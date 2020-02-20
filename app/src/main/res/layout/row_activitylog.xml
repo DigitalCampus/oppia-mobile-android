@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding_medium">
+
+    <ImageView
+        android:id="@+id/file_icon"
+        android:layout_width="@dimen/listitem_icon_size"
+        android:layout_height="@dimen/listitem_icon_size"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="false"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:src="@drawable/ic_file_account"
+        android:tint="@color/listitem_icon_tint"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:contentDescription="@string/alt_activity_icon"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/file_icon"
+        android:layout_toLeftOf="@+id/actions"
+        android:layout_toRightOf="@+id/file_icon"
+        android:layout_toStartOf="@+id/actions"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/file_name"
+            style="@style/NormalTextBoldDark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            tools:text="alexlittle" />
+
+        <TextView
+            android:id="@+id/file_date"
+            style="@style/MediumTextDarkItalic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/file_name"
+            android:layout_gravity="center_vertical"
+            android:visibility="visible"
+            tools:text="2019/03/05 14:45" />
+
+        <TextView
+            android:id="@+id/file_size"
+            style="@style/SubheaderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/file_name"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/padding_medium"
+            android:layout_toRightOf="@id/file_name"
+            tools:text="73 KB" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/actions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true">
+
+        <ImageButton
+            android:id="@+id/delete_btn"
+            android:layout_width="@dimen/course_icon_size"
+            android:layout_height="@dimen/course_icon_size"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/share_btn"
+            android:layout_centerVertical="true"
+            style="?android:attr/borderlessButtonStyle"
+            android:tint="@color/text_dark"
+            app:srcCompat="@android:drawable/ic_menu_delete"/>
+
+        <ImageButton
+            android:id="@+id/share_btn"
+            android:layout_width="@dimen/course_icon_size"
+            android:layout_height="@dimen/course_icon_size"
+            style="?android:attr/borderlessButtonStyle"
+            android:tint="@color/text_dark"
+            app:srcCompat="@android:drawable/ic_menu_share"/>
+
+
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

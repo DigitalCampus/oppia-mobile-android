@@ -73,7 +73,6 @@ public class PageWidget extends WidgetFactory {
 	@SuppressWarnings("unchecked")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		View vv = inflater.inflate(R.layout.fragment_webview, container, false);
 
 		activity = (Activity) getArguments().getSerializable(Activity.TAG);
@@ -97,9 +96,7 @@ public class PageWidget extends WidgetFactory {
 		super.onActivityCreated(savedInstanceState);
 		WebView wv = super.getActivity().findViewById(activity.getActId());
 		// get the location data
-		String url = course.getLocation()
-				+ activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
-						.getLanguage()));
+		String url = course.getLocation() + activity.getLocation(prefLang);
 		
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		wv.getSettings().setDefaultFontSize(defaultFontSize);
@@ -214,8 +211,7 @@ public class PageWidget extends WidgetFactory {
 
 	public String getContentToRead() {
 		File f = new File(File.separator + course.getLocation() + File.separator
-				+ activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
-						.getLanguage())));
+				+ activity.getLocation(prefLang));
 		StringBuilder text = new StringBuilder();
 		BufferedReader br = null;
 		try {

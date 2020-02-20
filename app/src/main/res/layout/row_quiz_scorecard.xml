@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <TextView
+        android:id="@+id/section_title"
+        style="@style/MediumTextDarkItalic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_gravity="center_vertical"
+        android:layout_toRightOf="@id/score"
+        android:layout_toEndOf="@id/score" />
+
+    <TextView
+        android:id="@+id/quiz_title"
+        style="@style/NormalTextBoldDark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_below="@id/section_title"
+        android:layout_marginTop="-3dp"
+        android:layout_toRightOf="@id/score"
+        android:layout_toEndOf="@id/score" />
+
+    <include
+        android:id="@+id/score"
+        layout="@layout/quiz_score_badge" />
+
+
+</RelativeLayout>

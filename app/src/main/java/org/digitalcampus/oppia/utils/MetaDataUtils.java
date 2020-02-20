@@ -16,18 +16,16 @@
  */
 package org.digitalcampus.oppia.utils;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
-
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.json.JSONException;
@@ -39,8 +37,6 @@ public class MetaDataUtils {
 
     public static final String TAG = MetaDataUtils.class.getSimpleName();
     private String networkProvider;
-    private String deviceId;
-    private String simSerial;
     private Context ctx;
     private SharedPreferences prefs;
 
@@ -50,20 +46,7 @@ public class MetaDataUtils {
         TelephonyManager manager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
         if (manager != null) {
             networkProvider = manager.getNetworkOperatorName();
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ctx.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-
-                    deviceId = "not-granted";
-                    simSerial = "not-granted";
-                    return;
-                }
-            }
-
-            deviceId = manager.getDeviceId();
-            simSerial = manager.getSimSerialNumber();
         }
-
     }
 
     public void setPrefs(SharedPreferences prefs){
@@ -75,11 +58,17 @@ public class MetaDataUtils {
     }
 
     private String getDeviceId() {
-        return deviceId;
+        return Settings.Secure.ANDROID_ID;
     }
 
     private String getSimSerial() {
-        return simSerial;
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.startsWith(manufacturer)) {
+            return model;
+        } else {
+            return manufacturer + " " + model;
+        }
     }
 
     private float getBatteryLevel() {

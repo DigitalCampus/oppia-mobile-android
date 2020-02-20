@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -69,13 +70,20 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = DbHelper.class.getSimpleName();
 	private static final String DB_NAME = "mobilelearning.db";
-	private static final int DB_VERSION = 30;
+	private static final int DB_VERSION = 31;
 
     private static DbHelper instance;
 	private SQLiteDatabase db;
 	private SharedPreferences prefs;
 	private Context ctx;
-	
+
+	private static final String STR_CREATE_TABLE = "create table ";
+	private static final String STR_ALTER_TABLE = "ALTER TABLE ";
+	private static final String STR_INT_PRIMARY_KEY_AUTO = " integer primary key autoincrement, ";
+	private static final String STR_INT_COMMA = " int, ";
+	private static final String STR_TEXT_COMMA = " text, ";
+
+			
 	private static final String COURSE_TABLE = "Module";
 	private static final String COURSE_C_ID = BaseColumns._ID;
 	private static final String COURSE_C_VERSIONID = "versionid";
@@ -166,6 +174,18 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_ORGANIZATION = "organisation";
 	private static final String USER_C_PHONE = "phoneNo";
 
+	// User Custom Fields
+	private static final String USER_CF_TABLE = "user_cf";
+	private static final String USER_CF_ID = BaseColumns._ID;
+	private static final String USER_CF_USER_ID = "user_id";
+	private static final String USER_CF_USERNAME = "username";
+
+	private static final String CF_FIELD_KEY = "field_key";
+	private static final String CF_VALUE_STR = "value_str";
+	private static final String CF_VALUE_INT = "value_int";
+	private static final String CF_VALUE_BOOL = "value_bool";
+	private static final String CF_VALUE_FLOAT = "value_float";
+
 	private static final String USER_PREFS_TABLE = "userprefs";
     private static final String USER_PREFS_C_USERNAME = "username";
     private static final String USER_PREFS_C_PREFKEY = "preference";
@@ -213,6 +233,8 @@ public class DbHelper extends SQLiteOpenHelper {
         createCourseGamificationTable(db);
 		createActivityGamificationTable(db);
 		createLeaderboardTable(db);
+
+		createUserCustomFieldsTable(db);
 	}
 
     public void beginTransaction(){
@@ -226,56 +248,56 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 	private void createCourseTable(SQLiteDatabase db){
-		String mSql = "create table " + COURSE_TABLE + " (" + COURSE_C_ID + " integer primary key autoincrement, "
-				+ COURSE_C_VERSIONID + " int, " + COURSE_C_TITLE + " text, " + COURSE_C_LOCATION + " text, "
-				+ COURSE_C_SHORTNAME + " text," + COURSE_C_SCHEDULE + " int,"
-				+ COURSE_C_IMAGE + " text,"
-				+ COURSE_C_DESC + " text,"
+		String mSql = STR_CREATE_TABLE + COURSE_TABLE + " (" + COURSE_C_ID + STR_INT_PRIMARY_KEY_AUTO
+				+ COURSE_C_VERSIONID + STR_INT_COMMA + COURSE_C_TITLE + STR_TEXT_COMMA + COURSE_C_LOCATION + STR_TEXT_COMMA
+				+ COURSE_C_SHORTNAME + STR_TEXT_COMMA + COURSE_C_SCHEDULE + STR_INT_COMMA
+				+ COURSE_C_IMAGE + STR_TEXT_COMMA
+				+ COURSE_C_DESC + STR_TEXT_COMMA
 				+ COURSE_C_ORDER_PRIORITY + " integer default 0, " 
-				+ COURSE_C_LANGS + " text, "
+				+ COURSE_C_LANGS + STR_TEXT_COMMA
                 + COURSE_C_SEQUENCING + " text default '" + Course.SEQUENCING_MODE_NONE + "' )";
 		db.execSQL(mSql);
 	}
 	
 	private void createActivityTable(SQLiteDatabase db){
-		String aSql = "create table " + ACTIVITY_TABLE + " (" +
-									ACTIVITY_C_ID + " integer primary key autoincrement, " + 
-									ACTIVITY_C_COURSEID + " int, " + 
-									ACTIVITY_C_SECTIONID + " int, " + 
-									ACTIVITY_C_ACTID + " int, " + 
-									ACTIVITY_C_ACTTYPE + " text, " + 
+		String aSql = STR_CREATE_TABLE + ACTIVITY_TABLE + " (" +
+									ACTIVITY_C_ID + STR_INT_PRIMARY_KEY_AUTO + 
+									ACTIVITY_C_COURSEID + STR_INT_COMMA + 
+									ACTIVITY_C_SECTIONID + STR_INT_COMMA + 
+									ACTIVITY_C_ACTID + STR_INT_COMMA + 
+									ACTIVITY_C_ACTTYPE + STR_TEXT_COMMA + 
 									ACTIVITY_C_STARTDATE + " datetime null, " + 
 									ACTIVITY_C_ENDDATE + " datetime null, " + 
-									ACTIVITY_C_ACTIVITYDIGEST + " text, "+
+									ACTIVITY_C_ACTIVITYDIGEST + STR_TEXT_COMMA+
 									ACTIVITY_C_TITLE + " text)";
 		db.execSQL(aSql);
 	}
 	
 	private void createLogTable(SQLiteDatabase db){
-		String lSql = "create table " + TRACKER_LOG_TABLE + " (" +
-				TRACKER_LOG_C_ID + " integer primary key autoincrement, " + 
+		String lSql = STR_CREATE_TABLE + TRACKER_LOG_TABLE + " (" +
+				TRACKER_LOG_C_ID + STR_INT_PRIMARY_KEY_AUTO + 
 				TRACKER_LOG_C_COURSEID + " integer, " + 
 				TRACKER_LOG_C_DATETIME + " datetime default current_timestamp, " + 
-				TRACKER_LOG_C_ACTIVITYDIGEST + " text, " + 
-				TRACKER_LOG_C_DATA + " text, " + 
+				TRACKER_LOG_C_ACTIVITYDIGEST + STR_TEXT_COMMA + 
+				TRACKER_LOG_C_DATA + STR_TEXT_COMMA + 
 				TRACKER_LOG_C_SUBMITTED + " integer default 0, " + 
 				TRACKER_LOG_C_INPROGRESS + " integer default 0, " +
 				TRACKER_LOG_C_COMPLETED + " integer default 0, " + 
 				TRACKER_LOG_C_USERID + " integer default 0, " +
-				TRACKER_LOG_C_TYPE + " text, " +
+				TRACKER_LOG_C_TYPE + STR_TEXT_COMMA +
 				TRACKER_LOG_C_EXPORTED + " integer default 0, " +
-                TRACKER_LOG_C_EVENT + " text, " +
+                TRACKER_LOG_C_EVENT + STR_TEXT_COMMA +
                 TRACKER_LOG_C_POINTS + " integer default 0 " +
 				")";
 		db.execSQL(lSql);
 	}
 
 	private void createQuizAttemptsTable(SQLiteDatabase db){
-		String sql = "create table " + QUIZATTEMPTS_TABLE + " (" + 
-							QUIZATTEMPTS_C_ID + " integer primary key autoincrement, " + 
+		String sql = STR_CREATE_TABLE + QUIZATTEMPTS_TABLE + " (" +
+							QUIZATTEMPTS_C_ID + STR_INT_PRIMARY_KEY_AUTO + 
 							QUIZATTEMPTS_C_DATETIME + " datetime default current_timestamp, " + 
-							QUIZATTEMPTS_C_DATA + " text, " +  
-							QUIZATTEMPTS_C_ACTIVITY_DIGEST + " text, " + 
+							QUIZATTEMPTS_C_DATA + STR_TEXT_COMMA +  
+							QUIZATTEMPTS_C_ACTIVITY_DIGEST + STR_TEXT_COMMA + 
 							QUIZATTEMPTS_C_SENT + " integer default 0, "+
 							QUIZATTEMPTS_C_COURSEID + " integer, " +
 							QUIZATTEMPTS_C_USERID + " integer default 0, " +
@@ -283,16 +305,16 @@ public class DbHelper extends SQLiteOpenHelper {
 							QUIZATTEMPTS_C_MAXSCORE + " real default 0, " +
 							QUIZATTEMPTS_C_PASSED + " integer default 0, " +
 							QUIZATTEMPTS_C_EXPORTED + " integer default 0," +
-                            QUIZATTEMPTS_C_EVENT + " text, " +
+                            QUIZATTEMPTS_C_EVENT + STR_TEXT_COMMA +
                             QUIZATTEMPTS_C_POINTS + " integer default 0 )";
 		db.execSQL(sql);
 	}
 	
 	private void createSearchTable(SQLiteDatabase db){
 		String sql = "CREATE VIRTUAL TABLE "+SEARCH_TABLE+" USING FTS3 (" +
-                SEARCH_C_TEXT + " text, " +
-                SEARCH_C_COURSETITLE + " text, " +
-                SEARCH_C_SECTIONTITLE + " text, " +
+                SEARCH_C_TEXT + STR_TEXT_COMMA +
+                SEARCH_C_COURSETITLE + STR_TEXT_COMMA +
+                SEARCH_C_SECTIONTITLE + STR_TEXT_COMMA +
                 SEARCH_C_ACTIVITYTITLE + " text " +
             ")";
 		db.execSQL(sql);
@@ -300,8 +322,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	private void createUserTable(SQLiteDatabase db){
 		String sql = "CREATE TABLE ["+USER_TABLE+"] (" +
-                "["+USER_C_ID+"]" + " integer primary key autoincrement, " +
-                "["+USER_C_USERNAME +"]" + " TEXT, "+
+                "["+USER_C_ID+"]" + STR_INT_PRIMARY_KEY_AUTO +
+                "["+USER_C_USERNAME +"]" + STR_TEXT_COMMA+
                 "["+USER_C_FIRSTNAME +"] TEXT, " +
                 "["+USER_C_LASTNAME+"] TEXT, " +
                 "["+USER_C_PASSWORDENCRYPTED +"] TEXT, " +
@@ -320,38 +342,55 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL(sql);
 	}
 
+
+	private void createUserCustomFieldsTable(SQLiteDatabase db) {
+
+		String sql = "CREATE TABLE ["+USER_CF_TABLE+"] (" +
+				"["+USER_CF_ID+"]" + STR_INT_PRIMARY_KEY_AUTO +
+				"["+ USER_CF_USERNAME +"]" + STR_TEXT_COMMA+
+				"["+ CF_FIELD_KEY +"]" + STR_TEXT_COMMA +
+
+				"["+ CF_VALUE_STR +"]" + STR_TEXT_COMMA +
+				"["+ CF_VALUE_INT +"]" + STR_INT_COMMA +
+				"["+ CF_VALUE_BOOL +"] BOOLEAN, " +
+				"["+ CF_VALUE_FLOAT +"] FLOAT, " +
+				"CONSTRAINT unq UNIQUE (" + USER_CF_USERNAME + ", "+ CF_FIELD_KEY +")" +
+				");";
+		db.execSQL(sql);
+	}
+
     public void createUserPrefsTable(SQLiteDatabase db){
-        String mSql = "create table " + USER_PREFS_TABLE + " ("
+        String mSql = STR_CREATE_TABLE + USER_PREFS_TABLE + " ("
                 + USER_PREFS_C_USERNAME + " text not null, "
                 + USER_PREFS_C_PREFKEY + " text not null, "
-                + USER_PREFS_C_PREFVALUE + " text, "
+                + USER_PREFS_C_PREFVALUE + STR_TEXT_COMMA
                 + "primary key (" + USER_PREFS_C_USERNAME + ", " + USER_PREFS_C_PREFKEY + ") "
                 +  ")";
         db.execSQL(mSql);
     }
 
     public void createCourseGamificationTable(SQLiteDatabase db){
-        String mSql = "create table " + COURSE_GAME_TABLE + " ("
-                + COURSE_GAME_C_ID + " integer primary key autoincrement, "
+        String mSql = STR_CREATE_TABLE + COURSE_GAME_TABLE + " ("
+                + COURSE_GAME_C_ID + STR_INT_PRIMARY_KEY_AUTO
                 + COURSE_GAME_C_COURSEID + " integer,"
-                + COURSE_GAME_C_EVENT + " text,"
+                + COURSE_GAME_C_EVENT + STR_TEXT_COMMA
                 + COURSE_GAME_C_POINTS + " integer default 0 )";
         db.execSQL(mSql);
     }
 
 	private void createActivityGamificationTable(SQLiteDatabase db){
-		String mSql = "create table " + ACTIVITY_GAME_TABLE + " ("
-				+ ACTIVITY_GAME_C_ID + " integer primary key autoincrement, "
+		String mSql = STR_CREATE_TABLE + ACTIVITY_GAME_TABLE + " ("
+				+ ACTIVITY_GAME_C_ID + STR_INT_PRIMARY_KEY_AUTO
 				+ ACTIVITY_GAME_C_ACTIVITYID + " integer,"
-				+ ACTIVITY_GAME_C_EVENT + " text,"
+				+ ACTIVITY_GAME_C_EVENT + STR_TEXT_COMMA
 				+ ACTIVITY_GAME_C_POINTS + " integer default 0 )";
 		db.execSQL(mSql);
 	}
 
 	private void createLeaderboardTable(SQLiteDatabase db){
-		String sql = "create table " + LEADERBOARD_TABLE + " (" +
-				LEADERBOARD_C_USERNAME + " text, " +
-				LEADERBOARD_C_FULLNAME + " text, " +
+		String sql = STR_CREATE_TABLE + LEADERBOARD_TABLE + " (" +
+				LEADERBOARD_C_USERNAME + STR_TEXT_COMMA +
+				LEADERBOARD_C_FULLNAME + STR_TEXT_COMMA +
 				LEADERBOARD_C_POINTS + " integer default 0, " +
 				LEADERBOARD_C_LASTUPDATE + " datetime default current_timestamp )";
 		db.execSQL(sql);
@@ -372,28 +411,28 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		
 		if(oldVersion <= 7 && newVersion >= 8){
-			String sql = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_STARTDATE + " datetime null;";
+			String sql = STR_ALTER_TABLE + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_STARTDATE + " datetime null;";
 			db.execSQL(sql);
-			sql = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_ENDDATE + " datetime null;";
+			sql = STR_ALTER_TABLE + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_ENDDATE + " datetime null;";
 			db.execSQL(sql);
 		}
 		
 		if(oldVersion <= 8 && newVersion >= 9){
-			String sql = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_SCHEDULE + " int null;";
+			String sql = STR_ALTER_TABLE + COURSE_TABLE + " ADD COLUMN " + COURSE_C_SCHEDULE + " int null;";
 			db.execSQL(sql);
 		}
 		
 		if(oldVersion <= 9 && newVersion >= 10){
-			String sql = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_TITLE  + " text null;";
+			String sql = STR_ALTER_TABLE + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_TITLE  + " text null;";
 			db.execSQL(sql);
 		}
 		
 		// This is a fix as previous versions may not have upgraded db tables correctly
 		if(oldVersion <= 10 && newVersion >=11){
-			String sql1 = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_STARTDATE + " datetime null;";
-			String sql2 = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_ENDDATE + " datetime null;";
-			String sql3 = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_SCHEDULE + " int null;";
-			String sql4 = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_TITLE  + " text null;";
+			String sql1 = STR_ALTER_TABLE + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_STARTDATE + " datetime null;";
+			String sql2 = STR_ALTER_TABLE + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_ENDDATE + " datetime null;";
+			String sql3 = STR_ALTER_TABLE + COURSE_TABLE + " ADD COLUMN " + COURSE_C_SCHEDULE + " int null;";
+			String sql4 = STR_ALTER_TABLE + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_TITLE  + " text null;";
 
 			db.execSQL(sql1);
 			db.execSQL(sql2);
@@ -402,14 +441,14 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		
 		if(oldVersion <= 11 && newVersion >= 12){
-			String sql = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_LANGS  + " text null;";
+			String sql = STR_ALTER_TABLE + COURSE_TABLE + " ADD COLUMN " + COURSE_C_LANGS  + " text null;";
 			db.execSQL(sql);
-			sql = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_IMAGE  + " text null;";
+			sql = STR_ALTER_TABLE + COURSE_TABLE + " ADD COLUMN " + COURSE_C_IMAGE  + " text null;";
 			db.execSQL(sql);
 		}
 		
 		if(oldVersion <= 12 && newVersion >= 13){
-			String sql = "ALTER TABLE " + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_COMPLETED  + " integer default 0;";
+			String sql = STR_ALTER_TABLE + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_COMPLETED  + " integer default 0;";
 			db.execSQL(sql);
 		}
 		// skip jump from 13 to 14
@@ -420,12 +459,12 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		
 		if(oldVersion <= 15 && newVersion >= 16){
-			String sql = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_DESC + " text null;";
+			String sql = STR_ALTER_TABLE + COURSE_TABLE + " ADD COLUMN " + COURSE_C_DESC + " text null;";
 			db.execSQL(sql);
 		}
 		
 		if(oldVersion <= 16 && newVersion >= 17){
-			String sql = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_ORDER_PRIORITY + " integer default 0;";
+			String sql = STR_ALTER_TABLE + COURSE_TABLE + " ADD COLUMN " + COURSE_C_ORDER_PRIORITY + " integer default 0;";
 			db.execSQL(sql);
 		}
 		
@@ -434,11 +473,11 @@ public class DbHelper extends SQLiteOpenHelper {
 			this.createSearchTable(db);
 			
 			// alter quiz results table
-			String sql1 = "ALTER TABLE " + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_USERID + " integer default 0;";
+			String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_USERID + " integer default 0;";
 			db.execSQL(sql1);
 			
 			// alter tracker table
-			String sql2 = "ALTER TABLE " + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_USERID + " integer default 0;";
+			String sql2 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_USERID + " integer default 0;";
 			db.execSQL(sql2);
 			
 			// create user table
@@ -449,35 +488,35 @@ public class DbHelper extends SQLiteOpenHelper {
 		if(oldVersion <= 18 && newVersion >= 19){
 			
 			// alter quiz results table
-			String sql1 = "ALTER TABLE " + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_SCORE + " real default 0;";
+			String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_SCORE + " real default 0;";
 			db.execSQL(sql1);
-			String sql2 = "ALTER TABLE " + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_PASSED + " integer default 0;";
+			String sql2 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_PASSED + " integer default 0;";
 			db.execSQL(sql2);
 			
 			// alter user table
-			String sql3 = "ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_LAST_LOGIN_DATE + " datetime null;";
+			String sql3 = STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_LAST_LOGIN_DATE + " datetime null;";
 			db.execSQL(sql3);
-			String sql4 = "ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_NO_LOGINS + " integer default 0;";
+			String sql4 = STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_NO_LOGINS + " integer default 0;";
 			db.execSQL(sql4);
 		}
 
 		if(oldVersion <= 19 && newVersion >= 20){
 			// alter quiz results table
-			String sql1 = "ALTER TABLE " + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_MAXSCORE + " real default 0;";
+			String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_MAXSCORE + " real default 0;";
 			db.execSQL(sql1);
 		}
 		
 		if(oldVersion <= 20 && newVersion >= 21){
 			// alter quiz results table
-			String sql1 = "ALTER TABLE " + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_ACTIVITY_DIGEST + " text;";
+			String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_ACTIVITY_DIGEST + " text;";
 			db.execSQL(sql1);
 		}
 		
 		if(oldVersion <= 21 && newVersion >= 22){
 			// add points and badges columns
-			String sql1 = "ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_POINTS + " integer default 0;";
+			String sql1 = STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_POINTS + " integer default 0;";
 			db.execSQL(sql1);
-			String sql2 = "ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_BADGES + " integer default 0;";
+			String sql2 = STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_BADGES + " integer default 0;";
 			db.execSQL(sql2);
 		}
 
@@ -489,25 +528,25 @@ public class DbHelper extends SQLiteOpenHelper {
 
         if(oldVersion <= 23 && newVersion >= 24){
             // add field "sequencingMode" to Course table
-            String sql1 = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_SEQUENCING + " text default '"+Course.SEQUENCING_MODE_NONE+"';";
+            String sql1 = STR_ALTER_TABLE + COURSE_TABLE + " ADD COLUMN " + COURSE_C_SEQUENCING + " text default '"+Course.SEQUENCING_MODE_NONE+"';";
             db.execSQL(sql1);
         }
 
 		if(oldVersion <= 24 && newVersion >= 25){
 			// add field "type" to Tracker table
-			String sql1 = "ALTER TABLE " + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_TYPE + " text ;";
+			String sql1 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_TYPE + " text ;";
 			db.execSQL(sql1);
 		}
 
 		if(oldVersion <= 25 && newVersion >= 26){
 			// add field "exported" to Tracker table
-			String sql1 = "ALTER TABLE " + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_EXPORTED + " integer default 0;";
+			String sql1 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_EXPORTED + " integer default 0;";
 			db.execSQL(sql1);
 		}
 
 		if(oldVersion <= 26 && newVersion >= 27){
 			// add field "exported" to Tracker table
-			String sql1 = "ALTER TABLE " + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_EXPORTED + " integer default 0;";
+			String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_EXPORTED + " integer default 0;";
 			db.execSQL(sql1);
 		}
 
@@ -516,14 +555,14 @@ public class DbHelper extends SQLiteOpenHelper {
             createActivityGamificationTable(db);
 
             // update tracker table
-            String sql1 = "ALTER TABLE " + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_POINTS + " integer default 0;";
-            String sql2 = "ALTER TABLE " + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_EVENT  + " text null;";
+            String sql1 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_POINTS + " integer default 0;";
+            String sql2 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_EVENT  + " text null;";
             db.execSQL(sql1);
             db.execSQL(sql2);
 
             // update quizattempt table
-            String sql3 = "ALTER TABLE " + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_POINTS + " integer default 0;";
-            String sql4 = "ALTER TABLE " + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_EVENT  + " text null;";
+            String sql3 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_POINTS + " integer default 0;";
+            String sql4 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_EVENT  + " text null;";
             db.execSQL(sql3);
             db.execSQL(sql4);
         }
@@ -536,12 +575,17 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		if(oldVersion <= 29 && newVersion >= 30){
 			// add fields for offline_register to User table
-			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_OFFLINE_REGISTER + " integer default 0;");
-			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_PASSWORDPLAIN + " text null;");
-			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_EMAIL + " text null;");
-			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_PHONE + " text null;");
-			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_JOBTITLE + " text null;");
-			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_ORGANIZATION + " text null;");
+			db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_OFFLINE_REGISTER + " integer default 0;");
+			db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_PASSWORDPLAIN + " text null;");
+			db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_EMAIL + " text null;");
+			db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_PHONE + " text null;");
+			db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_JOBTITLE + " text null;");
+			db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_ORGANIZATION + " text null;");
+		}
+
+
+		if (oldVersion < 31) {
+			createUserCustomFieldsTable(db);
 		}
 	}
 
@@ -943,25 +987,132 @@ public class DbHelper extends SQLiteOpenHelper {
 		// find if attempted
 		String s1 = QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_ACTIVITY_DIGEST +"=?";
 		String[] args1 = new String[] { String.valueOf(userId), digest };
-		Cursor c1 = db.query(QUIZATTEMPTS_TABLE, null, s1, args1, null, null, null);
-        qs.setNumAttempts(c1.getCount());
-		if (c1.getCount() == 0){ return qs; }
-		c1.moveToFirst();
-		while (!c1.isAfterLast()) {
-			float userScore = c1.getFloat(c1.getColumnIndex(QUIZATTEMPTS_C_SCORE));
+		Cursor query = db.query(QUIZATTEMPTS_TABLE, null, s1, args1, null, null, null);
+        qs.setNumAttempts(query.getCount());
+		if (query.getCount() == 0){ return qs; }
+
+		qs.setNumAttempts(query.getCount());
+		float scoreSum = 0;
+		query.moveToFirst();
+		while (!query.isAfterLast()) {
+			float userScore = query.getFloat(query.getColumnIndex(QUIZATTEMPTS_C_SCORE));
 			if (userScore > qs.getUserScore()){
 				qs.setUserScore(userScore);
 			}
-			if (c1.getInt(c1.getColumnIndex(QUIZATTEMPTS_C_PASSED)) != 0){
+			if (query.getInt(query.getColumnIndex(QUIZATTEMPTS_C_PASSED)) != 0){
 				qs.setPassed(true);
 			}
-			qs.setMaxScore(c1.getFloat(c1.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
-			c1.moveToNext();
+			scoreSum += userScore;
+			qs.setMaxScore(query.getFloat(query.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
+			query.moveToNext();
 		}
-		c1.close();
+		query.close();
+
+		qs.setAverageScore(scoreSum/qs.getNumAttempts());
 		qs.setAttempted(true);
 		
 		return qs;
+	}
+
+
+	public List<QuizAttempt> getGlobalQuizAttempts(long userId, String prefLang){
+
+		// find if attempted
+		String s1 = QUIZATTEMPTS_C_USERID + "=?";
+		String order = QUIZATTEMPTS_C_DATETIME + " DESC";
+		String[] args1 = new String[] { String.valueOf(userId) };
+		Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s1, args1, null, null, order);
+
+		ArrayList<QuizAttempt> attempts = new ArrayList<>();
+		long startTime = System.currentTimeMillis();
+		Map<Long, Course> fetchedCourses = new HashMap<>();
+		Map<Long, CompleteCourse> fetchedXMLCourses = new HashMap<>();
+
+		c.moveToFirst();
+		while (!c.isAfterLast()) {
+			QuizAttempt qa = new QuizAttempt();
+			qa.setId(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
+			qa.setActivityDigest(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
+			qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
+			qa.setDateTime(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATETIME)));
+			qa.setCourseId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_COURSEID)));
+			qa.setScore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)));
+			qa.setMaxscore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
+			qa.setPassed(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_PASSED)) != 0);
+
+			c.moveToNext();
+
+			long courseId = qa.getCourseId();
+			Course course = fetchedCourses.get(courseId);
+			if (course == null){
+				course = this.getCourse(courseId, userId);
+				fetchedCourses.put(courseId, course);
+			}
+			if (course == null){
+				continue;
+			}
+			qa.setCourseTitle(course.getTitle(prefLang));
+
+			String digest = qa.getActivityDigest();
+			Activity activity = this.getActivityByDigest(digest);
+			if (activity == null){
+				continue;
+			}
+			qa.setQuizTitle(activity.getTitle(prefLang));
+			int sectionOrderId = activity.getSectionId();
+			CompleteCourse parsed = fetchedXMLCourses.get(courseId);
+			if (parsed == null){
+				try {
+					CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
+					cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
+					parsed = cxr.getParsedCourse();
+					fetchedXMLCourses.put(courseId, parsed);
+					qa.setSectionTitle(parsed.getSection(sectionOrderId).getTitle(prefLang));
+				} catch (InvalidXMLException ixmle) {
+					Log.d(TAG,"Invalid course xml file", ixmle);
+					Mint.logException(ixmle);
+				}
+			}
+			else{
+				qa.setSectionTitle(parsed.getSection(sectionOrderId).getTitle(prefLang));
+			}
+
+			attempts.add(qa);
+
+
+		}
+		c.close();
+
+		return attempts;
+	}
+
+	public List<QuizAttempt> getQuizAttempts(String digest, long userId){
+
+		// find if attempted
+		String s1 = QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_ACTIVITY_DIGEST +"=?";
+		String[] args1 = new String[] { String.valueOf(userId), digest };
+		Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s1, args1, null, null, null);
+
+		ArrayList<QuizAttempt> attempts = new ArrayList<>();
+
+		float scoreSum = 0;
+		c.moveToFirst();
+		while (!c.isAfterLast()) {
+			QuizAttempt qa = new QuizAttempt();
+			qa.setId(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
+			qa.setActivityDigest(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
+			qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
+			qa.setDateTime(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATETIME)));
+			qa.setCourseId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_COURSEID)));
+			qa.setScore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)));
+			qa.setMaxscore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
+			qa.setPassed(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_PASSED)) != 0);
+			attempts.add(qa);
+			c.moveToNext();
+		}
+		c.close();
+
+		return attempts;
 	}
 
 	public void insertTracker(int courseId, String digest, String data, String type, boolean completed, String event, int points){

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
 
@@ -27,11 +28,13 @@
         android:text="@string/paired_devices"
         android:visibility="gone" />
 
-    <ListView
-        android:id="@+id/paired_devices"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_paired_devices"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:fadeScrollbars="false"/>
+        android:fadeScrollbars="false"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"/>
 
     <TextView
         android:id="@+id/new_devices_title"
@@ -45,12 +48,14 @@
         android:text="@string/other_devices"
         android:visibility="gone" />
 
-    <ListView
-        android:id="@+id/new_devices"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_new_devices"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:fadeScrollbars="false"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"/>
 
 
     <LinearLayout

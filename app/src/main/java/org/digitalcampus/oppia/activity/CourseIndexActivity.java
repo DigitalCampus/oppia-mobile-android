@@ -21,7 +21,6 @@ import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.view.Menu;
@@ -137,7 +136,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         sendTrackers();
 
         // remove any saved state info from shared prefs in case they interfere with subsequent page views
-        Editor editor = prefs.edit();
+        SharedPreferences.Editor editor = prefs.edit();
         Map<String, ?> keys = prefs.getAll();
 
         for (Map.Entry<String, ?> entry : keys.entrySet()) {
@@ -213,37 +212,54 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_language) {
-            createLanguageDialog();
-            return true;
-        } else if (itemId == android.R.id.home) {
-            this.finish();
-            return true;
-        } else {
-            Intent i;
-            Bundle tb = new Bundle();
+        Intent i;
+        Bundle tb = new Bundle();
 
-            if (itemId == R.id.menu_help) {
+        switch (item.getItemId()) {
+            case R.id.menu_language:
+                createLanguageDialog();
+                return true;
+
+            case R.id.menu_help:
                 i = new Intent(this, AboutActivity.class);
                 tb.putSerializable(AboutActivity.TAB_ACTIVE, AboutActivity.TAB_HELP);
-            } else if (itemId == R.id.menu_scorecard) {
+                break;
+
+            case R.id.menu_scorecard:
                 i = new Intent(this, ScorecardActivity.class);
                 tb.putSerializable(Course.TAG, course);
-            } else {
+                break;
+
+            case R.id.menu_expand_all_sections:
+                adapter.expandCollapseAllSections(true);
+                return true;
+
+            case R.id.menu_collapse_all_sections:
+                adapter.expandCollapseAllSections(false);
+                return true;
+
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            default:
                 i = new Intent(this, CourseMetaPageActivity.class);
                 tb.putSerializable(Course.TAG, course);
                 tb.putInt(CourseMetaPage.TAG, item.getItemId());
-            }
-            i.putExtras(tb);
-            startActivityForResult(i, 1);
-            return true;
+                break;
         }
+
+        i.putExtras(tb);
+        startActivityForResult(i, 1);
+
+
+        return super.onOptionsItemSelected(item);
+
     }
 
     private void createLanguageDialog() {
         UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
-            public Boolean call() throws Exception {
+            public Boolean call() {
                 CourseIndexActivity.this.initialize(false);
                 return true;
             }
@@ -385,6 +401,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     //@Override
     public void onParseComplete(CompleteCourse parsed) {
+        loadingCourseView.setVisibility(View.GONE);
         parsedCourse = parsed;
         course.setMetaPages(parsedCourse.getMetaPages());
         course.setMedia(parsedCourse.getMedia());
@@ -400,13 +417,15 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     //@Override
     public void onParseError() {
+        loadingCourseView.setVisibility(View.GONE);
         showErrorMessage();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_JUMPTO) {
-            String digest = data.getStringExtra(JUMPTO_TAG);
+            String digest = data.getStringExtra( JUMPTO_TAG);
             startCourseActivityByDigest(digest);
         }
     }

@@ -22,15 +22,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean, List<CourseTransferableFile>> {
+public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean, Void> {
 
     public interface FetchBackupsListener{
         void coursesPendingToInstall(boolean pending);
-        void onFetchComplete(List<CourseTransferableFile> backups);
+        void onFetchComplete(List<CourseTransferableFile> backups, List<CourseTransferableFile> activityLogs);
     }
 
     FetchBackupsListener listener;
     private Context ctx;
+    private List<CourseTransferableFile> transferableFiles = new ArrayList<>();
+    private List<CourseTransferableFile> activityLogs = new ArrayList<>();
 
     public FetchCourseTransferableFilesTask(Context ctx) {
         this.ctx = ctx;
@@ -38,12 +40,10 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
 
 
     @Override
-    protected List<CourseTransferableFile> doInBackground(Payload... payloads) {
+    protected Void doInBackground(Payload... payloads) {
 
         DbHelper db = DbHelper.getInstance(ctx);
-        ArrayList<CourseTransferableFile> transferableFiles = new ArrayList<>();
         List<Course> courses = db.getAllCourses();
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 
@@ -108,7 +108,24 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
             }
         }
 
-        return transferableFiles;
+        File activityLogsDir = new File(Storage.getActivityPath(ctx));
+        if (!activityLogsDir.exists()){
+            return null;
+        }
+        String[] logs = activityLogsDir.list();
+        for (String filename : logs){
+            File file = new File(activityLogsDir, filename);
+            CourseTransferableFile log = new CourseTransferableFile();
+            log.setFilename(file.getName());
+            log.setFile(file);
+            log.setType(CourseTransferableFile.TYPE_ACTIVITY_LOG);
+            log.setTitleFromFilename();
+            log.setFileSize(file.length());
+            log.setShortname("");
+            activityLogs.add(log);
+        }
+
+        return null;
     }
 
     @Override
@@ -122,10 +139,10 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
     }
 
     @Override
-    protected void onPostExecute(List<CourseTransferableFile> backups) {
+    protected void onPostExecute(Void params) {
         synchronized (this) {
             if (listener != null) {
-                listener.onFetchComplete(backups);
+                listener.onFetchComplete(transferableFiles, activityLogs);
             }
         }
     }

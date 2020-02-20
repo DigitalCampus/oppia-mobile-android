@@ -16,26 +16,26 @@ import org.digitalcampus.oppia.model.CourseTransferableFile;
 
 import java.util.ArrayList;
 
-public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCourseListAdapter.TclaViewHolder> {
+public class TransferableFileListAdapter extends RecyclerView.Adapter<TransferableFileListAdapter.TclaViewHolder> {
 
-    public static final String TAG = TransferCourseListAdapter.class.getSimpleName();
+    public static final String TAG = TransferableFileListAdapter.class.getSimpleName();
     private ArrayList<CourseTransferableFile> transferableFiles;
     private ArrayList<CourseTransferableFile> courseFiles = new ArrayList<>();
     private final ListInnerBtnOnClickListener listener;
 
     public class TclaViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        private TextView courseTitle;
-        private TextView courseFilesize;
-        private TextView courseDescription;
+        private TextView fileTitle;
+        private TextView fileSubtitle;
+        private TextView fileAside;
         private ImageButton actionBtn;
         private ImageView icon;
 
         public TclaViewHolder(View v) {
             super(v);
-            courseTitle = v.findViewById(R.id.course_title);
-            courseFilesize = v.findViewById(R.id.course_filesize);
-            courseDescription = v.findViewById(R.id.course_description);
+            fileTitle = v.findViewById(R.id.file_title);
+            fileSubtitle = v.findViewById(R.id.file_subtitle);
+            fileAside = v.findViewById(R.id.file_aside);
             actionBtn = v.findViewById(R.id.download_course_btn);
             icon = v.findViewById(R.id.elem_icon);
 
@@ -70,25 +70,37 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
     }
 
 
-    public TransferCourseListAdapter(ArrayList<CourseTransferableFile> files, ListInnerBtnOnClickListener listener){
-        this.transferableFiles = files;
-        this.listener = listener;
-        filterCourses();
+    public TransferableFileListAdapter(ArrayList<CourseTransferableFile> files, ListInnerBtnOnClickListener listener){
+        this(files, listener, false);
+    }
 
-        this.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                filterCourses();
-                super.onChanged();
-            }
-        });
+    public TransferableFileListAdapter(ArrayList<CourseTransferableFile> files, ListInnerBtnOnClickListener listener, boolean filterCourses){
+
+        this.listener = listener;
+
+        if (filterCourses){
+            this.transferableFiles = files;
+            filterCourses();
+
+            this.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                @Override
+                public void onChanged() {
+                    filterCourses();
+                    super.onChanged();
+                }
+            });
+        }
+        else{
+            this.courseFiles = files;
+        }
+
     }
 
     @NonNull
     @Override
     public TclaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.course_transfer_row, parent, false);
+                .inflate(R.layout.row_transferable_file, parent, false);
         return new TclaViewHolder(v);
 
     }
@@ -98,19 +110,27 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
         CourseTransferableFile current = courseFiles.get(position);
 
         if (current.getTitle() != null){
-            holder.courseTitle.setVisibility(View.VISIBLE);
-            holder.courseTitle.setText(current.getTitle());
+            holder.fileTitle.setVisibility(View.VISIBLE);
+            holder.fileTitle.setText(current.getTitle());
         }
         else{
-            holder.courseTitle.setVisibility(View.GONE);
+            holder.fileTitle.setVisibility(View.GONE);
         }
 
-        holder.courseDescription.setText(current.getFilename());
-        holder.icon.setImageResource(
-                current.getType().equals(CourseTransferableFile.TYPE_COURSE_BACKUP)?
-                        R.drawable.ic_notification : R.drawable.default_icon_video);
+        if (current.getType().equals(CourseTransferableFile.TYPE_ACTIVITY_LOG)){
+            holder.fileSubtitle.setText(current.getDisplayDateTimeFromFilename());
+            holder.fileAside.setVisibility(View.VISIBLE);
+            holder.fileAside.setText(current.getDisplayFileSize());
+            holder.icon.setImageResource(R.drawable.ic_file_account);
+        }
+        else{
 
-        holder.courseFilesize.setText( current.getDisplayFileSize() );
+            holder.icon.setImageResource(
+                    current.getType().equals(CourseTransferableFile.TYPE_COURSE_BACKUP)?
+                            R.drawable.ic_notification : R.drawable.default_icon_video);
+            holder.fileSubtitle.setText( current.getDisplayFileSize() );
+            holder.fileAside.setVisibility(View.GONE);
+        }
 
     }
 

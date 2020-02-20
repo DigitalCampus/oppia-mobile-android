@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginLeft="@dimen/list_card_horizontal_margin"
+    android:layout_marginRight="@dimen/list_card_horizontal_margin"
+    android:layout_marginBottom="7dp"
+    app:contentPaddingBottom="@dimen/list_card_vertical_padding"
+    app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
+    app:contentPaddingRight="@dimen/list_card_horizontal_padding"
+    app:contentPaddingTop="@dimen/list_card_vertical_padding"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:descendantFocusability="blocksDescendants"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp">
+
+        <include
+            android:id="@+id/score"
+            layout="@layout/quiz_score_badge" />
+
+        <TextView
+            android:id="@+id/course_title"
+            style="@style/NormalTextBoldDark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_grey"
+            android:layout_gravity="center_vertical"
+            android:layout_toEndOf="@id/score"
+            android:layout_toRightOf="@id/score"
+            android:layout_alignParentTop="true"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+        <TextView
+            android:id="@+id/quiz_title"
+            style="@style/NormalTextDark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@color/text_grey"
+            android:layout_toEndOf="@id/score"
+            android:layout_toRightOf="@id/score"
+            android:layout_below="@id/course_title"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ic_date"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="@dimen/small_icon_size"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="@dimen/padding_medium"
+            android:layout_toEndOf="@id/score"
+            android:layout_toRightOf="@id/score"
+            android:layout_below="@id/quiz_title"
+            android:scaleType="fitCenter"
+            android:tint="@color/text_grey"
+            app:srcCompat="@drawable/ic_date" />
+
+        <TextView
+            android:id="@+id/attempt_date"
+            style="@style/NormalTextBoldDark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@color/text_grey"
+            android:layout_alignTop="@id/ic_date"
+            android:layout_alignBottom="@id/ic_date"
+            android:layout_gravity="center_vertical"
+            android:layout_toEndOf="@id/ic_date"
+            android:layout_toRightOf="@id/ic_date"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

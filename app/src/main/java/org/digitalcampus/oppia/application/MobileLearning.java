@@ -133,6 +133,8 @@ public class MobileLearning extends Application {
     public static final DateTimeFormatter DATE_FORMAT_DAY_MONTH = DateTimeFormat.forPattern("d MMM");
     public static final DateTimeFormatter TIME_FORMAT_HOURS_MINUTES = DateTimeFormat.forPattern("HH:mm");
 
+    public static final DateTimeFormatter DISPLAY_DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm");
+
     public static final int MAX_TRACKER_SUBMIT = 10;
     //	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback","url"};
     public static final String[] SUPPORTED_MEDIA_TYPES = {"video/m4v", "video/mp4", "audio/mpeg", "video/3gp", "video/3gpp"}; //NOSONAR
@@ -155,6 +157,9 @@ public class MobileLearning extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        DbHelper dbHelper = DbHelper.getInstance(this);
+        dbHelper.getReadableDatabase(); // To force migration if needed
 
 
         // this method fires once at application start
@@ -215,6 +220,11 @@ public class MobileLearning extends Application {
         } else {
             cancelTrackerWork();
         }
+
+
+        // To test worker alone
+//        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(TrackerWorker.class).build();
+//        WorkManager.getInstance(this).enqueue(oneTimeWorkRequest);
     }
 
 

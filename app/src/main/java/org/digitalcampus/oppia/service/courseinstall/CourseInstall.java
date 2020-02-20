@@ -199,6 +199,7 @@ public class CourseInstall {
 
     public static File savedBackupCourse(Context ctx, String shortname){
 
+
         //Look for previous backup files
         File backupDir = new File(Storage.getCourseBackupPath(ctx));
         backupDir.mkdirs();

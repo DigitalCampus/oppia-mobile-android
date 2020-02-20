@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <include android:id="@+id/toolbar" layout="@layout/toolbar" />
 
@@ -33,13 +34,12 @@
         android:padding="@dimen/margin_medium"
         tools:visibility="gone" />
 
-    <ListView
-        android:id="@+id/tag_list"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_tags"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/category_title"
-        android:dividerHeight="0dp"
-        android:divider="@color/transparent"
-        android:listSelector="@color/transparent" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"/>
 
 </RelativeLayout>

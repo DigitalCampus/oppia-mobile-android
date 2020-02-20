@@ -19,7 +19,9 @@ package org.digitalcampus.oppia.model;
 
 import android.util.Log;
 
-public class QuizStats {
+import java.io.Serializable;
+
+public class QuizStats implements Serializable {
 
 	public static final String TAG = QuizStats.class.getSimpleName();
 	
@@ -33,7 +35,11 @@ public class QuizStats {
     private boolean attempted;
     private float maxScore = -1;
     private float userScore = -1;
+    private float averageScore = -1;
     private boolean passed;
+
+    private String quizTitle;
+    private String sectionTitle;
 
     public QuizStats(int quizId){ this.quizId = quizId; }
     public QuizStats(){ }
@@ -54,6 +60,11 @@ public class QuizStats {
     public float getUserScore() { return userScore; }
     public void setUserScore(float userScore) { this.userScore = userScore; }
 
+    public float getAverageScore() { return averageScore; }
+    public void setAverageScore(float averageScore) {
+        this.averageScore = averageScore;
+    }
+
     public boolean isAttempted(){ return attempted; }
     public void setAttempted(boolean a){
         attempted = a;
@@ -67,6 +78,10 @@ public class QuizStats {
         return percent;
     }
 
+    public int getAveragePercent(){
+        return  Math.round(averageScore * 100.0f / Math.max(1,maxScore));
+    }
+
     public boolean isPassed(){
         return passed;
     }
@@ -75,5 +90,19 @@ public class QuizStats {
     public int getNumAttempts() { return numAttempts; }
     public void setNumAttempts(int numAttempts) { this.numAttempts = numAttempts; }
 
+    public String getQuizTitle() {
+        return quizTitle;
+    }
 
+    public void setQuizTitle(String quizTitle) {
+        this.quizTitle = quizTitle;
+    }
+
+    public String getSectionTitle() {
+        return sectionTitle;
+    }
+
+    public void setSectionTitle(String sectionTitle) {
+        this.sectionTitle = sectionTitle;
+    }
 }

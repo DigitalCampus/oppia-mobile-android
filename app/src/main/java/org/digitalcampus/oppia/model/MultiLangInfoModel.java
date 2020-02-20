@@ -46,7 +46,7 @@ public class MultiLangInfoModel implements Serializable {
 
     public String getTitle(String lang) {
         String title = getInfo(lang, titles);
-        return title == null ? DEFAULT_NOTITLE : title;
+        return title == null ? DEFAULT_NOTITLE : title.trim();
     }
 
     public String getTitle(SharedPreferences prefs){
@@ -103,11 +103,11 @@ public class MultiLangInfoModel implements Serializable {
     private String getInfo(String lang, ArrayList<Lang> values){
         for(Lang l: values){
             if(l.getLang().equals(lang)){
-                return l.getContent();
+                return l.getContent().trim();
             }
         }
         if(values.size() > 0){
-            return values.get(0).getContent();
+            return values.get(0).getContent().trim();
         }
 
         return null;
