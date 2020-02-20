@@ -47,8 +47,6 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
 
 	private SubmitListener mStateListener;
 
-
-    public LoginTask(Context ctx) { super(ctx); }
     public LoginTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
 
     @Override
@@ -94,28 +92,9 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
                 u.setApiKey(jsonResp.getString("api_key"));
                 u.setFirstname(jsonResp.getString("first_name"));
                 u.setLastname(jsonResp.getString("last_name"));
-                try {
-                    u.setPoints(jsonResp.getInt("points"));
-                    u.setBadges(jsonResp.getInt("badges"));
-                } catch (JSONException e){
-                    u.setPoints(0);
-                    u.setBadges(0);
-                }
-                try {
-                    u.setScoringEnabled(jsonResp.getBoolean("scoring"));
-                    u.setBadgingEnabled(jsonResp.getBoolean("badging"));
-                } catch (JSONException e){
-                    u.setScoringEnabled(true);
-                    u.setBadgingEnabled(true);
-                }
-                try {
-                    JSONObject metadata = jsonResp.getJSONObject("metadata");
-                    MetaDataUtils mu = new MetaDataUtils(ctx);
-                    mu.saveMetaData(metadata, prefs);
-                } catch (JSONException e) {
-                    Mint.logException(e);
-                    Log.d(TAG, "JSONException: ", e);
-                }
+                setPointsAndBadges(jsonResp, u);
+                setPointsAndBadgesEnabled(jsonResp, u);
+                setMetaData(jsonResp);
                 DbHelper db = DbHelper.getInstance(ctx);
                 db.addOrUpdateUser(u);
                 payload.setResult(true);
@@ -151,6 +130,37 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
 		
 		return payload;
 	}
+
+	private void setPointsAndBadges(JSONObject jsonResp, User u){
+        try {
+            u.setPoints(jsonResp.getInt("points"));
+            u.setBadges(jsonResp.getInt("badges"));
+        } catch (JSONException e){
+            u.setPoints(0);
+            u.setBadges(0);
+        }
+    }
+
+    private void setPointsAndBadgesEnabled(JSONObject jsonResp, User u){
+        try {
+            u.setScoringEnabled(jsonResp.getBoolean("scoring"));
+            u.setBadgingEnabled(jsonResp.getBoolean("badging"));
+        } catch (JSONException e){
+            u.setScoringEnabled(true);
+            u.setBadgingEnabled(true);
+        }
+    }
+
+    private void setMetaData(JSONObject jsonResp){
+        try {
+            JSONObject metadata = jsonResp.getJSONObject("metadata");
+            MetaDataUtils mu = new MetaDataUtils(ctx);
+            mu.saveMetaData(metadata, prefs);
+        } catch (JSONException e) {
+            Mint.logException(e);
+            Log.d(TAG, "JSONException: ", e);
+        }
+    }
 
 	@Override
 	protected void onPostExecute(Payload response) {

@@ -34,6 +34,6 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
 
     @Override
     public void onPreferenceUpdated(String pref, String newValue) {
-
+        // do nothing
     }
 }

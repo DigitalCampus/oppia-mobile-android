@@ -41,8 +41,6 @@ public class BluetoothConnectionManager {
     // Unique UUID for this application
     private static final UUID MY_UUID_SECURE =
             UUID.fromString("f03ecf10-1ed0-49e6-96a6-d9b198148f81");
-    private static final UUID MY_UUID_INSECURE =
-            UUID.fromString("b7940299-f991-4207-810d-8d3a9f3ac71d");
 
 
     private static int state;
@@ -263,6 +261,7 @@ public class BluetoothConnectionManager {
             state = STATE_LISTEN;
         }
 
+        @Override
         public void run() {
             Log.d(TAG, "Socket BEGIN mAcceptThread " + this);
             setName("AcceptThread");
@@ -298,6 +297,8 @@ public class BluetoothConnectionManager {
                                     Log.e(TAG, "Could not close unwanted socket", e);
                                 }
                                 break;
+                            default:
+                                // do nothing
                         }
                     }
                 }
@@ -341,6 +342,7 @@ public class BluetoothConnectionManager {
             state = STATE_CONNECTING;
         }
 
+        @Override
         public void run() {
             Log.i(TAG, "BEGIN connectThread " );
             setName("ConnectThread");

@@ -104,7 +104,7 @@ public class FeedbackWidget extends WidgetFactory {
 		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
 		feedbackContent = ((Activity) getArguments().getSerializable(Activity.TAG)).getContents(prefLang);
 
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		vv.setId(activity.getActId());
 		if ((savedInstanceState != null) && (savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG) != null)){

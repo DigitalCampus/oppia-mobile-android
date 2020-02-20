@@ -78,6 +78,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -134,6 +135,7 @@ public class MainActivityUITest {
         when(editor.putString(anyString(), anyString())).thenReturn(editor);
         when(editor.putLong(anyString(), anyLong())).thenReturn(editor);
         when(editor.putBoolean(anyString(), anyBoolean())).thenReturn(editor);
+        when(editor.putInt(anyString(), anyInt())).thenReturn(editor);
     }
 
     private void givenThereAreSomeCourses(int numberOfCourses) {
@@ -339,13 +341,6 @@ public class MainActivityUITest {
         onView(withId(R.id.nav_bottom_points)).perform(click());
         onView(withId(R.id.tabs)).perform(selectTabAtPosition(2));
 
-//        onView(allOf(
-//                withText(R.string.tab_title_badges),
-//                isDescendantOfA(withId(R.id.tabs))))
-//                .perform(click());
-
-//        onView(withText(R.string.tab_title_badges)).perform(click());
-
         assertEquals(0, badgesList.size());
 
     }
@@ -414,11 +409,6 @@ public class MainActivityUITest {
                 .inRoot(RootMatchers.withDecorView(
                         Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
-
-//        onData(anything())
-//                .inAdapterView(withId(R.id.recycler_courses))
-//                .atPosition(0)
-//                .perform(longClick());
 
         onView(withId(R.id.course_context_delete))
                 .perform(click());

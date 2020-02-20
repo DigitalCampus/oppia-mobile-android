@@ -25,27 +25,12 @@ public class Points {
 	private DateTime datetime;
 	private String event;
     private String description;
-	private int points;
-	
-	public String getDateAsString() {
-		return DateUtils.DATE_FORMAT.print(datetime);
-	}
-
-	public String getMonthAsString() {
-		return DateUtils.MONTH_FORMAT.print(datetime);
-	}
-
-	public String getDayMonthAsString() {
-		return DateUtils.DATE_FORMAT_DAY_MONTH.print(datetime);
-	}
+	private int pointsAwarded;
 
 	public String getDateDayMonth() {
 		return DateUtils.DATE_FORMAT_DAY_MONTH.print(datetime);
 	}
-	
-	public String getTimeAsString() {
-		return DateUtils.TIME_FORMAT.print(datetime);
-	}
+
 
 	public String getTimeHoursMinutes() {
 		return DateUtils.TIME_FORMAT_HOURS_MINUTES.print(datetime);
@@ -75,11 +60,11 @@ public class Points {
         this.description = description;
     }
 	
-	public int getPoints() {
-		return points;
+	public int getPointsAwarded() {
+		return pointsAwarded;
 	}
 	
-	public void setPoints(int points) {
-		this.points = points;
+	public void setPointsAwarded(int points) {
+		this.pointsAwarded = points;
 	}
 }

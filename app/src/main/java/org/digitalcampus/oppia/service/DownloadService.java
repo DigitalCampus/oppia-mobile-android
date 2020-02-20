@@ -242,12 +242,12 @@ public class DownloadService extends IntentService {
                 // check the file digest matches, otherwise delete the file
                 // (it's either been a corrupted download or it's the wrong file)
                 byte[] digest = mDigest.digest();
-                String resultMD5 = "";
+                StringBuilder resultMD5 = new StringBuilder();
 
                 for (byte aDigest : digest) {
-                    resultMD5 += Integer.toString((aDigest & 0xff) + 0x100, 16).substring(1);
+                    resultMD5.append(Integer.toString((aDigest & 0xff) + 0x100, 16).substring(1));
                 }
-                if(!resultMD5.contains(fileDigest)){
+                if(!resultMD5.toString().contains(fileDigest)){
                     this.deleteFile(downloadedFile);
                     sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_media_download));
                     removeDownloading(fileUrl);
@@ -337,10 +337,8 @@ public class DownloadService extends IntentService {
     }
 
     private void deleteFile(File file){
-        if ((file != null) && file.exists() && !file.isDirectory()){
-            if (!file.delete()) {
-                Log.e(TAG, "deleteFile: File could not be deleted: " + file.getAbsolutePath());
-            }
+        if ((file != null) && file.exists() && !file.isDirectory() && !file.delete()){
+            Log.e(TAG, "deleteFile: File could not be deleted: " + file.getAbsolutePath());
         }
     }
 

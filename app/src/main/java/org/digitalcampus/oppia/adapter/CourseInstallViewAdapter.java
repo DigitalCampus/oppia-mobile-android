@@ -59,8 +59,6 @@ public class CourseInstallViewAdapter extends Course {
     private static final String JSON_PROPERTY_IS_DRAFT = "is_draft";
     private static final String JSON_PROPERTY_AUTHOR = "author";
     private static final String JSON_PROPERTY_USERNAME = "username";
-    private static final String JSON_PROPERTY_SCHEDULE_URI = "schedule_uri";
-    private static final String JSON_PROPERTY_SCHEDULE = "schedule";
     private static final String JSON_PROPERTY_ORGANISATION = "organisation";
 
     public boolean isDownloading() {
@@ -116,7 +114,7 @@ public class CourseInstallViewAdapter extends Course {
             Context ctx, JSONObject json, String location, boolean onlyAddUpdates)
             throws JSONException {
 
-        ArrayList<String> downloadingCourses = CourseInstallerService.getTasksDownloading();
+        ArrayList<String> downloadingCourses = (ArrayList<String>) CourseInstallerService.getTasksDownloading();
         ArrayList<CourseInstallViewAdapter> courses = new ArrayList<>();
 
         JSONArray coursesArray = json.getJSONArray(SERVER_COURSES_NAME);

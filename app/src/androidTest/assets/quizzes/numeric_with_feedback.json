@@ -1,0 +1,65 @@
+{
+  "id": 3494,
+  "title": {
+    "en": "Numeric - with feedback"
+  },
+  "description": {
+    "en": ""
+  },
+  "props": {
+    "digest": "80058f0068a4cc89dd991fbc32d9cfae523cr0s2p80m0",
+    "courseversion": "20200218094423",
+    "showfeedback": 2,
+    "passthreshold": 80,
+    "maxattempts": 0,
+    "maxscore": 1
+  },
+  "questions": [
+    {
+      "order": 1,
+      "id": 36135,
+      "question": {
+        "id": 19774,
+        "type": "numerical",
+        "title": {
+          "en": "How many sides does a hexagon have?"
+        },
+        "props": {
+          "maxscore": 1
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 103341,
+            "props": {
+              "id": 815,
+              "feedback": {
+                "en": "correct"
+              },
+              "tolerance": "0"
+            },
+            "title": {
+              "en": "6"
+            },
+            "score": "1.0000"
+          },
+          {
+            "order": 2,
+            "id": 103342,
+            "props": {
+              "id": 784,
+              "feedback": {
+                "en": "wrong"
+              },
+              "tolerance": "0"
+            },
+            "title": {
+              "en": "*"
+            },
+            "score": "0.0000"
+          }
+        ]
+      }
+    }
+  ]
+}

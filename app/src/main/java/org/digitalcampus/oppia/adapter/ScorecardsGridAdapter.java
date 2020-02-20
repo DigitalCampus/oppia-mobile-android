@@ -21,7 +21,7 @@ import org.digitalcampus.oppia.model.Course;
 import java.util.List;
 import java.util.Locale;
 
-public class ScorecardsGridAdapter extends RecyclerView.Adapter<ScorecardsGridAdapter.ViewHolder> {
+public class ScorecardsGridAdapter extends RecyclerView.Adapter<ScorecardsGridAdapter.ScorecardsGridViewHolder> {
 
 
     private final String prefLang;
@@ -38,17 +38,17 @@ public class ScorecardsGridAdapter extends RecyclerView.Adapter<ScorecardsGridAd
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ScorecardsGridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_scorecard, parent, false);
 
         // Return a new holder instance
-        return new ViewHolder(contactView);
+        return new ScorecardsGridViewHolder(contactView);
     }
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final ScorecardsGridViewHolder viewHolder, final int position) {
 
         final Course course = getItemAtPosition(position);
 
@@ -75,15 +75,14 @@ public class ScorecardsGridAdapter extends RecyclerView.Adapter<ScorecardsGridAd
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ScorecardsGridViewHolder extends RecyclerView.ViewHolder {
 
-        private View rootView;
         private TextView courseTitle;
         private TextView activitiesCompleted;
         private TextView activitiesTotal;
         private CircularProgressBar circularProgressBar;
 
-        public ViewHolder(final View itemView) {
+        public ScorecardsGridViewHolder(final View itemView) {
 
             super(itemView);
 
@@ -92,9 +91,7 @@ public class ScorecardsGridAdapter extends RecyclerView.Adapter<ScorecardsGridAd
             activitiesCompleted = itemView.findViewById(R.id.scorecard_activities_completed);
             activitiesTotal = itemView.findViewById(R.id.scorecard_activities_total);
 
-            rootView = itemView;
-
-            rootView.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (itemClickListener != null) {

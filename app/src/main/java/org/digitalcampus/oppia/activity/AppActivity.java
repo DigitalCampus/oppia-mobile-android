@@ -176,12 +176,12 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
         //We check if the user session time has expired to log him out
         if (App.SESSION_EXPIRATION_ENABLED) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences prefsReload = PreferenceManager.getDefaultSharedPreferences(this);
             long now = System.currentTimeMillis() / 1000;
-            long lastTimeActive = prefs.getLong(PrefsActivity.LAST_ACTIVE_TIME, now);
+            long lastTimeActive = prefsReload.getLong(PrefsActivity.LAST_ACTIVE_TIME, now);
             long timePassed = now - lastTimeActive;
 
-            prefs.edit().putLong(PrefsActivity.LAST_ACTIVE_TIME, now).apply();
+            prefsReload.edit().putLong(PrefsActivity.LAST_ACTIVE_TIME, now).apply();
             if (timePassed > App.SESSION_EXPIRATION_TIMEOUT) {
                 Log.d(TAG, "Session timeout (passed " + timePassed + " seconds), logging out");
                 logoutAndRestartApp();
@@ -231,8 +231,8 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     @Override
     public void onGamificationEvent(String message, int points) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
+        SharedPreferences prefsGame = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean notifEnabled = prefsGame.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
         if (notifEnabled) {
 
             final View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
@@ -258,7 +258,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             layout.addView(snackView, 0);
             layout.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
 
-            final int gamifPointsViewType = Integer.parseInt(prefs.getString(PrefsActivity.PREF_GAMIFICATION_POINTS_ANIMATION, Gamification.GAMIFICATION_POINTS_ANIMATION));
+            final int gamifPointsViewType = Integer.parseInt(prefsGame.getString(PrefsActivity.PREF_GAMIFICATION_POINTS_ANIMATION, Gamification.GAMIFICATION_POINTS_ANIMATION));
 
             final boolean fullAnimation = gamifPointsViewType == 2 || gamifPointsViewType == 3;
             final boolean withSound = gamifPointsViewType == 3;
@@ -358,7 +358,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         animSetGlobal.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-
+                // do nothing
             }
 
             @Override
@@ -369,12 +369,12 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
             @Override
             public void onAnimationCancel(Animator animation) {
-
+                // do nothing
             }
 
             @Override
             public void onAnimationRepeat(Animator animation) {
-
+                // do nothing
             }
         });
 

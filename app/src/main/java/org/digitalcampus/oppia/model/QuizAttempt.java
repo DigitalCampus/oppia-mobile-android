@@ -60,7 +60,7 @@ public class QuizAttempt implements Serializable {
 		this.datetime = datetime;
 	}
 
-	public void setDateTime(String date) {
+	public void setDateTimeFromString(String date) {
 		this.datetime = DateUtils.DATETIME_FORMAT.parseDateTime(date);
 	}
 

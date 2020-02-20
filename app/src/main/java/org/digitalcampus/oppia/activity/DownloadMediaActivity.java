@@ -29,9 +29,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,7 +66,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
     public static final String MISSING_MEDIA = "missing_media";
 
-    private SharedPreferences prefs;
+    private SharedPreferences sharedPreferences;
     private ArrayList<Media> missingMedia;
     private DownloadBroadcastReceiver receiver;
     Button downloadViaPCBtn;
@@ -102,7 +102,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_media);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         findViews();
 
         Bundle bundle = this.getIntent().getExtras();
@@ -221,7 +221,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         adapterMedia.setOnItemClickListener(new DownloadMediaAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                // do nothing
             }
 
             @Override
@@ -240,7 +240,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             }
         });
 
-        Media.resetMediaScan(prefs);
+        Media.resetMediaScan(sharedPreferences);
 
     }
 
@@ -358,11 +358,11 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             html = html.replace("##download_via_pc_intro##", getString(R.string.download_via_pc_intro));
             html = html.replace("##download_via_pc_final##", getString(R.string.download_via_pc_final, path));
 
-            String downloadData = "";
+            StringBuilder downloadData = new StringBuilder();
             for (Media m : missingMedia) {
-                downloadData += "<li><a href='" + m.getDownloadUrl() + "'>" + m.getFilename() + "</a></li>";
+                downloadData.append("<li><a href='" + m.getDownloadUrl() + "'>" + m.getFilename() + "</a></li>");
             }
-            html = html.replace("##download_files##", downloadData);
+            html = html.replace("##download_files##", downloadData.toString());
 
             File file = new File(Environment.getExternalStorageDirectory(), filename);
             f = new FileOutputStream(file);
@@ -442,7 +442,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     }
 
     private void downloadMedia(Media mediaToDownload, DownloadMode mode) {
-        if (!ConnectionUtils.isOnWifi(DownloadMediaActivity.this) && !DownloadMediaActivity.this.prefs.getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, false)) {
+        if (!ConnectionUtils.isOnWifi(DownloadMediaActivity.this) && !DownloadMediaActivity.this.sharedPreferences.getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, false)) {
             UIUtils.showAlert(DownloadMediaActivity.this, R.string.warning, R.string.warning_wifi_required);
             return;
         }
@@ -506,7 +506,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         anim.setDuration(900);
         missingMediaContainer.startAnimation(anim);
 
-        missingMediaContainer.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        missingMediaContainer.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ValueAnimator animator = ValueAnimator.ofInt(0, missingMediaContainer.getMeasuredHeight());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             //@Override
@@ -525,7 +525,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         anim.setDuration(900);
         missingMediaContainer.startAnimation(anim);
 
-        missingMediaContainer.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        missingMediaContainer.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ValueAnimator animator = ValueAnimator.ofInt(missingMediaContainer.getMeasuredHeight(), 0);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             //@Override

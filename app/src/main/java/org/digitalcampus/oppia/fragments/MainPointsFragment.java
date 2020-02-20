@@ -18,7 +18,7 @@ public class MainPointsFragment extends TabsFragment {
     }
 
     public MainPointsFragment() {
-
+        // do nothing
     }
 
     @Override

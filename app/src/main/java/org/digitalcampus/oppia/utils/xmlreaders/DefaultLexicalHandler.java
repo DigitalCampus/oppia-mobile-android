@@ -34,17 +34,31 @@ class DefaultLexicalHandler extends DefaultHandler implements LexicalHandler {
         chars.append(ch, start, length);
     }
 
-    public void comment(char[] aArg0, int aArg1, int aArg2) throws SAXException {}
+    public void comment(char[] aArg0, int aArg1, int aArg2) throws SAXException {
+        // do nothing
+    }
     
-    public void endCDATA() throws SAXException {}
+    public void endCDATA() throws SAXException {
+        // do nothing
+    }
     
-    public void endDTD() throws SAXException {}
+    public void endDTD() throws SAXException {
+        // do nothing
+    }
     
-    public void endEntity(String aName) throws SAXException {}
+    public void endEntity(String aName) throws SAXException {
+        // do nothing
+    }
     
-    public void startCDATA() throws SAXException {}
+    public void startCDATA() throws SAXException {
+        // do nothing
+    }
     
-    public void startDTD(String aArg0, String aArg1, String aArg2) throws SAXException {}
+    public void startDTD(String aArg0, String aArg1, String aArg2) throws SAXException {
+        // do nothing
+    }
     
-    public void startEntity(String aName) throws SAXException {}
+    public void startEntity(String aName) throws SAXException {
+        // do nothing
+    }
 }

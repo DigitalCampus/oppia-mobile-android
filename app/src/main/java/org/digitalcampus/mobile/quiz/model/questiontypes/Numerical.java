@@ -19,8 +19,6 @@ package org.digitalcampus.mobile.quiz.model.questiontypes;
 
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
@@ -41,36 +39,11 @@ public class Numerical extends QuizQuestion implements Serializable {
         for (String a : this.userResponses) {
             try {
                 userAnswer = Float.parseFloat(a);
-            } catch (NumberFormatException nfe) {
-                Log.d(TAG, "Response given is not recognised as a number", nfe);
-                Mint.logException(nfe);
+            } catch (NumberFormatException|NullPointerException e) {
+                Log.d(TAG, "Response given is not recognised as a number", e);
             }
         }
-        float score = 0;
-        if (userAnswer != null) {
-            float currMax = 0;
-            // loop through the valid answers and check against these
-            for (Response r : responseOptions) {
-                try {
-                    Float respNumber = Float.parseFloat(r.getTitle(lang));
-                    Float tolerance = (float) 0.0;
-                    if(r.getProp(Quiz.JSON_PROPERTY_TOLERANCE) != null){
-                        tolerance = Float.parseFloat(r.getProp(Quiz.JSON_PROPERTY_TOLERANCE));
-                    }
-
-                    if ((respNumber - tolerance <= userAnswer) && (userAnswer <= respNumber + tolerance) && (r.getScore() > currMax)) {
-                        score = r.getScore();
-                        currMax = r.getScore();
-                        if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))) {
-                            this.feedback = r.getFeedback(lang);
-                        }
-                    }
-                } catch (NumberFormatException nfe) {
-                    Log.d(TAG, "Response option is not recognised as a number", nfe);
-                    Mint.logException(nfe);
-                }
-            }
-        }
+        float score = calculateScoreWithTolerance(lang, userAnswer);
 
         if (score == 0){
             for (Response r : responseOptions){
@@ -88,17 +61,37 @@ public class Numerical extends QuizQuestion implements Serializable {
         }
     }
 
+    private float calculateScoreWithTolerance(String lang, Float userAnswer){
+        float score = 0;
+        if (userAnswer != null) {
+            float currMax = 0;
+            // loop through the valid answers and check against these
+            for (Response r : responseOptions) {
+                try {
+                    Float respNumber = Float.parseFloat(r.getTitle(lang));
+                    Float tolerance = r.getTolerance();
+
+                    if ((respNumber - tolerance <= userAnswer) && (userAnswer <= respNumber + tolerance) && (r.getScore() > currMax)) {
+                        score = r.getScore();
+                        currMax = r.getScore();
+                        if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))) {
+                            this.feedback = r.getFeedback(lang);
+                        }
+                    }
+                } catch (NumberFormatException nfe) {
+                    Log.d(TAG, "Response option is not recognised as a number", nfe);
+                }
+            }
+        }
+        return score;
+    }
+
     @Override
     public String getFeedback(String lang) {
         // reset feedback back to nothing
         this.feedback = "";
         this.mark(lang);
         return this.feedback;
-    }
-
-    @Override
-    public int getMaxScore() {
-        return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
     }
 
     @Override
@@ -112,7 +105,6 @@ public class Numerical extends QuizQuestion implements Serializable {
             }
         } catch (JSONException jsone) {
             Log.d(TAG,"Error creating json object", jsone);
-            Mint.logException(jsone);
         }
         return jo;
     }

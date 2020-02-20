@@ -287,6 +287,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
                     sendTransferProgress.setVisibility(View.GONE);
                 startBluetooth();
                 break;
+            default:
+                // do nothing
         }
 
     }
@@ -426,7 +428,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     @Override
     public void onTransferComplete(CourseTransferableFile file) {
 
-        if (BluetoothTransferService.getTasksTransferring().size() == 0){
+        if (BluetoothTransferService.getTasksTransferring().isEmpty()){
             sendTransferProgress.setVisibility(View.GONE);
             pendingSize.setVisibility(View.GONE);
             pendingFiles.setVisibility(View.GONE);
@@ -463,9 +465,14 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     }
 
     @Override
-    public void downloadComplete(Payload p) { }
+    public void downloadComplete(Payload p) {
+        // do nothing
+    }
+
     @Override
-    public void downloadProgressUpdate(DownloadProgress dp) { }
+    public void downloadProgressUpdate(DownloadProgress dp) {
+        // do nothing
+    }
 
     @Override
     public void installComplete(Payload p) {
@@ -531,7 +538,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             pendingProgress += pendingFile.getFileSize();
         }
         pendingProgress = Math.max(0, pendingProgress - progress);
-        if ((pending.size() == 0) || (pendingProgress == 0)){
+        if (pending.isEmpty() || pendingProgress == 0){
             sendTransferProgress.setVisibility(View.GONE);
             pendingFiles.setVisibility(View.GONE);
             pendingSize.setVisibility(View.GONE);
@@ -547,7 +554,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             pendingSize.setText(FileUtils.readableFileSize(pendingProgress));
         }
 
-        if ((pending.size() == 0) && (pendingProgress == 0)){
+        if (pending.isEmpty() && pendingProgress == 0){
             //If we are sending and there are no transfers left, show the complete toast
             Toast.makeText(this, R.string.bluetooth_all_transfers_complete, Toast.LENGTH_LONG).show();
         }
@@ -587,6 +594,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
                             Toast.LENGTH_SHORT).show();
                     this.finish();
                 }
+            default:
+                // do nothing
         }
     }
 
@@ -616,10 +625,14 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     }
 
     @Override
-    public void onTabUnselected(TabLayout.Tab tab) { }
+    public void onTabUnselected(TabLayout.Tab tab) {
+        // do nothing
+    }
 
     @Override
-    public void onTabReselected(TabLayout.Tab tab) { }
+    public void onTabReselected(TabLayout.Tab tab) {
+        // do nothing
+    }
 
 
 
@@ -656,6 +669,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
                     Toast.makeText(self, msg.getData().getString(BluetoothConnectionManager.TOAST),
                             Toast.LENGTH_SHORT).show();
                     break;
+                default:
+                    // do nothing
             }
         }
     }
@@ -688,6 +703,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             case android.R.id.home:
                 this.onBackPressed();
                 break;
+            default:
+                // do nothing
         }
 
         return super.onOptionsItemSelected(item);

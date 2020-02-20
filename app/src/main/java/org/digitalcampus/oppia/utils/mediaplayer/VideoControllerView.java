@@ -676,6 +676,8 @@ public class VideoControllerView extends FrameLayout {
                         sendMessageDelayed(msg, 1000l - ((long)pos % 1000l));
                     }
                     break;
+                default:
+                    // do nothing
             }
         }
     }

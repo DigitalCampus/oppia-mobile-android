@@ -1,0 +1,59 @@
+{
+  "id": 3492,
+  "title": {
+    "en": "Numeric - close-allowed no feedback"
+  },
+  "description": {
+    "en": ""
+  },
+  "props": {
+    "digest": "910e1359ec38ff6aa94f950150f53433521cr0s2p80m0",
+    "courseversion": "20200217172707",
+    "showfeedback": 2,
+    "passthreshold": 80,
+    "maxattempts": 0,
+    "maxscore": 1
+  },
+  "questions": [
+    {
+      "order": 1,
+      "id": 36133,
+      "question": {
+        "id": 19772,
+        "type": "numerical",
+        "title": {
+          "en": "How high in metres is Everest?"
+        },
+        "props": {
+          "maxscore": 1
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 103338,
+            "props": {
+              "id": 587,
+              "tolerance": "0"
+            },
+            "title": {
+              "en": "8848"
+            },
+            "score": "1.0000"
+          },
+          {
+            "order": 2,
+            "id": 103339,
+            "props": {
+              "id": 844,
+              "tolerance": "50"
+            },
+            "title": {
+              "en": "8848"
+            },
+            "score": "0.6000"
+          }
+        ]
+      }
+    }
+  ]
+}

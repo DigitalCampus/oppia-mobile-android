@@ -28,7 +28,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class DragAndDrop extends QuizQuestion implements Serializable {
 
@@ -48,13 +47,25 @@ public class DragAndDrop extends QuizQuestion implements Serializable {
             }
         }
         // if not all the drops where filled, mark as failed
-        if (userResponses.size() < dropzones){
+        if (userResponses.size() < dropzones) {
             userscore = 0;
             return;
         }
 
-        // loop through the responses
-        // find whichever are set as selected and add up the responses
+        if (!determineIfPassed()){
+            userscore = 0;
+        }
+        else if(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE) != null){
+            userscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
+        }
+        else{
+            userscore = 1;
+        }
+    }
+
+    // loop through the responses
+    // find whichever are set as selected and add up the responses
+    private boolean determineIfPassed(){
         boolean passed = true;
         for (Response r : this.responseOptions){
             if (r.getProp("xleft") == null || r.getProp("ytop") == null){
@@ -73,24 +84,7 @@ public class DragAndDrop extends QuizQuestion implements Serializable {
                 }
             }
         }
-
-        if (!passed){
-            userscore = 0;
-        }
-        else if(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE) != null){
-            userscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
-        }
-        else{
-            userscore = 1;
-        }
-    }
-
-    @Override
-    public void setUserResponses(List<String> str) {
-        if (!str.equals(this.userResponses)){
-            this.setFeedbackDisplayed(false);
-        }
-        this.userResponses = str;
+        return passed;
     }
 
     @Override
@@ -99,11 +93,6 @@ public class DragAndDrop extends QuizQuestion implements Serializable {
         this.feedback = "";
         this.mark(lang);
         return this.feedback;
-    }
-
-    @Override
-    public int getMaxScore() {
-        return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
     }
 
     @Override

@@ -52,6 +52,8 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
                     int progress = Integer.parseInt(intent.getStringExtra(DownloadService.SERVICE_MESSAGE));
                     mediaListener.onDownloadProgress(fileUrl, progress);
                     break;
+                default:
+                    // do nothing
             }
         }
 

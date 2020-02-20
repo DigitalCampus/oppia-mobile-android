@@ -77,7 +77,7 @@ public class AppModule {
     }
 
     @Provides
-    public ArrayList<Badges> provideBadgesList(){
+    public List<Badges> provideBadgesList(){
         return new ArrayList<>();
     }
 

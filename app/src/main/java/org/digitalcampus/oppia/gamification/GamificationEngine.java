@@ -22,7 +22,6 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
-import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.model.Activity;
@@ -73,12 +72,11 @@ public class GamificationEngine {
         return defaultGamification.getEvent(event);
     }
 
-    private String getMediaCompletionCriteriaFromHierarchy(Course course, Activity activity){
-
+    private String getMediaCompletionCriteriaFromHierarchy(){
         return Gamification.DEFAULT_MEDIA_CRITERIA;
     }
 
-    private int getMediaCompletionThresholdFromHierarchy(Course course, Activity activity) {
+    private int getMediaCompletionThresholdFromHierarchy() {
         return Gamification.DEFAULT_MEDIA_THRESHOLD;
     }
 
@@ -107,7 +105,7 @@ public class GamificationEngine {
         return Gamification.GAMIFICATION_REGISTER;
     }
 
-    public GamificationEvent processEventQuizAttempt(Course course, Activity activity, Quiz quiz, float scorePercent){
+    public GamificationEvent processEventQuizAttempt(Course course, Activity activity, float scorePercent){
         int totalPoints = 0;
         DbHelper db = DbHelper.getInstance(this.ctx);
 
@@ -166,11 +164,11 @@ public class GamificationEngine {
         Media m = activity.getMedia(mediaFileName);
         if (m != null) {
             try {
-                String criteria = getMediaCompletionCriteriaFromHierarchy(course, activity);
+                String criteria = getMediaCompletionCriteriaFromHierarchy();
                 Log.d(TAG, "Video criteria: " + criteria);
                 if (criteria.equals(Gamification.MEDIA_CRITERIA_THRESHOLD)){
 
-                    int threshold = getMediaCompletionThresholdFromHierarchy(course, activity);
+                    int threshold = getMediaCompletionThresholdFromHierarchy();
                     Log.d(TAG, "Threshold: " + threshold);
                     if ((timeTaken * 100 / m.getLength()) > threshold){
                         completed = true;

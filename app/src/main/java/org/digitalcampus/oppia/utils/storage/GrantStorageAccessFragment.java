@@ -98,7 +98,9 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
 
     public static class InfoDialog extends DialogFragment implements View.OnClickListener {
 
-        public InfoDialog(){ }
+        public InfoDialog(){
+            // do nothing
+        }
 
         private ListInnerBtnOnClickListener listener;
         public void setListener(ListInnerBtnOnClickListener listener){
@@ -107,8 +109,7 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
         private boolean intentSent = false;
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-        {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             View view = inflater.inflate(R.layout.dialog_lollipop_storage_access, container, false);
             Button acceptButton = view.findViewById(R.id.acceptBtn);
@@ -118,8 +119,8 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
             return view;
         }
 
-        public void onResume()
-        {
+        @Override
+        public void onResume() {
             Window window = getDialog().getWindow();
             final WindowManager.LayoutParams attrs = window.getAttributes();
 

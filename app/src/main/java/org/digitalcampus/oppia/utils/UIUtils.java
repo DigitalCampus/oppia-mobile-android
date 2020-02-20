@@ -48,6 +48,7 @@ import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
@@ -55,6 +56,10 @@ public class UIUtils {
 
     public static final String TAG = UIUtils.class.getSimpleName();
     private static int pointsToSubstractForAnimationSaved;
+
+    private UIUtils() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * Displays the users points and badges scores in the app header
@@ -295,7 +300,7 @@ public class UIUtils {
      * @param prefs
      * @param funct
      */
-    public static void createLanguageDialog(Context ctx, ArrayList<Lang> langs, final SharedPreferences prefs, final Callable<Boolean> funct) {
+    public static void createLanguageDialog(Context ctx, List<Lang> langs, final SharedPreferences prefs, final Callable<Boolean> funct) {
         ArrayList<String> langStringList = new ArrayList<>();
         final ArrayList<Lang> languagesList = new ArrayList<>();
 
@@ -303,7 +308,7 @@ public class UIUtils {
         for (Lang lang : langs) {
             boolean found = false;
             for (Lang ln : languagesList) {
-                if (ln.getLang().equals(lang.getLang())) {
+                if (ln.getLanguage().equals(lang.getLanguage())) {
                     found = true;
                     break;
                 }
@@ -318,10 +323,10 @@ public class UIUtils {
 
         String prefLanguage = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         for (Lang lang : languagesList) {
-            Locale locale = new Locale(lang.getLang());
+            Locale locale = new Locale(lang.getLanguage());
             String langDisp = locale.getDisplayLanguage(locale);
             langStringList.add(langDisp);
-            if (lang.getLang().equals(prefLanguage)) {
+            if (lang.getLanguage().equals(prefLanguage)) {
                 prefLangPosition = i;
             }
             i++;
@@ -333,7 +338,7 @@ public class UIUtils {
             AlertDialog mAlertDialog = new AlertDialog.Builder(ctx)
                     .setSingleChoiceItems(arr, prefLangPosition, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            String newLang = languagesList.get(whichButton).getLang();
+                            String newLang = languagesList.get(whichButton).getLanguage();
                             Editor editor = prefs.edit();
                             editor.putString(PrefsActivity.PREF_LANGUAGE, newLang);
                             editor.apply();

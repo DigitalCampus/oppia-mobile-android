@@ -284,10 +284,6 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                 trackerServiceListener.trackerComplete(p.isResult(), p.getResultResponse(), failures);
             }
         }
-        // reset submittask back to null after completion - so next call can run properly
-//        MobileLearning app = (MobileLearning) ctx.getApplicationContext();
-//        app.omSubmitTrackerMultipleTask = null;
-
     }
 
     public void setTrackerServiceListener(TrackerServiceListener tsl) {

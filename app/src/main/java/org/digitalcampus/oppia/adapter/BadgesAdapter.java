@@ -14,7 +14,7 @@ import org.digitalcampus.oppia.model.Badges;
 
 import java.util.List;
 
-public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.ViewHolder> {
+public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.BadgesViewHolder> {
 
 
     private List<Badges> badges;
@@ -26,17 +26,17 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.ViewHolder
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BadgesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_fragment_badges_list, parent, false);
 
         // Return a new holder instance
-        return new ViewHolder(contactView);
+        return new BadgesViewHolder(contactView);
     }
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final BadgesViewHolder viewHolder, final int position) {
 
         final Badges b = getItemAtPosition(position);
 
@@ -55,20 +55,17 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.ViewHolder
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class BadgesViewHolder extends RecyclerView.ViewHolder {
 
-        public View rootView;
         private TextView badgeDescription;
         private TextView badgeDate;
 
-        public ViewHolder(View itemView) {
+        public BadgesViewHolder(View itemView) {
 
             super(itemView);
 
             badgeDescription = itemView.findViewById(R.id.badges_description);
             badgeDate = itemView.findViewById(R.id.badges_date);
-
-            rootView = itemView;
         }
     }
 

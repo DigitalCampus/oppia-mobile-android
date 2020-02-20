@@ -213,7 +213,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 
     @Override
     public void onLeaderboardImportProgress(String message) {
-
+        // do nothing
     }
 
     @Override

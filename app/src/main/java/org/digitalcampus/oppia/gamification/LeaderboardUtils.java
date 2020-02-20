@@ -22,6 +22,10 @@ public class LeaderboardUtils {
 
     public static final String TAG = LeaderboardUtils.class.getSimpleName();
 
+    private LeaderboardUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static int importLeaderboardJSON(Context ctx, String json) throws JSONException, ParseException, WrongServerException {
 
         DbHelper db = DbHelper.getInstance(ctx);

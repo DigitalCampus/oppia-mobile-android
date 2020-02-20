@@ -7,6 +7,10 @@ import org.joda.time.DateTime;
 
 public class TimestampConverter {
 
+    private TimestampConverter() {
+        throw new IllegalStateException("Utility class");
+    }
+
     @TypeConverter
     public static DateTime fromTimestamp(String value) {
         try {

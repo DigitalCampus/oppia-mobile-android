@@ -19,15 +19,12 @@ package org.digitalcampus.mobile.quiz.model.questiontypes;
 
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class MultiChoice extends QuizQuestion implements Serializable  {
 
@@ -35,24 +32,11 @@ public class MultiChoice extends QuizQuestion implements Serializable  {
     public static final String TAG = MultiChoice.class.getSimpleName();
 
     @Override
-    public void setUserResponses(List<String> str) {
-        if (!str.equals(this.userResponses)){
-            this.setFeedbackDisplayed(false);
-        }
-        this.userResponses = str;
-    }
-
-    @Override
     public String getFeedback(String lang) {
         // reset feedback back to nothing
         this.feedback = "";
         this.mark(lang);
         return this.feedback;
-    }
-
-    @Override
-    public int getMaxScore() {
-        return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
     }
 
     @Override
@@ -65,7 +49,6 @@ public class MultiChoice extends QuizQuestion implements Serializable  {
                 jo.put(Quiz.JSON_PROPERTY_TEXT, "");
             } catch (JSONException jsone) {
                 Log.d(TAG,"Error creating json object", jsone);
-                Mint.logException(jsone);
             }
             return jo;
         }
@@ -77,7 +60,6 @@ public class MultiChoice extends QuizQuestion implements Serializable  {
                 jo.put(Quiz.JSON_PROPERTY_TEXT, ur);
             } catch (JSONException jsone) {
                 Log.d(TAG,"Error creating json object", jsone);
-                Mint.logException(jsone);
             }
         }
         return jo;

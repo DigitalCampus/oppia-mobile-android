@@ -38,16 +38,19 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 public class BadgesFragment extends AppFragment implements APIRequestListener {
 
+	private static final String STR_JSON_OBJECTS = "objects";
+
 	private JSONObject json;
     private BadgesAdapter adapterBadges;
 
-	@Inject ArrayList<Badges> badges;
+	@Inject
+	List<Badges> badges;
 	
 	public static BadgesFragment newInstance() {
 	    return new BadgesFragment();
@@ -91,12 +94,12 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 			this.getView().findViewById(R.id.loading_badges).setVisibility(View.GONE);
 			this.getView().findViewById(R.id.error_state).setVisibility(View.GONE);
 
-			if(json.getJSONArray("objects").length() == 0){
+			if(json.getJSONArray(STR_JSON_OBJECTS).length() == 0){
 				this.getView().findViewById(R.id.empty_state).setVisibility(View.VISIBLE);
 				return;
 			}
-			for (int i = 0; i < (json.getJSONArray("objects").length()); i++) {
-				JSONObject jsonObj = (JSONObject) json.getJSONArray("objects").get(i);
+			for (int i = 0; i < (json.getJSONArray(STR_JSON_OBJECTS).length()); i++) {
+				JSONObject jsonObj = (JSONObject) json.getJSONArray(STR_JSON_OBJECTS).get(i);
 				Badges b = new Badges();
 				b.setDescription(jsonObj.getString("description"));
 				b.setDateTime(jsonObj.getString("award_date"));

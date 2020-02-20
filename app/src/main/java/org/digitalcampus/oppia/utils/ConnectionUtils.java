@@ -8,14 +8,14 @@ public class ConnectionUtils {
 
 	public static final String TAG = ConnectionUtils.class.getSimpleName();
 
+	private ConnectionUtils() {
+		throw new IllegalStateException("Utility class");
+	}
+
 	public static boolean isOnWifi(Context ctx) {
 		ConnectivityManager conMan = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = conMan.getActiveNetworkInfo();
-		if (netInfo == null || netInfo.getType() != ConnectivityManager.TYPE_WIFI) {
-			return false;
-		} else {
-			return true;
-		}
+		return (netInfo == null || netInfo.getType() != ConnectivityManager.TYPE_WIFI);
 	}
 
 	public static boolean isNetworkConnected(Context context) {

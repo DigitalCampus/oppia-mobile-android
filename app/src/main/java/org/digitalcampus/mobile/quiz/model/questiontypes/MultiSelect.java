@@ -19,8 +19,6 @@ package org.digitalcampus.mobile.quiz.model.questiontypes;
 
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import java.io.Serializable;
 
 import org.digitalcampus.mobile.quiz.Quiz;
@@ -39,19 +37,7 @@ public class MultiSelect extends QuizQuestion implements Serializable {
         // loop through the responses
         // find whichever are set as selected and add up the responses
 
-        float total = 0;
-
-        for (Response r : responseOptions){
-            for (String ur : userResponses) {
-                if (ur.equals(r.getTitle(lang))) {
-                    total += r.getScore();
-                    if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
-                        this.feedback += ur + ": " + r.getFeedback(lang) + "\n\n";
-                    }
-                }
-            }
-
-        }
+        float total = setFeedback(lang);
 
         // fix marking so that if one of the incorrect scores is selected final mark is 0
         for (Response r : responseOptions){
@@ -69,6 +55,26 @@ public class MultiSelect extends QuizQuestion implements Serializable {
         }
     }
 
+    private float setFeedback(String lang){
+        float total = 0;
+        StringBuilder questionFeedback = new StringBuilder();
+        for (Response r : responseOptions){
+            for (String ur : userResponses) {
+                if (ur.equals(r.getTitle(lang))) {
+                    total += r.getScore();
+                    if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
+                        questionFeedback.append(ur);
+                        questionFeedback.append(": ");
+                        questionFeedback.append(r.getFeedback(lang));
+                        questionFeedback.append("\n\n");
+                    }
+                }
+            }
+        }
+        this.feedback = questionFeedback.toString();
+        return total;
+    }
+
     @Override
     public String getFeedback(String lang) {
         // reset feedback back to nothing
@@ -78,24 +84,19 @@ public class MultiSelect extends QuizQuestion implements Serializable {
     }
 
     @Override
-    public int getMaxScore() {
-        return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
-    }
-
-    @Override
     public JSONObject responsesToJSON() {
         JSONObject jo = new JSONObject();
         try {
             jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
             jo.put(Quiz.JSON_PROPERTY_SCORE,userscore);
-            String qrtext = "";
+            StringBuilder qrtext = new StringBuilder();
             for(String ur: userResponses ){
-                qrtext += ur + Quiz.RESPONSE_SEPARATOR;
+                qrtext.append(ur);
+                qrtext.append(Quiz.RESPONSE_SEPARATOR);
             }
-            jo.put(Quiz.JSON_PROPERTY_TEXT, qrtext);
+            jo.put(Quiz.JSON_PROPERTY_TEXT, qrtext.toString());
         } catch (JSONException jsone) {
             Log.d(TAG,"Error creating json object", jsone);
-            Mint.logException(jsone);
         }
         return jo;
     }

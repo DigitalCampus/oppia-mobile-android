@@ -31,7 +31,7 @@ public class MultiChoiceHelper {
      * A handy ViewHolder base class which works with the MultiChoiceHelper
      * and reproduces the default behavior of a ListView.
      */
-    public static abstract class ViewHolder extends RecyclerView.ViewHolder {
+    public abstract static class ViewHolder extends RecyclerView.ViewHolder {
 
         View.OnClickListener clickListener;
         MultiChoiceHelper multiChoiceHelper;
@@ -210,7 +210,7 @@ public class MultiChoiceHelper {
                 if (value) {
                     checkedIdStates.put(id, position);
                 } else {
-                    checkedIdStates.delete(id);
+                    checkedIdStates.remove(id);
                 }
             }
 
@@ -394,7 +394,7 @@ public class MultiChoiceHelper {
                     }
 
                     if (!found) {
-                        checkedIdStates.delete(id);
+                        checkedIdStates.remove(id);
                         checkedIndex--;
                         checkedItemCount--;
                         checkedCountChanged = true;

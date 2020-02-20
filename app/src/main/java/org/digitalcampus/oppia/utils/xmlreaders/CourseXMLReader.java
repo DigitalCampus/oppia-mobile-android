@@ -40,7 +40,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -68,21 +68,32 @@ public class CourseXMLReader {
 
         if (courseXML.exists()) {
             try {
-                SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
+                SAXParserFactory parserFactory  = setupParser();
                 SAXParser parser = parserFactory.newSAXParser();
                 reader = parser.getXMLReader();
-
                 XMLSecurityHelper.makeParserSecure(reader);
 
-            } catch (ParserConfigurationException e) {
-                throw new InvalidXMLException(e);
-            } catch (SAXException e) {
+            } catch (ParserConfigurationException|SAXException e) {
                 throw new InvalidXMLException(e);
             }
         } else {
             Log.d(TAG, "course XML not found at: " + filename);
             throw new InvalidXMLException("Course XML not found at: " + filename);
         }
+    }
+
+    private SAXParserFactory setupParser(){
+        SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
+        try {
+            parserFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            parserFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            parserFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            parserFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            parserFactory.setXIncludeAware(false);
+        } catch (ParserConfigurationException|SAXException e) {
+            // This should catch a failed setFeature feature
+        }
+        return parserFactory;
     }
 
     public boolean parse(ParseMode parseMode) throws InvalidXMLException {
@@ -105,7 +116,7 @@ public class CourseXMLReader {
         return true;
     }
 
-    private void parseComplete() throws ParserConfigurationException, SAXException, IOException {
+    private void parseComplete() throws SAXException, IOException {
 
         DbHelper db = DbHelper.getInstance(ctx);
         long userId = db.getUserId(SessionManager.getUsername(ctx));
@@ -120,7 +131,7 @@ public class CourseXMLReader {
 
     private void parseMedia() throws ParserConfigurationException, SAXException, IOException {
         mediaParseHandler = new CourseMediaXMLHandler();
-        SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
+        SAXParserFactory parserFactory  = setupParser();
         SAXParser parser = parserFactory.newSAXParser();
         reader = parser.getXMLReader();
         reader.setContentHandler(mediaParseHandler);
@@ -153,8 +164,8 @@ public class CourseXMLReader {
         }
     }
 
-	public ArrayList<Media> getMedia() throws InvalidXMLException {
-        return (ArrayList<Media>) getMediaResponses().getCourseMedia();
+	public List<Media> getMedia() throws InvalidXMLException {
+        return getMediaResponses().getCourseMedia();
 	}
 
 }

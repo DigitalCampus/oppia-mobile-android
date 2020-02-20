@@ -148,6 +148,7 @@ public class PageWidget extends WidgetFactory {
 		});
 	}
 
+	@Override
 	public void setIsBaseline(boolean isBaseline) {
 		this.isBaseline = isBaseline;
 	}

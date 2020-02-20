@@ -158,6 +158,7 @@ public class UrlWidget extends WidgetFactory {
 
 	@Override
 	public void setWidgetConfig(HashMap<String, Object> config) {
+		// do nothing
 	}
 
 }

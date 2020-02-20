@@ -381,13 +381,13 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
             Points mockPoint = new Points();
             mockPoint.setDateTime(DateUtils.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
             int random = new Random().nextInt(70);
-            mockPoint.setPoints(random);
+            mockPoint.setPointsAwarded(random);
             mockPoint.setEvent(eventTypes[random % eventTypes.length]); // random event type
             mockPoint.setDescription("Description mock " + i);
 
             if (i % 13 == 0) {
                 // to add some days with 0 points
-                mockPoint.setPoints(0);
+                mockPoint.setPointsAwarded(0);
             }
 
             pointsMock.add(mockPoint);
@@ -396,7 +396,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
                 // to add some days with more than one number of points
                 Points mockPointExtra = new Points();
                 mockPointExtra.setDateTime(DateUtils.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
-                mockPointExtra.setPoints(new Random().nextInt(70));
+                mockPointExtra.setPointsAwarded(new Random().nextInt(70));
                 mockPointExtra.setEvent("Event extra " + i);
                 mockPointExtra.setDescription("Description extra " + i);
                 pointsMock.add(mockPointExtra);
@@ -417,12 +417,12 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
-
+        // do nothing
     }
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-
+        // do nothing
     }
 
     // Event types list

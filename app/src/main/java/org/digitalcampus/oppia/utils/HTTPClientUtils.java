@@ -49,6 +49,10 @@ public class HTTPClientUtils {
 
     private static OkHttpClient client;
 
+    private HTTPClientUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static OkHttpClient getClient(Context ctx) {
         if (client == null) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -63,7 +67,7 @@ public class HTTPClientUtils {
                     .hostnameVerifier(new HostnameVerifier() {
                         @Override
                         public boolean verify(String hostname, SSLSession session) {
-                            return true;
+                            return hostname.equalsIgnoreCase(session.getPeerHost());
                         }
                     })
                     .build();

@@ -53,7 +53,8 @@ public class NumericalWidget extends TextInputQuizWidget {
         hideOnFocusLoss(et);
 
 	}
-	
+
+	@Override
 	public List<String> getQuestionResponses(List<Response> responses){
 		EditText et = view.findViewById(R.id.responsetext);
 		if(et.getText().toString().trim().equals("")){

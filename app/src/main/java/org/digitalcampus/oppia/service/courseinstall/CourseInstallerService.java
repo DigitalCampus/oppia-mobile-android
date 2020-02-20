@@ -22,7 +22,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -37,8 +36,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -72,7 +71,7 @@ public class CourseInstallerService extends IntentService {
         currentInstance = instance;
     }
 
-    public static ArrayList<String> getTasksDownloading(){
+    public static List<String> getTasksDownloading(){
         if (currentInstance != null){
             synchronized (currentInstance){
                 return currentInstance.tasksDownloading;
@@ -81,7 +80,7 @@ public class CourseInstallerService extends IntentService {
         return new ArrayList<>();
     }
 
-    public CourseInstallerService(ApiEndpoint api) {
+    public CourseInstallerService() {
         super(TAG);
     }
 
@@ -152,8 +151,7 @@ public class CourseInstallerService extends IntentService {
 
                     @Override
                     public void onFail(String message) {
-                        sendBroadcast(fileUrl, ACTION_FAILED, message);
-                        removeDownloading(fileUrl);
+                        onError(message);
                     }
 
                     @Override
@@ -292,10 +290,6 @@ public class CourseInstallerService extends IntentService {
             in.close();
             f.flush();
         } catch (MalformedURLException e) {
-            logAndNotifyError(fileUrl, e);
-            return false;
-        } catch (ProtocolException e) {
-            FileUtils.deleteFile(downloadedFile);
             logAndNotifyError(fileUrl, e);
             return false;
         } catch (IOException e) {

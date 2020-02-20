@@ -60,7 +60,7 @@ public class Quiz implements Serializable {
 
     public static final int SHOW_FEEDBACK_ALWAYS = 1;
     public static final int SHOW_FEEDBACK_NEVER = 0;
-    public static final int SHOW_FEEDBACK_ATEND = 2;
+    public static final int SHOW_FEEDBACK_AT_END = 2;
 
     public static final int QUIZ_DEFAULT_PASS_THRESHOLD = 99; // use 99 rather than 100 in case of rounding
     public static final int QUIZ_QUESTION_PASS_THRESHOLD = 99; // use 99 rather than 100 in case of rounding
@@ -91,7 +91,6 @@ public class Quiz implements Serializable {
     private HashMap<String,String> title = new HashMap<>();
     private String url;
     private float maxscore;
-    private boolean checked;
     private int currentq = 0;
     private int maxattempts;
     private float userscore;
@@ -119,7 +118,7 @@ public class Quiz implements Serializable {
         this.defaultLang = defaultLang;
         try {
             JSONObject json = new JSONObject(quiz);
-            this.id = json.getInt(JSON_PROPERTY_ID);
+            this.setID(json.getInt(JSON_PROPERTY_ID));
 
             if (json.get(JSON_PROPERTY_TITLE) instanceof JSONObject){
                 JSONObject titleLangs = json.getJSONObject(JSON_PROPERTY_TITLE);
@@ -137,7 +136,7 @@ public class Quiz implements Serializable {
             }
             this.propsSerialized = json.get(JSON_PROPERTY_PROPS).toString();
             this.maxscore = propsSerializedGetInt(JSON_PROPERTY_MAXSCORE,0);
-            this.maxattempts = propsSerializedGetInt(JSON_PROPERTY_MAXATTEMPTS, -1);
+            this.setMaxAttempts(propsSerializedGetInt(JSON_PROPERTY_MAXATTEMPTS, -1));
             int randomSelect = propsSerializedGetInt(JSON_PROPERTY_RANDOMSELECT,0);
 
             // add questions
@@ -328,7 +327,7 @@ public class Quiz implements Serializable {
         return this.id;
     }
 
-    public void setID(int id) {
+    private void setID(int id) {
         this.id = id;
     }
 
@@ -352,14 +351,6 @@ public class Quiz implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public boolean isChecked() {
-        return checked;
-    }
-
-    public void setChecked(boolean checked) {
-        this.checked = checked;
     }
 
     public int getCurrentQuestionNo() {
@@ -445,10 +436,6 @@ public class Quiz implements Serializable {
         return propsSerializedGetInt("availability",AVAILABILITY_ALWAYS);
     }
 
-    public boolean isAllowTryAgain(){
-        return propsSerializedGetBoolean("allowtryagain",true);
-    }
-
     private int propsSerializedGetInt(String key, int defaultValue){
         try {
             JSONObject json = new JSONObject(propsSerialized);
@@ -459,18 +446,7 @@ public class Quiz implements Serializable {
         return defaultValue;
     }
 
-    private boolean propsSerializedGetBoolean(String key, boolean defaultValue){
-        try {
-            JSONObject json = new JSONObject(propsSerialized);
-            return json.getBoolean(key);
-        } catch (JSONException jsone) {
-            Log.d(TAG, "Error getting boolean from propsSerialized", jsone);
-            Mint.logException(jsone);
-        }
-        return defaultValue;
-    }
-
-    public  int getMaxAttempts() { return maxattempts; }
+    public int getMaxAttempts() { return maxattempts; }
     public boolean limitAttempts(){ return maxattempts > 0; }
-    public void setMaxAttempts(int maxAttempts) { this.maxattempts = maxAttempts; }
+    private void setMaxAttempts(int maxAttempts) { this.maxattempts = maxAttempts; }
 }

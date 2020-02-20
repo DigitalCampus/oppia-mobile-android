@@ -1,0 +1,65 @@
+{
+  "id": 3485,
+  "title": {
+    "en": "Multi choice - no feedback"
+  },
+  "description": {
+    "en": ""
+  },
+  "props": {
+    "digest": "309bffc8b8b5b6dce24894cc7d8ce0d8514cr0s2p80m0",
+    "courseversion": "20200216122601",
+    "showfeedback": 2,
+    "passthreshold": 80,
+    "maxattempts": 0,
+    "maxscore": 1
+  },
+  "questions": [
+    {
+      "order": 1,
+      "id": 36122,
+      "question": {
+        "id": 19761,
+        "type": "multichoice",
+        "title": {
+          "en": "What is the capital of Germany?"
+        },
+        "props": {
+          "maxscore": 1,
+          "shuffleanswers": "1"
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 103310,
+            "props": {
+              "id": 229
+            },
+            "title": {
+              "en": "Berlin"
+            },
+            "score": "1.0000"
+          },
+          {
+            "order": 2,
+            "id": 103311,
+            "props": {
+              "id": 162
+            },
+            "title": {
+              "en": "Bonn"
+            },
+            "score": "0.0000"
+          },
+          {
+            "order": 3,
+            "id": 103312,
+            "props": nich"
+            },
+            "score": "0.0000"
+          }
+        ]
+      }
+    }
+  ]
+}

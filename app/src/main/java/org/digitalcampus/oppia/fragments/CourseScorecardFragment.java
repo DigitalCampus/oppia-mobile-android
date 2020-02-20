@@ -134,7 +134,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         
     	DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-        ArrayList<Activity> quizActs = db.getCourseQuizzes(course.getCourseId());
+        ArrayList<Activity> quizActs = (ArrayList<Activity>) db.getCourseQuizzes(course.getCourseId());
         ArrayList<QuizStats> quizzes = new ArrayList<>();
 
         String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
