@@ -49,7 +49,7 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 	protected Payload doInBackground(Payload... params) {
 
 		Payload payload = params[0];
-        ArrayList<Object> currentMedia = payload.getResponseData();
+        ArrayList<Object> currentMedia = (ArrayList<Object>) payload.getResponseData();
         ArrayList<String> downloadingMedia = (ArrayList<String>) DownloadService.getTasksDownloading();
 
         List<?> courseObjs = payload.getData();
