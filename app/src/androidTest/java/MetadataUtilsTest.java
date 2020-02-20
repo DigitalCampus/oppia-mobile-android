@@ -2,7 +2,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import org.digitalcampus.mobile.learning.test.BuildConfig;
+//import org.digitalcampus.mobile.learning.test.BuildConfig;
+import org.digitalcampus.mobile.learning.BuildConfig;
+
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONObject;
