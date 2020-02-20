@@ -35,6 +35,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -283,7 +284,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
+    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putSerializable(TAG, missingMedia);
     }
@@ -319,10 +320,10 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                     adapterMedia.sortByCourse();
                     isSortByCourse = true;
                 invalidateOptionsMenu();
+                }
                 return true;
-            }
             case R.id.menu_select_all:
-                for (int i = 0; i < recyclerMedia.getAdapter().getItemCount(); i++) {
+                for (int i = 0; i < adapterMedia.getItemCount(); i++) {
                     if (!multiChoiceHelper.isItemChecked(i)) {
                         multiChoiceHelper.setItemChecked(i, true, true);
                     }

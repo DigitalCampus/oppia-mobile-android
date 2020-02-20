@@ -35,6 +35,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -145,6 +146,16 @@ public class FileUtils {
         return true;
     }
 
+
+    public static String getDigestFromMessage(MessageDigest mDigest){
+        byte[] digest = mDigest.digest();
+        StringBuilder resultMD5 = new StringBuilder();
+
+        for (byte aDigest : digest) {
+            resultMD5.append(Integer.toString((aDigest & 0xff) + 0x100, 16).substring(1));
+        }
+        return resultMD5.toString();
+    }
 
     public static boolean zipFileAtPath(File sourceFile, File zipDestination) {
         final int BUFFER = 2048;

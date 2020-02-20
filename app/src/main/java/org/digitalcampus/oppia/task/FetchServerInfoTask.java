@@ -29,6 +29,11 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
     private static final String SERVER_VERSION = "version";
     private static final String ERROR_MESSAGE = "errorMessage";
 
+    private static final String RESULT_TAG = "result";
+    private static final String RESULT_NOINTERNET = "noInternet";
+    private static final String RESULT_SUCCESS = "success";
+    private static final String RESULT_ERROR = "error";
+
     public interface FetchServerInfoListener{
         void onError(String message);
         void onValidServer(String version, String name);
@@ -60,7 +65,7 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
 
         if (!ConnectionUtils.isNetworkConnected(connectivityManager)){
             // If there is no connection available right now, we don't try to fetch info (to avoid setting a server as invalid)
-            result.put("result", "noInternet");
+            result.put(RESULT_TAG, RESULT_NOINTERNET);
             return result;
         }
 
@@ -76,7 +81,7 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
                 String serverVersion = json.getString(SERVER_VERSION);
                 String serverName = json.getString(SERVER_NAME);
 
-                result.put("result", "success");
+                result.put(RESULT_TAG, RESULT_SUCCESS);
                 result.put(SERVER_VERSION, serverVersion);
                 result.put(SERVER_NAME, serverName);
 
@@ -89,7 +94,7 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
                 validServer = true;
             }
             else{
-                result.put("result", "error");
+                result.put(RESULT_TAG, RESULT_ERROR);
                 switch (response.code()) {
                     case 401:
                     case 403: // unauthorised
@@ -100,13 +105,13 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
                 }
             }
         } catch (IOException e) {
-            result.put("result", "error");
+            result.put(RESULT_TAG, RESULT_ERROR);
             result.put(ERROR_MESSAGE, e.getMessage());
             Log.e(TAG, "doInBackground: ", e);
             return result;
 
         } catch (JSONException e) {
-            result.put("result", "error");
+            result.put(RESULT_TAG, RESULT_ERROR);
             result.put(ERROR_MESSAGE, ctx.getString(R.string.error_processing_response));
             Log.e(TAG, "doInBackground: ", e);
         }
@@ -125,15 +130,15 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
     protected void onPostExecute(HashMap<String, String> r) {
         super.onPostExecute(r);
         if (listener != null){
-            String result = r.get("result");
+            String result = r.get(RESULT_TAG);
             Log.d(TAG, result);
-            if ("noInternet".equals(result)){
+            if (RESULT_NOINTERNET.equals(result)){
                 listener.onUnchecked();
             }
-            if ("success".equals(result)){
+            if (RESULT_SUCCESS.equals(result)){
                 listener.onValidServer(r.get(SERVER_VERSION), r.get(SERVER_NAME));
             }
-            else if (("error".equals(result))){
+            else if ((RESULT_ERROR.equals(result))){
                 listener.onError(r.get(ERROR_MESSAGE));
             }
         }

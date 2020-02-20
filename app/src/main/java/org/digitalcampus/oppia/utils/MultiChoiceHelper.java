@@ -319,9 +319,12 @@ public class MultiChoiceHelper {
         public void writeToParcel(Parcel out, int flags) {
             out.writeInt(checkedItemCount);
             out.writeSparseBooleanArray(checkStates);
-            final int n = checkedIdStates != null ? checkedIdStates.size() : -1;
-            out.writeInt(n);
-            for (int i = 0; i < n; i++) {
+            if (checkedIdStates == null){
+                out.writeInt(-1);
+                return;
+            }
+            out.writeInt(checkedIdStates.size());
+            for (int i = 0; i < checkedIdStates.size(); i++) {
                 out.writeLong(checkedIdStates.keyAt(i));
                 out.writeInt(checkedIdStates.valueAt(i));
             }
@@ -345,7 +348,7 @@ public class MultiChoiceHelper {
         };
     }
 
-    void confirmCheckedPositions() {
+    private void confirmCheckedPositions() {
         if (checkedItemCount == 0) {
             return;
         }

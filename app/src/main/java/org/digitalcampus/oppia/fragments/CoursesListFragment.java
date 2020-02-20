@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,6 @@ import org.digitalcampus.oppia.listener.UpdateActivityListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
@@ -48,11 +48,9 @@ import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
 import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
-import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
@@ -76,7 +74,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     private InstallerBroadcastReceiver receiver;
 
     @Inject CoursesRepository coursesRepository;
-    @Inject SharedPreferences prefs;
+    @Inject SharedPreferences sharedPrefs;
     @Inject ApiEndpoint apiEndpoint;
     private LinearLayout llLoading;
     private TextView tvManageCourses;
@@ -106,11 +104,11 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         findViews(layout);
         getAppComponent().inject(this);
 
-        prefs.registerOnSharedPreferenceChangeListener(this);
+        sharedPrefs.registerOnSharedPreferenceChangeListener(this);
 
         // set preferred lang to the default lang
-        if ("".equals(prefs.getString(PrefsActivity.PREF_LANGUAGE, ""))) {
-            prefs.edit().putString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()).apply();
+        if ("".equals(sharedPrefs.getString(PrefsActivity.PREF_LANGUAGE, ""))) {
+            sharedPrefs.edit().putString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()).apply();
         }
 
         if (getResources().getBoolean(R.bool.is_tablet)) {
@@ -190,19 +188,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         });
     }
 
-    private void createLanguageDialog() {
-        ArrayList<Lang> langs = new ArrayList<>();
-        for(Course m: courses){ langs.addAll(m.getLangs()); }
-
-        UIUtils.createLanguageDialog(getActivity(), langs, prefs, new Callable<Boolean>() {
-            public Boolean call(){
-                onStart();
-                return true;
-            }
-        });
-    }
-
-
     // Recycler callbacks
     @Override
     public void onItemClick(int position) {
@@ -220,7 +205,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
             public void onPermissionGranted() {
                 tempCourse = courses.get(position);
                 if (itemId == R.id.course_context_delete) {
-                    if (prefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
+                    if (sharedPrefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
                         confirmCourseDelete();
                     } else {
                         Toast.makeText(getActivity(), getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
@@ -313,7 +298,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void scanMedia() {
 
-        if (Media.shouldScanMedia(prefs)){
+        if (Media.shouldScanMedia(sharedPrefs)){
             ScanMediaTask task = new ScanMediaTask(getActivity());
             Payload p = new Payload(this.courses);
             task.setScanMediaListener(this);
@@ -404,6 +389,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     /* CourseInstallerListener implementation */
     public void onInstallComplete(String fileUrl) {
         toast(R.string.install_complete);
+        Log.d(TAG, fileUrl + ": Installation complete.");
         displayCourses();
     }
 
