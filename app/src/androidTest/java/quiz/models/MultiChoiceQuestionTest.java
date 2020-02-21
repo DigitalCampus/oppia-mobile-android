@@ -45,7 +45,7 @@ public class MultiChoiceQuestionTest {
      */
     // correct answer
     @Test
-    public void test_correctNoFeedback()throws Exception {
+    public void test_correctNoFeedback() throws Exception {
         QuizQuestion quizQuestion = quizNoFeedback.getCurrentQuestion();
         assertTrue(quizQuestion instanceof MultiChoice);
 
