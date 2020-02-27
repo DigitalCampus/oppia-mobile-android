@@ -17,3 +17,4 @@ app/app-release.apk
 custom.properties
 sonarqube.properties
 projectFilesBackup/
+/sonarcloud
