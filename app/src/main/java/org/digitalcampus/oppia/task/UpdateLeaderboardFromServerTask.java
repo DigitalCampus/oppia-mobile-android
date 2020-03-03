@@ -39,7 +39,7 @@ public class UpdateLeaderboardFromServerTask extends APIRequestTask<Payload, Obj
 
         try {
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
-            Request request = createRequestWithUserAuth(apiEndpoint.getFullURL(ctx, Paths.LEADERBOARD_PATH));
+            Request request = createRequestBuilderWithUserAuth(apiEndpoint.getFullURL(ctx, Paths.LEADERBOARD_PATH)).build();
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
                 String json = response.body().string();
