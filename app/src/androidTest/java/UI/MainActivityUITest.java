@@ -23,6 +23,7 @@ import com.google.android.material.tabs.TabLayout;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
+import org.digitalcampus.oppia.activity.EditProfileActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.SearchActivity;
@@ -720,4 +721,15 @@ public class MainActivityUITest {
 
     }
 
+    @Test
+    public void showsEditProfileActivityOnMenuItemClick() throws Exception {
+
+        mainActivityTestRule.launchActivity(null);
+
+        openDrawer();
+        onView(withId(R.id.btn_expand_profile_options)).perform(click());
+        onView(withText(R.string.edit_profile)).perform(click());
+        checkCorrectActivity(EditProfileActivity.class);
+
+    }
 }

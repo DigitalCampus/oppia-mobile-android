@@ -31,6 +31,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
@@ -59,6 +60,7 @@ public class DrawerMenuManager {
 
     private NavigationView navigationView;
     private ActionBarDrawerToggle drawerToggle;
+    private DrawerLayout drawerLayout;
     private Map<Integer, MenuOption> customOptions = new HashMap<>();
 
     public DrawerMenuManager(AppActivity act) {
@@ -68,7 +70,7 @@ public class DrawerMenuManager {
     public void initializeDrawer() {
         // Initializing Drawer Layout and ActionBarToggle
         final Toolbar toolbar = drawerAct.findViewById(R.id.toolbar);
-        final DrawerLayout drawerLayout = drawerAct.findViewById(R.id.drawer);
+        drawerLayout = drawerAct.findViewById(R.id.drawer);
         navigationView = drawerAct.findViewById(R.id.navigation_view);
 
         if (drawerLayout == null || navigationView == null) return;
@@ -94,6 +96,7 @@ public class DrawerMenuManager {
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
+
     }
 
     public void onPrepareOptionsMenu(Menu menu, Map<Integer, MenuOption> options) {
@@ -184,4 +187,7 @@ public class DrawerMenuManager {
         builder.show();
     }
 
+    public void close() {
+        drawerLayout.closeDrawer(GravityCompat.START);
+    }
 }
