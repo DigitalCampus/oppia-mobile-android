@@ -92,6 +92,9 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
                 u.setApiKey(jsonResp.getString("api_key"));
                 u.setFirstname(jsonResp.getString("first_name"));
                 u.setLastname(jsonResp.getString("last_name"));
+                u.setEmail(jsonResp.getString("email"));
+                u.setOrganisation(jsonResp.getString("organisation"));
+                u.setJobTitle(jsonResp.getString("job_title"));
                 setPointsAndBadges(jsonResp, u);
                 setPointsAndBadgesEnabled(jsonResp, u);
                 setMetaData(jsonResp);

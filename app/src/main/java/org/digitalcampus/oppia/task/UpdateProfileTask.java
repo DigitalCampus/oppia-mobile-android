@@ -103,7 +103,7 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
             json.put("email", u.getEmail());
             json.put("first_name", u.getFirstname());
             json.put("last_name", u.getLastname());
-            json.put("jobtitle", u.getJobTitle());
+            json.put("job_title", u.getJobTitle());
             json.put("organisation", u.getOrganisation());
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
