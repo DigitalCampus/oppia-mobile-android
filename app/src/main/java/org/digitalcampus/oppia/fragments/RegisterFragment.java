@@ -22,13 +22,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.util.Pair;
 import android.util.Patterns;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AlertDialog;
+import kotlin.Unit;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -38,8 +45,11 @@ import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.listener.SubmitListener;
+import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.RegisterTask;
@@ -48,12 +58,18 @@ import org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 public class RegisterFragment extends AppFragment implements SubmitListener, RegisterTask.RegisterListener {
+
+	private List<Pair<CustomField, ValidableTextInputLayout>> customFields;
+
 
 	private ValidableTextInputLayout usernameField;
 	private ValidableTextInputLayout emailField;
@@ -64,7 +80,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	private ValidableTextInputLayout jobTitleField;
 	private ValidableTextInputLayout organisationField;
 	private ValidableTextInputLayout phoneNoField;
-	private List<ValidableTextInputLayout> fields;
+	private List<ValidableTextInputLayout> fields = new ArrayList<>();
 
 	private Button registerButton;
 	private Button loginButton;
@@ -96,8 +112,34 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		registerButton = vv.findViewById(R.id.register_btn);
 		loginButton = vv.findViewById(R.id.action_login_btn);
 
-		fields = Arrays.asList(usernameField, emailField, passwordField, passwordAgainField,
-				firstnameField, lastnameField, jobTitleField, organisationField, phoneNoField);
+		fields.addAll(Arrays.asList(usernameField, emailField, passwordField, passwordAgainField,
+				firstnameField, lastnameField, jobTitleField, organisationField, phoneNoField));
+
+		LinearLayout customFieldsContainer = vv.findViewById(R.id.custom_fields_container);
+		List<CustomField> cFields = DbHelper.getInstance(getContext()).getCustomFields();
+		for (CustomField field : cFields){
+
+			EditText editText = new EditText(getActivity());
+			editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+			editText.setHint(field.getLabel());
+			if (field.getType().equals("int")){
+				editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+			}
+
+			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.MATCH_PARENT,
+					LinearLayout.LayoutParams.WRAP_CONTENT);
+
+			ValidableTextInputLayout inputLayout = new ValidableTextInputLayout(getActivity(), field.isRequired());
+			if (!TextUtils.isEmpty(field.getHelperText())){
+				inputLayout.setHelperText(field.getHelperText());
+			}
+			inputLayout.setLayoutParams(params);
+			inputLayout.addView(editText, params);
+			customFieldsContainer.addView(inputLayout);
+			fields.add(inputLayout);
+			customFields.add(new Pair<>(field, inputLayout));
+		}
 
 		return vv;
 	}
@@ -203,6 +245,18 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
             u.setJobTitle(jobTitle);
             u.setOrganisation(organisation);
             u.setPhoneNo(phoneNo);
+
+			Map<String, CustomValue> fields = new HashMap<>();
+            for (Pair<CustomField, ValidableTextInputLayout> formField : customFields){
+            	CustomField field = formField.first;
+            	if (field.getType().equals("int")){
+					fields.put(field.getKey(), new CustomValue<>(Integer.parseInt(formField.second.getCleanedValue())));
+				}
+            	else{
+					fields.put(field.getKey(), new CustomValue<>(formField.second.getCleanedValue()));
+				}
+			}
+			u.setUserCustomFields(fields);
             executeRegisterTask(u);
         }
 

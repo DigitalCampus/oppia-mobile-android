@@ -21,6 +21,11 @@ public class ValidableTextInputLayout extends TextInputLayout {
         super(context);
     }
 
+    public ValidableTextInputLayout(Context context, boolean isRequired) {
+        super(context);
+        required = isRequired;
+    }
+
     public ValidableTextInputLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         updateAttrs(context, attrs);

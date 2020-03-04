@@ -4,7 +4,7 @@
       "name":"custom1",
       "label":"Custom int",
       "required":false,
-      "helper_text":"This is an integer",
+      "helper_text":"",
       "order": 1,
       "type":"int"
     },

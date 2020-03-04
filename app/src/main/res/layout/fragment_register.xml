@@ -182,6 +182,11 @@
 
                 </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
 
+                <LinearLayout
+                    android:id="@+id/custom_fields_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"></LinearLayout>
 
             </LinearLayout>
 
