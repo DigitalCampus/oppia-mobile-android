@@ -1,0 +1,24 @@
+{
+  "fields": [
+    {
+      "name":"custom1",
+      "label":"Custom int",
+      "required":false,
+      "helper_text":"This is an integer",
+      "order": 1,
+      "type":"int"
+    },
+
+    {
+      "name":"custom2",
+      "label":"Custom string",
+      "required":true,
+      "helper_text":"This is required",
+      "type":"str",
+      "order": 2
+    }
+
+  ]
+
+
+}
