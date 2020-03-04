@@ -44,7 +44,7 @@ import okhttp3.Response;
 
 public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> {
 
-    private static final String SUBMIT_ERROR = "submit_error";
+    public static final String SUBMIT_ERROR = "submit_error";
 
     private ResponseListener responseListener;
     private ProgressDialog progressDialog;
@@ -101,8 +101,8 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
             // add post params
             JSONObject json = new JSONObject();
             json.put("email", u.getEmail());
-            json.put("firstname", u.getFirstname());
-            json.put("lastname", u.getLastname());
+            json.put("first_name", u.getFirstname());
+            json.put("last_name", u.getLastname());
             json.put("jobtitle", u.getJobTitle());
             json.put("organisation", u.getOrganisation());
 
@@ -114,7 +114,6 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
             // make request
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
-                String body = response.body().string();
                 return true;
             } else {
                 switch (response.code()) {

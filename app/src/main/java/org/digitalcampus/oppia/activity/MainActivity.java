@@ -209,7 +209,6 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private void configureLogoutOption() {
         boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, App.MENU_ALLOW_LOGOUT);
         btnLogout.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
-        btnExpandProfileOptions.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
         if (!logoutVisible) {
             setupProfileOptionsView(false);
         }

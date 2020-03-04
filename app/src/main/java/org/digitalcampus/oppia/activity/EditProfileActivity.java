@@ -23,6 +23,9 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
     @Inject
     ApiEndpoint apiEndpoint;
 
+    @Inject
+    User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +48,6 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
     private void fillUserProfileData() {
 
-        User user = getAppComponent().getUser();
         binding.fieldEmail.setText(user.getEmail());
         binding.fieldFirstname.setText(user.getFirstname());
         binding.fieldLastname.setText(user.getLastname());
@@ -89,7 +91,6 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
 
         if (valid){
-            User user = getAppComponent().getUser();
             user.setFirstname(firstname);
             user.setLastname(lastname);
             user.setEmail(email);
