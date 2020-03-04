@@ -178,6 +178,10 @@ public class User {
 		return userCustomFields;
 	}
 
+	public CustomValue getCustomField(String key){
+		return userCustomFields.get(key);
+	}
+
 	public void setUserCustomFields(Map<String, CustomValue> userCustomFields) {
 		this.userCustomFields = userCustomFields;
 	}

@@ -68,7 +68,7 @@ import javax.inject.Inject;
 
 public class RegisterFragment extends AppFragment implements SubmitListener, RegisterTask.RegisterListener {
 
-	private List<Pair<CustomField, ValidableTextInputLayout>> customFields;
+	private List<Pair<CustomField, ValidableTextInputLayout>> customFields = new ArrayList<>();
 
 
 	private ValidableTextInputLayout usernameField;

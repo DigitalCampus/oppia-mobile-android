@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
@@ -42,6 +43,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.QuizAttempt;
@@ -697,7 +699,49 @@ public class DbHelper extends SQLiteOpenHelper {
             String[] args = new String[]{String.valueOf(userId)};
             db.update(USER_TABLE, values, s, args);
         }
+        insertOrUpdateCustomFields(user);
+
         return userId;
+    }
+
+    private void insertOrUpdateCustomFields(User user) {
+        List<ContentValues> contenValuesList = convertCFtoCV(user.getUserCustomFields());
+        for (ContentValues contentValues : contenValuesList) {
+            contentValues.put(USER_CF_USERNAME, user.getUsername());
+            try {
+                db.insertOrThrow(USER_CF_TABLE, null, contentValues);
+            } catch (SQLiteException e) {
+                String s = USER_CF_USERNAME + "=? AND " + CF_FIELD_KEY + "=?";
+                String[] args = new String[] { String.valueOf(user.getUsername()), contentValues.getAsString(CF_FIELD_KEY) };
+                db.update(USER_CF_TABLE, contentValues, s, args);
+            }
+        }
+
+    }
+
+    private List<ContentValues> convertCFtoCV(Map<String, CustomValue> customFields) {
+
+        List<ContentValues> contentValuesList = new ArrayList<>();
+        for (Map.Entry<String, CustomValue> entry : customFields.entrySet()) {
+            String key = entry.getKey();
+            CustomValue customValue = entry.getValue();
+            Object value = customValue.getValue();
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(CF_FIELD_KEY, key);
+            if (value instanceof String) {
+                contentValues.put(CF_VALUE_STR, (String) value);
+            } else if (value instanceof Integer) {
+                contentValues.put(CF_VALUE_INT, (Integer) value);
+            } else if (value instanceof Float) {
+                contentValues.put(CF_VALUE_FLOAT, (Float) value);
+            } else if (value instanceof Boolean) {
+                contentValues.put(CF_VALUE_BOOL, (Boolean) value);
+            }
+            contentValuesList.add(contentValues);
+        }
+
+        return contentValuesList;
     }
 
     public void deleteUser(String username) {
