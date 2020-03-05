@@ -1,11 +1,10 @@
 package Utils;
 
 import android.content.Context;
-import android.util.Log;
-
-import com.splunk.mint.Mint;
 
 import androidx.test.platform.app.InstrumentationRegistry;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.oppia.utils.storage.Storage;
 
@@ -16,8 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 public class FileUtils {
 
@@ -31,20 +28,26 @@ public class FileUtils {
             sb.append(line).append("\n");
         }
         reader.close();
-        return sb.toString();
+        return sb.toString().trim();
     }
 
     public static String getStringFromFile(Context context, String filePath) throws Exception {
         String ret = "";
 
+        InputStream stream = null;
         try {
-            final InputStream stream = context.getResources().getAssets().open(filePath);
-
+            stream = context.getResources().getAssets().open(filePath);
             ret = convertStreamToString(stream);
-
-            stream.close();
         }catch(IOException ioe){
             ioe.printStackTrace();
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    // ignore
+                }
+            }
         }
         return ret;
     }

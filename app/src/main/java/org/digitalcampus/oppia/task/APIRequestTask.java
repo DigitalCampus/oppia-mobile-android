@@ -41,28 +41,27 @@ public abstract class APIRequestTask<PARAMS, PROGRESS, RESULT> extends AsyncTask
         apiEndpoint = api;
     }
 
-    protected Request createRequestWithUserAuth(String url) {
+    protected Request.Builder createRequestBuilderWithUserAuth(String url) {
         DbHelper db = DbHelper.getInstance(ctx);
-        Request request = null;
+        Request.Builder requestBuilder = null;
         try {
             User u = db.getUser(SessionManager.getUsername(ctx));
-            request = new Request.Builder()
+            requestBuilder = new Request.Builder()
                     .url(url)
                     .addHeader(HTTPClientUtils.HEADER_AUTH,
-                            HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()))
-                    .build();
+                            HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()));
 
         } catch (UserNotFoundException e) {
             Mint.logException(e);
             Log.d(TAG, "User not found: ", e);
         }
 
-        if (request == null) {
+        if (requestBuilder == null) {
             //the user was not found, we create it without the header
-            request = new Request.Builder().url(url).build();
+            requestBuilder = new Request.Builder().url(url);
         }
 
-        return request;
+        return requestBuilder;
     }
 
     @Override

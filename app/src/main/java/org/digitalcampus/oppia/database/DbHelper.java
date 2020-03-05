@@ -1185,7 +1185,6 @@ public class DbHelper extends SQLiteOpenHelper {
             u.setPassword(c.getString(c.getColumnIndex(USER_C_PASSWORDPLAIN)));
             u.setPasswordAgain(c.getString(c.getColumnIndex(USER_C_PASSWORDPLAIN)));
         }
-
         fetchUserCustomFields(u);
 
         return u;

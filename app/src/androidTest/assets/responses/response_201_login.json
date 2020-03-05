@@ -5,6 +5,9 @@
   "course_points": [],
   "first_name": "user1",
   "last_login": "2016-06-23T15:25:34.399297",
+  "organisation": "organization",
+  "email": "test@testemail.com",
+  "job_title": "tester",
   "last_name": "demo",
   "metadata": {
     "BATTERY_LEVEL": true,

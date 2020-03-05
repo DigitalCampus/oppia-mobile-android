@@ -1,6 +1,7 @@
 package org.digitalcampus.oppia.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 
@@ -84,8 +86,6 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         configureBadgePointsView();
 
         viewProfileOptions.setVisibility(View.GONE);
-
-        btnEditProfile.setVisibility(View.GONE);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
     }
@@ -209,7 +209,6 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private void configureLogoutOption() {
         boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, App.MENU_ALLOW_LOGOUT);
         btnLogout.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
-        btnExpandProfileOptions.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
         if (!logoutVisible) {
             setupProfileOptionsView(false);
         }
@@ -264,6 +263,14 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
                 break;
 
             case R.id.btn_edit_profile:
+                if (ConnectionUtils.isNetworkConnected(this)) {
+                    startActivity(new Intent(this, EditProfileActivity.class));
+                } else {
+                    alert(R.string.edit_profile_available_online);
+                }
+
+                setupProfileOptionsView(false);
+                drawer.close();
                 break;
 
             case R.id.btn_logout:
@@ -274,6 +281,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
                 // do nothing
         }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

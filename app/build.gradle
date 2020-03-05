@@ -1,4 +1,3 @@
-
 plugins {
     id "org.sonarqube" version "2.8"
 }
@@ -12,8 +11,8 @@ repositories {
 }
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
+    buildToolsVersion '29.0.2'
 
     defaultConfig {
         versionCode 75
@@ -21,7 +20,7 @@ android {
 
         applicationId "org.digitalcampus.mobile.learning"
         minSdkVersion 14
-        targetSdkVersion 28
+        targetSdkVersion 29
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -143,6 +142,7 @@ android {
 
     useLibrary 'android.test.mock'
 
+    viewBinding.enabled = true
 }
 
 // Setup Jacoco version. It's recommended way to exclude conflicts between components
@@ -172,6 +172,7 @@ dependencies {
     implementation 'androidx.concurrent:concurrent-futures:1.1.0-alpha01'
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     implementation "androidx.work:work-runtime:$workVersion"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     androidTestImplementation "androidx.work:work-testing:$workVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
 
@@ -212,7 +213,7 @@ dependencies {
 
     // Fragment testing
     implementation "androidx.fragment:fragment:$fragmentVersion"
-    debugImplementation ("androidx.fragment:fragment-testing:$fragmentVersion") {
+    debugImplementation("androidx.fragment:fragment-testing:$fragmentVersion") {
         // exclude androidx.test:core while fragment_testing depends on 1.1.0
         exclude group: 'androidx.test', module: 'core'
     }
