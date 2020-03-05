@@ -118,19 +118,14 @@ public class PermissionsManager {
             return true;
         }
 
-        boolean canAsk = true;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act.getApplicationContext());
         for (String permission : permissions) {
-            if (act.shouldShowRequestPermissionRationale(permission)) {
-            }
-            else{
-                if (!isFirstTimeAsked(prefs, permission)){
-                    //The permission has been asked before, and the user answered "dont ask again"
-                    canAsk = false;
-                }
+            if (!act.shouldShowRequestPermissionRationale(permission) && !isFirstTimeAsked(prefs, permission)) {
+                //The permission has been asked before, and the user answered "dont ask again"
+                return false;
             }
         }
-        return canAsk;
+        return true;
     }
 
     public static List<String> filterNotGrantedPermissions(final Activity act, List<String> permissions){

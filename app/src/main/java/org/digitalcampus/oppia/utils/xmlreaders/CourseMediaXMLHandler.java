@@ -22,6 +22,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class CourseMediaXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler {
@@ -35,11 +36,11 @@ public class CourseMediaXMLHandler extends DefaultLexicalHandler implements IMed
     private static final String NODE_FILESIZE = "filesize";
     private static final String NODE_MODULE = "module";
 
-    private ArrayList<Media> courseMedia = new ArrayList<>();
+    private List<Media> courseMedia = new ArrayList<>();
     private boolean insideMediaTag = false;
     private Stack<String> parentElements = new Stack<>();
 
-    public ArrayList<Media> getCourseMedia() {
+    public List<Media> getCourseMedia() {
         return courseMedia;
     }
 

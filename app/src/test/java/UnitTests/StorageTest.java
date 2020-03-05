@@ -2,10 +2,6 @@ package UnitTests;
 
 import android.test.mock.MockContext;
 
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.exception.UserNotFoundException;
-import org.digitalcampus.oppia.model.CustomValue;
-import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.junit.Before;
 import org.junit.ClassRule;

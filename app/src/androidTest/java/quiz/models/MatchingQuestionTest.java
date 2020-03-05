@@ -86,4 +86,66 @@ public class MatchingQuestionTest {
         quizDefaultFeedback.mark(DEFAULT_LANG);
         assertEquals(df.format(0.9999), df.format(quizDefaultFeedback.getUserscore()));
     }
+
+    // partially correct
+    @Test
+    public void test_partialCorrectNoFeedback()throws Exception {
+        QuizQuestion quizQuestion = quizDefaultFeedback.getCurrentQuestion();
+        assertTrue(quizQuestion instanceof Matching);
+
+        ArrayList<String> userResponses = new ArrayList<>();
+        userResponses.add("Rock beats|Scissors");
+        userResponses.add("Paper beats|Scissors");
+        userResponses.add("Scissors beat|Scissors");
+        quizQuestion.setUserResponses(userResponses);
+        assertEquals("Your answer is partially correct.", quizQuestion.getFeedback(DEFAULT_LANG));
+        assertEquals(df.format(0.3333), df.format(quizQuestion.getUserscore()));
+        assertEquals(33, quizQuestion.getScoreAsPercent());
+
+        // check json response object
+        JSONObject responseJson = quizQuestion.responsesToJSON();
+        assertTrue(responseJson.has("question_id"));
+        assertTrue(responseJson.has("score"));
+        assertTrue(responseJson.has("text"));
+
+        assertEquals(19778, responseJson.get("question_id"));
+        assertEquals(df.format(0.33), df.format(responseJson.get("score")));
+        assertEquals("Rock beats|Scissors||Paper beats|Scissors||Scissors beat|Scissors||", responseJson.get("text"));
+
+        // check for whole quiz
+        assertEquals((float) 0, quizDefaultFeedback.getUserscore());
+        quizDefaultFeedback.mark(DEFAULT_LANG);
+    }
+
+
+    // no correct
+
+    @Test
+    public void test_noCorrectNoFeedback()throws Exception {
+        QuizQuestion quizQuestion = quizDefaultFeedback.getCurrentQuestion();
+        assertTrue(quizQuestion instanceof Matching);
+
+        ArrayList<String> userResponses = new ArrayList<>();
+        userResponses.add("Rock beats|Rock");
+        userResponses.add("Paper beats|Paper");
+        userResponses.add("Scissors beat|Scissors");
+        quizQuestion.setUserResponses(userResponses);
+        assertEquals("Your answer is incorrect.", quizQuestion.getFeedback(DEFAULT_LANG));
+        assertEquals(df.format(0), df.format(quizQuestion.getUserscore()));
+        assertEquals(0, quizQuestion.getScoreAsPercent());
+
+        // check json response object
+        JSONObject responseJson = quizQuestion.responsesToJSON();
+        assertTrue(responseJson.has("question_id"));
+        assertTrue(responseJson.has("score"));
+        assertTrue(responseJson.has("text"));
+
+        assertEquals(19778, responseJson.get("question_id"));
+        assertEquals(df.format(0), df.format(responseJson.get("score")));
+        assertEquals("Rock beats|Rock||Paper beats|Paper||Scissors beat|Scissors||", responseJson.get("text"));
+
+        // check for whole quiz
+        assertEquals((float) 0, quizDefaultFeedback.getUserscore());
+        quizDefaultFeedback.mark(DEFAULT_LANG);
+    }
 }

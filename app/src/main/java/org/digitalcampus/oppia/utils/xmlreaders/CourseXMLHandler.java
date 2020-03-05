@@ -30,6 +30,7 @@ import org.digitalcampus.oppia.model.Section;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler {
@@ -85,7 +86,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     }
 
     public String getCourseImage() { return courseIcon; }
-    public ArrayList<Media> getCourseMedia() {
+    public List<Media> getCourseMedia() {
         return courseMedia;
     }
 

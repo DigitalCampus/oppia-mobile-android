@@ -21,6 +21,7 @@ import static Utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -57,13 +58,13 @@ public class RegisterCHUITest {
     private void enterValidDataStep1() {
 
         onEditTextWithinTextInputLayoutWithId(R.id.edit_reg_ch_first_name)
-                .perform(scrollTo(), typeText("First Name"));
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
 
         onEditTextWithinTextInputLayoutWithId(R.id.edit_reg_ch_last_name)
-                .perform(scrollTo(), typeText("Last Name"));
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
 
         onEditTextWithinTextInputLayoutWithId(R.id.edit_reg_ch_employee_id)
-                .perform(scrollTo(), typeText("Username"));
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
     }
 
@@ -168,7 +169,7 @@ public class RegisterCHUITest {
 
 
     @Test
-    public void showsErrorWhenEmplyeeIDcontainsSpaces() throws Exception {
+    public void showsErrorWhenEmployeeIDcontainsSpaces() throws Exception {
 
         openCHRegistrationForm();
 
@@ -259,18 +260,18 @@ public class RegisterCHUITest {
     }
 
     @Test
-    public void checkDistrictDisablesWhenNoCountyIsSelected() throws Exception {
+    public void checkDistrictDisabledWhenNoCountyIsSelected() throws Exception {
         openCHRegistrationForm();
         enterValidDataStep1();
         onView(withId(R.id.btn_register_ch_next))
-                .perform(click());
+                .perform(closeSoftKeyboard(), click());
         enterValidDataStep2();
         onView(withId(R.id.btn_register_ch_next))
-                .perform(click());
+                .perform(closeSoftKeyboard(), click());
 
         onView(withId(R.id.spinner_districts)).check(matches(not(isEnabled())));
 
-        onView(withId(R.id.spinner_counties)).perform(click());
+        onView(withId(R.id.spinner_counties)).perform(closeSoftKeyboard(), click());
         onData(allOf(is(instanceOf(County.class)))).atPosition(1).perform(click());
 
         onView(withId(R.id.spinner_districts)).check(matches(isEnabled()));
@@ -291,7 +292,7 @@ public class RegisterCHUITest {
         openCHRegistrationForm();
         enterValidDataStep1();
         onView(withId(R.id.btn_register_ch_next))
-                .perform(click());
+                .perform(closeSoftKeyboard(), click());
         enterValidDataStep2();
         onView(withId(R.id.btn_register_ch_next))
                 .perform(click());
@@ -303,7 +304,7 @@ public class RegisterCHUITest {
                 .inRoot(withDecorView(not(is(welcomeActivityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
 
-        onView(withId(R.id.spinner_counties)).perform(click());
+        onView(withId(R.id.spinner_counties)).perform(closeSoftKeyboard(), click());
         onData(allOf(is(instanceOf(County.class)))).atPosition(1).perform(click());
 
         onView(withId(R.id.btn_register_perform)).perform(click());
@@ -316,17 +317,18 @@ public class RegisterCHUITest {
 
     @Test
     public void entersMainActivityWhenRegisterSuccess() throws Exception {
+
         openCHRegistrationForm();
         enterValidDataStep1();
         onView(withId(R.id.btn_register_ch_next))
-                .perform(click());
+                .perform(closeSoftKeyboard(), click());
         enterValidDataStep2();
         onView(withId(R.id.btn_register_ch_next))
-                .perform(click());
+                .perform(closeSoftKeyboard(), click());
 
         enterValidDataStep3();
 
-        onView(withId(R.id.btn_register_perform)).perform(click());
+        onView(withId(R.id.btn_register_perform)).perform(closeSoftKeyboard(), click());
 
         onView(withText(R.string.please_select_county_district))
                 .inRoot(withDecorView(not(is(welcomeActivityTestRule.getActivity().getWindow().getDecorView()))))

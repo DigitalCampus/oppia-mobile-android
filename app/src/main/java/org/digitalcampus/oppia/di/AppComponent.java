@@ -4,6 +4,7 @@ import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
 import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.activity.EditProfileActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
@@ -45,6 +46,8 @@ public interface AppComponent {
     void inject(CoursesListFragment fragment);
     void inject(AppFragment fragment);
     void inject(GlobalQuizAttemptsFragment fragment);
+
+    void inject(EditProfileActivity activity);
 
     void inject(AdminSecurityManager adminSecurityManager);
 

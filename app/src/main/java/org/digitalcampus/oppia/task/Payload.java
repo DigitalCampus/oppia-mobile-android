@@ -31,7 +31,7 @@ public class Payload {
 	private List<?> data;
 	private boolean result = false;
 	private String resultResponse;
-	private ArrayList<Object> responseData = new ArrayList<>();
+	private List<Object> responseData = new ArrayList<>();
 	private String url;
 
 	public Payload(){
@@ -42,15 +42,15 @@ public class Payload {
 		this.setUrl(url);		
 	}
 	
-	public Payload(List<? extends Object> data) {
+	public Payload(List<?> data) {
 		this.data = data;
 	}
 
-	public List<? extends Object> getData() {
+	public List<?> getData() {
 		return data;
 	}
 
-	public void setData(ArrayList<? extends Object> data) {
+	public void setData(List<Object> data) {
 		this.data = data;
 	}
 
@@ -79,11 +79,11 @@ public class Payload {
 		}
 	}
 
-	public ArrayList<Object> getResponseData() {
+	public List<Object> getResponseData() {
 		return responseData;
 	}
 
-	public void setResponseData(ArrayList<Object> responseData) {
+	public void setResponseData(List<Object> responseData) {
 		this.responseData = responseData;
 	}
 	

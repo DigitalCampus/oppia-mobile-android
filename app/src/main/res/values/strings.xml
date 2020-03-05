@@ -469,6 +469,10 @@
     <string name="activitylog_delete_failed">Could not delete activity log file</string>
     <string name="prefSectionSystemNotifs">System notifications</string>
     <string name="prefSectionGamification">Gamification events</string>
+    <string name="title_activity_edit_profile">Edit profile</string>
+    <string name="edit_profile_available_online">Edit profile option is only available when the device is connected to the Internet</string>
+    <string name="save_profile">Save profile</string>
+    <string name="profile_updated_successfuly">Profile updated successfuly</string>
 
 </resources>
 

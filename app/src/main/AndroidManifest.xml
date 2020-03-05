@@ -9,23 +9,17 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <!-- this next permission is only needed for testing/debug purposes -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- this next permission is only needed for testing/debug purposes -->
     <uses-permission
         android:name="android.permission.SET_ANIMATION_SCALE"
-        tools:ignore="ProtectedPermissions" />
-
-    <!-- Bluetooth permissions -->
+        tools:ignore="ProtectedPermissions" /> <!-- Bluetooth permissions -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" /> <!-- Dangerous-level permissions (need user confirmation) -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
 
     <application
         android:name="org.digitalcampus.oppia.application.App"
@@ -34,7 +28,6 @@
         android:label="@string/app_name"
         android:theme="@style/Oppia.Theme"
         android:usesCleartextTraffic="true">
-
         <activity
             android:name="org.digitalcampus.oppia.activity.StartUpActivity"
             android:label="@string/app_name">
@@ -44,18 +37,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="org.digitalcampus.oppia.activity.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/Oppia.ToolbarTheme" >
-        </activity>
-
+            android:theme="@style/Oppia.ToolbarTheme"></activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseIndexActivity"
             android:label="@string/title_activity_course_index"
-            android:theme="@style/Oppia.ToolbarTheme">
-        </activity>
+            android:theme="@style/Oppia.ToolbarTheme"></activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseActivity"
             android:label="@string/title_activity_course"
@@ -120,18 +109,23 @@
         <activity
             android:name="org.digitalcampus.oppia.activity.ActivityLogActivity"
             android:label="@string/title_activitylog"
-            android:theme="@style/Oppia.ToolbarTheme"
-            />
+            android:theme="@style/Oppia.ToolbarTheme" />
         <activity
             android:name="org.digitalcampus.oppia.activity.DeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/bluetooth.select_device"
             android:theme="@style/Oppia.Dialog" />
+
+        <activity android:name="org.digitalcampus.oppia.activity.EditProfileActivity"
+            android:label="@string/title_activity_edit_profile"
+            android:theme="@style/Oppia.ToolbarTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.ViewDigestActivity"
             android:theme="@style/Oppia.ToolbarTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -166,7 +160,6 @@
             android:name="org.digitalcampus.oppia.gamification.GamificationService"
             android:exported="false"
             android:icon="@drawable/dc_logo" />
-
 
         <provider
             android:name="androidx.core.content.FileProvider"
