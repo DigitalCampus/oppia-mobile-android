@@ -18,10 +18,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.appcompat.widget.SwitchCompat;
+
 public class CustomFieldsUIManager {
 
     private List<CustomField> fields;
-    private List<Pair<CustomField, ValidableTextInputLayout>> inputs = new ArrayList<>();
+    private List<Pair<CustomField, ValidableField>> inputs = new ArrayList<>();
     private Context ctx;
 
     public CustomFieldsUIManager(Context ctx, List<CustomField> fields){
@@ -31,34 +33,74 @@ public class CustomFieldsUIManager {
 
     public void createFieldsInContainer(ViewGroup container){
         for (CustomField field : fields){
-            EditText editText = new EditText(ctx);
-            editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-            editText.setHint(field.getLabel());
-            if (field.isInteger() || field.isFloat()){
-                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+            ValidableField input = null;
+            if (field.isBoolean()){
+                input = addSwitchLayout(container, field);
             }
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-
-            ValidableTextInputLayout inputLayout = new ValidableTextInputLayout(ctx, field.isRequired());
+            else{
+                input = addEditTextLayout(container, field);
+            }
             if (!TextUtils.isEmpty(field.getHelperText())){
-                inputLayout.setHelperText(field.getHelperText());
+                input.setHelperText(field.getHelperText());
             }
-            inputLayout.setLayoutParams(params);
-            inputLayout.addView(editText, params);
-            container.addView(inputLayout);
-            inputLayout.initialize();
-            inputs.add(new Pair<>(field, inputLayout));
+            input.initialize();
+            inputs.add(new Pair<>(field, input));
         }
     }
 
+    private ValidableField addSwitchLayout(ViewGroup container, CustomField field){
+        SwitchCompat input = new SwitchCompat(ctx);
+        LinearLayout.LayoutParams wrap = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        input.setLayoutParams(wrap);
+        ValidableSwitchLayout switchLayout = new ValidableSwitchLayout(ctx, input);
+        switchLayout.setRequired(field.isRequired());
+        input.setHint(field.getLabel());
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        switchLayout.setLayoutParams(params);
+        container.addView(switchLayout);
+
+        return switchLayout;
+    }
+
+    private ValidableField addEditTextLayout(ViewGroup container, CustomField field){
+        EditText editText = new EditText(ctx);
+        editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        editText.setHint(field.getLabel());
+        if (field.isInteger() || field.isFloat()){
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        }
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        ValidableTextInputLayout inputLayout = new ValidableTextInputLayout(ctx, field.isRequired());
+        inputLayout.setLayoutParams(params);
+        inputLayout.addView(editText, params);
+        container.addView(inputLayout);
+
+        return inputLayout;
+    }
+
     public void fillWithUserData(User user){
-        for (Pair<CustomField, ValidableTextInputLayout> formField : inputs){
+        for (Pair<CustomField, ValidableField> formField : inputs){
             CustomValue value = user.getCustomField(formField.first.getKey());
-            if ((value != null) && !formField.first.isBoolean()){
-                formField.second.setText(value.toString());
+            if (value == null){
+                continue;
+            }
+            if (!formField.first.isBoolean()){
+                ValidableTextInputLayout input = (ValidableTextInputLayout) formField.second;
+                input.setText(value.toString());
+            }
+            else{
+                ValidableSwitchLayout input = (ValidableSwitchLayout) formField.second;
+                input.setChecked((boolean) value.getValue());
             }
 
         }
@@ -66,7 +108,7 @@ public class CustomFieldsUIManager {
 
     public boolean validateFields(){
         boolean valid = true;
-        for (Pair<CustomField, ValidableTextInputLayout> formField : inputs){
+        for (Pair<CustomField, ValidableField> formField : inputs){
             valid = formField.second.validate() && valid;
         }
         return valid;
@@ -74,17 +116,25 @@ public class CustomFieldsUIManager {
 
     public  Map<String, CustomValue>  getCustomFieldValues(){
         Map<String, CustomValue> values = new HashMap<>();
-        for (Pair<CustomField, ValidableTextInputLayout> formField : inputs){
+        for (Pair<CustomField, ValidableField> formField : inputs){
             CustomField field = formField.first;
-            if (field.isInteger()){
-                String value = formField.second.getCleanedValue();
-                if (!TextUtils.isEmpty(value)){
-                    values.put(field.getKey(), new CustomValue<>(Integer.parseInt(value)));
-                }
+            if (field.isBoolean()){
+                ValidableSwitchLayout input = (ValidableSwitchLayout) formField.second;
+                values.put(field.getKey(), new CustomValue<>(input.isChecked()));
             }
             else{
-                values.put(field.getKey(), new CustomValue<>(formField.second.getCleanedValue()));
+                ValidableTextInputLayout input = (ValidableTextInputLayout) formField.second;
+                if (field.isInteger()){
+                    String value = input.getCleanedValue();
+                    if (!TextUtils.isEmpty(value)){
+                        values.put(field.getKey(), new CustomValue<>(Integer.parseInt(value)));
+                    }
+                }
+                else{
+                    values.put(field.getKey(), new CustomValue<>(input.getCleanedValue()));
+                }
             }
+
         }
         return values;
     }

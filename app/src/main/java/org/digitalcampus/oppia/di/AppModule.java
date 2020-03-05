@@ -17,6 +17,7 @@ import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.QuizAttemptRepository;
 import org.digitalcampus.oppia.model.TagRepository;
@@ -114,8 +115,8 @@ public class AppModule {
     }
 
     @Provides
-    public List<CustomField> provideProfileCustomFieldsList(){
-        return DbHelper.getInstance(app).getCustomFields();
+    public CustomFieldsRepository provideProfileCustomFieldsList(){
+        return new CustomFieldsRepository();
     }
 
 }

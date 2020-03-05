@@ -151,7 +151,6 @@
                         android:textSize="15sp"/>
                 </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
 
-
                 <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
                     android:id="@+id/register_form_organisation_field"
                     android:layout_width="match_parent"
@@ -159,7 +158,6 @@
                     >
 
                     <EditText
-
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_organisation_title"

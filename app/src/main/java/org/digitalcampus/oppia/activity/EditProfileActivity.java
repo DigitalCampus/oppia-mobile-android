@@ -8,6 +8,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityEditProfileBinding;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.UpdateProfileTask;
@@ -31,6 +32,8 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
     User user;
 
     @Inject
+    CustomFieldsRepository customFieldsRepo;
+
     List<CustomField> profileCustomFields;
 
     @Override
@@ -43,6 +46,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
         getAppComponent().inject(this);
 
+        profileCustomFields = customFieldsRepo.getAll(this);
         fieldsManager = new CustomFieldsUIManager(this, profileCustomFields);
         fieldsManager.createFieldsInContainer(binding.customFieldsContainer);
 
@@ -92,6 +96,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         for (ValidableTextInputLayout field : fields){
             valid = field.validate() && valid;
         }
+        valid = fieldsManager.validateFields() && valid;
 
         //If the rest of email validations passed, check that the email is valid
         if (binding.fieldEmail.validate() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {

@@ -35,6 +35,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SwitchCompat;
 import kotlin.Unit;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
@@ -49,6 +50,7 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
@@ -88,6 +90,8 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	private ProgressDialog pDialog;
 
 	@Inject
+	CustomFieldsRepository customFieldsRepo;
+
 	List<CustomField> profileCustomFields;
 
 	@Inject
@@ -129,6 +133,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		super.onActivityCreated(savedInstanceState);
 		getAppComponent().inject(this);
 
+		profileCustomFields = customFieldsRepo.getAll(getContext());
 		fieldsManager = new CustomFieldsUIManager(this.getActivity(), profileCustomFields);
 		fieldsManager.createFieldsInContainer(customFieldsContainer);
 

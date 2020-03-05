@@ -1,5 +1,7 @@
 package UI;
 
+import android.content.Context;
+
 import Utils.MockedApiEndpointTest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -11,9 +13,16 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.CustomFieldsRepository;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static Utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
 import static Utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
@@ -28,18 +37,25 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class RegisterUITest extends MockedApiEndpointTest {
 
     private static final String VALID_REGISTER_RESPONSE = "responses/response_200_register.json";
 
+    @Mock
+    protected CustomFieldsRepository customFieldsRepo;
 
     @Rule
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
             new ActivityTestRule<>(WelcomeActivity.class, false, false);
 
-
+    @Before
+    public void setUp() throws Exception {
+        when(customFieldsRepo.getAll((Context) any())).thenReturn(new ArrayList<CustomField>());
+    }
 
     @Test
     public void showsErrorMessageWhenThereIsNoUsername() throws  Exception {

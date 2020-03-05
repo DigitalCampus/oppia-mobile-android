@@ -12,7 +12,7 @@
     <color name="activity_icon_background">#ffffff</color>
     <color name="highlight_label">#434343</color>
     <color name="highlight_separator">#b9b9b9</color>
-    <color name="text_error">#DD2C00</color>
+    <color name="text_error">#ff4003</color>
     <color name="stroke">#dfdfdf</color>
     <color name="quiz_navigation_bar">#d2d2d2</color>
     <color name="quiz_navigation_button">#FF5A595B</color>
