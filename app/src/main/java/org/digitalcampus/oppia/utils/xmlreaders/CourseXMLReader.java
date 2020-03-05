@@ -19,7 +19,7 @@ package org.digitalcampus.oppia.utils.xmlreaders;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import com.splunk.mint.Mint;

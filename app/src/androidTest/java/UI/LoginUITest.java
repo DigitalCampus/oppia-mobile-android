@@ -26,7 +26,7 @@ import static junit.framework.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class LoginUITest extends MockedApiEndpointTest {
 
-    private static final String VALID_LOGIN_RESPONSE = "responses/response_200_login.json";
+    private static final String VALID_LOGIN_RESPONSE = "responses/response_201_login.json";
     private static final String WRONG_CREDENTIALS_RESPONSE = "responses/response_400_login.json";
 
     @Rule

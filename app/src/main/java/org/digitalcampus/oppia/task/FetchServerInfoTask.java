@@ -3,7 +3,7 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
@@ -72,7 +72,7 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         OkHttpClient client = HTTPClientUtils.getClient(ctx);
         boolean validServer = false;
-        Request request = createRequestWithUserAuth(apiEndpoint.getFullURL(ctx, Paths.SERVER_INFO_PATH));
+        Request request = createRequestBuilderWithUserAuth(apiEndpoint.getFullURL(ctx, Paths.SERVER_INFO_PATH)).build();
         try {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){

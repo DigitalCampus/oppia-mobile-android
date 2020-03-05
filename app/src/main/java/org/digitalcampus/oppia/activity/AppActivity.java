@@ -27,7 +27,7 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -103,6 +104,13 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     public void toast(int stringId) {
         toast(getString(stringId));
+    }
+
+    public void alert(int stringId) {
+        new AlertDialog.Builder(this)
+                .setMessage(stringId)
+                .setNegativeButton(R.string.close, null)
+                .show();
     }
 
     public SharedPreferences getPrefs() {
