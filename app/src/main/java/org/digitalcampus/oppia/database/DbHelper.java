@@ -2132,7 +2132,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<CustomField> getCustomFields(){
-        Cursor c = db.query(CUSTOM_FIELD_TABLE, null, null, null, null, null, null);
+        Cursor c = db.query(CUSTOM_FIELD_TABLE, null, null, null, null, null, CUSTOM_FIELD_C_ORDER);
         c.moveToFirst();
 
         ArrayList<CustomField> fields = new ArrayList<>();

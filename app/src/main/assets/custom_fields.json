@@ -16,9 +16,16 @@
       "helper_text":"This is required",
       "type":"str",
       "order": 2
+    },
+
+    {
+      "name":"custom3",
+      "label":"Custom boolean",
+      "required":true,
+      "helper_text":"Check this to complete",
+      "type":"bool",
+      "order": 1
     }
-
   ]
-
 
 }
