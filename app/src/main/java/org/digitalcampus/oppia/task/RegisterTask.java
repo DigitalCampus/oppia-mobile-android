@@ -26,6 +26,8 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
@@ -36,6 +38,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -70,9 +73,7 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
         }
 
         if (saveUser){
-
             DbHelper db = DbHelper.getInstance(ctx);
-
             boolean usernameExists = db.isUser(user.getUsername()) != -1;
             if (!usernameExists) {
                 // add or update user in db
@@ -83,7 +84,6 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
                 payload.setResult(false);
                 payload.setResultResponseDataError(SUBMIT_ERROR, ctx.getString(R.string.register_username_exists));
             }
-
         }
 
 		return payload;
@@ -101,13 +101,21 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
             JSONObject json = new JSONObject();
             json.put("username", u.getUsername());
             json.put("password", u.getPassword());
-            json.put("passwordagain",u.getPasswordAgain());
-            json.put("email",u.getEmail());
-            json.put("firstname",u.getFirstname());
-            json.put("lastname",u.getLastname());
-            json.put("jobtitle",u.getJobTitle());
-            json.put("organisation",u.getOrganisation());
-            json.put("phoneno",u.getPhoneNo());
+            json.put("passwordagain", u.getPasswordAgain());
+
+            json.put("firstname", u.getFirstname());
+            json.put("lastname", u.getLastname());
+            json.put("jobtitle", u.getJobTitle());
+            json.put("organisation", u.getOrganisation());
+            json.put("phoneno", u.getPhoneNo());
+
+            List<CustomField> cFields = DbHelper.getInstance(ctx).getCustomFields();
+            for (CustomField field : cFields){
+                CustomValue value = u.getCustomField(field.getKey());
+                if (value != null){
+                    json.put(field.getKey(), value.getValue());
+                }
+            }
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()

@@ -22,13 +22,21 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.util.Pair;
 import android.util.Patterns;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SwitchCompat;
+import kotlin.Unit;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -38,22 +46,31 @@ import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.listener.SubmitListener;
+import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.CustomFieldsRepository;
+import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.RegisterTask;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.ui.CustomFieldsUIManager;
 import org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 public class RegisterFragment extends AppFragment implements SubmitListener, RegisterTask.RegisterListener {
+
 
 	private ValidableTextInputLayout usernameField;
 	private ValidableTextInputLayout emailField;
@@ -64,14 +81,22 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	private ValidableTextInputLayout jobTitleField;
 	private ValidableTextInputLayout organisationField;
 	private ValidableTextInputLayout phoneNoField;
-	private List<ValidableTextInputLayout> fields;
+	private List<ValidableTextInputLayout> fields = new ArrayList<>();
 
+	private LinearLayout customFieldsContainer;
+	private CustomFieldsUIManager fieldsManager;
 	private Button registerButton;
 	private Button loginButton;
 	private ProgressDialog pDialog;
 
 	@Inject
+	CustomFieldsRepository customFieldsRepo;
+
+	List<CustomField> profileCustomFields;
+
+	@Inject
 	ApiEndpoint apiEndpoint;
+
 
 	public static RegisterFragment newInstance() {
 	    return new RegisterFragment();
@@ -95,9 +120,10 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		phoneNoField = vv.findViewById(R.id.register_form_phoneno_field);
 		registerButton = vv.findViewById(R.id.register_btn);
 		loginButton = vv.findViewById(R.id.action_login_btn);
+		customFieldsContainer = vv.findViewById(R.id.custom_fields_container);
 
-		fields = Arrays.asList(usernameField, emailField, passwordField, passwordAgainField,
-				firstnameField, lastnameField, jobTitleField, organisationField, phoneNoField);
+		fields.addAll(Arrays.asList(usernameField, emailField, passwordField, passwordAgainField,
+				firstnameField, lastnameField, jobTitleField, organisationField, phoneNoField));
 
 		return vv;
 	}
@@ -106,6 +132,10 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		getAppComponent().inject(this);
+
+		profileCustomFields = customFieldsRepo.getAll(getContext());
+		fieldsManager = new CustomFieldsUIManager(this.getActivity(), profileCustomFields);
+		fieldsManager.createFieldsInContainer(customFieldsContainer);
 
 		registerButton.setOnClickListener(new View.OnClickListener() {
 			
@@ -151,7 +181,6 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	}
 
 
-
 	public void onRegisterClick() {
 		// get form fields
 		String username = usernameField.getCleanedValue();
@@ -168,6 +197,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		for (ValidableTextInputLayout field : fields){
 			valid = field.validate() && valid;
 		}
+		valid = fieldsManager.validateFields() && valid;
 
 		//If the rest of email validations passed, check that the email is valid
 		if (emailField.validate() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -203,6 +233,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
             u.setJobTitle(jobTitle);
             u.setOrganisation(organisation);
             u.setPhoneNo(phoneNo);
+			u.setUserCustomFields(fieldsManager.getCustomFieldValues());
             executeRegisterTask(u);
         }
 
@@ -216,7 +247,6 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 				passwordField.requestFocus();
 			}
 			currentValid = false;
-
 
 		}
 		else if (!password.equals(passwordAgain)) {

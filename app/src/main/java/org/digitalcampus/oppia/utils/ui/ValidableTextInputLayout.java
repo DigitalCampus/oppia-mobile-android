@@ -10,7 +10,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.digitalcampus.mobile.learning.R;
 
-public class ValidableTextInputLayout extends TextInputLayout {
+public class ValidableTextInputLayout extends TextInputLayout implements ValidableField{
 
     private static final String REQUIRED_SPANNED_HINT = "<string>%s <span style=\"color:red;\">*</span></string>";
 
@@ -19,6 +19,11 @@ public class ValidableTextInputLayout extends TextInputLayout {
 
     public ValidableTextInputLayout(Context context) {
         super(context);
+    }
+
+    public ValidableTextInputLayout(Context context, boolean isRequired) {
+        super(context);
+        required = isRequired;
     }
 
     public ValidableTextInputLayout(Context context, AttributeSet attrs) {
@@ -43,6 +48,10 @@ public class ValidableTextInputLayout extends TextInputLayout {
             styledAttrs.recycle();
         }
         initialize();
+    }
+
+    public void setRequired(boolean required){
+        this.required = required;
     }
 
     public void initialize(){
@@ -78,7 +87,6 @@ public class ValidableTextInputLayout extends TextInputLayout {
     }
 
     public void setText(String text) {
-
         getEditText().setText(text);
     }
 

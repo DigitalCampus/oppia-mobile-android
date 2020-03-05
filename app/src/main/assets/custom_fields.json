@@ -1,0 +1,31 @@
+{
+  "fields": [
+    {
+      "name":"custom1",
+      "label":"Custom int",
+      "required":false,
+      "helper_text":"",
+      "order": 1,
+      "type":"int"
+    },
+
+    {
+      "name":"custom2",
+      "label":"Custom string",
+      "required":true,
+      "helper_text":"This is required",
+      "type":"str",
+      "order": 2
+    },
+
+    {
+      "name":"custom3",
+      "label":"Custom boolean",
+      "required":true,
+      "helper_text":"Check this to complete",
+      "type":"bool",
+      "order": 1
+    }
+  ]
+
+}

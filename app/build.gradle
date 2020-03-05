@@ -94,6 +94,8 @@ android {
             buildConfigField "int", "ADMIN_PASSWORD_OVERRIDE_VERSION", runtimeProps['ADMIN_PASSWORD_OVERRIDE_VERSION']
             buildConfigField "String", "ADMIN_PROTECT_INITIAL_PASSWORD", "\"" + runtimeProps['ADMIN_PROTECT_INITIAL_PASSWORD'] + "\""
 
+            buildConfigField "int", "LOAD_CUSTOMFIELDS_VERSION", runtimeProps['LOAD_CUSTOMFIELDS_VERSION']
+
             buildConfigField "boolean", "START_COURSEINDEX_COLLAPSED", runtimeProps['START_COURSEINDEX_COLLAPSED']
             resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
             resValue "string", "MENU_ALLOW_COURSE_DOWNLOAD_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_COURSE_DOWNLOAD']

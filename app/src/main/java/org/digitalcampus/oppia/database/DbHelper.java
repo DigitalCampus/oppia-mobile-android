@@ -22,9 +22,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import androidx.preference.PreferenceManager;
 import android.provider.BaseColumns;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.splunk.mint.Mint;
@@ -40,6 +42,8 @@ import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.QuizAttempt;
@@ -181,6 +185,27 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String USER_C_PHONE = "phoneNo";
 
 
+    private static final String CUSTOM_FIELD_TABLE = "customfield";
+    private static final String CUSTOM_FIELD_C_ID = BaseColumns._ID;
+    private static final String CUSTOM_FIELD_C_KEY = "field_key";
+    private static final String CUSTOM_FIELD_C_REQUIRED = "required";
+    private static final String CUSTOM_FIELD_C_TYPE = "fieldtype";
+    private static final String CUSTOM_FIELD_C_LABEL = "label";
+    private static final String CUSTOM_FIELD_C_HELPTEXT = "helptext";
+    private static final String CUSTOM_FIELD_C_ORDER = "field_order";
+
+    // User Custom Fields
+    static final String USER_CF_TABLE = "user_cf";
+    private static final String USER_CF_ID = BaseColumns._ID;
+    private static final String USER_CF_USER_ID = "user_id";
+    private static final String USER_CF_USERNAME = "username";
+    private static final String CF_FIELD_KEY = "field_key";
+    private static final String CF_VALUE_STR = "value_str";
+    private static final String CF_VALUE_INT = "value_int";
+    private static final String CF_VALUE_BOOL = "value_bool";
+    private static final String CF_VALUE_FLOAT = "value_float";
+
+
     // Constructor
     private DbHelper(Context ctx) { //
         super(ctx, DB_NAME, null, DB_VERSION);
@@ -215,6 +240,8 @@ public class DbHelper extends SQLiteOpenHelper {
         createUserTable(db);
         createCourseGamificationTable(db);
         createActivityGamificationTable(db);
+        createUserCustomFieldsTable(db);
+        createCustomFieldTable(db);
     }
 
     public void beginTransaction() {
@@ -341,6 +368,33 @@ public class DbHelper extends SQLiteOpenHelper {
                 + ACTIVITY_GAME_C_ACTIVITYID + " integer,"
                 + ACTIVITY_GAME_C_EVENT + STR_TEXT_COMMA
                 + ACTIVITY_GAME_C_POINTS + " integer default 0 )";
+        db.execSQL(mSql);
+    }
+
+    private void createUserCustomFieldsTable(SQLiteDatabase db) {
+
+        String sql = "CREATE TABLE ["+USER_CF_TABLE+"] (" +
+                "["+USER_CF_ID+"]" + STR_INT_PRIMARY_KEY_AUTO +
+                "["+ USER_CF_USERNAME +"]" + STR_TEXT_COMMA+
+                "["+ CF_FIELD_KEY +"]" + STR_TEXT_COMMA +
+                "["+ CF_VALUE_STR +"]" + STR_TEXT_COMMA +
+                "["+ CF_VALUE_INT +"]" + STR_INT_COMMA +
+                "["+ CF_VALUE_BOOL +"] BOOLEAN, " +
+                "["+ CF_VALUE_FLOAT +"] FLOAT, " +
+                "CONSTRAINT unq UNIQUE (" + USER_CF_USERNAME + ", "+ CF_FIELD_KEY +")" +
+                ");";
+        db.execSQL(sql);
+    }
+
+    private void createCustomFieldTable(SQLiteDatabase db) {
+        String mSql = STR_CREATE_TABLE + CUSTOM_FIELD_TABLE + " ("
+                + CUSTOM_FIELD_C_ID + STR_INT_PRIMARY_KEY_AUTO
+                + CUSTOM_FIELD_C_KEY + STR_TEXT_COMMA
+                + CUSTOM_FIELD_C_LABEL + STR_TEXT_COMMA
+                + CUSTOM_FIELD_C_HELPTEXT + STR_TEXT_COMMA
+                + CUSTOM_FIELD_C_TYPE + STR_TEXT_COMMA
+                + CUSTOM_FIELD_C_ORDER + STR_INT_COMMA
+                + CUSTOM_FIELD_C_REQUIRED + STR_INT_DEFAULT_O + ")";
         db.execSQL(mSql);
     }
 
@@ -519,6 +573,11 @@ public class DbHelper extends SQLiteOpenHelper {
             db.execSQL(STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_ORGANIZATION + STR_TEXT_NULL + ";");
         }
 
+        if (oldVersion < 40) {
+            createUserCustomFieldsTable(db);
+            createCustomFieldTable(db);
+        }
+
     }
 
 
@@ -636,7 +695,49 @@ public class DbHelper extends SQLiteOpenHelper {
             String[] args = new String[]{String.valueOf(userId)};
             db.update(USER_TABLE, values, s, args);
         }
+        insertOrUpdateCustomFields(user);
+
         return userId;
+    }
+
+    private void insertOrUpdateCustomFields(User user) {
+        List<ContentValues> contenValuesList = convertCFtoCV(user.getUserCustomFields());
+        for (ContentValues contentValues : contenValuesList) {
+            contentValues.put(USER_CF_USERNAME, user.getUsername());
+            try {
+                db.insertOrThrow(USER_CF_TABLE, null, contentValues);
+            } catch (SQLiteException e) {
+                String s = USER_CF_USERNAME + "=? AND " + CF_FIELD_KEY + "=?";
+                String[] args = new String[] { String.valueOf(user.getUsername()), contentValues.getAsString(CF_FIELD_KEY) };
+                db.update(USER_CF_TABLE, contentValues, s, args);
+            }
+        }
+
+    }
+
+    private List<ContentValues> convertCFtoCV(Map<String, CustomValue> customFields) {
+
+        List<ContentValues> contentValuesList = new ArrayList<>();
+        for (Map.Entry<String, CustomValue> entry : customFields.entrySet()) {
+            String key = entry.getKey();
+            CustomValue customValue = entry.getValue();
+            Object value = customValue.getValue();
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(CF_FIELD_KEY, key);
+            if (value instanceof String) {
+                contentValues.put(CF_VALUE_STR, (String) value);
+            } else if (value instanceof Integer) {
+                contentValues.put(CF_VALUE_INT, (Integer) value);
+            } else if (value instanceof Float) {
+                contentValues.put(CF_VALUE_FLOAT, (Float) value);
+            } else if (value instanceof Boolean) {
+                contentValues.put(CF_VALUE_BOOL, (Boolean) value);
+            }
+            contentValuesList.add(contentValues);
+        }
+
+        return contentValuesList;
     }
 
     public void deleteUser(String username) {
@@ -1080,8 +1181,45 @@ public class DbHelper extends SQLiteOpenHelper {
             u.setPassword(c.getString(c.getColumnIndex(USER_C_PASSWORDPLAIN)));
             u.setPasswordAgain(c.getString(c.getColumnIndex(USER_C_PASSWORDPLAIN)));
         }
+        fetchUserCustomFields(u);
 
         return u;
+    }
+
+    private void fetchUserCustomFields(User u) {
+
+        String s = USER_C_USERNAME + "=? ";
+        String[] args = new String[]{ u.getUsername() };
+        Cursor c = db.query(USER_CF_TABLE, null, s, args, null, null, null);
+
+        List<CustomField> cFields = this.getCustomFields();
+
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            String key = c.getString(c.getColumnIndex(CF_FIELD_KEY));
+            for (CustomField field : cFields){
+                if (TextUtils.equals(key, field.getKey())){
+                    if (field.isString()){
+                        String value = c.getString(c.getColumnIndex(CF_VALUE_STR));
+                        u.putCustomField(key, new CustomValue<>(value));
+                    }
+                    else if (field.isBoolean()){
+                        boolean value = c.getInt(c.getColumnIndex(CF_VALUE_BOOL)) == 1;
+                        u.putCustomField(key, new CustomValue<>(value));
+                    }
+                    else if (field.isInteger()){
+                        int value = c.getInt(c.getColumnIndex(CF_VALUE_INT));
+                        u.putCustomField(key, new CustomValue<>(value));
+                    }
+                    else if (field.isFloat()){
+                        float value = c.getFloat(c.getColumnIndex(CF_VALUE_FLOAT));
+                        u.putCustomField(key, new CustomValue<>(value));
+                    }
+                }
+            }
+            c.moveToNext();
+        }
+        c.close();
     }
 
     private User getUser(Cursor c) throws UserNotFoundException {
@@ -1965,6 +2103,55 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
+    public void insertOrUpdateCustomField(CustomField field) {
+
+        if (TextUtils.isEmpty(field.getKey()))
+            return;
+
+        ContentValues values = new ContentValues();
+        values.put(CUSTOM_FIELD_C_KEY, field.getKey());
+        values.put(CUSTOM_FIELD_C_TYPE, field.getType());
+        values.put(CUSTOM_FIELD_C_HELPTEXT, field.getHelperText());
+        values.put(CUSTOM_FIELD_C_LABEL, field.getLabel());
+        values.put(CUSTOM_FIELD_C_REQUIRED, field.isRequired()?1:0);
+        values.put(CUSTOM_FIELD_C_ORDER, field.getOrder());
+
+        String s = CUSTOM_FIELD_C_KEY + "=?";
+        String[] args = new String[]{ field.getKey() };
+        Cursor c = db.query(CUSTOM_FIELD_TABLE, null, s, args, null, null, null);
+        boolean toUpdate = c.getCount() > 0;
+        c.close();
+
+        if (toUpdate){
+            db.update(CUSTOM_FIELD_TABLE, values, s, args);
+        }
+        else{
+            db.insertOrThrow(CUSTOM_FIELD_TABLE, null, values);
+        }
+
+    }
+
+    public List<CustomField> getCustomFields(){
+        Cursor c = db.query(CUSTOM_FIELD_TABLE, null, null, null, null, null, CUSTOM_FIELD_C_ORDER);
+        c.moveToFirst();
+
+        ArrayList<CustomField> fields = new ArrayList<>();
+        while (!c.isAfterLast()) {
+            CustomField field = new CustomField();
+            field.setKey(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_KEY)));
+            field.setType(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_TYPE)));
+            field.setRequired(c.getInt(c.getColumnIndex(CUSTOM_FIELD_C_REQUIRED))==1);
+            field.setOrder(c.getInt(c.getColumnIndex(CUSTOM_FIELD_C_ORDER)));
+            field.setLabel(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_LABEL)));
+            field.setHelperText(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_HELPTEXT)));
+
+            fields.add(field);
+            c.moveToNext();
+        }
+        c.close();
+        return fields;
+    }
+
     /* Methods SQLiteDatabase free. When all previous ones are migrated, DbHelper class can be used only for
         common methods to access Room Database and remove the inheritance of SQLiteOpenHelper and all db logic
      */
@@ -2001,7 +2188,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public static final String LEADERBOARD_TABLE = "leaderboard";
     public static final String USER_PREFS_TABLE = "userprefs";
-    public static final String USER_CF_TABLE = "user_cf";
 
     public void dropTable(String table) {
         db.execSQL(STR_DROP_IF_EXISTS + table);
