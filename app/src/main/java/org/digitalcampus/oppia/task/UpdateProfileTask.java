@@ -27,6 +27,8 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
@@ -36,6 +38,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -105,6 +108,14 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
             json.put("last_name", u.getLastname());
             json.put("job_title", u.getJobTitle());
             json.put("organisation", u.getOrganisation());
+
+            List<CustomField> cFields = DbHelper.getInstance(ctx).getCustomFields();
+            for (CustomField field : cFields){
+                CustomValue value = u.getCustomField(field.getKey());
+                if (value != null){
+                    json.put(field.getKey(), value.getValue());
+                }
+            }
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = createRequestBuilderWithUserAuth(apiEndpoint.getFullURL(ctx, Paths.UPDATE_PROFILE_PATH))

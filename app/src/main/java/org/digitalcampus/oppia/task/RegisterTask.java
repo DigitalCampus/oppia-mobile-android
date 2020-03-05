@@ -27,6 +27,7 @@ import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
@@ -101,7 +102,7 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
             json.put("username", u.getUsername());
             json.put("password", u.getPassword());
             json.put("passwordagain", u.getPasswordAgain());
-            json.put("email", u.getEmail());
+
             json.put("firstname", u.getFirstname());
             json.put("lastname", u.getLastname());
             json.put("jobtitle", u.getJobTitle());
@@ -110,7 +111,10 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
 
             List<CustomField> cFields = DbHelper.getInstance(ctx).getCustomFields();
             for (CustomField field : cFields){
-                json.put(field.getKey(), u.getCustomField(field.getKey()).getValue());
+                CustomValue value = u.getCustomField(field.getKey());
+                if (value != null){
+                    json.put(field.getKey(), value.getValue());
+                }
             }
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);

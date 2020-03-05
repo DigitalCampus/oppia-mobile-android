@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.model;
 
 import org.digitalcampus.oppia.utils.CryptoUtils;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -180,6 +181,10 @@ public class User {
 
 	public CustomValue getCustomField(String key){
 		return userCustomFields.get(key);
+	}
+
+	public void putCustomField(String key, CustomValue value){
+		userCustomFields.put(key, value);
 	}
 
 	public void setUserCustomFields(Map<String, CustomValue> userCustomFields) {

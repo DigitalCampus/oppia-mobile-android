@@ -7,24 +7,31 @@ import android.view.View;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityEditProfileBinding;
 import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.UpdateProfileTask;
+import org.digitalcampus.oppia.utils.ui.CustomFieldsUIManager;
 import org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 
 public class EditProfileActivity extends AppActivity implements View.OnClickListener, UpdateProfileTask.ResponseListener {
 
     private ActivityEditProfileBinding binding;
+    private CustomFieldsUIManager fieldsManager;
 
     @Inject
     ApiEndpoint apiEndpoint;
 
     @Inject
     User user;
+
+    @Inject
+    List<CustomField> profileCustomFields;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +42,9 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         binding.btnSaveProfile.setOnClickListener(this);
 
         getAppComponent().inject(this);
+
+        fieldsManager = new CustomFieldsUIManager(this, profileCustomFields);
+        fieldsManager.createFieldsInContainer(binding.customFieldsContainer);
 
         fillUserProfileData();
     }
@@ -53,6 +63,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         binding.fieldLastname.setText(user.getLastname());
         binding.fieldOrganisation.setText(user.getOrganisation());
         binding.fieldJobtitle.setText(user.getJobTitle());
+        fieldsManager.fillWithUserData(user);
     }
 
     @Override
@@ -96,6 +107,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
             user.setEmail(email);
             user.setJobTitle(jobTitle);
             user.setOrganisation(organisation);
+            user.setUserCustomFields(fieldsManager.getCustomFieldValues());
             executeUpdateProfileTask(user);
         }
     }

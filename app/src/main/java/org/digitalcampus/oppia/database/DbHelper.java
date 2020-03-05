@@ -74,7 +74,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String TAG = DbHelper.class.getSimpleName();
     public static final String DB_NAME = "mobilelearning.db";
-    public static final int DB_VERSION = 32;
+    public static final int DB_VERSION = 40;
 
     private static DbHelper instance;
     private SQLiteDatabase db;
@@ -573,12 +573,8 @@ public class DbHelper extends SQLiteOpenHelper {
             db.execSQL(STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_ORGANIZATION + STR_TEXT_NULL + ";");
         }
 
-
-        if (oldVersion < 31) {
+        if (oldVersion < 40) {
             createUserCustomFieldsTable(db);
-        }
-
-        if (oldVersion < 32) {
             createCustomFieldTable(db);
         }
 
@@ -1205,19 +1201,19 @@ public class DbHelper extends SQLiteOpenHelper {
                 if (TextUtils.equals(key, field.getKey())){
                     if (field.isString()){
                         String value = c.getString(c.getColumnIndex(CF_VALUE_STR));
-                        u.getUserCustomFields().put(key, new CustomValue<>(value));
+                        u.putCustomField(key, new CustomValue<>(value));
                     }
                     else if (field.isBoolean()){
                         boolean value = c.getInt(c.getColumnIndex(CF_VALUE_BOOL)) == 1;
-                        u.getUserCustomFields().put(key, new CustomValue<>(value));
+                        u.putCustomField(key, new CustomValue<>(value));
                     }
                     else if (field.isInteger()){
                         int value = c.getInt(c.getColumnIndex(CF_VALUE_INT));
-                        u.getUserCustomFields().put(key, new CustomValue<>(value));
+                        u.putCustomField(key, new CustomValue<>(value));
                     }
                     else if (field.isFloat()){
                         float value = c.getFloat(c.getColumnIndex(CF_VALUE_FLOAT));
-                        u.getUserCustomFields().put(key, new CustomValue<>(value));
+                        u.putCustomField(key, new CustomValue<>(value));
                     }
                 }
             }
