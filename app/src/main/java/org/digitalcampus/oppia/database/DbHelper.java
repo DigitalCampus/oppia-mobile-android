@@ -1186,7 +1186,45 @@ public class DbHelper extends SQLiteOpenHelper {
             u.setPasswordAgain(c.getString(c.getColumnIndex(USER_C_PASSWORDPLAIN)));
         }
 
+        fetchUserCustomFields(u);
+
         return u;
+    }
+
+    private void fetchUserCustomFields(User u) {
+
+        String s = USER_C_USERNAME + "=? ";
+        String[] args = new String[]{ u.getUsername() };
+        Cursor c = db.query(USER_CF_TABLE, null, s, args, null, null, null);
+
+        List<CustomField> cFields = this.getCustomFields();
+
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            String key = c.getString(c.getColumnIndex(CF_FIELD_KEY));
+            for (CustomField field : cFields){
+                if (TextUtils.equals(key, field.getKey())){
+                    if (field.isString()){
+                        String value = c.getString(c.getColumnIndex(CF_VALUE_STR));
+                        u.getUserCustomFields().put(key, new CustomValue<>(value));
+                    }
+                    else if (field.isBoolean()){
+                        boolean value = c.getInt(c.getColumnIndex(CF_VALUE_BOOL)) == 1;
+                        u.getUserCustomFields().put(key, new CustomValue<>(value));
+                    }
+                    else if (field.isInteger()){
+                        int value = c.getInt(c.getColumnIndex(CF_VALUE_INT));
+                        u.getUserCustomFields().put(key, new CustomValue<>(value));
+                    }
+                    else if (field.isFloat()){
+                        float value = c.getFloat(c.getColumnIndex(CF_VALUE_FLOAT));
+                        u.getUserCustomFields().put(key, new CustomValue<>(value));
+                    }
+                }
+            }
+            c.moveToNext();
+        }
+        c.close();
     }
 
     private User getUser(Cursor c) throws UserNotFoundException {

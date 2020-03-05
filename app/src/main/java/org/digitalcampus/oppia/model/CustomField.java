@@ -1,6 +1,7 @@
 package org.digitalcampus.oppia.model;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.splunk.mint.Mint;
 
@@ -65,6 +66,11 @@ public class CustomField {
     public void setOrder(int order) {
         this.order = order;
     }
+
+    public boolean isString(){ return TextUtils.equals(type, "str"); }
+    public boolean isBoolean(){ return TextUtils.equals(type, "bool"); }
+    public boolean isInteger(){ return TextUtils.equals(type, "int"); }
+    public boolean isFloat(){ return TextUtils.equals(type, "float"); }
 
     public static void loadCustomFieldsFromAssets(Context ctx){
         String data = StorageUtils.readFileFromAssets(ctx, "custom_fields.json");
