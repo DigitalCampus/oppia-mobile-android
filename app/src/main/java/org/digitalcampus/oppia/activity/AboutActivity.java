@@ -19,7 +19,7 @@ package org.digitalcampus.oppia.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.view.MenuItem;
 
 import androidx.fragment.app.Fragment;
