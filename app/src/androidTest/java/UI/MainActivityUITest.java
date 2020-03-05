@@ -290,15 +290,8 @@ public class MainActivityUITest {
 
         openDrawer();
 
-        onView(
-                allOf(
-                        withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                        withId(R.id.btn_expand_profile_options)))
-                .check(doesNotExist());
-
-        // when added Edit profile option, uncomment this and remove previous line
-//        onView(withId(R.id.btn_expand_profile_options)).perform(click());
-//        onView(withText(R.string.logout)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.btn_expand_profile_options)).perform(click());
+        onView(withText(R.string.logout)).check(matches(not(isDisplayed())));
     }
 
     @Test

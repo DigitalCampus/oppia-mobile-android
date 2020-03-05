@@ -18,6 +18,7 @@ import org.digitalcampus.oppia.model.User;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 
 import Utils.MockedApiEndpointTest;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
@@ -48,19 +49,8 @@ public class EditProfileUITest extends MockedApiEndpointTest {
     private static final String VALID_ORGANIZATION = "A organization";
     private static final String VALID_JOB_TITLE = "A job title";
 
-    @Rule public DaggerMockRule<AppComponent> daggerRule =
-            new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
-                    .getTargetContext()
-                    .getApplicationContext())).set(
-                    new DaggerMockRule.ComponentSetter<AppComponent>() {
-                        @Override public void setComponent(AppComponent component) {
-                            App app =
-                                    (App) InstrumentationRegistry.getInstrumentation()
-                                            .getTargetContext()
-                                            .getApplicationContext();
-                            app.setComponent(component);
-                        }
-                    });
+    @Mock
+    protected User user;
 
     @Rule
     public ActivityTestRule<EditProfileActivity> editProfileActivityTestRule =
