@@ -2103,6 +2103,10 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
+    public void clearCustomFields(){
+        db.delete(CUSTOM_FIELD_TABLE, null, null);
+    }
+
     public void insertOrUpdateCustomField(CustomField field) {
 
         if (TextUtils.isEmpty(field.getKey()))
