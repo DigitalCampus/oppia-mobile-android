@@ -40,8 +40,6 @@ public class DBTest {
         user.setEmail("xxx2@yyy.zzz");
         user.setCounty("spain");
         user.setDistrict("alcala");
-        user.getUserCustomFields().put("afloat", new CustomValue(0.8f));
-        user.getUserCustomFields().put("abool", new CustomValue(true));
 
         dbHelper.addOrUpdateUser(user);
 
@@ -49,8 +47,6 @@ public class DBTest {
             User user1 = dbHelper.getUser(user.getUsername());
             assertEquals(user1.getCounty(), "spain");
             assertEquals(user1.getDistrict(), "alcala");
-            assertEquals(user1.getUserCustomFields().get("afloat").getValue(), 0.8f);
-            assertEquals(user1.getUserCustomFields().get("abool").getValue(), true);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }

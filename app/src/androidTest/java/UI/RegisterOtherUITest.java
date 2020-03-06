@@ -87,7 +87,9 @@ public class RegisterOtherUITest {
         onView(withId(R.id.btn_reg_other)).perform(click());
 
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username With Spaces"));
+                .perform(scrollTo(), typeText("Username With Spaces"));
+
+        closeSoftKeyboard();
 
         onView(withId(R.id.btn_register_perform))
                 .perform(click());
@@ -171,10 +173,11 @@ public class RegisterOtherUITest {
         enterValidRequiredData();
 
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), replaceText(""));
+                .perform(scrollTo(), replaceText(""));
 
-        onView(withId(R.id.btn_register_perform))
-                .perform(click());
+        closeSoftKeyboard();
+
+        onView(withId(R.id.btn_register_perform)).perform(click());
 
         onErrorViewWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
                 .check(matches(withText(R.string.field_required)));

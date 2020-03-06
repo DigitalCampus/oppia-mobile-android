@@ -69,7 +69,8 @@ public class NumericWithFeedbackTest {
                 .check(matches(withText(FIRST_QUESTION_TITLE)));
 
         onView(withId(R.id.responsetext))
-                .perform(closeSoftKeyboard(), scrollTo(), typeText(CORRECT_ANSWER));
+                .perform(scrollTo(), typeText(CORRECT_ANSWER));
+        closeSoftKeyboard();
         onView(withId(R.id.mquiz_next_btn)).perform(click());
 
         String actual = Utils.TestUtils.getCurrentActivity().getString(R.string.widget_quiz_results_score, (float) 100);
