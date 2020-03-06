@@ -2,7 +2,7 @@ package org.digitalcampus.oppia.api;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;

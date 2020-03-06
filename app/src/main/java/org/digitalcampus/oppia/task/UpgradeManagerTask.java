@@ -22,7 +22,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
@@ -41,6 +41,7 @@ import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.SearchUtils;
@@ -151,6 +152,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		DBMigration.newInstance(ctx).checkMigrationStatus();
 
 		overrideAdminPasswordTask();
+		reloadCustomFieldsIfNeeded();
 		
 		return payload;
 	}
@@ -420,7 +422,17 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 					.apply();
 			}
 		}
+	}
 
+	private void reloadCustomFieldsIfNeeded(){
+		if (BuildConfig.LOAD_CUSTOMFIELDS_VERSION <= BuildConfig.VERSION_CODE){
+			String loadedConfig = "customfields_loaded_" + BuildConfig.LOAD_CUSTOMFIELDS_VERSION;
+			boolean alreadyLoaded = prefs.getBoolean(loadedConfig, false);
+			if (!alreadyLoaded){
+				CustomField.loadCustomFieldsFromAssets(ctx);
+				prefs.edit().putBoolean(loadedConfig, true).apply();
+			}
+		}
 	}
 	
 	private class V54UpgradeQuizObj {

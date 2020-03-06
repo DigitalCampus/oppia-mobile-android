@@ -1,16 +1,17 @@
-package org.digitalcampus.oppia.utils.ui;
+package org.digitalcampus.oppia.utils.ui.fields;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.AttributeSet;
+import android.widget.EditText;
 
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.digitalcampus.mobile.learning.R;
 
-public class ValidableTextInputLayout extends TextInputLayout {
+public class ValidableTextInputLayout extends TextInputLayout implements ValidableField{
 
     private static final String REQUIRED_SPANNED_HINT = "<string>%s <span style=\"color:red;\">*</span></string>";
 
@@ -19,6 +20,11 @@ public class ValidableTextInputLayout extends TextInputLayout {
 
     public ValidableTextInputLayout(Context context) {
         super(context);
+    }
+
+    public ValidableTextInputLayout(Context context, boolean isRequired) {
+        super(context);
+        required = isRequired;
     }
 
     public ValidableTextInputLayout(Context context, AttributeSet attrs) {
@@ -45,6 +51,10 @@ public class ValidableTextInputLayout extends TextInputLayout {
         initialize();
     }
 
+    public void setRequired(boolean required){
+        this.required = required;
+    }
+
     public void initialize(){
         if (required && this.getEditText() != null){
             String html = String.format(REQUIRED_SPANNED_HINT, this.getHint());
@@ -54,7 +64,11 @@ public class ValidableTextInputLayout extends TextInputLayout {
     }
 
     public boolean validate(){
-        String text = getEditText().getText().toString().trim();
+        EditText input = getEditText();
+        if (input == null){
+            return true;
+        }
+        String text = input.getText().toString().trim();
         boolean valid = true;
         if (required && (text.length() == 0)){
             this.setErrorEnabled(true);
@@ -74,12 +88,18 @@ public class ValidableTextInputLayout extends TextInputLayout {
     }
 
     public String getCleanedValue(){
-        return getEditText().getText().toString().trim();
+        EditText input = getEditText();
+        if (input == null){
+            return null;
+        }
+        return input.getText().toString().trim();
     }
 
     public void setText(String text) {
-
-        getEditText().setText(text);
+        EditText input = getEditText();
+        if (input != null){
+            input.setText(text);
+        }
     }
 
 

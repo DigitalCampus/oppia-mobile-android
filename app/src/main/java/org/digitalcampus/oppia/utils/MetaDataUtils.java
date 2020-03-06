@@ -23,7 +23,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.BatteryManager;
 import android.os.Build;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import org.digitalcampus.oppia.activity.PrefsActivity;

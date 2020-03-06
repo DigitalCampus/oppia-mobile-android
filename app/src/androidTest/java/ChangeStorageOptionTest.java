@@ -2,7 +2,7 @@
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 

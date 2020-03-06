@@ -30,7 +30,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.fragments.AppFragment;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout;
+import org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout;
 
 import java.util.Arrays;
 import java.util.List;

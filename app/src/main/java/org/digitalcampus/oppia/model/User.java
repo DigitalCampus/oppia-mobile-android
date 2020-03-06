@@ -1,16 +1,16 @@
-/* 
+/*
  * This file is part of OppiaMobile - https://digital-campus.org/
- * 
+ *
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * OppiaMobile is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -113,21 +113,21 @@ public class User {
 	public void setScoringEnabled(boolean scoringEnabled) {
 		this.scoringEnabled = scoringEnabled;
 	}
-	
+
 	public boolean isBadgingEnabled() {
 		return badgingEnabled;
 	}
 	public void setBadgingEnabled(boolean badgingEnabled) {
 		this.badgingEnabled = badgingEnabled;
 	}
-	
+
 	public String getPasswordEncrypted() {
 		if (this.passwordEncrypted == null){
-            this.passwordEncrypted = CryptoUtils.encryptLocalPassword(this.password);
-        }
+			this.passwordEncrypted = CryptoUtils.encryptLocalPassword(this.password);
+		}
 		return this.passwordEncrypted;
 	}
-	
+
 	public void setPasswordEncrypted(String pwEncrypted){
 		this.passwordEncrypted = pwEncrypted;
 	}
@@ -137,9 +137,8 @@ public class User {
 			return CryptoUtils.encryptExternalPassword(this.password);
 		}
 		else return "";
-
 	}
-	
+
 	public long getUserId() {
 		return userId;
 	}
@@ -172,6 +171,14 @@ public class User {
 
 	public void setOfflineRegister(boolean offlineRegister) {
 		this.offlineRegister = offlineRegister;
+	}
+
+	public CustomValue getCustomField(String key){
+		return userCustomFields.get(key);
+	}
+
+	public void putCustomField(String key, CustomValue value){
+		userCustomFields.put(key, value);
 	}
 
 	public String getEmployeeID() {

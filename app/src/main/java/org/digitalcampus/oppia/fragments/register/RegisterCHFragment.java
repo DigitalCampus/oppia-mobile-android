@@ -21,7 +21,7 @@ import org.digitalcampus.oppia.fragments.AppFragment;
 import org.digitalcampus.oppia.model.County;
 import org.digitalcampus.oppia.model.District;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout;
+import org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;

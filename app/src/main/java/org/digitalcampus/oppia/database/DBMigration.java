@@ -64,7 +64,7 @@ public class DBMigration {
         if (currentVersion < 1) {
             copyUserPreferencesData(dbHelper);
             copyLeaderboardData(dbHelper);
-            copyUserCustomFieldsData(dbHelper);
+            //copyUserCustomFieldsData(dbHelper);
         }
 
 

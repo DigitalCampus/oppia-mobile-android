@@ -1,6 +1,6 @@
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;

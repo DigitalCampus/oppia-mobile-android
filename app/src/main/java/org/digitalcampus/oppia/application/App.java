@@ -21,7 +21,7 @@ package org.digitalcampus.oppia.application;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.room.Room;

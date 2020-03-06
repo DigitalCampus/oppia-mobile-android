@@ -29,6 +29,8 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.SubmitListener;
+import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
@@ -37,6 +39,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -75,7 +78,6 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
         try {
 			// update progress dialog
 			publishProgress(ctx.getString(R.string.login_process));
-
             JSONObject json = new JSONObject();
             json.put("username", u.getUsername());
             json.put("password", u.getPassword());
@@ -89,19 +91,12 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
                 JSONObject jsonResp = new JSONObject(response.body().string());
-                u.setApiKey(jsonResp.getString("api_key"));
-                u.setFirstname(jsonResp.getString("first_name"));
-                u.setLastname(jsonResp.getString("last_name"));
-                if (jsonResp.has("email") && jsonResp.has("organisation") && jsonResp.has("job_title")){
-                    u.setEmail(jsonResp.getString("email"));
-                    u.setOrganisation(jsonResp.getString("organisation"));
-                    u.setJobTitle(jsonResp.getString("job_title"));
-                }
+                setUserFields(jsonResp, u);
+                setCustomFields(jsonResp, u);
                 setPointsAndBadges(jsonResp, u);
                 setPointsAndBadgesEnabled(jsonResp, u);
                 setMetaData(jsonResp);
-                DbHelper db = DbHelper.getInstance(ctx);
-                db.addOrUpdateUser(u);
+                DbHelper.getInstance(ctx).addOrUpdateUser(u);
                 payload.setResult(true);
                 payload.setResultResponse(ctx.getString(R.string.login_complete));
             }
@@ -135,6 +130,42 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
 		
 		return payload;
 	}
+
+	private void setUserFields(JSONObject json, User u) throws JSONException {
+        u.setApiKey(json.getString("api_key"));
+        u.setFirstname(json.getString("first_name"));
+        u.setLastname(json.getString("last_name"));
+        if (json.has("email") && json.has("organisation") && json.has("job_title")){
+            u.setEmail(json.getString("email"));
+            u.setOrganisation(json.getString("organisation"));
+            u.setJobTitle(json.getString("job_title"));
+        }
+    }
+
+    private void setCustomFields(JSONObject json, User u) throws JSONException {
+        List<CustomField> cFields = DbHelper.getInstance(ctx).getCustomFields();
+        for (CustomField field : cFields){
+            String key = field.getKey();
+            if (json.has(key)){
+                if (field.isString()){
+                    String value = json.getString(key);
+                    u.putCustomField(key, new CustomValue<>(value));
+                }
+                else if (field.isBoolean()){
+                    boolean value = json.getBoolean(key);
+                    u.putCustomField(key, new CustomValue<>(value));
+                }
+                else if (field.isInteger()){
+                    int value = json.getInt(key);
+                    u.putCustomField(key, new CustomValue<>(value));
+                }
+                else if (field.isFloat()){
+                    float value = (float) json.getDouble(key);
+                    u.putCustomField(key, new CustomValue<>(value));
+                }
+            }
+        }
+    }
 
 	private void setPointsAndBadges(JSONObject jsonResp, User u){
         try {

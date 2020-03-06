@@ -3,7 +3,7 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;

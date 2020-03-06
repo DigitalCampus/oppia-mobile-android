@@ -20,7 +20,7 @@ package org.digitalcampus.oppia.utils.storage;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.StorageAccessListener;

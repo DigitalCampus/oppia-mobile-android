@@ -27,7 +27,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
