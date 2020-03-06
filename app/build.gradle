@@ -21,7 +21,7 @@ android {
         applicationId "org.digitalcampus.mobile.learning"
 
         minSdkVersion 23
-        targetSdkVersion 28
+        targetSdkVersion 29
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -154,9 +154,9 @@ jacoco {
 
 
 dependencies {
-    def workVersion = '2.3.1'
+    def workVersion = '2.3.3'
     def roomVersion = "1.1.1"
-    def fragmentVersion = '1.2.1'
+    def fragmentVersion = '1.2.2'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'joda-time:joda-time:2.3'
