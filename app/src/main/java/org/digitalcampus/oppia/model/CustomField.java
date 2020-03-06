@@ -12,6 +12,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class CustomField {
+
+    private static final String TYPE_STRING = "str";
+    private static final String TYPE_BOOLEAN = "bool";
+    private static final String TYPE_INT = "int";
+    private static final String TYPE_FLOAT = "float";
+
     private String key;
     private String label;
     private boolean required;
@@ -67,17 +73,19 @@ public class CustomField {
         this.order = order;
     }
 
-    public boolean isString(){ return TextUtils.equals(type, "str"); }
-    public boolean isBoolean(){ return TextUtils.equals(type, "bool"); }
-    public boolean isInteger(){ return TextUtils.equals(type, "int"); }
-    public boolean isFloat(){ return TextUtils.equals(type, "float"); }
+    public boolean isString(){ return TextUtils.equals(type, TYPE_STRING); }
+    public boolean isBoolean(){ return TextUtils.equals(type, TYPE_BOOLEAN); }
+    public boolean isInteger(){ return TextUtils.equals(type, TYPE_INT); }
+    public boolean isFloat(){ return TextUtils.equals(type, TYPE_FLOAT); }
 
     public static void loadCustomFieldsFromAssets(Context ctx){
         String data = StorageUtils.readFileFromAssets(ctx, "custom_fields.json");
         try {
             JSONObject json = new JSONObject(data);
             JSONArray fields = json.getJSONArray("fields");
-            DbHelper dbHelper = DbHelper.getInstance(ctx);
+            DbHelper db = DbHelper.getInstance(ctx);
+            db.clearCustomFields();
+
             for (int i = 0; i<fields.length(); i++){
                 JSONObject f = fields.getJSONObject(i);
                 CustomField field = new CustomField();
@@ -88,7 +96,7 @@ public class CustomField {
                 field.setHelperText(f.getString("helper_text"));
                 field.setOrder(f.getInt("order"));
 
-                dbHelper.insertOrUpdateCustomField(field);
+                db.insertOrUpdateCustomField(field);
             }
 
         } catch (JSONException e) {

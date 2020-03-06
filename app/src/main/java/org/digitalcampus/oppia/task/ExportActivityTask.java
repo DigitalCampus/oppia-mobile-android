@@ -83,9 +83,9 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
                 CustomValue value = u.getCustomField(field.getKey());
                 if (value != null){
                     userJSON += "\"" + field.getKey() + "\":"
-                            + (field.getType().equals("str") ? "\"" : "")
+                            + (field.isString() ? "\"" : "")
                             + value.getValue().toString()
-                            + (field.getType().equals("str") ? "\"" : "")
+                            + (field.isString() ? "\"" : "")
                             + ", ";
                 }
             }

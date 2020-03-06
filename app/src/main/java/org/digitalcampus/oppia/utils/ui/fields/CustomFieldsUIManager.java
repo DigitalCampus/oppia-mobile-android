@@ -34,7 +34,7 @@ public class CustomFieldsUIManager {
     public void createFieldsInContainer(ViewGroup container){
         for (CustomField field : fields){
 
-            ValidableField input = null;
+            ValidableField input;
             if (field.isBoolean()){
                 input = addSwitchLayout(container, field);
             }

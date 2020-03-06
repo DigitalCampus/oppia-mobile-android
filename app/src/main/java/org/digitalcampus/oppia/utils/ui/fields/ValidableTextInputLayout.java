@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.AttributeSet;
+import android.widget.EditText;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -63,7 +64,11 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
     }
 
     public boolean validate(){
-        String text = getEditText().getText().toString().trim();
+        EditText input = getEditText();
+        if (input == null){
+            return true;
+        }
+        String text = input.getText().toString().trim();
         boolean valid = true;
         if (required && (text.length() == 0)){
             this.setErrorEnabled(true);
@@ -83,11 +88,18 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
     }
 
     public String getCleanedValue(){
-        return getEditText().getText().toString().trim();
+        EditText input = getEditText();
+        if (input == null){
+            return null;
+        }
+        return input.getText().toString().trim();
     }
 
     public void setText(String text) {
-        getEditText().setText(text);
+        EditText input = getEditText();
+        if (input != null){
+            input.setText(text);
+        }
     }
 
 
