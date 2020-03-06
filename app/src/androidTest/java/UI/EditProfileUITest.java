@@ -14,11 +14,17 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
+import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.User;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import Utils.MockedApiEndpointTest;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
@@ -28,6 +34,7 @@ import static Utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -37,6 +44,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class EditProfileUITest extends MockedApiEndpointTest {
@@ -52,9 +61,17 @@ public class EditProfileUITest extends MockedApiEndpointTest {
     @Mock
     protected User user;
 
+    @Mock
+    protected CustomFieldsRepository customFieldsRepo;
+
     @Rule
     public ActivityTestRule<EditProfileActivity> editProfileActivityTestRule =
             new ActivityTestRule<>(EditProfileActivity.class, false, false);
+
+    @Before
+    public void setUp() throws Exception {
+        when(customFieldsRepo.getAll((Context) any())).thenReturn(new ArrayList<CustomField>());
+    }
 
     private void enterValidData() {
 
@@ -85,7 +102,7 @@ public class EditProfileUITest extends MockedApiEndpointTest {
         onEditTextWithinTextInputLayoutWithId(R.id.field_firstname)
                 .perform(scrollTo(), clearText());
         onEditTextWithinTextInputLayoutWithId(R.id.field_lastname)
-                .perform(scrollTo(), clearText());
+                .perform(scrollTo(), clearText(), closeSoftKeyboard());
 
         onView(withId(R.id.btn_save_profile)).perform(click());
 
@@ -106,7 +123,7 @@ public class EditProfileUITest extends MockedApiEndpointTest {
         editProfileActivityTestRule.launchActivity(null);
 
         onEditTextWithinTextInputLayoutWithId(R.id.field_email)
-                .perform(scrollTo(), clearText(), typeText("wrong-email-format"));
+                .perform(scrollTo(), clearText(), typeText("wrong-email-format"), closeSoftKeyboard());
 
         onView(withId(R.id.btn_save_profile)).perform(click());
 
@@ -123,7 +140,7 @@ public class EditProfileUITest extends MockedApiEndpointTest {
         editProfileActivityTestRule.launchActivity(null);
 
         enterValidData();
-
+        closeSoftKeyboard();
         onView(withId(R.id.btn_save_profile)).perform(click());
 
         Context context = InstrumentationRegistry.getInstrumentation().getContext();

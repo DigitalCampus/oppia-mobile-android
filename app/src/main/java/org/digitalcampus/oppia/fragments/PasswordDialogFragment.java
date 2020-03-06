@@ -34,31 +34,36 @@ import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 
 public class PasswordDialogFragment extends DialogFragment {
 
-        private AdminSecurityManager.AuthListener listener;
+    private AdminSecurityManager.AuthListener listener;
 
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-
-            builder.setView(inflater.inflate(R.layout.dialog_password, null))
-                    .setPositiveButton(R.string.ok, null)
-                    .setNegativeButton(android.R.string.cancel, null);
-            return builder.create();
-        }
-
+    /**      
+     * @deprecated
+     */
     @Override
-    public void onStart()
-    {
+    @Deprecated
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        builder.setView(inflater.inflate(R.layout.dialog_password, null))
+                .setPositiveButton(R.string.ok, null)
+                .setNegativeButton(android.R.string.cancel, null);
+        return builder.create();
+    }
+
+    /**      
+     * @deprecated
+     */
+    @Override
+    @Deprecated
+    public void onStart() {
         super.onStart();
         final AlertDialog d = (AlertDialog)getDialog();
-        if(d != null)
-        {
+        if(d != null) {
             Button positiveButton = d.getButton(DialogInterface.BUTTON_POSITIVE);
-            positiveButton.setOnClickListener(new View.OnClickListener()
-            {
-                public void onClick(View v)
-                {
+            positiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     EditText passwordField = d.findViewById(R.id.admin_password_field);
                     View errorMessage = d.findViewById(R.id.admin_password_error);
                     String password = passwordField.getText().toString();

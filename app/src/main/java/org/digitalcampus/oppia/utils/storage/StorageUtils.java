@@ -21,7 +21,11 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,6 +130,28 @@ public class StorageUtils {
         }
 
         return list;
+    }
+
+
+    public static String readFileFromAssets(Context ctx, String filename) {
+        String content = null;
+        InputStream is = null;
+        try {
+            is = ctx.getAssets().open(filename);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            content = new String(buffer, "UTF-8");
+        } catch (IOException e) {
+            Mint.logException(e);
+            return null;
+        }
+        finally {
+            try {
+                if (is != null) { is.close(); }
+            } catch (IOException e) { /* Pass */ }
+        }
+        return content;
     }
 
 }

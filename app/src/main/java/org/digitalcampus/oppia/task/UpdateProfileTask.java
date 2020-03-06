@@ -27,6 +27,8 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
@@ -36,6 +38,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -106,6 +109,14 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
             json.put("job_title", u.getJobTitle());
             json.put("organisation", u.getOrganisation());
 
+            List<CustomField> cFields = DbHelper.getInstance(ctx).getCustomFields();
+            for (CustomField field : cFields){
+                CustomValue value = u.getCustomField(field.getKey());
+                if (value != null){
+                    json.put(field.getKey(), value.getValue());
+                }
+            }
+
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = createRequestBuilderWithUserAuth(apiEndpoint.getFullURL(ctx, Paths.UPDATE_PROFILE_PATH))
                     .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, json.toString()))
@@ -115,19 +126,15 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 return true;
+            } else if (response.code() == 400) {
+                String bodyResponse = response.body().string();
+                payload.setResult(false);
+                payload.setResponseData(new ArrayList<Object>(Arrays.asList(SUBMIT_ERROR)));
+                payload.setResultResponse(bodyResponse);
+                Log.d(TAG, bodyResponse);
             } else {
-                switch (response.code()) {
-                    case 400:
-                        String bodyResponse = response.body().string();
-                        payload.setResult(false);
-                        payload.setResponseData(new ArrayList<Object>(Arrays.asList(SUBMIT_ERROR)));
-                        payload.setResultResponse(bodyResponse);
-                        Log.d(TAG, bodyResponse);
-                        break;
-                    default:
-                        payload.setResult(false);
-                        payload.setResultResponse(ctx.getString(R.string.error_connection));
-                }
+                payload.setResult(false);
+                payload.setResultResponse(ctx.getString(R.string.error_connection));
             }
 
         } catch (javax.net.ssl.SSLHandshakeException e) {
@@ -167,7 +174,7 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
                 }
 
                 String errorMessage = response.getResultResponse();
-                if ((response.getResponseData() != null) && (response.getResponseData().size() > 0)) {
+                if (response.getResponseData() != null && !response.getResponseData().isEmpty()) {
                     String data = (String) response.getResponseData().get(0);
                     if (data.equals(SUBMIT_ERROR)) {
                         try {

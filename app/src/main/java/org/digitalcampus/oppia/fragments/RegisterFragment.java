@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -40,20 +41,25 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.listener.SubmitListener;
+import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.RegisterTask;
 import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout;
+import org.digitalcampus.oppia.utils.ui.fields.CustomFieldsUIManager;
+import org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 
 public class RegisterFragment extends AppFragment implements SubmitListener, RegisterTask.RegisterListener {
+
 
 	private ValidableTextInputLayout usernameField;
 	private ValidableTextInputLayout emailField;
@@ -64,14 +70,22 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	private ValidableTextInputLayout jobTitleField;
 	private ValidableTextInputLayout organisationField;
 	private ValidableTextInputLayout phoneNoField;
-	private List<ValidableTextInputLayout> fields;
+	private List<ValidableTextInputLayout> fields = new ArrayList<>();
 
+	private LinearLayout customFieldsContainer;
+	private CustomFieldsUIManager fieldsManager;
 	private Button registerButton;
 	private Button loginButton;
 	private ProgressDialog pDialog;
 
 	@Inject
+	CustomFieldsRepository customFieldsRepo;
+
+	List<CustomField> profileCustomFields;
+
+	@Inject
 	ApiEndpoint apiEndpoint;
+
 
 	public static RegisterFragment newInstance() {
 	    return new RegisterFragment();
@@ -95,9 +109,10 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		phoneNoField = vv.findViewById(R.id.register_form_phoneno_field);
 		registerButton = vv.findViewById(R.id.register_btn);
 		loginButton = vv.findViewById(R.id.action_login_btn);
+		customFieldsContainer = vv.findViewById(R.id.custom_fields_container);
 
-		fields = Arrays.asList(usernameField, emailField, passwordField, passwordAgainField,
-				firstnameField, lastnameField, jobTitleField, organisationField, phoneNoField);
+		fields.addAll(Arrays.asList(usernameField, emailField, passwordField, passwordAgainField,
+				firstnameField, lastnameField, jobTitleField, organisationField, phoneNoField));
 
 		return vv;
 	}
@@ -107,14 +122,18 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		super.onActivityCreated(savedInstanceState);
 		getAppComponent().inject(this);
 
+		profileCustomFields = customFieldsRepo.getAll(getContext());
+		fieldsManager = new CustomFieldsUIManager(this.getActivity(), profileCustomFields);
+		fieldsManager.createFieldsInContainer(customFieldsContainer);
+
 		registerButton.setOnClickListener(new View.OnClickListener() {
-			
+			@Override
 			public void onClick(View v) {
 				onRegisterClick();
 			}
 		});
 		loginButton.setOnClickListener(new View.OnClickListener() {
-
+			@Override
 			public void onClick(View v) {
 				WelcomeActivity wa = (WelcomeActivity) RegisterFragment.super.getActivity();
 				wa.switchTab(WelcomeActivity.TAB_LOGIN);
@@ -151,7 +170,6 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	}
 
 
-
 	public void onRegisterClick() {
 		// get form fields
 		String username = usernameField.getCleanedValue();
@@ -168,6 +186,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		for (ValidableTextInputLayout field : fields){
 			valid = field.validate() && valid;
 		}
+		valid = fieldsManager.validateFields() && valid;
 
 		//If the rest of email validations passed, check that the email is valid
 		if (emailField.validate() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -203,6 +222,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
             u.setJobTitle(jobTitle);
             u.setOrganisation(organisation);
             u.setPhoneNo(phoneNo);
+			u.setUserCustomFields(fieldsManager.getCustomFieldValues());
             executeRegisterTask(u);
         }
 
@@ -216,7 +236,6 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 				passwordField.requestFocus();
 			}
 			currentValid = false;
-
 
 		}
 		else if (!password.equals(passwordAgain)) {
@@ -266,6 +285,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 			builder.setTitle(error);
 			builder.setMessage(R.string.offline_register_confirm);
 			builder.setPositiveButton(R.string.register_offline, new DialogInterface.OnClickListener() {
+				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					u.setOfflineRegister(true);
 					executeRegisterTask(u);

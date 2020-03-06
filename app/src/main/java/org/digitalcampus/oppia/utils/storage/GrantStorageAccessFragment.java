@@ -57,7 +57,11 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
         this.listener = listener;
     }
 
+    /**      
+     * @deprecated
+     */
     @Override
+    @Deprecated
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -77,7 +81,11 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
         }
     }
 
+    /**      
+     * @deprecated
+     */
     @Override
+    @Deprecated
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         if (requestCode == REQUEST_GRANT_CODE && resultCode == Activity.RESULT_OK) {
             Uri treeUri = resultData.getData();
@@ -105,7 +113,11 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
         }
         private boolean intentSent = false;
 
+        /**      
+         * @deprecated
+         */
         @Override
+        @Deprecated
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             View view = inflater.inflate(R.layout.dialog_lollipop_storage_access, container, false);
@@ -116,7 +128,11 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
             return view;
         }
 
+        /**      
+         * @deprecated
+         */
         @Override
+        @Deprecated
         public void onResume() {
             Window window = getDialog().getWindow();
             final WindowManager.LayoutParams attrs = window.getAttributes();
@@ -134,7 +150,11 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
             super.onResume();
         }
 
+        /**      
+         * @deprecated
+         */
         @Override
+        @Deprecated
         public void onCancel(DialogInterface dialog) {
             if (!intentSent && (listener!=null))
                 listener.onClick(RESULT_DISMISS);

@@ -8,7 +8,6 @@ import android.util.Log;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.db_model.Leaderboard;
-import org.digitalcampus.oppia.model.db_model.UserCustomField;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
 
 import java.util.List;
@@ -64,10 +63,7 @@ public class DBMigration {
         if (currentVersion < 1) {
             copyUserPreferencesData(dbHelper);
             copyLeaderboardData(dbHelper);
-            copyUserCustomFieldsData(dbHelper);
         }
-
-
     }
 
     private void copyLeaderboardData(DbHelper dbHelper) {
@@ -85,12 +81,5 @@ public class DBMigration {
         App.getDb().userPreferenceDao().insertAll(userPreferences);
         dbHelper.dropTable(DbHelper.USER_PREFS_TABLE);
 
-    }
-
-    private static void copyUserCustomFieldsData(DbHelper dbHelper) {
-
-        List<UserCustomField> userCustomFields = dbHelper.getUserCustomFields();
-        App.getDb().userCustomFieldDao().insertAll(userCustomFields);
-        dbHelper.dropTable(DbHelper.USER_CF_TABLE);
     }
 }
