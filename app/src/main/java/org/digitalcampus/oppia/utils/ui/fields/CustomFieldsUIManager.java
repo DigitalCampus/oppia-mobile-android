@@ -1,4 +1,4 @@
-package org.digitalcampus.oppia.utils.ui;
+package org.digitalcampus.oppia.utils.ui.fields;
 
 import android.content.Context;
 import android.text.InputType;

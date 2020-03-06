@@ -22,21 +22,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
-import android.text.TextUtils;
-import android.util.Pair;
 import android.util.Patterns;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SwitchCompat;
-import kotlin.Unit;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -46,26 +39,22 @@ import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
-import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.RegisterTask;
 import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.ui.CustomFieldsUIManager;
-import org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout;
+import org.digitalcampus.oppia.utils.ui.fields.CustomFieldsUIManager;
+import org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 

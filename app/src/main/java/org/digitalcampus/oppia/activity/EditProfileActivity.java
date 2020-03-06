@@ -12,8 +12,8 @@ import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.UpdateProfileTask;
-import org.digitalcampus.oppia.utils.ui.CustomFieldsUIManager;
-import org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout;
+import org.digitalcampus.oppia.utils.ui.fields.CustomFieldsUIManager;
+import org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout;
 
 import java.util.Arrays;
 import java.util.List;
