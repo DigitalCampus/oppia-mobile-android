@@ -72,11 +72,8 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-
-        switch (v.getId()) {
-            case R.id.btn_save_profile:
-                getDataAndSend();
-                break;
+        if(v.getId() == R.id.btn_save_profile) {
+            getDataAndSend();
         }
     }
 

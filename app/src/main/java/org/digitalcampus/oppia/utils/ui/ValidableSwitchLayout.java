@@ -1,9 +1,8 @@
 package org.digitalcampus.oppia.utils.ui;
 
 import android.content.Context;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.TypedValue;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,8 +25,8 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
 
         errorText = new TextView(getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         errorText.setLayoutParams(params);
         errorText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         errorText.setTextColor(getResources().getColor(R.color.text_error));
@@ -69,8 +68,8 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
         if (helperText == null) {
             helperText = new TextView(getContext());
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
             helperText.setLayoutParams(params);
             helperText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
             this.addView(helperText);

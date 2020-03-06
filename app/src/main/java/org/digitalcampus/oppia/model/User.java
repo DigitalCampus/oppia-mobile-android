@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.model;
 
 import org.digitalcampus.oppia.utils.CryptoUtils;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -168,12 +167,6 @@ public class User {
 	public void setOfflineRegister(boolean offlineRegister) {
 		this.offlineRegister = offlineRegister;
 	}
-
-
-	//public String getDistrict() {
-		//return CustomValue.getSecureValue(userCustomFields, CUSTOM_FIELD_DISTRICT);
-	//}
-
 
 	public Map<String, CustomValue> getUserCustomFields() {
 		return userCustomFields;
