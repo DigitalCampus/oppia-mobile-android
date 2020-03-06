@@ -182,28 +182,27 @@ public class User {
 	}
 
 	public String getEmployeeID() {
-		return CustomValue.getSecureValue(userCustomFields, CUSTOM_FIELD_EMPLOYEE_ID);
+		return (String) getCustomField(CUSTOM_FIELD_EMPLOYEE_ID).getValue();
 	}
 
 	public void setEmployeeID(String employeeID) {
-		userCustomFields.put(CUSTOM_FIELD_EMPLOYEE_ID, new CustomValue(employeeID));
+		putCustomField(CUSTOM_FIELD_EMPLOYEE_ID, new CustomValue<>(employeeID));
 	}
 
 	public String getCounty() {
-		return CustomValue.getSecureValue(userCustomFields, CUSTOM_FIELD_COUNTY);
+		return (String) getCustomField(CUSTOM_FIELD_COUNTY).getValue();
 	}
 
 	public void setCounty(String county) {
-		userCustomFields.put(CUSTOM_FIELD_COUNTY, new CustomValue(county));
+		putCustomField(CUSTOM_FIELD_COUNTY, new CustomValue<>(county));
 	}
 
-
 	public String getDistrict() {
-		return CustomValue.getSecureValue(userCustomFields, CUSTOM_FIELD_DISTRICT);
+		return (String) getCustomField(CUSTOM_FIELD_DISTRICT).getValue();
 	}
 
 	public void setDistrict(String district) {
-		userCustomFields.put(CUSTOM_FIELD_DISTRICT, new CustomValue(district));
+		putCustomField(CUSTOM_FIELD_DISTRICT, new CustomValue<>(district));
 	}
 
 
