@@ -1587,16 +1587,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public long insertQuizAttempt(QuizAttempt qa) {
-        ContentValues values = new ContentValues();
-        values.put(QUIZATTEMPTS_C_DATA, qa.getData());
-        values.put(QUIZATTEMPTS_C_COURSEID, qa.getCourseId());
-        values.put(QUIZATTEMPTS_C_USERID, qa.getUserId());
-        values.put(QUIZATTEMPTS_C_MAXSCORE, qa.getMaxscore());
-        values.put(QUIZATTEMPTS_C_SCORE, qa.getScore());
-        values.put(QUIZATTEMPTS_C_PASSED, qa.isPassed());
-        values.put(QUIZATTEMPTS_C_ACTIVITY_DIGEST, qa.getActivityDigest());
-        values.put(QUIZATTEMPTS_C_EVENT, qa.getEvent());
-        values.put(QUIZATTEMPTS_C_POINTS, qa.getPoints());
+        ContentValues values = createContentValuesFromQuizAttempt(qa);
         long result = db.insertOrThrow(QUIZATTEMPTS_TABLE, null, values);
 
         // increment the users points
@@ -1605,6 +1596,22 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void updateQuizAttempt(QuizAttempt qa) {
+        ContentValues values = createContentValuesFromQuizAttempt(qa);
+        db.update(QUIZATTEMPTS_TABLE, values, QUIZATTEMPTS_C_ID + "=" + qa.getId(), null);
+    }
+
+    public void insertQuizAttempts(List<QuizAttempt> quizAttempts) {
+        beginTransaction();
+        for (QuizAttempt qa : quizAttempts) {
+            ContentValues values = createContentValuesFromQuizAttempt(qa);
+            values.put(QUIZATTEMPTS_C_SENT, qa.isSent());
+            values.put(QUIZATTEMPTS_C_DATETIME, qa.getDateTimeString());
+            db.insertOrThrow(QUIZATTEMPTS_TABLE, null, values);
+        }
+        endTransaction(true);
+    }
+
+    private ContentValues createContentValuesFromQuizAttempt(QuizAttempt qa){
         ContentValues values = new ContentValues();
         values.put(QUIZATTEMPTS_C_DATA, qa.getData());
         values.put(QUIZATTEMPTS_C_COURSEID, qa.getCourseId());
@@ -1615,27 +1622,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(QUIZATTEMPTS_C_ACTIVITY_DIGEST, qa.getActivityDigest());
         values.put(QUIZATTEMPTS_C_EVENT, qa.getEvent());
         values.put(QUIZATTEMPTS_C_POINTS, qa.getPoints());
-        db.update(QUIZATTEMPTS_TABLE, values, QUIZATTEMPTS_C_ID + "=" + qa.getId(), null);
-    }
-
-    public void insertQuizAttempts(List<QuizAttempt> quizAttempts) {
-        beginTransaction();
-        for (QuizAttempt qa : quizAttempts) {
-            ContentValues values = new ContentValues();
-            values.put(QUIZATTEMPTS_C_DATA, qa.getData());
-            values.put(QUIZATTEMPTS_C_COURSEID, qa.getCourseId());
-            values.put(QUIZATTEMPTS_C_USERID, qa.getUserId());
-            values.put(QUIZATTEMPTS_C_MAXSCORE, qa.getMaxscore());
-            values.put(QUIZATTEMPTS_C_SCORE, qa.getScore());
-            values.put(QUIZATTEMPTS_C_PASSED, qa.isPassed());
-            values.put(QUIZATTEMPTS_C_ACTIVITY_DIGEST, qa.getActivityDigest());
-            values.put(QUIZATTEMPTS_C_SENT, qa.isSent());
-            values.put(QUIZATTEMPTS_C_DATETIME, qa.getDateTimeString());
-            values.put(QUIZATTEMPTS_C_EVENT, qa.getEvent());
-            values.put(QUIZATTEMPTS_C_POINTS, qa.getPoints());
-            db.insertOrThrow(QUIZATTEMPTS_TABLE, null, values);
-        }
-        endTransaction(true);
+        return values;
     }
 
     public List<QuizAttempt> getUnsentQuizAttempts() {

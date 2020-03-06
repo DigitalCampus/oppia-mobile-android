@@ -126,19 +126,15 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 return true;
+            } else if (response.code() == 400) {
+                String bodyResponse = response.body().string();
+                payload.setResult(false);
+                payload.setResponseData(new ArrayList<Object>(Arrays.asList(SUBMIT_ERROR)));
+                payload.setResultResponse(bodyResponse);
+                Log.d(TAG, bodyResponse);
             } else {
-                switch (response.code()) {
-                    case 400:
-                        String bodyResponse = response.body().string();
-                        payload.setResult(false);
-                        payload.setResponseData(new ArrayList<Object>(Arrays.asList(SUBMIT_ERROR)));
-                        payload.setResultResponse(bodyResponse);
-                        Log.d(TAG, bodyResponse);
-                        break;
-                    default:
-                        payload.setResult(false);
-                        payload.setResultResponse(ctx.getString(R.string.error_connection));
-                }
+                payload.setResult(false);
+                payload.setResultResponse(ctx.getString(R.string.error_connection));
             }
 
         } catch (javax.net.ssl.SSLHandshakeException e) {
@@ -178,7 +174,7 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
                 }
 
                 String errorMessage = response.getResultResponse();
-                if ((response.getResponseData() != null) && (response.getResponseData().size() > 0)) {
+                if (response.getResponseData() != null && !response.getResponseData().isEmpty()) {
                     String data = (String) response.getResponseData().get(0);
                     if (data.equals(SUBMIT_ERROR)) {
                         try {

@@ -34,20 +34,28 @@ import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 
 public class PasswordDialogFragment extends DialogFragment {
 
-        private AdminSecurityManager.AuthListener listener;
+    private AdminSecurityManager.AuthListener listener;
 
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-
-            builder.setView(inflater.inflate(R.layout.dialog_password, null))
-                    .setPositiveButton(R.string.ok, null)
-                    .setNegativeButton(android.R.string.cancel, null);
-            return builder.create();
-        }
-
+    /**      
+     * @deprecated
+     */
     @Override
+    @Deprecated
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        builder.setView(inflater.inflate(R.layout.dialog_password, null))
+                .setPositiveButton(R.string.ok, null)
+                .setNegativeButton(android.R.string.cancel, null);
+        return builder.create();
+    }
+
+    /**      
+     * @deprecated
+     */
+    @Override
+    @Deprecated
     public void onStart() {
         super.onStart();
         final AlertDialog d = (AlertDialog)getDialog();
