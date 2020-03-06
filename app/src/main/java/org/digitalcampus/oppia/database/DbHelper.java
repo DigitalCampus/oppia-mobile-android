@@ -2241,32 +2241,26 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public List<UserCustomField> getUserCustomFields() {
 
-        String cfFieldKey = "field_key";
-        String cfValueStr = "value_str";
-        String cfValueInt = "value_int";
-        String cfValueBool = "value_bool";
-        String cfValueFloat = "value_float";
-
         ArrayList<UserCustomField> userCustomFields = new ArrayList<>();
         Cursor c = db.query(USER_CF_TABLE, null, null, null, null, null, null);
         c.moveToFirst();
         while (!c.isAfterLast()) {
             UserCustomField userCustomField = new UserCustomField();
             userCustomField.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
-            userCustomField.setFieldKey(c.getString(c.getColumnIndex(cfFieldKey)));
-            userCustomField.setValueStr(c.getString(c.getColumnIndex(cfValueStr)));
+            userCustomField.setFieldKey(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_KEY)));
+            userCustomField.setValueStr(c.getString(c.getColumnIndex(CF_VALUE_STR)));
 
-            String valueIntStr = c.getString(c.getColumnIndex(cfValueInt));
+            String valueIntStr = c.getString(c.getColumnIndex(CF_VALUE_INT));
             if (valueIntStr != null) {
                 userCustomField.setValueInt(Integer.parseInt(valueIntStr));
             }
 
-            String valueBoolStr = c.getString(c.getColumnIndex(cfValueBool));
+            String valueBoolStr = c.getString(c.getColumnIndex(CF_VALUE_BOOL));
             if (valueBoolStr != null) {
                 userCustomField.setValueBool(Integer.parseInt(valueBoolStr) == 1);
             }
 
-            String valueFloatStr = c.getString(c.getColumnIndex(cfValueFloat));
+            String valueFloatStr = c.getString(c.getColumnIndex(CF_VALUE_FLOAT));
             if (valueFloatStr != null) {
                 userCustomField.setValueFloat(Float.parseFloat(valueFloatStr));
             }

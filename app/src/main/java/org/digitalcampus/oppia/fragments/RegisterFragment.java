@@ -127,13 +127,13 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		fieldsManager.createFieldsInContainer(customFieldsContainer);
 
 		registerButton.setOnClickListener(new View.OnClickListener() {
-			
+			@Override
 			public void onClick(View v) {
 				onRegisterClick();
 			}
 		});
 		loginButton.setOnClickListener(new View.OnClickListener() {
-
+			@Override
 			public void onClick(View v) {
 				WelcomeActivity wa = (WelcomeActivity) RegisterFragment.super.getActivity();
 				wa.switchTab(WelcomeActivity.TAB_LOGIN);
@@ -285,6 +285,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 			builder.setTitle(error);
 			builder.setMessage(R.string.offline_register_confirm);
 			builder.setPositiveButton(R.string.register_offline, new DialogInterface.OnClickListener() {
+				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					u.setOfflineRegister(true);
 					executeRegisterTask(u);

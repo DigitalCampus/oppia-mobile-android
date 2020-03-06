@@ -52,16 +52,16 @@ public class CustomFieldsUIManager {
     private ValidableField addSwitchLayout(ViewGroup container, CustomField field){
         SwitchCompat input = new SwitchCompat(ctx);
         LinearLayout.LayoutParams wrap = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         input.setLayoutParams(wrap);
         ValidableSwitchLayout switchLayout = new ValidableSwitchLayout(ctx, input);
         switchLayout.setRequired(field.isRequired());
         input.setHint(field.getLabel());
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         switchLayout.setLayoutParams(params);
         container.addView(switchLayout);
 
@@ -77,8 +77,8 @@ public class CustomFieldsUIManager {
         }
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
 
         ValidableTextInputLayout inputLayout = new ValidableTextInputLayout(ctx, field.isRequired());
         inputLayout.setLayoutParams(params);

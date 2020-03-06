@@ -48,17 +48,14 @@ public class PasswordDialogFragment extends DialogFragment {
         }
 
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
         final AlertDialog d = (AlertDialog)getDialog();
-        if(d != null)
-        {
+        if(d != null) {
             Button positiveButton = d.getButton(DialogInterface.BUTTON_POSITIVE);
-            positiveButton.setOnClickListener(new View.OnClickListener()
-            {
-                public void onClick(View v)
-                {
+            positiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     EditText passwordField = d.findViewById(R.id.admin_password_field);
                     View errorMessage = d.findViewById(R.id.admin_password_error);
                     String password = passwordField.getText().toString();

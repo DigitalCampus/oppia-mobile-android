@@ -129,46 +129,22 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
                 JSONObject jsonResp = new JSONObject(response.body().string());
                 u.setApiKey(jsonResp.getString("api_key"));
                 u.setOfflineRegister(false);
-                try {
-                    u.setBadges(jsonResp.getInt("badges"));
-                } catch (JSONException e){
-                    u.setBadges(0);
-                }
-
-                try {
-                    u.setScoringEnabled(jsonResp.getBoolean("scoring"));
-                    u.setBadgingEnabled(jsonResp.getBoolean("badging"));
-                } catch (JSONException e){
-                    u.setScoringEnabled(true);
-                    u.setBadgingEnabled(true);
-                }
-
-                try {
-                    JSONObject metadata = jsonResp.getJSONObject("metadata");
-                    MetaDataUtils mu = new MetaDataUtils(ctx);
-                    mu.saveMetaData(metadata, prefs);
-                } catch (JSONException e) {
-                    Log.d(TAG, "JSONException:", e);
-                    Mint.logException(e);
-                }
-
+                u.setBadges(getBadges(jsonResp));
+                u.setScoringEnabled(getScoringEnabled(jsonResp));
+                u.setBadgingEnabled(getBadgingEnabled(jsonResp));
                 u.setFirstname(jsonResp.getString("first_name"));
                 u.setLastname(jsonResp.getString("last_name"));
+                saveMetaData(jsonResp);
                 return true;
-            }
-            else{
-                switch (response.code()) {
-                    case 400:
-                        String bodyResponse = response.body().string();
-                        payload.setResult(false);
-                        payload.setResponseData(new ArrayList<Object>(Arrays.asList(SUBMIT_ERROR)));
-                        payload.setResultResponse(bodyResponse);
-                        Log.d(TAG, bodyResponse);
-                        break;
-                    default:
-                        payload.setResult(false);
-                        payload.setResultResponse(ctx.getString(R.string.error_connection));
-                }
+            } else if (response.code() == 400) {
+                String bodyResponse = response.body().string();
+                payload.setResult(false);
+                payload.setResponseData(new ArrayList<Object>(Arrays.asList(SUBMIT_ERROR)));
+                payload.setResultResponse(bodyResponse);
+                Log.d(TAG, bodyResponse);
+            } else {
+                payload.setResult(false);
+                payload.setResultResponse(ctx.getString(R.string.error_connection));
             }
 
         } catch(javax.net.ssl.SSLHandshakeException e) {
@@ -192,6 +168,41 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
         return false;
     }
 
+    private int getBadges(JSONObject jsonResp){
+        try {
+            return jsonResp.getInt("badges");
+        } catch (JSONException e){
+            return 0;
+        }
+    }
+
+    private boolean getScoringEnabled(JSONObject jsonResp){
+        try {
+            return jsonResp.getBoolean("scoring");
+        } catch (JSONException e){
+            return true;
+        }
+    }
+
+    private boolean getBadgingEnabled(JSONObject jsonResp){
+        try {
+            return jsonResp.getBoolean("badging");
+        } catch (JSONException e){
+            return true;
+        }
+    }
+
+    private void saveMetaData(JSONObject jsonResp){
+        try {
+            JSONObject metadata = jsonResp.getJSONObject("metadata");
+            MetaDataUtils mu = new MetaDataUtils(ctx);
+            mu.saveMetaData(metadata, prefs);
+        } catch (JSONException e) {
+            Log.d(TAG, "JSONException:", e);
+            Mint.logException(e);
+        }
+    }
+
 	@Override
 	protected void onPostExecute(Payload response) {
 		synchronized (this) {
@@ -203,7 +214,7 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
 			    }
 
                 String errorMessage = response.getResultResponse();
-			    if ((response.getResponseData() != null) && (response.getResponseData().size()>0)){
+			    if (response.getResponseData() != null && !response.getResponseData().isEmpty()){
 			        String data = (String) response.getResponseData().get(0);
 			        if (data.equals(SUBMIT_ERROR)){
                         try {

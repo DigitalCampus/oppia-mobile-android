@@ -131,14 +131,14 @@ public class BluetoothTransferService extends Service {
             @Override
             public void onTransferComplete(CourseTransferableFile file) {
                 if (tasksDownloading.isEmpty()){
-                    OppiaNotificationUtils.sendSimpleMessage(BluetoothTransferService.this, true, 0,
+                    OppiaNotificationUtils.sendSimpleMessage(BluetoothTransferService.this, true,
                             getString(R.string.bluetooth_all_transfers_complete));
                 }
             }
 
             @Override
             public void onCommunicationClosed(String error) {
-                OppiaNotificationUtils.sendSimpleMessage(BluetoothTransferService.this, true, 0,
+                OppiaNotificationUtils.sendSimpleMessage(BluetoothTransferService.this, true,
                         getString(R.string.bluetooth_communication_closed));
             }
         });
