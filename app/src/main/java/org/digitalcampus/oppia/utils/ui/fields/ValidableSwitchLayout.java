@@ -1,8 +1,6 @@
-package org.digitalcampus.oppia.utils.ui;
+package org.digitalcampus.oppia.utils.ui.fields;
 
 import android.content.Context;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.TypedValue;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -10,6 +8,7 @@ import android.widget.TextView;
 import org.digitalcampus.mobile.learning.R;
 
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.content.ContextCompat;
 
 public class ValidableSwitchLayout extends LinearLayout implements ValidableField{
 
@@ -17,6 +16,10 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
     private SwitchCompat input;
     private TextView helperText;
     private TextView errorText;
+
+    public ValidableSwitchLayout(Context context){
+        super(context);
+    }
 
     public ValidableSwitchLayout(Context context, SwitchCompat input) {
         super(context);
@@ -30,7 +33,7 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         errorText.setLayoutParams(params);
         errorText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-        errorText.setTextColor(getResources().getColor(R.color.text_error));
+        errorText.setTextColor(ContextCompat.getColor(getContext(), R.color.text_error));
         errorText.setText(getResources().getString(R.string.field_required));
         errorText.setVisibility(GONE);
         addView(errorText);
@@ -60,7 +63,7 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
     public boolean validate() {
         boolean valid = !required || input.isChecked();
         errorText.setVisibility(valid ? GONE : VISIBLE);
-        input.setHintTextColor(getResources().getColor( valid ? android.R.color.tab_indicator_text : R.color.text_error));
+        input.setHintTextColor(ContextCompat.getColor(getContext(), valid ? android.R.color.tab_indicator_text : R.color.text_error));
         return valid;
     }
 

@@ -1,4 +1,4 @@
-package org.digitalcampus.oppia.utils.ui;
+package org.digitalcampus.oppia.utils.ui.fields;
 
 public interface ValidableField {
     void setRequired(boolean required);
