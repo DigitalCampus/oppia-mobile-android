@@ -104,7 +104,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         return location;
     }
 
-    //@Override
+    @Override
     public boolean isStorageAvailable(Context ctx) {
         String cardStatus = ExternalStorageState.getExternalStorageState();
         if (cardStatus.equals(Environment.MEDIA_REMOVED)
