@@ -122,15 +122,15 @@ public class GamificationService  extends IntentService {
                     DbHelper db = DbHelper.getInstance(this);
                     long userId = db.getUserId(SessionManager.getUsername(this));
 
-                    Log.d(TAG,"quiz points:" + String.valueOf(event.getPoints()));
+                    Log.d(TAG,"quiz points:" + event.getPoints());
                     // save results ready to send back to the quiz server
-                    String data = quiz.getResultObject(event).toString();
-                    Log.d(TAG,data);
+                    JSONObject result = quiz.getResultObject(event);
+                    result.put(LOGDATA_TIMETAKEN, timetaken);
 
                     QuizAttempt qa = new QuizAttempt();
                     qa.setCourseId(c.getCourseId());
                     qa.setUserId(userId);
-                    qa.setData(data);
+                    qa.setData(result.toString());
                     qa.setActivityDigest(act.getDigest());
                     qa.setScore(quiz.getUserscore());
                     qa.setMaxscore(quiz.getMaxscore());
