@@ -153,6 +153,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 
 		overrideAdminPasswordTask();
 		reloadCustomFieldsIfNeeded();
+
+		DbHelper.getInstance(ctx).extractQuizAttemptsTimetaken();
 		
 		return payload;
 	}

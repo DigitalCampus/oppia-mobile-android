@@ -584,6 +584,7 @@ public class DbHelper extends SQLiteOpenHelper {
             db.execSQL(STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_TIMETAKEN + STR_INT_DEFAULT_O + ";");
         }
 
+
     }
 
 
@@ -600,6 +601,41 @@ public class DbHelper extends SQLiteOpenHelper {
         values2.put(QUIZATTEMPTS_C_USERID, userId);
 
         db.update(QUIZATTEMPTS_TABLE, values2, "1=1", null);
+    }
+
+    public void extractQuizAttemptsTimetaken(){
+        List<QuizAttempt> attempts = getAllQuizAttempts();
+        List<QuizAttempt> updated = new ArrayList<>();
+        for (QuizAttempt attempt : attempts){
+            if (TextUtils.isEmpty(attempt.getData())){
+                continue;
+            }
+            try {
+                JSONObject logData = new JSONObject(attempt.getData());
+                String instanceID = logData.getString("instance_id");
+
+                String s = TRACKER_LOG_C_DATA + " LIKE ?";
+                String[] args = new String[]{ "%" + instanceID + "%" };
+                Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
+                if (c.getCount() > 0) {
+                    c.moveToFirst();
+                    String data = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
+                    JSONObject trackerData = new JSONObject(data);
+                    long time = trackerData.getLong("timetaken");
+                    attempt.setTimetaken(time);
+                    updated.add(attempt);
+                }
+                c.close();
+            } catch (JSONException e) {
+                // Pass
+            }
+
+        }
+
+        for (QuizAttempt attempt : updated){
+            updateQuizAttempt(attempt);
+        }
+
     }
 
 
