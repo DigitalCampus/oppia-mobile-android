@@ -582,6 +582,7 @@ public class DbHelper extends SQLiteOpenHelper {
         if (oldVersion < 41){
             // add the timetaken field
             db.execSQL(STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_TIMETAKEN + STR_INT_DEFAULT_O + ";");
+            extractQuizAttemptsTimetaken();
         }
 
 
