@@ -23,7 +23,8 @@ import android.util.Log;
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -44,11 +45,11 @@ import okhttp3.Response;
 public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadProgress, Payload> {
 
 	private UpdateActivityListener mStateListener;
-    private boolean APIKeyInvalidated = false;
+    private boolean apiKeyInvalidated = false;
 	private long userId;
 
-	public UpdateCourseActivityTask(Context ctx, long userId) {
-        super(ctx);
+	public UpdateCourseActivityTask(Context ctx, long userId, ApiEndpoint apiEndpoint) {
+        super(ctx, apiEndpoint);
 		this.userId = userId;
 	}
 
@@ -74,8 +75,8 @@ public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadPr
             if (!response.isSuccessful()){
                 payload.setResult(false);
                 if (response.code() == 401){
-                    SessionManager.setUserApiKeyValid(ctx, u, false);
-                    APIKeyInvalidated = true;
+                    SessionManager.setUserApiKeyValid(u, false);
+                    apiKeyInvalidated = true;
                 }
                 payload.setResultResponse(ctx.getString(
                         (response.code()==401) ? R.string.error_apikey_expired : R.string.error_connection));
@@ -136,7 +137,7 @@ public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadPr
 	protected void onPostExecute(Payload results) {
 		synchronized (this) {
             if (mStateListener != null) {
-                if (APIKeyInvalidated)
+                if (apiKeyInvalidated)
                     mStateListener.apiKeyInvalidated();
                 else
                     mStateListener.updateActivityComplete(results);

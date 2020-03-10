@@ -23,7 +23,6 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,8 +39,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
@@ -55,7 +53,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class ResourceWidget extends WidgetFactory {
@@ -66,6 +63,12 @@ public class ResourceWidget extends WidgetFactory {
 	private static final String PROPERTY_RESOURCE_VIEWING = "Resource_Viewing";
     private static final String PROPERTY_RESOURCE_STARTTIME = "Resource_StartTime";
     private static final String PROPERTY_RESOURCE_FILENAME = "Resource_FileName";
+
+    private static final String STR_WIDGET = "widget_";
+	private static final String STR_ACT_STARTTIME = "_Activity_StartTime";
+	private static final String STR_RESOURCE_VIEWING = "_Resource_Viewing";
+	private static final String STR_RESOURCE_STARTTIME = "_Resource_StartTime";
+	private static final String STR_RESOURCE_FILENAME = "_Resource_FileName";
 
 	private boolean resourceViewing = false;
 	private long resourceStartTime;
@@ -132,7 +135,7 @@ public class ResourceWidget extends WidgetFactory {
 			ImageView iv = new ImageView(super.getActivity());
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			iv.setImageBitmap(myBitmap);
-			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+			LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 			ll.addView(iv, lp);
 			iv.setTag(file);
 			iv.setOnClickListener(orcl);
@@ -151,10 +154,10 @@ public class ResourceWidget extends WidgetFactory {
 	public void onPause(){
 		super.onPause();
 		Editor editor = prefs.edit();
-		editor.putLong("widget_"+activity.getDigest()+"_Activity_StartTime", this.getStartTime());
-		editor.putBoolean("widget_"+activity.getDigest()+"_Resource_Viewing", this.isResourceViewing());
-		editor.putLong("widget_"+activity.getDigest()+"_Resource_StartTime", this.getResourceStartTime());
-		editor.putString("widget_"+activity.getDigest()+"_Resource_FileName", this.getResourceFileName());
+		editor.putLong(STR_WIDGET+activity.getDigest()+STR_ACT_STARTTIME, this.getStartTime());
+		editor.putBoolean(STR_WIDGET+activity.getDigest()+STR_RESOURCE_VIEWING, this.isResourceViewing());
+		editor.putLong(STR_WIDGET+activity.getDigest()+STR_RESOURCE_STARTTIME, this.getResourceStartTime());
+		editor.putString(STR_WIDGET+activity.getDigest()+STR_RESOURCE_FILENAME, this.getResourceFileName());
 		editor.apply();
 	}
 	
@@ -162,17 +165,17 @@ public class ResourceWidget extends WidgetFactory {
 	public void onResume() {
 		super.onResume();
 		// check to see if the vars are stored in shared prefs
-		if(prefs.contains("widget_"+activity.getDigest()+"_Activity_StartTime")){
-			this.setStartTime(prefs.getLong("widget_"+activity.getDigest()+"_Activity_StartTime", System.currentTimeMillis()/1000));
+		if(prefs.contains(STR_WIDGET+activity.getDigest()+STR_ACT_STARTTIME)){
+			this.setStartTime(prefs.getLong(STR_WIDGET+activity.getDigest()+STR_ACT_STARTTIME, System.currentTimeMillis()/1000));
 		}
-		if(prefs.contains("widget_"+activity.getDigest()+"_Resource_Viewing")){
-			this.setResourceViewing(prefs.getBoolean("widget_"+activity.getDigest()+"_Resource_Viewing", false));
+		if(prefs.contains(STR_WIDGET+activity.getDigest()+STR_RESOURCE_VIEWING)){
+			this.setResourceViewing(prefs.getBoolean(STR_WIDGET+activity.getDigest()+STR_RESOURCE_VIEWING, false));
 		}
-		if(prefs.contains("widget_"+activity.getDigest()+"_Resource_StartTime")){
-			this.setResourceStartTime(prefs.getLong("widget_"+activity.getDigest()+"_Resource_StartTime", System.currentTimeMillis()/1000));
+		if(prefs.contains(STR_WIDGET+activity.getDigest()+STR_RESOURCE_STARTTIME)){
+			this.setResourceStartTime(prefs.getLong(STR_WIDGET+activity.getDigest()+STR_RESOURCE_STARTTIME, System.currentTimeMillis()/1000));
 		}
-		if(prefs.contains("widget_"+activity.getDigest()+"_Resource_FileName")){
-			this.setResourceFileName(prefs.getString("widget_"+activity.getDigest()+"_Resource_FileName", ""));
+		if(prefs.contains(STR_WIDGET+activity.getDigest()+STR_RESOURCE_FILENAME)){
+			this.setResourceFileName(prefs.getString(STR_WIDGET+activity.getDigest()+STR_RESOURCE_FILENAME, ""));
 		}
 		
 		if (isResourceViewing()) {
@@ -183,7 +186,7 @@ public class ResourceWidget extends WidgetFactory {
 		Map<String,?> keys = prefs.getAll();
 
 		for(Map.Entry<String,?> entry : keys.entrySet()){
-			if (entry.getKey().startsWith("widget_"+activity.getDigest())){
+			if (entry.getKey().startsWith(STR_WIDGET+activity.getDigest())){
 				editor.remove(entry.getKey());
 			}            
 		 }
@@ -234,7 +237,7 @@ public class ResourceWidget extends WidgetFactory {
 	@Override
 	public void saveTracker(){
 		long timetaken = this.getSpentTime();
-		if (activity == null || timetaken < MobileLearning.RESOURCE_READ_TIME) {
+		if (activity == null || timetaken < App.RESOURCE_READ_TIME) {
 			return;
 		}
 

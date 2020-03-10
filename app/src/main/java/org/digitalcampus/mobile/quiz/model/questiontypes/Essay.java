@@ -22,7 +22,6 @@ import android.util.Log;
 import com.splunk.mint.Mint;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
@@ -38,19 +37,6 @@ public class Essay extends QuizQuestion implements Serializable {
     @Override
     public void mark(String lang) {
         this.userscore = 0;
-    }
-
-    @Override
-    public void setUserResponses(List<String> str) {
-        if (!str.equals(this.userResponses)){
-            this.setFeedbackDisplayed(false);
-        }
-        this.userResponses = str;
-    }
-
-    @Override
-    public int getMaxScore() {
-        return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
     }
 
     @Override

@@ -13,5 +13,4 @@
     <string name="back">Back</string>
 
     <string name="register_select_role_explanation">Please select your role</string>
-    <string name="error_register_email">Email not valid</string>
 </resources>

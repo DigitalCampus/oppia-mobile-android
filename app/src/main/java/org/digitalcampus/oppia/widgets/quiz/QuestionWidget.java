@@ -27,7 +27,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,9 +45,11 @@ public abstract class QuestionWidget {
 
 	// Abstract methods
 	public abstract void setQuestionResponses(List<Response> responses, List<String> currentAnswers);
+	public abstract void setQuestionResponses(List<String> currentAnswers);
 
 	public abstract List<String> getQuestionResponses(List<Response> responses);
-	
+	public abstract List<String> getQuestionResponses();
+
 	protected QuestionWidget(Activity activity, View v, ViewGroup container, int layout){
 		ctx = new ContextThemeWrapper(activity, R.style.Oppia_Theme);
 		prefs = PreferenceManager.getDefaultSharedPreferences(activity);

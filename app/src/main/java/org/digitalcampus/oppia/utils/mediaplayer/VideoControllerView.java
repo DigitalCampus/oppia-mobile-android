@@ -80,16 +80,18 @@ public class VideoControllerView extends FrameLayout {
     private ViewGroup           mAnchor;
     private View                mRoot;
     private ProgressBar         mProgress;
-    private TextView            mEndTime, mCurrentTime;
+    private TextView            mEndTime;
+    private TextView            mCurrentTime;
     private boolean             mShowing;
     private boolean             mDragging;
-    private static final int    sDefaultTimeout = 3000;
+    private static final int S_DEFAULT_TIMEOUT = 3000;
     private static final int    FADE_OUT = 1;
     private static final int    SHOW_PROGRESS = 2;
     private boolean             mUseFastForward;
     private boolean             mFromXml;
     private boolean             mListenersSet;
-    private View.OnClickListener mNextListener, mPrevListener;
+    private View.OnClickListener mNextListener;
+    private View.OnClickListener mPrevListener;
     StringBuilder               mFormatBuilder;
     Formatter                   mFormatter;
     private ImageButton         mPauseButton;
@@ -231,7 +233,7 @@ public class VideoControllerView extends FrameLayout {
      * automatically after 3 seconds of inactivity.
      */
     public void show() {
-        show(sDefaultTimeout);
+        show(S_DEFAULT_TIMEOUT);
     }
 
     /**
@@ -362,13 +364,13 @@ public class VideoControllerView extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        show(sDefaultTimeout);
+        show(S_DEFAULT_TIMEOUT);
         return true;
     }
 
     @Override
     public boolean onTrackballEvent(MotionEvent ev) {
-        show(sDefaultTimeout);
+        show(S_DEFAULT_TIMEOUT);
         return false;
     }
 
@@ -386,7 +388,7 @@ public class VideoControllerView extends FrameLayout {
                 || keyCode == KeyEvent.KEYCODE_SPACE) {
             if (uniqueDown) {
                 doPauseResume();
-                show(sDefaultTimeout);
+                show(S_DEFAULT_TIMEOUT);
                 if (mPauseButton != null) {
                     mPauseButton.requestFocus();
                 }
@@ -396,7 +398,7 @@ public class VideoControllerView extends FrameLayout {
             if (uniqueDown && !mPlayer.isPlaying()) {
                 mPlayer.start();
                 updatePausePlay();
-                show(sDefaultTimeout);
+                show(S_DEFAULT_TIMEOUT);
             }
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_MEDIA_STOP
@@ -404,7 +406,7 @@ public class VideoControllerView extends FrameLayout {
             if (uniqueDown && mPlayer.isPlaying()) {
                 mPlayer.pause();
                 updatePausePlay();
-                show(sDefaultTimeout);
+                show(S_DEFAULT_TIMEOUT);
             }
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN
@@ -419,21 +421,21 @@ public class VideoControllerView extends FrameLayout {
             return true;
         }
 
-        show(sDefaultTimeout);
+        show(S_DEFAULT_TIMEOUT);
         return super.dispatchKeyEvent(event);
     }
 
     private View.OnClickListener mPauseListener = new View.OnClickListener() {
         public void onClick(View v) {
             doPauseResume();
-            show(sDefaultTimeout);
+            show(S_DEFAULT_TIMEOUT);
         }
     };
 
     private View.OnClickListener mFullscreenListener = new View.OnClickListener() {
         public void onClick(View v) {
             doToggleFullscreen();
-            show(sDefaultTimeout);
+            show(S_DEFAULT_TIMEOUT);
         }
     };
 
@@ -530,7 +532,7 @@ public class VideoControllerView extends FrameLayout {
             mDragging = false;
             setProgress();
             updatePausePlay();
-            show(sDefaultTimeout);
+            show(S_DEFAULT_TIMEOUT);
 
             // Ensure that progress is properly updated in the future,
             // the call to show() does not guarantee this because it is a
@@ -586,7 +588,7 @@ public class VideoControllerView extends FrameLayout {
             mPlayer.seekTo(pos);
             setProgress();
 
-            show(sDefaultTimeout);
+            show(S_DEFAULT_TIMEOUT);
         }
     };
 
@@ -601,7 +603,7 @@ public class VideoControllerView extends FrameLayout {
             mPlayer.seekTo(pos);
             setProgress();
 
-            show(sDefaultTimeout);
+            show(S_DEFAULT_TIMEOUT);
         }
     };
 
@@ -674,6 +676,8 @@ public class VideoControllerView extends FrameLayout {
                         sendMessageDelayed(msg, 1000l - ((long)pos % 1000l));
                     }
                     break;
+                default:
+                    // do nothing
             }
         }
     }

@@ -43,6 +43,12 @@ public class MultiChoiceWidget extends QuestionWidget{
 		this.question = q;
 	}
 
+	@Override
+	public void setQuestionResponses(List<String> currentAnswers) {
+		// not used for this widget
+	}
+
+	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
 		LinearLayout responsesLL = view.findViewById(R.id.questionresponses);
     	responsesLL.removeAllViews();
@@ -58,7 +64,7 @@ public class MultiChoiceWidget extends QuestionWidget{
     	for (Response r : responses){
     		RadioButton rb = new RadioButton(ctx);
 			RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
-					RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
+				ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
 			setResponseMarginInLayoutParams(params);
     		rb.setId(id);
 			rb.setText(r.getTitle(currentUserLang));
@@ -83,6 +89,11 @@ public class MultiChoiceWidget extends QuestionWidget{
 			response.add(responses.get(idx).getTitle(currentUserLang));
     		return response;
     	}
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<String> getQuestionResponses() {
 		return new ArrayList<>();
 	}
 

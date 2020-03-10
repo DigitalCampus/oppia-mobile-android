@@ -23,7 +23,7 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -40,7 +40,11 @@ import java.util.List;
 public class SearchUtils {
 
 	public static final String TAG = SearchUtils.class.getSimpleName();
-	
+
+    private SearchUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
 	public static void reindexAll(Context ctx){
 		SearchReIndexTask task = new SearchReIndexTask(ctx);
 		Payload p = new Payload();
@@ -48,18 +52,19 @@ public class SearchUtils {
 	}
 
     public static void indexAddCourse(Context ctx, Course course, CompleteCourse parsedCourse){
-        ArrayList<Activity> activities = parsedCourse.getActivities(course.getCourseId());
+        ArrayList<Activity> activities = (ArrayList<Activity>) parsedCourse.getActivities(course.getCourseId());
         DbHelper db = DbHelper.getInstance(ctx);
 
         db.beginTransaction();
         for( Activity a : activities) {
-            ArrayList<Lang> langs = course.getLangs();
-            String fileContent = "";
+            ArrayList<Lang> langs = (ArrayList<Lang>) course.getLangs();
+            StringBuilder fileContent = new StringBuilder();
             for (Lang l : langs) {
-                if (a.getLocation(l.getLang()) != null && !a.getActType().equals("url")) {
-                    String url = course.getLocation() + a.getLocation(l.getLang());
+                if (a.getLocation(l.getLanguage()) != null && !a.getActType().equals("url")) {
+                    String url = course.getLocation() + a.getLocation(l.getLanguage());
                     try {
-                        fileContent += " " + FileUtils.readFile(url);
+                        fileContent.append(" ");
+                        fileContent.append(FileUtils.readFile(url));
                     } catch (IOException e) {
                         Mint.logException(e);
                         Log.d(TAG, "IOException:", e);
@@ -68,12 +73,12 @@ public class SearchUtils {
             }
 
 		Activity act = db.getActivityByDigest(a.getDigest());
-            if ((act != null) && !fileContent.equals("")) {
+            if ((act != null) && !fileContent.toString().equals("")) {
                 db.insertActivityIntoSearchTable(course.getTitleJSONString(),
                         parsedCourse.getSection(a.getSectionId()).getTitleJSONString(),
                         a.getTitleJSONString(),
                         act.getDbId(),
-                        fileContent);
+                        fileContent.toString());
             }
         }
         db.endTransaction(true);

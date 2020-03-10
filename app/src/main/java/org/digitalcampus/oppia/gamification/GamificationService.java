@@ -3,14 +3,14 @@ package org.digitalcampus.oppia.gamification;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
@@ -52,6 +52,13 @@ public class GamificationService  extends IntentService {
     public static final String EVENTDATA_INSTANCEID = "data_instance_id";
     public static final String EVENTDATA_MEDIA_FILENAME = "data_media_filename";
 
+    private static final String LOGDATA_LANG = "lang";
+    private static final String LOGDATA_READALOUD = "readaloud";
+    private static final String LOGDATA_TIMETAKEN = "timetaken";
+    private static final String LOGDATA_QUIZ_ID = "quiz_id";
+    private static final String LOGDATA_INSTANCE = "instance_id";
+    private static final String LOGDATA_SCORE = "score";
+
     private SharedPreferences prefs;
     private GamificationEngine gEngine;
 
@@ -78,7 +85,7 @@ public class GamificationService  extends IntentService {
 
                 JSONObject eventData =  new MetaDataUtils(this).getMetaData();
                 String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-                eventData.put("lang", lang);
+                eventData.put(LOGDATA_LANG, lang);
 
                 GamificationEvent event = null;
                 Course c = null;
@@ -97,8 +104,8 @@ public class GamificationService  extends IntentService {
                         c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
                         event = gEngine.processEventActivityCompleted(c, act);
 
-                        eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
-                        eventData.put("readaloud", intent.getBooleanExtra(EVENTDATA_READALOUD, false));
+                        eventData.put(LOGDATA_TIMETAKEN, intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
+                        eventData.put(LOGDATA_READALOUD, intent.getBooleanExtra(EVENTDATA_READALOUD, false));
 
                         trackerDigest = act.getDigest();
                     }
@@ -108,37 +115,38 @@ public class GamificationService  extends IntentService {
                     c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
                     Quiz quiz = (Quiz) intent.getSerializableExtra(SERVICE_QUIZ);
                     float score = intent.getFloatExtra(SERVICE_QUIZ_SCORE, 0f);
-                    event = gEngine.processEventQuizAttempt(c, act, quiz, score);
+                    long timetaken = intent.getLongExtra(EVENTDATA_TIMETAKEN, 0);
+
+                    event = gEngine.processEventQuizAttempt(c, act, score);
 
                     DbHelper db = DbHelper.getInstance(this);
                     long userId = db.getUserId(SessionManager.getUsername(this));
 
-                    Log.d(TAG,"quiz points:" + String.valueOf(event.getPoints()));
+                    Log.d(TAG,"quiz points:" + event.getPoints());
                     // save results ready to send back to the quiz server
-                    String data = quiz.getResultObject(event).toString();
-                    Log.d(TAG,data);
+                    JSONObject result = quiz.getResultObject(event);
+                    result.put(LOGDATA_TIMETAKEN, timetaken);
 
                     QuizAttempt qa = new QuizAttempt();
                     qa.setCourseId(c.getCourseId());
                     qa.setUserId(userId);
-                    qa.setData(data);
+                    qa.setData(result.toString());
                     qa.setActivityDigest(act.getDigest());
                     qa.setScore(quiz.getUserscore());
                     qa.setMaxscore(quiz.getMaxscore());
                     qa.setPassed(isCompleted);
+                    qa.setTimetaken(timetaken);
                     qa.setSent(false);
                     qa.setEvent(event.getEvent());
-                    //don't save points twice
-                    //qa.setPoints(event.getPoints());
                     db.insertQuizAttempt(qa);
 
                     long now = System.currentTimeMillis()/1000;
                     prefs.edit().putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
 
-                    eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
-                    eventData.put("quiz_id", quiz.getID());
-                    eventData.put("instance_id", quiz.getInstanceID());
-                    eventData.put("score", score);
+                    eventData.put(LOGDATA_TIMETAKEN, timetaken);
+                    eventData.put(LOGDATA_QUIZ_ID, quiz.getID());
+                    eventData.put(LOGDATA_INSTANCE, quiz.getInstanceID());
+                    eventData.put(LOGDATA_SCORE, score);
 
                     trackerDigest = act.getDigest();
 
@@ -149,7 +157,7 @@ public class GamificationService  extends IntentService {
                         c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
                         event = gEngine.processEventResourceActivity(c, act);
 
-                        eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
+                        eventData.put(LOGDATA_TIMETAKEN, intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
 
                         trackerDigest = act.getDigest();
                     }
@@ -159,9 +167,9 @@ public class GamificationService  extends IntentService {
                     c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
                     event = gEngine.processEventFeedbackActivity(c, act);
 
-                    eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
-                    eventData.put("quiz_id", intent.getIntExtra(EVENTDATA_QUIZID, 0));
-                    eventData.put("instance_id", intent.getStringExtra(EVENTDATA_INSTANCEID));
+                    eventData.put(LOGDATA_TIMETAKEN, intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
+                    eventData.put(LOGDATA_QUIZ_ID, intent.getIntExtra(EVENTDATA_QUIZID, 0));
+                    eventData.put(LOGDATA_INSTANCE, intent.getStringExtra(EVENTDATA_INSTANCEID));
 
                     trackerDigest = act.getDigest();
                 }
@@ -172,7 +180,7 @@ public class GamificationService  extends IntentService {
                     long timetaken = intent.getLongExtra(EVENTDATA_TIMETAKEN, 0);
 
                     event = gEngine.processEventMediaPlayed(c, act, filename, timetaken);
-                    eventData.put("timetaken", timetaken);
+                    eventData.put(LOGDATA_TIMETAKEN, timetaken);
                     eventData.put("mediafile", filename);
                     eventData.put("media", "played");
 

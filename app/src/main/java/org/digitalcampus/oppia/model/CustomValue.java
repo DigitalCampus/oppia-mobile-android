@@ -25,9 +25,9 @@ public class CustomValue<T> {
         }
     }
 
-    public static <TT> TT getSecureValue(Map<String, CustomValue> customFieldsMap, String key) {
+    public static <V> V getSecureValue(Map<String, CustomValue> customFieldsMap, String key) {
         if (customFieldsMap.containsKey(key)) {
-            return ((CustomValue<TT>) customFieldsMap.get(key)).getValue();
+            return ((CustomValue<V>) customFieldsMap.get(key)).getValue();
         } else {
             return null;
         }

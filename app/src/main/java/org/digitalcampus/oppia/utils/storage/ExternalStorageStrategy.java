@@ -25,7 +25,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import androidx.documentfile.provider.DocumentFile;
 import android.util.Log;
 

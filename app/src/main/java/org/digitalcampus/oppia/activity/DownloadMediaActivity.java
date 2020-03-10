@@ -23,19 +23,19 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -67,9 +67,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
     public static final String MISSING_MEDIA = "missing_media";
 
-    private SharedPreferences prefs;
+    private SharedPreferences sharedPreferences;
     private ArrayList<Media> missingMedia;
-//    private DownloadMediaListAdapter dmla;
     private DownloadBroadcastReceiver receiver;
     Button downloadViaPCBtn;
     private TextView emptyState;
@@ -78,7 +77,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     private View missingMediaContainer;
     private RecyclerView recyclerMedia;
     private ArrayList<Media> mediaSelected;
-    private ActionMode actionMode;
     private DownloadMediaAdapter adapterMedia;
     private MultiChoiceHelper multiChoiceHelper;
 
@@ -105,7 +103,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_media);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         findViews();
 
         Bundle bundle = this.getIntent().getExtras();
@@ -189,19 +187,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             @Override
             public boolean onActionItemClicked(androidx.appcompat.view.ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
-//                    case R.id.menu_sort_by:
-//                        if (isSortByCourse) {
-////                            dmla.sortByFilename();
-//                            isSortByCourse = false;
-//                            item.setTitle(getString(R.string.menu_sort_by_course));
-//                        } else {
-////                            dmla.sortByCourse();
-//                            isSortByCourse = true;
-//                            item.setTitle(getString(R.string.menu_sort_by_filename));
-//                        }
-//                        invalidateOptionsMenu();
-//                        return true;
-
                     case R.id.menu_select_all:
                         for (int i = 0; i < adapterMedia.getItemCount(); i++) {
                             if (!multiChoiceHelper.isItemChecked(i)) {
@@ -237,7 +222,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         adapterMedia.setOnItemClickListener(new DownloadMediaAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                // do nothing
             }
 
             @Override
@@ -256,7 +241,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             }
         });
 
-        Media.resetMediaScan(prefs);
+        Media.resetMediaScan(sharedPreferences);
 
     }
 
@@ -265,8 +250,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     public void onResume() {
         super.onResume();
         if ((missingMedia != null) && !missingMedia.isEmpty()) {
-            //We already have loaded media (coming from orientationchange)
-//            dmla.sortByFilename();
+            // We already have loaded media (coming from orientation change)
             isSortByCourse = false;
             adapterMedia.notifyDataSetChanged();
             emptyState.setVisibility(View.GONE);
@@ -300,7 +284,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
+    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putSerializable(TAG, missingMedia);
     }
@@ -328,19 +312,18 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         int itemId = item.getItemId();
         switch (itemId) {
-            case R.id.menu_sort_by: {
+            case R.id.menu_sort_by:
                 if (isSortByCourse) {
                     adapterMedia.sortByFilename();
                     isSortByCourse = false;
                 } else {
                     adapterMedia.sortByCourse();
                     isSortByCourse = true;
-                }
                 invalidateOptionsMenu();
+                }
                 return true;
-            }
             case R.id.menu_select_all:
-                for (int i = 0; i < recyclerMedia.getAdapter().getItemCount(); i++) {
+                for (int i = 0; i < adapterMedia.getItemCount(); i++) {
                     if (!multiChoiceHelper.isItemChecked(i)) {
                         multiChoiceHelper.setItemChecked(i, true, true);
                     }
@@ -376,11 +359,11 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             html = html.replace("##download_via_pc_intro##", getString(R.string.download_via_pc_intro));
             html = html.replace("##download_via_pc_final##", getString(R.string.download_via_pc_final, path));
 
-            String downloadData = "";
+            StringBuilder downloadData = new StringBuilder();
             for (Media m : missingMedia) {
-                downloadData += "<li><a href='" + m.getDownloadUrl() + "'>" + m.getFilename() + "</a></li>";
+                downloadData.append("<li><a href='" + m.getDownloadUrl() + "'>" + m.getFilename() + "</a></li>");
             }
-            html = html.replace("##download_files##", downloadData);
+            html = html.replace("##download_files##", downloadData.toString());
 
             File file = new File(Environment.getExternalStorageDirectory(), filename);
             f = new FileOutputStream(file);
@@ -460,7 +443,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     }
 
     private void downloadMedia(Media mediaToDownload, DownloadMode mode) {
-        if (!ConnectionUtils.isOnWifi(DownloadMediaActivity.this) && !DownloadMediaActivity.this.prefs.getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, false)) {
+        if (!ConnectionUtils.isOnWifi(DownloadMediaActivity.this) && !DownloadMediaActivity.this.sharedPreferences.getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, false)) {
             UIUtils.showAlert(DownloadMediaActivity.this, R.string.warning, R.string.warning_wifi_required);
             return;
         }
@@ -524,13 +507,12 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         anim.setDuration(900);
         missingMediaContainer.startAnimation(anim);
 
-        missingMediaContainer.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        missingMediaContainer.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ValueAnimator animator = ValueAnimator.ofInt(0, missingMediaContainer.getMeasuredHeight());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             //@Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 recyclerMedia.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
-//                recyclerMedia.setSelectionAfterHeaderView();
             }
         });
         animator.setStartDelay(200);
@@ -544,13 +526,12 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         anim.setDuration(900);
         missingMediaContainer.startAnimation(anim);
 
-        missingMediaContainer.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        missingMediaContainer.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ValueAnimator animator = ValueAnimator.ofInt(missingMediaContainer.getMeasuredHeight(), 0);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             //@Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 recyclerMedia.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
-//                recyclerMedia.setSelectionAfterHeaderView();
             }
         });
         animator.setStartDelay(0);

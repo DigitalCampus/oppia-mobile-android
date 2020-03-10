@@ -22,7 +22,6 @@ import android.util.Log;
 import com.splunk.mint.Mint;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
@@ -53,26 +52,17 @@ public class ShortAnswer extends QuizQuestion implements Serializable {
             }
         }
         if (total == 0){
-            for (Response r : responseOptions){
-                if (r.getTitle(lang).equalsIgnoreCase("*") && r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
-                    this.feedback = r.getFeedback(lang);
-                }
-            }
+            this.setFeedback(lang);
         }
-        int maxscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
-        if (total > maxscore){
-            userscore = maxscore;
-        } else {
-            userscore = total;
-        }
+        this.calculateUserscore(total);
     }
 
-    @Override
-    public void setUserResponses(List<String> str) {
-        if (!str.equals(this.userResponses)){
-            this.setFeedbackDisplayed(false);
+    private void setFeedback(String lang){
+        for (Response r : responseOptions){
+            if (r.getTitle(lang).equalsIgnoreCase("*") && r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
+                this.feedback = r.getFeedback(lang);
+            }
         }
-        this.userResponses = str;
     }
 
     @Override

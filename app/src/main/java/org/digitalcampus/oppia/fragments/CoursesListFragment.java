@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +29,10 @@ import org.digitalcampus.oppia.activity.DownloadMediaActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.CoursesListAdapter;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
@@ -39,19 +41,16 @@ import org.digitalcampus.oppia.listener.UpdateActivityListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
+import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
 import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
-import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
@@ -75,7 +74,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     private InstallerBroadcastReceiver receiver;
 
     @Inject CoursesRepository coursesRepository;
-    @Inject SharedPreferences prefs;
+    @Inject SharedPreferences sharedPrefs;
+    @Inject ApiEndpoint apiEndpoint;
     private LinearLayout llLoading;
     private TextView tvManageCourses;
     private Button manageBtn;
@@ -102,14 +102,13 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         View layout = inflater.inflate(R.layout.fragment_courses_list, container, false);
         findViews(layout);
+        getAppComponent().inject(this);
 
-        initializeDagger();
-
-        prefs.registerOnSharedPreferenceChangeListener(this);
+        sharedPrefs.registerOnSharedPreferenceChangeListener(this);
 
         // set preferred lang to the default lang
-        if ("".equals(prefs.getString(PrefsActivity.PREF_LANGUAGE, ""))) {
-            prefs.edit().putString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()).apply();
+        if ("".equals(sharedPrefs.getString(PrefsActivity.PREF_LANGUAGE, ""))) {
+            sharedPrefs.edit().putString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()).apply();
         }
 
         if (getResources().getBoolean(R.bool.is_tablet)) {
@@ -128,10 +127,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         return layout;
     }
 
-    private void initializeDagger() {
-        MobileLearning app = (MobileLearning) getActivity().getApplication();
-        app.getComponent().inject(this);
-    }
 
     @Override
     public void onStart() {
@@ -145,7 +140,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         receiver = new InstallerBroadcastReceiver();
         receiver.setCourseInstallerListener(this);
-        IntentFilter broadcastFilter = new IntentFilter(CourseIntallerService.BROADCAST_ACTION);
+        IntentFilter broadcastFilter = new IntentFilter(CourseInstallerService.BROADCAST_ACTION);
         broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
         getActivity().registerReceiver(receiver, broadcastFilter);
 
@@ -166,7 +161,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         llLoading.setVisibility(View.GONE);
 
-        if (courses.size() < MobileLearning.DOWNLOAD_COURSES_DISPLAY){
+        if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY){
             displayDownloadSection();
         } else {
             tvManageCourses.setText(R.string.no_courses);
@@ -193,19 +188,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         });
     }
 
-    private void createLanguageDialog() {
-        ArrayList<Lang> langs = new ArrayList<>();
-        for(Course m: courses){ langs.addAll(m.getLangs()); }
-
-        UIUtils.createLanguageDialog(getActivity(), langs, prefs, new Callable<Boolean>() {
-            public Boolean call(){
-                onStart();
-                return true;
-            }
-        });
-    }
-
-
     // Recycler callbacks
     @Override
     public void onItemClick(int position) {
@@ -223,7 +205,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
             public void onPermissionGranted() {
                 tempCourse = courses.get(position);
                 if (itemId == R.id.course_context_delete) {
-                    if (prefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
+                    if (sharedPrefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
                         confirmCourseDelete();
                     } else {
                         Toast.makeText(getActivity(), getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
@@ -239,7 +221,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void confirmCourseDelete() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
-//        builder.setCancelable(false);
         builder.setTitle(R.string.course_context_delete);
         builder.setMessage(R.string.course_context_delete_confirm);
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -268,7 +249,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void confirmCourseReset() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
-//        builder.setCancelable(false);
         builder.setTitle(R.string.course_context_reset);
         builder.setMessage(R.string.course_context_reset_confirm);
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -294,7 +274,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
-        UpdateCourseActivityTask task = new UpdateCourseActivityTask(getActivity(), SessionManager.getUserId(getActivity()));
+        UpdateCourseActivityTask task = new UpdateCourseActivityTask(getActivity(),
+                SessionManager.getUserId(getActivity()), apiEndpoint);
         ArrayList<Object> payloadData = new ArrayList<>();
         payloadData.add(tempCourse);
         Payload p = new Payload(payloadData);
@@ -317,7 +298,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void scanMedia() {
 
-        if (Media.shouldScanMedia(prefs)){
+        if (Media.shouldScanMedia(sharedPrefs)){
             ScanMediaTask task = new ScanMediaTask(getActivity());
             Payload p = new Payload(this.courses);
             task.setScanMediaListener(this);
@@ -333,13 +314,12 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         anim.setDuration(900);
         messageContainer.startAnimation(anim);
 
-        messageContainer.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        messageContainer.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ValueAnimator animator = ValueAnimator.ofInt(initialCourseListPadding, messageContainer.getMeasuredHeight());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             //@Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 recyclerCourses.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
-//                recyclerCourses.setSelectionAfterHeaderView();
             }
         });
         animator.setStartDelay(200);
@@ -409,6 +389,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     /* CourseInstallerListener implementation */
     public void onInstallComplete(String fileUrl) {
         toast(R.string.install_complete);
+        Log.d(TAG, fileUrl + ": Installation complete.");
         displayCourses();
     }
 

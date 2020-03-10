@@ -2,18 +2,21 @@ package org.digitalcampus.oppia.di;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import com.splunk.mint.Mint;
 
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.api.RemoteApiEndpoint;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.Badges;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.QuizAttemptRepository;
 import org.digitalcampus.oppia.model.TagRepository;
@@ -75,7 +78,7 @@ public class AppModule {
     }
 
     @Provides
-    public ArrayList<Badges> provideBadgesList(){
+    public List<Badges> provideBadgesList(){
         return new ArrayList<>();
     }
 
@@ -102,6 +105,17 @@ public class AppModule {
     @Singleton
     public QuizAttemptRepository provideQuizAttemptRepository() {
         return new QuizAttemptRepository();
+    }
+
+    @Provides
+    @Singleton
+    public ApiEndpoint provideApiEndpoint() {
+        return new RemoteApiEndpoint();
+    }
+
+    @Provides
+    public CustomFieldsRepository provideProfileCustomFieldsList(){
+        return new CustomFieldsRepository();
     }
 
 }

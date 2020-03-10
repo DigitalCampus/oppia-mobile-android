@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Section extends MultiLangInfoModel implements Serializable  {
@@ -53,15 +54,15 @@ public class Section extends MultiLangInfoModel implements Serializable  {
 		this.order = order;
 	}
 
-	public ArrayList<Activity> getActivities() {
+	public List<Activity> getActivities() {
 		return activities;
 	}
 
 	public void addActivity(Activity activity){
 		this.activities.add(activity);
 	}
-	public void setActivities(ArrayList<Activity> activities) {
-		this.activities = activities;
+	public void setActivities(List<Activity> activities) {
+		this.activities = (ArrayList<Activity>) activities;
 	}
 
 	public Activity getActivity(String digest){

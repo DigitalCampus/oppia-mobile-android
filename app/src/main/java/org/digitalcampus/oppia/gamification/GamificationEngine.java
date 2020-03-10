@@ -22,8 +22,7 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
-import org.digitalcampus.mobile.quiz.Quiz;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -73,12 +72,11 @@ public class GamificationEngine {
         return defaultGamification.getEvent(event);
     }
 
-    private String getMediaCompletionCriteriaFromHierarchy(Course course, Activity activity){
-
+    private String getMediaCompletionCriteriaFromHierarchy(){
         return Gamification.DEFAULT_MEDIA_CRITERIA;
     }
 
-    private int getMediaCompletionThresholdFromHierarchy(Course course, Activity activity) {
+    private int getMediaCompletionThresholdFromHierarchy() {
         return Gamification.DEFAULT_MEDIA_THRESHOLD;
     }
 
@@ -107,7 +105,7 @@ public class GamificationEngine {
         return Gamification.GAMIFICATION_REGISTER;
     }
 
-    public GamificationEvent processEventQuizAttempt(Course course, Activity activity, Quiz quiz, float scorePercent){
+    public GamificationEvent processEventQuizAttempt(Course course, Activity activity, float scorePercent){
         int totalPoints = 0;
         DbHelper db = DbHelper.getInstance(this.ctx);
 
@@ -166,25 +164,18 @@ public class GamificationEngine {
         Media m = activity.getMedia(mediaFileName);
         if (m != null) {
             try {
-                String criteria = getMediaCompletionCriteriaFromHierarchy(course, activity);
+                String criteria = getMediaCompletionCriteriaFromHierarchy();
+                int threshold = getMediaCompletionThresholdFromHierarchy();
                 Log.d(TAG, "Video criteria: " + criteria);
-                if (criteria.equals(Gamification.MEDIA_CRITERIA_THRESHOLD)){
+                if (criteria.equals(Gamification.MEDIA_CRITERIA_THRESHOLD) && ((timeTaken * 100 / m.getLength()) > threshold)){
 
-                    int threshold = getMediaCompletionThresholdFromHierarchy(course, activity);
                     Log.d(TAG, "Threshold: " + threshold);
-                    if ((timeTaken * 100 / m.getLength()) > threshold){
-                        completed = true;
-                        Log.d(TAG, "Threshold passed!");
-                        if (!db.isMediaPlayed(activity.getDigest())){
-                            Log.d(TAG, "First view --> giving points");
-                            totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_THRESHOLD_PASSED).getPoints();
-                        }
-                        else{
-                            Log.d(TAG, "Not first view --> not giving points");
-                        }
-
+                    completed = true;
+                    Log.d(TAG, "Threshold passed!");
+                    if (!db.isMediaPlayed(activity.getDigest())){
+                        Log.d(TAG, "First view --> giving points");
+                        totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_THRESHOLD_PASSED).getPoints();
                     }
-
                 }
                 else{
                     //Using intervals media criteria
@@ -201,7 +192,6 @@ public class GamificationEngine {
                 }
 
 
-
             } catch (GamificationEventNotFound genf) {
                 Log.d(TAG,LOG_EVENT_NOT_FOUND + genf.getEventName(), genf);
                 Mint.logException(genf);
@@ -210,9 +200,6 @@ public class GamificationEngine {
         return new GamificationEvent(Gamification.EVENT_NAME_MEDIA_PLAYED, totalPoints, completed);
     }
 
-
-
-    // TODO GAMIFICATION - allow adding specific points for particular course
     // needs to be able to access the course object at the point the tracker is triggered
     public GamificationEvent processEventCourseDownloaded(){
         return Gamification.GAMIFICATION_COURSE_DOWNLOADED;
@@ -230,7 +217,6 @@ public class GamificationEngine {
     }
 
     public GamificationEvent processEventResourceActivity(Course course, Activity activity){
-        // TODO GAMIFICATION - add specific event for this - now just using default activity completed
         try{
             return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
         } catch (GamificationEventNotFound genf) {
@@ -239,12 +225,10 @@ public class GamificationEngine {
     }
 
     public GamificationEvent processEventResourceStoppedActivity(){
-        // TODO GAMIFICATION - add specific event for this - eg using time taken
         return Gamification.GAMIFICATION_UNDEFINED;
     }
 
     public GamificationEvent processEventFeedbackActivity(Course course, Activity activity){
-        // TODO GAMIFICATION - add specific event for this - now just using default activity completed
         try{
             return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
         } catch (GamificationEventNotFound genf) {
@@ -253,7 +237,6 @@ public class GamificationEngine {
     }
 
     public GamificationEvent processEventURLActivity(Course course, Activity activity){
-        // TODO GAMIFICATION - add specific event for this - now just using default activity completed
         try{
             return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
         } catch (GamificationEventNotFound genf) {

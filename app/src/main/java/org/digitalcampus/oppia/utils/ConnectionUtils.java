@@ -8,20 +8,27 @@ public class ConnectionUtils {
 
 	public static final String TAG = ConnectionUtils.class.getSimpleName();
 
+	private ConnectionUtils() {
+		throw new IllegalStateException("Utility class");
+	}
+
 	public static boolean isOnWifi(Context ctx) {
 		ConnectivityManager conMan = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = conMan.getActiveNetworkInfo();
-		if (netInfo == null || netInfo.getType() != ConnectivityManager.TYPE_WIFI) {
-			return false;
-		} else {
-			return true;
-		}
+		return (netInfo == null || netInfo.getType() != ConnectivityManager.TYPE_WIFI);
 	}
 
 	public static boolean isNetworkConnected(Context context) {
-		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		return (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isAvailable() && cm
+		return isNetworkConnected(getConnectivityManager(context));
+	}
+
+	public static boolean isNetworkConnected(ConnectivityManager manager) {
+		return (manager.getActiveNetworkInfo() != null && manager.getActiveNetworkInfo().isAvailable() && manager
 				.getActiveNetworkInfo().isConnected());
+	}
+
+	public static ConnectivityManager getConnectivityManager(Context ctx){
+		return (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
 	}
 
 }

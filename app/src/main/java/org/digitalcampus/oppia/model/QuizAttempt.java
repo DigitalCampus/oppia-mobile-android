@@ -21,7 +21,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -46,7 +46,7 @@ public class QuizAttempt implements Serializable {
 	private User user;
 	private String event;
     private int points;
-    private int timetaken;
+    private long timetaken;
 
     private String courseTitle;
     private String quizTitle;
@@ -60,12 +60,12 @@ public class QuizAttempt implements Serializable {
 		this.datetime = datetime;
 	}
 
-	public void setDateTime(String date) {
-		this.datetime = MobileLearning.DATETIME_FORMAT.parseDateTime(date);
+	public void setDateTimeFromString(String date) {
+		this.datetime = DateUtils.DATETIME_FORMAT.parseDateTime(date);
 	}
 
 	public String getDateTimeString() {
-		return MobileLearning.DATETIME_FORMAT.print(datetime);
+		return DateUtils.DATETIME_FORMAT.print(datetime);
 	}
 	
 	public long getId() {
@@ -182,18 +182,16 @@ public class QuizAttempt implements Serializable {
         this.points = points;
     }
 
-	public int getTimetaken() {
+	public long getTimetaken() {
 		return timetaken;
 	}
 
-	public void setTimetaken(int timetaken) {
+	public void setTimetaken(long timetaken) {
 		this.timetaken = timetaken;
 	}
 
 	public String getHumanTimetaken(){
-		return String.format("%d min %ds",
-				TimeUnit.MILLISECONDS.toSeconds(timetaken)/60,
-				TimeUnit.MILLISECONDS.toSeconds(timetaken) % 60 );
+		return String.format("%d min %ds", timetaken/60, timetaken % 60 );
 	}
 
 	public String getCourseTitle() {

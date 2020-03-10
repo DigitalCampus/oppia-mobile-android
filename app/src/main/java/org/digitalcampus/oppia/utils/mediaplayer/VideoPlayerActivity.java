@@ -24,7 +24,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -61,8 +61,6 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     private Course course;
 
     private View endContainer;
-    private ImageButton replayBtn;
-    private ImageButton continueBtn;
 
     protected SharedPreferences prefs;
 
@@ -111,8 +109,8 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         super.onStart();
         videoSurface = findViewById(R.id.videoSurface);
         endContainer = findViewById(R.id.end_container);
-        replayBtn = findViewById(R.id.replay_button);
-        continueBtn = findViewById(R.id.continue_button);
+        ImageButton replayBtn = findViewById(R.id.replay_button);
+        ImageButton continueBtn = findViewById(R.id.continue_button);
 
         replayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,13 +222,13 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     }
 
     public void toggleFullScreen() {
-        
+        // do nothing
     }
     // End VideoMediaController.MediaPlayerControl
 
     // Implement SurfaceHolder.Callback
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        
+        // do nothing
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
@@ -261,7 +259,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
-
+        // do nothing
     }
 
     @Override

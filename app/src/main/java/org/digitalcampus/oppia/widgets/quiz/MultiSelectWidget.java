@@ -44,6 +44,11 @@ public class MultiSelectWidget extends QuestionWidget {
 	}
 
 	@Override
+	public void setQuestionResponses(List<String> currentAnswers) {
+		// not used for this widget
+	}
+
+	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
 		responsesLL = view.findViewById(R.id.questionresponses);
     	responsesLL.removeAllViews();
@@ -57,7 +62,7 @@ public class MultiSelectWidget extends QuestionWidget {
     		CheckBox chk= new CheckBox(ctx);
 			chk.setText(Html.fromHtml(r.getTitle(currentUserLang)));
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-					LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+					ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
 			setResponseMarginInLayoutParams(params);
 			responsesLL.addView(chk, params);
 			for (String a : currentAnswer) {
@@ -84,6 +89,11 @@ public class MultiSelectWidget extends QuestionWidget {
 		} else {
 			return response;
 		}
+	}
+
+	@Override
+	public List<String> getQuestionResponses() {
+		return new ArrayList<>();
 	}
 
 }

@@ -56,8 +56,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     private static final int REQUEST_DISCOVERABLE_MODE = 4;
     private static final int BLUETOOTH_DISCOVERABLE_TIME = 300;
 
-    private final int TAB_ACTIVITYLOGS = 0;
-    private final int TAB_COURSES = 1;
+    private static final int TAB_ACTIVITYLOGS = 0;
+    private static final int TAB_COURSES = 1;
 
     private RecyclerView coursesRecyclerView;
     private RecyclerView.Adapter coursesAdapter;
@@ -139,15 +139,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         coursesAdapter = new TransferableFileListAdapter(transferableFiles, new ListInnerBtnOnClickListener() {
             @Override
             public void onClick(int position) {
-                final CourseTransferableFile toShare = transferableFiles.get(position);
-                if (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED){
-                    for (CourseTransferableFile file : transferableFiles){
-                        if (toShare.getRelatedMedia().contains(file.getFilename())){
-                            btServiceDelegate.sendFile(file);
-                        }
-                    }
-                    btServiceDelegate.sendFile(toShare);
-                }
+                CourseTransferableFile toShare = transferableFiles.get(position);
+                sendFile(toShare);
             }
         }, true);
         tabsFilter.addOnTabSelectedListener(this);
@@ -183,18 +176,10 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         sendAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (currentSelectedTab){
-                    case TAB_ACTIVITYLOGS:
-                        for (CourseTransferableFile file : activityLogs){
-                            btServiceDelegate.sendFile(file);
-                        }
-                        break;
-
-                    case TAB_COURSES:
-                        for (CourseTransferableFile file : transferableFiles){
-                            btServiceDelegate.sendFile(file);
-                        }
-                        break;
+                if(currentSelectedTab == TAB_ACTIVITYLOGS) {
+                    sendAll(activityLogs);
+                } else if (currentSelectedTab == TAB_COURSES) {
+                    sendAll(transferableFiles);
                 }
 
             }
@@ -263,12 +248,30 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
             bluetoothManager.connect(device);
         }
-
     }
 
     private void setupBluetoothConnection() {
         Log.d(TAG, "setting up connection");
         bluetoothManager = new BluetoothConnectionManager(this, uiHandler);
+    }
+
+    private void sendFile(CourseTransferableFile toShare){
+        if (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED){
+            for (CourseTransferableFile file : transferableFiles){
+                if (toShare.getRelatedMedia().contains(file.getFilename())){
+                    btServiceDelegate.sendFile(file);
+                }
+            }
+            btServiceDelegate.sendFile(toShare);
+        }
+    }
+
+    private void sendAll(List<CourseTransferableFile> files){
+        if (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED){
+            for (CourseTransferableFile file : files){
+                btServiceDelegate.sendFile(file);
+            }
+        }
     }
 
     private void updateStatus(boolean updateTransferProgress){
@@ -291,12 +294,14 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
                     sendTransferProgress.setVisibility(View.GONE);
                 startBluetooth();
                 break;
+            default:
+                // do nothing
         }
 
     }
 
-    private void setStatus(int status_title, String connectedDevice) {
-        statusTitle.setText(status_title);
+    private void setStatus(int statusTitle, String connectedDevice) {
+        this.statusTitle.setText(statusTitle);
         if (connectedDevice == null){
             statusSubtitle.setText(R.string.bluetooth_no_device_connected);
             notConnectedInfo.setVisibility(View.VISIBLE);
@@ -430,7 +435,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     @Override
     public void onTransferComplete(CourseTransferableFile file) {
 
-        if (BluetoothTransferService.getTasksTransferring().size() == 0){
+        if (BluetoothTransferService.getTasksTransferring().isEmpty()){
             sendTransferProgress.setVisibility(View.GONE);
             pendingSize.setVisibility(View.GONE);
             pendingFiles.setVisibility(View.GONE);
@@ -467,9 +472,14 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     }
 
     @Override
-    public void downloadComplete(Payload p) { }
+    public void downloadComplete(Payload p) {
+        // do nothing
+    }
+
     @Override
-    public void downloadProgressUpdate(DownloadProgress dp) { }
+    public void downloadProgressUpdate(DownloadProgress dp) {
+        // do nothing
+    }
 
     @Override
     public void installComplete(Payload p) {
@@ -483,6 +493,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         }
         refreshFileList(false);
         Toast.makeText(this, R.string.install_complete, Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
@@ -534,7 +545,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             pendingProgress += pendingFile.getFileSize();
         }
         pendingProgress = Math.max(0, pendingProgress - progress);
-        if ((pending.size() == 0) || (pendingProgress == 0)){
+        if (pending.isEmpty() || pendingProgress == 0){
             sendTransferProgress.setVisibility(View.GONE);
             pendingFiles.setVisibility(View.GONE);
             pendingSize.setVisibility(View.GONE);
@@ -550,7 +561,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             pendingSize.setText(FileUtils.readableFileSize(pendingProgress));
         }
 
-        if ((pending.size() == 0) && (pendingProgress == 0)){
+        if (pending.isEmpty() && pendingProgress == 0){
             //If we are sending and there are no transfers left, show the complete toast
             Toast.makeText(this, R.string.bluetooth_all_transfers_complete, Toast.LENGTH_LONG).show();
         }
@@ -590,29 +601,27 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
                             Toast.LENGTH_SHORT).show();
                     this.finish();
                 }
+            default:
+                // do nothing
         }
     }
 
     private void updateTabs(){
         boolean connected = connectedPanel.getVisibility() == View.VISIBLE;
-        switch (currentSelectedTab) {
-            case TAB_ACTIVITYLOGS:
-                activitylogsRecyclerView.setVisibility(View.VISIBLE);
-                coursesRecyclerView.setVisibility(View.GONE);
-                if (connected){
-                    boolean hide = activityLogs.isEmpty() || pendingFiles.getVisibility() == View.VISIBLE;
-                    sendAllButton.setVisibility(hide ? View.GONE : View.VISIBLE);
-                }
-                break;
-
-            case TAB_COURSES:
-                activitylogsRecyclerView.setVisibility(View.GONE);
-                coursesRecyclerView.setVisibility(View.VISIBLE);
-                if (connected){
-                    boolean hide = transferableFiles.isEmpty() || pendingFiles.getVisibility() == View.VISIBLE;
-                    sendAllButton.setVisibility( hide ? View.GONE : View.VISIBLE);
-                }
-                break;
+        if(currentSelectedTab == TAB_ACTIVITYLOGS) {
+            activitylogsRecyclerView.setVisibility(View.VISIBLE);
+            coursesRecyclerView.setVisibility(View.GONE);
+            if (connected) {
+                boolean hide = activityLogs.isEmpty() || pendingFiles.getVisibility() == View.VISIBLE;
+                sendAllButton.setVisibility(hide ? View.GONE : View.VISIBLE);
+            }
+        } else if (currentSelectedTab == TAB_COURSES) {
+            activitylogsRecyclerView.setVisibility(View.GONE);
+            coursesRecyclerView.setVisibility(View.VISIBLE);
+            if (connected){
+                boolean hide = transferableFiles.isEmpty() || pendingFiles.getVisibility() == View.VISIBLE;
+                sendAllButton.setVisibility( hide ? View.GONE : View.VISIBLE);
+            }
         }
     }
 
@@ -623,10 +632,14 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     }
 
     @Override
-    public void onTabUnselected(TabLayout.Tab tab) { }
+    public void onTabUnselected(TabLayout.Tab tab) {
+        // do nothing
+    }
 
     @Override
-    public void onTabReselected(TabLayout.Tab tab) { }
+    public void onTabReselected(TabLayout.Tab tab) {
+        // do nothing
+    }
 
 
 
@@ -663,6 +676,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
                     Toast.makeText(self, msg.getData().getString(BluetoothConnectionManager.TOAST),
                             Toast.LENGTH_SHORT).show();
                     break;
+                default:
+                    // do nothing
             }
         }
     }
@@ -695,6 +710,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             case android.R.id.home:
                 this.onBackPressed();
                 break;
+            default:
+                // do nothing
         }
 
         return super.onOptionsItemSelected(item);

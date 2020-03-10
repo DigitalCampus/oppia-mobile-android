@@ -22,7 +22,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -37,7 +37,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SearchResultsAdapter;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Course;
@@ -49,7 +49,7 @@ import java.util.List;
 
 public class SearchActivity extends AppActivity {
 
-    private SharedPreferences prefs;
+    private SharedPreferences sharedPreferences;
     private long userId = 0;
 
 	private EditText searchText;
@@ -67,7 +67,7 @@ public class SearchActivity extends AppActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         adapterResults = new SearchResultsAdapter(this, results);
         recyclerResults = findViewById(R.id.recycler_results_search);
         recyclerResults.setAdapter(adapterResults);
@@ -85,9 +85,6 @@ public class SearchActivity extends AppActivity {
                 SearchActivity.this.startActivity(i);
             }
         });
-
-
-
 	}
 	
 	@Override
@@ -96,7 +93,7 @@ public class SearchActivity extends AppActivity {
         initialize();
 
 		DbHelper db = DbHelper.getInstance(this);
-		userId = db.getUserId(prefs.getString("preUsername", ""));
+		userId = db.getUserId(sharedPreferences.getString("preUsername", ""));
 		
 		searchText = findViewById(R.id.search_string);
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -206,7 +203,6 @@ public class SearchActivity extends AppActivity {
             results.clear();
             results.addAll(searchResults);
             adapterResults.notifyDataSetChanged();
-//            resultsList.setSelectionAfterHeaderView();
             SimpleAnimator.fadeFromTop(recyclerResults, SimpleAnimator.FADE_IN);
             loadingSpinner.setVisibility(View.GONE);
             searchButton.setEnabled(true);

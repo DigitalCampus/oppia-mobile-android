@@ -18,8 +18,8 @@
 package org.digitalcampus.oppia.utils.xmlreaders;
 
 import org.digitalcampus.oppia.model.Media;
-import java.util.ArrayList;
+import java.util.List;
 
 public interface IMediaXMLHandler {
-    ArrayList<Media> getCourseMedia();
+    List<Media> getCourseMedia();
 }

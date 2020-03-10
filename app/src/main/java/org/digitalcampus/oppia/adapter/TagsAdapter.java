@@ -15,7 +15,7 @@ import org.digitalcampus.oppia.model.Tag;
 
 import java.util.List;
 
-public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
+public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder> {
 
 
     private List<Tag> tags;
@@ -29,18 +29,17 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TagsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View contactView = LayoutInflater.from(context).inflate(R.layout.tag_row, parent, false);
+        View contactView = LayoutInflater.from(context).inflate(R.layout.row_tag, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new TagsViewHolder(contactView);
     }
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final TagsViewHolder viewHolder, final int position) {
 
         final Tag t = getItemAtPosition(position);
 
@@ -69,14 +68,13 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        public View rootView;
+    public class TagsViewHolder extends RecyclerView.ViewHolder {
+        
         private TextView tagName;
         private TextView tagDescription;
         private TextView tagCount;
 
-        public ViewHolder(View itemView) {
+        public TagsViewHolder(View itemView) {
 
             super(itemView);
 
@@ -84,9 +82,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
             tagDescription = itemView.findViewById(R.id.tag_description);
             tagCount = itemView.findViewById(R.id.tag_count);
 
-            rootView = itemView;
-
-            rootView.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (itemClickListener != null) {

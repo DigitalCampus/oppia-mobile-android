@@ -20,7 +20,7 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import com.splunk.mint.Mint;
@@ -95,7 +95,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
                 if (!makeDirs){
                     boolean canWrite = destDir.canWrite();
                     Log.d(TAG, "Error creating destination dir " + destPath + ": canWrite=" + canWrite);
-                    throw new Exception("No file created!"); }
+                    throw new IOException("No file created!"); }
             }
             Storage.createNoMediaFile(ctx);
 

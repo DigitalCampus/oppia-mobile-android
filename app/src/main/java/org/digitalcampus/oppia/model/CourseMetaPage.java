@@ -45,14 +45,14 @@ public class CourseMetaPage implements Serializable{
 	
 	public Lang getLang(String langStr){
 		for(Lang l: langs){
-			if(l.getLang().toLowerCase(Locale.US).equals(langStr.toLowerCase(Locale.US))){
+			if(l.getLanguage().toLowerCase(Locale.US).equals(langStr.toLowerCase(Locale.US))){
 				return l;
 			}
 		}
-		if(langs.size()> 0){
-			return langs.get(0);
-		} else {
+		if(langs.isEmpty()){
 			return null;
+		} else {
+			return langs.get(0);
 		}
 	}
 }

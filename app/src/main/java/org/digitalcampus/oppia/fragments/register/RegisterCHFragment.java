@@ -16,12 +16,12 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import com.badoualy.stepperindicator.StepperIndicator;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.fragments.AppFragment;
 import org.digitalcampus.oppia.model.County;
 import org.digitalcampus.oppia.model.District;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout;
+import org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -234,9 +234,9 @@ public class RegisterCHFragment extends AppFragment implements View.OnClickListe
                     String passwordAgain = editRegChPasswordAgain.getCleanedValue();
 
                     // check password length
-                    if (password.length() < MobileLearning.PASSWORD_MIN_LENGTH) {
+                    if (password.length() < App.PASSWORD_MIN_LENGTH) {
                         editRegChPassword.setErrorEnabled(true);
-                        editRegChPassword.setError(getString(R.string.error_register_password, MobileLearning.PASSWORD_MIN_LENGTH));
+                        editRegChPassword.setError(getString(R.string.error_register_password, App.PASSWORD_MIN_LENGTH));
                         editRegChPassword.requestFocus();
                         return false;
                     }

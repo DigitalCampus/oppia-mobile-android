@@ -2,7 +2,7 @@ package org.digitalcampus.oppia.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.adapter.LeaderboardAdapter;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.gamification.Leaderboard;
+import org.digitalcampus.oppia.gamification.LeaderboardUtils;
 import org.digitalcampus.oppia.listener.SubmitListener;
-import org.digitalcampus.oppia.model.LeaderboardPosition;
+import org.digitalcampus.oppia.model.db_model.Leaderboard;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.UpdateLeaderboardFromServerTask;
 
@@ -28,6 +29,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 
 public class LeaderboardFragment extends AppFragment implements SubmitListener {
 
@@ -35,19 +38,22 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
         return new LeaderboardFragment();
     }
 
-    RecyclerView leaderboard_view;
+    RecyclerView leaderboardView;
     TextView rankingPosition;
     TextView totalPoints;
     ProgressBar loadingSpinner;
 
+    @Inject
+    ApiEndpoint apiEndpoint;
+
     LeaderboardAdapter adapter;
-    List<LeaderboardPosition> leaderboard;
+    List<Leaderboard> leaderboard;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View vv = inflater.inflate(R.layout.fragment_leaderboard, container, false);
 
-        leaderboard_view = vv.findViewById(R.id.list_leaderboard);
+        leaderboardView = vv.findViewById(R.id.list_leaderboard);
         rankingPosition = vv.findViewById(R.id.tv_ranking);
         totalPoints= vv.findViewById(R.id.tv_total_points);
 
@@ -60,17 +66,17 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        getAppComponent().inject(this);
         leaderboard = new ArrayList<>();
 
         adapter = new LeaderboardAdapter(this.getContext(), leaderboard);
-        leaderboard_view.setLayoutManager( new LinearLayoutManager(this.getContext()));
-        leaderboard_view.setAdapter(adapter);
+        leaderboardView.setLayoutManager( new LinearLayoutManager(this.getContext()));
+        leaderboardView.setAdapter(adapter);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if (Leaderboard.shouldFetchLeaderboard(prefs)){
+        if (LeaderboardUtils.shouldFetchLeaderboard(prefs)){
             Payload p = new Payload();
-            UpdateLeaderboardFromServerTask task = new UpdateLeaderboardFromServerTask(super.getActivity());
+            UpdateLeaderboardFromServerTask task = new UpdateLeaderboardFromServerTask(super.getActivity(), apiEndpoint);
             task.seListener(this);
             task.execute(p);
         }
@@ -84,19 +90,18 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
 
         leaderboard.clear();
 
-        DbHelper db = DbHelper.getInstance(getActivity());
-        leaderboard.addAll(db.getLeaderboard());
+        leaderboard.addAll(App.getDb().leaderboardDao().getAll());
 
         String username = SessionManager.getUsername(this.getContext());
         Collections.sort(leaderboard);
 
-        LeaderboardPosition userPos = null;
+        Leaderboard userPos = null;
         int i;
         for (i=0; i<leaderboard.size(); i++){
-            LeaderboardPosition pos = leaderboard.get(i);
-            if (pos.getUsername().equals(username)){
-                pos.setUser(true);
-                userPos = pos;
+            Leaderboard leaderboardItem = leaderboard.get(i);
+            if (leaderboardItem.getUsername().equals(username)){
+                leaderboardItem.setUser(true);
+                userPos = leaderboardItem;
                 break;
             }
         }
@@ -109,7 +114,7 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
         adapter.notifyDataSetChanged();
 
         loadingSpinner.setVisibility(View.GONE);
-        leaderboard_view.setVisibility(View.VISIBLE);
+        leaderboardView.setVisibility(View.VISIBLE);
     }
 
     @Override

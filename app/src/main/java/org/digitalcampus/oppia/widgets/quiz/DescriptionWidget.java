@@ -34,7 +34,12 @@ public class DescriptionWidget extends QuestionWidget{
 		LinearLayout ll = v.findViewById(R.id.quiz_response_widget);
 		ll.removeAllViews();
 	}
-	
+
+	@Override
+	public void setQuestionResponses(List<String> currentAnswers) {
+		// not used for this widget
+	}
+
 	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswers) {
 		// do nothing
@@ -43,6 +48,11 @@ public class DescriptionWidget extends QuestionWidget{
 
 	@Override
 	public List<String> getQuestionResponses(List<Response> responses) {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<String> getQuestionResponses() {
 		return new ArrayList<>();
 	}
 

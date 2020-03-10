@@ -1,7 +1,8 @@
 package UI;
 
-import androidx.test.rule.ActivityTestRule;
+import Utils.MockedApiEndpointTest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
@@ -21,17 +22,22 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
 
+
 @RunWith(AndroidJUnit4.class)
-public class LoginUITest {
+public class LoginUITest extends MockedApiEndpointTest {
+
+    private static final String VALID_LOGIN_RESPONSE = "responses/response_201_login.json";
+    private static final String WRONG_CREDENTIALS_RESPONSE = "responses/response_400_login.json";
 
     @Rule
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
-            new ActivityTestRule<>(WelcomeActivity.class);
-
+            new ActivityTestRule<>(WelcomeActivity.class, false, false);
 
 
     @Test
     public void showsErrorMessageWhenThereIsNoUsername() throws Exception{
+        welcomeActivityTestRule.launchActivity(null);
+
         onView(withId(R.id.welcome_login))
                 .perform(scrollTo(), click());
 
@@ -44,6 +50,10 @@ public class LoginUITest {
 
     @Test
     public void showsErrorMessageWhenTheUsernameOrPasswordAreWrong() throws Exception{
+
+        startServer(400, WRONG_CREDENTIALS_RESPONSE, 0);
+        welcomeActivityTestRule.launchActivity(null);
+
         onView(withId(R.id.welcome_login))
                 .perform(scrollTo(), click());
 
@@ -63,19 +73,22 @@ public class LoginUITest {
     @Test
     public void changeActivityWhenTheCredentialsAreCorrect() throws Exception {
 
-       onView(withId(R.id.welcome_login))
+        startServer(200, VALID_LOGIN_RESPONSE, 0);
+        welcomeActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.welcome_login))
                .perform(scrollTo(), click());
 
-       onView(withId(R.id.login_username_field))
+        onView(withId(R.id.login_username_field))
                .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_username"));
 
-       onView(withId(R.id.login_password_field))
+        onView(withId(R.id.login_password_field))
                .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_password"));
 
-       onView(withId(R.id.login_btn))
+        onView(withId(R.id.login_btn))
                .perform(scrollTo(), click());
 
-       assertEquals(MainActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+        assertEquals(MainActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
     }
 
 

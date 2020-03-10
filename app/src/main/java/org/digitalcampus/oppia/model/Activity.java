@@ -20,21 +20,11 @@ package org.digitalcampus.oppia.model;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
-import org.digitalcampus.oppia.utils.ImageUtils;
-import org.joda.time.DateTime;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import android.content.res.Resources;
-import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
-
-import com.splunk.mint.Mint;
 
 public class Activity extends MultiLangInfoModel implements Serializable{
 	
@@ -50,20 +40,19 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 	private int actId;
 	private int dbId;
 	private String actType;
-	private ArrayList<Lang> locations = new ArrayList<>();
-	private ArrayList<Lang> contents = new ArrayList<>();
+	private List<Lang> locations = new ArrayList<>();
+	private List<Lang> contents = new ArrayList<>();
 	private String digest;
 	private String imageFile;
-	private ArrayList<Media> media = new ArrayList<>();
+	private List<Media> media = new ArrayList<>();
 	private boolean completed = false;
 	private boolean attempted = false;
 	private boolean customImage = false;
-	private DateTime startDate;
-	private DateTime endDate;
 	private String mimeType;
-	private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<>();
+	private List<GamificationEvent> gamificationEvents = new ArrayList<>();
 
 	public Activity(){
+		// do nothing
 	}
 	
 	public boolean hasCustomImage(){
@@ -86,16 +75,12 @@ public class Activity extends MultiLangInfoModel implements Serializable{
         return R.drawable.default_icon_activity;
     }
 
-	public BitmapDrawable getImageFile(String prefix, Resources res) {
-		return ImageUtils.LoadBMPsdcard(getImageFilePath(prefix), res, getDefaultResourceImage());
-	}
-
 	public void setImageFile(String imageFile) {
 		this.imageFile = imageFile;
 		this.customImage = true;
 	}
 	
-	public ArrayList<Media> getMedia() {
+	public List<Media> getMedia() {
 		return media;
 	}
 
@@ -108,7 +93,7 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 		return null;
 	}
 
-	public void setMedia(ArrayList<Media> media) {
+	public void setMedia(List<Media> media) {
 		this.media = media;
 	}
 
@@ -154,57 +139,42 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 
 	public String getLocation(String lang) {
 		for(Lang l: locations){
-			if(l.getLang().equals(lang)){
+			if(l.getLanguage().equals(lang)){
 				return l.getContent();
 			}
 		}
-		if(locations.size() > 0){
+		if(locations.isEmpty()){
+			return null;
+		} else {
 			return locations.get(0).getContent();
 		}
-		return null;
+
 	}
 	
-	public void setLocations(ArrayList<Lang> locations) {
+	public void setLocations(List<Lang> locations) {
 		this.locations = locations;
 	}
 	
 	public String getContents(String lang) {
 		for(Lang l: contents){
-			if(l.getLang().equals(lang)){
+			if(l.getLanguage().equals(lang)){
 				return l.getContent();
 			}
 		}
-		if(contents.size() > 0){
+		if(contents.isEmpty()) {
+			return "No content";
+		} else {
 			return contents.get(0).getContent();
 		}
-		return "No content";
+
 	}
 	
-	public void setContents(ArrayList<Lang> contents) {
+	public void setContents(List<Lang> contents) {
 		this.contents = contents;
 	}
-	
-	public void setContentFromJSONString(String json){
-		try {
-			JSONArray contentsArray = new JSONArray(json);
-			for(int i=0; i<contentsArray.length(); i++){
-				JSONObject contentObj = contentsArray.getJSONObject(i);
-				@SuppressWarnings("unchecked")
-				Iterator<String> iter =  contentObj.keys();
-				while(iter.hasNext()){
-					String key = iter.next();
-					String content = contentObj.getString(key);
-					Lang l = new Lang(key,content);
-					this.contents.add(l);
-				}
-			}
-		} catch (JSONException e) {
-			Mint.logException(e);
-			Log.d(TAG, "JSON error: ", e);
-		}
-	}
+
 	public boolean hasMedia(){
-		return media.size() != 0;
+		return !media.isEmpty();
 	}
 	
 	public void setCompleted(boolean completed){
@@ -213,22 +183,6 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 	
 	public boolean getCompleted(){
 		return this.completed;
-	}
-	
-	public DateTime getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(DateTime startDate) {
-		this.startDate = startDate;
-	}
-
-	public DateTime getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(DateTime endDate) {
-		this.endDate = endDate;
 	}
 
 	public String getMimeType() {
@@ -255,11 +209,7 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 		this.dbId = dbId;
 	}
 
-    public void addGamificationEvent(GamificationEvent event){
-        gamificationEvents.add(event);
-    }
-
-	public void setGamificationEvents(ArrayList<GamificationEvent> events){
+	public void setGamificationEvents(List<GamificationEvent> events){
 		gamificationEvents = events;
 	}
 

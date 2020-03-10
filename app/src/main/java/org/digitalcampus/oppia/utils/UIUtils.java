@@ -27,7 +27,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,12 +42,13 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.ScorecardActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
@@ -55,6 +56,10 @@ public class UIUtils {
 
     public static final String TAG = UIUtils.class.getSimpleName();
     private static int pointsToSubstractForAnimationSaved;
+
+    private UIUtils() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * Displays the users points and badges scores in the app header
@@ -84,7 +89,7 @@ public class UIUtils {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
         //Get User from AppModule with dagger
-        MobileLearning app = (MobileLearning) ctx.getApplicationContext();
+        App app = (App) ctx.getApplicationContext();
         User u = app.getComponent().getUser();
 
         Log.d(TAG, "username: " + u.getUsername());
@@ -187,12 +192,12 @@ public class UIUtils {
 
     /**
      * @param ctx
-     * @param Res
+     * @param res
      * @param msg
      * @return
      */
-    public static AlertDialog showAlert(Context ctx, int Res, String msg) {
-        return UIUtils.showAlert(ctx, ctx.getString(Res), msg, ctx.getString(R.string.close));
+    public static AlertDialog showAlert(Context ctx, int res, String msg) {
+        return UIUtils.showAlert(ctx, ctx.getString(res), msg, ctx.getString(R.string.close));
     }
 
     public static AlertDialog showAlert(Context ctx, String title, String msg) {
@@ -236,13 +241,13 @@ public class UIUtils {
 
     /**
      * @param ctx
-     * @param R
+     * @param res
      * @param msg
      * @param funct
      * @return
      */
-    public static void showAlert(Context ctx, int R, CharSequence msg, Callable<Boolean> funct) {
-        UIUtils.showAlert(ctx, ctx.getString(R), msg, funct);
+    public static void showAlert(Context ctx, int res, CharSequence msg, Callable<Boolean> funct) {
+        UIUtils.showAlert(ctx, ctx.getString(res), msg, funct);
     }
 
     public static void showAlert(Context ctx, String title, CharSequence msg, final Callable<Boolean> funct) {
@@ -295,7 +300,7 @@ public class UIUtils {
      * @param prefs
      * @param funct
      */
-    public static void createLanguageDialog(Context ctx, ArrayList<Lang> langs, final SharedPreferences prefs, final Callable<Boolean> funct) {
+    public static void createLanguageDialog(Context ctx, List<Lang> langs, final SharedPreferences prefs, final Callable<Boolean> funct) {
         ArrayList<String> langStringList = new ArrayList<>();
         final ArrayList<Lang> languagesList = new ArrayList<>();
 
@@ -303,7 +308,7 @@ public class UIUtils {
         for (Lang lang : langs) {
             boolean found = false;
             for (Lang ln : languagesList) {
-                if (ln.getLang().equals(lang.getLang())) {
+                if (ln.getLanguage().equals(lang.getLanguage())) {
                     found = true;
                     break;
                 }
@@ -318,10 +323,10 @@ public class UIUtils {
 
         String prefLanguage = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         for (Lang lang : languagesList) {
-            Locale locale = new Locale(lang.getLang());
+            Locale locale = new Locale(lang.getLanguage());
             String langDisp = locale.getDisplayLanguage(locale);
             langStringList.add(langDisp);
-            if (lang.getLang().equals(prefLanguage)) {
+            if (lang.getLanguage().equals(prefLanguage)) {
                 prefLangPosition = i;
             }
             i++;
@@ -333,7 +338,7 @@ public class UIUtils {
             AlertDialog mAlertDialog = new AlertDialog.Builder(ctx)
                     .setSingleChoiceItems(arr, prefLangPosition, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            String newLang = languagesList.get(whichButton).getLang();
+                            String newLang = languagesList.get(whichButton).getLanguage();
                             Editor editor = prefs.edit();
                             editor.putString(PrefsActivity.PREF_LANGUAGE, newLang);
                             editor.apply();

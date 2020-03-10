@@ -19,11 +19,11 @@ package org.digitalcampus.oppia.utils.xmlreaders;
 
 import android.util.Log;
 
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.TrackerLog;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
@@ -62,11 +63,7 @@ public class CourseTrackerXMLReader {
 			try {
 				DocumentBuilder builder = XMLSecurityHelper.getNewSecureDocumentBuilder();
 				document = builder.parse(courseXML);
-			} catch (ParserConfigurationException e) {
-				throw new InvalidXMLException(e);
-			} catch (SAXException e) {
-				throw new InvalidXMLException(e);
-			} catch (IOException e) {
+			} catch (ParserConfigurationException|SAXException|IOException e) {
 				throw new InvalidXMLException(e);
 			}
 		}
@@ -78,18 +75,13 @@ public class CourseTrackerXMLReader {
 			DocumentBuilder builder = XMLSecurityHelper.getNewSecureDocumentBuilder();
 			InputSource is = new InputSource(new StringReader(xmlContent));
 			document = builder.parse(is);
-		} catch (ParserConfigurationException e) {
-			throw new InvalidXMLException(e);
-		} catch (SAXException e) {
-			throw new InvalidXMLException(e);
-		} catch (IOException e) {
+		} catch (ParserConfigurationException|SAXException|IOException e) {
 			throw new InvalidXMLException(e);
 		}
-
 	}
 
 	
-	public ArrayList<TrackerLog> getTrackers(long courseId, long userId){
+	public List<TrackerLog> getTrackers(long courseId, long userId){
 		ArrayList<TrackerLog> trackers = new ArrayList<>();
 		if (this.document == null){
 			return trackers;
@@ -99,7 +91,7 @@ public class CourseTrackerXMLReader {
 			NamedNodeMap attrs = actTrackers.item(i).getAttributes();
 			String digest = attrs.getNamedItem(NODE_DIGEST).getTextContent();
 			String submittedDateString = attrs.getNamedItem(NODE_SUBMITTEDDATE).getTextContent();
-			DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(submittedDateString);
+			DateTime sdt = DateUtils.DATETIME_FORMAT.parseDateTime(submittedDateString);
 			
 			boolean completed;
 			try {
@@ -125,9 +117,7 @@ public class CourseTrackerXMLReader {
             int points;
             try {
                 points = Integer.parseInt(attrs.getNamedItem(NODE_POINTS).getTextContent());
-            } catch (NullPointerException npe) {
-                points = 0;
-            } catch (NumberFormatException nfe){
+            } catch (NullPointerException|NumberFormatException npe) {
                 points = 0;
             }
 			
@@ -146,7 +136,7 @@ public class CourseTrackerXMLReader {
 		return trackers;
 	}
 	
-	public ArrayList<QuizAttempt> getQuizAttempts(long courseId, long userId){
+	public List<QuizAttempt> getQuizAttempts(long courseId, long userId){
 		ArrayList<QuizAttempt> quizAttempts = new ArrayList<>();
 		if (this.document == null){
 			return quizAttempts;
@@ -187,7 +177,7 @@ public class CourseTrackerXMLReader {
                     }
 
 					String submittedDateString = quizAttrs.getNamedItem(NODE_SUBMITTEDDATE).getTextContent();
-					DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(submittedDateString);
+					DateTime sdt = DateUtils.DATETIME_FORMAT.parseDateTime(submittedDateString);
 					
 					boolean passed;
 					try {

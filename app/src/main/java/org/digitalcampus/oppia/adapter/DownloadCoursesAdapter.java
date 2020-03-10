@@ -3,7 +3,7 @@ package org.digitalcampus.oppia.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,22 +20,21 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import java.util.List;
 import java.util.Locale;
 
-public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCoursesAdapter.ViewHolder> {
+public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCoursesAdapter.DownloadCoursesViewHolder> {
 
 
-    private List<CourseIntallViewAdapter> courses;
+    private List<CourseInstallViewAdapter> courses;
     private Context context;
     private OnItemClickListener itemClickListener;
     private String prefLang;
 
     private String updateDescription;
-    private String updateSchedDescription;
     private String installDescription;
     private String installedDescription;
     private String cancelDescription;
 
 
-    public DownloadCoursesAdapter(Context context, List<CourseIntallViewAdapter> courses) {
+    public DownloadCoursesAdapter(Context context, List<CourseInstallViewAdapter> courses) {
         this.context = context;
         this.courses = courses;
 
@@ -49,20 +48,19 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DownloadCoursesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View contactView = LayoutInflater.from(context).inflate(R.layout.course_download_row, parent, false);
+        View contactView = LayoutInflater.from(context).inflate(R.layout.row_course_download, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new DownloadCoursesViewHolder(contactView);
     }
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final DownloadCoursesViewHolder viewHolder, final int position) {
 
-        final CourseIntallViewAdapter c = getItemAtPosition(position);
+        final CourseInstallViewAdapter c = getItemAtPosition(position);
 
         viewHolder.courseTitle.setText(c.getTitle(prefLang));
 
@@ -113,10 +111,6 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
                     viewHolder.actionBtn.setImageResource(R.drawable.ic_action_refresh);
                     viewHolder.actionBtn.setContentDescription(updateDescription);
                     viewHolder.actionBtn.setEnabled(true);
-                } else if (c.isToUpdateSchedule()){
-                    viewHolder.actionBtn.setImageResource(R.drawable.ic_action_refresh);
-                    viewHolder.actionBtn.setContentDescription(updateSchedDescription);
-                    viewHolder.actionBtn.setEnabled(true);
                 } else {
                     viewHolder.actionBtn.setImageResource(R.drawable.ic_action_accept);
                     viewHolder.actionBtn.setContentDescription(installedDescription);
@@ -137,14 +131,13 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
         return courses.size();
     }
 
-    public CourseIntallViewAdapter getItemAtPosition(int position) {
+    public CourseInstallViewAdapter getItemAtPosition(int position) {
         return courses.get(position);
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class DownloadCoursesViewHolder extends RecyclerView.ViewHolder {
 
-        public View rootView;
         private TextView courseTitle;
         private TextView courseDraft;
         private TextView courseDescription;
@@ -153,7 +146,7 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
         private TextView courseAuthor;
         private TextView labelAuthor;
 
-        public ViewHolder(View itemView) {
+        public DownloadCoursesViewHolder(View itemView) {
 
             super(itemView);
 
@@ -164,16 +157,6 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
             actionProgress = itemView.findViewById(R.id.download_progress);
             courseAuthor = itemView.findViewById(R.id.course_author);
             labelAuthor = itemView.findViewById(R.id.label_author);
-            rootView = itemView;
-
-//            rootView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (itemClickListener != null) {
-//                        itemClickListener.onItemClick(v, getAdapterPosition());
-//                    }
-//                }
-//            });
 
             actionBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

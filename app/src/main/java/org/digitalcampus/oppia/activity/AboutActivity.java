@@ -19,7 +19,7 @@ package org.digitalcampus.oppia.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.view.MenuItem;
 
 import androidx.fragment.app.Fragment;
@@ -40,21 +40,20 @@ import java.util.Locale;
 public class AboutActivity extends AppActivity {
 	
 	public static final String TAB_ACTIVE = "TAB_ACTIVE";
-	public static final int TAB_ABOUT = 0;
 	public static final int TAB_HELP = 1;
 	public static final int TAB_PRIVACY = 2;
 
 	private ViewPager viewPager;
     private TabLayout tabs;
 	private int currentTab = 0;
-	private SharedPreferences prefs;
+	private SharedPreferences sharedPreferences;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_about);
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		viewPager = findViewById(R.id.activity_about_pager);
 
         tabs = findViewById(R.id.tabs_toolbar);
@@ -70,7 +69,7 @@ public class AboutActivity extends AppActivity {
 		super.onStart();
 		initialize();
 
-		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+		String lang = sharedPreferences.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		List<Fragment> fragments = new ArrayList<>();
         List<String> titles = new ArrayList<>();
 		
@@ -98,12 +97,11 @@ public class AboutActivity extends AppActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				this.finish();
-				return true;
-			default:
-				return false;
+		if (item.getItemId() == android.R.id.home) {
+			this.finish();
+			return true;
+		} else {
+			return false;
 		}
 	}
 }

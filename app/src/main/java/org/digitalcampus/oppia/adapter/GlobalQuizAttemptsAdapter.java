@@ -7,15 +7,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.QuizAttempt;
+import org.digitalcampus.oppia.utils.DateUtils;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAttemptsAdapter.ViewHolder>{
+public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAttemptsAdapter.GlobalQuizAttemptsViewHolder>{
 
     private final Context ctx;
     private final List<QuizAttempt> quizAttempts;
@@ -28,21 +28,19 @@ public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAt
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class GlobalQuizAttemptsViewHolder extends RecyclerView.ViewHolder {
 
         private TextView date;
-        //private TextView timetaken;
         private TextView score;
-        private TextView course_title;
-        private TextView quiz_title;
+        private TextView courseTitle;
+        private TextView quizTitle;
 
-        public ViewHolder(View itemView) {
+        public GlobalQuizAttemptsViewHolder(View itemView) {
             super(itemView);
-            //timetaken = itemView.findViewById(R.id.attempt_timetaken);
             date = itemView.findViewById(R.id.attempt_date);
             score = itemView.findViewById(R.id.score);
-            course_title = itemView.findViewById(R.id.course_title);
-            quiz_title = itemView.findViewById(R.id.quiz_title);
+            courseTitle = itemView.findViewById(R.id.course_title);
+            quizTitle = itemView.findViewById(R.id.quiz_title);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -66,20 +64,19 @@ public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAt
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public GlobalQuizAttemptsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(ctx).inflate(R.layout.row_quiz_attempt_global, parent, false);
-        return new GlobalQuizAttemptsAdapter.ViewHolder(v);
+        return new GlobalQuizAttemptsViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull GlobalQuizAttemptsViewHolder viewHolder, int position) {
         final QuizAttempt quiz = getItemAtPosition(position);
 
-        viewHolder.quiz_title.setText(quiz.getDisplayTitle(ctx));
+        viewHolder.quizTitle.setText(quiz.getDisplayTitle(ctx));
         String course = quiz.getCourseTitle();
-        viewHolder.course_title.setText(course == null ? ctx.getString(R.string.quiz_attempts_unkwnown_course) : course);
-        //viewHolder.timetaken.setText(quiz.getHumanTimetaken());
-        viewHolder.date.setText(MobileLearning.DISPLAY_DATETIME_FORMAT.print(quiz.getDatetime()));
+        viewHolder.courseTitle.setText(course == null ? ctx.getString(R.string.quiz_attempts_unkwnown_course) : course);
+        viewHolder.date.setText(DateUtils.DISPLAY_DATETIME_FORMAT.print(quiz.getDatetime()));
         viewHolder.score.setText(quiz.getScorePercentLabel());
         viewHolder.score.setBackgroundResource(
                 quiz.isPassed()

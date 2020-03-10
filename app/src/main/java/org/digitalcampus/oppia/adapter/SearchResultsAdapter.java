@@ -3,7 +3,7 @@ package org.digitalcampus.oppia.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +25,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
-public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.ViewHolder> {
+public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.SearchResultsViewHolder> {
 
 
     private static final String TAG = "SearchResultsAdapter";
@@ -43,18 +43,17 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SearchResultsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View contactView = LayoutInflater.from(context).inflate(R.layout.search_results_row, parent, false);
+        View contactView = LayoutInflater.from(context).inflate(R.layout.row_search_results, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new SearchResultsViewHolder(contactView);
     }
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final SearchResultsViewHolder viewHolder, final int position) {
 
         final SearchResult sr = getItemAtPosition(position);
 
@@ -95,15 +94,15 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class SearchResultsViewHolder extends RecyclerView.ViewHolder {
 
-        public View rootView;
+        private View rootView;
         private TextView activityTitle;
         private TextView sectionTitle;
         private TextView courseTitle;
         private ImageView activityImage;
 
-        public ViewHolder(View itemView) {
+        public SearchResultsViewHolder(View itemView) {
 
             super(itemView);
 

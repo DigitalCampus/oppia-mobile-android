@@ -15,16 +15,16 @@ public class JSInterfaceForResourceImages {
     private static final String TAG = JSInterfaceForResourceImages.class.getSimpleName();
 
     //Name of the JS interface to add to the webView
-    public static final String InterfaceExposedName = "OppiaAndroid";
+    public static final String INTERFACE_EXPOSED_NAME = "OppiaAndroid";
 
     //Script to inject in the webView after load
-    public static final String JSInjection = "javascript: (function(){var imgs = document.querySelectorAll('img'); Array.prototype.forEach.call(imgs, function(img, i){if (img.parentNode.nodeName.toLowerCase()!=='a'){img.addEventListener('click', function(){"+InterfaceExposedName+".openFile(img.getAttribute('src'));});}});})();";
-    Context _ctx;
+    public static final String JS_INJECTION = "javascript: (function(){var imgs = document.querySelectorAll('img'); Array.prototype.forEach.call(imgs, function(img, i){if (img.parentNode.nodeName.toLowerCase()!=='a'){img.addEventListener('click', function(){"+ INTERFACE_EXPOSED_NAME +".openFile(img.getAttribute('src'));});}});})();";
+    Context context;
     String resourcesLocation;
 
     /** Instantiate the interface and set the context */
     public JSInterfaceForResourceImages(Context ctx, String location) {
-        this._ctx = ctx;
+        this.context = ctx;
         this.resourcesLocation = location;
     }
 
@@ -32,12 +32,12 @@ public class JSInterfaceForResourceImages {
     public void openFile(String relativeFilePath) {
         File fileToOpen = new File(resourcesLocation + relativeFilePath);
         Log.d(TAG, "File to open externally: " + fileToOpen.getPath());
-        Intent intent = ExternalResourceOpener.getIntentToOpenResource(_ctx, fileToOpen);
+        Intent intent = ExternalResourceOpener.getIntentToOpenResource(context, fileToOpen);
         if(intent != null){
-            _ctx.startActivity(intent);
+            context.startActivity(intent);
         } else {
-            Toast.makeText(_ctx,
-                    _ctx.getString(R.string.error_resource_app_not_found, relativeFilePath),
+            Toast.makeText(context,
+                    context.getString(R.string.error_resource_app_not_found, relativeFilePath),
                     Toast.LENGTH_LONG).show();
         }
 

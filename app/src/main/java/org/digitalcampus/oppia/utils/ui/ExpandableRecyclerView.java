@@ -20,6 +20,7 @@ import org.digitalcampus.mobile.learning.R;
 public class ExpandableRecyclerView extends RecyclerView
 {
 
+    private static final String TAG = ExpandableRecyclerView.class.getSimpleName();
 
     public ExpandableRecyclerView(Context context)
     {
@@ -144,7 +145,7 @@ public class ExpandableRecyclerView extends RecyclerView
     }
 
 
-    public static abstract class Adapter<CVH extends ViewHolder, GVH extends ViewHolder, HVH extends ViewHolder, C, G> extends RecyclerView.Adapter<ViewHolder>
+    public abstract static class Adapter<CVH extends ViewHolder, GVH extends ViewHolder, HVH extends ViewHolder, C, G> extends RecyclerView.Adapter<ViewHolder>
     {
 
         private OnChildItemClickedListener onChildItemClickedListener;
@@ -317,17 +318,14 @@ public class ExpandableRecyclerView extends RecyclerView
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
         {
-            Log.d("Expand", "type:" + viewType);
+            Log.d(TAG, "type:" + viewType);
             switch (viewType){
-                case TYPE_HEADER: {
+                case TYPE_HEADER:
                     return onCreateHeaderViewHolder(parent);
-                }
-                case TYPE_GROUP_HEADER: {
+                case TYPE_GROUP_HEADER:
                     return onCreateGroupViewHolder(parent);
-                }
-                default:{
+                default:
                     return onCreateChildViewHolder(parent, viewType);
-                }
             }
         }
 
@@ -342,10 +340,10 @@ public class ExpandableRecyclerView extends RecyclerView
         @Override
         public int getItemViewType(int i)
         {
-            Log.d("Expand", "Init:" + i);
+            Log.d(TAG, "Init:" + i);
             if (headerVisible){
                 if (i == 0){
-                    Log.d("Expand",  "Header:" + i);
+                    Log.d(TAG,  "Header:" + i);
                     return TYPE_HEADER;
                 }
                 else{
@@ -416,7 +414,7 @@ public class ExpandableRecyclerView extends RecyclerView
         }
     }
 
-    public static abstract class GroupViewHolder extends RecyclerView.ViewHolder
+    public abstract static class GroupViewHolder extends RecyclerView.ViewHolder
     {
 
         ImageView expandedIndicator;

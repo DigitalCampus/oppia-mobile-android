@@ -13,7 +13,7 @@ import org.digitalcampus.mobile.learning.R;
 
 import java.util.List;
 
-public class DevicesBTAdapter extends RecyclerView.Adapter<DevicesBTAdapter.ViewHolder> {
+public class DevicesBTAdapter extends RecyclerView.Adapter<DevicesBTAdapter.DevicesBTViewHolder> {
 
 
     private List<String> devices;
@@ -27,18 +27,17 @@ public class DevicesBTAdapter extends RecyclerView.Adapter<DevicesBTAdapter.View
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DevicesBTViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View contactView = LayoutInflater.from(context).inflate(R.layout.device_row, parent, false);
+        View contactView = LayoutInflater.from(context).inflate(R.layout.row_device, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new DevicesBTViewHolder(contactView);
     }
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final DevicesBTViewHolder holder, final int position) {
 
         final String device = getItemAtPosition(position);
 
@@ -56,11 +55,11 @@ public class DevicesBTAdapter extends RecyclerView.Adapter<DevicesBTAdapter.View
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class DevicesBTViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView rootView;
+        private TextView rootView;
 
-        public ViewHolder(View itemView) {
+        public DevicesBTViewHolder(View itemView) {
 
             super(itemView);
 

@@ -1,0 +1,32 @@
+{
+  "fields": [
+    {
+      "name":"county",
+      "label":"Select county",
+      "required":true,
+      "helper_text":"",
+      "type":"str",
+      "order": 1
+    },
+
+    {
+      "name":"district",
+      "label":"Select district",
+      "required":true,
+      "helper_text":"",
+      "type":"str",
+      "order": 1
+    },
+
+    {
+      "name":"employee_id",
+      "label":"Employee ID",
+      "required":true,
+      "helper_text":"",
+      "type":"str",
+      "order": 1
+    }
+  ]
+
+
+}

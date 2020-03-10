@@ -48,7 +48,7 @@ public class APIUserRequestTask extends APIRequestTask<Payload, Object, Payload>
 		try {
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
-            Request request = createRequestWithUserAuth(apiEndpoint.getFullURL(ctx, payload.getUrl()));
+            Request request = createRequestBuilderWithUserAuth(apiEndpoint.getFullURL(ctx, payload.getUrl())).build();
 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){

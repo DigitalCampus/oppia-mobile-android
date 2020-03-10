@@ -31,6 +31,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
@@ -43,7 +44,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.SyncActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 
 import java.util.HashMap;
@@ -59,6 +60,7 @@ public class DrawerMenuManager {
 
     private NavigationView navigationView;
     private ActionBarDrawerToggle drawerToggle;
+    private DrawerLayout drawerLayout;
     private Map<Integer, MenuOption> customOptions = new HashMap<>();
 
     public DrawerMenuManager(AppActivity act) {
@@ -68,7 +70,7 @@ public class DrawerMenuManager {
     public void initializeDrawer() {
         // Initializing Drawer Layout and ActionBarToggle
         final Toolbar toolbar = drawerAct.findViewById(R.id.toolbar);
-        final DrawerLayout drawerLayout = drawerAct.findViewById(R.id.drawer);
+        drawerLayout = drawerAct.findViewById(R.id.drawer);
         navigationView = drawerAct.findViewById(R.id.navigation_view);
 
         if (drawerLayout == null || navigationView == null) return;
@@ -94,10 +96,7 @@ public class DrawerMenuManager {
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
-    }
 
-    public void onPrepareOptionsMenu(Menu menu, int currentOption) {
-        this.onPrepareOptionsMenu(menu, currentOption, null);
     }
 
     public void onPrepareOptionsMenu(Menu menu, Map<Integer, MenuOption> options) {
@@ -124,10 +123,10 @@ public class DrawerMenuManager {
         }
 
         SharedPreferences prefs = drawerAct.getPrefs();
-        itemSettings.setVisible(MobileLearning.MENU_ALLOW_SETTINGS);
-        itemCourseDownload.setVisible(prefs.getBoolean(PrefsActivity.PREF_DOWNLOAD_ENABLED, MobileLearning.MENU_ALLOW_COURSE_DOWNLOAD));
-        itemLanguageDialog.setVisible(customOptions.containsKey(R.id.menu_language) && prefs.getBoolean(PrefsActivity.PREF_CHANGE_LANGUAGE_ENABLED, MobileLearning.MENU_ALLOW_LANGUAGE));
-        itemSync.setVisible(MobileLearning.MENU_ALLOW_SYNC);
+        itemSettings.setVisible(App.MENU_ALLOW_SETTINGS);
+        itemCourseDownload.setVisible(prefs.getBoolean(PrefsActivity.PREF_DOWNLOAD_ENABLED, App.MENU_ALLOW_COURSE_DOWNLOAD));
+        itemLanguageDialog.setVisible(customOptions.containsKey(R.id.menu_language) && prefs.getBoolean(PrefsActivity.PREF_CHANGE_LANGUAGE_ENABLED, App.MENU_ALLOW_LANGUAGE));
+        itemSync.setVisible(App.MENU_ALLOW_SYNC);
     }
 
     public void onPostCreate(Bundle savedInstanceState) {
@@ -155,10 +154,6 @@ public class DrawerMenuManager {
                     launchIntentForActivity(ActivityLogActivity.class);
                 } else if (itemId == R.id.menu_about) {
                     launchIntentForActivity(AboutActivity.class);
-//                } else if (itemId == R.id.menu_scorecard) {
-//                    launchIntentForActivity(ScorecardActivity.class);
-//                } else if (itemId == R.id.menu_search) {
-//                    launchIntentForActivity(SearchActivity.class);
                 } else if (itemId == R.id.menu_settings) {
                     launchIntentForActivity(PrefsActivity.class);
                 } else if (itemId == R.id.menu_sync) {
@@ -192,4 +187,7 @@ public class DrawerMenuManager {
         builder.show();
     }
 
+    public void close() {
+        drawerLayout.closeDrawer(GravityCompat.START);
+    }
 }

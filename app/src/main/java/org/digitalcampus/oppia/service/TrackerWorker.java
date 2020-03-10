@@ -18,8 +18,9 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.api.Paths;
+import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.APIRequestFinishListener;
 import org.digitalcampus.oppia.listener.APIRequestListener;
@@ -40,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 public class TrackerWorker extends ListenableWorker implements APIRequestFinishListener, APIRequestListener {
 
 
-    private final String TAG = "TrackerWorker";
+    private static final String TAG = TrackerWorker.class.getSimpleName();
     private SettableFuture<Result> future;
     private int pendingTasks;
 
@@ -54,10 +55,7 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
 
         Log.i(TAG, "startWork");
 
-//        boolean backgroundData = getInputData().getBoolean("backgroundData", true);
-
         future = SettableFuture.create();
-
 
         boolean isLoggedIn = SessionManager.isLoggedIn(getApplicationContext());
         if (isLoggedIn) {
@@ -88,12 +86,12 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
 
         // check for updated courses
         // should only do this once a day or so....
-        SharedPreferences prefs = MobileLearning.getPrefs(getApplicationContext());
+        SharedPreferences prefs = App.getPrefs(getApplicationContext());
         long lastRun = prefs.getLong("lastCourseUpdateCheck", 0);
         long now = System.currentTimeMillis() / 1000;
         if ((lastRun + (TimeUnit.HOURS.toSeconds(12))) < now) {
             APIUserRequestTask task = new APIUserRequestTask(getApplicationContext());
-            Payload p = new Payload(MobileLearning.SERVER_COURSES_PATH);
+            Payload p = new Payload(Paths.SERVER_COURSES_PATH);
             task.setAPIRequestListener(this);
             task.setAPIRequestFinishListener(this, "APIUserRequestTask");
             task.execute(p);
@@ -115,13 +113,13 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
         DbHelper db = DbHelper.getInstance(getApplicationContext());
         List<QuizAttempt> unsent = db.getUnsentQuizAttempts();
 
-        if (unsent.size() > 0) {
+        if (unsent.isEmpty()) {
+            onRequestFinish(null);
+        } else {
             Payload p2 = new Payload(unsent);
             SubmitQuizAttemptsTask omSubmitQuizAttemptsTask = new SubmitQuizAttemptsTask(getApplicationContext());
             omSubmitQuizAttemptsTask.setAPIRequestFinishListener(this, "SubmitQuizAttemptsTask");
             omSubmitQuizAttemptsTask.execute(p2);
-        } else {
-            onRequestFinish(null);
         } 
 
 
@@ -137,18 +135,12 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
             Log.d(TAG, json.toString(4));
             DbHelper db = DbHelper.getInstance(getApplicationContext());
             for (int i = 0; i < (json.getJSONArray("courses").length()); i++) {
-                JSONObject json_obj = (JSONObject) json.getJSONArray("courses").get(i);
-                String shortName = json_obj.getString("shortname");
-                Double version = json_obj.getDouble("version");
+                JSONObject jsonObj = (JSONObject) json.getJSONArray("courses").get(i);
+                String shortName = jsonObj.getString("shortname");
+                Double version = jsonObj.getDouble("version");
 
                 if (db.toUpdate(shortName, version)) {
                     updateAvailable = true;
-                }
-                if (json_obj.has("schedule")) {
-                    Double scheduleVersion = json_obj.getDouble("schedule");
-                    if (db.toUpdateSchedule(shortName, scheduleVersion)) {
-                        updateAvailable = true;
-                    }
                 }
             }
 

@@ -29,7 +29,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.BadgesAdapter;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Badges;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
@@ -38,16 +38,19 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 public class BadgesFragment extends AppFragment implements APIRequestListener {
 
+	private static final String STR_JSON_OBJECTS = "objects";
+
 	private JSONObject json;
     private BadgesAdapter adapterBadges;
 
-	@Inject ArrayList<Badges> badges;
+	@Inject
+	List<Badges> badges;
 	
 	public static BadgesFragment newInstance() {
 	    return new BadgesFragment();
@@ -65,7 +68,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		initializeDagger();
+		getAppComponent().inject(this);
 
         adapterBadges = new BadgesAdapter(super.getActivity(), badges);
 		RecyclerView recyclerBadges = this.getView().findViewById(R.id.recycler_badges);
@@ -74,14 +77,10 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 		getBadges();
 	}
 
-	private void initializeDagger() {
-		MobileLearning app = (MobileLearning) getActivity().getApplication();
-		app.getComponent().inject(this);
-	}
 
 	private void getBadges(){		
 		APIUserRequestTask task = new APIUserRequestTask(super.getActivity());
-		Payload p = new Payload(MobileLearning.SERVER_AWARDS_PATH);
+		Payload p = new Payload(Paths.SERVER_AWARDS_PATH);
 		task.setAPIRequestListener(this);
 		task.execute(p);
 	}
@@ -95,16 +94,15 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 			this.getView().findViewById(R.id.loading_badges).setVisibility(View.GONE);
 			this.getView().findViewById(R.id.error_state).setVisibility(View.GONE);
 
-			if(json.getJSONArray("objects").length() == 0){
-				//tv.setText(R.string.info_no_badges);
+			if(json.getJSONArray(STR_JSON_OBJECTS).length() == 0){
 				this.getView().findViewById(R.id.empty_state).setVisibility(View.VISIBLE);
 				return;
 			}
-			for (int i = 0; i < (json.getJSONArray("objects").length()); i++) {
-				JSONObject json_obj = (JSONObject) json.getJSONArray("objects").get(i);
+			for (int i = 0; i < (json.getJSONArray(STR_JSON_OBJECTS).length()); i++) {
+				JSONObject jsonObj = (JSONObject) json.getJSONArray(STR_JSON_OBJECTS).get(i);
 				Badges b = new Badges();
-				b.setDescription(json_obj.getString("description"));
-				b.setDateTime(json_obj.getString("award_date"));
+				b.setDescription(jsonObj.getString("description"));
+				b.setDateTime(jsonObj.getString("award_date"));
 				badges.add(b);
 			}
 

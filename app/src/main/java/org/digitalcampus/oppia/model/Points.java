@@ -17,7 +17,7 @@
 
 package org.digitalcampus.oppia.model;
 
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 
 public class Points {
@@ -25,34 +25,19 @@ public class Points {
 	private DateTime datetime;
 	private String event;
     private String description;
-	private int points;
-	
-	public String getDateAsString() {
-		return MobileLearning.DATE_FORMAT.print(datetime);
-	}
-
-	public String getMonthAsString() {
-		return MobileLearning.MONTH_FORMAT.print(datetime);
-	}
-
-	public String getDayMonthAsString() {
-		return MobileLearning.DATE_FORMAT_DAY_MONTH.print(datetime);
-	}
+	private int pointsAwarded;
 
 	public String getDateDayMonth() {
-		return MobileLearning.DATE_FORMAT_DAY_MONTH.print(datetime);
-	}
-	
-	public String getTimeAsString() {
-		return MobileLearning.TIME_FORMAT.print(datetime);
+		return DateUtils.DATE_FORMAT_DAY_MONTH.print(datetime);
 	}
 
+
 	public String getTimeHoursMinutes() {
-		return MobileLearning.TIME_FORMAT_HOURS_MINUTES.print(datetime);
+		return DateUtils.TIME_FORMAT_HOURS_MINUTES.print(datetime);
 	}
 	
 	public void setDateTime(String date) {
-		this.datetime = MobileLearning.DATETIME_FORMAT.parseDateTime(date);
+		this.datetime = DateUtils.DATETIME_FORMAT.parseDateTime(date);
 	}
 
 	public DateTime getDateTime() {
@@ -75,11 +60,11 @@ public class Points {
         this.description = description;
     }
 	
-	public int getPoints() {
-		return points;
+	public int getPointsAwarded() {
+		return pointsAwarded;
 	}
 	
-	public void setPoints(int points) {
-		this.points = points;
+	public void setPointsAwarded(int points) {
+		this.pointsAwarded = points;
 	}
 }

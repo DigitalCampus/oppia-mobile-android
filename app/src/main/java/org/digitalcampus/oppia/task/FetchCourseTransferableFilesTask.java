@@ -3,12 +3,12 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
@@ -78,7 +78,7 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
                 try {
                     cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
                     cxr.parse(CourseXMLReader.ParseMode.ONLY_MEDIA);
-                    ArrayList<Media> media = cxr.getMediaResponses().getCourseMedia();
+                    List<Media> media = cxr.getMediaResponses().getCourseMedia();
                     for(Media m: media){
                         courseRelatedMedia.add(m.getFilename());
                     }
@@ -118,6 +118,7 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
             CourseTransferableFile log = new CourseTransferableFile();
             log.setFilename(file.getName());
             log.setFile(file);
+            log.setTitle(filename.substring(0, filename.indexOf('_')));
             log.setType(CourseTransferableFile.TYPE_ACTIVITY_LOG);
             log.setTitleFromFilename();
             log.setFileSize(file.length());

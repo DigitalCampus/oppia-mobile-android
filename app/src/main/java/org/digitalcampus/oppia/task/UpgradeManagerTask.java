@@ -22,7 +22,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
@@ -32,20 +32,21 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DBMigration;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.json.JSONException;
@@ -71,6 +72,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	private static final String MSG_DELETE_FAIL = "failed to delete: ";
 	private static final String MSG_COMPLETED = "completed";
 	private static final String MSG_FAILED = "failed";
+
+	private static final String STR_PROPS = "props";
 
 	public UpgradeManagerTask(Context ctx){
 		this.ctx = ctx;
@@ -146,7 +149,10 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			payload.setResult(true);
 		}
 
+		DBMigration.newInstance(ctx).checkMigrationStatus();
+
 		overrideAdminPasswordTask();
+		reloadCustomFieldsIfNeeded();
 		
 		return payload;
 	}
@@ -161,13 +167,11 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
             for (String course : children) {
                 publishProgress("checking: " + course);
                 String courseXMLPath = "";
-                String courseScheduleXMLPath = "";
                 String courseTrackerXMLPath = "";
                 // check that it's unzipped etc correctly
                 try {
-                    courseXMLPath = dir + File.separator + course + File.separator + MobileLearning.COURSE_XML;
-                    courseScheduleXMLPath = dir + File.separator + course + File.separator + MobileLearning.COURSE_SCHEDULE_XML;
-                    courseTrackerXMLPath = dir + File.separator + course + File.separator + MobileLearning.COURSE_TRACKER_XML;
+                    courseXMLPath = dir + File.separator + course + File.separator + App.COURSE_XML;
+                    courseTrackerXMLPath = dir + File.separator + course + File.separator + App.COURSE_TRACKER_XML;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     FileUtils.cleanUp(dir, Storage.getDownloadPath(ctx) + course);
                     break;
@@ -175,7 +179,6 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 
                 // check a module.xml file exists and is a readable XML file
                 CourseXMLReader cxr;
-                CourseScheduleXMLReader csxr;
                 CourseTrackerXMLReader ctxr;
 				CompleteCourse c;
                 try {
@@ -183,7 +186,6 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 					cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
 					c = cxr.getParsedCourse();
 
-                    csxr = new CourseScheduleXMLReader(new File(courseScheduleXMLPath));
                     ctxr = new CourseTrackerXMLReader(new File(courseTrackerXMLPath));
                 } catch (InvalidXMLException e) {
 					Mint.logException(e);
@@ -202,12 +204,6 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
                     db.insertActivities(c.getActivities(courseId));
                     db.insertTrackers(ctxr.getTrackers(courseId, 0));
                 }
-
-                // add schedule
-                // put this here so even if the course content isn't updated the schedule will be
-                db.insertSchedule(csxr.getSchedule());
-                db.updateScheduleVersion(courseId, csxr.getScheduleVersion());
-
             }
 		}
 	}
@@ -310,7 +306,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		long userId = db.getUserId(SessionManager.getUsername(ctx));
 		
 		List<Course> courses = db.getAllCourses();
-		ArrayList<v54UpgradeQuizObj> quizzes = new ArrayList<>();
+		ArrayList<V54UpgradeQuizObj> quizzes = new ArrayList<>();
 		
 		for (Course c: courses){
 			try {
@@ -318,38 +314,24 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
                 CompleteCourse parsedCourse = cxr.getParsedCourse();
 
-				ArrayList<Activity> baseActs = parsedCourse.getBaselineActivities();
+				ArrayList<Activity> baseActs = (ArrayList<Activity>) parsedCourse.getBaselineActivities();
 				for (Activity a: baseActs){
 					if (a.getActType().equalsIgnoreCase("quiz")){
-						String quizContent = a.getContents("en");
-						try {
-							JSONObject quizJson = new JSONObject(quizContent);
-							v54UpgradeQuizObj q = new v54UpgradeQuizObj();
-							q.id = quizJson.getInt("id");
-							q.digest = quizJson.getJSONObject("props").getString("digest");
-							q.threshold = quizJson.getJSONObject("props").getInt("passthreshold");
-							quizzes.add(q);
-						} catch (JSONException jsone) {
-                            Log.d(TAG,"failed to read json object", jsone);
+						V54UpgradeQuizObj quiz = v54ProcessQuiz(a);
+						if (quiz != null) {
+							quizzes.add(quiz);
 						}
 					}
 				}
 				
 				// now add the standard activities
-				ArrayList<Activity> acts = parsedCourse.getActivities(c.getCourseId());
+				ArrayList<Activity> acts = (ArrayList<Activity>) parsedCourse.getActivities(c.getCourseId());
 				for (Activity a: acts){
 					if (a.getActType().equalsIgnoreCase("quiz")){
-						String quizContent = a.getContents("en");
-						try {
-							JSONObject quizJson = new JSONObject(quizContent);
-							v54UpgradeQuizObj q = new v54UpgradeQuizObj();
-							q.id = quizJson.getInt("id");
-							q.digest = quizJson.getJSONObject("props").getString("digest");
-							q.threshold = quizJson.getJSONObject("props").getInt("passthreshold");
-							quizzes.add(q);
-                        } catch (JSONException jsone) {
-                            Log.d(TAG,"failed to read json object", jsone);
-                        }
+						V54UpgradeQuizObj quiz = v54ProcessQuiz(a);
+						if (quiz != null) {
+							quizzes.add(quiz);
+						}
 					}
 				}
 			} catch (InvalidXMLException ixmle) {
@@ -370,10 +352,10 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				
 				int quizId = jsonData.getInt("quiz_id");
 				
-				v54UpgradeQuizObj currentQuiz = null;
+				V54UpgradeQuizObj currentQuiz = null;
 				
 				// find the relevant quiz in quizzes
-				for (v54UpgradeQuizObj tmpQuiz: quizzes){
+				for (V54UpgradeQuizObj tmpQuiz: quizzes){
 					if (tmpQuiz.id == quizId){
 						currentQuiz = tmpQuiz;
 						break;
@@ -385,11 +367,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				} else {
 					Log.d(TAG,"Found");
 					qa.setActivityDigest(currentQuiz.digest);
-					if(qa.getScoreAsPercent() >= currentQuiz.threshold){
-						qa.setPassed(true);
-					} else {
-						qa.setPassed(false);
-					}
+					qa.setPassed(qa.getScoreAsPercent() >= currentQuiz.threshold);
 				}
 				
 				// make the actual updates
@@ -417,11 +395,26 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		
 	}
 
+	private V54UpgradeQuizObj v54ProcessQuiz(Activity activity){
+		String quizContent = activity.getContents("en");
+		try {
+			JSONObject quizJson = new JSONObject(quizContent);
+			V54UpgradeQuizObj q = new V54UpgradeQuizObj();
+			q.id = quizJson.getInt("id");
+			q.digest = quizJson.getJSONObject(STR_PROPS).getString("digest");
+			q.threshold = quizJson.getJSONObject(STR_PROPS).getInt("passthreshold");
+			return q;
+		} catch (JSONException jsone) {
+			Log.d(TAG,"failed to read json object", jsone);
+			return null;
+		}
+	}
+
 	private void overrideAdminPasswordTask(){
 		if (BuildConfig.ADMIN_PASSWORD_OVERRIDE_VERSION == BuildConfig.VERSION_CODE){
 			String overrideConfig = "password_overriden_" + BuildConfig.VERSION_CODE;
-			boolean already_overriden = prefs.getBoolean(overrideConfig, false);
-			if (!already_overriden){
+			boolean alreadyOverriden = prefs.getBoolean(overrideConfig, false);
+			if (!alreadyOverriden){
 				publishProgress(ctx.getString(R.string.info_override_password));
 				prefs.edit()
 					.putString(PrefsActivity.PREF_ADMIN_PASSWORD, BuildConfig.ADMIN_PROTECT_INITIAL_PASSWORD)
@@ -429,10 +422,20 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 					.apply();
 			}
 		}
+	}
 
+	private void reloadCustomFieldsIfNeeded(){
+		if (BuildConfig.LOAD_CUSTOMFIELDS_VERSION <= BuildConfig.VERSION_CODE){
+			String loadedConfig = "customfields_loaded_" + BuildConfig.LOAD_CUSTOMFIELDS_VERSION;
+			boolean alreadyLoaded = prefs.getBoolean(loadedConfig, false);
+			if (!alreadyLoaded){
+				CustomField.loadCustomFieldsFromAssets(ctx);
+				prefs.edit().putBoolean(loadedConfig, true).apply();
+			}
+		}
 	}
 	
-	private class v54UpgradeQuizObj{
+	private class V54UpgradeQuizObj {
 		private int id;
 		private String digest;
 		private int threshold;

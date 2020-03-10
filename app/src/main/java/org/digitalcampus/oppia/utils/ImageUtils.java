@@ -30,7 +30,11 @@ public class ImageUtils {
 
 	public static final String TAG = ImageUtils.class.getSimpleName();
 
-	public static BitmapDrawable LoadBMPsdcard(String path, Resources res, int defaultImageResource) {
+	private ImageUtils() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	public static BitmapDrawable loadBMPsdcard(String path, Resources res, int defaultImageResource) {
 		File imageFile = new File(path);
 		int size = res.getDimensionPixelSize(R.dimen.course_actionbar_icon_size);
 

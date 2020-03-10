@@ -27,10 +27,10 @@ import android.view.ViewGroup;
 import androidx.appcompat.widget.AppCompatButton;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.fragments.AppFragment;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout;
+import org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout;
 
 import java.util.Arrays;
 import java.util.List;
@@ -136,9 +136,9 @@ public class RegisterOtherFragment extends AppFragment implements View.OnClickLi
         }
 
         // check password length
-        if (password.length() < MobileLearning.PASSWORD_MIN_LENGTH) {
+        if (password.length() < App.PASSWORD_MIN_LENGTH) {
             passwordField.setErrorEnabled(true);
-            passwordField.setError(getString(R.string.error_register_password, MobileLearning.PASSWORD_MIN_LENGTH));
+            passwordField.setError(getString(R.string.error_register_password, App.PASSWORD_MIN_LENGTH));
             passwordField.requestFocus();
             return null;
         }

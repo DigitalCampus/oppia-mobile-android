@@ -14,13 +14,10 @@ import org.digitalcampus.oppia.model.Points;
 
 import java.util.List;
 
-public class PointsAdapter extends RecyclerView.Adapter<PointsAdapter.ViewHolder> {
-
+public class PointsAdapter extends RecyclerView.Adapter<PointsAdapter.PointsViewHolder> {
 
     private List<Points> points;
     private Context context;
-    private OnItemClickListener itemClickListener;
-
 
     public PointsAdapter(Context context, List<Points> points) {
         this.context = context;
@@ -28,25 +25,24 @@ public class PointsAdapter extends RecyclerView.Adapter<PointsAdapter.ViewHolder
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PointsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View contactView = LayoutInflater.from(context).inflate(R.layout.fragment_points_list_row, parent, false);
+        View contactView = LayoutInflater.from(context).inflate(R.layout.row_fragment_points_list, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new PointsViewHolder(contactView);
     }
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final PointsViewHolder viewHolder, final int position) {
 
         final Points point = getItemAtPosition(position);
 
         viewHolder.pointsDescription.setText(point.getDescription());
         viewHolder.pointsTime.setText(point.getTimeHoursMinutes());
         viewHolder.pointsDate.setText(point.getDateDayMonth());
-        viewHolder.pointsPoints.setText(String.valueOf(point.getPoints()));
+        viewHolder.pointsPoints.setText(String.valueOf(point.getPointsAwarded()));
 
     }
 
@@ -60,15 +56,14 @@ public class PointsAdapter extends RecyclerView.Adapter<PointsAdapter.ViewHolder
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class PointsViewHolder extends RecyclerView.ViewHolder {
 
-        public View rootView;
         private TextView pointsDescription;
         private TextView pointsTime;
         private TextView pointsDate;
         private TextView pointsPoints;
 
-        public ViewHolder(View itemView) {
+        public PointsViewHolder(View itemView) {
 
             super(itemView);
 
@@ -76,15 +71,8 @@ public class PointsAdapter extends RecyclerView.Adapter<PointsAdapter.ViewHolder
             pointsTime = itemView.findViewById(R.id.points_time);
             pointsDate = itemView.findViewById(R.id.points_date);
             pointsPoints = itemView.findViewById(R.id.points_points);
-
-            rootView = itemView;
         }
 
-    }
-
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.itemClickListener = listener;
     }
 
     public interface OnItemClickListener {

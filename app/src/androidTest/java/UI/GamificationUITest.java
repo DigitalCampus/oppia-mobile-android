@@ -13,7 +13,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Badges;
@@ -38,6 +38,7 @@ import it.cosenonjaviste.daggermock.DaggerMockRule;
 import static androidx.test.espresso.action.ViewActions.click;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -47,14 +48,14 @@ public class GamificationUITest {
 
     @Rule
     public DaggerMockRule<AppComponent> daggerRule =
-            new DaggerMockRule<>(AppComponent.class, new AppModule((MobileLearning) InstrumentationRegistry.getInstrumentation()
+            new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
                     .getTargetContext()
                     .getApplicationContext())).set(
                     new DaggerMockRule.ComponentSetter<AppComponent>() {
                         @Override
                         public void setComponent(AppComponent component) {
-                            MobileLearning app =
-                                    (MobileLearning) InstrumentationRegistry.getInstrumentation()
+                            App app =
+                                    (App) InstrumentationRegistry.getInstrumentation()
                                             .getTargetContext()
                                             .getApplicationContext();
                             app.setComponent(component);
@@ -90,6 +91,7 @@ public class GamificationUITest {
         when(editor.putString(anyString(), anyString())).thenReturn(editor);
         when(editor.putLong(anyString(), anyLong())).thenReturn(editor);
         when(editor.putBoolean(anyString(), anyBoolean())).thenReturn(editor);
+        when(editor.putInt(anyString(), anyInt())).thenReturn(editor);
     }
 
     private void givenThereAreSomeCourses(int numberOfCourses) {
@@ -112,7 +114,7 @@ public class GamificationUITest {
 
         if (true) {
             //Working on this test
-            Assert.assertEquals(coursesRepository.getCourses((Context) any()).size(), 1);
+            Assert.assertEquals(1, coursesRepository.getCourses((Context) any()).size());
             return;
         }
 

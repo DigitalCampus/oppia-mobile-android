@@ -2,12 +2,10 @@ package org.digitalcampus.oppia.gamification;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.widgets.PageWidget;
 
 public class GamificationServiceDelegate {
 

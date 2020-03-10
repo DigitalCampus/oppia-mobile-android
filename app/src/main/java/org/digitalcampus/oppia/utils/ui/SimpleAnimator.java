@@ -26,6 +26,10 @@ public class SimpleAnimator {
     public static final boolean FADE_IN = true;
     public static final boolean FADE_OUT = false;
 
+    private SimpleAnimator() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static void fade(final View view, boolean visible, int duration){
         ValueAnimator animator = ValueAnimator.ofFloat(visible?1f:0f, visible?0f:1f);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

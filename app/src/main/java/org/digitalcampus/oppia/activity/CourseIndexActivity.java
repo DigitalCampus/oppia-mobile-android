@@ -28,21 +28,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.work.Constraints;
-import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseIndexRecyclerViewAdapter;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
@@ -56,6 +51,12 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener, ParseCourseXMLTask.OnParseXmlListener {
 
     public static final String JUMPTO_TAG = "JumpTo";
@@ -66,7 +67,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private ArrayList<Section> sections;
     @Inject SharedPreferences prefs;
     private Activity baselineActivity;
-    //	private AlertDialog aDialog;
     private View loadingCourseView;
     private CourseIndexRecyclerViewAdapter adapter;
     private String digestJumpTo;
@@ -85,7 +85,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_index);
-        initializeDagger();
+        getAppComponent().inject(this);
 
         prefs.registerOnSharedPreferenceChangeListener(this);
         loadingCourseView = findViewById(R.id.loading_course);
@@ -102,12 +102,12 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 //We also check first if the baseline is completed before jumping to digest
                 boolean baselineCompleted = isBaselineCompleted();
                 if (baselineCompleted) {
-                    course.setMetaPages(parsedCourse.getMetaPages());
-                    sections = parsedCourse.getSections();
+                    course.setMetaPages((ArrayList<CourseMetaPage>) parsedCourse.getMetaPages());
+                    sections = (ArrayList<Section>) parsedCourse.getSections();
                     startCourseActivityByDigest(digest);
                     initializeCourseIndex(false);
                 } else {
-                    sections = parsedCourse.getSections();
+                    sections = (ArrayList<Section>) parsedCourse.getSections();
                     initializeCourseIndex(false);
                     showBaselineMessage(digest);
                 }
@@ -116,11 +116,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             }
         }
 
-    }
-
-    private void initializeDagger() {
-        MobileLearning app = (MobileLearning) getApplication();
-        app.getComponent().inject(this);
     }
 
     @Override
@@ -184,15 +179,10 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
         getMenuInflater().inflate(R.menu.activity_course_index, menu);
-        ArrayList<CourseMetaPage> ammp = course.getMetaPages();
+        ArrayList<CourseMetaPage> ammp = (ArrayList<CourseMetaPage>) course.getMetaPages();
         int order = 104;
         for (CourseMetaPage mmp : ammp) {
             Lang titleLang = mmp.getLang(
@@ -258,7 +248,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     }
 
     private void createLanguageDialog() {
-        UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
+        UIUtils.createLanguageDialog(this, (ArrayList<Lang>) course.getLangs(), prefs, new Callable<Boolean>() {
             public Boolean call() {
                 CourseIndexActivity.this.initialize(false);
                 return true;
@@ -304,7 +294,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     }
 
     private boolean isBaselineCompleted() {
-        ArrayList<Activity> baselineActs = parsedCourse.getBaselineActivities();
+        ArrayList<Activity> baselineActs = (ArrayList<Activity>) parsedCourse.getBaselineActivities();
         for (Activity a : baselineActs) {
             if (!a.isAttempted()) {
                 this.baselineActivity = a;
@@ -403,10 +393,10 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     public void onParseComplete(CompleteCourse parsed) {
         loadingCourseView.setVisibility(View.GONE);
         parsedCourse = parsed;
-        course.setMetaPages(parsedCourse.getMetaPages());
-        course.setMedia(parsedCourse.getMedia());
-        course.setGamificationEvents(parsedCourse.getGamification());
-        sections = parsedCourse.getSections();
+        course.setMetaPages((ArrayList<CourseMetaPage>) parsedCourse.getMetaPages());
+        course.setMedia((ArrayList<Media>) parsedCourse.getMedia());
+        course.setGamificationEvents((ArrayList<GamificationEvent>) parsedCourse.getGamification());
+        sections = (ArrayList<Section>) parsedCourse.getSections();
 
         boolean baselineCompleted = isBaselineCompleted();
         if (!baselineCompleted) {

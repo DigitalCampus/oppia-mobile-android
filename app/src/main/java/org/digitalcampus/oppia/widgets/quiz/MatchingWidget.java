@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.digitalcampus.mobile.learning.R;
@@ -40,8 +41,7 @@ import android.widget.TextView;
 public class MatchingWidget extends QuestionWidget {
 
 	public static final String TAG = MatchingWidget.class.getSimpleName();
-	
-	private LinearLayout responsesLL;
+
 	private LinearLayout[] responseLayouts;
 	
 	public MatchingWidget(Activity activity, View v, ViewGroup container) {
@@ -49,8 +49,13 @@ public class MatchingWidget extends QuestionWidget {
 	}
 
 	@Override
+	public void setQuestionResponses(List<String> currentAnswers) {
+		// not used for this widget
+	}
+
+	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
-		responsesLL = view.findViewById(R.id.questionresponses);
+		LinearLayout responsesLL = view.findViewById(R.id.questionresponses);
     	responsesLL.removeAllViews();
     	
     	// this could be tidied up - to use ArrayAdapters/Lists
@@ -65,15 +70,13 @@ public class MatchingWidget extends QuestionWidget {
     		possibleAnswers.put(temp[0].trim(),temp[1].trim());
     		possibleAnswersShuffle.add(temp[1].trim());
     	}
-    	
-    	
-    	
+
     	Iterator<Entry<String, String>> responseIt = possibleAnswers.entrySet().iterator();
     	int counter = 0;
     	responseLayouts = new LinearLayout[noresponses];
     	
     	while (responseIt.hasNext()) {
-    		HashMap.Entry<String,String> responsePairs = responseIt.next();
+    		Map.Entry<String,String> responsePairs = responseIt.next();
     		// only add if there is question text
     		if(!responsePairs.getKey().equals("")){
 	    		LinearLayout responseLayout = new LinearLayout(ctx);
@@ -127,6 +130,11 @@ public class MatchingWidget extends QuestionWidget {
 			return new ArrayList<>();
 		}
     	return userResponses;
+	}
+
+	@Override
+	public List<String> getQuestionResponses() {
+		return new ArrayList<>();
 	}
 
 }

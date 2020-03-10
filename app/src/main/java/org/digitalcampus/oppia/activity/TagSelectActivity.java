@@ -30,7 +30,6 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.TagsAdapter;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
@@ -52,7 +51,6 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
     private ArrayList<Tag> tags;
 
 	@Inject TagRepository tagRepository;
-	private RecyclerView recyclerTags;
 	private TagsAdapter adapterTags;
 
 	@Override
@@ -67,12 +65,12 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 		setContentView(R.layout.activity_download);
 		TextView tagTitle = findViewById(R.id.category_title);
 		tagTitle.setVisibility(View.GONE);
-		initializeDagger();
+		getAppComponent().inject(this);
 
         tags = new ArrayList<>();
         adapterTags = new TagsAdapter(this, tags);
 
-        recyclerTags = findViewById(R.id.recycler_tags);
+		RecyclerView recyclerTags = findViewById(R.id.recycler_tags);
 		recyclerTags.setAdapter(adapterTags);
 		adapterTags.setOnItemClickListener(new TagsAdapter.OnItemClickListener() {
 			@Override
@@ -80,7 +78,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 				Tag selectedTag = tags.get(position);
 				Intent i = new Intent(TagSelectActivity.this, DownloadActivity.class);
 				Bundle tb = new Bundle();
-				tb.putSerializable(Tag.TAG, selectedTag);
+				tb.putSerializable(Tag.TAG_CLASS, selectedTag);
 				i.putExtras(tb);
 				startActivity(i);
 			}
@@ -88,10 +86,6 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 
 	}
 
-	private void initializeDagger() {
-		MobileLearning app = (MobileLearning) getApplication();
-		app.getComponent().inject(this);
-	}
 	
 	@Override
 	public void onResume(){

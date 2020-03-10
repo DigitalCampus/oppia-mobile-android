@@ -32,8 +32,8 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
 import org.digitalcampus.oppia.adapter.CourseQuizzesAdapter;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -116,7 +116,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         int totalActivities = course.getNoActivities();
         int completedActivities = course.getNoActivitiesCompleted();
         cpbScorecard.setProgressMax(totalActivities);
-        cpbScorecard.setProgressWithAnimation(completedActivities, MobileLearning.SCORECARD_ANIM_DURATION);
+        cpbScorecard.setProgressWithAnimation(completedActivities, App.SCORECARD_ANIM_DURATION);
 
         activitiesTotal.setText(String.valueOf(course.getNoActivities()));
         activitiesCompleted.setText(String.valueOf(course.getNoActivitiesCompleted()));
@@ -130,11 +130,11 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
     //@Override
     public void onParseComplete(CompleteCourse parsedCourse) {
 
-        ArrayList<Activity> baseline = parsedCourse.getBaselineActivities();
+        ArrayList<Activity> baseline = (ArrayList<Activity>) parsedCourse.getBaselineActivities();
         
     	DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-        ArrayList<Activity> quizActs = db.getCourseQuizzes(course.getCourseId());
+        ArrayList<Activity> quizActs = (ArrayList<Activity>) db.getCourseQuizzes(course.getCourseId());
         ArrayList<QuizStats> quizzes = new ArrayList<>();
 
         String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
@@ -147,7 +147,8 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         	quizzes.add(qs);
         }
 
-        int quizzesAttempted = 0, quizzesPassed = 0;
+        int quizzesAttempted = 0;
+        int quizzesPassed = 0;
 
         for (QuizStats qs: quizzes){
         	if (qs.isAttempted()){

@@ -17,6 +17,8 @@
 
 package org.digitalcampus.oppia.task;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,11 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Payload {
-	
+
+	protected static final String TAG = Payload.class.getSimpleName();
 	private List<?> data;
 	private boolean result = false;
 	private String resultResponse;
-	private ArrayList<Object> responseData = new ArrayList<>();
+	private List<Object> responseData = new ArrayList<>();
 	private String url;
 
 	public Payload(){
@@ -39,15 +42,15 @@ public class Payload {
 		this.setUrl(url);		
 	}
 	
-	public Payload(List<? extends Object> data) {
+	public Payload(List<?> data) {
 		this.data = data;
 	}
 
-	public List<? extends Object> getData() {
+	public List<?> getData() {
 		return data;
 	}
 
-	public void setData(ArrayList<? extends Object> data) {
+	public void setData(List<Object> data) {
 		this.data = data;
 	}
 
@@ -72,15 +75,15 @@ public class Payload {
 			this.resultResponse = new JSONObject().put("error", errorMessage).toString();
 			this.responseData.add(data);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.d(TAG,"Invalid json for result response", e);
 		}
 	}
 
-	public ArrayList<Object> getResponseData() {
+	public List<Object> getResponseData() {
 		return responseData;
 	}
 
-	public void setResponseData(ArrayList<Object> responseData) {
+	public void setResponseData(List<Object> responseData) {
 		this.responseData = responseData;
 	}
 	

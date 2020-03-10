@@ -17,8 +17,8 @@
 
 package org.digitalcampus.oppia.utils.xmlreaders;
 
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
@@ -30,6 +30,7 @@ import org.digitalcampus.oppia.model.Section;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler {
@@ -85,7 +86,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     }
 
     public String getCourseImage() { return courseIcon; }
-    public ArrayList<Media> getCourseMedia() {
+    public List<Media> getCourseMedia() {
         return courseMedia;
     }
 
@@ -212,10 +213,10 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
                 actTitles.add(new Lang(currentLang, chars.toString()));
             }
             else if (NODE_META.equals(parentElements.peek())){
-                courseTitles.add(new Lang(currentLang==null? MobileLearning.DEFAULT_LANG:currentLang, chars.toString()));
+                courseTitles.add(new Lang(currentLang==null? App.DEFAULT_LANG:currentLang, chars.toString()));
             }
             else if (NODE_PAGE.equals(parentElements.peek())){
-                pageTitles.add(new Lang(currentLang==null?MobileLearning.DEFAULT_LANG:currentLang, chars.toString()));
+                pageTitles.add(new Lang(currentLang==null? App.DEFAULT_LANG:currentLang, chars.toString()));
             }
         }
         else if (NODE_LOCATION.equals(aQName)){
@@ -240,7 +241,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
                 actDescriptions.add(new Lang(currentLang, chars.toString()));
             }
             else if (NODE_META.equals(parentElements.peek())){
-                courseDescriptions.add(new Lang(currentLang==null?MobileLearning.DEFAULT_LANG:currentLang, chars.toString()));
+                courseDescriptions.add(new Lang(currentLang==null? App.DEFAULT_LANG:currentLang, chars.toString()));
             }
         }
         else if (NODE_VERSIONID.equals(aQName)){
@@ -303,7 +304,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
         else if (NODE_PAGE.equals(aQName)){
             for (Lang title : pageTitles){
                 for (Lang location : pageLocations){
-                    if (title.getLang().equals(location.getLang())){
+                    if (title.getLanguage().equals(location.getLanguage())){
                         title.setLocation(location.getContent());
                         currentPage.addLang(title);
                     }

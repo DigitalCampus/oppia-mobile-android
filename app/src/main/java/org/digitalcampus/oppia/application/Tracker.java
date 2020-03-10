@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.application;
 import java.util.UUID;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
@@ -28,7 +29,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import com.splunk.mint.Mint;

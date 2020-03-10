@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
+                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                     android:id="@+id/edit_reg_ch_first_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -65,9 +65,9 @@
                         android:hint="@string/first_name"
                         android:inputType="textCapWords" />
 
-                </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
+                </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
 
-                <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
+                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                     android:id="@+id/edit_reg_ch_last_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -78,9 +78,9 @@
                         android:hint="@string/last_name"
                         android:inputType="textCapWords" />
 
-                </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
+                </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
 
-                <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
+                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                     android:id="@+id/edit_reg_ch_employee_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
                         android:hint="@string/employee_id"
                         android:inputType="text" />
 
-                </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
+                </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
+                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                     android:id="@+id/edit_reg_ch_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -112,9 +112,9 @@
                         android:hint="@string/register_form_password_title"
                         android:inputType="textPassword" />
 
-                </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
+                </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
 
-                <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
+                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                     android:id="@+id/edit_reg_ch_password_again"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                         android:hint="@string/register_form_password_again_title"
                         android:inputType="textPassword" />
 
-                </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
+                </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
 
             </LinearLayout>
 

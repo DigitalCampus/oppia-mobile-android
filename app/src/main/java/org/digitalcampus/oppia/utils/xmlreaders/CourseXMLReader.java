@@ -19,15 +19,15 @@ package org.digitalcampus.oppia.utils.xmlreaders;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Media;
@@ -40,11 +40,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import java.util.List;
 
 public class CourseXMLReader {
 
@@ -65,30 +61,19 @@ public class CourseXMLReader {
         this.ctx = ctx;
         this.courseId = courseId;
         courseXML = new File(filename);
+        reader = XMLSecurityHelper.getSecureXMLReader();
 
-        if (courseXML.exists()) {
-            try {
-                SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
-                SAXParser parser = parserFactory.newSAXParser();
-                reader = parser.getXMLReader();
-
-                XMLSecurityHelper.makeParserSecure(reader);
-
-            } catch (ParserConfigurationException e) {
-                throw new InvalidXMLException(e);
-            } catch (SAXException e) {
-                throw new InvalidXMLException(e);
-            }
-        } else {
+        if (!courseXML.exists() || (reader == null)) {
             Log.d(TAG, "course XML not found at: " + filename);
             throw new InvalidXMLException("Course XML not found at: " + filename);
         }
     }
 
-    public boolean parse(ParseMode PARSE_MODE) throws InvalidXMLException {
+
+    public boolean parse(ParseMode parseMode) throws InvalidXMLException {
         if (courseXML.exists()) {
             try {
-                if (PARSE_MODE == ParseMode.ONLY_MEDIA)
+                if (parseMode == ParseMode.ONLY_MEDIA)
                     parseMedia();
                 else
                     parseComplete();
@@ -105,14 +90,7 @@ public class CourseXMLReader {
         return true;
     }
 
-    private void parseComplete() throws ParserConfigurationException, SAXException, IOException {
-
-//        SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
-//
-//        XMLSecurityHelper.makeParserSecure(parserFactory);
-//
-//        SAXParser parser = parserFactory.newSAXParser();
-//        reader = parser.getXMLReader();
+    private void parseComplete() throws SAXException, IOException {
 
         DbHelper db = DbHelper.getInstance(ctx);
         long userId = db.getUserId(SessionManager.getUsername(ctx));
@@ -125,11 +103,8 @@ public class CourseXMLReader {
 
     }
 
-    private void parseMedia() throws ParserConfigurationException, SAXException, IOException {
+    private void parseMedia() throws SAXException, IOException {
         mediaParseHandler = new CourseMediaXMLHandler();
-        SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
-        SAXParser parser = parserFactory.newSAXParser();
-        reader = parser.getXMLReader();
         reader.setContentHandler(mediaParseHandler);
         reader.setProperty("http://xml.org/sax/properties/lexical-handler", mediaParseHandler);
         InputStream in = new BufferedInputStream(new FileInputStream(courseXML));
@@ -160,7 +135,7 @@ public class CourseXMLReader {
         }
     }
 
-	public ArrayList<Media> getMedia() throws InvalidXMLException {
+	public List<Media> getMedia() throws InvalidXMLException {
         return getMediaResponses().getCourseMedia();
 	}
 

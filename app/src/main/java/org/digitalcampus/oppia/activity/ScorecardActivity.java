@@ -20,7 +20,7 @@ package org.digitalcampus.oppia.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -49,11 +49,13 @@ public class ScorecardActivity extends AppActivity {
 
 	private TabLayout tabs;
 	private ViewPager viewPager;
-	private SharedPreferences prefs;
+	private SharedPreferences sharedPreferences;
 	private Course course = null;
 
     private String targetTabOnLoad;
 
+	private List<Fragment> fragments = new ArrayList<>();
+	private List<String> tabTitles = new ArrayList<>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,7 @@ public class ScorecardActivity extends AppActivity {
 
 		viewPager = findViewById(R.id.activity_scorecard_pager);
         tabs = findViewById(R.id.tabs_toolbar);
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
@@ -93,17 +95,9 @@ public class ScorecardActivity extends AppActivity {
 		super.onStart();
 		initialize();
 
-		List<Fragment> fragments = new ArrayList<>();
-        List<String> tabTitles = new ArrayList<>();
-
 		Fragment fScorecard;
 		if(this.course != null){
 			fScorecard = CourseScorecardFragment.newInstance(course);
-			/*ActionBar actionBar = getSupportActionBar();
-            if ((actionBar != null) && (course.getImageFile() != null)) {
-                BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), R.drawable.dc_logo);
-                actionBar.setHomeAsUpIndicator(bm);
-            }*/
 		} else {
 			fScorecard = GlobalScorecardFragment.newInstance();
 		}
@@ -113,21 +107,11 @@ public class ScorecardActivity extends AppActivity {
 		fragments.add(ActivitiesFragment.newInstance(course));
 		tabTitles.add(this.getString(R.string.tab_title_activity));
 
-		boolean scoringEnabled = prefs.getBoolean(PrefsActivity.PREF_SCORING_ENABLED, true);
-		if (scoringEnabled) {
-			Fragment fPoints = PointsFragment.newInstance(course);
-			fragments.add(fPoints);
-            tabTitles.add(this.getString(R.string.tab_title_points));
+		boolean scoringEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_SCORING_ENABLED, true);
+		this.displayPoints(scoringEnabled);
 
-            if (course == null){
-				Fragment fLeaderboard = LeaderboardFragment.newInstance();
-				fragments.add(fLeaderboard);
-				tabTitles.add(getString(R.string.tab_title_leaderboard));
-			}
 
-        }
-
-		boolean badgingEnabled = prefs.getBoolean(PrefsActivity.PREF_BADGING_ENABLED, true);
+		boolean badgingEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_BADGING_ENABLED, true);
 		if ((badgingEnabled) && (course == null)){
 			Fragment fBadges= BadgesFragment.newInstance();
 			fragments.add(fBadges);
@@ -158,4 +142,19 @@ public class ScorecardActivity extends AppActivity {
 		return course;
 	}
 
+	private void displayPoints(boolean scoringEnabled){
+
+		if (scoringEnabled) {
+			Fragment fPoints = PointsFragment.newInstance(course);
+			fragments.add(fPoints);
+			tabTitles.add(this.getString(R.string.tab_title_points));
+
+			if (course == null){
+				Fragment fLeaderboard = LeaderboardFragment.newInstance();
+				fragments.add(fLeaderboard);
+				tabTitles.add(getString(R.string.tab_title_leaderboard));
+			}
+
+		}
+	}
 }

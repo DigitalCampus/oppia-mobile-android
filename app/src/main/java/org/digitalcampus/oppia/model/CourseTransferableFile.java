@@ -1,6 +1,6 @@
 package org.digitalcampus.oppia.model;
 
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -88,8 +88,8 @@ public class CourseTransferableFile implements Serializable {
 
     public String getDisplayDateTimeFromFilename(){
         DateTimeFormatter f = DateTimeFormat.forPattern("yyyyMMddHHmm");
-        DateTime dateTime = f.parseDateTime(filename.substring(filename.lastIndexOf("_")+1, filename.lastIndexOf('.')));
-        return MobileLearning.DISPLAY_DATETIME_FORMAT.print(dateTime);
+        DateTime dateTime = f.parseDateTime(filename.substring(filename.lastIndexOf('_')+1, filename.lastIndexOf('.')));
+        return DateUtils.DISPLAY_DATETIME_FORMAT.print(dateTime);
     }
 
     public String getType() {
@@ -107,11 +107,7 @@ public class CourseTransferableFile implements Serializable {
     public void setFile(File file) {
         this.file = file;
     }
-
-    public long getRelatedFilesize() {
-        return relatedFilesize;
-    }
-
+    
     public void setRelatedFilesize(long relatedFilesize) {
         this.relatedFilesize = relatedFilesize;
     }
@@ -141,14 +137,14 @@ public class CourseTransferableFile implements Serializable {
     }
 
     public String getActivityLogUsername(){
-        return filename.substring(0, filename.indexOf("_"));
+        return filename.substring(0, filename.indexOf('_'));
     }
 
     public void setTitleFromFilename() {
-        String title = "";
+        String filenameTitle = "";
         if (type.equals(TYPE_ACTIVITY_LOG)){
-            title = getActivityLogUsername();
+            filenameTitle = getActivityLogUsername();
         }
-        setTitle(title);
+        setTitle(filenameTitle);
     }
 }

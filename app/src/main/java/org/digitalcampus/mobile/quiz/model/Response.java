@@ -92,4 +92,12 @@ public class Response implements Serializable {
             return "";
         }
     }
+
+    public Float getTolerance(){
+        Float tolerance = (float) 0.0;
+        if(this.getProp(Quiz.JSON_PROPERTY_TOLERANCE) != null){
+            tolerance = Float.parseFloat(this.getProp(Quiz.JSON_PROPERTY_TOLERANCE));
+        }
+        return tolerance;
+    }
 }

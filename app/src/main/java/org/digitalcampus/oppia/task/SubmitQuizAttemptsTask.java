@@ -26,8 +26,8 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.api.Paths;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
@@ -35,7 +35,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -58,7 +57,7 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payl
 				Log.d(TAG, qa.getData());
                 OkHttpClient client = HTTPClientUtils.getClient(ctx);
                 Request request = new Request.Builder()
-                        .url(apiEndpoint.getFullURL(ctx, MobileLearning.QUIZ_SUBMIT_PATH))
+                        .url(apiEndpoint.getFullURL(ctx, Paths.QUIZ_SUBMIT_PATH))
                         .addHeader(HTTPClientUtils.HEADER_AUTH,
                                 HTTPClientUtils.getAuthHeaderValue(qa.getUser().getUsername(), qa.getUser().getApiKey()))
                         .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, qa.getData()))
@@ -80,18 +79,17 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payl
                             db.markQuizSubmitted(qa.getId());
                             break;
                         case 401:
-                            SessionManager.setUserApiKeyValid(ctx, qa.getUser(), false);
+                            SessionManager.setUserApiKeyValid(qa.getUser(), false);
                             break;
                         case 500: // server error - so to prevent re-submitting over and
                             // over just mark as submitted
                             db.markQuizSubmitted(qa.getId());
                             break;
+						default:
+							// do nothing
                     }
                 }
 
-			} catch (UnsupportedEncodingException e) {
-				payload.setResult(false);
-				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (IOException e) {
 				payload.setResult(false);
 				publishProgress(ctx.getString(R.string.error_connection));
@@ -109,16 +107,7 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payl
 	}
 
 	protected void onProgressUpdate(String... obj) {
-		
-	}
-
-	@Override
-	protected void onPostExecute(Payload p) {
-		super.onPostExecute(p);
-		// reset submittask back to null after completion - so next call can run
-		// properly
-//		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
-//		app.omSubmitQuizAttemptsTask = null;
+		// do nothing
 	}
 
 }

@@ -19,15 +19,11 @@ package org.digitalcampus.oppia.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.preference.PreferenceManager;
-import android.util.Log;
+import androidx.preference.PreferenceManager;
 
-import com.splunk.mint.Mint;
-
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -43,30 +39,35 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 
-public class HTTPClientUtils{
+public class HTTPClientUtils {
 
     public static final String TAG = HTTPClientUtils.class.getSimpleName();
     public static final String HEADER_AUTH = "Authorization";
     public static final String HEADER_USER_AGENT = "User-Agent";
     public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
+    public static final String USER_AGENT = "OppiaMobile Android: ";
 
     private static OkHttpClient client;
 
+    private HTTPClientUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static OkHttpClient getClient(Context ctx) {
-        if (client == null){
+        if (client == null) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
             int timeoutConn = Integer.parseInt(prefs.getString(PrefsActivity.PREF_SERVER_TIMEOUT_CONN,
-                            ctx.getString(R.string.prefServerTimeoutConnectionDefault)));
+                    ctx.getString(R.string.prefServerTimeoutConnectionDefault)));
 
             client = new OkHttpClient.Builder()
-                    .addInterceptor(new UserAgentInterceptor(ctx))
+                    .addInterceptor(new UserAgentInterceptor())
                     .addInterceptor(getLoggingInterceptor())
                     .connectTimeout(timeoutConn, TimeUnit.MILLISECONDS)
                     .readTimeout(timeoutConn, TimeUnit.MILLISECONDS)
                     .hostnameVerifier(new HostnameVerifier() {
                         @Override
                         public boolean verify(String hostname, SSLSession session) {
-                            return true;
+                            return hostname.equalsIgnoreCase(session.getPeerHost());
                         }
                     })
                     .build();
@@ -82,11 +83,11 @@ public class HTTPClientUtils{
         return logging;
     }
 
-    public static String getAuthHeaderValue(String username, String apiKey){
+    public static String getAuthHeaderValue(String username, String apiKey) {
         return "ApiKey " + username + ":" + apiKey;
     }
-    
-    public static HttpUrl getUrlWithCredentials(String url, String username, String apiKey){
+
+    public static HttpUrl getUrlWithCredentials(String url, String username, String apiKey) {
         return HttpUrl.parse(url).newBuilder()
                 .addQueryParameter("username", username)
                 .addQueryParameter("api_key", apiKey)
@@ -96,26 +97,18 @@ public class HTTPClientUtils{
 
     public static class UserAgentInterceptor implements Interceptor {
 
-        private Context ctx;
-
-        public UserAgentInterceptor(Context ctx){
-            this.ctx = ctx;
+        public UserAgentInterceptor() {
+            // required constructor
         }
 
         @Override
         public Response intercept(Chain chain) throws IOException {
 
-            String v = "0";
-            try {
-                v = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
-            } catch (PackageManager.NameNotFoundException e) {
-                Mint.logException(e);
-                Log.d(TAG, "NameNotFoundException:", e);
-            }
+            String v = BuildConfig.VERSION_NAME;
 
             Request originalRequest = chain.request();
             Request requestWithUserAgent = originalRequest.newBuilder()
-                    .header(HEADER_USER_AGENT, MobileLearning.USER_AGENT + v)
+                    .header(HEADER_USER_AGENT, USER_AGENT + v)
                     .build();
             return chain.proceed(requestWithUserAgent);
         }

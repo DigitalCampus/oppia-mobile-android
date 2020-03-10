@@ -3,14 +3,14 @@ package org.digitalcampus.oppia.model;
 
 import android.content.Context;
 
-import org.digitalcampus.oppia.adapter.CourseIntallViewAdapter;
+import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class CourseInstallRepository {
 
@@ -21,8 +21,8 @@ public class CourseInstallRepository {
         task.execute(p);
     }
 
-    public void refreshCourseList(Context ctx, ArrayList<CourseIntallViewAdapter> courses,
+    public void refreshCourseList(Context ctx, List<CourseInstallViewAdapter> courses,
                                   JSONObject json, String storage, boolean showUpdatesOnly) throws JSONException{
-        courses.addAll(CourseIntallViewAdapter.parseCoursesJSON(ctx, json, storage, showUpdatesOnly));
+        courses.addAll(CourseInstallViewAdapter.parseCoursesJSON(ctx, json, storage, showUpdatesOnly));
     }
 }

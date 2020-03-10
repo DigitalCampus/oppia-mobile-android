@@ -23,13 +23,14 @@ import com.google.android.material.tabs.TabLayout;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
+import org.digitalcampus.oppia.activity.EditProfileActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.SearchActivity;
 import org.digitalcampus.oppia.activity.StartUpActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Badges;
@@ -78,6 +79,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -90,14 +92,14 @@ public class MainActivityUITest {
 
     @Rule
     public DaggerMockRule<AppComponent> daggerRule =
-            new DaggerMockRule<>(AppComponent.class, new AppModule((MobileLearning) InstrumentationRegistry.getInstrumentation()
+            new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
                     .getTargetContext()
                     .getApplicationContext())).set(
                     new DaggerMockRule.ComponentSetter<AppComponent>() {
                         @Override
                         public void setComponent(AppComponent component) {
-                            MobileLearning app =
-                                    (MobileLearning) InstrumentationRegistry.getInstrumentation()
+                            App app =
+                                    (App) InstrumentationRegistry.getInstrumentation()
                                             .getTargetContext()
                                             .getApplicationContext();
                             app.setComponent(component);
@@ -134,6 +136,7 @@ public class MainActivityUITest {
         when(editor.putString(anyString(), anyString())).thenReturn(editor);
         when(editor.putLong(anyString(), anyLong())).thenReturn(editor);
         when(editor.putBoolean(anyString(), anyBoolean())).thenReturn(editor);
+        when(editor.putInt(anyString(), anyInt())).thenReturn(editor);
     }
 
     private void givenThereAreSomeCourses(int numberOfCourses) {
@@ -287,15 +290,8 @@ public class MainActivityUITest {
 
         openDrawer();
 
-        onView(
-                allOf(
-                        withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                        withId(R.id.btn_expand_profile_options)))
-                .check(doesNotExist());
-
-        // when added Edit profile option, uncomment this and remove previous line
-//        onView(withId(R.id.btn_expand_profile_options)).perform(click());
-//        onView(withText(R.string.logout)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.btn_expand_profile_options)).perform(click());
+        onView(withText(R.string.logout)).check(matches(not(isDisplayed())));
     }
 
     @Test
@@ -338,13 +334,6 @@ public class MainActivityUITest {
 
         onView(withId(R.id.nav_bottom_points)).perform(click());
         onView(withId(R.id.tabs)).perform(selectTabAtPosition(2));
-
-//        onView(allOf(
-//                withText(R.string.tab_title_badges),
-//                isDescendantOfA(withId(R.id.tabs))))
-//                .perform(click());
-
-//        onView(withText(R.string.tab_title_badges)).perform(click());
 
         assertEquals(0, badgesList.size());
 
@@ -414,11 +403,6 @@ public class MainActivityUITest {
                 .inRoot(RootMatchers.withDecorView(
                         Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
-
-//        onData(anything())
-//                .inAdapterView(withId(R.id.recycler_courses))
-//                .atPosition(0)
-//                .perform(longClick());
 
         onView(withId(R.id.course_context_delete))
                 .perform(click());
@@ -730,4 +714,15 @@ public class MainActivityUITest {
 
     }
 
+    @Test
+    public void showsEditProfileActivityOnMenuItemClick() throws Exception {
+
+        mainActivityTestRule.launchActivity(null);
+
+        openDrawer();
+        onView(withId(R.id.btn_expand_profile_options)).perform(click());
+        onView(withText(R.string.edit_profile)).perform(click());
+        checkCorrectActivity(EditProfileActivity.class);
+
+    }
 }

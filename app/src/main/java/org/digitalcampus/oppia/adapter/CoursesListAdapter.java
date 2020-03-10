@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +23,7 @@ import com.squareup.picasso.Picasso;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.CircleTransform;
 
@@ -31,7 +31,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
-public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.ViewHolder> {
+public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.CourseListViewHolder> {
 
 
     private final SharedPreferences prefs;
@@ -52,18 +52,17 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CourseListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View contactView = LayoutInflater.from(context).inflate(R.layout.course_list_row, parent, false);
+        View contactView = LayoutInflater.from(context).inflate(R.layout.row_course_list, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new CourseListViewHolder(contactView);
     }
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final CourseListViewHolder viewHolder, final int position) {
 
         final Course c = getItemAtPosition(position);
 
@@ -77,7 +76,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
             viewHolder.courseDescription.setVisibility(View.GONE);
         }
 
-        if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, MobileLearning.DEFAULT_DISPLAY_PROGRESS_BAR)) {
+        if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, App.DEFAULT_DISPLAY_PROGRESS_BAR)) {
             int courseProgress = (int) c.getProgressPercent();
             viewHolder.circularProgressBar.setVisibility(View.VISIBLE);
             viewHolder.circularProgressBar.setProgressWithAnimation(courseProgress, 1000l);
@@ -108,16 +107,15 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class CourseListViewHolder extends RecyclerView.ViewHolder {
 
-        private View rootView;
         private CircularProgressBar circularProgressBar;
         private TextView courseTitle;
         private TextView courseDescription;
         private ImageView courseImage;
 
 
-        public ViewHolder(View itemView) {
+        public CourseListViewHolder(View itemView) {
 
             super(itemView);
 
@@ -126,9 +124,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
             courseImage = itemView.findViewById(R.id.course_image);
             circularProgressBar = itemView.findViewById(R.id.circularProgressBar);
 
-            rootView = itemView;
-
-            rootView.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (itemClickListener != null) {
@@ -137,7 +133,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
                 }
             });
 
-            rootView.setOnLongClickListener(new View.OnLongClickListener() {
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     currentSelectedItem = getAdapterPosition();

@@ -9,7 +9,7 @@ import junit.framework.AssertionFailedError;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -87,7 +87,9 @@ public class RegisterOtherUITest {
         onView(withId(R.id.btn_reg_other)).perform(click());
 
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username With Spaces"));
+                .perform(scrollTo(), typeText("Username With Spaces"));
+
+        closeSoftKeyboard();
 
         onView(withId(R.id.btn_register_perform))
                 .perform(click());
@@ -134,7 +136,7 @@ public class RegisterOtherUITest {
                 .perform(click());
 
         String passwordError = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().getString(
-                R.string.error_register_password, MobileLearning.PASSWORD_MIN_LENGTH);
+                R.string.error_register_password, App.PASSWORD_MIN_LENGTH);
 
         onErrorViewWithinTextInputLayoutWithId(R.id.register_form_password_field)
                 .check(matches(withText(passwordError)));
@@ -171,10 +173,11 @@ public class RegisterOtherUITest {
         enterValidRequiredData();
 
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), replaceText(""));
+                .perform(scrollTo(), replaceText(""));
 
-        onView(withId(R.id.btn_register_perform))
-                .perform(click());
+        closeSoftKeyboard();
+
+        onView(withId(R.id.btn_register_perform)).perform(click());
 
         onErrorViewWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
                 .check(matches(withText(R.string.field_required)));

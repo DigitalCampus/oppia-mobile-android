@@ -1,6 +1,7 @@
 package org.digitalcampus.oppia.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -20,7 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.fragments.CoursesListFragment;
 import org.digitalcampus.oppia.fragments.MainPointsFragment;
 import org.digitalcampus.oppia.fragments.MainScorecardFragment;
@@ -28,6 +29,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 
@@ -44,9 +46,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
     private BottomNavigationView navBottomView;
     private DrawerMenuManager drawer;
-    private View btnEditProfile;
     private View btnLogout;
-    private NavigationView navDrawerView;
     private View btnExpandProfileOptions;
     private View viewProfileOptions;
     private MenuItem searchMenuItem;
@@ -58,10 +58,10 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private void findViews() {
 
         navBottomView = findViewById(R.id.nav_bottom_view);
-        navDrawerView = findViewById(R.id.navigation_view);
+        NavigationView navDrawerView = findViewById(R.id.navigation_view);
 
         View headerDrawer = navDrawerView.getHeaderView(0);
-        btnEditProfile = headerDrawer.findViewById(R.id.btn_edit_profile);
+        View btnEditProfile = headerDrawer.findViewById(R.id.btn_edit_profile);
         btnLogout = headerDrawer.findViewById(R.id.btn_logout);
         btnExpandProfileOptions = headerDrawer.findViewById(R.id.btn_expand_profile_options);
         viewProfileOptions = headerDrawer.findViewById(R.id.view_profile_options);
@@ -80,40 +80,16 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViews();
-        initializeDagger();
+        getAppComponent().inject(this);
 
         configureBadgePointsView();
 
         viewProfileOptions.setVisibility(View.GONE);
 
-        btnEditProfile.setVisibility(View.GONE); // TODO Edit profile feature.
-
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
-
-//        startActivity(new Intent(this, ScorecardActivity.class));
-
-//        Log.i(TAG, "Screen width: " + getResources().getConfiguration().screenWidthDp);
-//        Log.i(TAG, "Screen height: " + getResources().getConfiguration().screenHeightDp);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-//            Log.i(TAG, "Screen density: " + getResources().getConfiguration().densityDpi);
-//        }
-
-    }
-
-    private void initializeDagger() {
-        MobileLearning app = (MobileLearning) getApplication();
-        app.getComponent().inject(this);
     }
 
     private void configureBadgePointsView() {
-
-        // Not available yet. It cannot let you customize text size of badge
-//        BadgeDrawable badge = navBottomView.getOrCreateBadge(R.id.nav_bottom_points);
-//        badge.setMaxCharacterCount(8);
-//        badge.setNumber(5003);
-
-
-        // Workaround alternative:
 
         BottomNavigationMenuView bottomNavigationMenuView =
                 (BottomNavigationMenuView) navBottomView.getChildAt(0);
@@ -136,7 +112,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
     private void updateUserTotalPoints() {
 
-        MobileLearning app = (MobileLearning) getApplicationContext();
+        App app = (App) getApplicationContext();
         User u = app.getComponent().getUser();
 
         tvBadgeNumber.setText(String.valueOf(u.getPoints()));
@@ -202,7 +178,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
                 }
 
-                return null;
+                return false;
             }
         });
     }
@@ -230,9 +206,8 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
     // CONFIGURATIONS
     private void configureLogoutOption() {
-        boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, MobileLearning.MENU_ALLOW_LOGOUT);
+        boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, App.MENU_ALLOW_LOGOUT);
         btnLogout.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
-        btnExpandProfileOptions.setVisibility(logoutVisible ? View.VISIBLE : View.GONE); // TODO Edit profile feature.
         if (!logoutVisible) {
             setupProfileOptionsView(false);
         }
@@ -287,21 +262,30 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
                 break;
 
             case R.id.btn_edit_profile:
-                // TODO Edit profile feature.
+                if (ConnectionUtils.isNetworkConnected(this)) {
+                    startActivity(new Intent(this, EditProfileActivity.class));
+                } else {
+                    alert(R.string.edit_profile_available_online);
+                }
+
+                setupProfileOptionsView(false);
+                drawer.close();
                 break;
 
             case R.id.btn_logout:
                 drawer.logout();
                 break;
+
+            default:
+                // do nothing
         }
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_search:
-                drawer.launchIntentForActivity(SearchActivity.class);
-                break;
+        if(item.getItemId() ==  R.id.menu_search) {
+            drawer.launchIntentForActivity(SearchActivity.class);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -313,12 +297,6 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
             boolean newPref = sharedPreferences.getBoolean(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED, false);
             Log.d(TAG, PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED + ": " + newPref);
         }
-
-        // update the points/badges by invalidating the menu
-        if(key.equalsIgnoreCase(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH)){
-            // TODO adapt this
-        }
-
     }
 
 }
