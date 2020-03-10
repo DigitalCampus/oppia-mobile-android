@@ -4,8 +4,8 @@ plugins {
 
 sonarqube {
     properties {
-        property "sonar.projectKey", "org.digitalcampus.mobile.learning"
-        property "sonar.projectName", "Oppia-Android"
+        property "sonar.projectKey", "org.lastmilehealth.oppiamobile"
+        property "sonar.projectName", "LMH-Liberia"
         property "sonar.projectVersion", "1.0"
         property "sonar.exclusions", "robospice/**/*"
         property "sonar.host.url", "https://sonarcloud.io"
@@ -282,7 +282,7 @@ tasks.whenTaskAdded { task ->
 sonarqube {
     properties {
         property "sonar.projectVersion", android.defaultConfig.versionName
-        property "sonar.projectName", "Oppia-Android"
+        property "sonar.projectName", "Oppia Core app"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.sources", "src/main/java"
         property "sonar.binaries", "build/intermediates/app_classes/normalDebug"

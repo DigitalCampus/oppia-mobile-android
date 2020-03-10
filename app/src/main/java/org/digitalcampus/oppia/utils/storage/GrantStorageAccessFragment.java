@@ -116,7 +116,11 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
         }
         private boolean intentSent = false;
 
+        /**      
+         * @deprecated
+         */
         @Override
+        @Deprecated
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             View view = inflater.inflate(R.layout.dialog_lollipop_storage_access, container, false);
