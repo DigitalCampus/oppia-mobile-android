@@ -46,7 +46,7 @@ public class QuizAttempt implements Serializable {
 	private User user;
 	private String event;
     private int points;
-    private int timetaken;
+    private long timetaken;
 
     private String courseTitle;
     private String quizTitle;
@@ -182,18 +182,16 @@ public class QuizAttempt implements Serializable {
         this.points = points;
     }
 
-	public int getTimetaken() {
+	public long getTimetaken() {
 		return timetaken;
 	}
 
-	public void setTimetaken(int timetaken) {
+	public void setTimetaken(long timetaken) {
 		this.timetaken = timetaken;
 	}
 
 	public String getHumanTimetaken(){
-		return String.format("%d min %ds",
-				TimeUnit.MILLISECONDS.toSeconds(timetaken)/60,
-				TimeUnit.MILLISECONDS.toSeconds(timetaken) % 60 );
+		return String.format("%d min %ds", timetaken/60, timetaken % 60 );
 	}
 
 	public String getCourseTitle() {

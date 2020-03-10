@@ -74,7 +74,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String TAG = DbHelper.class.getSimpleName();
     public static final String DB_NAME = "mobilelearning.db";
-    public static final int DB_VERSION = 40;
+    public static final int DB_VERSION = 42;
 
     private static DbHelper instance;
     private SQLiteDatabase db;
@@ -159,6 +159,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String QUIZATTEMPTS_C_EXPORTED = "exported";
     private static final String QUIZATTEMPTS_C_EVENT = "event";
     private static final String QUIZATTEMPTS_C_POINTS = "points";
+    private static final String QUIZATTEMPTS_C_TIMETAKEN = "timetaken";
 
     private static final String SEARCH_TABLE = "search";
     private static final String SEARCH_C_TEXT = "fulltext";
@@ -197,7 +198,6 @@ public class DbHelper extends SQLiteOpenHelper {
     // User Custom Fields
     static final String USER_CF_TABLE = "user_cf";
     private static final String USER_CF_ID = BaseColumns._ID;
-    private static final String USER_CF_USER_ID = "user_id";
     private static final String USER_CF_USERNAME = "username";
     private static final String CF_FIELD_KEY = "field_key";
     private static final String CF_VALUE_STR = "value_str";
@@ -314,6 +314,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 QUIZATTEMPTS_C_PASSED + STR_INT_DEFAULT_O + ", " +
                 QUIZATTEMPTS_C_EXPORTED + STR_INT_DEFAULT_O + ", " +
                 QUIZATTEMPTS_C_EVENT + STR_TEXT_COMMA +
+                QUIZATTEMPTS_C_TIMETAKEN + STR_INT_DEFAULT_O + ", " +
                 QUIZATTEMPTS_C_POINTS + STR_INT_DEFAULT_O + ")";
         db.execSQL(sql);
     }
@@ -565,7 +566,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         if (oldVersion <= 29 && newVersion >= 30) {
             // add fields for offline_register to User table
-            db.execSQL(STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_OFFLINE_REGISTER + " integer default 0;");
+            db.execSQL(STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_OFFLINE_REGISTER + STR_INT_DEFAULT_O + ";");
             db.execSQL(STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_PASSWORDPLAIN + STR_TEXT_NULL + ";");
             db.execSQL(STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_EMAIL + STR_TEXT_NULL + ";");
             db.execSQL(STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_PHONE + STR_TEXT_NULL + ";");
@@ -577,6 +578,13 @@ public class DbHelper extends SQLiteOpenHelper {
             createUserCustomFieldsTable(db);
             createCustomFieldTable(db);
         }
+
+        if (oldVersion < 41){
+            // add the timetaken field
+            db.execSQL(STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_TIMETAKEN + STR_INT_DEFAULT_O + ";");
+            extractQuizAttemptsTimetaken();
+        }
+
 
     }
 
@@ -594,6 +602,41 @@ public class DbHelper extends SQLiteOpenHelper {
         values2.put(QUIZATTEMPTS_C_USERID, userId);
 
         db.update(QUIZATTEMPTS_TABLE, values2, "1=1", null);
+    }
+
+    public void extractQuizAttemptsTimetaken(){
+        List<QuizAttempt> attempts = getAllQuizAttempts();
+        List<QuizAttempt> updated = new ArrayList<>();
+        for (QuizAttempt attempt : attempts){
+            if (TextUtils.isEmpty(attempt.getData())){
+                continue;
+            }
+            try {
+                JSONObject logData = new JSONObject(attempt.getData());
+                String instanceID = logData.getString("instance_id");
+
+                String s = TRACKER_LOG_C_DATA + " LIKE ?";
+                String[] args = new String[]{ "%" + instanceID + "%" };
+                Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
+                if (c.getCount() > 0) {
+                    c.moveToFirst();
+                    String data = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
+                    JSONObject trackerData = new JSONObject(data);
+                    long time = trackerData.getLong("timetaken");
+                    attempt.setTimetaken(time);
+                    updated.add(attempt);
+                }
+                c.close();
+            } catch (JSONException e) {
+                // Pass
+            }
+
+        }
+
+        for (QuizAttempt attempt : updated){
+            updateQuizAttempt(attempt);
+        }
+
     }
 
 
@@ -845,6 +888,7 @@ public class DbHelper extends SQLiteOpenHelper {
             qa.setScore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)));
             qa.setMaxscore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
             qa.setPassed(Boolean.parseBoolean(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_PASSED))));
+            qa.setTimetaken(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_TIMETAKEN)));
             quizAttempts.add(qa);
             c.moveToNext();
         }
@@ -1015,6 +1059,7 @@ public class DbHelper extends SQLiteOpenHelper {
             qa.setScore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)));
             qa.setMaxscore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
             qa.setPassed(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_PASSED)) != 0);
+            qa.setTimetaken(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_TIMETAKEN)));
 
             c.moveToNext();
 
@@ -1081,6 +1126,7 @@ public class DbHelper extends SQLiteOpenHelper {
             qa.setScore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)));
             qa.setMaxscore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
             qa.setPassed(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_PASSED)) != 0);
+            qa.setTimetaken(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_TIMETAKEN)));
             attempts.add(qa);
             c.moveToNext();
         }
@@ -1622,6 +1668,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(QUIZATTEMPTS_C_ACTIVITY_DIGEST, qa.getActivityDigest());
         values.put(QUIZATTEMPTS_C_EVENT, qa.getEvent());
         values.put(QUIZATTEMPTS_C_POINTS, qa.getPoints());
+        values.put(QUIZATTEMPTS_C_TIMETAKEN, qa.getTimetaken());
         return values;
     }
 
@@ -1639,6 +1686,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 qa.setUserId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_USERID)));
                 qa.setEvent(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_EVENT)));
                 qa.setPoints(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_POINTS)));
+                qa.setTimetaken(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_TIMETAKEN)));
                 User u = this.getUser(qa.getUserId());
                 qa.setUser(u);
                 quizAttempts.add(qa);
@@ -1665,6 +1713,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 qa.setUserId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_USERID)));
                 qa.setEvent(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_EVENT)));
                 qa.setPoints(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_POINTS)));
+                qa.setTimetaken(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_TIMETAKEN)));
                 User u = this.getUser(qa.getUserId());
                 qa.setUser(u);
                 quizAttempts.add(qa);
