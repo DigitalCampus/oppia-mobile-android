@@ -1,6 +1,7 @@
 package Utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -52,26 +53,34 @@ public class FileUtils {
         return ret;
     }
 
-    public static void copyZipFromAssets(Context context, String filename){
-
+    public static void copyFileFromAssets(Context context, String assetsDir, String filename, File destination){
         try {
-            InputStream is = InstrumentationRegistry.getInstrumentation().getContext().getResources().getAssets().open("courses/" + filename);
-            File downloadPath = new File(Storage.getDownloadPath(context));
-            if(!downloadPath.exists()){Storage.createFolderStructure(context);}
-            OutputStream os = new FileOutputStream(new File(downloadPath, filename));
+            String source = assetsDir + File.separator + filename;
+            InputStream is = InstrumentationRegistry.getInstrumentation().getContext().getResources().getAssets().open(source);
+            if(!destination.exists()){
+                Storage.createFolderStructure(context);
+                boolean success = destination.mkdirs();
+                Log.d("Utils", success ? "s":"n");
+            }
 
+
+            OutputStream os = new FileOutputStream(new File(destination, filename));
             //Copy File
             byte[] buffer = new byte[1024];
             int read;
             while((read = is.read(buffer)) != -1){
                 os.write(buffer, 0, read);
             }
-
             is.close();
             os.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void copyZipFromAssets(Context context, String filename){
+        File downloadPath = new File(Storage.getDownloadPath(context));
+        copyFileFromAssets(context, "courses", filename, downloadPath);
     }
 
     public static void copyFileToDir(File file, File mediaDir, boolean deleteOnError) {
