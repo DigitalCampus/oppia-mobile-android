@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.utils.storage;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
@@ -26,7 +27,6 @@ import com.splunk.mint.Mint;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +52,7 @@ public class StorageUtils {
             DeviceFile mnt = new DeviceFile("/mnt");
             if (mnt.exists())
                 for (DeviceFile kid : mnt.listFiles())
-                    if (kid.getName().toLowerCase().contains("sd") && Boolean.TRUE.equals(kid.canWrite())){
+                    if (kid.getName().toLowerCase().contains("sd") && kid.canWrite()){
                         mInternalDrive = kid;
                         return mInternalDrive;
                     }
@@ -71,41 +71,43 @@ public class StorageUtils {
             return mExternalDrive;
         }
 
-        File[] dirs = ctx.getExternalFilesDirs(null);
-        if (dirs.length > 1){
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            File[] dirs = ctx.getExternalFilesDirs(null);
+            if (dirs.length > 1){
 
-            DeviceFile externalDrive = null;
-            for (int i=1; i<dirs.length; i++){
-                if (dirs[i] != null){
-                    Log.d(TAG, "Filedirs: " + dirs[i].getPath() + ": " + (dirs[i].canWrite()?"writable":"not writable!"));
-                    if (dirs[i].canWrite() && externalDrive == null) externalDrive = new DeviceFile(dirs[i]);
+                DeviceFile externalDrive = null;
+                for (int i=1; i<dirs.length; i++){
+                    if (dirs[i] != null){
+                        Log.d(TAG, "Filedirs: " + dirs[i].getPath() + ": " + (dirs[i].canWrite()?"writable":"not writable!"));
+                        if (dirs[i].canWrite() && externalDrive == null) externalDrive = new DeviceFile(dirs[i]);
+                    }
+                }
+
+                if ((externalDrive!=null) && externalDrive.canRead() && externalDrive.canWrite()){
+                    mExternalDrive = externalDrive;
+                    return externalDrive;
                 }
             }
 
-            if ((externalDrive!=null) && Boolean.TRUE.equals(externalDrive.canRead()) && Boolean.TRUE.equals(externalDrive.canWrite())){
-                mExternalDrive = externalDrive;
-                return externalDrive;
-            }
         }
-
 
         DeviceFile mDaddy = getInternalMemoryDrive().getParent();
         while(mDaddy.getDepth() > 2)
             mDaddy = mDaddy.getParent();
         Log.d(TAG, "traversing root path " + mDaddy.getPath());
         for (DeviceFile kid : mDaddy.listFiles()) {
-            Log.d(TAG, "  > " + kid.getPath() + " : " + (Boolean.TRUE.equals(kid.canWrite())?"writable":"not writable!"));
+            Log.d(TAG, "  > " + kid.getPath() + " : " + (kid.canWrite()?"writable":"not writable!"));
             if ((kid.getName().toLowerCase().contains("ext") || kid.getName().toLowerCase().contains("sdcard1"))
                     && !kid.getPath().equals(getInternalMemoryDrive().getPath())
-                    && Boolean.TRUE.equals(kid.canRead())
-                    && Boolean.TRUE.equals(kid.canWrite())) {
+                    && kid.canRead()
+                    && kid.canWrite()) {
                 mExternalDrive = kid;
                 return mExternalDrive;
             }
         }
         if (new File("/Removable").exists())
             for (DeviceFile kid : new DeviceFile("/Removable").listFiles())
-                if (kid.getName().toLowerCase().contains("ext") && Boolean.TRUE.equals(kid.canRead())
+                if (kid.getName().toLowerCase().contains("ext") && kid.canRead()
                         && !kid.getPath().equals(getInternalMemoryDrive().getPath())
                         && kid.list().length > 0) {
                     mExternalDrive = kid;
@@ -121,11 +123,11 @@ public class StorageUtils {
         DeviceFile internalStorage = getInternalMemoryDrive();
         DeviceFile externalStorage = getExternalMemoryDrive(ctx);
 
-        if (Boolean.TRUE.equals(internalStorage.canWrite())){
+        if ((internalStorage != null) && internalStorage.canWrite()){
             StorageLocationInfo internal = new StorageLocationInfo(internalStorage.getPath(), false, false, 1);
             list.add(internal);
         }
-        if ((externalStorage != null) && Boolean.TRUE.equals(externalStorage.canWrite())){
+        if ((externalStorage != null) && externalStorage.canWrite()){
             StorageLocationInfo external = new StorageLocationInfo(externalStorage.getPath(), false, true, 1);
             list.add(external);
         }
@@ -142,7 +144,7 @@ public class StorageUtils {
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
-            content = new String(buffer, StandardCharsets.UTF_8);
+            content = new String(buffer, "UTF-8");
         } catch (IOException e) {
             Mint.logException(e);
             return null;

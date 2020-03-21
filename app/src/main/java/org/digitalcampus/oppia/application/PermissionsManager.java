@@ -61,6 +61,10 @@ public class PermissionsManager {
     }
 
     public static boolean checkPermissionsAndInform(final Activity act){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            //If sdk version prior to 23 (Android M), the permissions are granted by manifest
+            return true;
+        }
 
         final List<String> permissionsToAsk = filterNotGrantedPermissions(act, PERMISSIONS_REQUIRED);
 
@@ -109,6 +113,10 @@ public class PermissionsManager {
 
 
     public static boolean canAskForAllPermissions(final Activity act, List<String> permissions){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            //If sdk version prior to 23 (Android M), the permissions are granted by manifest
+            return true;
+        }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act.getApplicationContext());
         for (String permission : permissions) {
@@ -123,6 +131,10 @@ public class PermissionsManager {
     public static List<String> filterNotGrantedPermissions(final Activity act, List<String> permissions){
 
         final List<String> permissionsToAsk = new ArrayList<>();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            //If sdk version prior to 23 (Android M), the permissions are granted by manifest
+            return permissionsToAsk;
+        }
 
         for (String permission : permissions){
             int permitted = act.checkSelfPermission( permission );

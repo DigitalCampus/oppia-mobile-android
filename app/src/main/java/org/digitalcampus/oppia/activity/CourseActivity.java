@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.preference.PreferenceManager;
@@ -357,25 +358,26 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             supportInvalidateOptionsMenu();
             HashMap<String, String> params = new HashMap<>();
             params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, TAG);
-            myTTS.speak(((WidgetFactory) apAdapter.getItem(currentActivityNo)).getContentToRead(), TextToSpeech.QUEUE_FLUSH, null, null);
+            myTTS.speak(((WidgetFactory) apAdapter.getItem(currentActivityNo)).getContentToRead(), TextToSpeech.QUEUE_FLUSH, params);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                myTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                    @Override
+                    public void onDone(String utteranceId) {
+                        CourseActivity.this.ttsRunning = false;
+                        myTTS = null;
+                    }
 
-            myTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-                @Override
-                public void onDone(String utteranceId) {
-                    CourseActivity.this.ttsRunning = false;
-                    myTTS = null;
-                }
+                    @Override
+                    public void onError(String utteranceId) {
+                        // does not need completing
+                    }
 
-                @Override
-                public void onError(String utteranceId) {
-                    // does not need completing
-                }
-
-                @Override
-                public void onStart(String utteranceId) {
-                    // does not need completing
-                }
-            });
+                    @Override
+                    public void onStart(String utteranceId) {
+                        // does not need completing
+                    }
+                });
+            }
         } else {
             // TTS not installed so show message
             Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
