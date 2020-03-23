@@ -9,6 +9,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.App;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,14 +25,15 @@ public class BuildChecksOppiaCore {
     @Before
     public void setUp() throws Exception {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        //We load the default prefs in case they were not loaded
+        App.loadDefaultPreferenceValues(context, false);
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Test
     public void checkDefaultSettingsParameters() {
 
-
-        String oppiaServerDefault = prefs.getString("prefServer", null);
+        String oppiaServerDefault = prefs.getString("prefServer", context.getString(R.string.prefServerDefault));
         String oppiaServerHost = context.getString(R.string.oppiaServerHost);
 
         assertEquals("https://demo.oppia-mobile.org/", oppiaServerDefault);
