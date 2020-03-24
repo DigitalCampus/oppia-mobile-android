@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -75,7 +76,8 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
     public void onClick(int result) {
         if (result == RESULT_DISMISS){
             if (listener != null) listener.onAccessGranted(null);
-        } else {
+        }
+        else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
             startActivityForResult(intent, REQUEST_GRANT_CODE);
         }
@@ -89,11 +91,12 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         if (requestCode == REQUEST_GRANT_CODE && resultCode == Activity.RESULT_OK) {
             Uri treeUri = resultData.getData();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
-            final ContentResolver resolver = getActivity().getContentResolver();
-            resolver.takePersistableUriPermission(treeUri,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
+                final ContentResolver resolver = getActivity().getContentResolver();
+                resolver.takePersistableUriPermission(treeUri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            }
             if (listener != null) listener.onAccessGranted(treeUri);
         }
         else{
