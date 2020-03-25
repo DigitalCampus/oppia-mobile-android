@@ -16,6 +16,7 @@ import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
+import org.digitalcampus.oppia.model.ActivityLogRepository;
 import org.digitalcampus.oppia.task.ExportActivityTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.digitalcampus.oppia.utils.UIUtils;
@@ -26,6 +27,8 @@ import java.io.File;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -44,6 +47,9 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
     private TextView submittedTrackers;
     private TextView unexportedTrackers;
 
+    @Inject
+    ActivityLogRepository logsRepository;
+
     private RecyclerView exportedFilesRecyclerView;
     private RecyclerView.Adapter filesAdapter;
     private ArrayList<File> files = new ArrayList<>();
@@ -61,7 +67,7 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activitylog);
         // Prevent activity from going to sleep
-
+        getAppComponent().inject(this);
         exportedFilesRecyclerView = findViewById(R.id.exported_files_list);
         archivedFilesRecyclerView = findViewById(R.id.archived_files_list);
         exportBtn = findViewById(R.id.export_btn);
@@ -164,27 +170,13 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
     }
 
     private void refreshFileList() {
-        File activityFolder = new File(Storage.getActivityPath(this));
-        if (activityFolder.exists()) {
-            files.clear();
-            String[] children = activityFolder.list();
-            for (String dirFiles : children) {
-                File exportedActivity = new File(activityFolder, dirFiles);
-                files.add(exportedActivity);
-            }
-            filesAdapter.notifyDataSetChanged();
-        }
+        files.clear();
+        files.addAll(logsRepository.getExportedActivityLogs(this));
+        filesAdapter.notifyDataSetChanged();
 
-        File archivedFolder = new File(Storage.getActivityArchivePath(this));
-        if (archivedFolder.exists()) {
-            archivedFiles.clear();
-            String[] children = archivedFolder.list();
-            for (String dirFiles : children) {
-                File exportedActivity = new File(archivedFolder, dirFiles);
-                archivedFiles.add(exportedActivity);
-            }
-            archivedFilesAdapter.notifyDataSetChanged();
-        }
+        archivedFiles.clear();
+        archivedFiles.addAll(logsRepository.getArchivedActivityLogs(this));
+        archivedFilesAdapter.notifyDataSetChanged();
     }
 
 

@@ -582,7 +582,7 @@ public class DbHelper extends SQLiteOpenHelper {
         if (oldVersion < 41){
             // add the timetaken field
             db.execSQL(STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_TIMETAKEN + STR_INT_DEFAULT_O + ";");
-            extractQuizAttemptsTimetaken();
+            extractQuizAttemptsTimetaken(db);
         }
 
 
@@ -604,8 +604,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.update(QUIZATTEMPTS_TABLE, values2, "1=1", null);
     }
 
-    public void extractQuizAttemptsTimetaken(){
-        List<QuizAttempt> attempts = getAllQuizAttempts();
+    public void extractQuizAttemptsTimetaken(SQLiteDatabase database){
+        List<QuizAttempt> attempts = getQuizAttempts(database);
         List<QuizAttempt> updated = new ArrayList<>();
         for (QuizAttempt attempt : attempts){
             if (TextUtils.isEmpty(attempt.getData())){
@@ -617,7 +617,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
                 String s = TRACKER_LOG_C_DATA + " LIKE ?";
                 String[] args = new String[]{ "%" + instanceID + "%" };
-                Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
+                Cursor c = database.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
                 if (c.getCount() > 0) {
                     c.moveToFirst();
                     String data = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
@@ -874,26 +874,37 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<QuizAttempt> getAllQuizAttempts() {
+        return getQuizAttempts(db);
+    }
+
+    public List<QuizAttempt> getQuizAttempts(SQLiteDatabase database){
         ArrayList<QuizAttempt> quizAttempts = new ArrayList<>();
-        Cursor c = db.query(QUIZATTEMPTS_TABLE, null, null, null, null, null, null);
+        Cursor c = database.query(QUIZATTEMPTS_TABLE, null, null, null, null, null, null);
         c.moveToFirst();
         while (!c.isAfterLast()) {
-            QuizAttempt qa = new QuizAttempt();
-            qa.setId(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
-            qa.setActivityDigest(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
-            qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
-            qa.setSent(Boolean.parseBoolean(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_SENT))));
-            qa.setCourseId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_COURSEID)));
-            qa.setUserId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_USERID)));
-            qa.setScore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)));
-            qa.setMaxscore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
-            qa.setPassed(Boolean.parseBoolean(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_PASSED))));
-            qa.setTimetaken(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_TIMETAKEN)));
+            QuizAttempt qa = fetchQuizAttempt(c);
             quizAttempts.add(qa);
             c.moveToNext();
         }
         c.close();
         return quizAttempts;
+    }
+
+    private QuizAttempt fetchQuizAttempt(Cursor c){
+        QuizAttempt qa = new QuizAttempt();
+        qa.setId(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
+        qa.setActivityDigest(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
+        qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
+        qa.setSent(Boolean.parseBoolean(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_SENT))));
+        qa.setDateTimeFromString(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATETIME)));
+        qa.setCourseId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_COURSEID)));
+        qa.setUserId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_USERID)));
+        qa.setScore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)));
+        qa.setMaxscore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
+        qa.setPassed(Boolean.parseBoolean(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_PASSED))));
+        qa.setTimetaken(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_TIMETAKEN)));
+
+        return qa;
     }
 
     public List<Course> getCoursesForUser(long userId) {
@@ -1050,17 +1061,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         c.moveToFirst();
         while (!c.isAfterLast()) {
-            QuizAttempt qa = new QuizAttempt();
-            qa.setId(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
-            qa.setActivityDigest(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
-            qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
-            qa.setDateTimeFromString(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATETIME)));
-            qa.setCourseId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_COURSEID)));
-            qa.setScore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)));
-            qa.setMaxscore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
-            qa.setPassed(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_PASSED)) != 0);
-            qa.setTimetaken(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_TIMETAKEN)));
-
+            QuizAttempt qa = fetchQuizAttempt(c);
             c.moveToNext();
 
             long courseId = qa.getCourseId();
