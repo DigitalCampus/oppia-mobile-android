@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.di;
 
+import org.digitalcampus.oppia.activity.ActivityLogActivity;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
@@ -32,6 +33,7 @@ public interface AppComponent {
     void inject(MainActivity activity);
     void inject(CourseIndexActivity activity);
     void inject(TagSelectActivity activity);
+    void inject(ActivityLogActivity activity);
     void inject(DownloadActivity activity);
     void inject(AppActivity activity);
     void inject(PrefsActivity activity);

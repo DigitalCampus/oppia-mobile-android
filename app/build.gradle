@@ -43,7 +43,7 @@ android {
 
     defaultConfig {
         versionCode 75
-        versionName "7.0.5"
+        versionName "7.0.5c"
 
         applicationId "org.lastmilehealth.oppiamobile"
         minSdkVersion 14
@@ -208,8 +208,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
     implementation 'com.splunk.mint:mint:5.0.0'
-    implementation 'io.github.inflationx:calligraphy3:3.0.0'
-    implementation 'io.github.inflationx:viewpump:1.0.0'
+    implementation 'io.github.inflationx:calligraphy3:3.1.1'
+    implementation 'io.github.inflationx:viewpump:2.0.3'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.mikhaellopez:circularprogressbar:3.0.3'
     implementation 'com.github.badoualy:stepper-indicator:1.0.7'
