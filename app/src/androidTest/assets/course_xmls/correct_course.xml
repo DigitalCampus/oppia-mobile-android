@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<module>
+    <meta>
+        <versionid>20150202182552</versionid>
+        <priority>0</priority>
+        <server>http://demo.oppia-mobile.org/</server>
+        <title lang="en">Reference course</title>
+        <shortname>ref</shortname>
+        <description lang="en"></description>
+        <langs>
+            <lang>es</lang>
+            <lang>en</lang>
+        </langs>
+    </meta>
+    <structure>
+        <section order="1">
+            <title lang="en">Examples of different features and activities</title>
+            <activities>
+                <activity type="page" order="1" digest="022637c433a26cd9784ab855d6a1b60621229">
+                    <title lang="en">Example of text page</title>
+                    <location lang="en">01_21229_en.html</location>
+                </activity>
+                <activity type="page" order="2" digest="d4c6598ad8a25a4eed0e838736ab951221230">
+                    <title lang="en">Example of tables</title>
+                    <location lang="en">01_21230_en.html</location>
+                </activity>
+                <activity type="quiz" order="3" digest="d8daad1783d6be43306a01c584b1ed4921231cr0s1a1p0a0">
+                    <title lang="en">Demo Quiz</title>
+                    <content lang="en">{"description":{"en":"Examples of different features and activities"},"id":1983,"lastupdated_date":"2015-02-02T15:35:30","owner":"\/api\/v1\/user\/1\/","props":{"allowtryagain":"1","availability":"0","courseversion":"20150202182533","digest":"d8daad1783d6be43306a01c584b1ed4921231cr0s1a1p0a0","maxscore":1,"passthreshold":"0","showfeedback":"1"},"questions":[{"id":20828,"order":1,"question":{"id":21035,"props":{"maxscore":1},"responses":[{"id":57497,"order":1,"props":{},"score":"0.00","title":{"en":"Dog"}},{"id":57498,"order":2,"props":{},"score":"1.00","title":{"en":"Cat"}},{"id":57499,"order":3,"props":{},"score":"0.00","title":{"en":"Mouse"}},{"id":57500,"order":4,"props":{},"score":"0.00","title":{"en":"Flea"}}],"title":{"en":"A multiple choice question"},"type":"multichoice"}}],"resource_uri":"\/api\/v1\/quiz\/1983\/","title":{"en":"Demo Quiz"}}</content>
+                </activity>
+                <activity type="page" order="4" digest="d7e1970619c5a75f32ebc28eb08db06f20628">
+                    <title lang="en">Stylesheet demo</title>
+                    <location lang="en">01_20628_en.html</location>
+                </activity>
+                <activity type="page" order="5" digest="e97d2a411579daed97f5585fb8f570ce21232">
+                    <title lang="en">Example of page with embedded image</title>
+                    <image filename="/images/21232.png" />
+                    <location lang="en">01_21232_en.html</location>
+                </activity>
+                <activity type="resource" order="6" digest="28e33e79d18438b9536bc84223e7d42322315">
+                    <title lang="en">Example of an image resource file</title>
+                    <description lang="en">Example of an image resource file</description>
+                    <location lang="en" type="image/png">/resources/example-image.png</location>
+                </activity>
+                <activity type="url" order="7" digest="abee7c3e1cd43b9f6591669a09bdc0dc21241">
+                    <title lang="en">Example of a URL activity</title>
+                    <description lang="en">Example of a URL activity</description>
+                    <location lang="en">http://digital-campus.org</location>
+                </activity>
+            </activities>
+        </section>
+        <section order="2">
+            <title lang="es">Sesion para usar multilang</title>
+            <title lang="en">Section to test multilang</title>
+            <activities>
+                <activity type="page" order="1" digest="aef0683d86c1c75e3e36fbc3970b639721234">
+                    <title lang="es">Curso para usar multilang</title>
+                    <title lang="en">Course for testing multilang</title>
+                    <location lang="es">02_21234_es.html</location>
+                    <location lang="en">02_21234_en.html</location>
+                </activity>
+                <activity type="feedback" order="2" digest="f024078b33d4d532bc7a236af90afdd121235">
+                    <title lang="es">Feedback para usar multilang</title>
+                    <title lang="en">Feedback for testing multilang</title>
+                    <content lang="en">{"description":{"en":"Section to test multilang","es":"Sesion para usar multilang"},"id":1968,"lastupdated_date":"2015-01-02T10:23:02","owner":"\/api\/v1\/user\/1\/","props":{"courseversion":"20150102092311","digest":"f024078b33d4d532bc7a236af90afdd121235","maxscore":0},"questions":[{"id":20685,"order":1,"question":{"id":20892,"props":{"required":"true"},"responses":[{"id":57057,"order":1,"props":{},"score":"0.00","title":{"en":"Works","es":"Funciona"}},{"id":57058,"order":2,"props":{},"score":"0.00","title":{"en":"Doesn't Work","es":"No Funciona"}}],"title":{"en":"Feedback Question for testing multilang","es":"Pregunta para usar multilang"},"type":"multichoice"}},{"id":20686,"order":2,"question":{"id":20893,"props":{"required":"false"},"responses":[{"id":57059,"order":1,"props":{},"score":"0.00","title":{"en":"Yes"}},{"id":57060,"order":2,"props":{},"score":"0.00","title":{"en":"No"}}],"title":{"en":"Question without multilang"},"type":"multichoice"}}],"resource_uri":"\/api\/v1\/quiz\/1968\/","title":{"en":"Feedback for testing multilang","es":"Feedback para usar multilang"}}</content>
+                </activity>
+                <activity type="quiz" order="3" digest="633071a8c834b8bda1502edab2cd2d7821236cr0s1a1p0a0">
+                    <title lang="es">Quiz para usar multilang</title>
+                    <title lang="en">Quiz for testing multilang</title>
+                    <content lang="en">{"description":{"en":"Section to test multilang","es":"Sesion para usar multilang"},"id":1984,"lastupdated_date":"2015-02-02T15:35:42","owner":"\/api\/v1\/user\/1\/","props":{"allowtryagain":"1","availability":"0","courseversion":"20150202182533","digest":"633071a8c834b8bda1502edab2cd2d7821236cr0s1a1p0a0","maxscore":6,"passthreshold":"0","showfeedback":"1"},"questions":[{"id":20829,"order":1,"question":{"id":21036,"props":{"maxscore":1},"responses":[{"id":57501,"order":1,"props":{"feedback":{"en":"Correct","es":"Verdad"}},"score":"1.00","title":{"en":"Yes","es":"Si"}},{"id":57502,"order":2,"props":{"feedback":{"en":"Not quite right","es":"Has hecho una falta"}},"score":"0.00","title":{"en":"Maybe","es":"quizas"}}],"title":{"en":"This is a question?","es":"Esta es una pregunta?"},"type":"multichoice"}},{"id":20830,"order":2,"question":{"id":21037,"props":{"maxscore":1},"responses":[{"id":57503,"order":1,"props":{"feedback":{"en":"Correct","es":"Verdad"}},"score":"1.00","title":{"en":"True"}},{"id":57504,"order":2,"props":{"feedback":{"en":"Incorrect","es":"Falso"}},"score":"0.00","title":{"en":"False"}}],"title":{"en":"A true\/false question","es":"Verdad o falso?"},"type":"multichoice"}},{"id":20831,"order":3,"question":{"id":21038,"props":{"maxscore":1},"responses":[{"id":57505,"order":1,"props":{"feedback":{"en":"Correct","es":"Verdad"}},"score":"0.50","title":{"en":"One","es":"Uno"}},{"id":57506,"order":2,"props":{"feedback":{"en":"Incorrect","es":"falso"}},"score":"0.00","title":{"en":"Two","es":"Dos"}},{"id":57507,"order":3,"props":{"feedback":{"en":"Correct","es":"Verdad"}},"score":"0.50","title":{"en":"All","es":"todos"}}],"title":{"en":"Multiselect","es":"Multi opciones"},"type":"multiselect"}},{"id":20832,"order":4,"question":{"id":21039,"props":{"maxscore":1},"responses":[{"id":57508,"order":1,"props":{"feedback":{"en":"Correct","es":"Verdad"}},"score":"1.00","title":{"en":"short"}},{"id":57509,"order":2,"props":{"feedback":{"en":"Correct","es":"Verdad"}},"score":"1.00","title":{"en":"corto"}},{"id":57510,"order":3,"props":{"feedback":{"en":"Correct","es":"Verdad"}},"score":"1.00","title":{"en":"short","es":"corto"}},{"id":57511,"order":4,"props":{"feedback":{"en":"Wrong","es":"Falso"}},"score":"0.00","title":{"en":"*"}},{"id":57512,"order":5,"props":{"feedback":{"en":"Wrong","es":"Falso"}},"score":"0.00","title":{"en":"*","es":"*"}}],"title":{"en":"Short Answer","es":"Repuesta corta"},"type":"shortanswer"}},{"id":20833,"order":5,"question":{"id":21040,"props":{"maxscore":1},"responses":[{"id":57513,"order":1,"props":{"feedback":{"en":"Correct","es":"Verdad"},"tolerance":"0"},"score":"1.00","title":{"en":"4"}},{"id":57514,"order":2,"props":{"feedback":{"en":"Almost","es":"Casi"},"tolerance":"1"},"score":"0.50","title":{"en":"4"}}],"title":{"en":"2 * 2 =","es":"2 por 2 iguals ?"},"type":"numerical"}},{"id":20834,"order":6,"question":{"id":21041,"props":{"correctfeedback":{"en":"Your answer is correct."},"incorrectfeedback":{"en":"Your answer is incorrect."},"maxscore":1,"partiallycorrectfeedback":{"en":"Your answer is partially correct."}},"responses":[{"id":57515,"order":1,"props":{},"score":"0.33","title":{"en":"cat|Mice","es":"gato|raton"}},{"id":57516,"order":2,"props":{},"score":"0.33","title":{"en":"Dog|cat","es":"Perro|gato"}},{"id":57517,"order":3,"props":{},"score":"0.33","title":{"en":"Mice|cheese","es":"Raton|queso"}}],"title":{"en":"Who eats what?","es":"Quien come que?"},"type":"matching"}}],"resource_uri":"\/api\/v1\/quiz\/1984\/","title":{"en":"Quiz for testing multilang","es":"Quiz para usar multilang"}}</content>
+                </activity>
+            </activities>
+        </section>
+        <section order="3">
+            <title lang="en">Demonstration of Videos/Media</title>
+            <activities>
+                <activity type="page" order="1" digest="6366f05d6389af759ba5a27df521191821237">
+                    <title lang="en">The Story of Cholera</title>
+                    <media>
+                        <file filename="the_story_of_cholera.m4v" download_url="https://downloads.digital-campus.org/media/demo/the_story_of_cholera.m4v" digest="d06f55fc000aa9bca954c71141fdda2c" filesize="20379881" length="268" />
+                    </media>
+                    <image filename="/images/21237.png" />
+                    <location lang="en">03_21237_en.html</location>
+                </activity>
+                <activity type="page" order="2" digest="00a694ce154979f2348e036482dbdd4f21238">
+                    <title lang="en">Page with Vimeo embed</title>
+                    <location lang="en">03_21238_en.html</location>
+                </activity>
+                <activity type="page" order="3" digest="623d8ff9bf9f1698831243f7b4dc5aa021239">
+                    <title lang="en">Page with YouTube embed</title>
+                    <location lang="en">03_21239_en.html</location>
+                </activity>
+            </activities>
+        </section>
+        <section order="4">
+            <title lang="en">Embedded videos in quiz/feedback</title>
+            <activities>
+                <activity type="quiz" order="1" digest="dd937c4aed8a959b811e8d2610d0844c21278cr0s1a1p0a0">
+                    <title lang="en">Quiz with embedded video</title>
+                    <content lang="en">{"description":{"en":"Embedded videos in quiz\/feedback"},"id":1989,"lastupdated_date":"2015-02-02T19:25:15","owner":"\/api\/v1\/user\/1\/","props":{"allowtryagain":"1","availability":"0","courseversion":"20150202182533","digest":"dd937c4aed8a959b811e8d2610d0844c21278cr0s1a1p0a0","maxscore":1,"passthreshold":"0","showfeedback":"1"},"questions":[{"id":20843,"order":1,"question":{"id":21050,"props":{"image":"images\/0da3ea305a4d28d20649d80c100f887c16ca3a36","maxscore":0,"media":"ghmp-basic-skills-20121001.m4v"},"responses":[],"title":{"en":"Watch the following video then answer the next questions."},"type":"description"}},{"id":20844,"order":2,"question":{"id":21051,"props":{"maxscore":1},"responses":[{"id":57538,"order":1,"props":{"feedback":{"en":"Correct","es":"Verdad"}},"score":"1.00","title":{"en":"short"}},{"id":57539,"order":2,"props":{"feedback":{"en":"Correct","es":"Verdad"}},"score":"1.00","title":{"en":"corto"}},{"id":57540,"order":3,"props":{"feedback":{"en":"Correct","es":"Verdad"}},"score":"1.00","title":{"en":"short","es":"corto"}},{"id":57541,"order":4,"props":{"feedback":{"en":"Wrong","es":"Falso"}},"score":"0.00","title":{"en":"*"}},{"id":57542,"order":5,"props":{"feedback":{"en":"Wrong","es":"Falso"}},"score":"0.00","title":{"en":"*","es":"*"}}],"title":{"en":"Short Answer","es":"Repuesta corta"},"type":"shortanswer"}}],"resource_uri":"\/api\/v1\/quiz\/1989\/","title":{"en":"Quiz with embedded video"}}</content>
+                </activity>
+            </activities>
+        </section>
+    </structure>
+    <media>
+        <file filename="the_story_of_cholera.m4v" download_url="https://downloads.digital-campus.org/media/demo/the_story_of_cholera.m4v" digest="d06f55fc000aa9bca954c71141fdda2c" filesize="20379881" length="268" />
+        <file filename="ghmp-basic-skills-20121001.m4v" download_url="http://downloads.digital-campus.org/media/pnc/ghmp-basic-skills-20121001.m4v" digest="3ec4d8ab03c3c6bd66b3805f0b11225b" />
+    </media>
+</module>
