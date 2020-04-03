@@ -44,8 +44,8 @@
                     android:id="@+id/register_form_username_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:required="true"
-                    app:cantContainSpaces="true">
+                    app:cantContainSpaces="true"
+                    app:required="true">
 
                     <EditText
                         android:id="@+id/register_form_username_edittext"

@@ -16,9 +16,9 @@ android {
 
     defaultConfig {
         versionCode 75
-        versionName "7.0.5"
+        versionName "7.0.5b"
 
-        applicationId "org.digitalcampus.mobile.learning"
+        applicationId "org.oppia.mobile.covid"
         minSdkVersion 14
         targetSdkVersion 29
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

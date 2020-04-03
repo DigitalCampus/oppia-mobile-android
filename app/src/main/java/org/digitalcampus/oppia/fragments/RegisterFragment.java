@@ -111,8 +111,8 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		loginButton = vv.findViewById(R.id.action_login_btn);
 		customFieldsContainer = vv.findViewById(R.id.custom_fields_container);
 
-		fields.addAll(Arrays.asList(usernameField, emailField, passwordField, passwordAgainField,
-				firstnameField, lastnameField, jobTitleField, organisationField, phoneNoField));
+		fields.addAll(Arrays.asList(usernameField, passwordField, passwordAgainField,
+				firstnameField, lastnameField));
 
 		return vv;
 	}
@@ -189,27 +189,27 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		valid = fieldsManager.validateFields() && valid;
 
 		//If the rest of email validations passed, check that the email is valid
-		if (emailField.validate() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+		/*if (emailField.validate() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 			emailField.setErrorEnabled(true);
 			emailField.setError(getString(R.string.error_register_email));
 			if (valid){
 				emailField.requestFocus();
 			}
 			valid = false;
-		}
+		}*/
 
 		// check password
 		valid = checkPasswordCriteria(valid, password, passwordAgain);
 
 		// check phone no
-		if (phoneNo.length() < 8) {
+		/*if (phoneNo.length() < 8) {
             phoneNoField.setErrorEnabled(true);
             phoneNoField.setError(getString(R.string.error_register_no_phoneno ));
 			if (valid){
 				phoneNoField.requestFocus();
 			}
 			valid = false;
-		}
+		}*/
 
 		if (valid){
             User u = new User();

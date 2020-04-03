@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appName "OppiaMobile"><!ENTITY companyName "Digital Campus"> ]>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appName "COVID-19 Ethiopia"><!ENTITY companyName "Digital Campus"> ]>
 <resources>
     <string name="app_name">&appName;</string>
     <string name="app_logo_alt">&companyName; Logo</string>
@@ -26,7 +26,7 @@
     <string name="service_tracker">&appName; Tracker Service</string>
 
     <string name="fragment_welcome_title">Welcome to &appName;</string>
-    <string name="fragment_welcome_desc">&appName; is a mobile learning platform for delivering learning content, video and quizzes.\n\n\'Oppia\' means \'to learn\' in Finnish</string>
+    <string name="fragment_welcome_desc">&appName; is a mobile learning platform for delivering learning content, video and quizzes.</string>
     <string name="fragment_welcome_login_info">To get started with &appName;, you will need to register or login.</string>
     <string name="fragment_welcome_privacy">We take your privacy seriously, <a href="http://digital-campus.org/privacy/">find out more about &companyName;\'s privacy policy</a></string>
 
