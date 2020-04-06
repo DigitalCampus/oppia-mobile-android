@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         versionCode 75
-        versionName "7.0.5b"
+        versionName "7.0.5c"
 
         applicationId "org.oppia.mobile.covid"
         minSdkVersion 14
