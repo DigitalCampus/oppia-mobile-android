@@ -15,8 +15,8 @@ android {
     buildToolsVersion '29.0.2'
 
     defaultConfig {
-        versionCode 75
-        versionName "7.0.5c"
+        versionCode 76
+        versionName "7.0.5e"
 
         applicationId "org.oppia.mobile.covid"
         minSdkVersion 14
