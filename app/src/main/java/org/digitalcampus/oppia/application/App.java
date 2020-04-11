@@ -55,7 +55,7 @@ public class App extends Application {
 
     public static final String TAG = App.class.getSimpleName();
 
-    public static final int APP_LOGO = R.drawable.dc_logo;
+    public static final int APP_LOGO = R.drawable.covid2;
 
     public static final String COURSE_XML = "module.xml";
     public static final String COURSE_TRACKER_XML = "tracker.xml";

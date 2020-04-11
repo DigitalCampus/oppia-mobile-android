@@ -2,8 +2,8 @@
 <resources>
 
     <!-- Main color for actionBar, buttons, etc -->
-    <color name="theme_primary">#74B042</color>
-    <color name="theme_primary_dark">#597725</color>
+    <color name="theme_primary">#21b24b</color>
+    <color name="theme_primary_dark">#4061ad</color>
 
     <!-- Secondary color: input tint, tab selector, scorecard color, etc -->
     <color name="theme_secondary">#689e3a</color>

@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/imageView12"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/dc_logo"
+            android:src="@drawable/covid2"
             android:layout_marginBottom="@dimen/padding_medium"
             android:layout_marginTop="@dimen/padding_large"/>
 
