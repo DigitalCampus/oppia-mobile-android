@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/tag_count"
+                android:background="@drawable/badge_tag_count"
                 android:padding="4dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
