@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="left"
         android:orientation="vertical"
-        android:background="@drawable/actionbar_background_gradient"
+        android:background="@drawable/bg_toolbar"
         android:paddingBottom="60dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"

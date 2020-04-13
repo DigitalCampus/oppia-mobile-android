@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Main color for actionBar, buttons, etc -->
+    <color name="theme_primary">@color/oppia_primary</color>
+    <color name="theme_primary_dark">@color/oppia_primary_dark</color>
+    <!-- Secondary color: input tint, scorecard color, etc -->
+    <color name="theme_secondary">@color/oppia_secondary</color>
+    <color name="theme_secondary_light">@color/oppia_secondary_light</color>
+
+    <!-- Color used for dropdown menus and list tints, it is "theme_secondary_light" with transparency -->
+    <color name="theme_focus_semitransparent">#cc9aca3c</color> <!-- added 80%(CC) transparency -->
+    <color name="theme_tint_almosttransparent">#409aca3c</color> <!-- added 25%(40) transparency -->
+
+    <!-- Color used for highlight dark text -->
+    <color name="theme_dark">@color/oppia_dark</color>
+
+    <!-- Toolbar -->
+    <color name="toolbar_bg_color">@color/theme_primary</color>
+    <color name="toolbar_icon_color">@color/text_dark</color>
+    <color name="statusbar_color">@color/theme_primary</color>
+
+    <!-- TabLayout and filter tabs -->
+    <color name="tab_bg_color">#e0dde2</color>
+    <color name="tab_indicator">@color/theme_secondary_light</color>
+    <color name="tab_text_color">@color/text_dark</color>
+    <color name="tab_selected_text_color">@color/text_dark</color>
+    <color name="tab_chip_color">@color/theme_primary</color>
+
+    <!-- Other common elements -->
+    <color name="listitem_icon_tint">@color/theme_primary</color>
+    <color name="design_snackbar_background_color" tools:override="true">@color/theme_primary</color>
+    <color name="gamification_snackbar_gradient_start">@color/theme_secondary_light</color>
+    <color name="gamification_snackbar_gradient_end">@color/theme_primary</color>
+    <color name="subtitle_bar">@color/theme_secondary_light</color>
+    <color name="points_badge">@color/theme_dark</color>
+
+    <!-- Course index -->
+    <color name="course_index_section_title">@color/text_dark</color>
+    <color name="course_index_highlight">@color/theme_secondary</color>
+
+    <!-- Chart colors -->
+    <color name="chart_line_color">@color/theme_primary</color>
+    <color name="chart_dots_color">@color/theme_primary</color>
+    <color name="chart_gradient_start">@color/theme_secondary</color>
+    <color name="chart_gradient_end">@color/theme_secondary_light</color>
+
+    <!-- Colors for activity chart lines -->
+    <color name="chart_line_activity_all">#000000</color>
+    <color name="chart_line_activity_completed">#43A047</color>
+    <color name="chart_line_media_watched">#1E88E5</color>
+    <color name="chart_line_course_downloaded">#E53935</color>
+    <color name="chart_line_quiz_attempt">#8E24AA</color>
+</resources>
