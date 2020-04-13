@@ -34,11 +34,15 @@
     <color name="subtitle_bar">@color/theme_secondary_light</color>
     <color name="points_badge">@color/theme_dark</color>
 
+    <color name="quiz_attempted">@color/theme_secondary</color>
+    <color name="quiz_passed">@color/theme_secondary_light</color>
+
     <!-- Course index -->
     <color name="course_index_section_title">@color/text_dark</color>
     <color name="course_index_highlight">@color/theme_secondary</color>
 
     <!-- Chart colors -->
+    <color name="piechart_completed">@color/theme_secondary</color>
     <color name="chart_line_color">@color/theme_primary</color>
     <color name="chart_dots_color">@color/theme_primary</color>
     <color name="chart_gradient_start">@color/theme_secondary</color>
