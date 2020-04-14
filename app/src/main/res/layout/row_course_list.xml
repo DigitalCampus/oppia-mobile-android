@@ -51,7 +51,7 @@
                     app:cpb_background_progressbar_width="7dp"
                     app:cpb_progress_direction="to_right"
                     app:cpb_progress_max="100"
-                    app:cpb_progressbar_color="@color/theme_secondary_light"
+                    app:cpb_progressbar_color="@color/piechart_completed"
                     app:cpb_progressbar_width="7dp" />
 
             </RelativeLayout>

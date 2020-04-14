@@ -210,10 +210,10 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         }
 
         LineDataSet dataSet = new LineDataSet(entries, "Label"); // add entries to dataset
-        dataSet.setColor(ContextCompat.getColor(getActivity(), R.color.theme_primary));
+        dataSet.setColor(ContextCompat.getColor(getActivity(), R.color.chart_line_color));
         dataSet.setDrawValues(false);
         dataSet.setDrawFilled(true);
-        dataSet.setCircleColor(ContextCompat.getColor(getActivity(), R.color.chart_points_circle_color));
+        dataSet.setCircleColor(ContextCompat.getColor(getActivity(), R.color.chart_dots_color));
         dataSet.setFillDrawable(getGradientDrawable());
 
         LineData lineData = new LineData(dataSet);
@@ -245,8 +245,8 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
     private Drawable getGradientDrawable() {
 
-        int colorStart = ContextCompat.getColor(getActivity(), R.color.theme_primary);
-        int colorEnd = ContextCompat.getColor(getActivity(), R.color.theme_secondary_light);
+        int colorStart = ContextCompat.getColor(getActivity(), R.color.chart_gradient_start);
+        int colorEnd = ContextCompat.getColor(getActivity(), R.color.chart_gradient_end);
 
         int alpha = 128;
         int colorStartAlpha = Color.argb(alpha, Color.red(colorStart), Color.green(colorStart), Color.blue(colorStart));

@@ -14,7 +14,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="@dimen/list_card_horizontal_margin"
         android:layout_marginBottom="7dp"
-        android:foreground="@drawable/background_change_selected"
+        android:foreground="@drawable/bg_selectable"
         app:contentPaddingBottom="@dimen/list_card_vertical_padding"
         app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
         app:contentPaddingRight="@dimen/list_card_horizontal_padding"
