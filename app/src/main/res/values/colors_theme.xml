@@ -18,6 +18,7 @@
     <color name="toolbar_bg_color">@color/black</color>
     <color name="toolbar_icon_color">@color/white</color>
     <color name="statusbar_color">@color/black</color>
+    <color name="subtitle_bar">@color/theme_primary</color>
 
     <!-- TabLayout and filter tabs -->
     <color name="tab_bg_color">#e0dde2</color>
@@ -31,7 +32,7 @@
     <color name="design_snackbar_background_color" tools:override="true">@color/theme_primary</color>
     <color name="gamification_snackbar_gradient_start">@color/theme_secondary_light</color>
     <color name="gamification_snackbar_gradient_end">@color/theme_secondary</color>
-    <color name="subtitle_bar">@color/theme_secondary_light</color>
+
     <color name="points_badge">@color/cha_emerald_dark</color>
 
     <color name="quiz_attempted">@color/theme_secondary</color>
