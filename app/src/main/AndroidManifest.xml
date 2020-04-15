@@ -73,6 +73,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseMetaPageActivity"
+            android:theme="@style/Oppia.ToolbarTheme"
             android:label="@string/title_course_meta" />
         <activity
             android:name="org.digitalcampus.oppia.activity.DownloadMediaActivity"

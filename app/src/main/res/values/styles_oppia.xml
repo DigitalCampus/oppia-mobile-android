@@ -44,6 +44,11 @@
         <item name="android:windowBackground">@color/background_dark</item>
     </style>
 
+    <style name="Oppia.Theme.NavigationView" parent="Base.Theme.AppCompat" >
+        <item name="android:listDivider">@color/drawer_divider</item>
+        <item name="android:textColorSecondary">@color/drawer_subtitle</item>
+    </style>
+
     <style name="TextAppearanceButtonBorderless" parent="TextAppearance.AppCompat.Widget.Button">
         <item name="fontPath">fonts/montserrat.ttf</item>
     </style>
