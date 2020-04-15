@@ -45,7 +45,7 @@
     <style name="SectionHeader">
         <item name="android:textSize">19sp</item>
         <item name="android:textColor">@color/text_dark</item>
-        <item name="fontPath">fonts/lato.ttf</item>
+        <item name="fontPath">fonts/gilroy-regular.otf</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_marginBottom">@dimen/padding_medium</item>
@@ -61,7 +61,7 @@
     <style name="SubheaderText">
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/text_dark</item>
-        <item name="fontPath">fonts/lato.ttf</item>
+        <item name="fontPath">fonts/gilroy-regular.otf</item>
     </style>
 
     <style name="ButtonText">
@@ -139,7 +139,7 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_light</item>
-        <item name="fontPath">fonts/montserrat.ttf</item>
+        <item name="fontPath">fonts/gilroy-bold.otf</item>
     </style>
 
     <style name="TabText">
@@ -179,7 +179,7 @@
         <item name="android:textSize">29sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginBottom">@dimen/padding_medium</item>
-        <item name="fontPath">fonts/montserrat.ttf</item>
+        <item name="fontPath">fonts/gilroy-bold.otf</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:layout_alignParentLeft">false</item>
         <item name="android:layout_alignParentRight">false</item>
@@ -188,7 +188,7 @@
 
     <style name="CourseTitle" parent="android:TextAppearance">
         <item name="android:textSize">17sp</item>
-        <item name="fontPath">fonts/lato.ttf</item>
+        <item name="fontPath">fonts/gilroy-regular.otf</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
 
@@ -252,12 +252,12 @@
         <item name="android:textSize">21sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/text_dark</item>
-        <item name="fontPath">fonts/lato.ttf</item>
+        <item name="fontPath">fonts/gilroy-regular.otf</item>
     </style>
 
 
     <style name="CollapsedToolbarHeader" parent="android:TextAppearance">
-        <item name="fontPath">fonts/lato.ttf</item>
+        <item name="fontPath">fonts/gilroy-regular.otf</item>
     </style>
 
     <style name="Oppia.Theme.NoActionBar">
@@ -287,7 +287,7 @@
 
     <style name="Oppia.Theme.CardBadge" parent="SmallTextDarkItalic">
         <item name="android:textColor">@color/text_light</item>
-        <item name="fontPath">fonts/montserrat.ttf</item>
+        <item name="fontPath">fonts/gilroy-bold.otf</item>
         <item name="android:textStyle">normal</item>
     </style>
 
