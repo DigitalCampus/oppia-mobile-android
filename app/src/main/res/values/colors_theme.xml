@@ -21,11 +21,11 @@
     <color name="subtitle_bar">@color/theme_primary</color>
 
 
-    <color name="drawer_bg">@color/background_light</color>
-    <color name="drawer_text">@color/text_dark</color>
-    <color name="drawer_subtitle">@color/theme_secondary</color>
-    <color name="drawer_icontint">@color/default_icon_foreground</color>
-    <color name="drawer_divider">@color/highlight_separator</color>
+    <color name="drawer_bg">@color/black</color>
+    <color name="drawer_text">@color/text_light</color>
+    <color name="drawer_subtitle">@color/theme_primary</color>
+    <color name="drawer_icontint">@color/cha_light_purple</color>
+    <color name="drawer_divider">@color/grey_dark</color>
 
 
     <!-- TabLayout and filter tabs -->
