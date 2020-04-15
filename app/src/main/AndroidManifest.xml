@@ -24,7 +24,7 @@
     <application
         android:name="org.digitalcampus.oppia.application.App"
         android:allowBackup="false"
-        android:icon="@drawable/dc_logo"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Oppia.Theme"
         android:usesCleartextTraffic="true">
