@@ -24,7 +24,7 @@
     <application
         android:name="org.digitalcampus.oppia.application.App"
         android:allowBackup="false"
-        android:icon="@drawable/dc_logo"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Oppia.Theme"
         android:usesCleartextTraffic="true">
@@ -73,6 +73,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseMetaPageActivity"
+            android:theme="@style/Oppia.ToolbarTheme"
             android:label="@string/title_course_meta" />
         <activity
             android:name="org.digitalcampus.oppia.activity.DownloadMediaActivity"

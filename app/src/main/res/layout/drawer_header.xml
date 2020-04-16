@@ -3,32 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/theme_secondary_light">
+    android:background="@color/black">
 
     <ImageView
-        android:id="@+id/imageView8"
+        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_gravity="top"
-        android:padding="0dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/drawer_header_bg" />
-
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/view_user_info"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:src="@drawable/dc_logo" />
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
+        android:src="@drawable/cha_header" />
 
     <RelativeLayout
         android:id="@+id/view_user_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView8"
-        android:background="@color/theme_secondary_light"
+        android:layout_below="@+id/header"
+        android:background="@color/theme_primary"
         android:paddingLeft="15dp"
         android:paddingTop="5dp"
         android:paddingRight="15dp"

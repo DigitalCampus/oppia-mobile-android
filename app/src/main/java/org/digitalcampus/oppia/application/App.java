@@ -133,7 +133,7 @@ public class App extends Application {
         ViewPump.init(ViewPump.builder()
                 .addInterceptor(new CalligraphyInterceptor(
                         new CalligraphyConfig.Builder()
-                                .setDefaultFontPath("fonts/lato.ttf")
+                                .setDefaultFontPath("fonts/gilroy-regular.otf")
                                 .setFontAttrId(R.attr.fontPath)
                                 .build()))
                 .build());
