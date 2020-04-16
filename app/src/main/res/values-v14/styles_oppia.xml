@@ -21,7 +21,7 @@
 
     <style name="Oppia.Theme" parent="Theme.AppCompat.Light.DarkActionBar">
 
-        <item name="android:actionBarItemBackground">@drawable/selectable_background_om</item>
+        <item name="android:actionBarItemBackground">@drawable/bg_selectable</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Om</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Om</item>
         <item name="android:actionBarTabTextStyle">@style/OM.Light.TabText.Style</item>
@@ -85,7 +85,7 @@
     </style>
 
     <style name="Oppia.CAB.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
-        <item name="background">@drawable/actionbar_background_gradient</item>
+        <item name="background">@drawable/bg_toolbar</item>
     </style>
 
 </resources>

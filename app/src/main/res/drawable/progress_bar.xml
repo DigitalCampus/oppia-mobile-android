@@ -12,8 +12,8 @@
                 <corners android:radius="5dp" />
                 <gradient
                     android:angle="270"
-                    android:endColor="@color/theme_primary"
-                    android:startColor="@color/theme_secondary_light" />
+                    android:endColor="@color/quiz_passed"
+                    android:startColor="@color/quiz_attempted" />
             </shape>
         </clip>
     </item>

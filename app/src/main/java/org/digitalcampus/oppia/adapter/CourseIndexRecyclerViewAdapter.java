@@ -52,7 +52,7 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
 
         this.startExpanded = !startCollapsed;
         courseLocation = course.getLocation();
-        highlightColor = ContextCompat.getColor(ctx, R.color.theme_secondary);
+        highlightColor = ContextCompat.getColor(ctx, R.color.course_index_highlight);
         normalColor = ContextCompat.getColor(ctx, R.color.text_dark);
 
         courseTitle = course.getTitle(prefLang);

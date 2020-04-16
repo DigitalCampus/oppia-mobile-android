@@ -33,12 +33,14 @@
 
             <ImageView
                 android:id="@+id/searchbutton"
-                android:layout_width="wrap_content"
+                android:layout_width="35dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
+                android:layout_alignTop="@id/search_string"
+                android:layout_alignBottom="@id/search_string"
                 android:contentDescription="@string/search.activity_title"
-                android:src="@drawable/abs__ic_search"
+                app:srcCompat="@drawable/ic_search"
                 android:tint="@color/highlight_label" />
 
         </RelativeLayout>
