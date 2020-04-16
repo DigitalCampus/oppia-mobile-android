@@ -1,8 +1,8 @@
 /*
 #31849b - steel blue
 #f79646 - mustard orange
-#495525 - DC dark green
-#77A240 - DC mid green
+#6163BB - DC dark green
+#00AB9F - DC mid green
 */
 
 * { padding:0px;
@@ -19,21 +19,21 @@ body {
 h1 {
 	margin: 10px 5px;
 	text-align:center;
-	color: #495525;
+	color: #6163BB;
 	font-size: 160%;
 }
 
 h2 {
 	margin: 10px 5px;
 	text-align:center;
-	color: #495525;
+	color: #6163BB;
 	font-size: 140%;
 }
 
 h3 {
 	margin: 10px 5px;
 	text-align:center;
-	color: #495525;
+	color: #6163BB;
 	font-size: 120%;
 }
 
@@ -61,12 +61,12 @@ li:before {
       max-height: 0px;
       left: -20px;
       top: -0px;
-      color: #77A240;
+      color: #00AB9F;
       font-size: 30px;
     }
   
 a {
-	color: #495525;
+	color: #6163BB;
 	text-decoration: underline;
 }
 
@@ -74,7 +74,7 @@ a {
 	margin:10px 5px;
 	padding: 5px;
 	font-weight: bold;
-	border: 2px solid #77A240;
+	border: 2px solid #00AB9F;
 	border-radius: 0.5em;
 	-moz-border-radius: 0.5em;
 	-webkit-border-radius: 0.5em;
