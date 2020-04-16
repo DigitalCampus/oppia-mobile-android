@@ -32,9 +32,10 @@
             <ImageView
                 android:id="@+id/badge"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_gravity="top|end"
-                app:srcCompat="@drawable/completed_badge" />
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/badge_completed" />
         </FrameLayout>
 
         <TextView

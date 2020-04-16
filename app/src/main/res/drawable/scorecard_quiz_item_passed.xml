@@ -3,7 +3,7 @@
        android:shape="rectangle"
        android:innerRadius="0dp">
     <corners android:radius="7dp" />
-    <solid android:color="@color/theme_secondary_light" />
+    <solid android:color="@color/quiz_passed" />
     <padding
         android:top="2dp"
         android:left="2dp"

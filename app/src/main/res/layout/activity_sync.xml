@@ -214,7 +214,7 @@
                 android:layout_alignBottom="@id/tv_device_name"
                 android:layout_toLeftOf="@id/tv_device_name"
                 android:adjustViewBounds="true"
-                android:background="@drawable/background_transparent"
+                android:background="@drawable/bg_transparent"
                 android:scaleType="fitEnd"
                 android:tint="@color/theme_primary"
                 app:srcCompat="@drawable/ic_wifi_tethering" />

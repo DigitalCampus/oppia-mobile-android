@@ -30,7 +30,7 @@
                 app:cpb_background_progressbar_width="20dp"
                 app:cpb_progress_direction="to_right"
                 app:cpb_progress_max="100"
-                app:cpb_progressbar_color="@color/theme_secondary"
+                app:cpb_progressbar_color="@color/piechart_completed"
                 app:cpb_progressbar_width="20dp" />
 
             <LinearLayout
@@ -100,6 +100,7 @@
                 android:layout_marginRight="7dp"
                 android:background="@drawable/card"
                 android:orientation="vertical"
+                tools:visibility="visible"
                 android:visibility="invisible">
 
                 <TextView
@@ -154,7 +155,7 @@
                             style="@style/Highlight.Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/theme_secondary" />
+                            android:textColor="@color/quiz_attempted" />
 
                         <TextView
                             android:id="@+id/textView6"
@@ -183,7 +184,7 @@
                             style="@style/Highlight.Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/theme_secondary_light" />
+                            android:textColor="@color/quiz_passed" />
 
                         <TextView
                             android:id="@+id/textView7"

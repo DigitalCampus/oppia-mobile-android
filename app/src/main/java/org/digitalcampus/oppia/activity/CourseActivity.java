@@ -30,6 +30,7 @@ import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -213,10 +214,12 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         } else if (itemId == R.id.menu_tts) {
             if (myTTS == null && !ttsRunning) {
                 // check for TTS data
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 Intent checkTTSIntent = new Intent();
                 checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
                 startActivityForResult(checkTTSIntent, ttsCheck);
             } else if (myTTS != null && ttsRunning) {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 this.stopReading();
             } else {
                 // TTS not installed so show message

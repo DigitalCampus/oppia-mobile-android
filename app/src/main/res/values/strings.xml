@@ -29,7 +29,8 @@
     <string name="fragment_welcome_desc">&appName; is a mobile learning platform for delivering learning content, video and quizzes.\n\n
         Powered by <a href="https://lastmilehealth.org/chacademy/">Community Health Academy</a> and <a href="https://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
     <string name="fragment_welcome_login_info">To get started with &appName;, you will need to register or login.</string>
-    <string name="fragment_welcome_privacy"></string>
+
+    <string name="fragment_welcome_powered_by">Powered by <a href="http://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
 
     <string name="tab_title_about">About</string>
     <string name="tab_title_badges">Badges</string>
