@@ -41,10 +41,10 @@
     <color name="gamification_snackbar_gradient_start">@color/cha_emerald</color>
     <color name="gamification_snackbar_gradient_end">@color/cha_emerald_dark</color>
 
-    <color name="points_badge">@color/cha_emerald_dark</color>
+    <color name="points_badge">@color/cha_emerald</color>
 
-    <color name="quiz_attempted">@color/theme_secondary</color>
-    <color name="quiz_passed">@color/theme_secondary_light</color>
+    <color name="quiz_attempted">@color/cha_emerald_light</color>
+    <color name="quiz_passed">@color/theme_secondary</color>
 
     <!-- Course index -->
     <color name="course_index_section_title">@color/text_dark</color>
