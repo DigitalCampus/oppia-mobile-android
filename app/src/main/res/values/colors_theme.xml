@@ -4,8 +4,8 @@
     <color name="theme_primary">@color/cha_purple</color>
     <color name="theme_primary_dark">@color/cha_purple_dark</color>
     <!-- Secondary color: input tint, scorecard color, etc -->
-    <color name="theme_secondary">@color/cha_emerald_dark</color>
-    <color name="theme_secondary_light">@color/cha_emerald</color>
+    <color name="theme_secondary">@color/cha_emerald</color>
+    <color name="theme_secondary_light">@color/cha_emerald_light</color>
 
     <!-- Color used for dropdown menus and list tints, it is "theme_secondary_light" with transparency -->
     <color name="theme_focus_semitransparent">#cc00AB9F</color> <!-- added 80%(CC) transparency -->
@@ -38,8 +38,8 @@
     <!-- Other common elements -->
     <color name="listitem_icon_tint">@color/theme_primary</color>
     <color name="design_snackbar_background_color" tools:override="true">@color/theme_primary</color>
-    <color name="gamification_snackbar_gradient_start">@color/theme_secondary_light</color>
-    <color name="gamification_snackbar_gradient_end">@color/theme_secondary</color>
+    <color name="gamification_snackbar_gradient_start">@color/cha_emerald</color>
+    <color name="gamification_snackbar_gradient_end">@color/cha_emerald_dark</color>
 
     <color name="points_badge">@color/cha_emerald_dark</color>
 
