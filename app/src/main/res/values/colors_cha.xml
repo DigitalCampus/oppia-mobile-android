@@ -7,5 +7,6 @@
     <color name="cha_light_orange">#fdaa72</color>
     <color name="cha_emerald">#00AB9F</color>
     <color name="cha_emerald_dark">#367f70</color>
+    <color name="cha_emerald_light">#3BC8CA</color>
     <color name="lmh_blue">#4BB7D6</color>
 </resources>
