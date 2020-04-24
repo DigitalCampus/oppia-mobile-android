@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:adjustViewBounds="true"
-        android:src="@drawable/cha_header" />
+        android:src="@drawable/drawer_cha_header" />
 
     <RelativeLayout
         android:id="@+id/view_user_info"

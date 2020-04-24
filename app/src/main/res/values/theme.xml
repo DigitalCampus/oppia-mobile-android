@@ -8,7 +8,7 @@
     <color name="theme_secondary_light">@color/cha_emerald_light</color>
 
     <!-- Drawables for app icon and course default image -->
-    <item name="app_icon" type="drawable">@drawable/dc_logo</item>
+    <item name="app_icon" type="drawable">@mipmap/ic_launcher</item>
     <item name="course_icon_placeholder" type="drawable">@drawable/default_course</item>
 
     <!-- Color used for dropdown menus and list tints, it is "theme_secondary_light" with transparency -->
@@ -48,7 +48,7 @@
     <color name="points_badge">@color/cha_emerald</color>
 
     <color name="quiz_attempted">@color/cha_emerald_light</color>
-    <color name="quiz_passed">@color/theme_secondary</color>
+    <color name="quiz_passed">@color/cha_emerald</color>
 
     <!-- Course index -->
     <color name="course_index_section_title">@color/text_dark</color>
