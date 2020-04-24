@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="@dimen/course_icon_size"
         android:layout_height="@dimen/course_icon_size"
-        android:src="@drawable/default_course"
+        android:src="@drawable/course_icon_placeholder"
         android:layout_centerVertical="true"
         android:id="@+id/course_icon"
     />

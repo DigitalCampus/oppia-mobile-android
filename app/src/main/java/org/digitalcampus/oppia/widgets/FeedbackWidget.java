@@ -17,7 +17,6 @@
 
 package org.digitalcampus.oppia.widgets;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -26,7 +25,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,15 +40,14 @@ import org.digitalcampus.mobile.quiz.InvalidQuizException;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
-import org.digitalcampus.mobile.quiz.model.questiontypes.DragAndDrop;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Essay;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
@@ -58,7 +55,6 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
-import org.digitalcampus.oppia.widgets.quiz.DragAndDropWidget;
 import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiSelectWidget;
@@ -85,10 +81,6 @@ public class FeedbackWidget extends WidgetFactory {
 	private boolean isOnResultsPage = false;
 	private boolean quizAttemptSaved = false;
 	private QuestionWidget qw;
-
-	private ImageView playAudioBtn;
-	private ProgressBar progressBar;
-	private ProgressBarAnimator barAnim;
 
 	public static FeedbackWidget newInstance(Activity activity, Course course, boolean isBaseline) {
 		FeedbackWidget myFragment = new FeedbackWidget();
@@ -143,12 +135,12 @@ public class FeedbackWidget extends WidgetFactory {
 		this.nextBtn = getView().findViewById(R.id.mquiz_next_btn);
 		this.qText = getView().findViewById(R.id.question_text);
 		this.questionImage = getView().findViewById(R.id.question_image);
-		this.playAudioBtn = getView().findViewById(R.id.playAudioBtn);
-		this.progressBar =  getView().findViewById(R.id.progress_quiz);
-		this.barAnim = new ProgressBarAnimator(progressBar);
-		this.barAnim.setAnimDuration(PROGRESS_ANIM_DURATION);
+		ImageView playAudioBtn = getView().findViewById(R.id.playAudioBtn);
+		ProgressBar progressBar = getView().findViewById(R.id.progress_quiz);
+		ProgressBarAnimator barAnim = new ProgressBarAnimator(progressBar);
+		barAnim.setAnimDuration(PROGRESS_ANIM_DURATION);
 		this.questionImage.setVisibility(View.GONE);
-		this.playAudioBtn.setVisibility(View.GONE);
+		playAudioBtn.setVisibility(View.GONE);
 	}
 	
 	@Override
@@ -308,7 +300,7 @@ public class FeedbackWidget extends WidgetFactory {
 
 		// Show restart or continue button
 		Button restartBtn = getView().findViewById(R.id.quiz_results_button);
-		Button exitBtn = (Button) getView().findViewById(R.id.quiz_exit_button);
+		Button exitBtn = getView().findViewById(R.id.quiz_exit_button);
 
 		exitBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -387,7 +379,7 @@ public class FeedbackWidget extends WidgetFactory {
 	@Override
 	public void saveTracker() {
 		long timetaken = this.getSpentTime();
-		if(activity == null || !isOnResultsPage){
+		if(activity == null || !isOnResultsPage || quizAttemptSaved){
 			return;
 		}
 

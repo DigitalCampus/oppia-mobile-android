@@ -19,7 +19,6 @@ package org.digitalcampus.oppia.application;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
@@ -27,7 +26,6 @@ import android.util.Pair;
 import com.splunk.mint.Mint;
 import com.splunk.mint.MintLogLevel;
 
-import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -42,6 +40,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import androidx.preference.PreferenceManager;
 
 import static org.digitalcampus.oppia.activity.PrefsActivity.PREF_PHONE_NO;
 

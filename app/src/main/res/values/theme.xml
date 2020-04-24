@@ -7,6 +7,10 @@
     <color name="theme_secondary">@color/oppia_secondary</color>
     <color name="theme_secondary_light">@color/oppia_secondary_light</color>
 
+    <!-- Drawables for app icon and course default image -->
+    <item name="app_icon" type="drawable">@drawable/dc_logo</item>
+    <item name="course_icon_placeholder" type="drawable">@drawable/default_course</item>
+
     <!-- Color used for dropdown menus and list tints, it is "theme_secondary_light" with transparency -->
     <color name="theme_focus_semitransparent">#cc9aca3c</color> <!-- added 80%(CC) transparency -->
     <color name="theme_tint_almosttransparent">#409aca3c</color> <!-- added 25%(40) transparency -->

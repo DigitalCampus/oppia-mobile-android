@@ -536,7 +536,7 @@ public class QuizWidget extends WidgetFactory {
 
         // Show restart or continue button
         Button restartBtn = getView().findViewById(R.id.quiz_results_button);
-        Button exitBtn = (Button) getView().findViewById(R.id.quiz_exit_button);
+        Button exitBtn = getView().findViewById(R.id.quiz_exit_button);
 
         int quizAvailability = checkQuizAvailability();
         boolean quizAvailable = quizAvailability == QUIZ_AVAILABLE;
