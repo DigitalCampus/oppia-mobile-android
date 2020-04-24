@@ -88,11 +88,11 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         if (c.getImageFile() != null) {
             String image = c.getImageFileFromRoot();
             Picasso.get().load(new File(image))
-                    .placeholder(R.drawable.default_course)
+                    .placeholder(R.drawable.course_icon_placeholder)
                     .transform(new CircleTransform())
                     .into(viewHolder.courseImage);
         } else {
-            viewHolder.courseImage.setImageResource(R.drawable.default_course);
+            viewHolder.courseImage.setImageResource(R.drawable.course_icon_placeholder);
         }
 
     }

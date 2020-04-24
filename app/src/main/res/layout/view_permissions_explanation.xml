@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="@dimen/padding_large"
-            android:src="@drawable/dc_logo"/>
+            android:src="@drawable/app_icon"/>
 
         <TextView
             android:id="@+id/textView12"

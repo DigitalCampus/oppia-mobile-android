@@ -19,7 +19,7 @@
             android:layout_height="80dp"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            app:srcCompat="@drawable/dc_logo"/>
+            app:srcCompat="@drawable/app_icon"/>
 
         <TextView
             android:id="@+id/welcome_title"

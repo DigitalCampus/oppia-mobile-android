@@ -41,7 +41,6 @@ import com.google.android.material.tabs.TabLayout;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -107,7 +106,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             }
             // set image
             if (actionBar != null) {
-                BitmapDrawable bm = ImageUtils.loadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), App.APP_LOGO);
+                BitmapDrawable bm = ImageUtils.loadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), R.drawable.course_icon_placeholder);
                 actionBar.setHomeAsUpIndicator(bm);
                 actionBar.setDisplayShowHomeEnabled(true);
                 actionBar.setDisplayHomeAsUpEnabled(true);
