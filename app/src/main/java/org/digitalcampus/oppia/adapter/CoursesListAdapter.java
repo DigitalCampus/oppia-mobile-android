@@ -79,7 +79,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, App.DEFAULT_DISPLAY_PROGRESS_BAR)) {
             int courseProgress = (int) c.getProgressPercent();
             viewHolder.circularProgressBar.setVisibility(View.VISIBLE);
-            viewHolder.circularProgressBar.setProgressWithAnimation(courseProgress, 1000l);
+            viewHolder.circularProgressBar.setProgressWithAnimation(courseProgress, 1000L);
         } else {
             viewHolder.circularProgressBar.setVisibility(View.GONE);
         }

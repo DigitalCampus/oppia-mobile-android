@@ -289,7 +289,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private void createLanguageDialog() {
-        UIUtils.createLanguageDialog(this, (ArrayList<Lang>) course.getLangs(), sharedPreferences, new Callable<Boolean>() {
+        UIUtils.createLanguageDialog(this, course.getLangs(), sharedPreferences, new Callable<Boolean>() {
             public Boolean call() {
                 CourseActivity.this.loadActivities();
                 return true;
