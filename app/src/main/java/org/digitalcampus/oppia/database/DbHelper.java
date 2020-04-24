@@ -374,7 +374,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createUserCustomFieldsTable(SQLiteDatabase db) {
 
-        String sql = "CREATE TABLE ["+USER_CF_TABLE+"] (" +
+        String sql = "CREATE TABLE IF NOT EXISTS ["+USER_CF_TABLE+"] (" +
                 "["+USER_CF_ID+"]" + STR_INT_PRIMARY_KEY_AUTO +
                 "["+ USER_CF_USERNAME +"]" + STR_TEXT_COMMA+
                 "["+ CF_FIELD_KEY +"]" + STR_TEXT_COMMA +
@@ -1368,8 +1368,8 @@ public class DbHelper extends SQLiteOpenHelper {
             Course course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
 
             if (courseFilter != null && course != null && courseFilter.getCourseId() != course.getCourseId()) {
-                    c.moveToNext();
-                    continue;
+                c.moveToNext();
+                continue;
             }
 
             Points p = new Points();

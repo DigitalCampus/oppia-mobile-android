@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,21 +39,22 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.InvalidQuizException;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
-import org.digitalcampus.mobile.quiz.model.questiontypes.DragAndDrop;
+import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Essay;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.widgets.quiz.DragAndDropWidget;
+import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
+import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
 import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiSelectWidget;
@@ -68,6 +70,7 @@ public class FeedbackWidget extends WidgetFactory {
 
 	public static final String TAG = FeedbackWidget.class.getSimpleName();
 
+	private static final int PROGRESS_ANIM_DURATION = 600;
 	private ViewGroup container;
 	private Quiz feedback;
 	private String feedbackContent;
@@ -76,8 +79,9 @@ public class FeedbackWidget extends WidgetFactory {
 	private TextView qText;
 	private LinearLayout questionImage;
 	private boolean isOnResultsPage = false;
+	private boolean quizAttemptSaved = false;
 	private QuestionWidget qw;
-	
+
 	public static FeedbackWidget newInstance(Activity activity, Course course, boolean isBaseline) {
 		FeedbackWidget myFragment = new FeedbackWidget();
 
@@ -122,12 +126,21 @@ public class FeedbackWidget extends WidgetFactory {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		prevBtn = getView().findViewById(R.id.mquiz_prev_btn);
-		nextBtn = getView().findViewById(R.id.mquiz_next_btn);
-		qText = getView().findViewById(R.id.question_text);
-		questionImage = getView().findViewById(R.id.question_image);
-
+		this.fetchViews();
         loadFeedback();
+	}
+
+	private void fetchViews(){
+		this.prevBtn = getView().findViewById(R.id.mquiz_prev_btn);
+		this.nextBtn = getView().findViewById(R.id.mquiz_next_btn);
+		this.qText = getView().findViewById(R.id.question_text);
+		this.questionImage = getView().findViewById(R.id.question_image);
+		ImageView playAudioBtn = getView().findViewById(R.id.playAudioBtn);
+		ProgressBar progressBar = getView().findViewById(R.id.progress_quiz);
+		ProgressBarAnimator barAnim = new ProgressBarAnimator(progressBar);
+		barAnim.setAnimDuration(PROGRESS_ANIM_DURATION);
+		this.questionImage.setVisibility(View.GONE);
+		playAudioBtn.setVisibility(View.GONE);
 	}
 	
 	@Override
@@ -162,6 +175,7 @@ public class FeedbackWidget extends WidgetFactory {
 		// convert in case has any html special chars
 		qText.setText(Html.fromHtml(q.getTitle(prefLang)));
 
+		questionImage.setVisibility(View.GONE);
 		if (q.getProp("image") == null) {
 			questionImage.setVisibility(View.GONE);
 		} else {
@@ -183,8 +197,8 @@ public class FeedbackWidget extends WidgetFactory {
 			qw = new NumericalWidget(super.getActivity(), getView(), container);
 		} else if (q instanceof MultiSelect) {
 			qw = new MultiSelectWidget(super.getActivity(), getView(), container, q);
-		} else if (q instanceof DragAndDrop) {
-			qw = new DragAndDropWidget(super.getActivity(), getView(), container, q, course.getLocation());
+		} else if (q instanceof Description) {
+			qw = new DescriptionWidget(getView());
 		} else {
 			return;
 		}
@@ -214,7 +228,18 @@ public class FeedbackWidget extends WidgetFactory {
 			prevBtn.setEnabled(false);
 		}
 
-		nextBtn.setOnClickListener(new View.OnClickListener() {
+		nextBtn.setOnClickListener(nextBtnClickListener());
+
+		// set label on next button
+		if (feedback.hasNext()) {
+			nextBtn.setText(super.getActivity().getString(R.string.widget_quiz_next));
+		} else {
+			nextBtn.setText(super.getActivity().getString(R.string.widget_feedback_submit));
+		}
+	}
+
+	private View.OnClickListener nextBtnClickListener(){
+		return new View.OnClickListener() {
 			public void onClick(View v) {
 				// save answer
 				if (saveAnswer()) {
@@ -231,50 +256,75 @@ public class FeedbackWidget extends WidgetFactory {
 					toast.show();
 				}
 			}
-		});
-
-		// set label on next button
-		if (feedback.hasNext()) {
-			nextBtn.setText(super.getActivity().getString(R.string.widget_quiz_next));
-		} else {
-			nextBtn.setText(super.getActivity().getString(R.string.widget_feedback_submit));
-		}
+		};
 	}
 	
 	public void showResults() {
 
-        if (!isOnResultsPage){
-            // log the activity as complete
-            isOnResultsPage = true;
-            this.saveTracker();
+		// log the activity as complete
+		isOnResultsPage = true;
+		feedback.mark(prefLang);
+		this.saveTracker();
 
-            // save results ready to send back to the quiz server
-            String data = feedback.getResultObject(Gamification.GAMIFICATION_UNDEFINED).toString();
-            DbHelper db = DbHelper.getInstance(super.getActivity());
-            long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-    		
-    		QuizAttempt qa = new QuizAttempt();
-    		qa.setCourseId(course.getCourseId());
-    		qa.setUserId(userId);
-    		qa.setData(data);
-    		qa.setActivityDigest(activity.getDigest());
-    		qa.setScore(feedback.getUserscore());
-    		qa.setMaxscore(feedback.getMaxscore());
-    		qa.setPassed(this.getActivityCompleted());
+		// save results ready to send back to the quiz server
+		String data = feedback.getResultObject(Gamification.GAMIFICATION_UNDEFINED).toString();
+		DbHelper db = DbHelper.getInstance(super.getActivity());
+		long userId = db.getUserId(SessionManager.getUsername(getActivity()));
 
-            db.insertQuizAttempt(qa);
-        }
+		QuizAttempt qa = new QuizAttempt();
+		qa.setCourseId(course.getCourseId());
+		qa.setUserId(userId);
+		qa.setData(data);
+		qa.setActivityDigest(activity.getDigest());
+		qa.setScore(feedback.getUserscore());
+		qa.setMaxscore(feedback.getMaxscore());
+		qa.setPassed(true);
+		qa.setTimetaken(0);
+		qa.setSent(false);
+		db.insertQuizAttempt(qa);
 
         //Check if feedback results layout is already loaded
-        View feedbackResultsLayout = getView().findViewById(R.id.widget_feedback_results);
-        if (feedbackResultsLayout == null){
-            View view = getView().findViewById(R.id.quiz_progress);
-            ViewGroup parent = (ViewGroup) view.getParent();
-            int index = parent.indexOfChild(view);
-            parent.removeView(view);
-            view = super.getActivity().getLayoutInflater().inflate(R.layout.widget_feedback_results, parent, false);
-            parent.addView(view, index);
-        }
+		View quizResultsLayout = getView()==null ? null : getView().findViewById(R.id.widget_quiz_results);
+		if (quizResultsLayout == null){
+			// load new layout
+			View progressContainer = getView().findViewById(R.id.progress_container);
+			ViewGroup parent = (ViewGroup) progressContainer.getParent();
+			int index = parent.indexOfChild(progressContainer);
+			parent.removeView(progressContainer);
+			progressContainer = super.getActivity().getLayoutInflater().inflate(R.layout.widget_quiz_results, parent, false);
+			parent.addView(progressContainer, index);
+		}
+
+		TextView title = getView().findViewById(R.id.quiz_results_score);
+		title.setText(super.getActivity().getString(R.string.widget_feedback_submit_title));
+
+		// Show restart or continue button
+		Button restartBtn = getView().findViewById(R.id.quiz_results_button);
+		Button exitBtn = getView().findViewById(R.id.quiz_exit_button);
+
+		exitBtn.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				FeedbackWidget.this.getActivity().finish();
+			}
+		});
+		if (this.isBaseline) {
+			restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_baseline_goto_course));
+			restartBtn.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					FeedbackWidget.this.getActivity().finish();
+				}
+			});
+			exitBtn.setVisibility(View.GONE);
+		} else if (this.getActivityCompleted()){
+			restartBtn.setVisibility(View.GONE);
+		} else{
+			restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_results_restart));
+			restartBtn.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					FeedbackWidget.this.restart();
+				}
+			});
+		}
 	}
 	
 	private void setProgress() {
@@ -282,12 +332,32 @@ public class FeedbackWidget extends WidgetFactory {
 		progress.setText(super.getActivity().getString(R.string.widget_quiz_progress, feedback.getCurrentQuestionNo(),
 				this.feedback.getTotalNoQuestions()));
 	}
-	
+
+	private void restart() {
+		this.saveTracker();
+		this.setStartTime(System.currentTimeMillis() / 1000);
+
+		this.feedback = new Quiz();
+		this.feedback.load(feedbackContent, prefLang);
+		this.isOnResultsPage = false;
+		this.quizAttemptSaved = false;
+
+		// reload quiz layout
+		View quizResultsView = getView().findViewById(R.id.widget_quiz_results);
+		ViewGroup parent = (ViewGroup) quizResultsView.getParent();
+		int index = parent.indexOfChild(quizResultsView);
+		parent.removeView(quizResultsView);
+		quizResultsView = super.getActivity().getLayoutInflater().inflate(R.layout.widget_quiz, parent, false);
+		parent.addView(quizResultsView, index);
+
+		fetchViews();
+		showQuestion();
+	}
 	
 	private boolean saveAnswer() {
 		try {
 			List<String> answers = qw.getQuestionResponses(feedback.getCurrentQuestion().getResponseOptions());
-			if (answers != null) {
+			if ( (answers != null) && (!answers.isEmpty())) {
 				feedback.getCurrentQuestion().setUserResponses(answers);
 				return true;
 			}
@@ -309,14 +379,15 @@ public class FeedbackWidget extends WidgetFactory {
 	@Override
 	public void saveTracker() {
 		long timetaken = this.getSpentTime();
-		if(activity == null || !isOnResultsPage){
+		if(activity == null || !isOnResultsPage || quizAttemptSaved){
 			return;
 		}
 
 		new GamificationServiceDelegate(getActivity())
 				.createActivityIntent(course, activity, getActivityCompleted(), isBaseline)
-				.registerFeedbackEvent(timetaken, feedback.getID(), feedback.getInstanceID());
+				.registerFeedbackEvent(timetaken, feedback, feedback.getID(), feedback.getInstanceID());
 	}
+
 
 	@Override
 	public String getContentToRead() {

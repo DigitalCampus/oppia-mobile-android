@@ -76,9 +76,6 @@
             android:id="@+id/delete_btn"
             android:layout_width="@dimen/course_icon_size"
             android:layout_height="@dimen/course_icon_size"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/share_btn"
-            android:layout_centerVertical="true"
             style="?android:attr/borderlessButtonStyle"
             android:tint="@color/text_dark"
             app:srcCompat="@android:drawable/ic_menu_delete"/>

@@ -20,6 +20,7 @@ import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
+import org.digitalcampus.oppia.utils.CircleTransform;
 import org.digitalcampus.oppia.utils.ui.ExpandableRecyclerView;
 
 import java.io.File;
@@ -52,7 +53,7 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
 
         this.startExpanded = !startCollapsed;
         courseLocation = course.getLocation();
-        highlightColor = ContextCompat.getColor(ctx, R.color.theme_secondary);
+        highlightColor = ContextCompat.getColor(ctx, R.color.course_index_highlight);
         normalColor = ContextCompat.getColor(ctx, R.color.text_dark);
 
         courseTitle = course.getTitle(prefLang);
@@ -114,7 +115,11 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
     @Override
     public void onBindHeaderViewHolder(HeaderViewHolder holder) {
         holder.title.setText(courseTitle);
-        Picasso.get().load(new File(courseIcon)).error(R.drawable.default_course).into(holder.courseImage);
+        Picasso.get().load(new File(courseIcon))
+                .placeholder(R.drawable.course_icon_placeholder)
+                .error(R.drawable.course_icon_placeholder)
+                .transform(new CircleTransform())
+                .into(holder.courseImage);
     }
 
     @Override

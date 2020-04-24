@@ -19,7 +19,7 @@
             android:layout_height="80dp"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            app:srcCompat="@drawable/dc_logo"/>
+            app:srcCompat="@drawable/app_icon"/>
 
         <TextView
             android:id="@+id/welcome_title"
@@ -68,15 +68,15 @@
             android:text="@string/title_login"/>
 
         <TextView
-            android:id="@+id/welcome_privacy_info"
-            style="@style/SmallTextDarkItalic"
+            android:id="@+id/welcome_powered_by"
+            style="@style/SubheaderText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginTop="20dp"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:gravity="center"
-            android:text="@string/fragment_welcome_privacy"/>
+            android:text="@string/fragment_welcome_powered_by"/>
     </LinearLayout>
 
 </ScrollView>

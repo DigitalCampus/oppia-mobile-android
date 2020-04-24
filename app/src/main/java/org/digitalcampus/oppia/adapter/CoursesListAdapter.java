@@ -79,7 +79,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, App.DEFAULT_DISPLAY_PROGRESS_BAR)) {
             int courseProgress = (int) c.getProgressPercent();
             viewHolder.circularProgressBar.setVisibility(View.VISIBLE);
-            viewHolder.circularProgressBar.setProgressWithAnimation(courseProgress, 1000l);
+            viewHolder.circularProgressBar.setProgressWithAnimation(courseProgress, 1000L);
         } else {
             viewHolder.circularProgressBar.setVisibility(View.GONE);
         }
@@ -88,11 +88,11 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         if (c.getImageFile() != null) {
             String image = c.getImageFileFromRoot();
             Picasso.get().load(new File(image))
-                    .placeholder(R.drawable.default_course)
+                    .placeholder(R.drawable.course_icon_placeholder)
                     .transform(new CircleTransform())
                     .into(viewHolder.courseImage);
         } else {
-            viewHolder.courseImage.setImageResource(R.drawable.default_course);
+            viewHolder.courseImage.setImageResource(R.drawable.course_icon_placeholder);
         }
 
     }

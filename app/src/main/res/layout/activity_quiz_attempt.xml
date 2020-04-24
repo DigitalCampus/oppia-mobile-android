@@ -26,8 +26,6 @@
             android:id="@+id/action_bar_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:background="@color/subtitle_bar"
             android:gravity="center_vertical"
