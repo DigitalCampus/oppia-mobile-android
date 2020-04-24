@@ -24,7 +24,7 @@
             android:layout_below="@+id/status_subtitle"
             android:layout_marginBottom="-3dp"
             android:indeterminate="true"
-            android:progressDrawable="@drawable/progress_bar_quiz"
+            android:progressDrawable="@drawable/progress_bar_light"
             android:scaleY="2.0"
             android:visibility="visible" />
 

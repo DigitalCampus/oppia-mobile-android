@@ -216,7 +216,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginRight="17dp"
                     android:progress="0"
-                    android:progressDrawable="@drawable/progress_bar_light"
+                    android:progressDrawable="@drawable/progress_bar_quiz"
                     android:secondaryProgress="0" />
 
                 <androidx.recyclerview.widget.RecyclerView
