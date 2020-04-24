@@ -21,7 +21,6 @@ import org.digitalcampus.oppia.task.ExportActivityTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
-import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
 import java.text.NumberFormat;

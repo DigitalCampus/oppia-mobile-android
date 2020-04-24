@@ -37,7 +37,7 @@
                     android:layout_margin="5dp"
                     android:contentDescription="@string/app_logo_alt"
                     android:padding="@dimen/padding_course_list_item_circular_progress"
-                    android:src="@drawable/default_course" />
+                    android:src="@drawable/course_icon_placeholder" />
 
                 <com.mikhaellopez.circularprogressbar.CircularProgressBar
                     android:id="@+id/circularProgressBar"

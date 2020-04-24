@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="TwoWayView">
-        <attr name="android:orientation"/>
-        <attr name="android:choiceMode"/>
-        <attr name="android:listSelector"/>
-        <attr name="android:drawSelectorOnTop"/>
-    </declare-styleable>
-
     <declare-styleable name="ValidableTextInputLayout">
         <attr name="required" format="boolean" />
         <attr name="cantContainSpaces" format="boolean" />
