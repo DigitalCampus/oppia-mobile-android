@@ -37,8 +37,11 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        android:theme="@style/Oppia.Theme"
+        android:theme="@style/Oppia.Theme.NavigationView"
+        android:background="@color/drawer_bg"
         app:headerLayout="@layout/drawer_header"
+        app:itemTextColor="@color/drawer_text"
+        app:itemIconTint="@color/drawer_icontint"
         app:menu="@menu/drawer_main">
 
         <LinearLayout

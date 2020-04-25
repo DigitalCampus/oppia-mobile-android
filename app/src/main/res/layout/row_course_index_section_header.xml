@@ -51,7 +51,7 @@
         android:layout_marginLeft="@dimen/padding_medium"
         android:layout_toLeftOf="@id/expanded_indicator"
         android:text="Introduction blablabla"
-        android:textColor="@color/text_dark"
+        android:textColor="@color/course_index_section_title"
         android:textStyle="bold" />
 
     <View

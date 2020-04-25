@@ -38,16 +38,16 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
         return new LeaderboardFragment();
     }
 
-    RecyclerView leaderboardView;
-    TextView rankingPosition;
-    TextView totalPoints;
-    ProgressBar loadingSpinner;
+    private RecyclerView leaderboardView;
+    private TextView rankingPosition;
+    private TextView totalPoints;
+    private ProgressBar loadingSpinner;
 
     @Inject
     ApiEndpoint apiEndpoint;
 
-    LeaderboardAdapter adapter;
-    List<Leaderboard> leaderboard;
+    private LeaderboardAdapter adapter;
+    private List<Leaderboard> leaderboard;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
         leaderboardView.setLayoutManager( new LinearLayoutManager(this.getContext()));
         leaderboardView.setAdapter(adapter);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         if (LeaderboardUtils.shouldFetchLeaderboard(prefs)){
             Payload p = new Payload();
             UpdateLeaderboardFromServerTask task = new UpdateLeaderboardFromServerTask(super.getActivity(), apiEndpoint);
@@ -89,7 +89,6 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
     private void updateLeaderboard(){
 
         leaderboard.clear();
-
         leaderboard.addAll(App.getDb().leaderboardDao().getAll());
 
         String username = SessionManager.getUsername(this.getContext());

@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.di;
 
+import org.digitalcampus.oppia.activity.ActivityLogActivity;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
@@ -8,6 +9,7 @@ import org.digitalcampus.oppia.activity.EditProfileActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
+import org.digitalcampus.oppia.activity.ViewDigestActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.database.DBMigration;
 import org.digitalcampus.oppia.fragments.ActivitiesFragment;
@@ -33,6 +35,8 @@ public interface AppComponent {
     void inject(MainActivity activity);
     void inject(CourseIndexActivity activity);
     void inject(TagSelectActivity activity);
+    void inject(ViewDigestActivity activity);
+    void inject(ActivityLogActivity activity);
     void inject(DownloadActivity activity);
     void inject(AppActivity activity);
     void inject(PrefsActivity activity);

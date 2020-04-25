@@ -44,6 +44,11 @@
         <item name="android:windowBackground">@color/background_dark</item>
     </style>
 
+    <style name="Oppia.Theme.NavigationView" parent="Base.Theme.AppCompat" >
+        <item name="android:listDivider">@color/drawer_divider</item>
+        <item name="android:textColorSecondary">@color/drawer_subtitle</item>
+    </style>
+
     <style name="TextAppearanceButtonBorderless" parent="TextAppearance.AppCompat.Widget.Button">
         <item name="fontPath">fonts/montserrat.ttf</item>
     </style>
@@ -83,10 +88,10 @@
     </style>
 
     <style name="ActionBar.Solid.Om" parent="android:Widget.Holo.ActionBar.Solid">
-        <item name="android:background">@drawable/actionbar_background_gradient</item>
+        <item name="android:background">@drawable/bg_toolbar</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Om</item>
         <item name="android:titleTextStyle">@style/Oppia.ActionBar.TitleTextStyle</item>
-        <item name="background">@drawable/actionbar_background_gradient</item>
+        <item name="background">@drawable/bg_toolbar</item>
         <item name="progressBarStyle">@style/ProgressBar.Om</item>
         <item name="titleTextStyle">@style/Oppia.ActionBar.TitleTextStyle</item>
         <item name="elevation">4dp</item>
@@ -99,14 +104,14 @@
     </style>
 
     <style name="Oppia.CAB.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
-        <item name="background">@drawable/actionbar_background_gradient</item>
+        <item name="background">@drawable/bg_toolbar</item>
     </style>
 
     <style name="PopupMenu.Om" parent="android:Widget.ListPopupWindow">
     </style>
 
     <style name="DropDownListView.Om" parent="android:Widget.ListView.DropDown">
-        <item name="android:listSelector">@drawable/selectable_background_om</item>
+        <item name="android:listSelector">@drawable/bg_selectable</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
 
@@ -122,7 +127,7 @@
     </style>
 
     <style name="DropDownNav.Om" parent="android:Widget.Spinner.DropDown">
-        <item name="android:dropDownSelector">@drawable/selectable_background_om</item>
+        <item name="android:dropDownSelector">@drawable/bg_selectable</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">normal</item>
@@ -162,13 +167,13 @@
     </style>
 
     <style name="Oppia.ToolbarTheme.Toolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">@drawable/actionbar_background_gradient</item>
-        <item name="background">@drawable/actionbar_background_gradient</item>
+        <item name="android:background">@drawable/bg_toolbar</item>
+        <item name="background">@drawable/bg_toolbar</item>
     </style>
 
     <style name="Oppia.ToolbarTheme.AppTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabMinWidth">@dimen/toolbar_tab_width</item>
-        <item name="tabIndicatorColor">@color/theme_secondary_light</item>
+        <item name="tabIndicatorColor">@color/tab_indicator</item>
         <item name="tabIndicatorHeight">5dp</item>
         <item name="tabPaddingStart">6dp</item>
         <item name="tabPaddingEnd">6dp</item>

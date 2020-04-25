@@ -41,7 +41,7 @@ public class PermissionsManager {
     public static final String TAG = PermissionsManager.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST = 1246;
     private static final List<String> PERMISSIONS_REQUIRED = Arrays.asList(
-        //Remember to update this when the Manifest permisssions change!
+        //Remember to update this when the Manifest permissions change!
         Manifest.permission.READ_PHONE_STATE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.ACCESS_COARSE_LOCATION,

@@ -97,7 +97,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         View badgeView = LayoutInflater.from(this).inflate(R.layout.view_badge, null);
 
-        tvBadgeNumber = (TextView)badgeView.findViewById(R.id.tv_badge_number);
+        tvBadgeNumber = badgeView.findViewById(R.id.tv_badge_number);
 
         itemView.addView(badgeView);
     }

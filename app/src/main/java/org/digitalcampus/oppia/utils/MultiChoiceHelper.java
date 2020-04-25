@@ -1,7 +1,6 @@
 package org.digitalcampus.oppia.utils;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.SparseBooleanArray;
@@ -248,15 +247,7 @@ public class MultiChoiceHelper {
     }
 
     private static SparseBooleanArray clone(SparseBooleanArray original) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            return original.clone();
-        }
-        final int size = original.size();
-        SparseBooleanArray clone = new SparseBooleanArray(size);
-        for (int i = 0; i < size; ++i) {
-            clone.append(original.keyAt(i), original.valueAt(i));
-        }
-        return clone;
+        return original.clone();
     }
 
     public void onRestoreInstanceState(Parcelable state) {

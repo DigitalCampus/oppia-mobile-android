@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <color name="background_dark">#333333</color>
     <color name="background_light">#eeeeee</color>
     <color name="list_divider">#888</color>
@@ -12,17 +12,11 @@
     <color name="activity_icon_background">#ffffff</color>
     <color name="highlight_label">#434343</color>
     <color name="highlight_separator">#b9b9b9</color>
-    <color name="text_error">#ff4003</color>
+    <color name="text_error">#B5330A</color>
     <color name="stroke">#dfdfdf</color>
     <color name="quiz_navigation_bar">#d2d2d2</color>
     <color name="quiz_navigation_button">#FF5A595B</color>
     <color name="cardlist_badge">#6D6B6D</color>
-
-    <color name="listitem_icon_tint">@color/theme_primary</color>
-    <color name="design_snackbar_background_color" tools:override="true">@color/theme_primary</color>
-    <color name="subtitle_bar">@color/theme_secondary_light</color>
-    <color name="points_badge">@color/theme_dark</color>
-
     <color name="background_cover">#c6333333</color>
     <color name="transparent">#00ffffff</color>
 
@@ -31,7 +25,4 @@
     <color name="grey_light">#e2e2e2</color>
     <color name="grey_dark">#7E7E7E</color>
     <color name="red">#E53935</color>
-
-    <color name="chart_points_circle_color">@color/theme_primary</color>
-
 </resources>

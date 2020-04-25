@@ -12,6 +12,7 @@ import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
+import org.digitalcampus.oppia.model.ActivityLogRepository;
 import org.digitalcampus.oppia.model.Badges;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
@@ -88,6 +89,13 @@ public class AppModule {
     public TagRepository provideTagRepository() {
         return new TagRepository();
     }
+
+    @Provides
+    @Singleton
+    public ActivityLogRepository provideActivityLogRepository() {
+        return new ActivityLogRepository();
+    }
+
 
     @Provides
     @Singleton
