@@ -18,7 +18,7 @@ android {
         versionCode 78
 
         applicationId "org.oppia.mobile.covid"
-        versionName "7.1.0c"
+        versionName "7.1.0d"
 
         minSdkVersion 23
         targetSdkVersion 29
