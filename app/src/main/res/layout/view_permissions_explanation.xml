@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="@dimen/padding_large"
-            android:src="@drawable/covid2"/>
+            android:src="@drawable/app_icon"/>
 
         <TextView
             android:id="@+id/textView12"
@@ -71,7 +71,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/notification_subtext_size">
+        android:layout_margin="@dimen/activity_horizontal_margin">
 
         <ImageView
             android:layout_width="30dp"
@@ -105,9 +105,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/notification_subtext_size"
-            android:layout_marginRight="@dimen/notification_subtext_size"
-            android:layout_marginBottom="@dimen/notification_subtext_size">
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin">
 
             <ImageView
                 android:id="@+id/imageView12"

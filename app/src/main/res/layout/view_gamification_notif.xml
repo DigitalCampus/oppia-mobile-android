@@ -24,7 +24,7 @@
         android:paddingBottom="10dp"
         android:layout_marginLeft="15dp"
         android:adjustViewBounds="true"
-        app:srcCompat="@drawable/covid2" />
+        app:srcCompat="@drawable/course_icon_placeholder" />
 
     <TextView
         android:id="@+id/tv_gamification_notif_message"

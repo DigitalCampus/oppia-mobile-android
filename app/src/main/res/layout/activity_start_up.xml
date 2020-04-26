@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:drawableLeft="@drawable/covid2"
+                android:drawableLeft="@drawable/app_icon"
                 android:drawablePadding="5dp"
                 android:text="@string/app_name"
                 android:textColor="@color/theme_dark"

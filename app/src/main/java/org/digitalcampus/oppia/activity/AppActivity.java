@@ -250,7 +250,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             layout.setClickable(false);
 
             // Hide the text
-            TextView textView = (TextView) layout.findViewById(com.google.android.material.R.id.snackbar_text);
+            TextView textView = layout.findViewById(com.google.android.material.R.id.snackbar_text);
             textView.setVisibility(View.INVISIBLE);
 
             // Inflate our custom view

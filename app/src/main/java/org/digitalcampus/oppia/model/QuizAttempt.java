@@ -27,7 +27,6 @@ import org.joda.time.DateTime;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.TimeUnit;
 
 public class QuizAttempt implements Serializable {
 

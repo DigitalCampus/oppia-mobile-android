@@ -18,10 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-
             android:background="@drawable/bg_toolbar"
-            android:drawableTop="@drawable/covid2"
-
+            android:drawableTop="@drawable/app_icon"
             android:gravity="center"
             android:paddingTop="@dimen/course_icon_size"
             android:paddingBottom="@dimen/padding_large"
