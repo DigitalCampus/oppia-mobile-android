@@ -163,7 +163,7 @@
                     android:id="@+id/bluetooth_ic"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@android:drawable/stat_sys_data_bluetooth"
+                    android:src="@drawable/ic_bluetooth"
                     android:tint="@color/highlight_separator" />
 
                 <TextView
