@@ -14,4 +14,14 @@ public class CoursesRepository {
         long userId = db.getUserId(SessionManager.getUsername(ctx));
         return db.getCoursesForUser(userId);
     }
+
+    public Activity getActivityByDigest(Context ctx, String digest){
+        DbHelper db = DbHelper.getInstance(ctx);
+        return db.getActivityByDigest(digest);
+    }
+
+    public Course getCourse(Context ctx, long courseID, long userID){
+        DbHelper db = DbHelper.getInstance(ctx);
+        return db.getCourse(courseID, userID);
+    }
 }

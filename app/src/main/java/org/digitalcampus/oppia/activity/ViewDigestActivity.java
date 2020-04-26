@@ -11,6 +11,10 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.User;
+
+import javax.inject.Inject;
 
 public class ViewDigestActivity extends AppActivity {
 
@@ -18,6 +22,9 @@ public class ViewDigestActivity extends AppActivity {
 
     private TextView errorText;
     private View activityDetail;
+
+    @Inject CoursesRepository coursesRepository;
+    @Inject User user;
 
     @Override
     public void onStart() {
@@ -29,9 +36,13 @@ public class ViewDigestActivity extends AppActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_digest);
+        getAppComponent().inject(this);
 
-        final Intent intent = getIntent();
-        final String digest = intent.getData().getQueryParameter(ACTIVITY_DIGEST_PARAM);
+        Intent intent = getIntent();
+        String digest = null;
+        if (intent.getData() != null){
+            digest = intent.getData().getQueryParameter(ACTIVITY_DIGEST_PARAM);
+        }
 
         activityDetail = findViewById(R.id.activity_detail);
         errorText = findViewById(R.id.error_text);
@@ -39,8 +50,8 @@ public class ViewDigestActivity extends AppActivity {
         boolean validDigest = validate(digest);
         if (validDigest){
             Log.d(TAG, "Digest valid, checking activity");
+            Activity activity = coursesRepository.getActivityByDigest(this, digest);
             DbHelper db = DbHelper.getInstance(this);
-            Activity activity = db.getActivityByDigest(digest);
 
             if (activity == null){
                 errorText.setText(this.getText(R.string.open_digest_errors_activity_not_found));
@@ -48,12 +59,11 @@ public class ViewDigestActivity extends AppActivity {
                 activityDetail.setVisibility(View.GONE);
             }
             else{
-                long userID = db.getUserId(SessionManager.getUsername(this));
-                Course activityCourse = db.getCourse(activity.getCourseId(), userID);
-                activity.setCompleted(db.activityCompleted(activityCourse.getCourseId(), digest, userID));
+                Course course = coursesRepository.getCourse(this, activity.getCourseId(), user.getUserId());
+                activity.setCompleted(db.activityCompleted(course.getCourseId(), digest, user.getUserId()));
                 Intent i = new Intent(ViewDigestActivity.this, CourseIndexActivity.class);
                 Bundle tb = new Bundle();
-                tb.putSerializable(Course.TAG, activityCourse);
+                tb.putSerializable(Course.TAG, course);
                 tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, activity.getDigest());
                 i.putExtras(tb);
                 ViewDigestActivity.this.startActivity(i);
@@ -71,7 +81,7 @@ public class ViewDigestActivity extends AppActivity {
             activityDetail.setVisibility(View.GONE);
             return false;
         }
-        if (!SessionManager.isLoggedIn(this)){
+        if (user == null){
             Log.d(TAG, "Not logged in");
             errorText.setText(this.getText(R.string.open_digest_errors_not_logged_in));
             errorText.setVisibility(View.VISIBLE);
