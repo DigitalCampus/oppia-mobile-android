@@ -17,8 +17,8 @@ android {
     defaultConfig {
         versionCode 78
 
-        applicationId "org.oppia.mobile.covid"
-        versionName "7.1.0d"
+        applicationId "et.gov.moh.oppia.covid"
+        versionName "7.1.0e"
 
         minSdkVersion 23
         targetSdkVersion 29
