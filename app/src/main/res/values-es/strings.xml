@@ -313,4 +313,9 @@
     <string name="upgradev49_1">Copiando archivos al nuevo destino - esta tarea podría llevar varios minutos</string>
     <string name="permissions.phone_state.title">consultar la identidad y estado del teléfono</string>
     <string name="permissions.phone_state.description">&appName; necesita acceso a la identidad del teléfono para obtener información sobre el modelo de dispositivo y la versión de Android</string>
+    <string name="prefServer_notChecked">URL no comprobada</string>
+    <string name="prefServer_errorTitle">URL no válida</string>
+    <string name="prefServerIncompatible">Versión incompatible (antigua)</string>
+    <string name="prefSecurity_title">Seguridad</string>
+    <string name="prefNotifications_title">Notificaciones</string>
 </resources>

@@ -2,12 +2,18 @@ package org.digitalcampus.oppia.fragments.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.Patterns;
 import android.webkit.URLUtil;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.StorageLocationInfo;
 import org.digitalcampus.oppia.utils.storage.StorageUtils;
@@ -96,6 +102,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         }
 
         SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+        boolean compatible = true;
         String server = prefs.getString(PrefsActivity.PREF_SERVER, "");
         String status;
 
@@ -108,6 +115,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
             if (valid){
                 String name = prefs.getString(PrefsActivity.PREF_SERVER_NAME, server);
                 String version = prefs.getString(PrefsActivity.PREF_SERVER_VERSION, "");
+                compatible = RemoteApiEndpoint.isServerVersionCompatible(version);
                 status = name + " (" + version + ")";
             }
             else{
@@ -115,8 +123,18 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
             }
         }
 
+        String summary = server + "\n" + status;
+        SpannableStringBuilder summarySpan = new SpannableStringBuilder (summary);
+
+        if (!compatible){
+            String uncompatible = "\n" + getContext().getString(R.string.prefServerIncompatible);
+            summarySpan.setSpan(new ForegroundColorSpan(getContext().getColor(R.color.red)), summary.length(), summary.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            summarySpan.setSpan(new StyleSpan(Typeface.BOLD), summary.length(), summary.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            summarySpan.insert(summary.length(), uncompatible);
+        }
+
         serverPref.setText(server);
-        serverPref.setSummary(server + "\n" + status);
+        serverPref.setSummary(summarySpan);
     }
 
     public void updateStoragePref(String storageOption){

@@ -3,7 +3,7 @@ package org.digitalcampus.oppia.api;
 public class Paths {
 
     // server path vars - new version
-    public static final String OPPIAMOBILE_API = "api/v1/";
+    public static final String OPPIAMOBILE_API = "api/v2/";
     public static final String LEADERBOARD_PATH = OPPIAMOBILE_API + "leaderboard/";
     public static final String SERVER_AWARDS_PATH = OPPIAMOBILE_API + "awards/";
     public static final String TRACKER_PATH = OPPIAMOBILE_API + "tracker/";
