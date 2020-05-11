@@ -70,12 +70,26 @@
                     android:textSize="15sp"/>
             </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
 
+            <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
+                android:id="@+id/field_phoneno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:required="true">
+
+                <EditText
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_form_phoneno_title"
+                    android:inputType="phone"
+                    android:textSize="15sp"/>
+            </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
 
             <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                 android:id="@+id/field_organisation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                >
+                android:visibility="gone">
 
                 <EditText
 
@@ -90,7 +104,8 @@
             <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                 android:id="@+id/field_jobtitle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <EditText
                     android:layout_width="match_parent"

@@ -15,16 +15,17 @@ android {
     buildToolsVersion '29.0.2'
 
     defaultConfig {
-        versionCode 78
+        versionCode 80
 
         applicationId "et.gov.moh.oppia.covid"
-        versionName "7.1.0e"
+        versionName "7.1.0g"
 
-        minSdkVersion 23
+        minSdkVersion 20
         targetSdkVersion 29
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
 
     //Add the version_name value to strings resources
@@ -226,7 +227,7 @@ dependencies {
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.2'
 
 //    debugImplementation 'im.dino:dbinspector:3.4.1@aar'
-
+    implementation 'com.android.support:multidex:1.0.3'
 }
 
 

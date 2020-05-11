@@ -1,3 +1,44 @@
 {
-  "fields": []
+  "fields": [
+    {
+      "name":"region",
+      "label":"Region",
+      "order":1,
+      "required":true,
+      "helper_text":"",
+      "type":"str"
+    },
+    {
+      "name":"sub_city",
+      "label":"Sub-City",
+      "order":2,
+      "required":false,
+      "helper_text":"Enter if your region is Addis Ababa",
+      "type":"str"
+    },
+    {
+      "name":"woreda",
+      "label":"Woreda",
+      "order":3,
+      "required":true,
+      "helper_text":"",
+      "type":"str"
+    },
+    {
+      "name":"organisation_facility",
+      "label":"Health Facility/Organisation",
+      "order":4,
+      "required":true,
+      "helper_text":"",
+      "type":"str"
+    },
+    {
+      "name":"profession",
+      "label":"Job Title",
+      "order":5,
+      "required":true,
+      "helper_text":"",
+      "type":"str"
+    }
+  ]
 }

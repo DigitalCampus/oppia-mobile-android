@@ -155,7 +155,7 @@
                     android:id="@+id/register_form_organisation_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    >
+                    android:visibility="gone">
 
                     <EditText
                         android:layout_width="match_parent"
@@ -169,7 +169,8 @@
                 <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                     android:id="@+id/register_form_jobtitle_field"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <EditText
                         android:layout_width="match_parent"

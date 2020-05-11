@@ -67,6 +67,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         binding.fieldLastname.setText(user.getLastname());
         binding.fieldOrganisation.setText(user.getOrganisation());
         binding.fieldJobtitle.setText(user.getJobTitle());
+        binding.fieldPhoneno.setText(user.getPhoneNo());
         fieldsManager.fillWithUserData(user);
     }
 
@@ -84,9 +85,10 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         String lastname = binding.fieldLastname.getCleanedValue();
         String jobTitle = binding.fieldJobtitle.getCleanedValue();
         String organisation = binding.fieldOrganisation.getCleanedValue();
+        String phoneno = binding.fieldPhoneno.getCleanedValue();
 
-        ValidableTextInputLayout[] fields = new ValidableTextInputLayout[]{binding.fieldEmail, binding.fieldFirstname,
-                binding.fieldLastname, binding.fieldJobtitle, binding.fieldOrganisation};
+        ValidableTextInputLayout[] fields = new ValidableTextInputLayout[]{ binding.fieldFirstname,
+                binding.fieldLastname, binding.fieldJobtitle, binding.fieldOrganisation, binding.fieldPhoneno};
 
 
         boolean valid = true;
@@ -96,11 +98,11 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         valid = fieldsManager.validateFields() && valid;
 
         //If the rest of email validations passed, check that the email is valid
-        if (binding.fieldEmail.validate() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        /*if (binding.fieldEmail.validate() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             binding.fieldEmail.setErrorEnabled(true);
             binding.fieldEmail.setError(getString(R.string.error_register_email));
             valid = false;
-        }
+        }*/
 
 
         if (valid){
@@ -109,6 +111,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
             user.setEmail(email);
             user.setJobTitle(jobTitle);
             user.setOrganisation(organisation);
+            user.setPhoneNo(phoneno);
             user.setUserCustomFields(fieldsManager.getCustomFieldValues());
             executeUpdateProfileTask(user);
         }

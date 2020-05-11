@@ -112,7 +112,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		customFieldsContainer = vv.findViewById(R.id.custom_fields_container);
 
 		fields.addAll(Arrays.asList(usernameField, passwordField, passwordAgainField,
-				firstnameField, lastnameField));
+				firstnameField, lastnameField, phoneNoField));
 
 		return vv;
 	}
