@@ -19,9 +19,9 @@ package org.digitalcampus.oppia.model;
 
 import java.util.List;
 
-public class QuizFeedback {
+public class QuizAnswerFeedback {
 
-	public static final String TAG = QuizFeedback.class.getSimpleName();
+	public static final String TAG = QuizAnswerFeedback.class.getSimpleName();
 	
 	private float score;
 	private String questionText;

@@ -14,21 +14,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.Quiz;
-import org.digitalcampus.oppia.model.QuizFeedback;
+import org.digitalcampus.oppia.model.QuizAnswerFeedback;
 
 import java.util.List;
 
-public class QuizFeedbackAdapter extends RecyclerView.Adapter<QuizFeedbackAdapter.QuizFeedbackViewHolder> {
+public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswersFeedbackAdapter.QuizFeedbackViewHolder> {
 
 
-    private List<QuizFeedback> quizFeedbacks;
+    private List<QuizAnswerFeedback> quizFeedbacks;
     private Context context;
     private OnItemClickListener itemClickListener;
 
 
-    public QuizFeedbackAdapter(Context context, List<QuizFeedback> quizFeedbacks) {
+    public QuizAnswersFeedbackAdapter(Context context, List<QuizAnswerFeedback> quizAnswerFeedbacks) {
         this.context = context;
-        this.quizFeedbacks = quizFeedbacks;
+        this.quizFeedbacks = quizAnswerFeedbacks;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class QuizFeedbackAdapter extends RecyclerView.Adapter<QuizFeedbackAdapte
     @Override
     public void onBindViewHolder(final QuizFeedbackViewHolder viewHolder, final int position) {
 
-        final QuizFeedback qf = getItemAtPosition(position);
+        final QuizAnswerFeedback qf = getItemAtPosition(position);
 
         StringBuilder userResponseText = new StringBuilder();
         for (int i=0; i<qf.getUserResponse().size();i++){
@@ -89,7 +89,7 @@ public class QuizFeedbackAdapter extends RecyclerView.Adapter<QuizFeedbackAdapte
         return quizFeedbacks.size();
     }
 
-    public QuizFeedback getItemAtPosition(int position) {
+    public QuizAnswerFeedback getItemAtPosition(int position) {
         return quizFeedbacks.get(position);
     }
 
