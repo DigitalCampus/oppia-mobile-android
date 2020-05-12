@@ -27,6 +27,7 @@ public class QuizAnswerFeedback {
 	private String questionText;
 	private String feedbackText;
 	private List<String> userResponse;
+	private boolean isSurvey;
 	
 	public float getScore() {
 		return score;
@@ -51,5 +52,13 @@ public class QuizAnswerFeedback {
 	}
 	public void setUserResponse(List<String> userResponse) {
 		this.userResponse = userResponse;
+	}
+
+	public boolean isSurvey() {
+		return isSurvey;
+	}
+
+	public void setIsSurvey(boolean survey) {
+		isSurvey = survey;
 	}
 }

@@ -76,11 +76,17 @@ public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswers
             viewHolder.quizFeedbackText.setVisibility(View.GONE);
         }
 
-        viewHolder.quizFeedbackIcon.setImageResource(
-                (qf.getScore() >= Quiz.QUIZ_QUESTION_PASS_THRESHOLD)?
-                        R.drawable.quiz_tick:
-                        R.drawable.quiz_cross
-        );
+        if (qf.isSurvey()){
+            viewHolder.quizFeedbackIcon.setVisibility(View.GONE);
+        }else {
+            viewHolder.quizFeedbackIcon.setVisibility(View.VISIBLE);
+            viewHolder.quizFeedbackIcon.setImageResource(
+                    (qf.getScore() >= Quiz.QUIZ_QUESTION_PASS_THRESHOLD)?
+                            R.drawable.quiz_tick:
+                            R.drawable.quiz_cross
+            );
+        }
+
 
     }
 
