@@ -29,14 +29,14 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
-import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
+import org.digitalcampus.oppia.adapter.QuizAnswersFeedbackAdapter;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.model.QuizFeedback;
+import org.digitalcampus.oppia.model.QuizAnswerFeedback;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.json.JSONArray;
@@ -118,22 +118,22 @@ public class QuizAttemptActivity extends AppActivity {
 			Log.d(TAG,"Invalid json for quiz attempt", e);
 			return;
 		}
-		List<QuizFeedback> quizFeedback = new ArrayList<>();
+		List<QuizAnswerFeedback> quizAnswerFeedback = new ArrayList<>();
 		List<QuizQuestion> questions = quiz.getQuestions();
 		for(QuizQuestion q: questions){
 			if(!(q instanceof Description)){
 				updateQuizResponse(q, jsonData);
 				q.mark(prefLang);
-				QuizFeedback qf = new QuizFeedback();
+				QuizAnswerFeedback qf = new QuizAnswerFeedback();
 				qf.setScore(q.getScoreAsPercent());
 				qf.setQuestionText(q.getTitle(prefLang));
 				qf.setUserResponse(q.getUserResponses());
 				qf.setFeedbackText(q.getFeedback(prefLang));
-				quizFeedback.add(qf);
+				quizAnswerFeedback.add(qf);
 			}
 		}
 
-		QuizFeedbackAdapter adapterQuizFeedback = new QuizFeedbackAdapter(this, quizFeedback);
+		QuizAnswersFeedbackAdapter adapterQuizFeedback = new QuizAnswersFeedbackAdapter(this, quizAnswerFeedback);
 		recyclerQuestionFeedbackLV.setAdapter(adapterQuizFeedback);
 	    
 	}
