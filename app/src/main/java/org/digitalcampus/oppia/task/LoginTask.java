@@ -135,9 +135,13 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
         u.setApiKey(json.getString("api_key"));
         u.setFirstname(json.getString("first_name"));
         u.setLastname(json.getString("last_name"));
-        if (json.has("email") && json.has("organisation") && json.has("job_title")){
+        if (json.has("email")){
             u.setEmail(json.getString("email"));
+        }
+        if (json.has("organisation")){
             u.setOrganisation(json.getString("organisation"));
+        }
+        if (json.has("job_title")){
             u.setJobTitle(json.getString("job_title"));
         }
     }

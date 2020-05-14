@@ -105,7 +105,6 @@ public class HTTPClientUtils {
         public Response intercept(Chain chain) throws IOException {
 
             String v = BuildConfig.VERSION_NAME;
-
             Request originalRequest = chain.request();
             Request requestWithUserAgent = originalRequest.newBuilder()
                     .header(HEADER_USER_AGENT, USER_AGENT + v)

@@ -108,7 +108,6 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
             result.put(RESULT_TAG, RESULT_ERROR);
             result.put(ERROR_MESSAGE, e.getMessage());
             Log.e(TAG, "doInBackground: ", e);
-            return result;
 
         } catch (JSONException e) {
             result.put(RESULT_TAG, RESULT_ERROR);
