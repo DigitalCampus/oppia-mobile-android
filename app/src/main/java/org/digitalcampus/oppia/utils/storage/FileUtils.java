@@ -116,16 +116,8 @@ public class FileUtils {
                     fos = new FileOutputStream(f); //NOSONAR
                     dest = new BufferedOutputStream(fos, BUFFER_SIZE); //NOSONAR
 
-                    // this counter is a hack to prevent getting stuck when
-                    // installing corrupted or not fully downloaded course
-                    // packages
-                    int counter = 0;
                     while ((count = zis.read(data, 0, BUFFER_SIZE)) != -1) {
                         dest.write(data, 0, count);
-                        counter++;
-                        if (counter > 11000) {
-                            return false;
-                        }
                     }
 
                     closeSafely(dest);

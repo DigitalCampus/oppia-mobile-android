@@ -102,6 +102,7 @@
         server endpoint</string>
     <string name="prefServerTimeoutConnection">Connection timeout</string>
     <string name="prefServerTimeoutResponse">Response timeout</string>
+    <string name="prefServerIncompatible">Incompatible version (older)</string>
     <string name="prefInt_errorTitle">Invalid value</string>
     <string name="prefInt_errorDescription">Please, enter a valid integer value</string>
     <string name="prefShowCourseDescription">Show course description</string>
