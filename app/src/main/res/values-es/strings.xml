@@ -257,8 +257,6 @@
 
     <string name="course_draft">(borrador)</string>
     <string name="loading_course">Cargando curso&#8230;</string>
-    <string name="menu_font_decrease">Reducir tamaño de letra</string>
-    <string name="menu_font_increase">Aumentar tamaño de letra</string>
     <string name="more_courses">Descargar más cursos</string>
     <string name="register_form_organisation_title">Organización</string>
     <string name="register_form_jobtitle_title">Puesto de trabajo</string>
@@ -285,8 +283,6 @@
     <string name="sequencing.course.message">Debe completar todas las actividades anteriores del curso antes de que ésta esté disponible.</string>
     <string name="sequencing.dialog_title">Actividad bloqueada</string>
     <string name="sequencing.section.message">Debe completar todas las actividades anteriores de esta sección antes de que ésta esté disponible.</string>
-    <string name="title_stats_unsubmitted">Actividades pendientes de enviar</string>
-    <string name="title_stats_submitted">Actividades enviadas al servidor</string>
     <string name="error_preloading_accounts">Error precargando cuentas de usuario desde fichero CSV</string>
     <string name="error_reset">Nombre de usuario o email no encontrado\nInténtelo de nuevo</string>
     <string name="no_title_set">Sin título</string>
@@ -351,7 +347,6 @@
     <string name="open_digest.btn_action">Abrir actividad</string>
     <string name="menu_sync">Sincronizar</string>
     <string name="title_sync">Sincronizar</string>
-    <string name="tab_title_export">Exportar</string>
     <string name="export_task_completed">Exportación completa</string>
     <string name="paired_devices">Dispositivos enlazados</string>
     <string name="other_devices">Otros dispositivos</string>
@@ -398,7 +393,6 @@
     <string name="no_points_data">No hay datos</string>
 
     <string name="reset_alert_title">Restaurar</string>
-    <string name="tab_title_transfer">Enviar</string>
 
     <string name="bluetooth.send_all">Enviar todos</string>
     <string name="bluetooth.btn_disconnect">Desconectar</string>
@@ -442,7 +436,6 @@
     <string name="event_media_watched">Visualización de vídeo</string>
     <string name="event_quiz_attempt">Intento de cuestionario</string>
 
-    <string name="device_name">Este dispositivo: %s</string>
     <string name="channel_notif_internal_name">Notificaciones internas</string>
     <string name="channel_notif_internal_description">Este canal muestra notificaciones útiles de distintos procesos como las transferencias Bluetooth o las descargas</string>
     <string name="nav_home">Inicio</string>
@@ -463,7 +456,6 @@
     <string name="exported_activities.title">Registros de actividad exportados</string>
     <string name="export_task_no_activities">No había actividades o cuestionarios que exportar.</string>
     <string name="submit_trackers_success">Registros enviados al servidor correctamente.</string>
-    <string name="activity_not_transferred_message">Tienes archivos de registro exportados sin enviar.</string>
     <string name="download_via_pc_extenal_storage">Es necesario establecer un almacenamiento externo para poder copiar los ficheros descargados desde el PC a un directorio de la app. Por favor, cambia la opción de almacenamiento en Ajustes.</string>
 
     <string name="activitylog_delete_failed">No se pudo eliminar el archivo de logs</string>
