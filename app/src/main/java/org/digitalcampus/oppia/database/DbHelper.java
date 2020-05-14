@@ -605,40 +605,46 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void extractQuizAttemptsTimetaken(SQLiteDatabase database){
-        List<QuizAttempt> attempts = getQuizAttempts(database);
-        List<QuizAttempt> updated = new ArrayList<>();
-        for (QuizAttempt attempt : attempts){
-            if (TextUtils.isEmpty(attempt.getData())){
+        Cursor c1 = database.query(QUIZATTEMPTS_TABLE, null, null, null, null, null, null);
+        c1.moveToFirst();
+        while (!c1.isAfterLast()) {
+
+            String data = c1.getString(c1.getColumnIndex(QUIZATTEMPTS_C_DATA));
+            if (TextUtils.isEmpty(data)){
+                c1.moveToNext();
                 continue;
             }
+
             try {
-                JSONObject logData = new JSONObject(attempt.getData());
+                JSONObject logData = new JSONObject(data);
                 String instanceID = logData.getString("instance_id");
+                int attemptID = c1.getInt(c1.getColumnIndex(QUIZATTEMPTS_C_ID));
+                long time = -1;
 
                 String s = TRACKER_LOG_C_DATA + " LIKE ?";
                 String[] args = new String[]{ "%" + instanceID + "%" };
                 Cursor c = database.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
                 if (c.getCount() > 0) {
                     c.moveToFirst();
-                    String data = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
-                    JSONObject trackerData = new JSONObject(data);
-                    long time = trackerData.getLong("timetaken");
-                    attempt.setTimetaken(time);
-                    updated.add(attempt);
+                    String trackerData = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
+                    JSONObject trackerJSON = new JSONObject(trackerData);
+                    time = trackerJSON.getLong("timetaken");
                 }
                 c.close();
+
+                if (time > 0){
+                    ContentValues values = new ContentValues();
+                    values.put(QUIZATTEMPTS_C_TIMETAKEN, time);
+                    database.update(QUIZATTEMPTS_TABLE, values, QUIZATTEMPTS_C_ID + "=" + attemptID, null);
+                }
+
             } catch (JSONException e) {
                 // Pass
             }
-
+            c1.moveToNext();
         }
-
-        for (QuizAttempt attempt : updated){
-            updateQuizAttempt(attempt);
-        }
-
+        c1.close();
     }
-
 
     // returns id of the row
     public long addOrUpdateCourse(Course course) {
