@@ -13,7 +13,7 @@
     <string name="menu_help">Ayuda</string>
     <string name="menu_logout">Cerrar sesión</string>
     <string name="menu_read_aloud">Leer en voz alta</string>
-    <string name="menu_return_to_courses">Volver a tus cursos</string>
+    <string name="menu_return_to_courses">Volver a cursos</string>
     <string name="menu_scorecard">Scorecard</string>
     <string name="menu_search">Búsqueda</string>
     <string name="menu_stop_read_aloud">Detener lectura</string>
@@ -22,9 +22,9 @@
     
     <string name="fragment_welcome_title">Bienvenido a &appName;</string>
     <string name="fragment_welcome_desc">&appName; es una plataforma de aprendizaje móvil de código abierto para la entrega de contenido de aprendizaje, vídeo y cuestionarios.\n\n\'Oppia\' viene del verbo \'aprender\' en finés.</string>
-    <string name="fragment_welcome_login_info">Para empezar a utilizar &appName;, necesitarás registrarte o iniciar sesión.</string>
-    <string name="fragment_welcome_privacy">Nos tomamos tu privacidad en serio, <a href="http://digital-campus.org/privacy/">descubre más acerca de la política de privacidad de &companyName;</a></string>
-    
+    <string name="fragment_welcome_login_info">Para empezar a utilizar &appName;, necesitará registrarse o iniciar sesión.</string>
+    <string name="fragment_welcome_powered_by">Con tecnología de <a href="http://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
+
     <string name="tab_title_about">Acerca de</string>
     <string name="tab_title_badges">Insignias</string>
     <string name="tab_title_login">Login</string>
@@ -38,9 +38,9 @@
     <string name="title_baseline">Preliminar</string>
     <string name="title_download_activity">Gestionar cursos</string>
     <string name="title_prefs">Ajustes</string>
-    <string name="version">Version: %1$s</string>
+    <string name="version">Versión: %1$s</string>
     <string name="title_download_media">Descarga Media</string>
-    <string name="title_tag_select_activity">Selecciona categoría</string>
+    <string name="title_tag_select_activity">Seleccione categoría</string>
     <string name="title_activity_course_index">Índice del curso</string>
     <string name="title_activity_course">Activity</string>
     <string name="title_course_meta">Acerca de</string>
@@ -48,19 +48,19 @@
     <string name="search.activity_title">Búsqueda</string>
         
     <string name="widget_feedback_submit">Enviar</string>
-    <string name="widget_feedback_submit_title">Gracias por enviar tu feedback.</string>
+    <string name="widget_feedback_submit_title">Gracias por enviar su feedback.</string>
     
     <string name="widget_quiz_next">Siguiente</string>
     <string name="widget_quiz_prev"> Anterior</string>
-    <string name="widget_quiz_getresults">Obterner resultados</string>
+    <string name="widget_quiz_getresults">Resolver</string>
     <string name="widget_quiz_noanswergiven">Por favor dé una respuesta antes de pasar a la siguiente pregunta</string>
     <string name="widget_quiz_progress">Pregunta %1$d de %2$d</string>
  	<string name="widget_quiz_results_score">Su puntuación: %1$.0f%%</string>
- 	<string name="widget_quiz_results_restart">Vuelva a pasar el test</string>
- 	<string name="widget_quiz_baseline_completed">Gracias por completar el pre-test. Ahora puedes continuar con el curso.</string>
+ 	<string name="widget_quiz_results_restart">Reintentar</string>
+ 	<string name="widget_quiz_baseline_completed">Gracias por completar el pre-test. Ahora puede continuar con el curso.</string>
  	<string name="widget_quiz_baseline_goto_course"><![CDATA[Ir al curso >>]]></string>
- 	<string name="widget_quiz_image_caption">Pulsa en la imagen para verla ampliada</string>
- 	<string name="widget_quiz_feedback_response_title">Tu respuesta:</string>
+ 	<string name="widget_quiz_image_caption">Pulse en la imagen para verla ampliada</string>
+ 	<string name="widget_quiz_feedback_response_title">Su respuesta:</string>
  	<string name="widget_quiz_feedback_feedback_title">Feedback: </string>
  	
  	<string name="widget_resource_open_file">Abrir \'%1$s\'</string>
@@ -68,39 +68,62 @@
  	<string name="course_context_reset">Restablecer</string>
  	<string name="course_context_delete">Borrar</string>
     <string name="course_context_update_activity">Actualizar actividad</string>
-    <string name="course_context_reset_confirm">¿Estás seguro de que deseas restablecer este curso? Se eliminarán todos los registros de progreso para este curso.</string>
- 	<string name="course_context_delete_confirm">¿Estás seguro de que deseas eliminar este curso? Se eliminará completamente el curso de la aplicación.</string>
+    <string name="course_context_reset_confirm">¿Está seguro de que desea restablecer este curso? Se eliminarán todos los registros de progreso para este curso.</string>
+ 	<string name="course_context_delete_confirm">¿Está seguro de que desea eliminar este curso? Se eliminará completamente el curso de la aplicación.</string>
  	
  	<string name="no_courses">No hay ningún curso instalado</string>
  	
  	<string name="prefServer">Servidor</string>
 	<string name="prefLanguage">Idioma preferido</string>
 	<string name="prefAdvanced">Configuración avanzada</string>
-	
 	<string name="prefServerTimeoutConnection">Tiempo de espera de conexión superado</string>
 	<string name="prefServerTimeoutResponse">Tiempo de espera de respuesta superado</string>
-	
 	<string name="prefBackgroudDataConnect">Seguimiento de actividad</string>
-	<string name="prefBackgroudDataConnect_summary">Enviar registros de actividad, incluso cuando esta aplicación no se esté ejecutando.</string>
+	<string name="prefBackgroudDataConnect_summary">Enviar registros de actividad, incluso cuando la aplicación no se esté ejecutando.</string>
     <string name="prefTextSize">Tamaño del texto</string>
     <string name="prefUser">Usuario</string>
 	<string name="prefHighlightCompleted">Resaltar actividades completadas</string>
 	<string name="prefShowSectionNumbers">Mostrar número de sección</string>
     <string name="prefShowCourseDescription">Mostrar descripción de cursos</string>
     <string name="prefShowProgressBar">Mostrar barra de progreso</string>
+    <string name="prefDeleteCourseEnabled">Permitir borrado de cursos</string>
+    <string name="prefDisableNotifications">Desactivar notificaciones</string>
+    <string name="prefSectionGamification">Eventos de gamificación</string>
+    <string name="prefStartCourseIndexCollapsed">Contraer inicialmente las secciones del índice de curso</string>
+    <string name="prefSectionSystemNotifs">Notificaciones del sistema</string>
+    <string name="prefGamificationPointsViewTypeNone">Ninguna</string>
+    <string name="prefGamificationPointsViewTypeSimpleAnimation">Animación simple</string>
+    <string name="prefGamificationPointsViewTypeFullAnimation">Animación completa</string>
+    <string name="prefGamificationPointsViewTypeFullAnimationSound">Animación completa con sonido</string>
+    <string name="prefAnimationTypeGamificationPoints">Animación para la notificación de puntos</string>
+    <string name="prefChangeLanguageEnabled">Permitir cambio de idioma desde inicio</string>
+    <string name="prefDownloadEnabled">Permitir descarga de cursos desde inicio</string>
+    <string name="prefShowGamificationEvents">Mostrar eventos de gamificación</string>
+    <string name="prefDisplay_title">Visual</string>
+    <string name="prefAdvanced_title">Avanzada</string>
+    <string name="prefDurationAnimationTypeGamificationPointsView">Duración de la animación</string>
+    <string name="prefDurationAnimation_summary">Tiempo que dura en pantalla (en segundos) la animación cuando se conceden puntos</string>
+    <string name="prefInt_errorTitle">Valor no válido</string>
+    <string name="prefInt_errorDescription">Por favor, introduzca un valor numérico válido</string>
+    <string name="prefServer_errorDescription">Por favor, introduzca una URL correcta que se corresponda con la dirección de su servidor &appName;</string>
+
     <string name="prefStorageLocation">Almacenamiento</string>
     <string name="prefStorageOptionInternal">Interno</string>
     <string name="prefStorageOptionExternal">Externo</string>
+    <string name="prefAdminPassword">Cambiar contraseña de admin</string>
+    <string name="prefAdminProtection">Proteger acciones de administrador con contraseña</string>
+    <string name="prefUserHint">(solo lectura)</string>
+
     <string name="moving_storage_location">Moviendo ficheros al nuevo almacenamiento…</string>
     <string name="move_storage_completed">Cambio de almacenamiento de ficheros completo</string>
     <string name="storageNonRemovable">Almacenamiento no extraíble</string>
     <string name="storageRemovable">Tarjeta SD extraíble</string>
-    <string name="prefDeleteCourseEnabled">Permitir borrado de cursos</string>
+
 	<string name="notification_course_update_title">Nuevas actualizaciones de cursos</string>
-	<string name="notification_course_update_text">Hay actualizaciones disponibles para tus cursos.</string>
-    <string name="prefDisableNotifications">Desactivar notificaciones</string>
+	<string name="notification_course_update_text">Hay actualizaciones disponibles para sus cursos.</string>
+
 	
-	<string name="title_login">Inicio sesión</string>
+	<string name="title_login">Iniciar sesión</string>
 	<string name="login_username_title">Usuario</string>
 	<string name="login_password_title">Contraseña</string>
 	<string name="title_register">Registrar</string>
@@ -121,7 +144,7 @@
 	<string name="close">Cerrar</string>
 	<string name="error">Error</string>
 	<string name="info">Info</string>
-	<string name="warning">Warning</string>
+	<string name="warning">Aviso</string>
 	<string name="loading">Cargando</string>
 	<string name="ok">OK</string>
 	<string name="cancel">Cancelar</string>
@@ -132,13 +155,13 @@
 	<string name="open">Abrir</string>
 	
 	<string name="alert_pretest">Pre-test</string>
-	<string name="alert_pretest_summary">Este curso tiene un pre-test que debes completar antes de poder ver el curso completo.</string>
+	<string name="alert_pretest_summary">Este curso tiene un pre-test que debe completar antes de poder ver el curso completo.</string>
 	
 	<string name="tag_label">%1$s (%2$d)</string>
 	
 	<string name="alt_activity_icon">Icono de actividad</string>
 	
-	<string name="update">Actualización</string>
+	<string name="update">Actualizar</string>
 	<string name="installed">Instalado</string>
 	<string name="install">Instalar</string>
 	
@@ -153,15 +176,15 @@
 	
 	<string name="install_course_complete">%1$s: instalado</string>
 	
-	<string name="info_scan_media_start">Scanning for media</string>
+	<string name="info_scan_media_start">Escaneando multimedia</string>
 	<string name="info_scan_media_checking">Comprobando: %1$s</string>
-	<string name="info_scan_media_missing">Faltan algunos archivos multimedia (videos, etc) de tus cursos</string>
+	<string name="info_scan_media_missing">Faltan algunos archivos multimedia (videos, etc) de sus cursos</string>
 	
 	<string name="loading_courses">Cargando cursos</string>
 	<string name="loading_points">Cargando puntos&#8230;</string>
 	<string name="loading_badges">Cargando insignias&#8230;</string>
 	
-	<string name="info_no_badges">Todavía no tienes ninguna insignia. Termina un curso completo para ganarte tu primera insignia.</string>
+	<string name="info_no_badges">Todavía no tiene ninguna insignia. Termine un curso completo para ganarse tu primera insignia.</string>
 	
 	<string name="scan_media_download_button">Descarga</string>
 	<string name="scan_media_download_via_pc_button">Descarga vía PC</string>
@@ -170,34 +193,34 @@
     <string name="notification_media_title">&appName;: gestión de descargas</string>
     <string name="notification_media_subject">Todos los ficheros multimedia fueron descargados correctamente</string>
 	
-	<string name="error_connection">Error conectando al servidor. Por favor, comprueba que tienes una conexión a internet activa y prueba otra vez.</string>
-	<string name="error_connection_required">Necesitas una conexión a internet activa para acceder a esta página. Por favor, activa tu wifi o conexión de datos y prueba de nuevo.</string>
+	<string name="error_connection">Error conectando al servidor. Por favor, compruebe que tiene una conexión a internet activa y pruebe otra vez.</string>
+	<string name="error_connection_required">Necesita una conexión a internet activa para acceder a esta página. Por favor, active el wifi o conexión de datos y pruebe de nuevo.</string>
 	<string name="error_processing_response">Error procesando respuesta</string>
-	<string name="error_no_username">Por favor, introduce un nombre de usuario</string>
+	<string name="error_no_username">Por favor, introduzca un nombre de usuario</string>
 	<string name="error_installing_course">%1$s: no se pudo instalar</string>
 	<string name="error_latest_already_installed">%1$s: última versión ya está instalada</string>
 	<string name="error_login">Usuario o contraseña incorrectos\nInténtalo de nuevo</string>
-	<string name="error_sdcard">Tu tarjeta SD no está disponible - por favor reinicia la aplicación cuando vuelva a estarlo.\nLa app se cerrará ahora.</string>
+	<string name="error_sdcard">Su tarjeta SD no está disponible - por favor reinicie la aplicación cuando vuelva a estarlo.\nLa app se cerrará ahora.</string>
 	<string name="error_media_not_found">Media: \'%1$s\' no encontrado.</string>
-	<string name="error_media_app_not_found">Parece que no tienes un reproductor multimedia instalado que pueda reproducir este vídeo.</string>
+	<string name="error_media_app_not_found">Parece que no tiene un reproductor multimedia instalado que pueda reproducir este vídeo.</string>
 	<string name="error_media_unsupported">\'%1$s\' no parece ser un tipo de fichero multimedia soportado.</string>
 	<string name="error_download_failure">Descarga fallida</string>
 	<string name="error_update_failure">Actualización fallida</string>
 	<string name="error_install_failure">Instalación fallida</string>
-    <string name="error_register_no_email">Por favor, introduce tu email</string>
-	<string name="error_register_password">Tu contraseña debe tener al menos %1$d caracteres</string>
+    <string name="error_register_no_email">Por favor, introduzca su email</string>
+	<string name="error_register_password">La contraseña debe tener al menos %1$d caracteres</string>
 	<string name="error_register_password_no_match">Las contraseña no coinciden</string>
 	<string name="error_register_no_firstname">Introduce tu nombre</string>
 	<string name="error_register_no_lastname">Introduce tu apellido</string>
 	<string name="error_register_no_username">Introduce un nombre de usuario</string>
 	
-	<string name="error_resource_app_not_found">Parece que no tienes ninguna app instalada para abrir \'%1$s\'. Por favor, instala una app que pueda abrir este tipo de archivo.</string>
+	<string name="error_resource_app_not_found">Parece que no tiene ninguna app instalada para abrir \'%1$s\'. Por favor, instale una app que pueda abrir este tipo de archivo.</string>
 	<string name="error_resource_not_found">Archivo: \'%1$s\' no encontrado.</string>
 	
-	<string name="error_media_download">Error descargando multimedia, por favor inténtalo de nuevo más tarde</string>
+	<string name="error_media_download">Error descargando multimedia, por favor inténtelo de nuevo más tarde</string>
 	<string name="error_reading_xml">Ha ocurrido un error instalando el curso. Por favor, reinstálelo de nuevo.</string>
-	<string name="error_tts_start">Fallo en Text To Speech. Comprueba que tu dispositivo tiene la funcionalidad de Text to Speech instalada y habilitada</string>
-	<string name="warning_wifi_required">Debes estar conectado a una red wifi para descargar ficheros multimedia.\nPor favor, conéctate a una red wifi o descarga los archivos desde tu PC.</string>
+	<string name="error_tts_start">Fallo en Text To Speech. Compruebe que su dispositivo tiene la funcionalidad de Text to Speech instalada y habilitada</string>
+	<string name="warning_wifi_required">Debe estar conectado a una red wifi para descargar ficheros multimedia.\nPor favor, conéctese a una red wifi o descargue los archivos desde tu PC.</string>
 
     <string name="course_updating">Actualizando actividad del curso…</string>
     <string name="course_updating_success">\'%1$s\': Actividad del curso actualizada satisfactoriamente</string>
@@ -209,17 +232,17 @@
 	<string name="login_process">Iniciando sesión</string>
 	<string name="login_complete">Registrado</string>
 	
-	<string name="logout_confirm">Estás seguro de que quieres cerrar sesión?\n\nNecesitarás una conexión a internet activa para loguearte de nuevo.</string>
+	<string name="logout_confirm">Está seguro de que quiere cerrar sesión?\n\nNecesitará una conexión a internet activa para entrar de nuevo.</string>
 	
 	<string name="register_process">Identificando</string>
 	<string name="register_complete">Registro completo</string>
 	
 	<string name="change_language">Cambiar idioma</string>
 	
-	<string name="download_via_pc_message">Se ha añadido un pequeño fichero \'%1$s\' en tu tarjeta SD, abre este archivo en el ordenador y sigue las instrucciones para descargar los ficheros multimedia y copiarlos en tu tarjeta SD.</string>
+	<string name="download_via_pc_message">Se ha añadido un pequeño fichero \'%1$s\' en su tarjeta SD, abra este archivo en el ordenador y siga las instrucciones para descargar los ficheros multimedia y copiarlos en su tarjeta SD.</string>
 	<string name="download_via_pc_title">Descargar Multimedia</string>
-	<string name="download_via_pc_intro">Descarga cada uno de los ficheros a continuación en tu PC (usa botón derecho, guardar como)</string>
-	<string name="download_via_pc_final">Una vez hayas descargado los archivos cópialoes en el directorio \'%1$s\' de tu tarjeta SD.</string>
+	<string name="download_via_pc_intro">Descargue cada uno de los ficheros a continuación en tu PC (usa botón derecho, guardar como)</string>
+	<string name="download_via_pc_final">Una vez haya descargado los archivos cópielos en el directorio \'%1$s\' de su tarjeta SD.</string>
 
     <string name="search.result_summary">%1$d resultados para \"%2$s\"</string>
     <string name="search.message.searching">Buscando…</string>
@@ -227,12 +250,12 @@
     <string name="search.message.fetching">Obteniendo resultados…</string>
 
     <string name="scorecard_quizzes_highlight_pretest">Pre-test</string>
-    <string name="scorecard_quizzes_highlight_attempted">Intentos</string>
-    <string name="scorecard_quizzes_highlight_passed">Aprobados</string>
+    <string name="scorecard_quizzes_highlight_attempted">Intentados</string>
+    <string name="scorecard_quizzes_highlight_passed">Superados</string>
     <string name="scorecard_activities_completed">act. completadas</string>
     <string name="scorecard_activities_total">total</string>
 
-    <string name="course_draft">(versión en borrador)</string>
+    <string name="course_draft">(borrador)</string>
     <string name="loading_course">Cargando curso&#8230;</string>
     <string name="menu_font_decrease">Reducir tamaño de letra</string>
     <string name="menu_font_increase">Aumentar tamaño de letra</string>
@@ -241,14 +264,12 @@
     <string name="register_form_jobtitle_title">Puesto de trabajo</string>
     <string name="register_form_phoneno_title">Número de teléfono</string>
     <string name="submit_stats_btn_text">Enviar ahora</string>
-    <string name="admin_password_required">Esta funcionalidad está protegida para uso de admin únicamente. Por favor, introduce la constraseña de admin para continuar:</string>
+    <string name="admin_password_required">Esta funcionalidad está protegida para uso de admin únicamente. Por favor, introduzca la constraseña de admin para continuar:</string>
     <string name="admin_password_newpassword_dialog_title">Contraseña </string>
     <string name="admin_password_newpassword_dialog_message">Por favor, introduce tu contraseña de administrador</string>
     <string name="admin_password_error_incorrect_password">Contraseña de admin incorrecta. Inténtalo de nuevo</string>
     <string name="info_upgrading">Actualizando a %1$s</string>
-    <string name="prefAdminPassword">Cambiar contraseña de admin</string>
-    <string name="prefAdminProtection">Proteger acciones de administrador con contraseña</string>
-    <string name="prefUserHint">(solo lectura)</string>
+
     <string name="tab_title_reset">Restaurar contraseña</string>
     <string name="title_btn_reset">Restaurar contraseña</string>
     <string name="error_insufficient_storage_available">Espacio de almacenamiento libre insuficiente</string>
@@ -257,26 +278,26 @@
     <string name="tab_title_help">Ayuda</string>
     <string name="storageAccessNotGranted">Acceso a la tarjeta SD no concedido</string>
     <string name="storageAccess_help1">Desde la versión 5 de Android (Lollipop) las aplicaciones tienen disponible de forma oficial una manera para escribir en la tarjeta SD externa. Las apps tienen que pedir permiso de escritura al usuario en una carpeta de la SD: se abrirá un diálogo del sistema y tendrás que seleccionar la tarjeta SD desde allí.</string>
-    <string name="storageAccess_help2">Si el diálogo aparece vacío y no hay ningún elemento en el panel lateral izquierdo, deberás seleccionar primero en el menú la opción para mostrar la tarjeta SD.</string>
+    <string name="storageAccess_help2">Si el diálogo aparece vacío y no hay ningún elemento en el panel lateral izquierdo, deberá seleccionar primero en el menú la opción para mostrar la tarjeta SD.</string>
     <string name="storageAccess_help3">Después, pulsa en la tarjeta SD en la lista del panel lateral izquierdo para mostrar su estructura de carpetas. En esta pantalla verás el "Almacenamiento interno" y la tarjeta SD. La tarjeta SD puede mostrarse con un nombre diferente del que aparece aquí, por ejemplo "Kingston". Es la denominada etiqueta de volumen de la tarjeta.</string>
-    <string name="storageAccess_help4">Una vez seleccionada la tarjeta, no pulses sobre ninguna subcarpeta de la misma. Debes elegir la carpeta raíz de más alto nivel de la SD. Esto es importante.</string>
-    <string name="storageAccess_help5">Después de seleccionar el botón de "Seleccionar SD" deberías volver a la app. La propia app comprueba por si acaso si de verdad puede escribir en la tarjeta SD seleccionada, y si el directorio seleccionado es la carpeta raíz.</string>
-    <string name="sequencing.course.message">Debes completar todas las actividades anteriores del curso antes de que ésta esté disponible.</string>
+    <string name="storageAccess_help4">Una vez seleccionada la tarjeta, no pulse sobre ninguna subcarpeta de la misma. Debe elegir la carpeta raíz de más alto nivel de la SD. Esto es importante.</string>
+    <string name="storageAccess_help5">Después de seleccionar el botón de "Seleccionar SD" debería volver a la app. La propia app comprueba por si acaso si de verdad puede escribir en la tarjeta SD seleccionada, y si el directorio seleccionado es la carpeta raíz.</string>
+    <string name="sequencing.course.message">Debe completar todas las actividades anteriores del curso antes de que ésta esté disponible.</string>
     <string name="sequencing.dialog_title">Actividad bloqueada</string>
-    <string name="sequencing.section.message">Debes completar todas las actividades anteriores de esta sección antes de que ésta esté disponible.</string>
+    <string name="sequencing.section.message">Debe completar todas las actividades anteriores de esta sección antes de que ésta esté disponible.</string>
     <string name="title_stats_unsubmitted">Actividades pendientes de enviar</string>
     <string name="title_stats_submitted">Actividades enviadas al servidor</string>
     <string name="error_preloading_accounts">Error precargando cuentas de usuario desde fichero CSV</string>
-    <string name="error_reset">Nombre de usuario o email no encontrado\nInténtalo de nuevo</string>
+    <string name="error_reset">Nombre de usuario o email no encontrado\nInténtelo de nuevo</string>
     <string name="no_title_set">Sin título</string>
     h
     <string name="info.startup.preloaded_accounts">Precargadas %1$d nueva(s) cuenta(s) de usuario.</string>
-    <string name="empty_state_media">Genial! Has descargado todo el contenido multimedia de tus cursos en el dispositivo.</string>
+    <string name="empty_state_media">Genial! Ha descargado todo el contenido multimedia de sus cursos en el dispositivo.</string>
     <string name="menu_sort_by">Ordenar por</string>
     <string name="menu_sort_by_course">Ordenar por curso</string>
     <string name="menu_sort_by_filename">Ordenar por nombre de archivo</string>
     <string name="error_connection_ssl">Error conectando al servidor debido a problemas con SSL. Por favor, asegúrese de que el host del servidor de &appName; en los ajustes es correcto, y de que el dispositivo tiene configurada la fecha y hora actuales</string>
-    <string name="error_apikey_expired">Tu clave de API ha expirado. Por favor, inicia sesión de nuevo.</string>
+    <string name="error_apikey_expired">Su clave API ha expirado. Por favor, inicie sesión de nuevo.</string>
     <string name="media_player_description">Reproductor &appName;</string>
     <string name="menu_select_all">Seleccionar todos</string>
     <string name="missing_media_download_selected">Descargar seleccionados</string>
@@ -286,30 +307,34 @@
     <string name="notification.remote_admin.camera_enabled">Se han habilitado las cámaras del dispositivo remotamente</string>
     <string name="notification.remote_admin.title">&appName;: Administración Remota </string>
     <string name="permissions.allow_btn_text">Conceder permisos</string>
-    <string name="permissions.not_askable.info">Estás viendo este mensaje porque se han solicitado permisos previamente y los denegaste marcando la casilla "No preguntar de nuevo"</string>
-    <string name="permissions.not_askable.message">La app no tiene los permisos necesarios para funcionar. Por favor, ve a Configuración \> Aplicaciones \> &appName; \> Permisos para conceder estos permisos</string>
+    <string name="permissions.not_askable.info">Está viendo este mensaje porque se han solicitado permisos previamente y los denegó marcando la casilla "No preguntar de nuevo"</string>
+    <string name="permissions.not_askable.message">La app no tiene los permisos necesarios para funcionar. Por favor, vaya a Configuración \> Aplicaciones \> &appName; \> Permisos para conceder estos permisos</string>
     <string name="permissions.storage.description">&appName; necesita acceso a la tarjeta SD para poder guardar los contenidos multimedia descargados para los cursos</string>
     <string name="permissions.storage.title">leer y modificar contenidos de la tarjeta SD</string>
     <string name="permissions.title">&appName; necesita los siguientes permisos para funcionar correctamente:</string>
+    <string name="permissions.bluetooth.message">La app necesita permisos adicionales para buscar otros dispositivos Bluetooth.</string>
+    <string name="permissions.location.title">acceder a la ubicación</string>
+    <string name="permissions.location.description">En las últimas versiones de Android se necesita este permiso para poder enlazar otros dispositivos con Bluetooth</string>
+
     <string name="prefDownloadViaCellularEnabled">Descargar multimedia usando los datos del teléfono</string>
     <string name="prefLogoutEnabled">Permitir cierre de sesión desde el menú principal</string>
     <string name="register_alert_title">Registro</string>
     <string name="reset_username_title">Usuario o Email</string>
     <string name="reset_process">Restaurando contraseña…</string>
-    <string name="reset_complete">Tu contraseña ha sido restaurada.\n\nComprueba tu email para tu nueva contraseña.</string>
+    <string name="reset_complete">Su contraseña ha sido restaurada.\n\nCompruebe su email para ver la nueva contraseña.</string>
     <string name="tab_title_activity">Actividad</string>
     <string name="widget_quiz_continue"><![CDATA[Continuar >>]]></string>
-    <string name="widget_quiz_media_caption">Pulsa en la imagen para ver el vídeo</string>
-    <string name="widget_quiz_unavailable_attempts">Ya has intentado este quiz el número máximo de veces permitido</string>
-    <string name="widget_quiz_unavailable_course">Debes completar todas las actividades anteriores en este curso para que este quiz esté disponible.</string>
-    <string name="widget_quiz_unavailable_section">Debes completar todas las actividades anteriores en esta sección para que este quiz esté disponible.</string>
-    <string name="warning_download_via_cellular_enabled">¡Cuidado! Permitir que los ficheros multimedia se descarguen mediante tu conexión de datos puede gastar una gran cantidad de datos de tu tarifa.\n\nNo se recomienda habilitar esta opción si tienes en una conexión lenta.</string>
+    <string name="widget_quiz_media_caption">Pulse en la imagen para ver el vídeo</string>
+    <string name="widget_quiz_unavailable_attempts">Ya ha intentado este quiz el número máximo de veces permitido</string>
+    <string name="widget_quiz_unavailable_course">Debe completar todas las actividades anteriores en este curso para que este quiz esté disponible.</string>
+    <string name="widget_quiz_unavailable_section">Debe completar todas las actividades anteriores en esta sección para que este quiz esté disponible.</string>
+    <string name="warning_download_via_cellular_enabled">¡Cuidado! Permitir que los ficheros multimedia se descarguen mediante tu conexión de datos puede gastar una gran cantidad de datos de su tarifa.\n\nNo se recomienda habilitar esta opción si tiene una conexión lenta.</string>
     <string name="warning_delete_disabled">El borrado de cursos está deshabilitado - actualiza los ajustes para permitir el borrado de cursos.</string>
     <string name="empty_state_courses">Actualmente no hay ningún curso disponible para ti en este servidor.</string>
     <string name="empty_state_scorecard">Todavía no tienes ningún curso instalado. \nCuando instales algún curso, podras ver aquí tu progreso general.</string>
     <string name="error_quiz_no_questions">No hay preguntas en este quiz.</string>
     <string name="prefRemoteAdminEnabled">Habilitar administración remota del dispositivo</string>
-    <string name="scorecard_quizzes_title">Quizzes</string>
+    <string name="scorecard_quizzes_title">Cuestionarios</string>
     <string name="upgradev49_1">Copiando archivos al nuevo destino - esta tarea podría llevar varios minutos</string>
     <string name="permissions.phone_state.title">consultar la identidad y estado del teléfono</string>
     <string name="permissions.phone_state.description">&appName; necesita acceso a la identidad del teléfono para obtener información sobre el modelo de dispositivo y la versión de Android</string>
@@ -318,4 +343,133 @@
     <string name="prefServerIncompatible">Versión incompatible (antigua)</string>
     <string name="prefSecurity_title">Seguridad</string>
     <string name="prefNotifications_title">Notificaciones</string>
+    <string name="storage_default">Por defecto</string>
+    <string name="publisher">Publicado por:</string>
+    <string name="error_register_email">Email no válido</string>
+    <string name="permissions.simple.title">Se necesitan permisos</string>
+    <string name="open_digest.activity_completed">Actividad completada</string>
+    <string name="open_digest.btn_action">Abrir actividad</string>
+    <string name="menu_sync">Sincronizar</string>
+    <string name="title_sync">Sincronizar</string>
+    <string name="tab_title_export">Exportar</string>
+    <string name="export_task_completed">Exportación completa</string>
+    <string name="paired_devices">Dispositivos enlazados</string>
+    <string name="other_devices">Otros dispositivos</string>
+
+    <string name="bluetooth.button_scan">Escanear</string>
+    <string name="bluetooth.none_paired">Sin dispositivos enlazados</string>
+    <string name="bluetooth.scanning">Escaneando…</string>
+    <string name="bluetooth.title_connected_to">Conectado</string>
+    <string name="bluetooth.title_not_connected">No conectado</string>
+    <string name="bluetooth.btn_connect">Conectar</string>
+    <string name="bluetooth.tab_course">cursos</string>
+    <string name="bluetooth.tab_activitylog">logs de actividad</string>
+
+
+    <string name="title_activity_edit_profile">Editar perfil</string>
+    <string name="save_profile">Guardar perfil</string>
+    <string name="activitylog_delete">Eliminar</string>
+    <string name="title_activitylog">Registros de actividad</string>
+
+    <string name="nav_points">Puntos</string>
+    <string name="edit_profile">Editar perfil</string>
+
+    <string name="register_username_exists">El nombre de usuario ya existe</string>
+    <string name="collapse_all_sections">Contraer todas las secciones</string>
+    <string name="expand_all_sections">Expandir todas las secciones</string>
+
+    <string name="event_activity_all">Todas</string>
+    <string name="last_week">últ. semana</string>
+    <string name="last_month">últ. mes</string>
+    <string name="last_year">últ. año</string>
+    <string name="points">puntos</string>
+    <string name="field_spaces_error">No puede contener espacios</string>
+    <string name="register_offline">Registro sin conexión</string>
+    <string name="field_required">Este campo no puede estar vacío</string>
+    <string name="sign_in_title">Entrar</string>
+    <string name="transfer_receiving_course">Recibiendo curso…</string>
+    <string name="leaderboard_points">%1$s puntos</string>
+    <string name="leaderboard_position">Tu posición</string>
+    <string name="tab_title_leaderboard">Clasificación</string>
+    <string name="points_event_course_downloaded">Curso \'%1$s\' descargado</string>
+    <string name="points_event_activity_completed">Actividad completada \'%1$s - %2$s\'</string>
+    <string name="points_event_media_played">Multimedia reproducido \'%1$s\'</string>
+    <string name="points_event_quiz_attempt">Cuestionario \'%1$s - %2$s\' realizado</string>
+    <string name="no_points_data">No hay datos</string>
+
+    <string name="reset_alert_title">Restaurar</string>
+    <string name="tab_title_transfer">Enviar</string>
+
+    <string name="bluetooth.send_all">Enviar todos</string>
+    <string name="bluetooth.btn_disconnect">Desconectar</string>
+    <string name="bluetooth_all_transfers_complete">Se completaron todas las transferencias Bluetooth pendientes</string>
+    <string name="bluetooth_communication_closed">Se cerró la conexión Bluetooth</string>
+    <string name="bluetooth_device_scanning">Buscando dispositivos…</string>
+    <string name="bluetooth.title_connecting">Conectando a dispositivo…</string>
+    <string name="bluetooth.select_device">Elige dispositivo al que conectarse</string>
+    <string name="bluetooth.no_devices_found">No se encontraron dispositivos</string>
+    <string name="bluetooth.device_name">Este dispositivo:</string>
+    <string name="bluetooth.enable_discovery">Activar visibilidad Bluetooth</string>
+    <string name="bluetooth.no_device_connected">Sin conexión</string>
+    <string name="bluetooth.info_connect">Conéctate a otro dispositivo mediante Bluetooth para iniciar la transferencia</string>
+    <string name="bluetooth.transferable_type">Transferible</string>
+    <string name="bluetooth.files_pending">%1$d archivos pendientes</string>
+    <string name="bluetooth.transfer_complete">%1$s: Transferencia completada</string>
+    <string name="bt_not_enabled_leaving">El Bluetooth no está habilitado</string>
+    <string name="bluetooth.discovery_already_enabled">El dispositivo ya es visible</string>
+    <string name="bluetooth.discovery_fail">No se pudo activar la visibilidad Bluetooth</string>
+    <string name="bluetooth.discovery_success">Dispositivo visible durante %1$d segundos</string>
+
+    <string name="quiz_attempts.average">Media</string>
+    <string name="quiz_attempts.best">Mejor</string>
+    <string name="quiz_attempts.number">Intentos</string>
+    <string name="quiz_attempts.loading">Cargando intentos…</string>
+    <string name="quiz_attempts.empty_state">Todavía no ha hecho este cuestionario</string>
+    <string name="quiz_attempts.unkwnown_course">Curso desconocido/eliminado</string>
+    <string name="quiz_attempts.unkwnown_quiz">Cuestionario desconocido/eliminado</string>
+    <string name="quiz_attempts.global_empty_state">Todavía no ha realizado ningún cuestionario</string>
+    <string name="quiz_attempt.title">Cuestionario</string>
+    <string name="quiz_attempts.take_quiz">Hacer cuestionario</string>
+    <string name="quiz_attempts.retake_quiz">Repetir cuestionario</string>
+    <string name="quiz_attempts.title">Cuestionarios realizados</string>
+
+    <string name="register_account_already">¿Ya tiene una cuenta?</string>
+    <string name="login_dont_have_account">¿Todavía no tiene una cuenta?</string>
+    <string name="offline_register_confirm">Alternativamente, puede registrarse sin conexión y empezar a usar la app. Más adelante tendrá que enviar o transferir sus datos de usuario</string>
+    <string name="event_activity_completed">Actividad completada</string>
+    <string name="event_media_played">Vídeo reproducido</string>
+    <string name="event_course_downloaded">Descarga de curso</string>
+    <string name="event_media_watched">Visualización de vídeo</string>
+    <string name="event_quiz_attempt">Intento de cuestionario</string>
+
+    <string name="device_name">Este dispositivo: %s</string>
+    <string name="channel_notif_internal_name">Notificaciones internas</string>
+    <string name="channel_notif_internal_description">Este canal muestra notificaciones útiles de distintos procesos como las transferencias Bluetooth o las descargas</string>
+    <string name="nav_home">Inicio</string>
+    <string name="nav_scorecard">Scorecard</string>
+    <string name="info_override_password">Sobreescribiendo contraseña de admin…</string>
+
+    <string name="archived_activities">Registros de actividad archivados (ya transferidos)</string>
+    <string name="edit_profile_available_online">La opción para editar perfil solo está disponible cuando el dispositivo está conectado a internet</string>
+    <string name="profile_updated_successfuly">Perfil actualizado correctamente</string>
+
+    <string name="open_digest.errors.invalid_param">Falta el parámetro de identificación o está mal configurado. Por favor, compruebe que el enlace es válido.</string>
+    <string name="open_digest.errors.activity_not_found">Actividad no encontrada. ¿Está seguro de que tiene instalado el curso que contiene esta actividad?</string>
+    <string name="open_digest.description">&appName; dispone de la funcionalidad para abrir actividades basadas en su URL (recibidas desde un SMS, por ejemplo)</string>
+    <string name="open_digest.errors.not_logged_in">No ha iniciado sesión. Por favor, entre y prueba a abrir el enlace de nuevo.</string>
+
+    <string name="export_activity.text">Exportar registros recientes de actividades y cuestionarios a un fichero externo</string>
+    <string name="export_task_completed_text">Se ha creado en el almacenamiento un fichero con nombre  \'%1$s\'</string>
+    <string name="exported_activities.title">Registros de actividad exportados</string>
+    <string name="export_task_no_activities">No había actividades o cuestionarios que exportar.</string>
+    <string name="submit_trackers_success">Registros enviados al servidor correctamente.</string>
+    <string name="activity_not_transferred_message">Tienes archivos de registro exportados sin enviar.</string>
+    <string name="download_via_pc_extenal_storage">Es necesario establecer un almacenamiento externo para poder copiar los ficheros descargados desde el PC a un directorio de la app. Por favor, cambia la opción de almacenamiento en Ajustes.</string>
+
+    <string name="activitylog_delete_failed">No se pudo eliminar el archivo de logs</string>
+    <string name="activitylog_delete_confirm">Estás seguro de que quieres eliminar este archivo?</string>
+
+    <string name="course_transferring">Transferencia en curso…</string>
+    <string name="courses_install_pending">Hay nuevos cursos recibidos sin instalar.</string>
+
 </resources>

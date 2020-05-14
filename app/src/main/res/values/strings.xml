@@ -119,6 +119,23 @@
     <string name="prefAdvanced_title">Advanced</string>
     <string name="prefDisplay_title">Display</string>
 
+    <string name="prefAdminProtection">Protect admin actions with password</string>
+    <string name="prefAdminPassword">Change admin password</string>
+    <string name="prefRemoteAdminEnabled">Enable remote administration of the device</string>
+    <string name="prefSectionSystemNotifs">System notifications</string>
+    <string name="prefSectionGamification">Gamification events</string>
+    <string name="prefShowGamificationEvents">Show gamification events</string>
+    <string name="prefDownloadEnabled">Enable course downloading from homepage</string>
+    <string name="prefChangeLanguageEnabled">Enable changing language from homepage</string>
+    <string name="prefStartCourseIndexCollapsed">Start course index with sections collapsed</string>
+    <string name="prefAnimationTypeGamificationPoints">Gamification points animation type</string>
+    <string name="prefGamificationPointsViewTypeFullAnimationSound">Full animation with sound</string>
+    <string name="prefGamificationPointsViewTypeFullAnimation">Full animation</string>
+    <string name="prefGamificationPointsViewTypeSimpleAnimation">Simple animation</string>
+    <string name="prefGamificationPointsViewTypeNone">None</string>
+    <string name="prefDurationAnimationTypeGamificationPointsView">Animation duration</string>
+    <string name="prefDurationAnimation_summary">Time that the gamification points event animation stays on screen (in seconds)</string>
+
     <!-- Strings relative to Storage -->
     <string name="prefStorageLocation">Storage Location</string>
     <string name="prefStorageOptionInternal">Internal</string>
@@ -308,9 +325,6 @@
     <string name="admin_password_error_incorrect_password">Incorrect admin password. Try again</string>
     <string name="admin_password_newpassword_dialog_title">Admin password</string>
     <string name="admin_password_newpassword_dialog_message">Please, introduce your admin password</string>
-    <string name="prefAdminProtection">Protect admin actions with password</string>
-    <string name="prefAdminPassword">Change admin password</string>
-    <string name="prefRemoteAdminEnabled">Enable remote administration of the device</string>
 
     <string name="notification.remote_admin.title">&appName; Remote Administration</string>
     <string name="notification.remote_admin.camera_disabled">The device cameras have been disabled remotely</string>
@@ -410,9 +424,7 @@
     <string name="tab_title_leaderboard">Leaderboard</string>
     <string name="leaderboard_position">Your position</string>
     <string name="leaderboard_points">%1$s points</string>
-    <string name="prefShowGamificationEvents">Show gamification events</string>
-    <string name="prefDownloadEnabled">Enable course downloading from homepage</string>
-    <string name="prefChangeLanguageEnabled">Enable changing language from homepage</string>
+
     <string name="transfer_receiving_course">Receiving course file...</string>
     <string name="sign_in_title">Sign in</string>
     <string name="register_account_already">Already have an account?</string>
@@ -435,14 +447,7 @@
     <string name="event_quiz_attempt">Quiz attempt</string>
     <string name="event_activity_all">All activities</string>
 
-    <string name="prefAnimationTypeGamificationPoints">Gamification points animation type</string>
-    <string name="prefGamificationPointsViewTypeFullAnimationSound">Full animation with sound</string>
-    <string name="prefGamificationPointsViewTypeFullAnimation">Full animation</string>
-    <string name="prefGamificationPointsViewTypeSimpleAnimation">Simple animation</string>
-    <string name="prefGamificationPointsViewTypeNone">None</string>
 
-    <string name="prefDurationAnimationTypeGamificationPointsView">Animation duration</string>
-    <string name="prefDurationAnimation_summary">Time that the gamification points event animation stays on screen (in seconds)</string>
     <string name="device_name">This device name: %s</string>
 
     <string name="channel_notif_internal_name">Internal notifications</string>
@@ -454,7 +459,7 @@
     <string name="nav_points">Points</string>
     <string name="edit_profile">Edit profile</string>
 
-    <string name="prefStartCourseIndexCollapsed">Start course index with sections collapsed</string>
+
     <string name="info_override_password">Overriding admin password</string>
     <string name="register_username_exists">Username already exists</string>
     <string name="collapse_all_sections">Collapse all sections</string>
@@ -465,8 +470,7 @@
     <string name="activitylog_delete">Delete</string>
     <string name="activitylog_delete_confirm">Are you sure you want to delete this activity log file?</string>
     <string name="activitylog_delete_failed">Could not delete activity log file</string>
-    <string name="prefSectionSystemNotifs">System notifications</string>
-    <string name="prefSectionGamification">Gamification events</string>
+
     <string name="title_activity_edit_profile">Edit profile</string>
     <string name="edit_profile_available_online">Edit profile option is only available when the device is connected to the Internet</string>
     <string name="save_profile">Save profile</string>
