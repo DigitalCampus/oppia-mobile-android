@@ -84,6 +84,7 @@
     <string name="no_courses">There are no courses currently installed</string>
     <string name="more_courses">Download more courses</string>
 
+    <string name="prefCurrentVersion">Current version: %1$s</string>
     <string name="prefAdvanced">Advanced settings</string>
     <string name="prefBackgroudDataConnect">Background activity tracker</string>
     <string name="prefBackgroudDataConnect_summary">Send activity logs even when this application isn\'t running</string>

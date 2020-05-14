@@ -85,7 +85,7 @@
 	<string name="prefHighlightCompleted">Resaltar actividades completadas</string>
 	<string name="prefShowSectionNumbers">Mostrar número de sección</string>
     <string name="prefShowCourseDescription">Mostrar descripción de cursos</string>
-    <string name="prefShowProgressBar">Mostrar barra de progreso</string>
+    <string name="prefShowProgressBar">Mostrar progreso del curso</string>
     <string name="prefDeleteCourseEnabled">Permitir borrado de cursos</string>
     <string name="prefDisableNotifications">Desactivar notificaciones</string>
     <string name="prefSectionGamification">Eventos de gamificación</string>
@@ -99,7 +99,7 @@
     <string name="prefChangeLanguageEnabled">Permitir cambio de idioma desde inicio</string>
     <string name="prefDownloadEnabled">Permitir descarga de cursos desde inicio</string>
     <string name="prefShowGamificationEvents">Mostrar eventos de gamificación</string>
-    <string name="prefDisplay_title">Visual</string>
+    <string name="prefDisplay_title">Ajustes visuales</string>
     <string name="prefAdvanced_title">Avanzada</string>
     <string name="prefDurationAnimationTypeGamificationPointsView">Duración de la animación</string>
     <string name="prefDurationAnimation_summary">Tiempo que dura en pantalla (en segundos) la animación cuando se conceden puntos</string>
@@ -463,5 +463,18 @@
 
     <string name="course_transferring">Transferencia en curso…</string>
     <string name="courses_install_pending">Hay nuevos cursos recibidos sin instalar.</string>
+    <string name="activitylog_submitted">enviados al servidor</string>
+    <string name="activitylog_tosubmit">por enviar</string>
+    <string name="activitylog_toexport">por exportar</string>
+    <string name="activitylog_btn_submit">enviar</string>
+    <string name="activitylog_btn_export">exportar actividad</string>
+    <string name="videoplayer_play_again">Reproducir de nuevo</string>
+    <string name="videoplayer_continue">Continuar al curso</string>
+    <string name="options">Opciones</string>
+    <string name="prefNotifications_description">Notificaciones del sistema y rótulos in-app de eventos de gamificación</string>
+    <string name="prefSecurity_description">Protección de admin para acciones especiales y habilitar/deshabilitar algunas funcionalidades de los menús</string>
+    <string name="prefAdvanced_description">Ajustes avanzados / técnicos</string>
+    <string name="prefDisplay_description">Control sobre cómo se muestran los cursos y los contenidos en la app</string>
+    <string name="prefCurrentVersion">Versión actual: %1$s</string>
 
 </resources>
