@@ -13,8 +13,6 @@
     <string name="menu_language">Choisir la langue</string>
     <string name="menu_settings">Paramètres</string>
     <string name="menu_about">À propos</string>
-    <string name="menu_font_increase">Agrandir la taille du texte</string>
-    <string name="menu_font_decrease">Réduire la taille du texte</string>
     <string name="menu_help">Aide</string>
     <string name="menu_logout">Déconnection</string>
     <string name="menu_read_aloud">Lire à voix haute</string>
@@ -53,8 +51,6 @@
     <string name="title_activity_course_index">Catalogue des cours</string>
     <string name="title_activity_course">Activité</string>
     <string name="title_course_meta">À propos</string>
-    <string name="title_stats_submitted">Pas d\'activités envoyées au serveur</string>
-    <string name="title_stats_unsubmitted">Pas d\'activités en attente</string>
     <string name="title_prefs">Paramètres</string>
     <string name="title_scorecard">Carnet</string>
     <string name="title_tag_select_activity">Choisir une catégorie</string>

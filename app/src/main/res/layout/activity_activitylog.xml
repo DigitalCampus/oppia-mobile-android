@@ -55,7 +55,7 @@
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:singleLine="false"
-                android:text="submitted to server "/>
+                android:text="@string/activitylog_submitted"/>
 
         </RelativeLayout>
 
@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/highlight_to_submit"
-                android:text="to submit"/>
+                android:text="@string/activitylog_tosubmit"/>
 
         </RelativeLayout>
 
@@ -111,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/highlight_to_export"
-                android:text="to export"/>
+                android:text="@string/activitylog_toexport"/>
 
         </RelativeLayout>
 
@@ -133,14 +133,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Submit to server"/>
+            android:text="@string/activitylog_btn_submit"/>
 
         <Button
             android:id="@+id/export_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Export activity"/>
+            android:text="@string/activitylog_btn_export"/>
 
     </LinearLayout>
 

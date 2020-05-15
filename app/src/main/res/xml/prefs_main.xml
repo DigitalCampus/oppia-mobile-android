@@ -17,7 +17,7 @@
         app:title="@string/prefDisplay_title"
         app:key="prefDisplay"
         app:icon="@drawable/ic_settings_display"
-        app:summary="Control how courses and contents are displayed"
+        app:summary="@string/prefDisplay_description"
         />
 
     <Preference
@@ -27,7 +27,7 @@
         app:title="@string/prefNotifications_title"
         app:key="prefNotifications"
         app:icon="@drawable/ic_settings_notif"
-        app:summary="System notifications and in-app gamification messages"
+        app:summary="@string/prefNotifications_description"
     />
 
     <Preference
@@ -38,7 +38,7 @@
         app:key="prefSecurity"
         android:key="prefSecurity"
         app:icon="@drawable/ic_settings_security"
-        app:summary="Admin protection of special actions and enabling/disabling certain functionalities from the screen"
+        app:summary="@string/prefSecurity_description"
         />
 
     <Preference
@@ -48,7 +48,7 @@
         app:title="@string/prefAdvanced_title"
         app:key="prefAdvanced"
         app:icon="@drawable/ic_settings_advanced"
-        app:summary="More advanced/technical settings"
+        app:summary="@string/prefAdvanced_description"
         />
 </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

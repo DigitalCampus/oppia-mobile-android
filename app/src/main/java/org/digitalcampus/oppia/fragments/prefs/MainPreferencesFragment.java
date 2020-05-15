@@ -26,7 +26,8 @@ public class MainPreferencesFragment extends BasePreferenceFragment {
         super.onCreate(savedInstance);
 
         EditTextPreference info = findPreference(PrefsActivity.PREF_INFO);
-        info.setTitle("Current version:" + BuildConfig.VERSION_NAME);
+
+        info.setTitle(getString(R.string.prefCurrentVersion, BuildConfig.VERSION_NAME));
         info.setSummary(BuildConfig.APPLICATION_ID);
     }
 
