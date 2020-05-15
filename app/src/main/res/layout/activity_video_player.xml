@@ -50,7 +50,7 @@
                 android:id="@+id/textView23"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Play again"
+                android:text="@string/videoplayer_play_again"
                 android:textColor="@color/text_light"/>
         </LinearLayout>
 
@@ -73,7 +73,7 @@
                 android:id="@+id/textView25"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Continue to course"
+                android:text="@string/videoplayer_continue"
                 android:textColor="@color/text_light"/>
         </LinearLayout>
 

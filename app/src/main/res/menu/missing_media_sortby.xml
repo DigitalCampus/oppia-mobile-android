@@ -3,7 +3,7 @@
     xmlns:oppiamobile="http://schemas.android.com/apk/res-auto">
     <item
         android:icon="@drawable/ic_more"
-        android:title="Options"
+        android:title="@string/options"
         oppiamobile:showAsAction="ifRoom">
         <menu>
             <item
