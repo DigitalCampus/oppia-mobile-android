@@ -74,7 +74,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String TAG = DbHelper.class.getSimpleName();
     public static final String DB_NAME = "mobilelearning.db";
-    public static final int DB_VERSION = 42;
+    public static final int DB_VERSION = 43;
 
     private static DbHelper instance;
     private SQLiteDatabase db;
@@ -160,6 +160,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String QUIZATTEMPTS_C_EVENT = "event";
     private static final String QUIZATTEMPTS_C_POINTS = "points";
     private static final String QUIZATTEMPTS_C_TIMETAKEN = "timetaken";
+    private static final String QUIZATTEMPTS_C_TYPE = "quiztype";
 
     private static final String SEARCH_TABLE = "search";
     private static final String SEARCH_C_TEXT = "fulltext";
@@ -315,6 +316,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 QUIZATTEMPTS_C_EXPORTED + STR_INT_DEFAULT_O + ", " +
                 QUIZATTEMPTS_C_EVENT + STR_TEXT_COMMA +
                 QUIZATTEMPTS_C_TIMETAKEN + STR_INT_DEFAULT_O + ", " +
+                QUIZATTEMPTS_C_TYPE + " text default '" + QuizAttempt.TYPE_QUIZ + "', " +
                 QUIZATTEMPTS_C_POINTS + STR_INT_DEFAULT_O + ")";
         db.execSQL(sql);
     }
@@ -585,6 +587,9 @@ public class DbHelper extends SQLiteOpenHelper {
             extractQuizAttemptsTimetaken(db);
         }
 
+        if (oldVersion < 43){
+            db.execSQL(STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_TYPE + " text default '" + QuizAttempt.TYPE_QUIZ + "';");
+        }
 
     }
 
@@ -605,40 +610,46 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void extractQuizAttemptsTimetaken(SQLiteDatabase database){
-        List<QuizAttempt> attempts = getQuizAttempts(database);
-        List<QuizAttempt> updated = new ArrayList<>();
-        for (QuizAttempt attempt : attempts){
-            if (TextUtils.isEmpty(attempt.getData())){
+        Cursor c1 = database.query(QUIZATTEMPTS_TABLE, null, null, null, null, null, null);
+        c1.moveToFirst();
+        while (!c1.isAfterLast()) {
+
+            String data = c1.getString(c1.getColumnIndex(QUIZATTEMPTS_C_DATA));
+            if (TextUtils.isEmpty(data)){
+                c1.moveToNext();
                 continue;
             }
+
             try {
-                JSONObject logData = new JSONObject(attempt.getData());
+                JSONObject logData = new JSONObject(data);
                 String instanceID = logData.getString("instance_id");
+                int attemptID = c1.getInt(c1.getColumnIndex(QUIZATTEMPTS_C_ID));
+                long time = -1;
 
                 String s = TRACKER_LOG_C_DATA + " LIKE ?";
                 String[] args = new String[]{ "%" + instanceID + "%" };
                 Cursor c = database.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
                 if (c.getCount() > 0) {
                     c.moveToFirst();
-                    String data = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
-                    JSONObject trackerData = new JSONObject(data);
-                    long time = trackerData.getLong("timetaken");
-                    attempt.setTimetaken(time);
-                    updated.add(attempt);
+                    String trackerData = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
+                    JSONObject trackerJSON = new JSONObject(trackerData);
+                    time = trackerJSON.getLong("timetaken");
                 }
                 c.close();
+
+                if (time > 0){
+                    ContentValues values = new ContentValues();
+                    values.put(QUIZATTEMPTS_C_TIMETAKEN, time);
+                    database.update(QUIZATTEMPTS_TABLE, values, QUIZATTEMPTS_C_ID + "=" + attemptID, null);
+                }
+
             } catch (JSONException e) {
                 // Pass
             }
-
+            c1.moveToNext();
         }
-
-        for (QuizAttempt attempt : updated){
-            updateQuizAttempt(attempt);
-        }
-
+        c1.close();
     }
-
 
     // returns id of the row
     public long addOrUpdateCourse(Course course) {
@@ -902,6 +913,7 @@ public class DbHelper extends SQLiteOpenHelper {
         qa.setScore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)));
         qa.setMaxscore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
         qa.setPassed(Boolean.parseBoolean(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_PASSED))));
+        qa.setType(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_TYPE)));
         qa.setTimetaken(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_TIMETAKEN)));
 
         return qa;
@@ -1050,9 +1062,9 @@ public class DbHelper extends SQLiteOpenHelper {
     public List<QuizAttempt> getGlobalQuizAttempts(long userId, String prefLang) {
 
         // find if attempted
-        String s1 = QUIZATTEMPTS_C_USERID + "=?";
+        String s1 = QUIZATTEMPTS_C_USERID + "=? and " + QUIZATTEMPTS_C_TYPE + "=?";
         String order = QUIZATTEMPTS_C_DATETIME + " DESC";
-        String[] args1 = new String[]{String.valueOf(userId)};
+        String[] args1 = new String[]{String.valueOf(userId), QuizAttempt.TYPE_QUIZ};
         Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s1, args1, null, null, order);
 
         ArrayList<QuizAttempt> attempts = new ArrayList<>();
@@ -1670,6 +1682,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(QUIZATTEMPTS_C_EVENT, qa.getEvent());
         values.put(QUIZATTEMPTS_C_POINTS, qa.getPoints());
         values.put(QUIZATTEMPTS_C_TIMETAKEN, qa.getTimetaken());
+        values.put(QUIZATTEMPTS_C_TYPE, qa.getType());
         return values;
     }
 
@@ -1715,6 +1728,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 qa.setEvent(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_EVENT)));
                 qa.setPoints(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_POINTS)));
                 qa.setTimetaken(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_TIMETAKEN)));
+                qa.setType(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_TYPE)));
                 User u = this.getUser(qa.getUserId());
                 qa.setUser(u);
                 quizAttempts.add(qa);

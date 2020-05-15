@@ -46,6 +46,7 @@ public abstract class WidgetFactory extends Fragment {
 
     protected static final String WIDGET_CONFIG = "widget_config";
     protected static final String PROPERTY_FEEDBACK = "feedback";
+    protected static final String PROPERTY_QUIZ = "quiz";
     protected static final String PROPERTY_ACTIVITY_STARTTIME = "Activity_StartTime";
     protected static final String PROPERTY_ON_RESULTS_PAGE = "OnResultsPage";
     protected static final String PROPERTY_ATTEMPT_SAVED = "attemptSaved";
