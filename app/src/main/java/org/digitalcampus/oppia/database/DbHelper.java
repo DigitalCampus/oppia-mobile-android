@@ -28,6 +28,7 @@ import androidx.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 
 import com.splunk.mint.Mint;
 
@@ -74,7 +75,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String TAG = DbHelper.class.getSimpleName();
     public static final String DB_NAME = "mobilelearning.db";
-    public static final int DB_VERSION = 43;
+    public static final int DB_VERSION = 44;
 
     private static DbHelper instance;
     private SQLiteDatabase db;
@@ -195,6 +196,13 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String CUSTOM_FIELD_C_LABEL = "label";
     private static final String CUSTOM_FIELD_C_HELPTEXT = "helptext";
     private static final String CUSTOM_FIELD_C_ORDER = "field_order";
+    private static final String CUSTOM_FIELD_C_COLLECTION = "collection";
+
+    private static final String CUSTOM_FIELDS_COLLECTION_TABLE = "customfield_collection";
+    private static final String CUSTOM_FIELDS_COLLECTION_C_ID = BaseColumns._ID;
+    private static final String CUSTOM_FIELDS_COLLECTION_C_COLLECTION_ID = "collection_id";
+    private static final String CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY = "item_key";
+    private static final String CUSTOM_FIELDS_COLLECTION_C_ITEM_VALUE = "item_value";
 
     // User Custom Fields
     static final String USER_CF_TABLE = "user_cf";
@@ -243,6 +251,7 @@ public class DbHelper extends SQLiteOpenHelper {
         createActivityGamificationTable(db);
         createUserCustomFieldsTable(db);
         createCustomFieldTable(db);
+        createCustomFieldsCollectionTable(db);
     }
 
     public void beginTransaction() {
@@ -396,8 +405,18 @@ public class DbHelper extends SQLiteOpenHelper {
                 + CUSTOM_FIELD_C_LABEL + STR_TEXT_COMMA
                 + CUSTOM_FIELD_C_HELPTEXT + STR_TEXT_COMMA
                 + CUSTOM_FIELD_C_TYPE + STR_TEXT_COMMA
+                + CUSTOM_FIELD_C_COLLECTION + STR_TEXT_COMMA
                 + CUSTOM_FIELD_C_ORDER + STR_INT_COMMA
                 + CUSTOM_FIELD_C_REQUIRED + STR_INT_DEFAULT_O + ")";
+        db.execSQL(mSql);
+    }
+
+    private void createCustomFieldsCollectionTable(SQLiteDatabase db) {
+        String mSql = STR_CREATE_TABLE + CUSTOM_FIELDS_COLLECTION_TABLE + " ("
+                + CUSTOM_FIELDS_COLLECTION_C_ID + STR_INT_PRIMARY_KEY_AUTO
+                + CUSTOM_FIELDS_COLLECTION_C_COLLECTION_ID + STR_TEXT_COMMA
+                + CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY + STR_TEXT_COMMA
+                + CUSTOM_FIELDS_COLLECTION_C_ITEM_VALUE + " text)";
         db.execSQL(mSql);
     }
 
@@ -589,6 +608,11 @@ public class DbHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 43){
             db.execSQL(STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_TYPE + " text default '" + QuizAttempt.TYPE_QUIZ + "';");
+        }
+
+        if (oldVersion < 44){
+            db.execSQL(STR_ALTER_TABLE + CUSTOM_FIELD_TABLE + STR_ADD_COLUMN + CUSTOM_FIELD_C_COLLECTION + STR_TEXT_NULL + ";");
+            createCustomFieldsCollectionTable(db);
         }
 
     }
@@ -2170,6 +2194,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(CUSTOM_FIELD_C_LABEL, field.getLabel());
         values.put(CUSTOM_FIELD_C_REQUIRED, field.isRequired()?1:0);
         values.put(CUSTOM_FIELD_C_ORDER, field.getOrder());
+        values.put(CUSTOM_FIELD_C_COLLECTION, field.getCollectionName());
 
         String s = CUSTOM_FIELD_C_KEY + "=?";
         String[] args = new String[]{ field.getKey() };
@@ -2182,6 +2207,29 @@ public class DbHelper extends SQLiteOpenHelper {
         }
         else{
             db.insertOrThrow(CUSTOM_FIELD_TABLE, null, values);
+        }
+
+    }
+
+    public void insertOrUpdateCustomFieldCollection(String collectionName, List<Pair<String, String>> items) {
+        for (Pair<String, String> item : items){
+            ContentValues values = new ContentValues();
+            values.put(CUSTOM_FIELDS_COLLECTION_C_COLLECTION_ID, collectionName);
+            values.put(CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY, item.first);
+            values.put(CUSTOM_FIELDS_COLLECTION_C_ITEM_VALUE, item.second);
+
+            String s = CUSTOM_FIELDS_COLLECTION_C_COLLECTION_ID + "=? AND " + CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY + "=?";
+            String[] args = new String[]{ collectionName, item.first };
+            Cursor c = db.query(CUSTOM_FIELDS_COLLECTION_TABLE, null, s, args, null, null, null);
+            boolean toUpdate = c.getCount() > 0;
+            c.close();
+
+            if (toUpdate){
+                db.update(CUSTOM_FIELDS_COLLECTION_TABLE, values, s, args);
+            }
+            else{
+                db.insertOrThrow(CUSTOM_FIELDS_COLLECTION_TABLE, null, values);
+            }
         }
 
     }
@@ -2199,6 +2247,7 @@ public class DbHelper extends SQLiteOpenHelper {
             field.setOrder(c.getInt(c.getColumnIndex(CUSTOM_FIELD_C_ORDER)));
             field.setLabel(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_LABEL)));
             field.setHelperText(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_HELPTEXT)));
+            field.setCollectionName(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_HELPTEXT)));
 
             fields.add(field);
             c.moveToNext();
