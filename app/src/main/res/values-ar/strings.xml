@@ -14,8 +14,6 @@
     <string name="menu_language">اختيار اللغة</string>
     <string name="menu_settings">الإعدادات</string>
     <string name="menu_about">عن طبشورة أوبيا</string>
-    <string name="menu_font_increase">تكبير حجم النص</string>
-    <string name="menu_font_decrease">تصغير حجم النص</string>
     <string name="menu_help">المساعدة</string>
     <string name="menu_logout">تسجيل الخروج</string>
     <string name="menu_read_aloud">القراءة بصوت عال</string>
@@ -54,8 +52,6 @@
     <string name="title_activity_course_index">مناهج الدروس</string>
     <string name="title_activity_course">نشاط</string>
     <string name="title_course_meta">عن طبشورة أوبيا</string>
-    <string name="title_stats_submitted">لا أنشطة مرسلة الى الخادم</string>
-    <string name="title_stats_unsubmitted">لا أنشطة معلقة</string>
     <string name="title_prefs">الإعدادات</string>
     <string name="title_scorecard">دفتر العلامات</string>
     <string name="title_tag_select_activity">اختار فئة</string>
