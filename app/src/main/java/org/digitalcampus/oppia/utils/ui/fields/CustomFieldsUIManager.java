@@ -121,13 +121,17 @@ public class CustomFieldsUIManager {
             if (value == null){
                 continue;
             }
-            if (!formField.first.isBoolean()){
-                ValidableTextInputLayout input = (ValidableTextInputLayout) formField.second;
-                input.setText(value.toString());
-            }
-            else{
+            if (formField.first.isBoolean()){
                 ValidableSwitchLayout input = (ValidableSwitchLayout) formField.second;
                 input.setChecked((boolean) value.getValue());
+            }
+            else if(formField.first.isChoices()){
+                ValidableSpinnerLayout input = (ValidableSpinnerLayout) formField.second;
+                input.setSelection(value.toString());
+            }
+            else{
+                ValidableTextInputLayout input = (ValidableTextInputLayout) formField.second;
+                input.setText(value.toString());
             }
 
         }
@@ -148,6 +152,10 @@ public class CustomFieldsUIManager {
             if (field.isBoolean()){
                 ValidableSwitchLayout input = (ValidableSwitchLayout) formField.second;
                 values.put(field.getKey(), new CustomValue<>(input.isChecked()));
+            }
+            else if (field.isChoices()){
+                ValidableSpinnerLayout input = (ValidableSpinnerLayout) formField.second;
+                values.put(field.getKey(), new CustomValue<>(input.getSelected()));
             }
             else{
                 ValidableTextInputLayout input = (ValidableTextInputLayout) formField.second;

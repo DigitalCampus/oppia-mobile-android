@@ -67,7 +67,7 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         }
         for (int i=0; i<items.size(); i++){
             if (TextUtils.equals(items.get(i).getKey(), key)){
-                input.setSelection(i);
+                input.setSelection(i + (selected ? 0 : 1));
                 return;
             }
         }
@@ -75,7 +75,8 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     }
 
     public String getSelected(){
-        return items.get(input.getSelectedItemPosition()).getKey();
+        int pos = input.getSelectedItemPosition();
+        return items.get(pos).getKey();
     }
 
     private void setDisabledTextColor(View view, int position){

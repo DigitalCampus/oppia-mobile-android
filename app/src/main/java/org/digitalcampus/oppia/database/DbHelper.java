@@ -1286,6 +1286,10 @@ public class DbHelper extends SQLiteOpenHelper {
                         String value = c.getString(c.getColumnIndex(CF_VALUE_STR));
                         u.putCustomField(key, new CustomValue<>(value));
                     }
+                    else if (field.isChoices()){
+                        String value = c.getString(c.getColumnIndex(CF_VALUE_STR));
+                        u.putCustomField(key, new CustomValue<>(value));
+                    }
                     else if (field.isBoolean()){
                         boolean value = c.getInt(c.getColumnIndex(CF_VALUE_BOOL)) == 1;
                         u.putCustomField(key, new CustomValue<>(value));
