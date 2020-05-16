@@ -30,7 +30,7 @@ public class CustomField {
     private String helperText;
     private int order;
     private String collectionName;
-    private List<Pair<String, String>> collection;
+    private List<CollectionItem> collection;
 
     public String getKey() {
         return key;
@@ -88,6 +88,14 @@ public class CustomField {
         this.collectionName = collection;
     }
 
+    public List<CollectionItem> getCollection() {
+        return collection;
+    }
+
+    public void setCollection(List<CollectionItem> collection) {
+        this.collection = collection;
+    }
+
     public boolean isString(){ return TextUtils.equals(type, TYPE_STRING); }
     public boolean isBoolean(){ return TextUtils.equals(type, TYPE_BOOLEAN); }
     public boolean isInteger(){ return TextUtils.equals(type, TYPE_INT); }
@@ -131,19 +139,47 @@ public class CustomField {
                 JSONObject col = collections.getJSONObject(i);
                 String collectionName = col.getString("collection_name");
                 JSONArray items = col.getJSONArray("items");
-                List<Pair<String, String>> collectionItems = new ArrayList<>();
+                List<CollectionItem> collectionItems = new ArrayList<>();
 
                 for (int j = 0; j<items.length(); j++){
                     JSONObject item = items.getJSONObject(j);
                     String key = item.getString("id");
                     String value = item.getString("value");
-                    collectionItems.add( new Pair<>(key, value));
+                    collectionItems.add( new CollectionItem(key, value));
                 }
                 db.insertOrUpdateCustomFieldCollection(collectionName, collectionItems);
             }
 
         } catch (JSONException e) {
             Mint.logException(e);
+        }
+    }
+
+    public static class CollectionItem {
+        private String key;
+        private String label;
+
+        public CollectionItem(String key, String label){
+            this.key = key;
+            this.label = label;
+        }
+        public String getKey() { return key; }
+        public String getLabel() { return label; }
+        public void setKey(String key) { this.key = key; }
+        public void setLabel(String label) { this.label = label; }
+
+        @Override
+        public String toString() {
+            return label;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if(obj instanceof CollectionItem){
+                CollectionItem item = (CollectionItem) obj;
+                return item.getKey().equals(key);
+            }
+            return false;
         }
     }
 }

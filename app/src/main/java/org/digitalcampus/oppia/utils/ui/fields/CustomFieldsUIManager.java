@@ -5,10 +5,13 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
@@ -18,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.SwitchCompat;
 
 public class CustomFieldsUIManager {
@@ -38,12 +42,16 @@ public class CustomFieldsUIManager {
             if (field.isBoolean()){
                 input = addSwitchLayout(container, field);
             }
+            else if (field.isChoices()){
+                input = addSpinnerLayout(container, field);
+            }
             else{
                 input = addEditTextLayout(container, field);
             }
             if (!TextUtils.isEmpty(field.getHelperText())){
                 input.setHelperText(field.getHelperText());
             }
+            container.invalidate();
             input.initialize();
             inputs.add(new Pair<>(field, input));
         }
@@ -66,6 +74,25 @@ public class CustomFieldsUIManager {
         container.addView(switchLayout);
 
         return switchLayout;
+    }
+
+    private ValidableField addSpinnerLayout(ViewGroup container, CustomField field){
+
+        Spinner input = (Spinner) LayoutInflater.from(ctx).inflate(R.layout.view_underlined_spinner, null);
+        LinearLayout.LayoutParams wrap = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        input.setLayoutParams(wrap);
+        ValidableSpinnerLayout spinnerLayout = new ValidableSpinnerLayout(ctx, input, field.getLabel(), field.getCollection());
+        spinnerLayout.setRequired(field.isRequired());
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        spinnerLayout.setLayoutParams(params);
+        container.addView(spinnerLayout);
+
+        return spinnerLayout;
     }
 
     private ValidableField addEditTextLayout(ViewGroup container, CustomField field){

@@ -2211,15 +2211,15 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insertOrUpdateCustomFieldCollection(String collectionName, List<Pair<String, String>> items) {
-        for (Pair<String, String> item : items){
+    public void insertOrUpdateCustomFieldCollection(String collectionName, List<CustomField.CollectionItem> items) {
+        for (CustomField.CollectionItem item : items){
             ContentValues values = new ContentValues();
             values.put(CUSTOM_FIELDS_COLLECTION_C_COLLECTION_ID, collectionName);
-            values.put(CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY, item.first);
-            values.put(CUSTOM_FIELDS_COLLECTION_C_ITEM_VALUE, item.second);
+            values.put(CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY, item.getKey());
+            values.put(CUSTOM_FIELDS_COLLECTION_C_ITEM_VALUE, item.getLabel());
 
             String s = CUSTOM_FIELDS_COLLECTION_C_COLLECTION_ID + "=? AND " + CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY + "=?";
-            String[] args = new String[]{ collectionName, item.first };
+            String[] args = new String[]{ collectionName, item.getKey() };
             Cursor c = db.query(CUSTOM_FIELDS_COLLECTION_TABLE, null, s, args, null, null, null);
             boolean toUpdate = c.getCount() > 0;
             c.close();
@@ -2247,12 +2247,31 @@ public class DbHelper extends SQLiteOpenHelper {
             field.setOrder(c.getInt(c.getColumnIndex(CUSTOM_FIELD_C_ORDER)));
             field.setLabel(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_LABEL)));
             field.setHelperText(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_HELPTEXT)));
-            field.setCollectionName(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_HELPTEXT)));
+            field.setCollectionName(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_COLLECTION)));
 
             fields.add(field);
             c.moveToNext();
         }
         c.close();
+
+        for (CustomField field : fields){
+            if (field.isChoices() && !TextUtils.isEmpty(field.getCollectionName())){
+                String s = CUSTOM_FIELDS_COLLECTION_C_COLLECTION_ID + "=?";
+                String[] args = new String[]{ field.getCollectionName() };
+                c = db.query(CUSTOM_FIELDS_COLLECTION_TABLE, null, s, args, null, null, null);
+                c.moveToFirst();
+                List<CustomField.CollectionItem> items = new ArrayList<>();
+                while (!c.isAfterLast()) {
+                    String key = c.getString(c.getColumnIndex(CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY));
+                    String value = c.getString(c.getColumnIndex(CUSTOM_FIELDS_COLLECTION_C_ITEM_VALUE));
+                    items.add( new CustomField.CollectionItem(key, value));
+                    c.moveToNext();
+                }
+                c.close();
+                field.setCollection(items);
+            }
+        }
+
         return fields;
     }
 
