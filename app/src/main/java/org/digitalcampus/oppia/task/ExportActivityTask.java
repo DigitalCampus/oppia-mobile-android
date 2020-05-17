@@ -83,9 +83,9 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
                 CustomValue value = u.getCustomField(field.getKey());
                 if (value != null){
                     userJSON += "\"" + field.getKey() + "\":"
-                            + (field.isString() ? "\"" : "")
+                            + (field.isExportedAsString() ? "\"" : "")
                             + value.getValue().toString()
-                            + (field.isString() ? "\"" : "")
+                            + (field.isExportedAsString() ? "\"" : "")
                             + ", ";
                 }
             }
@@ -93,7 +93,6 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
             userJSON += "\"trackers\":" + TrackerLog.asJSONCollectionString(userTrackers) + ", ";
             userJSON += "\"quizresponses\":" + QuizAttempt.asJSONCollectionString(userQuizzes) + ", ";
             userJSON += "\"points\":[]";
-
             userJSON += "}";
             userResults.add(userJSON);
         }

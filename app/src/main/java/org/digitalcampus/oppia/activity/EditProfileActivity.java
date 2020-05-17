@@ -48,7 +48,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
         profileCustomFields = customFieldsRepo.getAll(this);
         fieldsManager = new CustomFieldsUIManager(this, profileCustomFields);
-        fieldsManager.createFieldsInContainer(binding.customFieldsContainer);
+        fieldsManager.populateAndInitializeFields(binding.customFieldsContainer);
 
         fillUserProfileData();
     }
@@ -90,7 +90,6 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         ValidableTextInputLayout[] fields = new ValidableTextInputLayout[]{ binding.fieldFirstname,
                 binding.fieldLastname, binding.fieldJobtitle, binding.fieldOrganisation, binding.fieldPhoneno};
 
-
         boolean valid = true;
         for (ValidableTextInputLayout field : fields){
             valid = field.validate() && valid;
@@ -103,7 +102,6 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
             binding.fieldEmail.setError(getString(R.string.error_register_email));
             valid = false;
         }*/
-
 
         if (valid){
             user.setFirstname(firstname);
