@@ -22,11 +22,6 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
         super(context);
     }
 
-    public ValidableTextInputLayout(Context context, boolean isRequired) {
-        super(context);
-        required = isRequired;
-    }
-
     public ValidableTextInputLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         updateAttrs(context, attrs);
@@ -65,7 +60,7 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
 
     public boolean validate(){
         EditText input = getEditText();
-        if (input == null){
+        if (input == null || this.getVisibility() == GONE){
             return true;
         }
         String text = input.getText().toString().trim();
@@ -93,6 +88,11 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
             return null;
         }
         return input.getText().toString().trim();
+    }
+
+    @Override
+    public void setChangeListener(onChangeListener listener) {
+
     }
 
     public void setText(String text) {

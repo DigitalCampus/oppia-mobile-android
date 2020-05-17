@@ -2,7 +2,9 @@ package org.digitalcampus.oppia.utils.ui.fields;
 
 import android.content.Context;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
     public ValidableSwitchLayout(Context context, SwitchCompat input) {
         super(context);
         this.setOrientation(VERTICAL);
+
         this.addView(input);
         this.input = input;
 
@@ -58,6 +61,15 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
         if (required && input != null){
             this.input.setHint(input.getHint() + " *");
         }
+
+    }
+
+    @Override
+    public void setLayoutParams(ViewGroup.LayoutParams params){
+        int margin = getContext().getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin);
+        LinearLayout.LayoutParams linearParams = (LinearLayout.LayoutParams) params;
+        linearParams.setMargins(0, margin, 0, margin);
+        super.setLayoutParams(linearParams);
     }
 
     @Override
@@ -86,5 +98,16 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
     @Override
     public String getCleanedValue() {
         return input.isChecked() ? "true" : "false";
+    }
+
+
+    @Override
+    public void setChangeListener(final onChangeListener listener) {
+        input.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                listener.onValueChanged(input.isChecked() ? "true" : null);
+            }
+        });
     }
 }

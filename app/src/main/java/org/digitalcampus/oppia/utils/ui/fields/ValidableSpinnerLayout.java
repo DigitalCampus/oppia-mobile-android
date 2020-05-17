@@ -31,6 +31,8 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     private boolean selected = false;
     private ArrayAdapter<CustomField.CollectionItem> adapter;
 
+    private onChangeListener valueChangelistener;
+
     public ValidableSpinnerLayout(Context context){
         super(context);
     }
@@ -72,11 +74,6 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
             }
         }
 
-    }
-
-    public String getSelected(){
-        int pos = input.getSelectedItemPosition();
-        return items.get(pos).getKey();
     }
 
     private void setDisabledTextColor(View view, int position){
@@ -132,7 +129,13 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
 
     @Override
     public String getCleanedValue() {
-        return items.get(input.getSelectedItemPosition()).getKey();
+        int pos = input.getSelectedItemPosition();
+        return items.get(pos).getKey();
+    }
+
+    @Override
+    public void setChangeListener(onChangeListener listener) {
+        this.valueChangelistener = listener;
     }
 
     @Override
@@ -146,6 +149,10 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
                 //As we removed the first item, we need to reselect the element in the dropdown
                 input.setSelection(position-1);
             }
+        }
+
+        if(selected && valueChangelistener != null){
+            valueChangelistener.onValueChanged(getCleanedValue());
         }
 
     }

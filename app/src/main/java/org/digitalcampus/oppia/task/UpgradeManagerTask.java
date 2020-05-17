@@ -425,6 +425,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	}
 
 	private void reloadCustomFieldsIfNeeded(){
+		CustomField.loadCustomFieldsFromAssets(ctx);
 		if (BuildConfig.LOAD_CUSTOMFIELDS_VERSION <= BuildConfig.VERSION_CODE){
 			String loadedConfig = "customfields_loaded_" + BuildConfig.LOAD_CUSTOMFIELDS_VERSION;
 			boolean alreadyLoaded = prefs.getBoolean(loadedConfig, false);

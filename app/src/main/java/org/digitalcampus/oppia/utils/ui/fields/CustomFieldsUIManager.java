@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -21,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.SwitchCompat;
 
 public class CustomFieldsUIManager {
@@ -35,85 +35,102 @@ public class CustomFieldsUIManager {
         this.ctx = ctx;
     }
 
-    public void createFieldsInContainer(ViewGroup container){
-        for (CustomField field : fields){
+    private void addAndConfigureInput(CustomField field, ValidableField input){
+        input.setRequired(field.isRequired());
+        if (!TextUtils.isEmpty(field.getHelperText())){
+            input.setHelperText(field.getHelperText());
+        }
+        inputs.add(new Pair<>(field, input));
+    }
 
-            ValidableField input;
+    private LinearLayout.LayoutParams getDefaultLayoutParams(){
+        return new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    public void populateAndInitializeFields(ViewGroup container){
+
+        for (CustomField field : fields){
+            View input;
             if (field.isBoolean()){
-                input = addSwitchLayout(container, field);
+                input = addSwitchLayout(field);
             }
             else if (field.isChoices()){
-                input = addSpinnerLayout(container, field);
+                input = addSpinnerLayout(field);
             }
             else{
-                input = addEditTextLayout(container, field);
+                input = addEditTextLayout(field);
             }
-            if (!TextUtils.isEmpty(field.getHelperText())){
-                input.setHelperText(field.getHelperText());
-            }
-            container.invalidate();
+            input.setLayoutParams(getDefaultLayoutParams());
+            container.addView(input);
+        }
+
+        initializeFields();
+        container.invalidate();
+
+    }
+
+    private void initializeFields(){
+        for (final Pair<CustomField, ValidableField> dependField : inputs){
+            final CustomField field = dependField.first;
+            final ValidableField input = dependField.second;
             input.initialize();
-            inputs.add(new Pair<>(field, input));
+
+            if (field.isDependantOnField()){
+                input.setVisibility(View.GONE);
+                // Find field it depends on
+                for (final Pair<CustomField, ValidableField> formField : inputs){
+                   if (TextUtils.equals(formField.first.getKey(), field.getFieldVisibleBy())) {
+                       formField.second.setChangeListener(new ValidableField.onChangeListener() {
+                           @Override
+                           public void onValueChanged(String newValue) {
+                               boolean visible = newValue != null && !TextUtils.isEmpty(newValue) &&
+                                       (TextUtils.isEmpty(field.getValueVisibleBy()) ||
+                                    TextUtils.equals(field.getValueVisibleBy(), newValue));
+                               input.setVisibility(visible ? View.VISIBLE : View.GONE);
+                           }
+                       });
+                       break;
+                   }
+                }
+            }
         }
     }
 
-    private ValidableField addSwitchLayout(ViewGroup container, CustomField field){
-        SwitchCompat input = new SwitchCompat(ctx);
+    private View addSwitchLayout(CustomField field){
+        SwitchCompat switchInput = new SwitchCompat(ctx);
         LinearLayout.LayoutParams wrap = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        input.setLayoutParams(wrap);
-        ValidableSwitchLayout switchLayout = new ValidableSwitchLayout(ctx, input);
-        switchLayout.setRequired(field.isRequired());
-        input.setHint(field.getLabel());
+        switchInput.setLayoutParams(wrap);
+        switchInput.setHint(field.getLabel());
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        switchLayout.setLayoutParams(params);
-        container.addView(switchLayout);
-
-        return switchLayout;
+        ValidableSwitchLayout input = new ValidableSwitchLayout(ctx, switchInput);
+        addAndConfigureInput(field, input);
+        return input;
     }
 
-    private ValidableField addSpinnerLayout(ViewGroup container, CustomField field){
-
-        Spinner input = (Spinner) LayoutInflater.from(ctx).inflate(R.layout.view_underlined_spinner, null);
-        LinearLayout.LayoutParams wrap = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        input.setLayoutParams(wrap);
-        ValidableSpinnerLayout spinnerLayout = new ValidableSpinnerLayout(ctx, input, field.getLabel(), field.getCollection());
-        spinnerLayout.setRequired(field.isRequired());
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        spinnerLayout.setLayoutParams(params);
-        container.addView(spinnerLayout);
-
-        return spinnerLayout;
+    private View addSpinnerLayout(CustomField field){
+        Spinner spinner = (Spinner) LayoutInflater.from(ctx).inflate(R.layout.view_underlined_spinner, null);
+        ValidableSpinnerLayout input = new ValidableSpinnerLayout(ctx, spinner, field.getLabel(), field.getCollection());
+        addAndConfigureInput(field, input);
+        return input;
     }
 
-    private ValidableField addEditTextLayout(ViewGroup container, CustomField field){
+    private View addEditTextLayout(CustomField field){
         EditText editText = new EditText(ctx);
         editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         editText.setHint(field.getLabel());
         if (field.isInteger() || field.isFloat()){
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         }
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        ValidableTextInputLayout inputLayout = new ValidableTextInputLayout(ctx, field.isRequired());
-        inputLayout.setLayoutParams(params);
-        inputLayout.addView(editText, params);
-        container.addView(inputLayout);
-
-        return inputLayout;
+        ValidableTextInputLayout input = new ValidableTextInputLayout(ctx);
+        input.addView(editText, getDefaultLayoutParams());
+        addAndConfigureInput(field, input);
+        return input;
     }
+
 
     public void fillWithUserData(User user){
         for (Pair<CustomField, ValidableField> formField : inputs){
@@ -155,7 +172,7 @@ public class CustomFieldsUIManager {
             }
             else if (field.isChoices()){
                 ValidableSpinnerLayout input = (ValidableSpinnerLayout) formField.second;
-                values.put(field.getKey(), new CustomValue<>(input.getSelected()));
+                values.put(field.getKey(), new CustomValue<>(input.getCleanedValue()));
             }
             else{
                 ValidableTextInputLayout input = (ValidableTextInputLayout) formField.second;
