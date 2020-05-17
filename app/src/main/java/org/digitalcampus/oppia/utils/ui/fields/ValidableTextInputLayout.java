@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -56,6 +60,14 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
             Spanned requiredHint = Html.fromHtml(html);
             this.setHint(requiredHint);
         }
+
+        if (!TextUtils.isEmpty(getHelperText())){
+            // We add some additional bottom margin
+            LayoutParams params = (LayoutParams) getLayoutParams();
+            params.bottomMargin = getContext().getResources().getDimensionPixelOffset(R.dimen.margin_medium);
+            setLayoutParams(params);
+        }
+
     }
 
     public boolean validate(){

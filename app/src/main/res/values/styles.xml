@@ -291,5 +291,13 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="Oppia.CustomField.TextInputLayoutHint" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/theme_primary</item>
+        <item name="color">@color/theme_secondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Oppia.CustomField.TextInputLayoutError" parent="TextAppearance.Design.Error" />
+
 
 </resources>

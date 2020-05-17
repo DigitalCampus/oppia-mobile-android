@@ -28,6 +28,9 @@
                 android:id="@+id/field_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColorHint="@color/theme_secondary"
+                app:errorTextAppearance="@style/Oppia.CustomField.TextInputLayoutError"
+                app:hintTextAppearance="@style/Oppia.CustomField.TextInputLayoutHint"
                 app:required="true"
                 app:cantContainSpaces="true">
 
@@ -44,10 +47,13 @@
                 android:id="@+id/field_firstname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:textColorHint="@color/theme_secondary"
+                app:errorTextAppearance="@style/Oppia.CustomField.TextInputLayoutError"
+                app:hintTextAppearance="@style/Oppia.CustomField.TextInputLayoutHint"
                 app:required="true">
 
                 <EditText
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/register_form_firstname_title"
@@ -59,10 +65,13 @@
                 android:id="@+id/field_lastname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:textColorHint="@color/theme_secondary"
+                app:errorTextAppearance="@style/Oppia.CustomField.TextInputLayoutError"
+                app:hintTextAppearance="@style/Oppia.CustomField.TextInputLayoutHint"
                 app:required="true">
 
                 <EditText
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/register_form_lastname_title"
@@ -75,10 +84,12 @@
                 android:id="@+id/field_organisation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                >
+                android:layout_marginTop="@dimen/margin_medium"
+                android:textColorHint="@color/theme_secondary"
+                app:errorTextAppearance="@style/Oppia.CustomField.TextInputLayoutError"
+                app:hintTextAppearance="@style/Oppia.CustomField.TextInputLayoutHint">
 
                 <EditText
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/register_form_organisation_title"
@@ -90,7 +101,11 @@
             <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                 android:id="@+id/field_jobtitle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:textColorHint="@color/theme_secondary"
+                app:errorTextAppearance="@style/Oppia.CustomField.TextInputLayoutError"
+                app:hintTextAppearance="@style/Oppia.CustomField.TextInputLayoutHint">
 
                 <EditText
                     android:layout_width="match_parent"
