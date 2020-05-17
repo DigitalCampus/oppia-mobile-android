@@ -25,20 +25,128 @@
       "type":"str"
     },
     {
-      "name":"organisation_facility",
-      "label":"Health Facility/Organisation",
+      "name":"profession",
+      "label":"Profession",
       "order":4,
+      "required":true,
+      "helper_text":"",
+      "collection":"professions",
+      "type":"choices"
+    },
+    {
+      "name":"profession_other",
+      "label":"Profession - Other (please specify)",
+      "order":5,
+      "required":false,
+      "helper_text":"",
+      "visible_byfield":"profession",
+      "visible_byvalue":"other",
+      "type":"str"
+    },
+    {
+      "name":"place_of_work",
+      "label":"Primary place of work",
+      "order":6,
+      "required":true,
+      "helper_text":"",
+      "collection":"places_of_work",
+      "type":"choices"
+    },
+    {
+      "name":"org_facility_name",
+      "label":"Name of health facility or organization",
+      "order":7,
       "required":true,
       "helper_text":"",
       "type":"str"
     },
     {
-      "name":"profession",
-      "label":"Job Title",
-      "order":5,
+      "name":"response_involvement",
+      "label":"COVID-19 pandemic response involvement",
+      "order":8,
+      "required":true,
+      "helper_text":"Are you currently involved or planning to be involved in the COVID-19 pandemic response in any of the following ways?",
+      "collection":"response_involvements",
+      "type":"choices"
+    },
+    {
+      "name":"response_involvement_other",
+      "label":"Other involvement (please specify)",
+      "order":9,
+      "required":false,
+      "helper_text":"",
+      "visible_byfield":"response_involvement",
+      "visible_byvalue":"other",
+      "type":"str"
+    },
+    {
+      "name":"gender",
+      "label":"Gender",
+      "order":10,
       "required":true,
       "helper_text":"",
-      "type":"str"
+      "collection":"genders",
+      "type":"choices"
+    }
+  ],
+  "collections": [
+    {
+      "collection_name": "professions",
+      "items":[
+        {"id": "environment_health_officer", "value":"Environment health officer"},
+        {"id": "health_extension_worker", "value":"Health Extension Worker"},
+        {"id": "health_officer", "value":"Health officer"},
+        {"id": "laboratory_officer", "value":"Laboratory officer"},
+        {"id": "midwife", "value":"Midwife"},
+        {"id": "nurse", "value":"Nurse"},
+        {"id": "pharmacist", "value":"Pharmacist"},
+        {"id": "physician", "value":"Physician"},
+        {"id": "program_manager_or_implementer", "value":"Program manager or implementer"},
+        {"id": "public_health_officer", "value":"Public health officer"},
+        {"id": "Researcher", "value":"Researcher"},
+        {"id": "n_a", "value":"N/A - Not currently working"},
+        {"id": "other", "value":"Other"}
+      ]
+    },
+    {
+      "collection_name": "places_of_work",
+      "items":[
+        {"id": "academic_institution", "value":"Academic institution"},
+        {"id": "civil_society_organization", "value":"Civil society organization"},
+        {"id": "government_office", "value":"Government office"},
+        {"id": "health_center", "value":"Health center"},
+        {"id": "health_post", "value":"Health post"},
+        {"id": "hospital", "value":"Hospital"},
+        {"id": "intergovernmental_organization", "value":"Intergovernmental organization"},
+        {"id": "laboratory", "value":"Laboratory"},
+        {"id": "ngo_nonprofit", "value":"NGO / nonprofit"},
+        {"id": "pharmacy", "value":"Pharmacy"},
+        {"id": "private_clinic", "value":"Private clinic"},
+        {"id": "research institution", "value":"Research institution"},
+        {"id": "other_public", "value":"Other public/government institution"},
+        {"id": "other_private", "value":"Other private sector institution/company"},
+        {"id": "n_a", "value":"N/A - Not currently working"}
+      ]
+    },
+    {
+      "collection_name": "response_involvements",
+      "items": [
+        {"id": "community_engagement", "value":"Conducting community engagement, risk communication, and/or health education activities"},
+        {"id": "surveillance", "value":"Conducting surveillance"},
+        {"id": "contact_tracing", "value":"Conducting contact tracing"},
+        {"id": "testing", "value":"Testing suspected cases"},
+        {"id": "treating", "value":"Treating or supporting patients with confirmed and suspected COVID-19 "},
+        {"id": "no", "value":"No, I am not involved in the pandemic response"},
+        {"id": "other", "value":"Other (please specify)"}
+      ]
+    },
+    {
+      "collection_name": "genders",
+      "items": [
+        {"id": "female", "value":"Female"},
+        {"id": "male", "value":"Male"},
+        {"id": "prefer_not_to_say", "value":"Prefer not to say"}
+      ]
     }
   ]
 }
