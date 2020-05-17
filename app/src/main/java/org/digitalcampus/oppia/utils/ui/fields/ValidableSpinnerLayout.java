@@ -46,7 +46,6 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         this.items = items;
         this.label = label;
 
-
         errorText = new TextView(getContext());
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -122,6 +121,8 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             helperText.setLayoutParams(params);
             helperText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+            int padding = getContext().getResources().getDimensionPixelOffset(R.dimen.padding_medium);
+            helperText.setPadding(padding,0,padding,0);
             this.addView(helperText);
         }
         helperText.setText(text);
