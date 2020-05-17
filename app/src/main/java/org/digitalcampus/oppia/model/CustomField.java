@@ -32,6 +32,9 @@ public class CustomField {
     private String collectionName;
     private List<CollectionItem> collection;
 
+    private String fieldVisibleBy;
+    private String valueVisibleBy;
+
     public String getKey() {
         return key;
     }
@@ -96,6 +99,26 @@ public class CustomField {
         this.collection = collection;
     }
 
+    public boolean isDependantOnField(){
+        return !TextUtils.isEmpty(fieldVisibleBy);
+    }
+
+    public String getFieldVisibleBy() {
+        return fieldVisibleBy;
+    }
+
+    public void setFieldVisibleBy(String fieldVisibleBy) {
+        this.fieldVisibleBy = fieldVisibleBy;
+    }
+
+    public String getValueVisibleBy() {
+        return valueVisibleBy;
+    }
+
+    public void setValueVisibleBy(String valueVisibleBy) {
+        this.valueVisibleBy = valueVisibleBy;
+    }
+
     public boolean isString(){ return TextUtils.equals(type, TYPE_STRING); }
     public boolean isBoolean(){ return TextUtils.equals(type, TYPE_BOOLEAN); }
     public boolean isInteger(){ return TextUtils.equals(type, TYPE_INT); }
@@ -125,6 +148,12 @@ public class CustomField {
                 }
                 if (f.has("collection")){
                     field.setCollectionName(f.getString("collection"));
+                }
+                if (f.has("visible_byfield")){
+                    field.setFieldVisibleBy(f.getString("visible_byfield"));
+                }
+                if (f.has("visible_byvalue")){
+                    field.setValueVisibleBy(f.getString("visible_byvalue"));
                 }
 
                 db.insertOrUpdateCustomField(field);
