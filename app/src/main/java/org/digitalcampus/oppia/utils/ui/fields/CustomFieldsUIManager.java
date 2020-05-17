@@ -43,10 +43,13 @@ public class CustomFieldsUIManager {
         inputs.add(new Pair<>(field, input));
     }
 
-    private LinearLayout.LayoutParams getDefaultLayoutParams(){
-        return new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+    private ValidableField getInputByKey(String key){
+        for (final Pair<CustomField, ValidableField> formField : inputs){
+            if (TextUtils.equals(formField.first.getKey(), key)) {
+                return formField.second;
+            }
+        }
+        return null;
     }
 
     public void populateAndInitializeFields(ViewGroup container){
@@ -68,7 +71,6 @@ public class CustomFieldsUIManager {
 
         initializeFields();
         container.invalidate();
-
     }
 
     private void initializeFields(){
@@ -79,21 +81,21 @@ public class CustomFieldsUIManager {
 
             if (field.isDependantOnField()){
                 input.setVisibility(View.GONE);
-                // Find field it depends on
-                for (final Pair<CustomField, ValidableField> formField : inputs){
-                   if (TextUtils.equals(formField.first.getKey(), field.getFieldVisibleBy())) {
-                       formField.second.setChangeListener(new ValidableField.onChangeListener() {
-                           @Override
-                           public void onValueChanged(String newValue) {
-                               boolean visible = newValue != null && !TextUtils.isEmpty(newValue) &&
-                                       (TextUtils.isEmpty(field.getValueVisibleBy()) ||
-                                    TextUtils.equals(field.getValueVisibleBy(), newValue));
-                               input.setVisibility(visible ? View.VISIBLE : View.GONE);
-                           }
-                       });
-                       break;
-                   }
+
+                ValidableField formField = getInputByKey(field.getFieldVisibleBy());
+                if (formField == null){
+                    continue;
                 }
+
+                formField.setChangeListener(new ValidableField.onChangeListener() {
+                    @Override
+                    public void onValueChanged(String newValue) {
+                        boolean valueFilled = newValue != null && !TextUtils.isEmpty(newValue);
+                        boolean condition = TextUtils.isEmpty(field.getValueVisibleBy()) || TextUtils.equals(field.getValueVisibleBy(), newValue);
+                        boolean visible = valueFilled && condition;
+                        input.setVisibility(visible ? View.VISIBLE : View.GONE);
+                    }
+                });
             }
         }
     }
@@ -189,5 +191,12 @@ public class CustomFieldsUIManager {
 
         }
         return values;
+    }
+
+
+    private LinearLayout.LayoutParams getDefaultLayoutParams(){
+        return new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 }

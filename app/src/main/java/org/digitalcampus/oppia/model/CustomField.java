@@ -2,7 +2,6 @@ package org.digitalcampus.oppia.model;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Pair;
 
 import com.splunk.mint.Mint;
 
@@ -14,6 +13,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 public class CustomField {
 
@@ -128,6 +129,9 @@ public class CustomField {
 
     public static void loadCustomFieldsFromAssets(Context ctx){
         String data = StorageUtils.readFileFromAssets(ctx, "custom_fields.json");
+        if (TextUtils.isEmpty(data)){
+            return;
+        }
         try {
             JSONObject json = new JSONObject(data);
             JSONArray fields = json.getJSONArray("fields");
@@ -198,6 +202,7 @@ public class CustomField {
         public void setKey(String key) { this.key = key; }
         public void setLabel(String label) { this.label = label; }
 
+        @NonNull
         @Override
         public String toString() {
             return label;

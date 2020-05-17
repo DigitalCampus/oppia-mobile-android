@@ -17,6 +17,7 @@ import org.digitalcampus.oppia.model.CustomField;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 public class ValidableSpinnerLayout extends LinearLayout implements ValidableField, AdapterView.OnItemSelectedListener {
@@ -93,7 +94,7 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         uiItems.addAll(items);
         adapter = new ArrayAdapter<CustomField.CollectionItem>(this.getContext(), android.R.layout.simple_spinner_dropdown_item, uiItems){
             @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 setDisabledTextColor(view, position);
                 return view;
