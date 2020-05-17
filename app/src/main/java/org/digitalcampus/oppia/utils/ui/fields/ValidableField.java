@@ -6,4 +6,10 @@ public interface ValidableField {
     boolean validate();
     void setHelperText(CharSequence text);
     String getCleanedValue();
+    void setChangeListener(onChangeListener listener);
+    void setVisibility(final int VISIBLE_MODE);
+
+    interface onChangeListener{
+        void onValueChanged(String newValue);
+    }
 }

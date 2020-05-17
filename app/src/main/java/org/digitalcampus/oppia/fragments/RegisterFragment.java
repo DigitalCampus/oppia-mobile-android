@@ -124,7 +124,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 
 		profileCustomFields = customFieldsRepo.getAll(getContext());
 		fieldsManager = new CustomFieldsUIManager(this.getActivity(), profileCustomFields);
-		fieldsManager.createFieldsInContainer(customFieldsContainer);
+		fieldsManager.populateAndInitializeFields(customFieldsContainer);
 
 		registerButton.setOnClickListener(new View.OnClickListener() {
 			@Override
