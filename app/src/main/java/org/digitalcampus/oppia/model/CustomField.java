@@ -124,6 +124,7 @@ public class CustomField {
     public boolean isInteger(){ return TextUtils.equals(type, TYPE_INT); }
     public boolean isFloat(){ return TextUtils.equals(type, TYPE_FLOAT); }
     public boolean isChoices(){ return TextUtils.equals(type, TYPE_CHOICES); }
+    public boolean isExportedAsString(){ return isString() || isChoices(); }
 
     public static void loadCustomFieldsFromAssets(Context ctx){
         String data = StorageUtils.readFileFromAssets(ctx, "custom_fields.json");
