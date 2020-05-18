@@ -26,11 +26,7 @@
 
             <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                 android:id="@+id/field_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColorHint="@color/theme_secondary"
-                app:errorTextAppearance="@style/Oppia.CustomField.TextInputLayoutError"
-                app:hintTextAppearance="@style/Oppia.CustomField.TextInputLayoutHint"
+                style="@style/Oppia.CustomField.TextInputLayout"
                 app:required="true"
                 app:cantContainSpaces="true">
 
@@ -45,12 +41,8 @@
 
             <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                 android:id="@+id/field_firstname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/Oppia.CustomField.TextInputLayout"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:textColorHint="@color/theme_secondary"
-                app:errorTextAppearance="@style/Oppia.CustomField.TextInputLayoutError"
-                app:hintTextAppearance="@style/Oppia.CustomField.TextInputLayoutHint"
                 app:required="true">
 
                 <EditText
@@ -63,12 +55,8 @@
 
             <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                 android:id="@+id/field_lastname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:textColorHint="@color/theme_secondary"
-                app:errorTextAppearance="@style/Oppia.CustomField.TextInputLayoutError"
-                app:hintTextAppearance="@style/Oppia.CustomField.TextInputLayoutHint"
+                style="@style/Oppia.CustomField.TextInputLayout"
                 app:required="true">
 
                 <EditText
@@ -82,12 +70,8 @@
 
             <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                 android:id="@+id/field_organisation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:textColorHint="@color/theme_secondary"
-                app:errorTextAppearance="@style/Oppia.CustomField.TextInputLayoutError"
-                app:hintTextAppearance="@style/Oppia.CustomField.TextInputLayoutHint">
+                style="@style/Oppia.CustomField.TextInputLayout"
+                android:layout_marginTop="@dimen/margin_medium">
 
                 <EditText
                     android:layout_width="match_parent"
@@ -100,12 +84,8 @@
 
             <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                 android:id="@+id/field_jobtitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:textColorHint="@color/theme_secondary"
-                app:errorTextAppearance="@style/Oppia.CustomField.TextInputLayoutError"
-                app:hintTextAppearance="@style/Oppia.CustomField.TextInputLayoutHint">
+                style="@style/Oppia.CustomField.TextInputLayout"
+                android:layout_marginTop="@dimen/margin_medium">
 
                 <EditText
                     android:layout_width="match_parent"
