@@ -55,11 +55,11 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         addView(errorText);
 
         labelText = new TextView(getContext());
-        labelText.setTextAppearance(R.style.Oppia_CustomField_TextInputLayoutHint);
+        labelText.setTextAppearance(R.style.Oppia_CustomField_TextInputLayoutLabel);
         LayoutParams params = CustomFieldsUIManager.getLinearParams();
         params.setMargins(0, 10, 0, -20);
         labelText.setLayoutParams(params);
-        labelText.setPadding(input.getPaddingLeft(), 0, input.getPaddingRight(), 0);
+        labelText.setPadding(input.getPaddingLeft(), 0,0, 0);
         updateLabelText();
         addView(labelText, 0);
     }
@@ -95,7 +95,7 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         if (tv == null){
             return;
         }
-        tv.setTextColor(getContext().getColor( !selected && position == 0 ? R.color.grey_dark : R.color.text_dark));
+        tv.setTextColor(getContext().getResources().getColor( !selected && position == 0 ? R.color.grey_dark : R.color.text_dark));
         tv.invalidate();
     }
 
@@ -105,7 +105,7 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         uiItems = new ArrayList<>();
         uiItems.add(new CustomField.CollectionItem(null, label));
         uiItems.addAll(items);
-        adapter = new ArrayAdapter<CustomField.CollectionItem>(this.getContext(), android.R.layout.simple_spinner_dropdown_item, uiItems){
+        adapter = new ArrayAdapter<CustomField.CollectionItem>(this.getContext(), R.layout.view_spinner_dropdown_item, uiItems){
             @Override
             public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
@@ -132,7 +132,7 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         boolean valid = !required || selected;
         errorText.setVisibility(valid ? GONE : VISIBLE);
         labelText.setTextAppearance( valid ?
-                R.style.Oppia_CustomField_TextInputLayoutHint :
+                R.style.Oppia_CustomField_TextInputLayoutLabel :
                 R.style.Oppia_CustomField_TextInputLayoutError);
         return valid;
     }
