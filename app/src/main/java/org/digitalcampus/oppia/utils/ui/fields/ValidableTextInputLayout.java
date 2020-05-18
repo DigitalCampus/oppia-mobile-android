@@ -4,14 +4,16 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.EditText;
 
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.digitalcampus.mobile.learning.R;
 
-public class ValidableTextInputLayout extends TextInputLayout implements ValidableField{
+public class ValidableTextInputLayout extends TextInputLayout implements ValidableField, View.OnFocusChangeListener {
 
     private static final String REQUIRED_SPANNED_HINT = "<string>%s <span style=\"color:red;\">*</span></string>";
 
@@ -56,6 +58,15 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
             Spanned requiredHint = Html.fromHtml(html);
             this.setHint(requiredHint);
         }
+
+        if (!TextUtils.isEmpty(getHelperText())){
+            // We add some additional bottom margin
+            LayoutParams params = (LayoutParams) getLayoutParams();
+            params.bottomMargin = getContext().getResources().getDimensionPixelOffset(R.dimen.margin_medium);
+            setLayoutParams(params);
+        }
+        initializeLabelColorHintSelector();
+
     }
 
     public boolean validate(){
@@ -90,15 +101,43 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
         return input.getText().toString().trim();
     }
 
-    @Override
-    public void setChangeListener(onChangeListener listener) {
+    private void initializeLabelColorHintSelector() {
 
+        addOnEditTextAttachedListener(new OnEditTextAttachedListener() {
+            @Override
+            public void onEditTextAttached(TextInputLayout textInputLayout) {
+                getEditText().setFocusable(true);
+                getEditText().setFocusableInTouchMode(true);
+                getEditText().setOnFocusChangeListener(ValidableTextInputLayout.this);
+                setEditTextSelected();
+            }
+        });
+    }
+
+
+    @Override
+    public void setChangeListener(onChangeListener listener) { }
+
+    // Small hack to be able to show different label colors when the field is empty or filled
+    // using the color selector based in the "selected" state.
+    private void setEditTextSelected(){
+        EditText input = getEditText();
+        if (input != null){
+            boolean selected = !TextUtils.isEmpty(input.getText().toString());
+            this.setSelected(selected);
+        }
+    }
+
+    @Override
+    public void onFocusChange(View view, boolean hasFocus) {
+        setEditTextSelected();
     }
 
     public void setText(String text) {
         EditText input = getEditText();
         if (input != null){
             input.setText(text);
+            setEditTextSelected();
         }
     }
 

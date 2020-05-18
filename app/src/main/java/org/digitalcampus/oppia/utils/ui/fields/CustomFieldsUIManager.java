@@ -55,18 +55,17 @@ public class CustomFieldsUIManager {
     public void populateAndInitializeFields(ViewGroup container){
 
         for (CustomField field : fields){
-            View input;
+            View inputView;
             if (field.isBoolean()){
-                input = addSwitchLayout(field);
+                inputView = addSwitchLayout(field);
             }
             else if (field.isChoices()){
-                input = addSpinnerLayout(field);
+                inputView = addSpinnerLayout(field);
             }
             else{
-                input = addEditTextLayout(field);
+                inputView = addEditTextLayout(field);
             }
-            input.setLayoutParams(getDefaultLayoutParams());
-            container.addView(input);
+            container.addView(inputView);
         }
 
         initializeFields();
@@ -77,6 +76,13 @@ public class CustomFieldsUIManager {
         for (final Pair<CustomField, ValidableField> dependField : inputs){
             final CustomField field = dependField.first;
             final ValidableField input = dependField.second;
+
+            LinearLayout.LayoutParams params = getDefaultLayoutParams();
+            if (field.isDependantOnField()) {
+                // We remove the bottom separation from the field it depends on
+                params.topMargin = -ctx.getResources().getDimensionPixelSize(R.dimen.margin_medium)/2;
+            }
+            input.setLayoutParams(params);
             input.initialize();
 
             if (field.isDependantOnField()){
@@ -86,7 +92,6 @@ public class CustomFieldsUIManager {
                 if (formField == null){
                     continue;
                 }
-
                 formField.setChangeListener(new ValidableField.onChangeListener() {
                     @Override
                     public void onValueChanged(String newValue) {
@@ -97,24 +102,21 @@ public class CustomFieldsUIManager {
                     }
                 });
             }
+
         }
     }
 
     private View addSwitchLayout(CustomField field){
         SwitchCompat switchInput = new SwitchCompat(ctx);
-        LinearLayout.LayoutParams wrap = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        switchInput.setLayoutParams(wrap);
+        switchInput.setLayoutParams(getLinearParams());
         switchInput.setHint(field.getLabel());
-
         ValidableSwitchLayout input = new ValidableSwitchLayout(ctx, switchInput);
         addAndConfigureInput(field, input);
         return input;
     }
 
     private View addSpinnerLayout(CustomField field){
-        Spinner spinner = (Spinner) LayoutInflater.from(ctx).inflate(R.layout.view_underlined_spinner, null);
+        Spinner spinner = (Spinner) LayoutInflater.from(ctx).inflate(R.layout.view_customfield_spinner, null);
         ValidableSpinnerLayout input = new ValidableSpinnerLayout(ctx, spinner, field.getLabel(), field.getCollection());
         addAndConfigureInput(field, input);
         return input;
@@ -127,7 +129,7 @@ public class CustomFieldsUIManager {
         if (field.isInteger() || field.isFloat()){
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         }
-        ValidableTextInputLayout input = new ValidableTextInputLayout(ctx);
+        ValidableTextInputLayout input = (ValidableTextInputLayout) LayoutInflater.from(ctx).inflate(R.layout.view_customfield_text, null);;
         input.addView(editText, getDefaultLayoutParams());
         addAndConfigureInput(field, input);
         return input;
@@ -193,10 +195,15 @@ public class CustomFieldsUIManager {
         return values;
     }
 
-
-    private LinearLayout.LayoutParams getDefaultLayoutParams(){
+    public static LinearLayout.LayoutParams getLinearParams(){
         return new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    private LinearLayout.LayoutParams getDefaultLayoutParams(){
+        LinearLayout.LayoutParams params = getLinearParams();
+        params.topMargin = ctx.getResources().getDimensionPixelSize(R.dimen.margin_medium);
+        return params;
     }
 }

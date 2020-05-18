@@ -42,8 +42,7 @@
 
                 <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                     android:id="@+id/register_form_username_field"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/Oppia.CustomField.TextInputLayout"
                     app:required="true"
                     app:cantContainSpaces="true">
 
@@ -60,8 +59,8 @@
 
                 <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                     android:id="@+id/register_form_password_field"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    android:layout_marginTop="@dimen/margin_medium"
                     app:required="true"
                     app:cantContainSpaces="true">
 
@@ -74,9 +73,9 @@
                 </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
 
                 <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
-                    android:layout_width="match_parent"
                     android:id="@+id/register_form_password_again_field"
-                    android:layout_height="wrap_content"
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    android:layout_marginTop="@dimen/margin_medium"
                     app:required="true"
                     app:cantContainSpaces="true">
 
@@ -90,13 +89,12 @@
 
                 <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                     android:id="@+id/register_form_email_field"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    android:layout_marginTop="@dimen/margin_medium"
                     app:required="true"
                     app:cantContainSpaces="true">
 
                     <EditText
-
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_email_title"
@@ -107,12 +105,11 @@
 
                 <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                     android:id="@+id/register_form_firstname_field"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    android:layout_marginTop="@dimen/margin_medium"
                     app:required="true">
 
                     <EditText
-
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_firstname_title"
@@ -122,12 +119,11 @@
 
                 <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                     android:id="@+id/register_form_lastname_field"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    android:layout_marginTop="@dimen/margin_medium"
                     app:required="true">
 
                     <EditText
-
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_lastname_title"
@@ -138,12 +134,11 @@
 
                 <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                     android:id="@+id/register_form_phoneno_field"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    android:layout_marginTop="@dimen/margin_medium"
                     app:required="true">
 
                     <EditText
-
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_phoneno_title"
@@ -153,8 +148,8 @@
 
                 <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                     android:id="@+id/register_form_organisation_field"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    android:layout_marginTop="@dimen/margin_medium"
                     >
 
                     <EditText
@@ -168,8 +163,8 @@
 
                 <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                     android:id="@+id/register_form_jobtitle_field"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    android:layout_marginTop="@dimen/margin_medium">
 
                     <EditText
                         android:layout_width="match_parent"
