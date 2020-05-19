@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 
 public class ValidableSpinnerLayout extends LinearLayout implements ValidableField, AdapterView.OnItemSelectedListener {
 
@@ -26,6 +25,7 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     private Spinner input;
     private TextView helperText;
     private TextView errorText;
+    private TextView labelText;
     private List<CustomField.CollectionItem> items;
     private List<CustomField.CollectionItem> uiItems;
     private String label;
@@ -47,20 +47,35 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         this.label = label;
 
         errorText = new TextView(getContext());
-        LayoutParams params = new LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
-        errorText.setLayoutParams(params);
-        errorText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-        errorText.setTextColor(ContextCompat.getColor(getContext(), R.color.text_error));
+        errorText.setLayoutParams(CustomFieldsUIManager.getLinearParams());
+        errorText.setTextAppearance(R.style.Oppia_CustomField_TextInputLayoutError);
+        errorText.setPadding(input.getPaddingLeft(), 0, input.getPaddingRight(), 0);
         errorText.setText(getResources().getString(R.string.field_required));
         errorText.setVisibility(GONE);
         addView(errorText);
+
+        labelText = new TextView(getContext());
+        labelText.setTextAppearance(R.style.Oppia_CustomField_TextInputLayoutHint);
+        LayoutParams params = CustomFieldsUIManager.getLinearParams();
+        params.setMargins(0, 10, 0, -20);
+        labelText.setLayoutParams(params);
+        labelText.setPadding(input.getPaddingLeft(), 0, input.getPaddingRight(), 0);
+        updateLabelText();
+        addView(labelText, 0);
+    }
+
+    private void updateLabelText(){
+        String inputLabel = label;
+        if (required && input != null){
+            inputLabel += " *";
+        }
+        labelText.setText(inputLabel);
     }
 
     @Override
     public void setRequired(boolean required) {
         this.required = required;
+        updateLabelText();
     }
 
     public void setSelection(String key){
@@ -73,23 +88,22 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
                 return;
             }
         }
-
     }
 
     private void setDisabledTextColor(View view, int position){
         TextView tv = (TextView) view;
+        if (tv == null){
+            return;
+        }
         tv.setTextColor(getContext().getColor( !selected && position == 0 ? R.color.grey_dark : R.color.text_dark));
         tv.invalidate();
     }
 
     @Override
     public void initialize() {
-        String inputLabel = label;
-        if (required && input != null){
-            inputLabel += " *";
-        }
+
         uiItems = new ArrayList<>();
-        uiItems.add(new CustomField.CollectionItem(null, inputLabel));
+        uiItems.add(new CustomField.CollectionItem(null, label));
         uiItems.addAll(items);
         adapter = new ArrayAdapter<CustomField.CollectionItem>(this.getContext(), android.R.layout.simple_spinner_dropdown_item, uiItems){
             @Override
@@ -103,12 +117,23 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         input.setOnItemSelectedListener(this);
         input.setSelection(0);
 
+        LayoutParams params = (LayoutParams) input.getLayoutParams();
+        params.topMargin = -10;
+        input.setLayoutParams(params);
+
+        params = (LayoutParams) getLayoutParams();
+        params.bottomMargin = getContext().getResources().getDimensionPixelOffset(R.dimen.margin_medium);
+        setLayoutParams(params);
+
     }
 
     @Override
     public boolean validate() {
         boolean valid = !required || selected;
         errorText.setVisibility(valid ? GONE : VISIBLE);
+        labelText.setTextAppearance( valid ?
+                R.style.Oppia_CustomField_TextInputLayoutHint :
+                R.style.Oppia_CustomField_TextInputLayoutError);
         return valid;
     }
 
@@ -116,17 +141,12 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     public void setHelperText(CharSequence text) {
         if (helperText == null) {
             helperText = new TextView(getContext());
-            LayoutParams params = new LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            helperText.setLayoutParams(params);
+            helperText.setLayoutParams(CustomFieldsUIManager.getLinearParams());
             helperText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-            int padding = getContext().getResources().getDimensionPixelOffset(R.dimen.padding_medium);
-            helperText.setPadding(padding,0,padding,0);
+            helperText.setPadding(input.getPaddingLeft(),0,input.getPaddingRight(),0);
             this.addView(helperText);
         }
         helperText.setText(text);
-
     }
 
     @Override
