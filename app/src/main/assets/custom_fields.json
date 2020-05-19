@@ -6,20 +6,32 @@
       "order":1,
       "required":true,
       "helper_text":"",
+      "collection":"regions",
+      "type":"choices"
+    },
+    {
+      "name":"region_other",
+      "label":"Region - Other (please specify)",
+      "order":2,
+      "required":true,
+      "helper_text":"",
+      "visible_byfield":"region",
+      "visible_byvalue":"other",
       "type":"str"
     },
     {
       "name":"sub_city",
       "label":"Sub-City",
-      "order":2,
+      "order":3,
       "required":false,
-      "helper_text":"Enter if your region is Addis Ababa",
-      "type":"str"
+      "helper_text":"Select if your region is Addis Ababa",
+      "collection":"subcities",
+      "type":"choices"
     },
     {
       "name":"woreda",
       "label":"Woreda",
-      "order":3,
+      "order":4,
       "required":true,
       "helper_text":"",
       "type":"str"
@@ -27,7 +39,7 @@
     {
       "name":"profession",
       "label":"Profession",
-      "order":4,
+      "order":5,
       "required":true,
       "helper_text":"",
       "collection":"professions",
@@ -36,7 +48,7 @@
     {
       "name":"profession_other",
       "label":"Profession - Other (please specify)",
-      "order":5,
+      "order":6,
       "required":true,
       "helper_text":"",
       "visible_byfield":"profession",
@@ -46,7 +58,7 @@
     {
       "name":"place_of_work",
       "label":"Primary place of work",
-      "order":6,
+      "order":7,
       "required":true,
       "helper_text":"",
       "collection":"places_of_work",
@@ -55,34 +67,15 @@
     {
       "name":"org_facility_name",
       "label":"Name of health facility or organization",
-      "order":7,
-      "required":true,
-      "helper_text":"",
-      "type":"str"
-    },
-    {
-      "name":"response_involvement",
-      "label":"COVID-19 pandemic response involvement",
       "order":8,
       "required":true,
-      "helper_text":"Are you currently involved or planning to be involved in the COVID-19 pandemic response in any of the following ways?",
-      "collection":"response_involvements",
-      "type":"choices"
-    },
-    {
-      "name":"response_involvement_other",
-      "label":"Other involvement (please specify)",
-      "order":9,
-      "required":true,
       "helper_text":"",
-      "visible_byfield":"response_involvement",
-      "visible_byvalue":"other",
       "type":"str"
     },
     {
       "name":"gender",
       "label":"Gender",
-      "order":10,
+      "order":9,
       "required":true,
       "helper_text":"",
       "collection":"genders",
@@ -90,6 +83,38 @@
     }
   ],
   "collections": [
+    {
+      "collection_name": "regions",
+      "items":[
+        {"id": "addis_ababa", "value":"Addis Abeba"},
+        {"id": "afar", "value":"Afar Region"},
+        {"id": "amhara", "value":"Amhara Region"},
+        {"id": "benishangul_gumuz", "value":"Benishangul-Gumuz Region"},
+        {"id": "dire_dawa", "value":"Dire Dawa"},
+        {"id": "gambela", "value":"Gambela Region"},
+        {"id": "harari", "value":"Harari Region"},
+        {"id": "oromia", "value":"Oromia Region"},
+        {"id": "somali", "value":"Somali Region"},
+        {"id": "snnpr", "value":"Southern Nations, Nationalities, and Peoples Region"},
+        {"id": "tigray", "value":"Tigray Region"},
+        {"id": "other", "value":"Other"}
+      ]
+    },
+    {
+      "collection_name": "subcities",
+      "items":[
+        {"id": "addis_ketema", "value":"Addis Ketema"},
+        {"id": "akaky_kaliti", "value":"Akaky Kaliti"},
+        {"id": "arada", "value":"Arada"},
+        {"id": "bole", "value":"Bole"},
+        {"id": "gullele", "value":"Gullele"},
+        {"id": "kirkos", "value":"Kirkos"},
+        {"id": "kolfe_keranio", "value":"Kolfe Keranio"},
+        {"id": "lideta", "value":"Lideta"},
+        {"id": "nifas_silk_lafto", "value":"Nifas Silk-Lafto"},
+        {"id": "yeka", "value":"Yeka"}
+      ]
+    },
     {
       "collection_name": "professions",
       "items":[
@@ -129,23 +154,10 @@
       ]
     },
     {
-      "collection_name": "response_involvements",
-      "items": [
-        {"id": "community_engagement", "value":"Conducting community engagement, risk communication, and/or health education activities"},
-        {"id": "surveillance", "value":"Conducting surveillance"},
-        {"id": "contact_tracing", "value":"Conducting contact tracing"},
-        {"id": "testing", "value":"Testing suspected cases"},
-        {"id": "treating", "value":"Treating or supporting patients with confirmed and suspected COVID-19 "},
-        {"id": "no", "value":"No, I am not involved in the pandemic response"},
-        {"id": "other", "value":"Other (please specify)"}
-      ]
-    },
-    {
       "collection_name": "genders",
       "items": [
         {"id": "female", "value":"Female"},
-        {"id": "male", "value":"Male"},
-        {"id": "prefer_not_to_say", "value":"Prefer not to say"}
+        {"id": "male", "value":"Male"}
       ]
     }
   ]
