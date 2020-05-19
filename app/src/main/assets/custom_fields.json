@@ -10,28 +10,19 @@
       "type":"choices"
     },
     {
-      "name":"region_other",
-      "label":"Region - Other (please specify)",
+      "name":"sub_city",
+      "label":"Addis Ababa Sub-City",
       "order":2,
       "required":true,
       "helper_text":"",
       "visible_byfield":"region",
-      "visible_byvalue":"other",
+      "visible_byvalue":"addis_ababa",
       "type":"str"
-    },
-    {
-      "name":"sub_city",
-      "label":"Sub-City",
-      "order":3,
-      "required":false,
-      "helper_text":"Select if your region is Addis Ababa",
-      "collection":"subcities",
-      "type":"choices"
     },
     {
       "name":"woreda",
       "label":"Woreda",
-      "order":4,
+      "order":3,
       "required":true,
       "helper_text":"",
       "type":"str"
@@ -39,7 +30,7 @@
     {
       "name":"profession",
       "label":"Profession",
-      "order":5,
+      "order":4,
       "required":true,
       "helper_text":"",
       "collection":"professions",
@@ -48,7 +39,7 @@
     {
       "name":"profession_other",
       "label":"Profession - Other (please specify)",
-      "order":6,
+      "order":5,
       "required":true,
       "helper_text":"",
       "visible_byfield":"profession",
@@ -58,7 +49,7 @@
     {
       "name":"place_of_work",
       "label":"Primary place of work",
-      "order":7,
+      "order":6,
       "required":true,
       "helper_text":"",
       "collection":"places_of_work",
@@ -67,7 +58,7 @@
     {
       "name":"org_facility_name",
       "label":"Name of health facility or organization",
-      "order":8,
+      "order":7,
       "required":true,
       "helper_text":"",
       "type":"str"
@@ -75,7 +66,7 @@
     {
       "name":"gender",
       "label":"Gender",
-      "order":9,
+      "order":8,
       "required":true,
       "helper_text":"",
       "collection":"genders",
@@ -96,23 +87,7 @@
         {"id": "oromia", "value":"Oromia Region"},
         {"id": "somali", "value":"Somali Region"},
         {"id": "snnpr", "value":"Southern Nations, Nationalities, and Peoples Region"},
-        {"id": "tigray", "value":"Tigray Region"},
-        {"id": "other", "value":"Other"}
-      ]
-    },
-    {
-      "collection_name": "subcities",
-      "items":[
-        {"id": "addis_ketema", "value":"Addis Ketema"},
-        {"id": "akaky_kaliti", "value":"Akaky Kaliti"},
-        {"id": "arada", "value":"Arada"},
-        {"id": "bole", "value":"Bole"},
-        {"id": "gullele", "value":"Gullele"},
-        {"id": "kirkos", "value":"Kirkos"},
-        {"id": "kolfe_keranio", "value":"Kolfe Keranio"},
-        {"id": "lideta", "value":"Lideta"},
-        {"id": "nifas_silk_lafto", "value":"Nifas Silk-Lafto"},
-        {"id": "yeka", "value":"Yeka"}
+        {"id": "tigray", "value":"Tigray Region"}
       ]
     },
     {
