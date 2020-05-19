@@ -307,6 +307,12 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="Oppia.CustomField.TextInputLayoutLabel" parent="Oppia.CustomField.TextInputLayoutHint">
+        <item name="android:textColor">@color/oppia_primary</item>
+        <item name="color">@color/oppia_primary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="Oppia.CustomField.TextInputLayoutError" parent="TextAppearance.Design.Error" />
 
 
