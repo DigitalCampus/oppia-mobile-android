@@ -1,4 +1,6 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="TextBase">
         <item name="android:layout_width">wrap_content</item>
@@ -290,6 +292,28 @@
         <item name="fontPath">fonts/gilroy-bold.otf</item>
         <item name="android:textStyle">normal</item>
     </style>
+
+    <style name="Oppia.CustomField.TextInputLayout" parent="Widget.Design.TextInputLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColorHint">@color/form_label</item>
+        <item name="errorTextAppearance">@style/Oppia.CustomField.TextInputLayoutError</item>
+        <item name="hintTextAppearance">@style/Oppia.CustomField.TextInputLayoutHint</item>
+    </style>
+
+    <style name="Oppia.CustomField.TextInputLayoutHint" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/form_label</item>
+        <item name="color">@color/form_label</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Oppia.CustomField.TextInputLayoutLabel" parent="Oppia.CustomField.TextInputLayoutHint">
+        <item name="android:textColor">@color/oppia_primary</item>
+        <item name="color">@color/oppia_primary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Oppia.CustomField.TextInputLayoutError" parent="TextAppearance.Design.Error" />
 
 
 </resources>
