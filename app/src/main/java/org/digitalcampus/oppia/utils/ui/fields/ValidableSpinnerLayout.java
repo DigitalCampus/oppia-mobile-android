@@ -1,6 +1,7 @@
 package org.digitalcampus.oppia.utils.ui.fields;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
@@ -48,19 +49,23 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
 
         errorText = new TextView(getContext());
         errorText.setLayoutParams(CustomFieldsUIManager.getLinearParams());
-        errorText.setTextAppearance(R.style.Oppia_CustomField_TextInputLayoutError);
         errorText.setPadding(input.getPaddingLeft(), 0, input.getPaddingRight(), 0);
         errorText.setText(getResources().getString(R.string.field_required));
         errorText.setVisibility(GONE);
-        addView(errorText);
 
         labelText = new TextView(getContext());
-        labelText.setTextAppearance(R.style.Oppia_CustomField_TextInputLayoutLabel);
         LayoutParams params = CustomFieldsUIManager.getLinearParams();
         params.setMargins(0, 10, 0, -20);
         labelText.setLayoutParams(params);
         labelText.setPadding(input.getPaddingLeft(), 0,0, 0);
         updateLabelText();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            errorText.setTextAppearance(R.style.Oppia_CustomField_TextInputLayoutError);
+            labelText.setTextAppearance(R.style.Oppia_CustomField_TextInputLayoutLabel);
+        }
+
+        addView(errorText);
         addView(labelText, 0);
     }
 
@@ -131,9 +136,11 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     public boolean validate() {
         boolean valid = !required || selected;
         errorText.setVisibility(valid ? GONE : VISIBLE);
-        labelText.setTextAppearance( valid ?
-                R.style.Oppia_CustomField_TextInputLayoutLabel :
-                R.style.Oppia_CustomField_TextInputLayoutError);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            labelText.setTextAppearance( valid ?
+                    R.style.Oppia_CustomField_TextInputLayoutLabel :
+                    R.style.Oppia_CustomField_TextInputLayoutError);
+        }
         return valid;
     }
 
