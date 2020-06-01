@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 public class ValidableSpinnerLayout extends LinearLayout implements ValidableField, AdapterView.OnItemSelectedListener {
 
@@ -63,6 +64,10 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             errorText.setTextAppearance(R.style.Oppia_CustomField_TextInputLayoutError);
             labelText.setTextAppearance(R.style.Oppia_CustomField_TextInputLayoutLabel);
+        }
+        else{
+            labelText.setTextSize(getResources().getDimension(R.dimen.hint_text_size));
+            errorText.setTextColor(ContextCompat.getColor(getContext(), R.color.text_error));
         }
 
         addView(errorText);

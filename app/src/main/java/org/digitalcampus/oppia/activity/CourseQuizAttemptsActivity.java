@@ -76,7 +76,7 @@ public class CourseQuizAttemptsActivity extends AppActivity {
         }
 
         final List<QuizAttempt> attempts = attemptsRepository.getQuizAttempts(this, stats);
-        QuizAttemptAdapter adapter = new QuizAttemptAdapter(this.getBaseContext(), attempts);
+        QuizAttemptAdapter adapter = new QuizAttemptAdapter(this, attempts);
         adapter.setOnItemClickListener(new CourseQuizzesAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
