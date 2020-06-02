@@ -304,13 +304,13 @@
     <style name="Oppia.CustomField.TextInputLayoutHint" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/form_label</item>
         <item name="color">@color/form_label</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/hint_text_size</item>
     </style>
 
     <style name="Oppia.CustomField.TextInputLayoutLabel" parent="Oppia.CustomField.TextInputLayoutHint">
         <item name="android:textColor">@color/oppia_primary</item>
         <item name="color">@color/oppia_primary</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/hint_text_size</item>
     </style>
 
     <style name="Oppia.CustomField.TextInputLayoutError" parent="TextAppearance.Design.Error" />

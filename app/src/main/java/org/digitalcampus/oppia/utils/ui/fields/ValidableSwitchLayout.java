@@ -31,10 +31,7 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
         this.input = input;
 
         errorText = new TextView(getContext());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        errorText.setLayoutParams(params);
+        errorText.setLayoutParams(CustomFieldsUIManager.getLinearParams());
         errorText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         errorText.setTextColor(ContextCompat.getColor(getContext(), R.color.text_error));
         errorText.setText(getResources().getString(R.string.field_required));
@@ -83,10 +80,7 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
     public void setHelperText(CharSequence text) {
         if (helperText == null) {
             helperText = new TextView(getContext());
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            helperText.setLayoutParams(params);
+            helperText.setLayoutParams(CustomFieldsUIManager.getLinearParams());
             helperText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
             this.addView(helperText);
         }
