@@ -21,6 +21,8 @@ package org.digitalcampus.oppia.application;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import androidx.multidex.MultiDex;
 import androidx.preference.PreferenceManager;
 import android.util.Log;
 
@@ -113,6 +115,11 @@ public class App extends Application {
     private AppComponent appComponent;
     private static MyDatabase db;
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
     @Override
     public void onCreate() {

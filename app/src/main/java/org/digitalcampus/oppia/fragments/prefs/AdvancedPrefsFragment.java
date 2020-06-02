@@ -128,7 +128,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
 
         if (!compatible){
             String uncompatible = "\n" + getContext().getString(R.string.prefServerIncompatible);
-            summarySpan.setSpan(new ForegroundColorSpan(getContext().getColor(R.color.red)), summary.length(), summary.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            summarySpan.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.red)), summary.length(), summary.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
             summarySpan.setSpan(new StyleSpan(Typeface.BOLD), summary.length(), summary.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
             summarySpan.insert(summary.length(), uncompatible);
         }
