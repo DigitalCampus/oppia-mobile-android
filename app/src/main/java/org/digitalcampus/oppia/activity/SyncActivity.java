@@ -25,6 +25,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.TransferableFileListAdapter;
+import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
@@ -89,6 +90,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     private BluetoothTransferServiceDelegate btServiceDelegate = null;
     private BluetoothBroadcastReceiver receiver;
     private boolean isReceiving = false;
+    private boolean hasPermissions = true;
     private TextView tvDeviceName;
 
     private MenuItem connectMenuItem;
@@ -196,6 +198,12 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     public void onResume() {
         super.onResume();
 
+        hasPermissions = PermissionsManager.checkPermissionsAndInform(this,
+                PermissionsManager.BLUETOOTH_PERMISSIONS_REQUIRED);
+        if (!hasPermissions){
+            return;
+        }
+
         // If BT is not on, request that it be enabled.
         if ((bluetoothAdapter != null) && !bluetoothAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -228,7 +236,10 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     public void onPause(){
         super.onPause();
         isReceiving = false;
-        unregisterReceiver(receiver);
+        if (receiver != null){
+            unregisterReceiver(receiver);
+        }
+
     }
 
     private void startBluetooth(){
@@ -310,8 +321,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             updateTabs();
 
             if (connectMenuItem != null){
-                connectMenuItem.setVisible(true);
-                discoverMenuItem.setVisible(true);
+                connectMenuItem.setVisible(hasPermissions);
+                discoverMenuItem.setVisible(hasPermissions);
                 disconnectMenuItem.setVisible(false);
             }
         }
@@ -328,7 +339,6 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             }
         }
     }
-
 
     private void ensureDiscoverable() {
         if (bluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
@@ -409,6 +419,11 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         task.execute();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        PermissionsManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 
     @Override
     public void onBackPressed() {
