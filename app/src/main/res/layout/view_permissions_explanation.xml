@@ -16,19 +16,20 @@
 
         <ImageView
             android:id="@+id/imageView11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/course_icon_size"
+            android:layout_height="@dimen/course_icon_size"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/padding_large"
-            android:src="@drawable/app_icon"/>
+            android:layout_margin="@dimen/margin_medium"
+            android:src="@drawable/ic_settings_advanced"/>
 
         <TextView
             android:id="@+id/textView12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:text="@string/permissions.title"/>
+            android:layout_margin="@dimen/margin_medium"
+            android:gravity="center"
+            android:text="@string/permissions.title" />
 
     <RelativeLayout
         android:id="@+id/permission_READ_PHONE_STATE"
@@ -42,11 +43,11 @@
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:id="@+id/imageView9"
-            android:src="@android:drawable/sym_action_call"
+            android:src="@drawable/ic_settings_server"
             android:layout_alignParentStart="false"
             android:layout_marginRight="@dimen/padding_medium"
             android:layout_alignParentLeft="true"
-            android:tint="@android:color/tab_indicator_text"
+            android:tint="@color/grey_dark"
             android:scaleType="fitCenter"
             android:layout_marginEnd="@dimen/padding_medium"
             android:contentDescription="@string/permissions.phone_state.title"/>
@@ -83,11 +84,11 @@
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:id="@+id/imageView10"
-            android:src="@android:drawable/stat_notify_sdcard"
+            android:src="@drawable/ic_settings_storage"
             android:layout_alignParentStart="false"
             android:layout_marginRight="@dimen/padding_medium"
             android:layout_alignParentLeft="true"
-            android:tint="@android:color/tab_indicator_text"
+            android:tint="@color/grey_dark"
             android:scaleType="fitCenter"/>
 
         <TextView
@@ -125,7 +126,7 @@
                 android:layout_marginRight="@dimen/padding_medium"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_bluetooth"
-                android:tint="@android:color/tab_indicator_text"/>
+                android:tint="@color/grey_dark"/>
 
             <TextView
                 android:id="@+id/textView22"
@@ -160,7 +161,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/not_askable_description"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_margin="@dimen/margin_medium"
         tools:visibility="visible"
         android:visibility="gone">
 
