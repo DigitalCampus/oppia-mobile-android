@@ -15,8 +15,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:background="@drawable/bg_toolbar"
+            android:background="@color/white"
+            android:layout_marginBottom="@dimen/margin_medium"
             android:paddingTop="@dimen/course_icon_size"
             android:paddingBottom="@dimen/padding_large">
 
@@ -30,9 +30,9 @@
                 android:paddingTop="@dimen/list_card_vertical_padding"
                 android:text="Community\nHealth\nAcademy"
                 android:textAppearance="@style/PointsText"
-                android:textColor="@color/text_light"
+                android:textColor="@color/text_dark"
                 android:textSize="24sp"
-                app:lineHeight="24sp" />
+                android:lineHeight="24sp" />
 
         </FrameLayout>
 
