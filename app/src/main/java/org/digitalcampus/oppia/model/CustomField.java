@@ -136,7 +136,7 @@ public class CustomField {
             JSONObject json = new JSONObject(data);
             JSONArray fields = json.getJSONArray("fields");
             DbHelper db = DbHelper.getInstance(ctx);
-            db.clearCustomFields();
+            db.clearCustomFieldsAndCollections();
 
             for (int i = 0; i<fields.length(); i++){
                 JSONObject f = fields.getJSONObject(i);

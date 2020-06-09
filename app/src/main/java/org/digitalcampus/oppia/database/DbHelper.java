@@ -2191,8 +2191,9 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public void clearCustomFields(){
+    public void clearCustomFieldsAndCollections(){
         db.delete(CUSTOM_FIELD_TABLE, null, null);
+        db.delete(CUSTOM_FIELDS_COLLECTION_TABLE, null, null);
     }
 
     public void insertOrUpdateCustomField(CustomField field) {
