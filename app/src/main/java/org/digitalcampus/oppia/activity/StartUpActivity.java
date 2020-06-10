@@ -75,7 +75,8 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     public void onResume(){
         super.onResume();
 
-        boolean shouldContinue = PermissionsManager.checkPermissionsAndInform(this);
+        boolean shouldContinue = PermissionsManager.checkPermissionsAndInform(this,
+                PermissionsManager.STARTUP_PERMISSIONS_REQUIRED);
         if (!shouldContinue) return;
 
         UpgradeManagerTask umt = new UpgradeManagerTask(this);

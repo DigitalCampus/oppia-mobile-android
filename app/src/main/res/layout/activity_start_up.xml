@@ -61,6 +61,5 @@
         android:id="@+id/permissions_explanation"
         android:background="@android:color/white"
         android:visibility="gone">
-
     </FrameLayout>
 </FrameLayout>
