@@ -7,8 +7,10 @@
     <color name="theme_secondary">@color/oppia_secondary</color>
     <color name="theme_secondary_light">@color/oppia_secondary_light</color>
 
-    <!-- Drawables for app icon and course default image -->
+    <!-- launcher icon drawable -->
     <item name="app_icon" type="drawable">@drawable/dc_logo</item>
+    <!-- Drawables for brand icon and course default image -->
+    <item name="brand_icon" type="drawable">@drawable/dc_logo</item>
     <item name="course_icon_placeholder" type="drawable">@drawable/default_course</item>
 
     <!-- Color used for dropdown menus and list tints, it is "theme_secondary_light" with transparency -->

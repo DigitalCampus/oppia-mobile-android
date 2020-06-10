@@ -20,7 +20,7 @@
             android:layout_height="@dimen/course_icon_size"
             android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/margin_medium"
-            android:src="@drawable/app_icon"/>
+            android:src="@drawable/brand_icon"/>
 
         <TextView
             android:id="@+id/textView12"

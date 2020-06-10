@@ -21,7 +21,7 @@
         android:layout_above="@+id/view_user_info"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"
-        android:src="@drawable/app_icon" />
+        android:src="@drawable/brand_icon" />
 
     <RelativeLayout
         android:id="@+id/view_user_info"
