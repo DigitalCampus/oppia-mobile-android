@@ -10,7 +10,7 @@
     <!-- launcher icon drawable -->
     <item name="app_icon" type="drawable">@mipmap/ic_launcher</item>
     <!-- Drawables for brand icon and course default image -->
-    <item name="brand_icon" type="drawable">@drawable/dc_logo</item>
+    <item name="brand_icon" type="drawable">@mipmap/ic_launcher_foreground</item>
     <item name="course_icon_placeholder" type="drawable">@drawable/default_course</item>
 
     <!-- Color used for dropdown menus and list tints, it is "theme_secondary_light" with transparency -->
