@@ -11,7 +11,7 @@
     <item name="app_icon" type="drawable">@mipmap/ic_launcher</item>
     <!-- Drawables for brand icon and course default image -->
     <item name="brand_icon" type="drawable">@mipmap/ic_launcher_foreground</item>
-    <item name="course_icon_placeholder" type="drawable">@drawable/default_course</item>
+    <item name="course_icon_placeholder" type="drawable">@mipmap/ic_launcher_foreground</item>
 
     <!-- Color used for dropdown menus and list tints, it is "theme_secondary_light" with transparency -->
     <color name="theme_focus_semitransparent">#cc00AB9F</color> <!-- added 80%(CC) transparency -->
