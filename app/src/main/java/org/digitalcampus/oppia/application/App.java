@@ -21,6 +21,8 @@ package org.digitalcampus.oppia.application;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import androidx.multidex.MultiDex;
 import androidx.preference.PreferenceManager;
 import android.util.Log;
 
@@ -54,8 +56,6 @@ import io.github.inflationx.viewpump.ViewPump;
 public class App extends Application {
 
     public static final String TAG = App.class.getSimpleName();
-
-    public static final int APP_LOGO = R.drawable.dc_logo;
 
     public static final String COURSE_XML = "module.xml";
     public static final String COURSE_TRACKER_XML = "tracker.xml";
@@ -115,6 +115,11 @@ public class App extends Application {
     private AppComponent appComponent;
     private static MyDatabase db;
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
     @Override
     public void onCreate() {

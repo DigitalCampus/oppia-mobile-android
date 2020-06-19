@@ -27,12 +27,13 @@ import org.joda.time.DateTime;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.TimeUnit;
 
 public class QuizAttempt implements Serializable {
 
 	public static final String TAG = QuizAttempt.class.getSimpleName();
-	
+	public static final String TYPE_QUIZ = "quiz";
+	public static final String TYPE_FEEDBACK = "feedback";
+
 	private DateTime datetime;
 	private long id;
 	private String data;
@@ -47,6 +48,7 @@ public class QuizAttempt implements Serializable {
 	private String event;
     private int points;
     private long timetaken;
+    private String type;
 
     private String courseTitle;
     private String quizTitle;
@@ -224,4 +226,12 @@ public class QuizAttempt implements Serializable {
         }
 	    return sectionTitle + " > " + quizTitle;
     }
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 }

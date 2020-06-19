@@ -128,6 +128,7 @@ public class GamificationService  extends IntentService {
                     result.put(LOGDATA_TIMETAKEN, timetaken);
 
                     QuizAttempt qa = new QuizAttempt();
+                    qa.setType(QuizAttempt.TYPE_QUIZ);
                     qa.setCourseId(c.getCourseId());
                     qa.setUserId(userId);
                     qa.setData(result.toString());
@@ -166,10 +167,34 @@ public class GamificationService  extends IntentService {
                     act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
                     c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
                     event = gEngine.processEventFeedbackActivity(c, act);
+                    Quiz quiz = (Quiz) intent.getSerializableExtra(SERVICE_QUIZ);
+                    long timetaken = intent.getLongExtra(EVENTDATA_TIMETAKEN, 0);
 
-                    eventData.put(LOGDATA_TIMETAKEN, intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
+                    DbHelper db = DbHelper.getInstance(this);
+                    long userId = db.getUserId(SessionManager.getUsername(this));
+
+                    Log.d(TAG,"quiz points:" + event.getPoints());
+                    // save results ready to send back to the quiz server
+                    JSONObject result = quiz.getResultObject(event);
+                    result.put(LOGDATA_TIMETAKEN, 0);
+
+                    QuizAttempt qa = new QuizAttempt();
+                    qa.setType(QuizAttempt.TYPE_FEEDBACK);
+                    qa.setCourseId(c.getCourseId());
+                    qa.setUserId(userId);
+                    qa.setData(result.toString());
+                    qa.setActivityDigest(act.getDigest());
+                    qa.setScore(quiz.getUserscore());
+                    qa.setMaxscore(quiz.getMaxscore());
+                    qa.setPassed(isCompleted);
+                    qa.setTimetaken(timetaken);
+                    qa.setSent(false);
+                    qa.setEvent(event.getEvent());
+                    db.insertQuizAttempt(qa);
+
+                    eventData.put(LOGDATA_TIMETAKEN, timetaken);
                     eventData.put(LOGDATA_QUIZ_ID, intent.getIntExtra(EVENTDATA_QUIZID, 0));
-                    eventData.put(LOGDATA_INSTANCE, intent.getStringExtra(EVENTDATA_INSTANCEID));
+                    eventData.put(LOGDATA_INSTANCE, quiz.getInstanceID());
 
                     trackerDigest = act.getDigest();
                 }

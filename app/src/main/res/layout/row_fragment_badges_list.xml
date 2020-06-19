@@ -30,7 +30,7 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
                 android:src="@drawable/trophy"
-                android:background="@drawable/points_background" />
+                android:background="@drawable/bg_points" />
 
             <TextView
                 android:id="@+id/badges_date"

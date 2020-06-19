@@ -30,7 +30,7 @@
                 app:cpb_background_progressbar_width="20dp"
                 app:cpb_progress_direction="to_right"
                 app:cpb_progress_max="100"
-                app:cpb_progressbar_color="@color/piechart_primary"
+                app:cpb_progressbar_color="@color/piechart_completed"
                 app:cpb_progressbar_width="20dp" />
 
             <LinearLayout
@@ -91,16 +91,24 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:id="@+id/quizzes_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="7dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:layout_marginRight="7dp"
-                android:background="@drawable/card"
-                android:orientation="vertical"
-                android:visibility="invisible">
+                android:layout_marginLeft="@dimen/list_card_horizontal_margin"
+                android:layout_marginRight="@dimen/list_card_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                tools:visibility="visible"
+                android:visibility="invisible"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:contentPaddingBottom="@dimen/padding_medium_2"
+                app:contentPaddingTop="@dimen/list_card_vertical_padding">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/quizzes_title"
@@ -154,7 +162,7 @@
                             style="@style/Highlight.Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/theme_secondary" />
+                            android:textColor="@color/quiz_attempted" />
 
                         <TextView
                             android:id="@+id/textView6"
@@ -183,7 +191,7 @@
                             style="@style/Highlight.Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/theme_secondary_light" />
+                            android:textColor="@color/quiz_passed" />
 
                         <TextView
                             android:id="@+id/textView7"
@@ -208,7 +216,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginRight="17dp"
                     android:progress="0"
-                    android:progressDrawable="@drawable/progress_bar_light"
+                    android:progressDrawable="@drawable/progress_bar_quiz"
                     android:secondaryProgress="0" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -226,6 +234,7 @@
 
 
             </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
         </FrameLayout>
 

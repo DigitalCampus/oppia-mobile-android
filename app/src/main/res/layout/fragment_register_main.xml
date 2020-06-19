@@ -8,7 +8,7 @@
         android:id="@+id/view_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/actionbar_background_gradient"
+        android:background="@drawable/bg_toolbar"
         android:paddingLeft="30dp"
         android:paddingTop="@android:dimen/notification_large_icon_height"
         android:paddingBottom="@dimen/padding_large"

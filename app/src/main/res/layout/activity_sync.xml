@@ -1,100 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include android:id="@+id/toolbar" layout="@layout/toolbar" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content"
+        android:background="@color/subtitle_bar"
+        android:paddingTop="@dimen/padding_medium">
 
-        <include android:id="@+id/toolbar" layout="@layout/toolbar" />
-
-        <RelativeLayout
+        <ProgressBar
+            android:id="@+id/send_transfer_progress"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:layout_below="@+id/status_subtitle"
+            android:layout_marginBottom="-3dp"
+            android:indeterminate="true"
+            android:progressDrawable="@drawable/progress_bar_light"
+            android:scaleY="2.0"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/transfer_pending_files"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/subtitle_bar"
-            android:paddingTop="@dimen/padding_medium">
+            android:layout_above="@+id/transfer_pending_size"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/padding_medium"
+            android:layout_marginRight="@dimen/padding_large"
+            android:layout_toRightOf="@id/status_subtitle"
+            android:gravity="end"
+            android:theme="@style/SubheaderText"
+            android:visibility="gone"
+            tools:text="2 files pending" />
 
-            <ProgressBar
-                android:id="@+id/send_transfer_progress"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="15dp"
-                android:layout_below="@+id/status_subtitle"
-                android:layout_marginBottom="-3dp"
-                android:indeterminate="true"
-                android:progressDrawable="@drawable/progress_bar_quiz"
-                android:scaleY="2.0"
-                android:visibility="visible" />
+        <TextView
+            android:id="@+id/transfer_pending_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/transfer_pending_files"
+            android:layout_alignBottom="@+id/status_subtitle"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/padding_medium"
+            android:layout_toLeftOf="@id/send_all_button"
+            android:gravity="end"
+            android:visibility="gone"
+            tools:text="2.4 MB" />
 
-            <TextView
-                android:id="@+id/transfer_pending_files"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/transfer_pending_size"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginEnd="@dimen/padding_medium"
-                android:layout_marginRight="@dimen/padding_large"
-                android:layout_toStartOf="@+id/bluetooth_btn"
-                android:layout_toRightOf="@id/status_subtitle"
-                android:gravity="end"
-                android:theme="@style/SubheaderText"
-                android:visibility="gone"
-                tools:text="2 files pending" />
+        <Button
+            android:id="@+id/send_all_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/padding_medium"
+            android:gravity="center_vertical|center"
+            android:text="@string/bluetooth.send_all"
+            android:textColor="@color/text_dark"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
-            <TextView
-                android:id="@+id/transfer_pending_size"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignRight="@id/transfer_pending_files"
-                android:layout_alignBottom="@+id/status_subtitle"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginEnd="@dimen/padding_medium"
-                android:layout_toStartOf="@+id/bluetooth_btn"
-                android:layout_toLeftOf="@id/send_all_button"
-                android:gravity="end"
-                android:visibility="gone"
-                tools:text="2.4 MB" />
+        <TextView
+            android:id="@+id/status_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/padding_large"
+            android:text="@string/bluetooth.title_not_connected"
+            android:theme="@style/ButtonText" />
 
-            <Button
-                android:id="@+id/send_all_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/padding_medium"
-                android:gravity="center_vertical|center"
-                android:text="@string/bluetooth.send_all"
-                android:textColor="@color/text_dark"
-                android:visibility="gone"
-                tools:visibility="visible" />
+        <TextView
+            android:id="@+id/status_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/status_title"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/padding_large"
+            android:layout_marginBottom="@dimen/padding_medium"
+            android:text="@string/bluetooth.no_device_connected"
+            android:theme="@style/SubheaderText" />
 
-            <TextView
-                android:id="@+id/status_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="@dimen/padding_large"
-                android:text="@string/bluetooth.title_not_connected"
-                android:theme="@style/ButtonText" />
-
-            <TextView
-                android:id="@+id/status_subtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/status_title"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="@dimen/padding_large"
-                android:layout_marginBottom="@dimen/padding_medium"
-                android:text="@string/bluetooth.no_device_connected"
-                android:theme="@style/SubheaderText" />
-
-        </RelativeLayout>
+    </RelativeLayout>
 
     <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context="org.digitalcampus.oppia.fragments.TransferFragment">
@@ -165,7 +167,7 @@
                         android:id="@+id/bluetooth_ic"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@android:drawable/stat_sys_data_bluetooth"
+                        android:src="@drawable/ic_bluetooth"
                         android:tint="@color/highlight_separator" />
 
                     <TextView
@@ -216,7 +218,7 @@
                     android:layout_alignBottom="@id/tv_device_name"
                     android:layout_toLeftOf="@id/tv_device_name"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/background_transparent"
+                    android:background="@drawable/bg_transparent"
                     android:scaleType="fitEnd"
                     android:tint="@color/theme_primary"
                     app:srcCompat="@drawable/ic_wifi_tethering" />
@@ -252,6 +254,18 @@
             </RelativeLayout>
 
         </FrameLayout>
-    </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/permissions_explanation"
+            android:background="@android:color/white"
+            android:layout_margin="@dimen/margin_medium"
+            android:visibility="gone">
+        </FrameLayout>
+    </FrameLayout>
+
+
+</LinearLayout>
 
 

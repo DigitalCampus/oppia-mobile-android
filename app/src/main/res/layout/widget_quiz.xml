@@ -23,7 +23,7 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
-                android:progressDrawable="@drawable/progress_bar_quiz"/>
+                android:progressDrawable="@drawable/progress_bar_light"/>
 
             <TextView
                 android:id="@+id/quiz_progress"

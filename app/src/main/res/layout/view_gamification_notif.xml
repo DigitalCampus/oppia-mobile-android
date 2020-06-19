@@ -11,7 +11,7 @@
         android:id="@+id/view_gradient"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_gamification_notif_view"
-        android:background="@drawable/gradient_green"
+        android:background="@drawable/bg_gamification_snackbar"
         android:layout_alignParentBottom="true"/>
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -24,7 +24,7 @@
         android:paddingBottom="10dp"
         android:layout_marginLeft="15dp"
         android:adjustViewBounds="true"
-        app:srcCompat="@drawable/dc_logo" />
+        app:srcCompat="@drawable/course_icon_placeholder" />
 
     <TextView
         android:id="@+id/tv_gamification_notif_message"

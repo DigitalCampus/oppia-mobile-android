@@ -19,14 +19,15 @@ package org.digitalcampus.oppia.model;
 
 import java.util.List;
 
-public class QuizFeedback {
+public class QuizAnswerFeedback {
 
-	public static final String TAG = QuizFeedback.class.getSimpleName();
+	public static final String TAG = QuizAnswerFeedback.class.getSimpleName();
 	
 	private float score;
 	private String questionText;
 	private String feedbackText;
 	private List<String> userResponse;
+	private boolean isSurvey;
 	
 	public float getScore() {
 		return score;
@@ -51,5 +52,13 @@ public class QuizFeedback {
 	}
 	public void setUserResponse(List<String> userResponse) {
 		this.userResponse = userResponse;
+	}
+
+	public boolean isSurvey() {
+		return isSurvey;
+	}
+
+	public void setIsSurvey(boolean survey) {
+		isSurvey = survey;
 	}
 }

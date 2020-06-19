@@ -102,7 +102,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 //We also check first if the baseline is completed before jumping to digest
                 boolean baselineCompleted = isBaselineCompleted();
                 if (baselineCompleted) {
-                    course.setMetaPages((ArrayList<CourseMetaPage>) parsedCourse.getMetaPages());
+                    course.setMetaPages(parsedCourse.getMetaPages());
                     sections = (ArrayList<Section>) parsedCourse.getSections();
                     startCourseActivityByDigest(digest);
                     initializeCourseIndex(false);
@@ -248,7 +248,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     }
 
     private void createLanguageDialog() {
-        UIUtils.createLanguageDialog(this, (ArrayList<Lang>) course.getLangs(), prefs, new Callable<Boolean>() {
+        UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
             public Boolean call() {
                 CourseIndexActivity.this.initialize(false);
                 return true;
@@ -393,9 +393,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     public void onParseComplete(CompleteCourse parsed) {
         loadingCourseView.setVisibility(View.GONE);
         parsedCourse = parsed;
-        course.setMetaPages((ArrayList<CourseMetaPage>) parsedCourse.getMetaPages());
-        course.setMedia((ArrayList<Media>) parsedCourse.getMedia());
-        course.setGamificationEvents((ArrayList<GamificationEvent>) parsedCourse.getGamification());
+        course.setMetaPages(parsedCourse.getMetaPages());
+        course.setMedia(parsedCourse.getMedia());
+        course.setGamificationEvents(parsedCourse.getGamification());
         sections = (ArrayList<Section>) parsedCourse.getSections();
 
         boolean baselineCompleted = isBaselineCompleted();

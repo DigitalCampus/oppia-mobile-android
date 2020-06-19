@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
+    style="@style/Oppia.CustomField.TextInputLayout" />

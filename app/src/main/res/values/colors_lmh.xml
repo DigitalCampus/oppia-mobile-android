@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="lmh_primary">#6F79EA</color>
+    <color name="lmh_primary_dark">#5A60BE</color>
+
+    <color name="lmh_secondary">#8E90C5</color>
+    <color name="lmh_secondary_light">#C5C9F7</color>
+
+    <color name="lmh_secondary_semi_transparent">#ccC5C9F7</color>
+
+    <color name="lmh_dark">#413E6F</color>
+
+</resources>

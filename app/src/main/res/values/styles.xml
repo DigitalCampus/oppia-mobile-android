@@ -1,4 +1,6 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="TextBase">
         <item name="android:layout_width">wrap_content</item>
@@ -37,7 +39,7 @@
     <style name="Header">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/actionbar_background_gradient</item>
+        <item name="android:background">@drawable/bg_toolbar</item>
         <item name="android:minHeight">40dp</item>
         <item name="android:orientation">horizontal</item>
     </style>
@@ -291,7 +293,29 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="EditValidableForm">
+    <style name="Oppia.CustomField.TextInputLayout" parent="Widget.Design.TextInputLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColorHint">@color/form_label</item>
+        <item name="errorTextAppearance">@style/Oppia.CustomField.TextInputLayoutError</item>
+        <item name="hintTextAppearance">@style/Oppia.CustomField.TextInputLayoutHint</item>
+    </style>
+
+    <style name="Oppia.CustomField.TextInputLayoutHint" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/form_label</item>
+        <item name="color">@color/form_label</item>
+        <item name="android:textSize">@dimen/hint_text_size</item>
+    </style>
+
+    <style name="Oppia.CustomField.TextInputLayoutLabel" parent="Oppia.CustomField.TextInputLayoutHint">
+        <item name="android:textColor">@color/oppia_primary</item>
+        <item name="color">@color/oppia_primary</item>
+        <item name="android:textSize">@dimen/hint_text_size</item>
+    </style>
+
+    <style name="Oppia.CustomField.TextInputLayoutError" parent="TextAppearance.Design.Error" />
+
+<style name="EditValidableForm">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">17sp</item>

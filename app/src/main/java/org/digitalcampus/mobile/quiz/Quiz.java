@@ -316,11 +316,7 @@ public class Quiz implements Serializable {
             q.mark(lang);
             total += q.getUserscore();
         }
-        if (total > maxscore) {
-            userscore = maxscore;
-        } else {
-            userscore = total;
-        }
+        userscore = Math.min(total, maxscore);
     }
 
     public int getID() {

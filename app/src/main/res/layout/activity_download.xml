@@ -17,6 +17,7 @@
         android:drawableTop="@drawable/empty_state_add"
         android:drawablePadding="@dimen/activity_vertical_margin"
         android:gravity="center"
+        android:layout_centerInParent="true"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"

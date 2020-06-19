@@ -146,7 +146,6 @@
             android:id="@+id/empty_state"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/action_bar_subtitle"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/padding_large"
             android:layout_marginRight="@dimen/padding_large"

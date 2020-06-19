@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="left"
         android:orientation="vertical"
-        android:background="@drawable/actionbar_background_gradient"
+        android:background="@drawable/bg_toolbar"
         android:paddingBottom="60dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/imageView12"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/dc_logo"
+            android:src="@drawable/brand_icon"
             android:layout_marginBottom="@dimen/padding_medium"
             android:layout_marginTop="@dimen/padding_large"/>
 
@@ -78,7 +78,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_margin="4dp"
                         android:contentDescription="@string/app_logo_alt"
-                        android:src="@drawable/default_course"
+                        android:src="@drawable/course_icon_placeholder"
                         android:layout_centerVertical="true"/>
 
                     <TextView

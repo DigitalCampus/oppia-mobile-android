@@ -3,6 +3,7 @@ package org.digitalcampus.oppia.utils.ui.fields;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,14 +26,12 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
     public ValidableSwitchLayout(Context context, SwitchCompat input) {
         super(context);
         this.setOrientation(VERTICAL);
+
         this.addView(input);
         this.input = input;
 
         errorText = new TextView(getContext());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        errorText.setLayoutParams(params);
+        errorText.setLayoutParams(CustomFieldsUIManager.getLinearParams());
         errorText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         errorText.setTextColor(ContextCompat.getColor(getContext(), R.color.text_error));
         errorText.setText(getResources().getString(R.string.field_required));
@@ -58,6 +57,15 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
         if (required && input != null){
             this.input.setHint(input.getHint() + " *");
         }
+
+    }
+
+    @Override
+    public void setLayoutParams(ViewGroup.LayoutParams params){
+        int margin = getContext().getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin);
+        LinearLayout.LayoutParams linearParams = (LinearLayout.LayoutParams) params;
+        linearParams.setMargins(0, margin, 0, margin);
+        super.setLayoutParams(linearParams);
     }
 
     @Override
@@ -72,10 +80,7 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
     public void setHelperText(CharSequence text) {
         if (helperText == null) {
             helperText = new TextView(getContext());
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            helperText.setLayoutParams(params);
+            helperText.setLayoutParams(CustomFieldsUIManager.getLinearParams());
             helperText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
             this.addView(helperText);
         }
@@ -86,5 +91,16 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
     @Override
     public String getCleanedValue() {
         return input.isChecked() ? "true" : "false";
+    }
+
+
+    @Override
+    public void setChangeListener(final onChangeListener listener) {
+        input.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                listener.onValueChanged(input.isChecked() ? "true" : null);
+            }
+        });
     }
 }

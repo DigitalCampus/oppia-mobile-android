@@ -37,7 +37,7 @@
                     android:layout_marginRight="@dimen/list_card_icon_margin"
                     android:contentDescription="@string/app_logo_alt"
                     android:padding="8dp"
-                    android:src="@drawable/default_course" />
+                    android:src="@drawable/course_icon_placeholder" />
 
                 <com.mikhaellopez.circularprogressbar.CircularProgressBar
                     android:id="@+id/circularProgressBar"
@@ -51,7 +51,7 @@
                     app:cpb_background_progressbar_width="7dp"
                     app:cpb_progress_direction="to_right"
                     app:cpb_progress_max="100"
-                    app:cpb_progressbar_color="@color/piechart_primary"
+                    app:cpb_progressbar_color="@color/piechart_completed"
                     app:cpb_progressbar_width="7dp" />
 
             </RelativeLayout>
