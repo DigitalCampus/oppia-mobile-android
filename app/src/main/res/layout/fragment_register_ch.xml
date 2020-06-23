@@ -9,7 +9,7 @@
         android:id="@+id/frame_stepper_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/theme_secondary_light"
+        android:background="@color/subtitle_bar"
         android:paddingLeft="@dimen/padding_large"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingRight="@dimen/padding_large"
@@ -21,9 +21,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            app:stpi_circleColor="@color/theme_primary"
+            app:stpi_circleColor="@color/theme_secondary_light"
             app:stpi_circleRadius="8dp"
-            app:stpi_indicatorColor="@color/theme_primary_dark"
+            app:stpi_indicatorColor="@color/theme_secondary"
             app:stpi_stepCount="3" />
     </FrameLayout>
 

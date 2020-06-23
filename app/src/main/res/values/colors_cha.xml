@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="cha_purple">#6F79EA</color>
+    <color name="cha_light_purple">#C5C9F7</color>
+    <color name="cha_purple_dark">#6163BB</color>
+    <color name="cha_orange">#FF9171</color>
+    <color name="cha_light_orange">#fdaa72</color>
+    <color name="cha_emerald">#00AB9F</color>
+    <color name="cha_emerald_dark">#367f70</color>
+    <color name="cha_emerald_light">#3BC8CA</color>
+    <color name="lmh_blue">#4BB7D6</color>
+</resources>

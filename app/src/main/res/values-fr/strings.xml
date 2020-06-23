@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-    <!ENTITY appName "Academy">
+    <!ENTITY appName "Community Health Academy">
     <!ENTITY companyName "Last Mile Health"> ]>
 <resources>
     <string name="app_name">&appName;</string>
@@ -28,7 +28,7 @@
     <string name="service_tracker">Service de suivi &appName;</string>
 
     <string name="fragment_welcome_title">Bienvenue sur &appName;</string>
-    <string name="fragment_welcome_desc">&appName; est une application d\'enseignement Androïd pour mobiles et tablettes qui permet le téléchargement des cours de la plateforme &appName;. Les utilisateurs peuvent travailler en mode hors-ligne notamment dans les tests.</string>
+    <string name="fragment_welcome_desc">&appName; est une application d\'enseignement Androïd pour mobiles et tablettes qui permet le téléchargement des cours de la plateforme &appName;. Les utilisateurs peuvent travailler en mode hors-ligne notamment dans les tests.\n\n\'Oppia\' veut dire \'apprendre\' en finlandais.</string>
     <string name="fragment_welcome_login_info">Pour débuter sur &appName;, vous devez vous inscrire ou vous connecter.</string>
     <string name="fragment_welcome_privacy">Nous respectons votre droit à la vie privée et à la sécurité de vos données personnelles, <a href="http://digital-campus.org/privacy/">en savoir plus sur la politique de confidentialité de &appName;</a></string>
 

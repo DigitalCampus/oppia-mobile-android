@@ -12,20 +12,29 @@
         android:orientation="vertical"
         >
 
-
-        <TextView
-            android:id="@+id/textView24"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:background="@drawable/bg_toolbar"
-            android:drawableTop="@drawable/brand_icon"
-            android:gravity="center"
+            android:background="@color/white"
+            android:layout_marginBottom="@dimen/margin_medium"
             android:paddingTop="@dimen/course_icon_size"
-            android:paddingBottom="@dimen/padding_large"
-            android:text="@string/app_name"
-            android:textAppearance="@style/SectionHeader"
-            android:textColor="@color/text_light"/>
+            android:paddingBottom="@dimen/padding_large">
+
+            <TextView
+                android:id="@+id/textView24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:gravity="left"
+                android:paddingTop="@dimen/list_card_vertical_padding"
+                android:text="Community\nHealth\nAcademy"
+                android:textAppearance="@style/PointsText"
+                android:textColor="@color/text_dark"
+                android:textSize="24sp"
+                android:lineHeight="24sp" />
+
+        </FrameLayout>
 
 
         <LinearLayout

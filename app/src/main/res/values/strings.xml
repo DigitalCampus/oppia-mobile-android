@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appName "Academy"><!ENTITY companyName "Last Mile Health"> ]>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appName "Community Health Academy"><!ENTITY companyName "Last Mile Health"> ]>
 <resources>
     <string name="app_name">&appName;</string>
     <string name="app_logo_alt">&companyName; Logo</string>
@@ -24,7 +24,7 @@
     <string name="service_tracker">&appName; Tracker Service</string>
 
     <string name="fragment_welcome_title">Welcome to &appName;</string>
-    <string name="fragment_welcome_desc">&appName; is a mobile learning platform for delivering learning content, video and quizzes.\n</string>
+    <string name="fragment_welcome_desc">&appName; is a mobile learning platform for delivering learning content, video and quizzes.</string>
     <string name="fragment_welcome_login_info">To get started with &appName;, you will need to register or login.</string>
     <string name="fragment_welcome_powered_by">Powered by <a href="http://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
 
@@ -252,12 +252,12 @@
     <string name="error_no_username">Please enter your username</string>
     <string name="error_processing_response">Error processing response</string>
     <string name="error_quiz_no_questions">There aren\'t any questions in this quiz.</string>
-    <string name="error_register_no_email">Please enter a valid email address</string>
+    <string name="error_register_no_email">Please enter your email address</string>
     <string name="error_register_password">Your password must be at least %1$d or more characters</string>
     <string name="error_register_password_no_match">Your passwords don\'t match</string>
     <string name="error_register_no_firstname">Please enter your first name</string>
     <string name="error_register_no_lastname">Please enter your last name</string>
-    <string name="error_register_no_phoneno">Please enter a valid phone number</string>
+    <string name="error_register_no_phoneno">Please enter your phone number</string>
     <string name="error_register_no_username">Please enter a username</string>
     <string name="error_register_username_spaces">Your username cannot contain spaces</string>
     <string name="error_register_email">Email not valid</string>

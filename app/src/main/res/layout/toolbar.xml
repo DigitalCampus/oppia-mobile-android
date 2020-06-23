@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?attr/actionBarSize"
-    android:theme="@style/Oppia.Theme.Dark"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     android:elevation="4dp"
     app:contentInsetLeft="0dp"
     app:contentInsetStart="0dp"

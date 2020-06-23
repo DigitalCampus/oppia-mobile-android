@@ -50,10 +50,10 @@
     </style>
 
     <style name="TextAppearanceButtonBorderless" parent="TextAppearance.AppCompat.Widget.Button">
-        <item name="fontPath">fonts/montserrat.ttf</item>
+        <item name="fontPath">fonts/gilroy-bold.otf</item>
     </style>
     <style name="RaisedButton" parent="Widget.AppCompat.Button">
-        <item name="fontPath">fonts/montserrat.ttf</item>
+        <item name="fontPath">fonts/gilroy-bold.otf</item>
     </style>
 
     <style name="PrimaryButton" parent="Widget.AppCompat.Button.Colored">
@@ -189,7 +189,7 @@
         <item name="android:textColor">@color/tab_text_color</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">2</item>
-        <item name="fontPath">fonts/montserrat.ttf</item>
+        <item name="fontPath">fonts/gilroy-bold.otf</item>
     </style>
 
     <style name="PrefsTheme" parent="PreferenceThemeOverlay.v14.Material">

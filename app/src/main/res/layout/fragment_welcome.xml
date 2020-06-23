@@ -16,10 +16,8 @@
         <ImageView
             android:id="@+id/imageView13"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            app:srcCompat="@drawable/brand_icon"/>
+            android:layout_height="150dp"
+            app:srcCompat="@drawable/brand_icon" />
 
         <TextView
             android:id="@+id/welcome_title"
