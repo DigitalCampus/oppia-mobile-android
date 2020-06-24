@@ -176,7 +176,7 @@ public class GamificationService  extends IntentService {
                     Log.d(TAG,"quiz points:" + event.getPoints());
                     // save results ready to send back to the quiz server
                     JSONObject result = quiz.getResultObject(event);
-                    result.put(LOGDATA_TIMETAKEN, 0);
+                    result.put(LOGDATA_TIMETAKEN, timetaken);
 
                     QuizAttempt qa = new QuizAttempt();
                     qa.setType(QuizAttempt.TYPE_FEEDBACK);
