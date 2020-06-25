@@ -415,10 +415,12 @@
     <string name="quiz_attempt.title">Quiz attempt</string>
 
     <!-- Strings for point events -->
+    <string name="points_event_default">Points granted!</string>
     <string name="points_event_activity_completed">Activity completed \'%1$s - %2$s\'</string>
     <string name="points_event_media_played">Media played \'%1$s\'</string>
     <string name="points_event_quiz_attempt">Quiz attempt \'%1$s - %2$s\'</string>
     <string name="points_event_course_downloaded">Course \'%1$s\' downloaded</string>
+    <string name="points_event_feedback_completed">Feedback  \'%1$s - %2$s\' submitted</string>
     <string name="tab_title_leaderboard">Leaderboard</string>
     <string name="leaderboard_position">Your position</string>
     <string name="leaderboard_points">%1$s points</string>

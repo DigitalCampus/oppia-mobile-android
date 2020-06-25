@@ -41,6 +41,7 @@ public class Gamification {
     public static final String EVENT_NAME_SEARCH_PERFORMED = "search_performed";
     public static final String EVENT_NAME_MEDIA_MISSING = "media_missing";
     public static final String EVENT_NAME_MEDIA_THRESHOLD_PASSED = "media_threshold_passed";
+    public static final String EVENT_NAME_FEEDBACK_COMPLETED = "feedback_completed";
 
     // default points for gamification
     public static final GamificationEvent GAMIFICATION_REGISTER = new GamificationEvent(EVENT_NAME_REGISTER,100);
@@ -58,6 +59,7 @@ public class Gamification {
     public static final GamificationEvent GAMIFICATION_SEARCH_PERFORMED =  new GamificationEvent(EVENT_NAME_SEARCH_PERFORMED,0);
     public static final GamificationEvent GAMIFICATION_MEDIA_MISSING =  new GamificationEvent(EVENT_NAME_MEDIA_MISSING,0);
     public static final GamificationEvent GAMIFICATION_MEDIA_THRESHOLD_PASSED =  new GamificationEvent(EVENT_NAME_MEDIA_THRESHOLD_PASSED,150);
+    public static final GamificationEvent GAMIFICATION_FEEDBACK_COMPLETED =  new GamificationEvent(EVENT_NAME_FEEDBACK_COMPLETED,50);
 
     // Gamification points configuration
     public static final String GAMIFICATION_POINTS_ANIMATION = BuildConfig.GAMIFICATION_POINTS_ANIMATION;
@@ -90,6 +92,7 @@ public class Gamification {
         events.add(GAMIFICATION_SEARCH_PERFORMED);
         events.add(GAMIFICATION_MEDIA_MISSING);
         events.add(GAMIFICATION_MEDIA_THRESHOLD_PASSED);
+        events.add(GAMIFICATION_FEEDBACK_COMPLETED);
     }
 
     public GamificationEvent getEvent(String event) throws GamificationEventNotFound {
