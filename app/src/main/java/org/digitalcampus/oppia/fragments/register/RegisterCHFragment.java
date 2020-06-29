@@ -1,10 +1,12 @@
 package org.digitalcampus.oppia.fragments.register;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -16,6 +18,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import com.badoualy.stepperindicator.StepperIndicator;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.SearchActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.fragments.AppFragment;
 import org.digitalcampus.oppia.model.County;
@@ -129,6 +132,13 @@ public class RegisterCHFragment extends AppFragment implements View.OnClickListe
         viewRegChScreen0.setVisibility(currentScreen == 0 ? View.VISIBLE : View.GONE);
         viewRegChScreen1.setVisibility(currentScreen == 1 ? View.VISIBLE : View.GONE);
         viewRegChScreen2.setVisibility(currentScreen == 2 ? View.VISIBLE : View.GONE);
+
+
+        View containerView = this.getView();
+        if (containerView != null){
+            InputMethodManager imm =  (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(containerView.getWindowToken(), 0);
+        }
 
 
         stepperIndicator.setCurrentStep(currentScreen);
