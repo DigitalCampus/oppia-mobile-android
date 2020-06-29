@@ -1,6 +1,7 @@
 package org.digitalcampus.oppia.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 
@@ -48,7 +49,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
         profileCustomFields = customFieldsRepo.getAll(this);
         fieldsManager = new CustomFieldsUIManager(this, profileCustomFields);
-        fieldsManager.populateAndInitializeFields(binding.customFieldsContainer);
+        //fieldsManager.populateAndInitializeFields(binding.customFieldsContainer);
 
         fillUserProfileData();
     }
@@ -95,7 +96,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         valid = fieldsManager.validateFields() && valid;
 
         //If the rest of email validations passed, check that the email is valid
-        if (binding.fieldEmail.validate() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (binding.fieldEmail.validate() && !TextUtils.equals("", email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             binding.fieldEmail.setErrorEnabled(true);
             binding.fieldEmail.setError(getString(R.string.error_register_email));
             valid = false;
@@ -107,7 +108,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
             user.setEmail(email);
             user.setJobTitle(jobTitle);
             user.setOrganisation(organisation);
-            user.setUserCustomFields(fieldsManager.getCustomFieldValues());
+            //user.setUserCustomFields(fieldsManager.getCustomFieldValues());
             executeUpdateProfileTask(user);
         }
     }
