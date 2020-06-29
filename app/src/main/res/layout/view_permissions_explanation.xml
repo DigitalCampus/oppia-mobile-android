@@ -16,10 +16,9 @@
 
         <ImageView
             android:id="@+id/imageView11"
-            android:layout_width="@dimen/course_icon_size"
-            android:layout_height="@dimen/course_icon_size"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="@dimen/margin_medium"
             android:src="@drawable/brand_icon"/>
 
         <TextView
