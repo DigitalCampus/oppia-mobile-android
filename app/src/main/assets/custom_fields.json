@@ -26,6 +26,205 @@
       "type":"str",
       "order": 1
     }
+  ],
+
+  "collections": [
+    {
+      "collection_name": "counties",
+      "items": [
+        {"id": "Bomi", "value":"Bomi"},
+        {"id": "Bong", "value":"Bong"},
+        {"id": "Gbarpolu", "value":"Gbarpolu"},
+        {"id": "Grand Bassa", "value":"Grand Bassa"},
+        {"id": "Grand Cape Mount", "value":"Grand Cape Mount"},
+        {"id": "Grand Gedeh", "value":"Grand Gedeh"},
+        {"id": "Grand Kru", "value":"Grand Kru"},
+        {"id": "Lofa", "value":"Lofa"},
+        {"id": "Margibi", "value":"Margibi"},
+        {"id": "Maryland", "value":"Maryland"},
+        {"id": "Montserrado", "value":"Montserrado"},
+        {"id": "Nimba", "value":"Nimba"},
+        {"id": "River Gee", "value":"River Gee"},
+        {"id": "Rivercess", "value":"Rivercess"},
+        {"id": "Sinoe", "value":"Sinoe"}
+      ]
+    },
+
+    {
+      "collection_name": "Bomi",
+      "items": [
+        {"id": "Dowein", "value":"Dowein"},
+        {"id": "Klay", "value":"Klay"},
+        {"id": "Senjeh", "value":"Senjeh"},
+        {"id": "Suehn Mecca", "value":"Suehn Mecca"}
+      ]
+    },
+
+    {
+      "collection_name": "Bong",
+      "items": [
+        {"id": "CHT - Bong", "value":"CHT - Bong"},
+        {"id": "Fuamah", "value":"Fuamah"},
+        {"id": "Jorquelleh", "value":"Jorquelleh"},
+        {"id": "Kokoyah", "value":"Kokoyah"},
+        {"id": "Kpaai", "value":"Kpaai"},
+        {"id": "Panta", "value":"Panta"},
+        {"id": "Salala", "value":"Salala"},
+        {"id": "Sanoyea", "value":"Sanoyea"},
+        {"id": "Suakoko", "value":"Suakoko"},
+        {"id": "Zota", "value":"Zota"}
+      ]
+    },
+
+    {
+      "collection_name": "Gbarpolu",
+      "items": [
+        {"id": "Belleh District", "value":"Belleh District"},
+        {"id": "Bokomu District", "value":"Bokomu District"},
+        {"id": "Bopolu District", "value":"Bopolu District"},
+        {"id": "Gbarma District", "value":"Gbarma District"},
+        {"id": "Kongba District", "value":"Kongba District"}
+      ]
+    },
+    {
+      "collection_name": "Grand Bassa",
+      "items": [
+        {"id": "Buchanan District", "value":"Buchanan District"},
+        {"id": "Campwood District", "value":"Campwood District"},
+        {"id": "District # 1", "value":"District # 1"},
+        {"id": "District # 2", "value":"District # 2"},
+        {"id": "District # 3", "value":"District # 3"},
+        {"id": "District # 4", "value":"District # 4"},
+        {"id": "Owensgrove District", "value":"Owensgrove District"}
+      ]
+    },
+    {
+      "collection_name": "Grand Cape Mount",
+      "items": [
+        {"id": "CHT - Grand Cape Mount", "value":"CHT - Grand Cape Mount"},
+        {"id": "Commonwealth-C District", "value":"Commonwealth-C District"},
+        {"id": "Garwula District", "value":"Garwula District"},
+        {"id": "Gola konneh District", "value":"Gola konneh District"},
+        {"id": "Porkpa District", "value":"Porkpa District"},
+        {"id": "Tewor District", "value":"Tewor District"}
+      ]
+    },
+    {
+      "collection_name": "Grand Gedeh",
+      "items": [
+        {"id": "B'Hai District", "value":"B'Hai District"},
+        {"id": "Cavalla District", "value":"Cavalla District"},
+        {"id": "CHT - Grand Gedeh", "value":"CHT - Grand Gedeh"},
+        {"id": "Gbao District", "value":"Gbao District"},
+        {"id": "Konobo District", "value":"Konobo District"},
+        {"id": "Putu District", "value":"Putu District"},
+        {"id": "Tchien District", "value":"Tchien District"}
+      ]
+    },
+    {
+      "collection_name": "Grand Kru",
+      "items": [
+        {"id": "Barclayville District", "value":"Barclayville District"},
+        {"id": "Buah District", "value":"Buah District"},
+        {"id": "Dorbor District", "value":"Dorbor District"},
+        {"id": "Jraoh District", "value":"Jraoh District"},
+        {"id": "Trehn District", "value":"Trehn District"}
+      ]
+    },
+    {
+      "collection_name": "Lofa",
+      "items": [
+        {"id": "CHT - Lofa", "value":"CHT - Lofa"},
+        {"id": "Foya District", "value":"Foya District"},
+        {"id": "Kolahun District", "value":"Kolahun District"},
+        {"id": "Salayea District", "value":"Salayea District"},
+        {"id": "Vahun District", "value":"Vahun District"},
+        {"id": "Voinjama District", "value":"Voinjama District"},
+        {"id": "Zorzor District", "value":"Zorzor District"}
+      ]
+    },
+    {
+      "collection_name": "Margibi",
+      "items": [
+        {"id": "Firestone District", "value":"Firestone District"},
+        {"id": "Gibi District", "value":"Gibi District"},
+        {"id": "Kakata District", "value":"Kakata District"},
+        {"id": "Mambah-Kaba District", "value":"Mambah-Kaba District"}
+      ]
+    },
+    {
+      "collection_name": "Maryland",
+      "items": [
+        {"id": "Barrobo Farjah District", "value":"Barrobo Farjah District"},
+        {"id": "Barrobo Whojah District", "value":"Barrobo Whojah District"},
+        {"id": "Harper District", "value":"Harper District"},
+        {"id": "Karluway 1 District", "value":"Karluway 1 District"},
+        {"id": "Karluway 2 District", "value":"Karluway 2 District"},
+        {"id": "Pleebo District", "value":"Pleebo District"}
+      ]
+    },
+    {
+      "collection_name": "Montserrado",
+      "items": [
+        {"id": "Bushrod District", "value":"Bushrod District"},
+        {"id": "Careysburg District", "value":"Careysburg District"},
+        {"id": "Central Monrovia district", "value":"Central Monrovia district"},
+        {"id": "Commonwealth District", "value":"Commonwealth District"},
+        {"id": "Somalia Drive District", "value":"Somalia Drive District"},
+        {"id": "St Paul River District", "value":"St Paul River District"},
+        {"id": "Todee District", "value":"Todee District"}
+      ]
+    },
+    {
+      "collection_name": "Nimba",
+      "items": [
+        {"id": "CHT - Nimba", "value":"CHT - Nimba"},
+        {"id": "Gbehlay-Geh District", "value":"Gbehlay-Geh District"},
+        {"id": "Saclepea Mah District", "value":"Saclepea Mah District"},
+        {"id": "Sanniquelleh Mahn District", "value":"Sanniquelleh Mahn District"},
+        {"id": "Tappita District", "value":"Tappita District"},
+        {"id": "Yarwein Mehnsohnneh District", "value":"Yarwein Mehnsohnneh District"},
+        {"id": "Zoe-Geh District", "value":"Zoe-Geh District"}
+      ]
+    },
+    {
+      "collection_name": "River Gee",
+      "items": [
+        {"id": "Chedepo District", "value":"Chedepo District"},
+        {"id": "CHT - River Gee", "value":"CHT - River Gee"},
+        {"id": "Gbeapo District", "value":"Gbeapo District"},
+        {"id": "Potupo District", "value":"Potupo District"},
+        {"id": "Sarbo District", "value":"Sarbo District"},
+        {"id": "Tienpo District", "value":"Tienpo District"},
+        {"id": "Webbo District", "value":"Webbo District"}
+      ]
+    },
+    {
+      "collection_name": "Rivercess",
+      "items": [
+        {"id": "Central C District", "value":"Central C District"},
+        {"id": "Doedian District", "value":"Doedian District"},
+        {"id": "Joe River District", "value":"Joe River District"},
+        {"id": "Jowein District", "value":"Jowein District"},
+        {"id": "Timbo District", "value":"Timbo District"},
+        {"id": "Yarnie District", "value":"Yarnie District"}
+      ]
+    },
+    {
+      "collection_name": "Sinoe",
+      "items": [
+        {"id": "Butaw District", "value":"Butaw District"},
+        {"id": "Dugbe River District", "value":"Dugbe River District"},
+        {"id": "Gblonee District", "value":"Gblonee District"},
+        {"id": "Greenville District", "value":"Greenville District"},
+        {"id": "Jeade District", "value":"Jeade District"},
+        {"id": "Jedepo District", "value":"Jedepo District"},
+        {"id": "Kpanyan District", "value":"Kpanyan District"},
+        {"id": "Pynes Town District", "value":"Pynes Town District"},
+        {"id": "Tarjuwon District", "value":"Tarjuwon District"},
+        {"id": "Tarsue District", "value":"Tarsue District"}
+      ]
+    }
   ]
 
 
