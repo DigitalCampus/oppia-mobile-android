@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
@@ -99,8 +100,16 @@ public class CustomFieldsUIManager {
                         boolean condition = TextUtils.isEmpty(field.getValueVisibleBy()) || TextUtils.equals(field.getValueVisibleBy(), newValue);
                         boolean visible = valueFilled && condition;
                         input.setVisibility(visible ? View.VISIBLE : View.GONE);
+
+                        ValidableField collectionField = getInputByKey(field.getCollectionNameBy());
+                        if (collectionField != null){
+                            String collectionName = collectionField.getCleanedValue();
+                            List<CustomField.CollectionItem> collection = DbHelper.getInstance(ctx).getCollection(collectionName);
+                            ((ValidableSpinnerLayout)input).updateCollection(collection);
+                        }
                     }
                 });
+
             }
 
         }
