@@ -75,7 +75,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String TAG = DbHelper.class.getSimpleName();
     public static final String DB_NAME = "mobilelearning.db";
-    public static final int DB_VERSION = 45;
+    public static final int DB_VERSION = 46;
 
     private static DbHelper instance;
     private SQLiteDatabase db;
@@ -199,6 +199,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String CUSTOM_FIELD_C_COLLECTION = "collection";
     private static final String CUSTOM_FIELD_C_VISIBLE_BY = "visible_by";
     private static final String CUSTOM_FIELD_C_VISIBLE_VALUE = "visible_value";
+    private static final String CUSTOM_FIELD_C_COLLECTION_BY = "collection_by";
 
     private static final String CUSTOM_FIELDS_COLLECTION_TABLE = "customfield_collection";
     private static final String CUSTOM_FIELDS_COLLECTION_C_ID = BaseColumns._ID;
@@ -411,7 +412,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 + CUSTOM_FIELD_C_VISIBLE_BY + STR_TEXT_COMMA
                 + CUSTOM_FIELD_C_VISIBLE_VALUE + STR_TEXT_COMMA
                 + CUSTOM_FIELD_C_ORDER + STR_INT_COMMA
-                + CUSTOM_FIELD_C_REQUIRED + STR_INT_DEFAULT_O + ")";
+                + CUSTOM_FIELD_C_REQUIRED + STR_INT_DEFAULT_O + ", "
+                + CUSTOM_FIELD_C_COLLECTION_BY + " text)";
         db.execSQL(mSql);
     }
 
@@ -622,6 +624,10 @@ public class DbHelper extends SQLiteOpenHelper {
         if (oldVersion < 45){
             db.execSQL(STR_ALTER_TABLE + CUSTOM_FIELD_TABLE + STR_ADD_COLUMN + CUSTOM_FIELD_C_VISIBLE_BY + STR_TEXT_NULL + ";");
             db.execSQL(STR_ALTER_TABLE + CUSTOM_FIELD_TABLE + STR_ADD_COLUMN + CUSTOM_FIELD_C_VISIBLE_VALUE + STR_TEXT_NULL + ";");
+        }
+
+        if (oldVersion < 46){
+            db.execSQL(STR_ALTER_TABLE + CUSTOM_FIELD_TABLE + STR_ADD_COLUMN + CUSTOM_FIELD_C_COLLECTION_BY + STR_TEXT_NULL + ";");
         }
 
     }
@@ -2211,6 +2217,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(CUSTOM_FIELD_C_COLLECTION, field.getCollectionName());
         values.put(CUSTOM_FIELD_C_VISIBLE_BY, field.getFieldVisibleBy());
         values.put(CUSTOM_FIELD_C_VISIBLE_VALUE, field.getValueVisibleBy());
+        values.put(CUSTOM_FIELD_C_COLLECTION_BY, field.getCollectionNameBy());
 
         String s = CUSTOM_FIELD_C_KEY + "=?";
         String[] args = new String[]{ field.getKey() };
@@ -2283,6 +2290,7 @@ public class DbHelper extends SQLiteOpenHelper {
             field.setCollectionName(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_COLLECTION)));
             field.setFieldVisibleBy(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_VISIBLE_BY)));
             field.setValueVisibleBy(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_VISIBLE_VALUE)));
+            field.setCollectionNameBy(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_COLLECTION_BY)));
 
             fields.add(field);
             c.moveToNext();
