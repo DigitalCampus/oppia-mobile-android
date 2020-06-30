@@ -35,6 +35,7 @@ public class CustomField {
 
     private String fieldVisibleBy;
     private String valueVisibleBy;
+    private String collectionNameBy;
 
     public String getKey() {
         return key;
@@ -90,6 +91,14 @@ public class CustomField {
 
     public void setCollectionName(String collection) {
         this.collectionName = collection;
+    }
+
+    public String getCollectionNameBy() {
+        return collectionNameBy;
+    }
+
+    public void setCollectionNameBy(String collectionNameBy) {
+        this.collectionNameBy = collectionNameBy;
     }
 
     public List<CollectionItem> getCollection() {
@@ -159,6 +168,9 @@ public class CustomField {
                 }
                 if (f.has("visible_byvalue")){
                     field.setValueVisibleBy(f.getString("visible_byvalue"));
+                }
+                if (f.has("collection_byfield")){
+                    field.setCollectionNameBy(f.getString("collection_byfield"));
                 }
 
                 db.insertOrUpdateCustomField(field);

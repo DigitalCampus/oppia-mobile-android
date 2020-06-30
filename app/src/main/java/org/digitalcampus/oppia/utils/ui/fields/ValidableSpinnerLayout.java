@@ -100,6 +100,11 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         }
     }
 
+    public void updateCollection(List<CustomField.CollectionItem> items){
+        this.items = items;
+        initialize();
+    }
+
     private void setDisabledTextColor(View view, int position){
         TextView tv = (TextView) view;
         if (tv == null){
@@ -114,7 +119,9 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
 
         uiItems = new ArrayList<>();
         uiItems.add(new CustomField.CollectionItem(null, label));
-        uiItems.addAll(items);
+        if (items != null){
+            uiItems.addAll(items);
+        }
         adapter = new ArrayAdapter<CustomField.CollectionItem>(this.getContext(), R.layout.view_spinner_dropdown_item, uiItems){
             @Override
             public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -126,6 +133,7 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         input.setAdapter(adapter);
         input.setOnItemSelectedListener(this);
         input.setSelection(0);
+        selected = false;
 
         LayoutParams params = (LayoutParams) input.getLayoutParams();
         params.topMargin = -10;
