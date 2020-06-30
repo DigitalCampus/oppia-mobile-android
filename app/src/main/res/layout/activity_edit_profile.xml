@@ -17,6 +17,61 @@
         android:layout_below="@+id/toolbar"
         android:layout_above="@+id/btn_save_profile">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/subtitle_bar"
+                android:padding="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:id="@+id/textView28"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:text="@string/county_label"
+                    android:textAppearance="@style/Oppia.Theme.CardBadge"
+                    android:textColor="@color/text_dark"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/textView28"
+                    android:paddingStart="@dimen/margin_medium"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:layout_toEndOf="@id/county_tv"
+                    android:text="@string/district_label"
+                    android:textAppearance="@style/Oppia.Theme.CardBadge"
+                    android:textColor="@color/text_dark"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/county_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/textView28"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_toEndOf="@id/textView28" />
+
+                <TextView
+                    android:id="@+id/district_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/textView30"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:layout_toEndOf="@id/textView30" />
+            </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -100,6 +155,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
+        </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

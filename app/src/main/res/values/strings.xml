@@ -484,6 +484,8 @@
     <string name="videoplayer_play_again">Play again</string>
     <string name="videoplayer_continue">Continue to course</string>
     <string name="options">Options</string>
+    <string name="county_label">County</string>
+    <string name="district_label">District</string>
 
 </resources>
 

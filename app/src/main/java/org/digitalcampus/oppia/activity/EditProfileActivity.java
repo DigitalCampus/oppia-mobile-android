@@ -68,6 +68,8 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         binding.fieldLastname.setText(user.getLastname());
         binding.fieldOrganisation.setText(user.getOrganisation());
         binding.fieldJobtitle.setText(user.getJobTitle());
+        binding.districtTv.setText(user.getDistrict());
+        binding.countyTv.setText(user.getCounty());
         fieldsManager.fillWithUserData(user);
     }
 
