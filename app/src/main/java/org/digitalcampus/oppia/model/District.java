@@ -4,11 +4,11 @@ import androidx.annotation.NonNull;
 
 public class District {
 
-    private long id;
-    private long countyId;
+    private String id;
+    private String countyId;
     private String name;
 
-    public District(long id, long countyId, String name) {
+    public District(String id, String countyId, String name) {
         this.id = id;
         this.countyId = countyId;
         this.name = name;
@@ -24,19 +24,19 @@ public class District {
         return name;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public long getCountyId() {
+    public String getCountyId() {
         return countyId;
     }
 
-    public void setCountyId(long countyId) {
+    public void setCountyId(String countyId) {
         this.countyId = countyId;
     }
 

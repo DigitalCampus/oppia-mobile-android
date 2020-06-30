@@ -104,7 +104,6 @@ public class RegisterCHFragment extends AppFragment implements View.OnClickListe
         }
 
         configureCounties();
-
         updateScreen();
 
         return layout;
@@ -113,7 +112,7 @@ public class RegisterCHFragment extends AppFragment implements View.OnClickListe
     private void configureCounties() {
 
         counties.clear();
-        counties.addAll(County.getDemoCountries());
+        counties.addAll(County.geCountries(this.getContext()));
         counties.add(0, new County(getString(R.string.select_county)));
 
         adapterCounties = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, counties);

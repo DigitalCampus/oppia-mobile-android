@@ -2250,6 +2250,23 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
+    public List<CustomField.CollectionItem> getCollection(String collectionName){
+        String s = CUSTOM_FIELDS_COLLECTION_C_COLLECTION_ID + "=?";
+        String[] args = new String[]{ collectionName };
+        Cursor c = db.query(CUSTOM_FIELDS_COLLECTION_TABLE, null, s, args, null, null, null);
+        c.moveToFirst();
+        List<CustomField.CollectionItem> items = new ArrayList<>();
+        while (!c.isAfterLast()) {
+            String key = c.getString(c.getColumnIndex(CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY));
+            String value = c.getString(c.getColumnIndex(CUSTOM_FIELDS_COLLECTION_C_ITEM_VALUE));
+            items.add( new CustomField.CollectionItem(key, value));
+            c.moveToNext();
+        }
+        c.close();
+
+        return items;
+    }
+
     public List<CustomField> getCustomFields(){
         Cursor c = db.query(CUSTOM_FIELD_TABLE, null, null, null, null, null, CUSTOM_FIELD_C_ORDER);
         c.moveToFirst();
@@ -2274,19 +2291,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         for (CustomField field : fields){
             if (field.isChoices() && !TextUtils.isEmpty(field.getCollectionName())){
-                String s = CUSTOM_FIELDS_COLLECTION_C_COLLECTION_ID + "=?";
-                String[] args = new String[]{ field.getCollectionName() };
-                c = db.query(CUSTOM_FIELDS_COLLECTION_TABLE, null, s, args, null, null, null);
-                c.moveToFirst();
-                List<CustomField.CollectionItem> items = new ArrayList<>();
-                while (!c.isAfterLast()) {
-                    String key = c.getString(c.getColumnIndex(CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY));
-                    String value = c.getString(c.getColumnIndex(CUSTOM_FIELDS_COLLECTION_C_ITEM_VALUE));
-                    items.add( new CustomField.CollectionItem(key, value));
-                    c.moveToNext();
-                }
-                c.close();
-                field.setCollection(items);
+                field.setCollection(getCollection(field.getCollectionName()));
             }
         }
 
