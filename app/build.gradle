@@ -43,7 +43,7 @@ android {
 
     defaultConfig {
         versionCode 77
-        versionName "7.1.1"
+        versionName "7.1.1b"
 
         applicationId "org.lastmilehealth.oppiamobile"
         minSdkVersion 21
