@@ -126,18 +126,10 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		fieldsManager = new CustomFieldsUIManager(this.getActivity(), profileCustomFields);
 		fieldsManager.populateAndInitializeFields(customFieldsContainer);
 
-		registerButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onRegisterClick();
-			}
-		});
-		loginButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				WelcomeActivity wa = (WelcomeActivity) RegisterFragment.super.getActivity();
-				wa.switchTab(WelcomeActivity.TAB_LOGIN);
-			}
+		registerButton.setOnClickListener(v -> onRegisterClick());
+		loginButton.setOnClickListener(v -> {
+			WelcomeActivity wa = (WelcomeActivity) RegisterFragment.super.getActivity();
+			wa.switchTab(WelcomeActivity.TAB_LOGIN);
 		});
 		for (ValidableTextInputLayout field : fields){
 			field.initialize();
@@ -284,12 +276,9 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 			builder.setCancelable(false);
 			builder.setTitle(error);
 			builder.setMessage(R.string.offline_register_confirm);
-			builder.setPositiveButton(R.string.register_offline, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					u.setOfflineRegister(true);
-					executeRegisterTask(u);
-				}
+			builder.setPositiveButton(R.string.register_offline, (dialog, which) -> {
+				u.setOfflineRegister(true);
+				executeRegisterTask(u);
 			});
 			builder.setNegativeButton(R.string.cancel, null);
 			builder.show();

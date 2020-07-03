@@ -113,12 +113,9 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
             rootView = itemView;
 
-            rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        itemClickListener.onItemClick(v, getAdapterPosition());
-                    }
+            rootView.setOnClickListener(v -> {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(v, getAdapterPosition());
                 }
             });
         }

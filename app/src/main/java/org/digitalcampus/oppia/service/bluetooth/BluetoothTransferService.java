@@ -178,12 +178,7 @@ public class BluetoothTransferService extends Service {
                 if (!tasksDownloading.contains(file)){
                     tasksDownloading.add(file);
                 }
-                sendHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        sendFile(file);
-                    }
-                }, 100);
+                sendHandler.postDelayed(() -> sendFile(file), 100);
             }
         }
 
@@ -226,12 +221,7 @@ public class BluetoothTransferService extends Service {
         output = tmpOut;
 
         Log.d(TAG, "Socket streams created, starting receive thread");
-        receiveHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                listenAndReceiveFiles();
-            }
-        });
+        receiveHandler.post(() -> listenAndReceiveFiles());
     }
 
 

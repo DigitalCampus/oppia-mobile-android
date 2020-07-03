@@ -61,34 +61,25 @@ public class CourseQuizAttemptsActivity extends AppActivity {
             best.setText("-");
             findViewById(R.id.empty_state).setVisibility(View.VISIBLE);
             Button takeQuizBtn = findViewById(R.id.btn_take_quiz);
-            takeQuizBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) { takeQuiz(); }
-            });
+            takeQuizBtn.setOnClickListener(view -> takeQuiz());
         }
         else{
             average.setText(stats.getAveragePercent() + "%");
             best.setText(stats.getPercent() + "%");
-            retakeQuizBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) { takeQuiz(); }
-            });
+            retakeQuizBtn.setOnClickListener(view -> takeQuiz());
         }
 
         final List<QuizAttempt> attempts = attemptsRepository.getQuizAttempts(this, stats);
         QuizAttemptAdapter adapter = new QuizAttemptAdapter(this, attempts);
-        adapter.setOnItemClickListener(new CourseQuizzesAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Intent i = new Intent(CourseQuizAttemptsActivity.this, QuizAttemptActivity.class);
-                Bundle tb = new Bundle();
-                QuizAttempt attempt = attempts.get(position);
-                attempt.setSectionTitle(stats.getSectionTitle());
-                attempt.setQuizTitle(stats.getQuizTitle());
-                tb.putSerializable(QuizAttempt.TAG, attempt);
-                i.putExtras(tb);
-                startActivity(i);
-            }
+        adapter.setOnItemClickListener(position -> {
+            Intent i = new Intent(CourseQuizAttemptsActivity.this, QuizAttemptActivity.class);
+            Bundle tb = new Bundle();
+            QuizAttempt attempt = attempts.get(position);
+            attempt.setSectionTitle(stats.getSectionTitle());
+            attempt.setQuizTitle(stats.getQuizTitle());
+            tb.putSerializable(QuizAttempt.TAG, attempt);
+            i.putExtras(tb);
+            startActivity(i);
         });
         attemptsList.setAdapter(adapter);
     }

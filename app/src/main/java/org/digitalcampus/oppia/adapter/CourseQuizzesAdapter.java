@@ -57,12 +57,9 @@ public class CourseQuizzesAdapter extends RecyclerView.Adapter<CourseQuizzesAdap
             title = itemView.findViewById(R.id.quiz_title);
             score = itemView.findViewById(R.id.score);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        itemClickListener.onItemClick(getAdapterPosition());
-                    }
+            itemView.setOnClickListener(v -> {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(getAdapterPosition());
                 }
             });
 

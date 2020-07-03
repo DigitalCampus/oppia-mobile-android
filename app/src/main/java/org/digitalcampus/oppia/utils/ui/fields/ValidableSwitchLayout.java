@@ -96,11 +96,7 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
 
     @Override
     public void setChangeListener(final onChangeListener listener) {
-        input.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                listener.onValueChanged(input.isChecked() ? "true" : null);
-            }
-        });
+        input.setOnCheckedChangeListener((compoundButton, checked) ->
+                listener.onValueChanged(input.isChecked() ? "true" : null));
     }
 }

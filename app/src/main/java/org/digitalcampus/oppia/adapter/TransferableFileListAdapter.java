@@ -40,12 +40,9 @@ public class TransferableFileListAdapter extends RecyclerView.Adapter<Transferab
             actionBtn = v.findViewById(R.id.download_course_btn);
             icon = v.findViewById(R.id.elem_icon);
 
-            actionBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null){
-                        listener.onClick(getAdapterPosition());
-                    }
+            actionBtn.setOnClickListener(v1 -> {
+                if (listener != null){
+                    listener.onClick(getAdapterPosition());
                 }
             });
         }

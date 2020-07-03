@@ -81,16 +81,13 @@ public class ActivityTypesAdapter extends RecyclerView.Adapter<ActivityTypesAdap
             tvActivityType = itemView.findViewById(R.id.tv_activity_type);
             imgShowHide = itemView.findViewById(R.id.img_show_hide);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityType activityType = getItemAtPosition(getAdapterPosition());
-                    activityType.setEnabled(!activityType.isEnabled());
-                    notifyDataSetChanged();
+            itemView.setOnClickListener(v -> {
+                ActivityType activityType = getItemAtPosition(getAdapterPosition());
+                activityType.setEnabled(!activityType.isEnabled());
+                notifyDataSetChanged();
 
-                    if (itemClickListener != null) {
-                        itemClickListener.onItemClick(getAdapterPosition(), activityType.getType(), activityType.isEnabled());
-                    }
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(getAdapterPosition(), activityType.getType(), activityType.isEnabled());
                 }
             });
         }

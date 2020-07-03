@@ -41,12 +41,9 @@ public class QuizAttemptAdapter extends RecyclerView.Adapter<QuizAttemptAdapter.
             date = itemView.findViewById(R.id.attempt_date);
             score = itemView.findViewById(R.id.score);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        itemClickListener.onItemClick(getAdapterPosition());
-                    }
+            itemView.setOnClickListener(v -> {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(getAdapterPosition());
                 }
             });
 

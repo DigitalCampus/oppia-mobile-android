@@ -18,10 +18,11 @@
 package org.digitalcampus.oppia.activity;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
@@ -38,7 +39,6 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.PostInstallListener;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
-import org.digitalcampus.oppia.listener.StorageAccessListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Media;
@@ -88,7 +88,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 	}
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionsManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
@@ -134,15 +134,12 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 
         if (Storage.getStorageStrategy().needsUserPermissions(this)){
             Log.d(TAG, "Asking user for storage permissions");
-            Storage.getStorageStrategy().askUserPermissions(this, new StorageAccessListener() {
-                @Override
-                public void onAccessGranted(boolean isGranted) {
-                    Log.d(TAG, "Access granted for storage: " + isGranted);
-                    if (!isGranted) {
-                        Toast.makeText(StartUpActivity.this, getString(R.string.storageAccessNotGranted), Toast.LENGTH_LONG).show();
-                    }
-                    afterUpgrade(p);
+            Storage.getStorageStrategy().askUserPermissions(this, isGranted -> {
+                Log.d(TAG, "Access granted for storage: " + isGranted);
+                if (!isGranted) {
+                    Toast.makeText(StartUpActivity.this, getString(R.string.storageAccessNotGranted), Toast.LENGTH_LONG).show();
                 }
+                afterUpgrade(p);
             });
         }
         else{
@@ -157,11 +154,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
             builder.setCancelable(false);
             builder.setTitle(R.string.error);
             builder.setMessage(R.string.error_sdcard);
-            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    StartUpActivity.this.finish();
-                }
-            });
+            builder.setPositiveButton(R.string.ok, (dialog, which) -> StartUpActivity.this.finish());
             builder.show();
             return;
         }

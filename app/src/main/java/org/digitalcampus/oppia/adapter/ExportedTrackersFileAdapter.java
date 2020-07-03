@@ -45,21 +45,15 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
             ImageButton btnShare = v.findViewById(R.id.share_btn);
             ImageButton btnDelete = v.findViewById(R.id.delete_btn);
 
-            btnShare.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null){
-                        listener.onItemShareClick(fileList.get(getAdapterPosition()));
-                    }
+            btnShare.setOnClickListener(v1 -> {
+                if (listener != null){
+                    listener.onItemShareClick(fileList.get(getAdapterPosition()));
                 }
             });
             if (showDeleteButton){
-                btnDelete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (listener != null){
-                            listener.onItemToDelete(fileList.get(getAdapterPosition()));
-                        }
+                btnDelete.setOnClickListener(view -> {
+                    if (listener != null){
+                        listener.onItemToDelete(fileList.get(getAdapterPosition()));
                     }
                 });
             }

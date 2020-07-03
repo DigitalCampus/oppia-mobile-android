@@ -37,35 +37,29 @@ public class MultiChoiceHelper {
 
         public ViewHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (isMultiChoiceActive()) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            multiChoiceHelper.toggleItemChecked(position, false);
-                            updateCheckedState(position);
-                        }
-                    } else {
-                        if (clickListener != null) {
-                            clickListener.onClick(view);
-                        }
+            itemView.setOnClickListener(view -> {
+                if (isMultiChoiceActive()) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        multiChoiceHelper.toggleItemChecked(position, false);
+                        updateCheckedState(position);
+                    }
+                } else {
+                    if (clickListener != null) {
+                        clickListener.onClick(view);
                     }
                 }
             });
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    if ((multiChoiceHelper == null) || isMultiChoiceActive()) {
-                        return false;
-                    }
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        multiChoiceHelper.setItemChecked(position, true, false);
-                        updateCheckedState(position);
-                    }
-                    return true;
+            itemView.setOnLongClickListener(view -> {
+                if ((multiChoiceHelper == null) || isMultiChoiceActive()) {
+                    return false;
                 }
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    multiChoiceHelper.setItemChecked(position, true, false);
+                    updateCheckedState(position);
+                }
+                return true;
             });
         }
 
@@ -115,7 +109,7 @@ public class MultiChoiceHelper {
     private LongSparseArray<Integer> checkedIdStates;
     private int checkedItemCount = 0;
     private MultiChoiceModeWrapper multiChoiceModeCallback;
-    ActionMode choiceActionMode;
+    private ActionMode choiceActionMode;
 
     /**
      * Make sure this constructor is called before setting the adapter on the RecyclerView
@@ -154,25 +148,6 @@ public class MultiChoiceHelper {
         return checkStates.get(position);
     }
 
-    public SparseBooleanArray getCheckedItemPositions() {
-        return checkStates;
-    }
-
-    public long[] getCheckedItemIds() {
-        final LongSparseArray<Integer> idStates = checkedIdStates;
-        if (idStates == null) {
-            return new long[0];
-        }
-
-        final int count = idStates.size();
-        final long[] ids = new long[count];
-
-        for (int i = 0; i < count; i++) {
-            ids[i] = idStates.keyAt(i);
-        }
-
-        return ids;
-    }
 
     public void clearChoices() {
         if (checkedItemCount > 0) {
@@ -236,52 +211,7 @@ public class MultiChoiceHelper {
         setItemChecked(position, !isItemChecked(position), notifyChanged);
     }
 
-    public Parcelable onSaveInstanceState() {
-        SavedState savedState = new SavedState();
-        savedState.checkedItemCount = checkedItemCount;
-        savedState.checkStates = clone(checkStates);
-        if (checkedIdStates != null) {
-            savedState.checkedIdStates = checkedIdStates.clone();
-        }
-        return savedState;
-    }
 
-    private static SparseBooleanArray clone(SparseBooleanArray original) {
-        return original.clone();
-    }
-
-    public void onRestoreInstanceState(Parcelable state) {
-        if ((state != null) && (checkedItemCount == 0)) {
-            SavedState savedState = (SavedState) state;
-            checkedItemCount = savedState.checkedItemCount;
-            checkStates = savedState.checkStates;
-            checkedIdStates = savedState.checkedIdStates;
-
-            if (checkedItemCount > 0) {
-                // Empty adapter is given a chance to be populated before completeRestoreInstanceState()
-                if (adapter.getItemCount() > 0) {
-                    confirmCheckedPositions();
-                }
-                activity.getWindow().getDecorView().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        completeRestoreInstanceState();
-                    }
-                });
-            }
-        }
-    }
-
-    void completeRestoreInstanceState() {
-        if (checkedItemCount > 0) {
-            if (adapter.getItemCount() == 0) {
-                // Adapter was not populated, clear the selection
-                confirmCheckedPositions();
-            } else {
-                startSupportActionModeIfNeeded();
-            }
-        }
-    }
 
     private void startSupportActionModeIfNeeded() {
         if (choiceActionMode == null) {
@@ -297,9 +227,6 @@ public class MultiChoiceHelper {
         int checkedItemCount;
         SparseBooleanArray checkStates;
         LongSparseArray<Integer> checkedIdStates;
-
-        SavedState() {
-        }
 
         SavedState(Parcel in) {
             checkedItemCount = in.readInt();

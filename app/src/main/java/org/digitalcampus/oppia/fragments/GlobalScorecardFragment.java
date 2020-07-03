@@ -95,16 +95,9 @@ public class GlobalScorecardFragment extends AppFragment implements ScorecardsGr
             emptyState.setVisibility(View.VISIBLE);
 
             Button download = emptyState.findViewById(R.id.btn_download_courses);
-            download.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.menu_download, new AdminSecurityManager.AuthListener() {
-                        public void onPermissionGranted() {
-                            startActivity(new Intent(getActivity(), TagSelectActivity.class));
-                        }
-                    });
-                }
-            });
+            download.setOnClickListener(v ->
+                    AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.menu_download, () ->
+                            startActivity(new Intent(getActivity(), TagSelectActivity.class))));
         } else {
             recyclerScorecards.setVisibility(View.VISIBLE);
             emptyState.setVisibility(View.GONE);

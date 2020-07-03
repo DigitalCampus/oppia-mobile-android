@@ -20,7 +20,6 @@ package org.digitalcampus.oppia.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.preference.PreferenceManager;
@@ -62,7 +61,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Callable;
 
 public class CourseActivity extends AppActivity implements OnInitListener, TabLayout.OnTabSelectedListener {
 
@@ -144,7 +142,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     @Override
     public void onPause() {
         super.onPause();
-
 
         if (!ttsRunning) {
             WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
@@ -334,15 +331,13 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private void createLanguageDialog() {
-        UIUtils.createLanguageDialog(this, course.getLangs(), sharedPreferences, new Callable<Boolean>() {
-            public Boolean call() {
-                CourseActivity.this.loadActivities();
-                if (launchTTSAfterLanguageSelection) {
-                    launchTTSAfterLanguageSelection = false;
-                    launchTTS();
-                }
-                return true;
+        UIUtils.createLanguageDialog(this, course.getLangs(), sharedPreferences, () -> {
+            CourseActivity.this.loadActivities();
+            if (launchTTSAfterLanguageSelection) {
+                launchTTSAfterLanguageSelection = false;
+                launchTTS();
             }
+            return true;
         });
     }
 
@@ -358,14 +353,11 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
             currentWidget.resetTimeTracking();
         } else {
-            Runnable setPreviousTab = new Runnable() {
-                @Override
-                public void run() {
-                    UIUtils.showAlert(CourseActivity.this, R.string.sequencing_dialog_title, R.string.sequencing_section_message);
-                    TabLayout.Tab target = tabs.getTabAt(currentActivityNo);
-                    if (target != null) {
-                        target.select();
-                    }
+            Runnable setPreviousTab = () -> {
+                UIUtils.showAlert(CourseActivity.this, R.string.sequencing_dialog_title, R.string.sequencing_section_message);
+                TabLayout.Tab target = tabs.getTabAt(currentActivityNo);
+                if (target != null) {
+                    target.select();
                 }
             };
             new Handler().post(setPreviousTab);
@@ -414,27 +406,25 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             }
 
             myTTS.speak(((WidgetFactory) apAdapter.getItem(currentActivityNo)).getContentToRead(), TextToSpeech.QUEUE_FLUSH, null, TAG);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                myTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-                    @Override
-                    public void onDone(String utteranceId) {
-                        CourseActivity.this.ttsRunning = false;
-                        myTTS = null;
-                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                    }
+            myTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                @Override
+                public void onDone(String utteranceId) {
+                    CourseActivity.this.ttsRunning = false;
+                    myTTS = null;
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                }
 
-                    @Override
-                    public void onError(String utteranceId) {
-                        // does not need completing
-                    }
+                @Override
+                public void onError(String utteranceId) {
+                    // does not need completing
+                }
 
-                    @Override
-                    public void onStart(String utteranceId) {
-                        // does not need completing
-                    }
-                });
+                @Override
+                public void onStart(String utteranceId) {
+                    // does not need completing
+                }
+            });
 
-            }
         } else {
             // TTS not installed so show message
             Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();

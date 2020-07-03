@@ -109,12 +109,9 @@ public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswers
             quizFeedbackTitle = itemView.findViewById(R.id.quiz_question_user_feedback_title);
             quizFeedbackIcon = itemView.findViewById(R.id.quiz_question_feedback_image);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        itemClickListener.onItemClick(v, getAdapterPosition());
-                    }
+            itemView.setOnClickListener(v -> {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(v, getAdapterPosition());
                 }
             });
         }

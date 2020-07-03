@@ -42,12 +42,9 @@ public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAt
             courseTitle = itemView.findViewById(R.id.course_title);
             quizTitle = itemView.findViewById(R.id.quiz_title);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        itemClickListener.onItemClick(getAdapterPosition());
-                    }
+            itemView.setOnClickListener(v -> {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(getAdapterPosition());
                 }
             });
         }

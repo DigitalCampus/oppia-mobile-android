@@ -104,14 +104,11 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
 
     private void initializeLabelColorHintSelector() {
 
-        addOnEditTextAttachedListener(new OnEditTextAttachedListener() {
-            @Override
-            public void onEditTextAttached(TextInputLayout textInputLayout) {
-                getEditText().setFocusable(true);
-                getEditText().setFocusableInTouchMode(true);
-                getEditText().setOnFocusChangeListener(ValidableTextInputLayout.this);
-                setEditTextSelected();
-            }
+        addOnEditTextAttachedListener(textInputLayout -> {
+            getEditText().setFocusable(true);
+            getEditText().setFocusableInTouchMode(true);
+            getEditText().setOnFocusChangeListener(ValidableTextInputLayout.this);
+            setEditTextSelected();
         });
     }
 

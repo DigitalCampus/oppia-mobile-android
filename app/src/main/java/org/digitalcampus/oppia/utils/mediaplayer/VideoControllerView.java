@@ -42,6 +42,8 @@ import java.lang.ref.WeakReference;
 import java.util.Formatter;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+
 
 /**
  * A view containing controls for a MediaPlayer. Typically contains the
@@ -161,7 +163,6 @@ public class VideoControllerView extends FrameLayout {
      * Create the view that holds the widgets that control playback.
      * Derived classes can override this to create their own.
      * @return The controller view.
-     * @hide This doesn't work as advertised
      */
     protected View makeControllerView() {
         LayoutInflater inflate = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -425,18 +426,14 @@ public class VideoControllerView extends FrameLayout {
         return super.dispatchKeyEvent(event);
     }
 
-    private View.OnClickListener mPauseListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            doPauseResume();
-            show(S_DEFAULT_TIMEOUT);
-        }
+    private View.OnClickListener mPauseListener = v -> {
+        doPauseResume();
+        show(S_DEFAULT_TIMEOUT);
     };
 
-    private View.OnClickListener mFullscreenListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            doToggleFullscreen();
-            show(S_DEFAULT_TIMEOUT);
-        }
+    private View.OnClickListener mFullscreenListener = v -> {
+        doToggleFullscreen();
+        show(S_DEFAULT_TIMEOUT);
     };
 
     public void updatePausePlay() {
@@ -658,7 +655,7 @@ public class VideoControllerView extends FrameLayout {
             mView = new WeakReference<>(view);
         }
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(@NonNull Message msg) {
             VideoControllerView view = mView.get();
             if (view == null || view.mPlayer == null) {
                 return;

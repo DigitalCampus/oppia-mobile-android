@@ -65,12 +65,7 @@ public class WelcomeActivity extends AppActivity {
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		toolbar.getMenu().clear();
 		toolbar.inflateMenu(R.menu.activity_welcome);
-		toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				return onOptionsItemSelected(item);
-			}
-		});
+		toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
 
 		List<Fragment> fragments = new ArrayList<>();
         List<String> tabTitles = new ArrayList<>();

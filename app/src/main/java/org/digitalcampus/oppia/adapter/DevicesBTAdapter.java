@@ -65,12 +65,9 @@ public class DevicesBTAdapter extends RecyclerView.Adapter<DevicesBTAdapter.Devi
 
             rootView = (TextView) itemView;
 
-            rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        itemClickListener.onItemClick(v, getAdapterPosition());
-                    }
+            rootView.setOnClickListener(v -> {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(v, getAdapterPosition());
                 }
             });
         }

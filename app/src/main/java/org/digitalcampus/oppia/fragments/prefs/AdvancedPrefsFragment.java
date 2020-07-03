@@ -60,20 +60,17 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         if (serverPref == null || storagePref == null){
             return;
         }
-        serverPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                String url = ((String) newValue).trim();
-                if (!URLUtil.isNetworkUrl(url) || !Patterns.WEB_URL.matcher(url).matches()){
-                    UIUtils.showAlert(getActivity(),
-                            R.string.prefServer_errorTitle,
-                            R.string.prefServer_errorDescription);
-                    return false;
-                }
-
-                // If it is correct, we allow the change
-                return true;
+        serverPref.setOnPreferenceChangeListener((preference, newValue) -> {
+            String url = ((String) newValue).trim();
+            if (!URLUtil.isNetworkUrl(url) || !Patterns.WEB_URL.matcher(url).matches()){
+                UIUtils.showAlert(getActivity(),
+                        R.string.prefServer_errorTitle,
+                        R.string.prefServer_errorDescription);
+                return false;
             }
+
+            // If it is correct, we allow the change
+            return true;
         });
         protectAdminEditTextPreferences();
 

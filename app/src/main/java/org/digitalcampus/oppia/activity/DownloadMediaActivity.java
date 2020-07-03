@@ -28,7 +28,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
@@ -148,22 +147,19 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
                 if (missingMediaContainer.getVisibility() != View.VISIBLE) {
                     missingMediaContainer.setVisibility(View.VISIBLE);
-                    downloadSelected.setOnClickListener(new OnClickListener() {
+                    downloadSelected.setOnClickListener(v -> {
+                        DownloadMode downloadMode = downloadSelected.getText()
+                                .equals(getString(R.string.missing_media_download_selected)) ? DownloadMode.DOWNLOAD_ALL
+                                : DownloadMode.STOP_ALL;
+                        downloadSelected.setText(downloadSelected.getText()
+                                .equals(getString(R.string.missing_media_download_selected)) ? getString(R.string.missing_media_stop_selected)
+                                : getString(R.string.missing_media_download_selected));
 
-                        public void onClick(View v) {
-                            DownloadMode downloadMode = downloadSelected.getText()
-                                    .equals(getString(R.string.missing_media_download_selected)) ? DownloadMode.DOWNLOAD_ALL
-                                    : DownloadMode.STOP_ALL;
-                            downloadSelected.setText(downloadSelected.getText()
-                                    .equals(getString(R.string.missing_media_download_selected)) ? getString(R.string.missing_media_stop_selected)
-                                    : getString(R.string.missing_media_download_selected));
-
-                            for (Media m : mediaSelected) {
-                                downloadMedia(m, downloadMode);
-                            }
-
-                            mode.finish();
+                        for (Media m : mediaSelected) {
+                            downloadMedia(m, downloadMode);
                         }
+
+                        mode.finish();
                     });
 
                     showDownloadMediaMessage();
@@ -235,11 +231,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             }
         });
 
-        downloadViaPCBtn.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                downloadViaPC();
-            }
-        });
+        downloadViaPCBtn.setOnClickListener(v -> downloadViaPC());
 
         Media.resetMediaScan(sharedPreferences);
 
@@ -276,7 +268,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         ArrayList<Media> savedMissingMedia = (ArrayList<Media>) savedInstanceState.getSerializable(TAG);
         this.missingMedia.clear();
@@ -490,12 +482,9 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         missingMediaContainer.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ValueAnimator animator = ValueAnimator.ofInt(0, missingMediaContainer.getMeasuredHeight());
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            //@Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                recyclerMedia.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
-            }
-        });
+        //@Override
+        animator.addUpdateListener(
+                valueAnimator -> recyclerMedia.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0));
         animator.setStartDelay(200);
         animator.setDuration(700);
         animator.start();
@@ -509,12 +498,9 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         missingMediaContainer.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ValueAnimator animator = ValueAnimator.ofInt(missingMediaContainer.getMeasuredHeight(), 0);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            //@Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                recyclerMedia.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
-            }
-        });
+        //@Override
+        animator.addUpdateListener(
+                valueAnimator -> recyclerMedia.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0));
         animator.setStartDelay(0);
         animator.setDuration(700);
         animator.start();

@@ -97,20 +97,17 @@ public class CustomFieldsUIManager {
 
         ValidableField formField = getInputByKey(field.getFieldVisibleBy());
         if (formField != null) {
-            formField.setChangeListener(new ValidableField.onChangeListener() {
-                @Override
-                public void onValueChanged(String newValue) {
-                    boolean valueFilled = newValue != null && !TextUtils.isEmpty(newValue);
-                    boolean condition = TextUtils.isEmpty(field.getValueVisibleBy()) || TextUtils.equals(field.getValueVisibleBy(), newValue);
-                    boolean visible = valueFilled && condition;
-                    input.setVisibility(visible ? View.VISIBLE : View.GONE);
+            formField.setChangeListener(newValue -> {
+                boolean valueFilled = newValue != null && !TextUtils.isEmpty(newValue);
+                boolean condition = TextUtils.isEmpty(field.getValueVisibleBy()) || TextUtils.equals(field.getValueVisibleBy(), newValue);
+                boolean visible = valueFilled && condition;
+                input.setVisibility(visible ? View.VISIBLE : View.GONE);
 
-                    ValidableField collectionField = getInputByKey(field.getCollectionNameBy());
-                    if (collectionField != null && field.isChoices()) {
-                        String collectionName = collectionField.getCleanedValue();
-                        List<CustomField.CollectionItem> collection = DbHelper.getInstance(ctx).getCollection(collectionName);
-                        ((ValidableSpinnerLayout) input).updateCollection(collection);
-                    }
+                ValidableField collectionField = getInputByKey(field.getCollectionNameBy());
+                if (collectionField != null && field.isChoices()) {
+                    String collectionName = collectionField.getCleanedValue();
+                    List<CustomField.CollectionItem> collection = DbHelper.getInstance(ctx).getCollection(collectionName);
+                    ((ValidableSpinnerLayout) input).updateCollection(collection);
                 }
             });
         }

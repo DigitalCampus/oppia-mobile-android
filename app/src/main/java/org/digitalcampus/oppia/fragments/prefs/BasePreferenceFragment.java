@@ -34,23 +34,17 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
             if (editTextPreference == null){
                 continue;
             }
-            editTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+            editTextPreference.setOnPreferenceChangeListener((preference, newValue) -> {
 
-                    if (!App.getPrefs(getActivity()).getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false)) {
-                        return true;
-                    }
-
-                    AdminSecurityManager.with(getActivity()).promptAdminPassword(new AdminSecurityManager.AuthListener() {
-                        @Override
-                        public void onPermissionGranted() {
-                            editTextPreference.setText((String) newValue);
-                            preference.getSharedPreferences().edit().putString(preference.getKey(), (String) newValue).apply();
-                        }
-                    });
-                    return false;
+                if (!App.getPrefs(getActivity()).getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false)) {
+                    return true;
                 }
+
+                AdminSecurityManager.with(getActivity()).promptAdminPassword(() -> {
+                    editTextPreference.setText((String) newValue);
+                    preference.getSharedPreferences().edit().putString(preference.getKey(), (String) newValue).apply();
+                });
+                return false;
             });
         }
     }
@@ -65,29 +59,23 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
         if (pref instanceof ListPreference){
             final ListPreference listPref = (ListPreference) pref;
             listPref.setSummary(listPref.getEntry() + append);
-            listPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    CharSequence[] entryValues = listPref.getEntryValues();
-                    for (int i=0; i< entryValues.length; i++){
-                        if (entryValues[i].equals(newValue)){
-                            listPref.setSummary(listPref.getEntries()[i] + append);
-                            break;
-                        }
+            listPref.setOnPreferenceChangeListener((preference, newValue) -> {
+                CharSequence[] entryValues = listPref.getEntryValues();
+                for (int i=0; i< entryValues.length; i++){
+                    if (entryValues[i].equals(newValue)){
+                        listPref.setSummary(listPref.getEntries()[i] + append);
+                        break;
                     }
-                    return true;
                 }
+                return true;
             });
         }
         else if (pref instanceof EditTextPreference){
             final EditTextPreference editPref = (EditTextPreference) pref;
             editPref.setSummary(editPref.getText() + append) ;
-            editPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    editPref.setText(newValue + append);
-                    return true;
-                }
+            editPref.setOnPreferenceChangeListener((preference, newValue) -> {
+                editPref.setText(newValue + append);
+                return true;
             });
         }
 

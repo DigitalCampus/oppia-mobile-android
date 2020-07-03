@@ -3,10 +3,8 @@ package org.digitalcampus.oppia.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import androidx.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +12,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.squareup.picasso.Picasso;
@@ -30,6 +26,9 @@ import org.digitalcampus.oppia.utils.CircleTransform;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
+
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.CourseListViewHolder> {
 
@@ -124,23 +123,17 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
             courseImage = itemView.findViewById(R.id.course_image);
             circularProgressBar = itemView.findViewById(R.id.circularProgressBar);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        itemClickListener.onItemClick(getAdapterPosition());
-                    }
+            itemView.setOnClickListener(v -> {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(getAdapterPosition());
                 }
             });
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    currentSelectedItem = getAdapterPosition();
-                    selectedOption = -1;
-                    contextMenuDialog.show();
-                    return true;
-                }
+            itemView.setOnLongClickListener(v -> {
+                currentSelectedItem = getAdapterPosition();
+                selectedOption = -1;
+                contextMenuDialog.show();
+                return true;
             });
 
 
@@ -158,23 +151,19 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         registerMenuClick(R.id.course_context_delete);
         registerMenuClick(R.id.course_context_update_activity);
 
-        contextMenuDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            //@Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                if (itemClickListener != null) {
-                    itemClickListener.onContextMenuItemSelected(currentSelectedItem, selectedOption);
-                }
+        //@Override
+        contextMenuDialog.setOnDismissListener(dialogInterface -> {
+            if (itemClickListener != null) {
+                itemClickListener.onContextMenuItemSelected(currentSelectedItem, selectedOption);
             }
         });
     }
 
     private void registerMenuClick(final int id) {
-        contextMenuDialog.findViewById(id).setOnClickListener(new View.OnClickListener() {
-            //@Override
-            public void onClick(View view) {
-                selectedOption = id;
-                contextMenuDialog.dismiss();
-            }
+        //@Override
+        contextMenuDialog.findViewById(id).setOnClickListener(view -> {
+            selectedOption = id;
+            contextMenuDialog.dismiss();
         });
     }
 

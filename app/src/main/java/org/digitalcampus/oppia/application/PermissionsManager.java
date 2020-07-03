@@ -92,12 +92,9 @@ public class PermissionsManager {
                 //First, set the permissions as asked
                 reqPermsBtn.setVisibility(View.VISIBLE);
                 permsNotAskable.setVisibility(View.GONE);
-                reqPermsBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //Open the dialog to ask for permissions
-                        requestPermissions(act, permissionsToAsk);
-                    }
+                reqPermsBtn.setOnClickListener(v -> {
+                    //Open the dialog to ask for permissions
+                    requestPermissions(act, permissionsToAsk);
                 });
             }
             else{

@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.utils.ui;
 
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -27,12 +26,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -49,6 +42,12 @@ import org.digitalcampus.oppia.application.SessionManager;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 public class DrawerMenuManager {
 
@@ -79,16 +78,13 @@ public class DrawerMenuManager {
                 SessionManager.getUserDisplayName(drawerAct));
         ((TextView) headerView.findViewById(R.id.drawer_username)).setText(
                 SessionManager.getUsername(drawerAct));
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                boolean result = onOptionsItemSelected(menuItem);
-                if (result) {
-                    menuItem.setChecked(false);
-                    drawerLayout.closeDrawers();
-                }
-                return result;
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            boolean result = onOptionsItemSelected(menuItem);
+            if (result) {
+                menuItem.setChecked(false);
+                drawerLayout.closeDrawers();
             }
+            return result;
         });
 
         drawerToggle = new ActionBarDrawerToggle(drawerAct, drawerLayout, toolbar, R.string.open, R.string.close);
@@ -143,22 +139,20 @@ public class DrawerMenuManager {
         if (item.isChecked()) return false;
 
         final int itemId = item.getItemId();
-        AdminSecurityManager.with(drawerAct).checkAdminPermission(itemId, new AdminSecurityManager.AuthListener() {
-            public void onPermissionGranted() {
-                // Check if the option has custom manager
-                if (customOptions.containsKey(itemId)) {
-                    customOptions.get(itemId).onOptionSelected();
-                } else if (itemId == R.id.menu_download) {
-                    launchIntentForActivity(TagSelectActivity.class);
-                } else if (itemId == R.id.menu_activitylog) {
-                    launchIntentForActivity(ActivityLogActivity.class);
-                } else if (itemId == R.id.menu_about) {
-                    launchIntentForActivity(AboutActivity.class);
-                } else if (itemId == R.id.menu_settings) {
-                    launchIntentForActivity(PrefsActivity.class);
-                } else if (itemId == R.id.menu_sync) {
-                    launchIntentForActivity(SyncActivity.class);
-                }
+        AdminSecurityManager.with(drawerAct).checkAdminPermission(itemId, () -> {
+            // Check if the option has custom manager
+            if (customOptions.containsKey(itemId)) {
+                customOptions.get(itemId).onOptionSelected();
+            } else if (itemId == R.id.menu_download) {
+                launchIntentForActivity(TagSelectActivity.class);
+            } else if (itemId == R.id.menu_activitylog) {
+                launchIntentForActivity(ActivityLogActivity.class);
+            } else if (itemId == R.id.menu_about) {
+                launchIntentForActivity(AboutActivity.class);
+            } else if (itemId == R.id.menu_settings) {
+                launchIntentForActivity(PrefsActivity.class);
+            } else if (itemId == R.id.menu_sync) {
+                launchIntentForActivity(SyncActivity.class);
             }
         });
 
@@ -178,11 +172,7 @@ public class DrawerMenuManager {
         builder.setCancelable(false);
         builder.setTitle(R.string.logout);
         builder.setMessage(R.string.logout_confirm);
-        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                drawerAct.logoutAndRestartApp();
-            }
-        });
+        builder.setPositiveButton(R.string.yes, (dialog, which) -> drawerAct.logoutAndRestartApp());
         builder.setNegativeButton(R.string.no, null);
         builder.show();
     }

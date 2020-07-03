@@ -91,12 +91,9 @@ public class ScorecardsGridAdapter extends RecyclerView.Adapter<ScorecardsGridAd
             activitiesCompleted = itemView.findViewById(R.id.scorecard_activities_completed);
             activitiesTotal = itemView.findViewById(R.id.scorecard_activities_total);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        itemClickListener.onItemClick(v, getAdapterPosition());
-                    }
+            itemView.setOnClickListener(v -> {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(v, getAdapterPosition());
                 }
             });
         }

@@ -33,6 +33,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
@@ -47,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 /**
  * This Activity appears as a dialog. It lists any paired devices and
@@ -88,38 +88,33 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
         scanningMessage = findViewById(R.id.scanning_message);
         // Initialize the button to perform device discovery
         scanButton = findViewById(R.id.button_scan);
-        scanButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+        scanButton.setOnClickListener(v -> {
 
-                final List<String> notGrantedPerms = PermissionsManager.filterNotGrantedPermissions(DeviceListActivity.this, BLUETOOTH_PERMISSIONS);
-                if (!notGrantedPerms.isEmpty()) {
-                    if (PermissionsManager.canAskForAllPermissions(DeviceListActivity.this, notGrantedPerms)) {
-                        UIUtils.showAlert(
-                                DeviceListActivity.this,
-                                R.string.permissions_simple_title,
-                                R.string.permissions_bluetooth_message,
-                                R.string.permissions_allow_btn_text,
-                                new Callable<Boolean>() {
-                                    @Override
-                                    public Boolean call() {
-                                        PermissionsManager.requestPermissions(
-                                                DeviceListActivity.this, notGrantedPerms);
-                                        return true;
-                                    }
-                                }
-                        );
-                    } else {
-                        UIUtils.showAlert(
-                                DeviceListActivity.this,
-                                R.string.permissions_simple_title,
-                                R.string.permissions_not_askable_message);
-                    }
+            final List<String> notGrantedPerms = PermissionsManager.filterNotGrantedPermissions(DeviceListActivity.this, BLUETOOTH_PERMISSIONS);
+            if (!notGrantedPerms.isEmpty()) {
+                if (PermissionsManager.canAskForAllPermissions(DeviceListActivity.this, notGrantedPerms)) {
+                    UIUtils.showAlert(
+                            DeviceListActivity.this,
+                            R.string.permissions_simple_title,
+                            R.string.permissions_bluetooth_message,
+                            R.string.permissions_allow_btn_text,
+                            () -> {
+                                PermissionsManager.requestPermissions(
+                                        DeviceListActivity.this, notGrantedPerms);
+                                return true;
+                            }
+                    );
                 } else {
-                    scanButton.setVisibility(View.GONE);
-                    doDiscovery();
+                    UIUtils.showAlert(
+                            DeviceListActivity.this,
+                            R.string.permissions_simple_title,
+                            R.string.permissions_not_askable_message);
                 }
-
+            } else {
+                scanButton.setVisibility(View.GONE);
+                doDiscovery();
             }
+
         });
 
 
@@ -298,7 +293,7 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (PermissionsManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
             doDiscovery();

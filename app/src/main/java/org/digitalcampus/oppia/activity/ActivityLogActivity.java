@@ -1,6 +1,5 @@
 package org.digitalcampus.oppia.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -84,27 +83,21 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
         super.onStart();
         initialize();
 
-        submitBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (omSubmitTrackerMultipleTask == null) {
-                    Log.d(TAG, "Sumitting trackers multiple task");
-                    updateActions(false);
-                    omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(ActivityLogActivity.this);
-                    omSubmitTrackerMultipleTask.setTrackerServiceListener(ActivityLogActivity.this);
-                    omSubmitTrackerMultipleTask.execute();
-                }
+        submitBtn.setOnClickListener(v -> {
+            if (omSubmitTrackerMultipleTask == null) {
+                Log.d(TAG, "Sumitting trackers multiple task");
+                updateActions(false);
+                omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(ActivityLogActivity.this);
+                omSubmitTrackerMultipleTask.setTrackerServiceListener(ActivityLogActivity.this);
+                omSubmitTrackerMultipleTask.execute();
             }
         });
 
-        exportBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        exportBtn.setOnClickListener(v -> {
 
-                showCompleteExportMessage = true;
-                exportActivities();
+            showCompleteExportMessage = true;
+            exportActivities();
 
-            }
         });
 
         exportedFilesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -131,13 +124,11 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
 
     private void exportActivities() {
         //Check the user has permissions to export activity data
-        AdminSecurityManager.with(this).checkAdminPermission(R.id.action_export_activity, new AdminSecurityManager.AuthListener() {
-            public void onPermissionGranted() {
-                ExportActivityTask task = new ExportActivityTask(ActivityLogActivity.this);
-                task.setListener(ActivityLogActivity.this);
-                updateActions(false);
-                task.execute();
-            }
+        AdminSecurityManager.with(this).checkAdminPermission(R.id.action_export_activity, () -> {
+            ExportActivityTask task = new ExportActivityTask(ActivityLogActivity.this);
+            task.setListener(ActivityLogActivity.this);
+            updateActions(false);
+            task.execute();
         });
     }
 
@@ -237,15 +228,13 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle);
         builder.setTitle(R.string.activitylog_delete);
         builder.setMessage(R.string.activitylog_delete_confirm);
-        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-               boolean success = fileToDelete.delete();
-               if (!success){
-                   Toast.makeText(ActivityLogActivity.this,
-                           R.string.activitylog_delete_failed, Toast.LENGTH_SHORT).show();
-               }
-               refreshFileList();
-            }
+        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+           boolean success = fileToDelete.delete();
+           if (!success){
+               Toast.makeText(ActivityLogActivity.this,
+                       R.string.activitylog_delete_failed, Toast.LENGTH_SHORT).show();
+           }
+           refreshFileList();
         });
         builder.setNegativeButton(R.string.no, null);
         builder.show();

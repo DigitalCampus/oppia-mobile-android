@@ -174,17 +174,10 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void displayDownloadSection(){
         noCoursesView.setVisibility(View.VISIBLE);
-
         tvManageCourses.setText((!courses.isEmpty())? R.string.more_courses : R.string.no_courses);
-
-        manageBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.menu_download, new AdminSecurityManager.AuthListener() {
-                    public void onPermissionGranted() {
-                        startActivity(new Intent(getActivity(), TagSelectActivity.class));
-                    }
-                });
-            }
+        manageBtn.setOnClickListener(v -> {
+            AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.menu_download, () ->
+                    startActivity(new Intent(getActivity(), TagSelectActivity.class)));
         });
     }
 
@@ -201,20 +194,18 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     @Override
     public void onContextMenuItemSelected(final int position, final int itemId) {
-        AdminSecurityManager.with(getActivity()).checkAdminPermission(itemId, new AdminSecurityManager.AuthListener() {
-            public void onPermissionGranted() {
-                tempCourse = courses.get(position);
-                if (itemId == R.id.course_context_delete) {
-                    if (sharedPrefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
-                        confirmCourseDelete();
-                    } else {
-                        Toast.makeText(getActivity(), getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
-                    }
-                } else if (itemId == R.id.course_context_reset) {
-                    confirmCourseReset();
-                } else if (itemId == R.id.course_context_update_activity){
-                    confirmCourseUpdateActivity();
+        AdminSecurityManager.with(getActivity()).checkAdminPermission(itemId, () -> {
+            tempCourse = courses.get(position);
+            if (itemId == R.id.course_context_delete) {
+                if (sharedPrefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
+                    confirmCourseDelete();
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
                 }
+            } else if (itemId == R.id.course_context_reset) {
+                confirmCourseReset();
+            } else if (itemId == R.id.course_context_update_activity){
+                confirmCourseUpdateActivity();
             }
         });
     }
@@ -223,27 +214,21 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
         builder.setTitle(R.string.course_context_delete);
         builder.setMessage(R.string.course_context_delete_confirm);
-        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                DeleteCourseTask task = new DeleteCourseTask(getActivity());
-                ArrayList<Object> payloadData = new ArrayList<>();
-                payloadData.add(tempCourse);
-                Payload p = new Payload(payloadData);
-                task.setOnDeleteCourseListener(CoursesListFragment.this);
-                task.execute(p);
+        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+            DeleteCourseTask task = new DeleteCourseTask(getActivity());
+            ArrayList<Object> payloadData = new ArrayList<>();
+            payloadData.add(tempCourse);
+            Payload p = new Payload(payloadData);
+            task.setOnDeleteCourseListener(CoursesListFragment.this);
+            task.execute(p);
 
-                progressDialog = new ProgressDialog(getActivity(), R.style.Oppia_AlertDialogStyle);
-                progressDialog.setMessage(getString(R.string.course_deleting));
-                progressDialog.setCancelable(false);
-                progressDialog.setCanceledOnTouchOutside(false);
-                progressDialog.show();
-            }
+            progressDialog = new ProgressDialog(getActivity(), R.style.Oppia_AlertDialogStyle);
+            progressDialog.setMessage(getString(R.string.course_deleting));
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
         });
-        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                tempCourse = null;
-            }
-        });
+        builder.setNegativeButton(R.string.no, (dialog, which) -> tempCourse = null);
         builder.show();
     }
 
@@ -251,18 +236,12 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
         builder.setTitle(R.string.course_context_reset);
         builder.setMessage(R.string.course_context_reset_confirm);
-        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                DbHelper db = DbHelper.getInstance(getActivity());
-                db.resetCourse(tempCourse.getCourseId(), SessionManager.getUserId(getActivity()));
-                displayCourses();
-            }
+        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+            DbHelper db = DbHelper.getInstance(getActivity());
+            db.resetCourse(tempCourse.getCourseId(), SessionManager.getUserId(getActivity()));
+            displayCourses();
         });
-        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                tempCourse = null;
-            }
-        });
+        builder.setNegativeButton(R.string.no, (dialog, which) -> tempCourse = null);
         builder.show();
     }
 
@@ -316,12 +295,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         messageContainer.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ValueAnimator animator = ValueAnimator.ofInt(initialCourseListPadding, messageContainer.getMeasuredHeight());
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            //@Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                recyclerCourses.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
-            }
-        });
+        animator.addUpdateListener(valueAnimator -> recyclerCourses.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0));
         animator.setStartDelay(200);
         animator.setDuration(700);
         animator.start();
@@ -345,17 +319,14 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         if (!response.getResponseData().isEmpty()) {
             if (messageContainer.getVisibility() != View.VISIBLE){
                 messageContainer.setVisibility(View.VISIBLE);
-                messageButton.setOnClickListener(new View.OnClickListener() {
-
-                    public void onClick(View view) {
-                        @SuppressWarnings("unchecked")
-                        ArrayList<Object> m = (ArrayList<Object>) view.getTag();
-                        Intent i = new Intent(getActivity(), DownloadMediaActivity.class);
-                        Bundle tb = new Bundle();
-                        tb.putSerializable(DownloadMediaActivity.MISSING_MEDIA, m);
-                        i.putExtras(tb);
-                        startActivity(i);
-                    }
+                messageButton.setOnClickListener(view -> {
+                    @SuppressWarnings("unchecked")
+                    ArrayList<Object> m = (ArrayList<Object>) view.getTag();
+                    Intent i = new Intent(getActivity(), DownloadMediaActivity.class);
+                    Bundle tb = new Bundle();
+                    tb.putSerializable(DownloadMediaActivity.MISSING_MEDIA, m);
+                    i.putExtras(tb);
+                    startActivity(i);
                 });
                 animateScanMediaMessage();
             }
