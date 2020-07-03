@@ -22,6 +22,8 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
@@ -128,13 +130,13 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("currentActivityNo", currentActivityNo);
     }
 
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
+    public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         currentActivityNo = savedInstanceState.getInt("currentActivityNo");
     }
@@ -226,23 +228,27 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             startActivity(i);
             return true;
         } else if (itemId == R.id.menu_tts) {
-            if (myTTS == null && !ttsRunning) {
-                if (checkLanguageSelected()) {
-                    launchTTS();
-                } else {
-                    launchTTSAfterLanguageSelection = true;
-                    createLanguageDialog();
-                }
-            } else if (myTTS != null && ttsRunning) {
-                this.stopReading();
-            } else {
-                // TTS not installed so show message
-                Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
-            }
+            manageTTS();
             supportInvalidateOptionsMenu();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void manageTTS() {
+        if (myTTS == null && !ttsRunning) {
+            if (checkLanguageSelected()) {
+                launchTTS();
+            } else {
+                launchTTSAfterLanguageSelection = true;
+                createLanguageDialog();
+            }
+        } else if (myTTS != null && ttsRunning) {
+            this.stopReading();
+        } else {
+            // TTS not installed so show message
+            Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -256,7 +262,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private boolean checkLanguageSelected() {
-
         String currentLang = sharedPreferences.getString(PrefsActivity.PREF_LANGUAGE, null);
         return currentLang != null && checkCourseHasLanguage(currentLang);
     }

@@ -95,7 +95,6 @@ public class UIUtils {
         }
 
         final TextView points = pointsItem.getActionView().findViewById(R.id.userpoints);
-        TextView badges = pointsItem.getActionView().findViewById(R.id.userbadges);
 
         if (points == null) {
             return;
@@ -130,28 +129,6 @@ public class UIUtils {
             points.setVisibility(View.GONE);
         }
 
-        if (badges == null){
-            return;
-        }
-
-        boolean badgingEnabled = prefs.getBoolean(PrefsActivity.PREF_BADGING_ENABLED, true);
-        if (badgingEnabled) {
-            badges.setVisibility(View.VISIBLE);
-            badges.setText(String.valueOf(u.getBadges()));
-
-            badges.setOnClickListener(view -> {
-                Intent i = new Intent(ctx, ScorecardActivity.class);
-                Bundle tb = new Bundle();
-                tb.putString(ScorecardActivity.TAB_TARGET, ScorecardActivity.TAB_TARGET_BADGES);
-                if (courseInContext != null) {
-                    tb.putSerializable(Course.TAG, courseInContext);
-                }
-                i.putExtras(tb);
-                ctx.startActivity(i);
-            });
-        } else {
-            badges.setVisibility(View.GONE);
-        }
     }
 
     /**

@@ -20,7 +20,7 @@ import org.digitalcampus.oppia.utils.HTTPClientUtils;
 
 import okhttp3.Request;
 
-public abstract class APIRequestTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
+public abstract class APIRequestTask<PARAMS, PROGRESS, RESULT> extends AsyncTask<PARAMS, PROGRESS, RESULT> {
 
     public static final String TAG = APIRequestTask.class.getSimpleName();
 
@@ -41,7 +41,7 @@ public abstract class APIRequestTask<Params, Progress, Result> extends AsyncTask
         apiEndpoint = api;
     }
 
-    protected Request.Builder createRequestBuilderWithUserAuth(String url) {
+    Request.Builder createRequestBuilderWithUserAuth(String url) {
         DbHelper db = DbHelper.getInstance(ctx);
         Request.Builder requestBuilder = null;
         try {
@@ -65,7 +65,7 @@ public abstract class APIRequestTask<Params, Progress, Result> extends AsyncTask
     }
 
     @Override
-    protected void onPostExecute(Result result) {
+    protected void onPostExecute(RESULT result) {
         super.onPostExecute(result);
 
         if (listener != null) {
