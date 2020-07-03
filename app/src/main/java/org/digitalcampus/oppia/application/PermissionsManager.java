@@ -92,10 +92,10 @@ public class PermissionsManager {
                 //First, set the permissions as asked
                 reqPermsBtn.setVisibility(View.VISIBLE);
                 permsNotAskable.setVisibility(View.GONE);
-                reqPermsBtn.setOnClickListener(v -> {
+                reqPermsBtn.setOnClickListener(v ->
                     //Open the dialog to ask for permissions
-                    requestPermissions(act, permissionsToAsk);
-                });
+                    requestPermissions(act, permissionsToAsk)
+                );
             }
             else{
                 //Just show the informative option

@@ -469,16 +469,6 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     }
 
     @Override
-    public void downloadComplete(Payload p) {
-        // do nothing
-    }
-
-    @Override
-    public void downloadProgressUpdate(DownloadProgress dp) {
-        // do nothing
-    }
-
-    @Override
     public void installComplete(Payload p) {
         Log.d(TAG, "Course completed installing!");
         if (progressDialog != null){

@@ -51,11 +51,11 @@ public class ActivityTypesAdapter extends RecyclerView.Adapter<ActivityTypesAdap
         if (activityType.isEnabled()) {
             holder.imgShowHide.setImageResource(R.drawable.ic_eye_show);
             holder.imgShowHide.getBackground().setAlpha(255);
-            holder.imgShowHide.setColorFilter(Color.WHITE);
+            holder.imgShowHide.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         } else {
             holder.imgShowHide.setImageResource(R.drawable.ic_eye_hide);
             holder.imgShowHide.getBackground().setAlpha(0);
-            holder.imgShowHide.setColorFilter(activityType.getColor());
+            holder.imgShowHide.setColorFilter(activityType.getColor(), PorterDuff.Mode.SRC_ATOP);
         }
     }
 

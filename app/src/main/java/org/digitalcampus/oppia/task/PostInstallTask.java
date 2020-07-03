@@ -96,7 +96,7 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
 	protected void onPostExecute(Payload p) {
 		synchronized (this) {
             if (mStateListener != null) {
-               mStateListener.postInstallComplete(p);
+               mStateListener.postInstallComplete();
             }
         }
 	}

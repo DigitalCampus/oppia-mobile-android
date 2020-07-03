@@ -2,7 +2,6 @@ package org.digitalcampus.oppia.fragments;
 
 import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -96,7 +95,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         
         
     }
-    
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -175,10 +175,10 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     private void displayDownloadSection(){
         noCoursesView.setVisibility(View.VISIBLE);
         tvManageCourses.setText((!courses.isEmpty())? R.string.more_courses : R.string.no_courses);
-        manageBtn.setOnClickListener(v -> {
+        manageBtn.setOnClickListener(v ->
             AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.menu_download, () ->
-                    startActivity(new Intent(getActivity(), TagSelectActivity.class)));
-        });
+                    startActivity(new Intent(getActivity(), TagSelectActivity.class)))
+        );
     }
 
     // Recycler callbacks
@@ -265,7 +265,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
         if(key.equalsIgnoreCase(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS) || key.equalsIgnoreCase(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS)){
             displayCourses();
         }
@@ -392,7 +391,5 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         displayCourses();
     }
-
-
 
 }

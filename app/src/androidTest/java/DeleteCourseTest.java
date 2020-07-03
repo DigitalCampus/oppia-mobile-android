@@ -199,14 +199,6 @@ public class DeleteCourseTest {
         InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
         imTask.setInstallerListener(new InstallCourseListener() {
             @Override
-            public void downloadComplete(Payload p) {
-            }
-
-            @Override
-            public void downloadProgressUpdate(DownloadProgress dp) {
-            }
-
-            @Override
             public void installComplete(Payload r) {
                 signal.countDown();
             }

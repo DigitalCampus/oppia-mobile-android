@@ -221,7 +221,7 @@ public class BluetoothTransferService extends Service {
         output = tmpOut;
 
         Log.d(TAG, "Socket streams created, starting receive thread");
-        receiveHandler.post(() -> listenAndReceiveFiles());
+        receiveHandler.post(this::listenAndReceiveFiles);
     }
 
 

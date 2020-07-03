@@ -66,7 +66,6 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
             Manifest.permission.ACCESS_FINE_LOCATION
     );
 
-    private Button scanButton;
     private View scanningMessage;
 
     private BluetoothBroadcastReceiver receiver;
@@ -87,9 +86,8 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
 
         scanningMessage = findViewById(R.id.scanning_message);
         // Initialize the button to perform device discovery
-        scanButton = findViewById(R.id.button_scan);
+        Button scanButton = findViewById(R.id.button_scan);
         scanButton.setOnClickListener(v -> {
-
             final List<String> notGrantedPerms = PermissionsManager.filterNotGrantedPermissions(DeviceListActivity.this, BLUETOOTH_PERMISSIONS);
             if (!notGrantedPerms.isEmpty()) {
                 if (PermissionsManager.canAskForAllPermissions(DeviceListActivity.this, notGrantedPerms)) {
@@ -293,7 +291,7 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (PermissionsManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
             doDiscovery();

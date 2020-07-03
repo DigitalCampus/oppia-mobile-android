@@ -275,79 +275,81 @@ public class MultiChoiceHelper {
         };
     }
 
-    private void confirmCheckedPositions() {
-        if (checkedItemCount == 0) {
-            return;
-        }
 
-        final int itemCount = adapter.getItemCount();
-        boolean checkedCountChanged = false;
-
-        if (itemCount == 0) {
-            // Optimized path for empty adapter: remove all items.
-            checkStates.clear();
-            if (checkedIdStates != null) {
-                checkedIdStates.clear();
-            }
-            checkedItemCount = 0;
-            checkedCountChanged = true;
-        } else if (checkedIdStates != null) {
-            // Clear out the positional check states, we'll rebuild it below from IDs.
-            checkStates.clear();
-
-            for (int checkedIndex = 0; checkedIndex < checkedIdStates.size(); checkedIndex++) {
-                final long id = checkedIdStates.keyAt(checkedIndex);
-                final int lastPos = checkedIdStates.valueAt(checkedIndex);
-
-                if ((lastPos >= itemCount) || (id != adapter.getItemId(lastPos))) {
-                    // Look around to see if the ID is nearby. If not, uncheck it.
-                    final int start = Math.max(0, lastPos - CHECK_POSITION_SEARCH_DISTANCE);
-                    final int end = Math.min(lastPos + CHECK_POSITION_SEARCH_DISTANCE, itemCount);
-                    boolean found = false;
-                    for (int searchPos = start; searchPos < end; searchPos++) {
-                        final long searchId = adapter.getItemId(searchPos);
-                        if (id == searchId) {
-                            found = true;
-                            checkStates.put(searchPos, true);
-                            checkedIdStates.setValueAt(checkedIndex, searchPos);
-                            break;
-                        }
-                    }
-
-                    if (!found) {
-                        checkedIdStates.remove(id);
-                        checkedIndex--;
-                        checkedItemCount--;
-                        checkedCountChanged = true;
-                        if (choiceActionMode != null && multiChoiceModeCallback != null) {
-                            multiChoiceModeCallback.onItemCheckedStateChanged(choiceActionMode, lastPos, id, false);
-                        }
-                    }
-                } else {
-                    checkStates.put(lastPos, true);
-                }
-            }
-        } else {
-            // If the total number of items decreased, remove all out-of-range check indexes.
-            for (int i = checkStates.size() - 1; (i >= 0) && (checkStates.keyAt(i) >= itemCount); i--) {
-                if (checkStates.valueAt(i)) {
-                    checkedItemCount--;
-                    checkedCountChanged = true;
-                }
-                checkStates.delete(checkStates.keyAt(i));
-            }
-        }
-
-        if (checkedCountChanged && choiceActionMode != null) {
-            if (checkedItemCount == 0) {
-                choiceActionMode.finish();
-            } else {
-                choiceActionMode.invalidate();
-            }
-        }
-    }
 
     class AdapterDataSetObserver extends RecyclerView.AdapterDataObserver {
+
+        private void confirmCheckedPositions() {
+            if (checkedItemCount == 0) {
+                return;
+            }
+
+            final int itemCount = adapter.getItemCount();
+            boolean checkedCountChanged = false;
+
+            if (itemCount == 0) {
+                // Optimized path for empty adapter: remove all items.
+                checkStates.clear();
+                if (checkedIdStates != null) {
+                    checkedIdStates.clear();
+                }
+                checkedItemCount = 0;
+                checkedCountChanged = true;
+            } else if (checkedIdStates != null) {
+                // Clear out the positional check states, we'll rebuild it below from IDs.
+                checkStates.clear();
+
+                for (int checkedIndex = 0; checkedIndex < checkedIdStates.size(); checkedIndex++) {
+                    final long id = checkedIdStates.keyAt(checkedIndex);
+                    final int lastPos = checkedIdStates.valueAt(checkedIndex);
+
+                    if ((lastPos >= itemCount) || (id != adapter.getItemId(lastPos))) {
+                        // Look around to see if the ID is nearby. If not, uncheck it.
+                        final int start = Math.max(0, lastPos - CHECK_POSITION_SEARCH_DISTANCE);
+                        final int end = Math.min(lastPos + CHECK_POSITION_SEARCH_DISTANCE, itemCount);
+                        boolean found = false;
+                        for (int searchPos = start; searchPos < end; searchPos++) {
+                            final long searchId = adapter.getItemId(searchPos);
+                            if (id == searchId) {
+                                found = true;
+                                checkStates.put(searchPos, true);
+                                checkedIdStates.setValueAt(checkedIndex, searchPos);
+                                break;
+                            }
+                        }
+
+                        if (!found) {
+                            checkedIdStates.remove(id);
+                            checkedIndex--;
+                            checkedItemCount--;
+                            checkedCountChanged = true;
+                            if (choiceActionMode != null && multiChoiceModeCallback != null) {
+                                multiChoiceModeCallback.onItemCheckedStateChanged(choiceActionMode, lastPos, id, false);
+                            }
+                        }
+                    } else {
+                        checkStates.put(lastPos, true);
+                    }
+                }
+            } else {
+                // If the total number of items decreased, remove all out-of-range check indexes.
+                for (int i = checkStates.size() - 1; (i >= 0) && (checkStates.keyAt(i) >= itemCount); i--) {
+                    if (checkStates.valueAt(i)) {
+                        checkedItemCount--;
+                        checkedCountChanged = true;
+                    }
+                    checkStates.delete(checkStates.keyAt(i));
+                }
+            }
+
+            if (checkedCountChanged && choiceActionMode != null) {
+                if (checkedItemCount == 0) {
+                    choiceActionMode.finish();
+                } else {
+                    choiceActionMode.invalidate();
+                }
+            }
+        }
 
         @Override
         public void onChanged() {

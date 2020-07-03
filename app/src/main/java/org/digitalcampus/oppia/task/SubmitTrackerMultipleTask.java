@@ -130,15 +130,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
             String dataToSend = org.apache.commons.io.FileUtils.readFileToString(activityLog);
 
             //We don't need the current user to send this, just some with a valid apiKey
-            User user;
-            try {
-                user = db.getOneRegisteredUser();
-            } catch (UserNotFoundException e) {
-                Mint.logException(e);
-                payload.setResult(false);
-                //If there is no logged in user, there is no point in trying to submit trackers
-                return;
-            }
+            User user = db.getOneRegisteredUser();
 
             if (!user.isOfflineRegister()){
                 boolean success = sendTrackers(user, dataToSend, true, payload);
@@ -153,7 +145,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                 }
             }
 
-        } catch (IOException e) {
+        } catch (IOException | UserNotFoundException e) {
             Mint.logException(e);
             payload.setResult(false);
         }
@@ -189,13 +181,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                     }
                     editor.apply();
 
-                    try {
-                        JSONObject metadata = jsonResp.getJSONObject("metadata");
-                        MetaDataUtils mu = new MetaDataUtils(ctx);
-                        mu.saveMetaData(metadata, prefs);
-                    } catch (JSONException e) {
-                        Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
-                    }
+                    saveMetadata(jsonResp);
                 }
 
                 return true;
@@ -227,6 +213,16 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
             Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
             Mint.logException(e);
             return false;
+        }
+    }
+
+    private void saveMetadata(JSONObject jsonResp) {
+        try {
+            JSONObject metadata = jsonResp.getJSONObject("metadata");
+            MetaDataUtils mu = new MetaDataUtils(ctx);
+            mu.saveMetaData(metadata, prefs);
+        } catch (JSONException e) {
+            Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
         }
     }
 

@@ -11,7 +11,6 @@ import java.util.Arrays;
 
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
-import androidx.preference.Preference;
 
 public class SecurityPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback{
 

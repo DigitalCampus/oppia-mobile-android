@@ -23,14 +23,10 @@ public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress,
     private static final String TAG = ImportLeaderboardsTask.class.getSimpleName();
 
     public interface ImportLeaderboardListener {
-        void onLeaderboardImportProgress(String message);
         void onLeaderboardImportComplete(Boolean success, String message);
     }
 
     private Context ctx;
-
-
-
     private ImportLeaderboardListener listener;
 
     public ImportLeaderboardsTask(Context ctx) {

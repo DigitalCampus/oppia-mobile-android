@@ -123,18 +123,12 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
 
     @Override
     public boolean needsUserPermissions(Context ctx) {
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            //Only in versions >= Lollipop we need to check write permissions
-            return false;
-        }
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         if (prefs.contains(PrefsActivity.STORAGE_NEEDS_PERMISSIONS)){
             return prefs.getBoolean(PrefsActivity.STORAGE_NEEDS_PERMISSIONS, false);
         }
 
-        //If by some reason the value is not set yet (coming from previous installation)
+        // If by some reason the value is not set yet (coming from previous installation)
         String currentLocation = this.getStorageLocation(ctx);
         File currentPath = new File(currentLocation);
         if (!currentPath.canWrite()){
