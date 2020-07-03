@@ -90,7 +90,7 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
 	}
 
 
-	public boolean submitUserToServer(User u, Payload payload, boolean updateProgress){
+	boolean submitUserToServer(User u, Payload payload, boolean updateProgress){
         try {
             if (updateProgress){
                 // update progress dialog
@@ -120,7 +120,7 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
                     .url(apiEndpoint.getFullURL(ctx, Paths.REGISTER_PATH))
-                    .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, json.toString()))
+                    .post(RequestBody.create(json.toString(), HTTPClientUtils.MEDIA_TYPE_JSON))
                     .build();
 
             // make request

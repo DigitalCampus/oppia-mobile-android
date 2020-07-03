@@ -133,7 +133,10 @@ public class QuizQuestion implements Serializable {
     }
 
     public String getFeedback(String lang) {
-        return "";
+        // reset feedback back to nothing
+        this.feedback = "";
+        this.mark(lang);
+        return this.feedback;
     }
 
     public int getMaxScore() {

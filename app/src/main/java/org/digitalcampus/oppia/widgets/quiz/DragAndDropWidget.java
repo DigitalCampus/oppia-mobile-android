@@ -61,13 +61,11 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
         draggablesContainer.setOnDragListener((v1, event) -> {
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
+                case DragEvent.ACTION_DRAG_EXITED:
                     v1.setBackgroundResource(R.drawable.dragscontainer_normal);
                     return true;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     v1.setBackgroundResource(R.drawable.dragscontainer_hover);
-                    return true;
-                case DragEvent.ACTION_DRAG_EXITED:
-                    v1.setBackgroundResource(R.drawable.dragscontainer_normal);
                     return true;
                 case DragEvent.ACTION_DROP:
                     // Dropped, reassign View to ViewGroup

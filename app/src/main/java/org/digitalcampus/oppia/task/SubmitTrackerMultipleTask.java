@@ -162,7 +162,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                     .url(apiEndpoint.getFullURL(ctx, isRaw ? Paths.ACTIVITYLOG_PATH : Paths.TRACKER_PATH))
                     .addHeader(HTTPClientUtils.HEADER_AUTH,
                             HTTPClientUtils.getAuthHeaderValue(user.getUsername(), user.getApiKey()))
-                    .patch(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, dataToSend))
+                    .patch(RequestBody.create(dataToSend, HTTPClientUtils.MEDIA_TYPE_JSON))
                     .build();
 
             Response response = client.newCall(request).execute();

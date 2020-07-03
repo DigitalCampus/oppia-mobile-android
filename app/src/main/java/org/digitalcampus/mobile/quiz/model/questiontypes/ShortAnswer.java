@@ -17,19 +17,12 @@
 
 package org.digitalcampus.mobile.quiz.model.questiontypes;
 
-import android.util.Log;
-
-import com.splunk.mint.Mint;
+import org.digitalcampus.mobile.quiz.Quiz;
+import org.digitalcampus.mobile.quiz.model.Response;
 
 import java.io.Serializable;
 
-import org.digitalcampus.mobile.quiz.Quiz;
-import org.digitalcampus.mobile.quiz.model.QuizQuestion;
-import org.digitalcampus.mobile.quiz.model.Response;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class ShortAnswer extends QuizQuestion implements Serializable {
+public class ShortAnswer extends UserResponseQuestion implements Serializable {
 
     private static final long serialVersionUID = 3539362553016059321L;
     public static final String TAG = ShortAnswer.class.getSimpleName();
@@ -66,45 +59,9 @@ public class ShortAnswer extends QuizQuestion implements Serializable {
     }
 
     @Override
-    public String getFeedback(String lang) {
-        // reset feedback back to nothing
-        this.feedback = "";
-        this.mark(lang);
-
-        return this.feedback;
-    }
-
-    @Override
     public int getMaxScore() {
         return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
     }
 
-    @Override
-    public JSONObject responsesToJSON() {
-        JSONObject jo = new JSONObject();
-        if(userResponses.isEmpty()){
-            try {
-                jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
-                jo.put(Quiz.JSON_PROPERTY_SCORE,userscore);
-                jo.put(Quiz.JSON_PROPERTY_TEXT, "");
-            } catch (JSONException jsone) {
-                Log.d(TAG,"Error creating json object", jsone);
-                Mint.logException(jsone);
-            }
-            return jo;
-        }
 
-        for(String ur: userResponses ){
-            try {
-                jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
-                jo.put(Quiz.JSON_PROPERTY_SCORE,userscore);
-                jo.put(Quiz.JSON_PROPERTY_TEXT, ur);
-            } catch (JSONException jsone) {
-                Log.d(TAG,"Error creating json object", jsone);
-                Mint.logException(jsone);
-            }
-        }
-
-        return jo;
-    }
 }

@@ -217,28 +217,16 @@ public class PageWidget extends WidgetFactory {
 		File f = new File(File.separator + course.getLocation() + File.separator
 				+ activity.getLocation(prefLang));
 		StringBuilder text = new StringBuilder();
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new FileReader(f));
+		try (BufferedReader reader = new BufferedReader(new FileReader(f))){
 			String line;
-
 			while ((line = reader.readLine()) != null) {
 				text.append(line);
 			}
-
 		} catch (IOException e) {
 			Log.e(TAG, "getContentToRead: ", e);
 			return "";
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					Log.e(TAG, e.getMessage());
-					Mint.logException(e);
-				}
-			}
 		}
+
 		return HtmlCompat.fromHtml(text.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY).toString();
 	}
 

@@ -42,8 +42,7 @@ public class ResetTask extends APIRequestTask<Payload, Object, Payload> {
 
 	private SubmitListener mStateListener;
 
-    public ResetTask(Context ctx) { super(ctx); }
-    public ResetTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
+	public ResetTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
 
     @Override
 	protected Payload doInBackground(Payload... params) {
@@ -61,7 +60,7 @@ public class ResetTask extends APIRequestTask<Payload, Object, Payload> {
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
                     .url(apiEndpoint.getFullURL(ctx, Paths.RESET_PATH))
-                    .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, json.toString()))
+                    .post(RequestBody.create(json.toString(), HTTPClientUtils.MEDIA_TYPE_JSON))
                     .build();
 
             Response response = client.newCall(request).execute();

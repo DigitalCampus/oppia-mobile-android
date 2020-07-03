@@ -140,7 +140,7 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
 
         // Find and set up the RecyclerView for paired devices
         RecyclerView recyclerPairedDevices = findViewById(R.id.recycler_paired_devices);
-        adapterPairedDevices.setOnItemClickListener(mDeviceClickListener);
+        adapterPairedDevices.setOnItemClickListener((v, position) -> selectDevice(v));
         recyclerPairedDevices.setAdapter(adapterPairedDevices);
 
         // Find and set up the RecyclerView for newly discovered devices
@@ -149,7 +149,7 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
         adapterNewDevices = new DevicesBTAdapter(this, newDevicesNames);
 
         RecyclerView recyclerNewDevices = findViewById(R.id.recycler_new_devices);
-        adapterNewDevices.setOnItemClickListener(mDeviceClickListener);
+        adapterNewDevices.setOnItemClickListener((v, position) -> selectDevice(v));
         recyclerNewDevices.setAdapter(adapterNewDevices);
 
         // Register for broadcasts when a device is discovered
@@ -214,30 +214,23 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
         return device.substring(device.length() - 17);
     }
 
-    /**
-     * The on-click listener for all devices in the ListViews
-     */
-    private DevicesBTAdapter.OnItemClickListener mDeviceClickListener
-            = new DevicesBTAdapter.OnItemClickListener() {
-        @Override
-        public void onItemClick(View v, int position) {
-            if (mBtAdapter.isDiscovering()) {
-                mBtAdapter.cancelDiscovery();
-            }
 
-            // Get the device MAC address, which is the last 17 chars in the View
-            String info = ((TextView) v).getText().toString();
-            String address = getAddress(info);
+    private void selectDevice(View v){
+        String info = ((TextView) v).getText().toString();
 
-            // Create the result Intent and include the MAC address
-            Intent intent = new Intent();
-            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
-
-            // Set result and finish this Activity
-            setResult(Activity.RESULT_OK, intent);
-            finish();
+        if (mBtAdapter.isDiscovering()) {
+            mBtAdapter.cancelDiscovery();
         }
-    };
+        // Get the device MAC address, which is the last 17 chars in the View
+        String address = getAddress(info);
+        // Create the result Intent and include the MAC address
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+        // Set result and finish this Activity
+        setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
 
     /**
      * The BroadcastReceiver that listens for discovered devices and changes the title when

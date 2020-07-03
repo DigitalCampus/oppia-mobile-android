@@ -59,7 +59,7 @@ import javax.inject.Inject;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnTabSelectedListener, ActivityTypesAdapter.OnItemClickListener {
+public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSelectedListener, ActivityTypesAdapter.OnItemClickListener {
 
     private static final String ARG_COURSE = "arg_course";
 

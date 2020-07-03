@@ -27,6 +27,7 @@ import com.splunk.mint.Mint;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,7 +145,7 @@ public class StorageUtils {
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
-            content = new String(buffer, "UTF-8");
+            content = new String(buffer, StandardCharsets.UTF_8);
         } catch (IOException e) {
             Mint.logException(e);
             return null;

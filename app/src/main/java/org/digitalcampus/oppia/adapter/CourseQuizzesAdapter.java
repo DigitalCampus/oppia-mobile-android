@@ -29,14 +29,12 @@ import org.digitalcampus.oppia.model.QuizStats;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
-public class CourseQuizzesAdapter extends RecyclerView.Adapter<CourseQuizzesAdapter.CourseQuizzesViewHolder> {
+public class CourseQuizzesAdapter extends RecyclerViewClickableAdapter<CourseQuizzesAdapter.CourseQuizzesViewHolder> {
 
     private final Context ctx;
     private final List<QuizStats> quizzesList;
 
-    private OnItemClickListener itemClickListener;
 
 
     public CourseQuizzesAdapter(Context context, List<QuizStats> quizzesList) {
@@ -44,7 +42,7 @@ public class CourseQuizzesAdapter extends RecyclerView.Adapter<CourseQuizzesAdap
         this.quizzesList = quizzesList;
     }
 
-    public class CourseQuizzesViewHolder extends RecyclerView.ViewHolder {
+    public class CourseQuizzesViewHolder extends RecyclerViewClickableAdapter.ViewHolder {
 
         private TextView title;
         private TextView section;
@@ -56,12 +54,6 @@ public class CourseQuizzesAdapter extends RecyclerView.Adapter<CourseQuizzesAdap
             section = itemView.findViewById(R.id.section_title);
             title = itemView.findViewById(R.id.quiz_title);
             score = itemView.findViewById(R.id.score);
-
-            itemView.setOnClickListener(v -> {
-                if (itemClickListener != null) {
-                    itemClickListener.onItemClick(getAdapterPosition());
-                }
-            });
 
         }
     }
@@ -96,14 +88,6 @@ public class CourseQuizzesAdapter extends RecyclerView.Adapter<CourseQuizzesAdap
         }
 
 
-    }
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.itemClickListener = listener;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(int position);
     }
 
     @Override

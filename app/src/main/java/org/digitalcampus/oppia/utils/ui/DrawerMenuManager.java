@@ -21,7 +21,6 @@ package org.digitalcampus.oppia.utils.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -95,11 +94,11 @@ public class DrawerMenuManager {
 
     }
 
-    public void onPrepareOptionsMenu(Menu menu, Map<Integer, MenuOption> options) {
-        this.onPrepareOptionsMenu(menu, null, options);
+    public void onPrepareOptionsMenu(Map<Integer, MenuOption> options) {
+        this.onPrepareOptionsMenu(null, options);
     }
 
-    public void onPrepareOptionsMenu(Menu menu, Integer currentOption, Map<Integer, MenuOption> options) {
+    public void onPrepareOptionsMenu(Integer currentOption, Map<Integer, MenuOption> options) {
 
         if (options != null)
             this.customOptions = options;
@@ -125,7 +124,7 @@ public class DrawerMenuManager {
         itemSync.setVisible(App.MENU_ALLOW_SYNC);
     }
 
-    public void onPostCreate(Bundle savedInstanceState) {
+    public void onPostCreate() {
         // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState();
     }

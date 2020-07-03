@@ -7,18 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import org.digitalcampus.mobile.learning.R;
 
 import java.util.List;
 
-public class DevicesBTAdapter extends RecyclerView.Adapter<DevicesBTAdapter.DevicesBTViewHolder> {
-
+public class DevicesBTAdapter extends RecyclerViewClickableAdapter<DevicesBTAdapter.DevicesBTViewHolder> {
 
     private List<String> devices;
     private Context context;
-    private OnItemClickListener itemClickListener;
 
 
     public DevicesBTAdapter(Context context, List<String> devices) {
@@ -55,7 +51,7 @@ public class DevicesBTAdapter extends RecyclerView.Adapter<DevicesBTAdapter.Devi
     }
 
 
-    public class DevicesBTViewHolder extends RecyclerView.ViewHolder {
+    public class DevicesBTViewHolder extends RecyclerViewClickableAdapter.ViewHolder {
 
         private TextView rootView;
 
@@ -64,24 +60,10 @@ public class DevicesBTAdapter extends RecyclerView.Adapter<DevicesBTAdapter.Devi
             super(itemView);
 
             rootView = (TextView) itemView;
-
-            rootView.setOnClickListener(v -> {
-                if (itemClickListener != null) {
-                    itemClickListener.onItemClick(v, getAdapterPosition());
-                }
-            });
         }
 
     }
 
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.itemClickListener = listener;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
 }
 
 

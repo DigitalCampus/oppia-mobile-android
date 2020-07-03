@@ -26,7 +26,6 @@ import com.google.android.material.tabs.TabLayout;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.TransferableFileListAdapter;
 import org.digitalcampus.oppia.application.PermissionsManager;
-import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
 import org.digitalcampus.oppia.model.DownloadProgress;
@@ -49,7 +48,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SyncActivity extends AppActivity implements InstallCourseListener, BluetoothBroadcastReceiver.BluetoothTransferListener, TabLayout.BaseOnTabSelectedListener, ExportActivityListener {
+public class SyncActivity extends AppActivity implements InstallCourseListener, BluetoothBroadcastReceiver.BluetoothTransferListener, TabLayout.OnTabSelectedListener {
 
     // Intent request codes
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
@@ -165,7 +164,10 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         sendAllButton.setOnClickListener(v -> sendAll());
 
         ExportActivityTask task = new ExportActivityTask(this);
-        task.setListener(this);
+        task.setListener(filename -> {
+            updateStatus(true);
+            refreshFileList(false);
+        });
         task.execute();
         sendTransferProgress.setVisibility(View.VISIBLE);
 
@@ -628,13 +630,6 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         // do nothing
     }
 
-
-
-    @Override
-    public void onExportComplete(String filename) {
-        updateStatus(true);
-        refreshFileList(false);
-    }
 
 
     //static inner class doesn't hold an implicit reference to the outer class

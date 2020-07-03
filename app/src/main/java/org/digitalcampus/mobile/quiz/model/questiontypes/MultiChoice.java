@@ -17,51 +17,11 @@
 
 package org.digitalcampus.mobile.quiz.model.questiontypes;
 
-import android.util.Log;
-
-import org.digitalcampus.mobile.quiz.Quiz;
-import org.digitalcampus.mobile.quiz.model.QuizQuestion;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.Serializable;
 
-public class MultiChoice extends QuizQuestion implements Serializable  {
+public class MultiChoice extends UserResponseQuestion implements Serializable  {
 
     private static final long serialVersionUID = -6605393327170759582L;
     public static final String TAG = MultiChoice.class.getSimpleName();
 
-    @Override
-    public String getFeedback(String lang) {
-        // reset feedback back to nothing
-        this.feedback = "";
-        this.mark(lang);
-        return this.feedback;
-    }
-
-    @Override
-    public JSONObject responsesToJSON() {
-        JSONObject jo = new JSONObject();
-        if(userResponses.isEmpty()){
-            try {
-                jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
-                jo.put(Quiz.JSON_PROPERTY_SCORE,userscore);
-                jo.put(Quiz.JSON_PROPERTY_TEXT, "");
-            } catch (JSONException jsone) {
-                Log.d(TAG,"Error creating json object", jsone);
-            }
-            return jo;
-        }
-
-        for(String ur: userResponses ){
-            try {
-                jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
-                jo.put(Quiz.JSON_PROPERTY_SCORE,userscore);
-                jo.put(Quiz.JSON_PROPERTY_TEXT, ur);
-            } catch (JSONException jsone) {
-                Log.d(TAG,"Error creating json object", jsone);
-            }
-        }
-        return jo;
-    }
 }

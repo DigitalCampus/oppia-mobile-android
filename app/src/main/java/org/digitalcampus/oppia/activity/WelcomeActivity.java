@@ -26,8 +26,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.tabs.TabLayout;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.LoginFragment;
@@ -47,7 +45,6 @@ public class WelcomeActivity extends AppActivity {
     public static final int TAB_PASSWORD = 3;
 
     private ViewPager viewPager;
-    private TabLayout tabs;
     private int currentTab = TAB_WELCOME;
 	
 	@Override
@@ -88,9 +85,7 @@ public class WelcomeActivity extends AppActivity {
 
         ActivityPagerAdapter apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, tabTitles);
 		viewPager.setAdapter(apAdapter);
-
 		viewPager.setCurrentItem(currentTab);
-        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
 	}
 	
 	@Override

@@ -13,14 +13,11 @@ import org.digitalcampus.oppia.utils.DateUtils;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
-public class QuizAttemptAdapter extends RecyclerView.Adapter<QuizAttemptAdapter.QuizAttemptViewHolder>{
+public class QuizAttemptAdapter extends RecyclerViewClickableAdapter<QuizAttemptAdapter.QuizAttemptViewHolder>{
 
     private final Context ctx;
     private final List<QuizAttempt> quizAttempts;
-
-    private CourseQuizzesAdapter.OnItemClickListener itemClickListener;
 
     public QuizAttemptAdapter(Context context, List<QuizAttempt> quizAttempts) {
         this.ctx = context;
@@ -28,36 +25,20 @@ public class QuizAttemptAdapter extends RecyclerView.Adapter<QuizAttemptAdapter.
     }
 
 
-    public class QuizAttemptViewHolder extends RecyclerView.ViewHolder {
+    class QuizAttemptViewHolder extends RecyclerViewClickableAdapter.ViewHolder {
 
         private TextView date;
         private TextView timetaken;
         private TextView score;
 
-        public QuizAttemptViewHolder(View itemView) {
-
+        QuizAttemptViewHolder(View itemView) {
             super(itemView);
             timetaken = itemView.findViewById(R.id.attempt_timetaken);
             date = itemView.findViewById(R.id.attempt_date);
             score = itemView.findViewById(R.id.score);
-
-            itemView.setOnClickListener(v -> {
-                if (itemClickListener != null) {
-                    itemClickListener.onItemClick(getAdapterPosition());
-                }
-            });
-
         }
     }
 
-
-    public void setOnItemClickListener(CourseQuizzesAdapter.OnItemClickListener listener) {
-        this.itemClickListener = listener;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-    }
 
     @NonNull
     @Override
