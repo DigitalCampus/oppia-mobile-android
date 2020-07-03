@@ -199,7 +199,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         super.onResume();
 
         hasPermissions = PermissionsManager.checkPermissionsAndInform(this,
-                PermissionsManager.BLUETOOTH_PERMISSIONS_REQUIRED);
+                PermissionsManager.BLUETOOTH_PERMISSIONS);
         if (!hasPermissions){
             return;
         }

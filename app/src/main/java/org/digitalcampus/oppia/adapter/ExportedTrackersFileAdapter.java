@@ -18,7 +18,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTrackersFileAdapter.EtfaViewHolder> {
+public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTrackersFileAdapter.ViewHolder> {
 
     public static final String TAG = ExportedTrackersFileAdapter.class.getSimpleName();
     private List<File> fileList;
@@ -30,13 +30,13 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
         void onItemToDelete(File fileToDelete);
     }
 
-    public class EtfaViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         private TextView fileName;
         private TextView fileSize;
         private TextView fileDate;
 
-        public EtfaViewHolder(View v) {
+        public ViewHolder(View v) {
             super(v);
             fileName = v.findViewById(R.id.file_name);
             fileSize = v.findViewById(R.id.file_size);
@@ -83,15 +83,15 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
 
     @NonNull
     @Override
-    public EtfaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_activitylog, parent, false);
-        return new EtfaViewHolder(v);
+        return new ViewHolder(v);
 
     }
 
     @Override
-    public void onBindViewHolder(EtfaViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         File current = fileList.get(position);
         String filename = current.getName();
         String username = filename.substring(0, filename.indexOf('_'));

@@ -40,7 +40,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
     public static final String TAG = ExternalStorageStrategy.class.getSimpleName();
     private static String internalPath;
 
-    //@Override
+    @Override
     public boolean updateStorageLocation(Context ctx){
 
         String location = null;
@@ -76,7 +76,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         return (location != null);
     }
 
-    //@Override
+    @Override
     public boolean updateStorageLocation(Context ctx, String mount) {
 
         if ((mount == null ) || mount.equals("")){
@@ -91,7 +91,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         return true;
     }
 
-    //@Override
+    @Override
     public String getStorageLocation(Context ctx){
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -105,8 +105,8 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         return location;
     }
 
-    //@Override
-    public boolean isStorageAvailable(Context ctx) {
+    @Override
+    public boolean isStorageAvailable() {
         String cardStatus = ExternalStorageState.getExternalStorageState();
         if (cardStatus.equals(Environment.MEDIA_REMOVED)
                 || cardStatus.equals(Environment.MEDIA_UNMOUNTABLE)
@@ -197,7 +197,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         fragmentTransaction.commitAllowingStateLoss();
     }
 
-    //@Override
+    @Override
     public String getStorageType() {
         return PrefsActivity.STORAGE_OPTION_EXTERNAL;
     }

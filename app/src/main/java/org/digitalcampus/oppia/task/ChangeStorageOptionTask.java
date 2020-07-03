@@ -63,7 +63,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
         StorageAccessStrategy newStrategy = StorageAccessStrategyFactory.createStrategy(storageType);
 
         Log.d(TAG, "Checking if storage is available...");
-        if (!newStrategy.isStorageAvailable(ctx)){
+        if (!newStrategy.isStorageAvailable()){
             resetStrategy(previousStrategy, previousLocation);
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_sdcard));

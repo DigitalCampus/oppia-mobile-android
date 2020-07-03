@@ -91,7 +91,7 @@ public class DeleteCourseTest {
     @Test
     public void deleteCourse_success() throws Exception {
 
-        if (!Storage.getStorageStrategy().isStorageAvailable(context)) {
+        if (!Storage.getStorageStrategy().isStorageAvailable()) {
             return;
         }
 

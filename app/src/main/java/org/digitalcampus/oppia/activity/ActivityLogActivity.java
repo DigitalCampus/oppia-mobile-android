@@ -50,11 +50,11 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
     ActivityLogRepository logsRepository;
 
     private RecyclerView exportedFilesRecyclerView;
-    private RecyclerView.Adapter filesAdapter;
+    private RecyclerView.Adapter<ExportedTrackersFileAdapter.ViewHolder> filesAdapter;
     private ArrayList<File> files = new ArrayList<>();
 
     private RecyclerView archivedFilesRecyclerView;
-    private RecyclerView.Adapter archivedFilesAdapter;
+    private RecyclerView.Adapter<ExportedTrackersFileAdapter.ViewHolder> archivedFilesAdapter;
     private ArrayList<File> archivedFiles = new ArrayList<>();
 
     private SubmitTrackerMultipleTask omSubmitTrackerMultipleTask;

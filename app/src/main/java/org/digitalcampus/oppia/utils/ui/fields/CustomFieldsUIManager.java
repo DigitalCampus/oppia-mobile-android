@@ -138,7 +138,7 @@ public class CustomFieldsUIManager {
         if (field.isInteger() || field.isFloat()){
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         }
-        ValidableTextInputLayout input = (ValidableTextInputLayout) LayoutInflater.from(ctx).inflate(R.layout.view_customfield_text, null);;
+        ValidableTextInputLayout input = (ValidableTextInputLayout) LayoutInflater.from(ctx).inflate(R.layout.view_customfield_text, null);
         input.addView(editText, getDefaultLayoutParams());
         addAndConfigureInput(field, input);
         return input;

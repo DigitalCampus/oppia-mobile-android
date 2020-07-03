@@ -183,22 +183,32 @@ public class CustomField {
             JSONArray collections = json.getJSONArray("collections");
             for (int i = 0; i<collections.length(); i++){
                 JSONObject col = collections.getJSONObject(i);
-                String collectionName = col.getString("collection_name");
-                JSONArray items = col.getJSONArray("items");
-                List<CollectionItem> collectionItems = new ArrayList<>();
-
-                for (int j = 0; j<items.length(); j++){
-                    JSONObject item = items.getJSONObject(j);
-                    String key = item.getString("id");
-                    String value = item.getString("value");
-                    collectionItems.add( new CollectionItem(key, value));
-                }
-                db.insertOrUpdateCustomFieldCollection(collectionName, collectionItems);
+                insertCollection(db, col);
             }
 
         } catch (JSONException e) {
             Mint.logException(e);
         }
+    }
+
+    private static void insertCollection(DbHelper db, JSONObject collection){
+        try {
+            String collectionName = collection.getString("collection_name");
+            JSONArray items = collection.getJSONArray("items");
+            List<CollectionItem> collectionItems = new ArrayList<>();
+
+            for (int j = 0; j<items.length(); j++){
+                JSONObject item = items.getJSONObject(j);
+                String key = item.getString("id");
+                String value = item.getString("value");
+                collectionItems.add( new CollectionItem(key, value));
+            }
+            db.insertOrUpdateCustomFieldCollection(collectionName, collectionItems);
+
+        } catch (JSONException e) {
+            Mint.logException(e);
+        }
+
     }
 
     public static class CollectionItem {
@@ -227,6 +237,11 @@ public class CustomField {
                 return item.getKey().equals(key);
             }
             return false;
+        }
+
+        @Override
+        public int hashCode(){
+            return key.hashCode();
         }
     }
 }

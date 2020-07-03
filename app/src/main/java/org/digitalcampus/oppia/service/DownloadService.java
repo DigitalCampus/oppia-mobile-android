@@ -232,7 +232,7 @@ public class DownloadService extends IntentService {
 
                 total += len1;
                 progress = (int)((total*100)/fileLength);
-                if ( (progress > 0) && (progress > previousProgress)){
+                if (progress > previousProgress){
                     sendBroadcast(fileUrl, ACTION_DOWNLOAD, ""+progress);
                     previousProgress = progress;
                 }

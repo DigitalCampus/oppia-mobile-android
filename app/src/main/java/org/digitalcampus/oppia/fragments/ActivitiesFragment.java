@@ -71,10 +71,10 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
 
     @Inject
     List<Points> pointsFull;
-    List<Points> pointsFiltered = new ArrayList<>();
+    private List<Points> pointsFiltered = new ArrayList<>();
+    private List<String> labels = new ArrayList<>();
     private Map<String, ActivityCount> activitiesGrouped = new LinkedHashMap<>(); // LinkedHashMap: ordered by insertion. TreeMap: sorts naturally by key
     private LineChart chart;
-    List<String> labels = new ArrayList<>();
     private int currentDatesRangePosition;
     private Course course;
     private RecyclerView recyclerActivityTypes;
