@@ -62,10 +62,9 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
         File csvAccounts = new File(csvPath);
 
         if (csvAccounts.exists()){
-            BufferedReader reader = null;
-            try {
-                String line;
-                reader = new BufferedReader(new FileReader(csvAccounts));
+            try (FileReader fileReader = new FileReader(csvAccounts);
+                 BufferedReader reader = new BufferedReader(fileReader)){
+
                 DbHelper db = DbHelper.getInstance(ctx);
                 int usernameColumn = -1;
                 int apikeyColumn = -1;
@@ -75,7 +74,7 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                 int lastNameColumn = -1;
                 int usersAdded = 0;
 
-                line = reader.readLine(); //We read first line to get headers
+                String line = reader.readLine(); //We read first line to get headers
                 if (line != null){
                     String[] headerData = line.split(CSV_SEPARATOR);
                     for (int i=0; i<headerData.length; i++){
@@ -139,14 +138,8 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                 payload.setResultResponse(ctx.getString(R.string.error_preloading_accounts));
             }
             finally {
-                try {
-                    if (reader!=null) reader.close();
-                    boolean deleted = csvAccounts.delete();
-                    Log.d(TAG, "CSV file " + (deleted?"":"not ") + "deleted");
-                }
-                catch (IOException e) {
-                    Mint.logException(e);
-                }
+                boolean deleted = csvAccounts.delete();
+                Log.d(TAG, "CSV file " + (deleted?"":"not ") + "deleted");
             }
         }
 

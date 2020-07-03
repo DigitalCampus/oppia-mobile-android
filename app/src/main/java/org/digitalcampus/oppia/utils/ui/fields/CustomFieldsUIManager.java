@@ -88,30 +88,31 @@ public class CustomFieldsUIManager {
 
             if (field.isDependantOnField()){
                 input.setVisibility(View.GONE);
-
-                ValidableField formField = getInputByKey(field.getFieldVisibleBy());
-                if (formField == null){
-                    continue;
-                }
-                formField.setChangeListener(new ValidableField.onChangeListener() {
-                    @Override
-                    public void onValueChanged(String newValue) {
-                        boolean valueFilled = newValue != null && !TextUtils.isEmpty(newValue);
-                        boolean condition = TextUtils.isEmpty(field.getValueVisibleBy()) || TextUtils.equals(field.getValueVisibleBy(), newValue);
-                        boolean visible = valueFilled && condition;
-                        input.setVisibility(visible ? View.VISIBLE : View.GONE);
-
-                        ValidableField collectionField = getInputByKey(field.getCollectionNameBy());
-                        if (collectionField != null){
-                            String collectionName = collectionField.getCleanedValue();
-                            List<CustomField.CollectionItem> collection = DbHelper.getInstance(ctx).getCollection(collectionName);
-                            ((ValidableSpinnerLayout)input).updateCollection(collection);
-                        }
-                    }
-                });
-
+                configureDepencency(input, field);
             }
+        }
+    }
 
+    private void configureDepencency(final ValidableField input, final CustomField field){
+
+        ValidableField formField = getInputByKey(field.getFieldVisibleBy());
+        if (formField != null) {
+            formField.setChangeListener(new ValidableField.onChangeListener() {
+                @Override
+                public void onValueChanged(String newValue) {
+                    boolean valueFilled = newValue != null && !TextUtils.isEmpty(newValue);
+                    boolean condition = TextUtils.isEmpty(field.getValueVisibleBy()) || TextUtils.equals(field.getValueVisibleBy(), newValue);
+                    boolean visible = valueFilled && condition;
+                    input.setVisibility(visible ? View.VISIBLE : View.GONE);
+
+                    ValidableField collectionField = getInputByKey(field.getCollectionNameBy());
+                    if (collectionField != null && field.isChoices()) {
+                        String collectionName = collectionField.getCleanedValue();
+                        List<CustomField.CollectionItem> collection = DbHelper.getInstance(ctx).getCollection(collectionName);
+                        ((ValidableSpinnerLayout) input).updateCollection(collection);
+                    }
+                }
+            });
         }
     }
 
@@ -204,7 +205,7 @@ public class CustomFieldsUIManager {
         return values;
     }
 
-    public static LinearLayout.LayoutParams getLinearParams(){
+    static LinearLayout.LayoutParams getLinearParams(){
         return new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);

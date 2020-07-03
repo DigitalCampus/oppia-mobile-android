@@ -44,6 +44,12 @@ android {
         disable 'MissingTranslation', 'ExtraTranslation'
     }
 
+    // Configure to use Java8 features like try-with-resources
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 
     Properties runtimeProps = new Properties()
     runtimeProps.load(new FileInputStream(rootProject.file('oppia-default.properties')))

@@ -343,14 +343,11 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             UIUtils.showAlert(this, R.string.prefStorageLocation, this.getString(R.string.download_via_pc_extenal_storage));
             return;
         }
-        FileOutputStream f = null;
-        Writer out = null;
-        try {
+        try (InputStream input = this.getAssets().open("templates/download_via_pc.html")) {
             String filename = "oppia-media.html";
             String path = ExternalStorageStrategy.getInternalBasePath(this);
-            InputStream input = this.getAssets().open("templates/download_via_pc.html");
-            String html = FileUtils.readFile(input);
 
+            String html = FileUtils.readFile(input);
             html = html.replace("##page_title##", getString(R.string.download_via_pc_title));
             html = html.replace("##app_name##", getString(R.string.app_name));
             html = html.replace("##primary_color##", "#" + Integer.toHexString(ContextCompat.getColor(this, R.color.theme_primary) & 0x00ffffff));
@@ -364,35 +361,19 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                 downloadData.append("<li><a href='" + m.getDownloadUrl() + "'>" + m.getFilename() + "</a></li>");
             }
             html = html.replace("##download_files##", downloadData.toString());
-
             File file = new File(Environment.getExternalStorageDirectory(), filename);
-            f = new FileOutputStream(file);
-            out = new OutputStreamWriter(new FileOutputStream(file));
-            out.write(html);
-            out.close();
-            f.close();
-            UIUtils.showAlert(this, R.string.info, this.getString(R.string.download_via_pc_message, filename));
+
+            try(Writer out = new OutputStreamWriter(new FileOutputStream(file))){
+                out.write(html);
+                UIUtils.showAlert(this, R.string.info, this.getString(R.string.download_via_pc_message, filename));
+            }
+
         } catch (FileNotFoundException fnfe) {
             Mint.logException(fnfe);
             Log.d(TAG, "File not found", fnfe);
         } catch (IOException ioe) {
             Mint.logException(ioe);
             Log.d(TAG, "IOException", ioe);
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException ioe) {
-                    Log.d(TAG, "couldn't close OutputStreamWriter object", ioe);
-                }
-            }
-            if (f != null) {
-                try {
-                    f.close();
-                } catch (IOException ioe) {
-                    Log.d(TAG, "couldn't close FileOutputStream object", ioe);
-                }
-            }
         }
     }
 

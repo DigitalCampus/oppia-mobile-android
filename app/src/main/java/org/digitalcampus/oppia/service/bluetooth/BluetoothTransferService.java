@@ -320,13 +320,11 @@ public class BluetoothTransferService extends Service {
 
     private void transferFile(DataOutputStream outputStream, CourseTransferableFile trFile){
         int totalBytes = 0;
-        FileInputStream fis = null;
 
-        try {
+        try (FileInputStream fis = new FileInputStream(trFile.getFile())) {
             byte[] buf = new byte[BUFFER_SIZE];
             int bytesRead;
 
-            fis = new FileInputStream(trFile.getFile());
             while((bytesRead = fis.read(buf)) != -1) {
                 totalBytes += bytesRead;
                 outputStream.write(buf, 0, bytesRead);
@@ -340,18 +338,8 @@ public class BluetoothTransferService extends Service {
             }
             outputStream.flush();
         }catch (IOException e){
+            Mint.logException(e);
             Log.e(TAG, e.getMessage(), e);
-        }
-        finally {
-            if (fis != null){
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    Mint.logException(e);
-                    Log.d(TAG, "IO exception: ", e);
-                }
-            }
-
         }
 
         Log.d(TAG, totalBytes + " bytes sent via bluetooth.");
@@ -432,20 +420,18 @@ public class BluetoothTransferService extends Service {
         }
     }
 
-    private int writeFile(DataInputStream d, CourseTransferableFile file, File outputFile) throws IOException {
+    private int writeFile(DataInputStream d, CourseTransferableFile file, File outputFile) {
 
         int totalBytes = 0;
         int prevProgress = 0;
-        try {
-
-            FileOutputStream output = new FileOutputStream(outputFile);
+        try (FileOutputStream out = new FileOutputStream(outputFile) ){
             long fileSize = file.getFileSize();
             byte[] buf = new byte[BUFFER_SIZE];
             int bytesRead;
 
             while ((bytesRead = d.read(buf, 0, Math.min(BUFFER_SIZE, (int) fileSize - totalBytes))) != -1) {
                 totalBytes += bytesRead;
-                output.write(buf, 0, bytesRead);
+                out.write(buf, 0, bytesRead);
                 if (totalBytes >= fileSize) {
                     Log.d(TAG, "Total bytes read: " + totalBytes + "/" + fileSize);
                     break;
@@ -467,8 +453,6 @@ public class BluetoothTransferService extends Service {
             }
         } catch (IOException e){
             Log.e(TAG,"Error receiving file", e);
-        } finally {
-            output.close();
         }
 
         return totalBytes;

@@ -236,7 +236,6 @@ public class CourseInstallerService extends IntentService {
 
         long startTime = System.currentTimeMillis();
         File downloadedFile = null;
-        FileOutputStream f = null;
 
         try {
         	DbHelper db = DbHelper.getInstance(this);
@@ -261,52 +260,43 @@ public class CourseInstallerService extends IntentService {
 
             String localFileName = Course.getLocalFilename(shortname, versionID);
             downloadedFile = new File(Storage.getDownloadPath(this),localFileName);
-            f = new FileOutputStream(downloadedFile);
-            InputStream in = response.body().byteStream();
 
-            byte[] buffer = new byte[8192];
-            int len1;
-            long total = 0;
-            int previousProgress = 0;
-            int progress;
-            while ((len1 = in.read(buffer)) > 0) {
-                //If received a cancel action while downloading, stop it
-                if (isCancelled(fileUrl)) {
-                    Log.d(TAG, "Course " + localFileName + " cancelled while downloading. Deleting temp file...");
-                    FileUtils.deleteFile(downloadedFile);
-                    removeCancelled(fileUrl);
-                    removeDownloading(fileUrl);
-                    return false;
-                }
+            try (FileOutputStream f = new FileOutputStream(downloadedFile);
+                    InputStream in = response.body().byteStream()){
 
-                total += len1;
-                progress = (int)((total*100)/fileLength);
-                if ( (progress > 0) && (progress > previousProgress)){
-                    sendBroadcast(fileUrl, ACTION_DOWNLOAD, ""+progress);
-                    previousProgress = progress;
+                byte[] buffer = new byte[8192];
+                int len1;
+                long total = 0;
+                int previousProgress = 0;
+                int progress;
+
+                while ((len1 = in.read(buffer)) > 0) {
+                    //If received a cancel action while downloading, stop it
+                    if (isCancelled(fileUrl)) {
+                        Log.d(TAG, "Course " + localFileName + " cancelled while downloading. Deleting temp file...");
+                        FileUtils.deleteFile(downloadedFile);
+                        removeCancelled(fileUrl);
+                        removeDownloading(fileUrl);
+                        return false;
+                    }
+
+                    total += len1;
+                    progress = (int)((total*100)/fileLength);
+                    if ( (progress > 0) && (progress > previousProgress)){
+                        sendBroadcast(fileUrl, ACTION_DOWNLOAD, ""+progress);
+                        previousProgress = progress;
+                    }
+                    f.write(buffer, 0, len1);
                 }
-                f.write(buffer, 0, len1);
             }
-            in.close();
-            f.flush();
-        } catch (MalformedURLException e) {
+
+        } catch (MalformedURLException | UserNotFoundException e) {
             logAndNotifyError(fileUrl, e);
             return false;
         } catch (IOException e) {
             FileUtils.deleteFile(downloadedFile);
             logAndNotifyError(fileUrl, e);
             return false;
-        } catch (UserNotFoundException unfe) {
-            logAndNotifyError(fileUrl, unfe);
-            return false;
-		} finally {
-            if (f != null){
-                try {
-                    f.close();
-                } catch (IOException ioe) {
-                    Log.d(TAG, "couldn't close FileOutputStream object", ioe);
-                }
-            }
         }
 
         Log.d(TAG, fileUrl + " succesfully downloaded");
