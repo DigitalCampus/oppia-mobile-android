@@ -2,14 +2,13 @@ package org.digitalcampus.oppia.adapter;
 
 
 import android.content.Context;
-import android.os.Build;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
@@ -54,22 +53,14 @@ public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswers
             }
         }
 
-        if (Build.VERSION.SDK_INT >= 24){
-            viewHolder.quizQuestion.setText(Html.fromHtml(qf.getQuestionText(), Html.FROM_HTML_MODE_LEGACY));
-            viewHolder.quizUserResponse.setText(Html.fromHtml(userResponseText.toString(), Html.FROM_HTML_MODE_LEGACY));
-        } else {
-            viewHolder.quizQuestion.setText(Html.fromHtml(qf.getQuestionText()));
-            viewHolder.quizUserResponse.setText(Html.fromHtml(userResponseText.toString()));
-        }
+        viewHolder.quizQuestion.setText(HtmlCompat.fromHtml(qf.getQuestionText(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+        viewHolder.quizUserResponse.setText(HtmlCompat.fromHtml(userResponseText.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY));
 
         if (qf.getFeedbackText() != null && !qf.getFeedbackText().equals("")){
             viewHolder.quizFeedbackTitle.setVisibility(View.VISIBLE);
             viewHolder.quizFeedbackText.setVisibility(View.VISIBLE);
-            if (Build.VERSION.SDK_INT >= 24) {
-                viewHolder.quizFeedbackText.setText(Html.fromHtml(qf.getFeedbackText(), Html.FROM_HTML_MODE_LEGACY));
-            } else {
-                viewHolder.quizFeedbackText.setText(Html.fromHtml(qf.getFeedbackText()));
-            }
+            viewHolder.quizFeedbackText.setText(HtmlCompat.fromHtml(qf.getFeedbackText(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+
         } else {
             //If there's no feedback to show, hide both text and title
             viewHolder.quizFeedbackTitle.setVisibility(View.GONE);

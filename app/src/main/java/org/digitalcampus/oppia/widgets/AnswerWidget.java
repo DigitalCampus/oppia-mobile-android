@@ -25,7 +25,6 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,11 +37,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.splunk.mint.Mint;
 
@@ -59,10 +53,8 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
-import org.digitalcampus.oppia.adapter.QuizAnswersFeedbackAdapter;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.QuizAnswerFeedback;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
@@ -76,11 +68,14 @@ import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
 import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.text.HtmlCompat;
+import androidx.fragment.app.FragmentActivity;
 
 public abstract class AnswerWidget extends WidgetFactory {
 
@@ -205,7 +200,7 @@ public abstract class AnswerWidget extends WidgetFactory {
         qText.setVisibility(View.VISIBLE);
         // convert in case has any html special chars
         String questionText = stripAudioFromText(q);
-        qText.setText(Html.fromHtml(questionText));
+        qText.setText(HtmlCompat.fromHtml(questionText, HtmlCompat.FROM_HTML_MODE_LEGACY));
 
         if (q.getProp("image") == null) {
             questionImage.setVisibility(View.GONE);

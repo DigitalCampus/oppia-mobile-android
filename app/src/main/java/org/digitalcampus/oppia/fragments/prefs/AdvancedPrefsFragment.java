@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Patterns;
@@ -128,8 +128,8 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
 
         if (!compatible){
             String uncompatible = "\n" + getContext().getString(R.string.prefServerIncompatible);
-            summarySpan.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.red)), summary.length(), summary.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            summarySpan.setSpan(new StyleSpan(Typeface.BOLD), summary.length(), summary.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            summarySpan.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.red)), summary.length(), summary.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            summarySpan.setSpan(new StyleSpan(Typeface.BOLD), summary.length(), summary.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             summarySpan.insert(summary.length(), uncompatible);
         }
 

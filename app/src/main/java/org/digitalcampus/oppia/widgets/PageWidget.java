@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 
 public class PageWidget extends WidgetFactory {
 
@@ -238,7 +239,7 @@ public class PageWidget extends WidgetFactory {
 				}
 			}
 		}
-		return android.text.Html.fromHtml(text.toString()).toString();
+		return HtmlCompat.fromHtml(text.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY).toString();
 	}
 
 
