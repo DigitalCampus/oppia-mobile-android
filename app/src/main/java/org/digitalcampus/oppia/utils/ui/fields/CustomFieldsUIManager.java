@@ -1,6 +1,8 @@
 package org.digitalcampus.oppia.utils.ui.fields;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -154,8 +156,14 @@ public class CustomFieldsUIManager {
                 input.setChecked((boolean) value.getValue());
             }
             else if(formField.first.isChoices()){
-                ValidableSpinnerLayout input = (ValidableSpinnerLayout) formField.second;
-                input.setSelection(value.toString());
+                final ValidableSpinnerLayout input = (ValidableSpinnerLayout) formField.second;
+                ValidableField dependOnField = getInputByKey(formField.first.getCollectionNameBy());
+                if (dependOnField == null){
+                    input.setSelection(value.toString());
+                }
+                else{
+                    new Handler(Looper.getMainLooper()).postDelayed((Runnable) () -> input.setSelection(value.toString()), 150);
+                }
             }
             else{
                 ValidableTextInputLayout input = (ValidableTextInputLayout) formField.second;

@@ -89,12 +89,14 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     }
 
     public void setSelection(String key){
-        if (key == null){
+        if (key == null || items == null){
             return;
         }
         for (int i=0; i<items.size(); i++){
             if (TextUtils.equals(items.get(i).getKey(), key)){
-                input.setSelection(i + (selected ? 0 : 1));
+                int position = i + (selected ? 0 : 1);
+                input.setSelection(position);
+                onItemSelected(null, null, position, 0);
                 return;
             }
         }
@@ -182,13 +184,15 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-        setDisabledTextColor(view, position);
+        if (view != null){
+            setDisabledTextColor(view, position);
+        }
         if (!selected){
             selected = position !=0;
             if (selected){
                 uiItems.remove(0);
                 adapter.notifyDataSetChanged();
-                //As we removed the first item, we need to reselect the element in the dropdown
+                // As we removed the first item, we need to reselect the element in the dropdown
                 input.setSelection(position-1);
             }
         }
