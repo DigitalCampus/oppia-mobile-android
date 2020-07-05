@@ -162,7 +162,7 @@ public class CustomFieldsUIManager {
                     input.setSelection(value.toString());
                 }
                 else{
-                    new Handler(Looper.getMainLooper()).postDelayed((Runnable) () -> input.setSelection(value.toString()), 150);
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> input.setSelection(value.toString()), 150);
                 }
             }
             else{

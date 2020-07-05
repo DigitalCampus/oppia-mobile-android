@@ -293,5 +293,5 @@ sonarqube {
         }
     }
 }
-//tasks.sonarqube.dependsOn connectedCheck
-//tasks.sonarqube.dependsOn jacocoTestReport
+tasks.sonarqube.dependsOn connectedCheck
+tasks.sonarqube.dependsOn jacocoTestReport
