@@ -35,9 +35,7 @@ import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
-import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
@@ -47,7 +45,6 @@ import org.digitalcampus.oppia.utils.ui.ExpandableRecyclerView;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
@@ -248,11 +245,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     }
 
     private void createLanguageDialog() {
-        UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
-            public Boolean call() {
-                CourseIndexActivity.this.initialize(false);
-                return true;
-            }
+        UIUtils.createLanguageDialog(this, course.getLangs(), prefs, () -> {
+            CourseIndexActivity.this.initialize(false);
+            return true;
         });
     }
 
@@ -260,12 +255,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
         final ExpandableRecyclerView listView = findViewById(R.id.section_list);
         adapter = new CourseIndexRecyclerViewAdapter(this, sections, course);
-        adapter.setOnChildItemClickedListener(new ExpandableRecyclerView.OnChildItemClickedListener() {
-            @Override
-            public void onChildItemClicked(int section, int position) {
-                Activity act = sections.get(section).getActivities().get(position);
-                startCourseActivityByDigest(act.getDigest());
-            }
+        adapter.setOnChildItemClickedListener((section, position) -> {
+            Activity act = sections.get(section).getActivities().get(position);
+            startCourseActivityByDigest(act.getDigest());
         });
 
         if (animate) {
@@ -275,11 +267,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
             listView.setAlpha(0f);
             ValueAnimator animator = ValueAnimator.ofFloat(1f, 0f);
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    listView.setTranslationX((Float) valueAnimator.getAnimatedValue() * 80);
-                    listView.setAlpha(1f - (Float) valueAnimator.getAnimatedValue());
-                }
+            animator.addUpdateListener(valueAnimator -> {
+                listView.setTranslationX((Float) valueAnimator.getAnimatedValue() * 80);
+                listView.setAlpha(1f - (Float) valueAnimator.getAnimatedValue());
             });
             animator.setDuration(700);
             animator.start();
@@ -311,29 +301,23 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         aDialog.setMessage(this.getString(R.string.alert_pretest_summary));
 
         aDialog.setButton(DialogInterface.BUTTON_NEGATIVE, this.getString(R.string.open),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //We set the digest to be able to jump to this activity after passing the baseline
-                        digestJumpTo = digest;
+                (dialog, which) -> {
+                    //We set the digest to be able to jump to this activity after passing the baseline
+                    digestJumpTo = digest;
 
-                        Intent intent = new Intent(CourseIndexActivity.this, CourseActivity.class);
-                        Bundle tb = new Bundle();
-                        Section section = new Section();
-                        section.addActivity(CourseIndexActivity.this.baselineActivity);
-                        tb.putSerializable(Section.TAG, section);
-                        tb.putSerializable(CourseActivity.BASELINE_TAG, true);
-                        tb.putSerializable(CourseActivity.NUM_ACTIVITY_TAG, 0);
-                        tb.putSerializable(Course.TAG, CourseIndexActivity.this.course);
-                        intent.putExtras(tb);
-                        startActivity(intent);
-                    }
+                    Intent intent = new Intent(CourseIndexActivity.this, CourseActivity.class);
+                    Bundle tb = new Bundle();
+                    Section section = new Section();
+                    section.addActivity(CourseIndexActivity.this.baselineActivity);
+                    tb.putSerializable(Section.TAG, section);
+                    tb.putSerializable(CourseActivity.BASELINE_TAG, true);
+                    tb.putSerializable(CourseActivity.NUM_ACTIVITY_TAG, 0);
+                    tb.putSerializable(Course.TAG, CourseIndexActivity.this.course);
+                    intent.putExtras(tb);
+                    startActivity(intent);
                 });
         aDialog.setButton(DialogInterface.BUTTON_POSITIVE, this.getString(R.string.cancel),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        CourseIndexActivity.this.finish();
-                    }
-                });
+                (dialog, which) -> CourseIndexActivity.this.finish());
         aDialog.show();
     }
 
@@ -374,11 +358,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     }
 
     private void showErrorMessage() {
-        UIUtils.showAlert(CourseIndexActivity.this, R.string.error, R.string.error_reading_xml, new Callable<Boolean>() {
-            public Boolean call() {
-                CourseIndexActivity.this.finish();
-                return true;
-            }
+        UIUtils.showAlert(CourseIndexActivity.this, R.string.error, R.string.error_reading_xml, () -> {
+            CourseIndexActivity.this.finish();
+            return true;
         });
     }
 

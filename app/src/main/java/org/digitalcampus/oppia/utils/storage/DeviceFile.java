@@ -72,14 +72,14 @@ public class DeviceFile{
         return mFile.getName();
     }
 
-    public Boolean isDirectory() {
+    public boolean isDirectory() {
         return mFile.isDirectory();
     }
 
-    public Boolean canRead() {
+    public boolean canRead() {
         return mFile.canRead();
     }
-    public Boolean canWrite() {
+    public boolean canWrite() {
         return mFile.canWrite();
     }
 

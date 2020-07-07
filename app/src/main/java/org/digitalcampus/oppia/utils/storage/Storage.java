@@ -86,7 +86,7 @@ public class Storage {
 
     public static boolean createFolderStructure(Context ctx) {
 
-        if (!storageStrategy.isStorageAvailable(ctx)){
+        if (!storageStrategy.isStorageAvailable()){
             Log.d(TAG, "Storage not available");
             return false;
         }

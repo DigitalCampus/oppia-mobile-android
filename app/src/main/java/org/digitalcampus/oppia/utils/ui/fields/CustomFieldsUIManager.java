@@ -90,39 +90,28 @@ public class CustomFieldsUIManager {
 
             if (field.isDependantOnField()){
                 input.setVisibility(View.GONE);
-
-                ValidableField formField = getInputByKey(field.getFieldVisibleBy());
-                if (formField != null){
-                    setDependantValueListener(formField, input, field);
-                }
+                configureDepencency(input, field);
             }
-
         }
     }
 
-    private void setDependantValueListener(ValidableField dependOnField, final ValidableField dependantField, final CustomField field){
-        dependOnField.setChangeListener(new ValidableField.onChangeListener() {
-            @Override
-            public void onValueChanged(String newValue) {
-                setDependantFieldVisibility(dependantField, field, newValue);
-                updateCollectionIfDependant(field, (ValidableSpinnerLayout) dependantField);
-            }
-        });
-    }
+    private void configureDepencency(final ValidableField input, final CustomField field){
 
-    private void setDependantFieldVisibility(ValidableField dependantField, CustomField field, String newValue){
-        boolean valueFilled = newValue != null && !TextUtils.isEmpty(newValue);
-        boolean condition = TextUtils.isEmpty(field.getValueVisibleBy()) || TextUtils.equals(field.getValueVisibleBy(), newValue);
-        boolean visible = valueFilled && condition;
-        dependantField.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
+        ValidableField formField = getInputByKey(field.getFieldVisibleBy());
+        if (formField != null) {
+            formField.setChangeListener(newValue -> {
+                boolean valueFilled = newValue != null && !TextUtils.isEmpty(newValue);
+                boolean condition = TextUtils.isEmpty(field.getValueVisibleBy()) || TextUtils.equals(field.getValueVisibleBy(), newValue);
+                boolean visible = valueFilled && condition;
+                input.setVisibility(visible ? View.VISIBLE : View.GONE);
 
-    private void updateCollectionIfDependant(CustomField field, ValidableSpinnerLayout input){
-        ValidableField collectionField = getInputByKey(field.getCollectionNameBy());
-        if (collectionField != null){
-            String collectionName = collectionField.getCleanedValue();
-            List<CustomField.CollectionItem> collection = DbHelper.getInstance(ctx).getCollection(collectionName);
-            input.updateCollection(collection);
+                ValidableField collectionField = getInputByKey(field.getCollectionNameBy());
+                if (collectionField != null && field.isChoices()) {
+                    String collectionName = collectionField.getCleanedValue();
+                    List<CustomField.CollectionItem> collection = DbHelper.getInstance(ctx).getCollection(collectionName);
+                    ((ValidableSpinnerLayout) input).updateCollection(collection);
+                }
+            });
         }
     }
 
@@ -158,7 +147,7 @@ public class CustomFieldsUIManager {
 
     public void fillWithUserData(User user){
         for (Pair<CustomField, ValidableField> formField : inputs){
-            final CustomValue value = user.getCustomField(formField.first.getKey());
+            CustomValue value = user.getCustomField(formField.first.getKey());
             if (value == null){
                 continue;
             }
@@ -173,14 +162,8 @@ public class CustomFieldsUIManager {
                     input.setSelection(value.toString());
                 }
                 else{
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            input.setSelection(value.toString());
-                        }
-                    }, 150);
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> input.setSelection(value.toString()), 150);
                 }
-
             }
             else{
                 ValidableTextInputLayout input = (ValidableTextInputLayout) formField.second;

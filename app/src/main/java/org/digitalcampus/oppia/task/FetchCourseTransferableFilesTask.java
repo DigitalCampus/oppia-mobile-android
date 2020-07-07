@@ -29,7 +29,7 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
         void onFetchComplete(List<CourseTransferableFile> backups, List<CourseTransferableFile> activityLogs);
     }
 
-    FetchBackupsListener listener;
+    private FetchBackupsListener listener;
     private Context ctx;
     private List<CourseTransferableFile> transferableFiles = new ArrayList<>();
     private List<CourseTransferableFile> activityLogs = new ArrayList<>();
@@ -42,15 +42,21 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
     @Override
     protected Void doInBackground(Payload... payloads) {
 
-        DbHelper db = DbHelper.getInstance(ctx);
-        List<Course> courses = db.getAllCourses();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-
         File dir = new File(Storage.getDownloadPath(ctx));
         String[] children = dir.list();
-
         publishProgress(children != null && children.length > 0);
+
+        fetchCourseBackups();
+        fetchMediaFiles();
+        fetchActivityLogs();
+
+        return null;
+    }
+
+    private void fetchCourseBackups(){
+        List<Course> courses = DbHelper.getInstance(ctx).getAllCourses();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 
         for (Course course : courses){
             File backup = CourseInstall.savedBackupCourse(ctx, course.getShortname());
@@ -89,10 +95,12 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
                 courseBackup.setRelatedMedia(courseRelatedMedia);
             }
         }
+    }
 
+    private void fetchMediaFiles(){
         File mediaPath = new File(Storage.getMediaPath(ctx));
         String[] mediaFiles = mediaPath.list();
-        if (mediaFiles.length > 0){
+        if (mediaFiles != null && mediaFiles.length > 0){
             for (String mediaFile : mediaFiles) {
                 File file = new File(mediaPath, mediaFile);
                 CourseTransferableFile media = new CourseTransferableFile();
@@ -107,26 +115,29 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
                 }
             }
         }
+    }
 
+    private void fetchActivityLogs(){
         File activityLogsDir = new File(Storage.getActivityPath(ctx));
         if (!activityLogsDir.exists()){
-            return null;
+            return;
         }
         String[] logs = activityLogsDir.list();
-        for (String filename : logs){
-            File file = new File(activityLogsDir, filename);
-            CourseTransferableFile log = new CourseTransferableFile();
-            log.setFilename(file.getName());
-            log.setFile(file);
-            log.setTitle(filename.substring(0, filename.indexOf('_')));
-            log.setType(CourseTransferableFile.TYPE_ACTIVITY_LOG);
-            log.setTitleFromFilename();
-            log.setFileSize(file.length());
-            log.setShortname("");
-            activityLogs.add(log);
+        if (logs != null && logs.length > 0){
+            for (String filename : logs){
+                File file = new File(activityLogsDir, filename);
+                CourseTransferableFile log = new CourseTransferableFile();
+                log.setFilename(file.getName());
+                log.setFile(file);
+                log.setTitle(filename.substring(0, filename.indexOf('_')));
+                log.setType(CourseTransferableFile.TYPE_ACTIVITY_LOG);
+                log.setTitleFromFilename();
+                log.setFileSize(file.length());
+                log.setShortname("");
+                activityLogs.add(log);
+            }
         }
 
-        return null;
     }
 
     @Override

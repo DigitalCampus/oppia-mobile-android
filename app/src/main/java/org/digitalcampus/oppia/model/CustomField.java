@@ -149,31 +149,7 @@ public class CustomField {
 
             for (int i = 0; i<fields.length(); i++){
                 JSONObject f = fields.getJSONObject(i);
-                CustomField field = new CustomField();
-                field.setKey(f.getString("name"));
-                field.setLabel(f.getString("label"));
-                field.setRequired(f.getBoolean("required"));
-                field.setType(f.getString("type"));
-                if (f.has("helper_text")){
-                    field.setHelperText(f.getString("helper_text"));
-                }
-                if (f.has("order")){
-                    field.setOrder(f.getInt("order"));
-                }
-                if (f.has("collection")){
-                    field.setCollectionName(f.getString("collection"));
-                }
-                if (f.has("visible_byfield")){
-                    field.setFieldVisibleBy(f.getString("visible_byfield"));
-                }
-                if (f.has("visible_byvalue")){
-                    field.setValueVisibleBy(f.getString("visible_byvalue"));
-                }
-                if (f.has("collection_byfield")){
-                    field.setCollectionNameBy(f.getString("collection_byfield"));
-                }
-
-                db.insertOrUpdateCustomField(field);
+                db.insertOrUpdateCustomField(parseField(f));
             }
 
             if (!json.has("collections")){
@@ -183,22 +159,59 @@ public class CustomField {
             JSONArray collections = json.getJSONArray("collections");
             for (int i = 0; i<collections.length(); i++){
                 JSONObject col = collections.getJSONObject(i);
-                String collectionName = col.getString("collection_name");
-                JSONArray items = col.getJSONArray("items");
-                List<CollectionItem> collectionItems = new ArrayList<>();
-
-                for (int j = 0; j<items.length(); j++){
-                    JSONObject item = items.getJSONObject(j);
-                    String key = item.getString("id");
-                    String value = item.getString("value");
-                    collectionItems.add( new CollectionItem(key, value));
-                }
-                db.insertOrUpdateCustomFieldCollection(collectionName, collectionItems);
+                insertCollection(db, col);
             }
 
         } catch (JSONException e) {
             Mint.logException(e);
         }
+    }
+
+    private static CustomField parseField(JSONObject f) throws JSONException {
+        CustomField field = new CustomField();
+        field.setKey(f.getString("name"));
+        field.setLabel(f.getString("label"));
+        field.setRequired(f.getBoolean("required"));
+        field.setType(f.getString("type"));
+        if (f.has("helper_text")){
+            field.setHelperText(f.getString("helper_text"));
+        }
+        if (f.has("order")){
+            field.setOrder(f.getInt("order"));
+        }
+        if (f.has("collection")){
+            field.setCollectionName(f.getString("collection"));
+        }
+        if (f.has("visible_byfield")){
+            field.setFieldVisibleBy(f.getString("visible_byfield"));
+        }
+        if (f.has("visible_byvalue")){
+            field.setValueVisibleBy(f.getString("visible_byvalue"));
+        }
+        if (f.has("collection_byfield")){
+            field.setCollectionNameBy(f.getString("collection_byfield"));
+        }
+        return field;
+    }
+
+    private static void insertCollection(DbHelper db, JSONObject collection){
+        try {
+            String collectionName = collection.getString("collection_name");
+            JSONArray items = collection.getJSONArray("items");
+            List<CollectionItem> collectionItems = new ArrayList<>();
+
+            for (int j = 0; j<items.length(); j++){
+                JSONObject item = items.getJSONObject(j);
+                String key = item.getString("id");
+                String value = item.getString("value");
+                collectionItems.add( new CollectionItem(key, value));
+            }
+            db.insertOrUpdateCustomFieldCollection(collectionName, collectionItems);
+
+        } catch (JSONException e) {
+            Mint.logException(e);
+        }
+
     }
 
     public static class CollectionItem {
@@ -227,6 +240,11 @@ public class CustomField {
                 return item.getKey().equals(key);
             }
             return false;
+        }
+
+        @Override
+        public int hashCode(){
+            return key.hashCode();
         }
     }
 }

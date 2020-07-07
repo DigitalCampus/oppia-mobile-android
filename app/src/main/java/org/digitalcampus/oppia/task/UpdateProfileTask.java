@@ -47,14 +47,10 @@ import okhttp3.Response;
 
 public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> {
 
-    public static final String SUBMIT_ERROR = "submit_error";
+    private static final String SUBMIT_ERROR = "submit_error";
 
     private ResponseListener responseListener;
     private ProgressDialog progressDialog;
-
-    public UpdateProfileTask(Context ctx) {
-        super(ctx);
-    }
 
     public UpdateProfileTask(Context ctx, ApiEndpoint api) {
         super(ctx, api);
@@ -94,7 +90,7 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
     }
 
 
-    public boolean submitUserToServer(User u, Payload payload, boolean updateProgress) {
+    private boolean submitUserToServer(User u, Payload payload, boolean updateProgress) {
         try {
             if (updateProgress) {
                 // update progress dialog
@@ -119,7 +115,7 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = createRequestBuilderWithUserAuth(apiEndpoint.getFullURL(ctx, Paths.UPDATE_PROFILE_PATH))
-                    .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, json.toString()))
+                    .post(RequestBody.create(json.toString(), HTTPClientUtils.MEDIA_TYPE_JSON))
                     .build();
 
             // make request
@@ -129,7 +125,7 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
             } else if (response.code() == 400) {
                 String bodyResponse = response.body().string();
                 payload.setResult(false);
-                payload.setResponseData(new ArrayList<Object>(Arrays.asList(SUBMIT_ERROR)));
+                payload.setResponseData(new ArrayList<>(Arrays.asList(SUBMIT_ERROR)));
                 payload.setResultResponse(bodyResponse);
                 Log.d(TAG, bodyResponse);
             } else {

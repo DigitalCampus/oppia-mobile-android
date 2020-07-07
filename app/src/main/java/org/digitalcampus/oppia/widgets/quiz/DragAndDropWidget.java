@@ -34,9 +34,7 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
     private List<Draggable> draggables = new ArrayList<>();
     private String courseLocation;
 
-
-
-    private int backgroundWidth = 0;
+    private int backgroundWidth;
     private int maxDragWidth = 0;
     private int maxDragHeight = 0;
 
@@ -60,38 +58,33 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
             viewTreeObserver.addOnGlobalLayoutListener(this);
         }
 
-        draggablesContainer.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                switch (event.getAction()) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        v.setBackgroundResource(R.drawable.dragscontainer_normal);
-                        return true;
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                        v.setBackgroundResource(R.drawable.dragscontainer_hover);
-                        return true;
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        v.setBackgroundResource(R.drawable.dragscontainer_normal);
-                        return true;
-                    case DragEvent.ACTION_DROP:
-                        // Dropped, reassign View to ViewGroup
-                        View view = (View) event.getLocalState();
-                        ViewGroup owner = (ViewGroup) view.getParent();
-                        owner.removeView(view);
-                        ViewGroup container = (ViewGroup) v;
-                        container.addView(view);
-                        view.setVisibility(View.VISIBLE);
-                        return true;
-                    case DragEvent.ACTION_DRAG_ENDED:
-                        v.setBackgroundResource(R.drawable.dragscontainer_normal);
-                        View v2 = (View) event.getLocalState();
-                        v2.setVisibility(View.VISIBLE);
-                        return true;
-                    default:
-                        break;
-                }
-                return false;
+        draggablesContainer.setOnDragListener((v1, event) -> {
+            switch (event.getAction()) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                case DragEvent.ACTION_DRAG_EXITED:
+                    v1.setBackgroundResource(R.drawable.dragscontainer_normal);
+                    return true;
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    v1.setBackgroundResource(R.drawable.dragscontainer_hover);
+                    return true;
+                case DragEvent.ACTION_DROP:
+                    // Dropped, reassign View to ViewGroup
+                    View view = (View) event.getLocalState();
+                    ViewGroup owner = (ViewGroup) view.getParent();
+                    owner.removeView(view);
+                    ViewGroup container1 = (ViewGroup) v1;
+                    container1.addView(view);
+                    view.setVisibility(View.VISIBLE);
+                    return true;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    v1.setBackgroundResource(R.drawable.dragscontainer_normal);
+                    View v2 = (View) event.getLocalState();
+                    v2.setVisibility(View.VISIBLE);
+                    return true;
+                default:
+                    break;
             }
+            return false;
         });
 
     }
@@ -116,12 +109,9 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
                 String yTop = r.getProp("ytop");
                 if (xLeft != null && yTop != null){
                     drop.setPosition(Integer.parseInt(xLeft), Integer.parseInt(yTop));
-                    drop.setOnDropListener(new OnDropListener() {
-                        @Override
-                        public void elemDropped(Draggable previousElem, Draggable newElem) {
-                            if ((previousElem != null) && (!previousElem.isInfinite())){
-                                draggablesContainer.addView(previousElem);
-                            }
+                    drop.setOnDropListener((previousElem, newElem) -> {
+                        if ((previousElem != null) && (!previousElem.isInfinite())){
+                            draggablesContainer.addView(previousElem);
                         }
                     });
                     dropzones.add(drop);
@@ -377,7 +367,6 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
             }
             return false;
         }
-
 
     }
 

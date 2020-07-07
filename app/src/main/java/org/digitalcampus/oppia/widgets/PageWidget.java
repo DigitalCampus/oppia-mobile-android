@@ -28,14 +28,12 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -51,6 +49,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 
 public class PageWidget extends WidgetFactory {
 
@@ -216,29 +215,17 @@ public class PageWidget extends WidgetFactory {
 		File f = new File(File.separator + course.getLocation() + File.separator
 				+ activity.getLocation(prefLang));
 		StringBuilder text = new StringBuilder();
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new FileReader(f));
+		try (BufferedReader reader = new BufferedReader(new FileReader(f))){
 			String line;
-
 			while ((line = reader.readLine()) != null) {
 				text.append(line);
 			}
-
 		} catch (IOException e) {
 			Log.e(TAG, "getContentToRead: ", e);
 			return "";
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					Log.e(TAG, e.getMessage());
-					Mint.logException(e);
-				}
-			}
 		}
-		return android.text.Html.fromHtml(text.toString()).toString();
+
+		return HtmlCompat.fromHtml(text.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY).toString();
 	}
 
 

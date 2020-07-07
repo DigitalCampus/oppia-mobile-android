@@ -24,14 +24,12 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.splunk.mint.Mint;
@@ -45,6 +43,8 @@ import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.IOException;
+
+import androidx.preference.PreferenceManager;
 
 public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, VideoControllerView.MediaPlayerControl, MediaPlayer.OnCompletionListener {
 
@@ -112,18 +112,8 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         ImageButton replayBtn = findViewById(R.id.replay_button);
         ImageButton continueBtn = findViewById(R.id.continue_button);
 
-        replayBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                start();
-            }
-        });
-        continueBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                VideoPlayerActivity.this.finish();
-            }
-        });
+        replayBtn.setOnClickListener(v -> start());
+        continueBtn.setOnClickListener(v -> VideoPlayerActivity.this.finish());
 
         videoSurface.setKeepScreenOn(true); //prevents player going into sleep mode
         SurfaceHolder videoHolder = videoSurface.getHolder();
@@ -168,7 +158,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     // Implement MediaPlayer.OnPreparedListener
     public void onPrepared(MediaPlayer mp) {
         controller.setMediaPlayer(this);
-        controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
+        controller.setAnchorView(findViewById(R.id.videoSurfaceContainer));
         player.start();
         player.setOnCompletionListener(this);
     }

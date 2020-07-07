@@ -61,28 +61,25 @@ public class PasswordDialogFragment extends DialogFragment {
         final AlertDialog d = (AlertDialog)getDialog();
         if(d != null) {
             Button positiveButton = d.getButton(DialogInterface.BUTTON_POSITIVE);
-            positiveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    EditText passwordField = d.findViewById(R.id.admin_password_field);
-                    View errorMessage = d.findViewById(R.id.admin_password_error);
-                    String password = passwordField.getText().toString();
+            positiveButton.setOnClickListener(v -> {
+                EditText passwordField = d.findViewById(R.id.admin_password_field);
+                View errorMessage = d.findViewById(R.id.admin_password_error);
+                String password = passwordField.getText().toString();
 
-                    //If the user leave the input blank, we don't perform any action
-                    if (password.equals("")) return;
+                //If the user leave the input blank, we don't perform any action
+                if (password.equals("")) return;
 
-                    boolean passCorrect = AdminSecurityManager.with(getActivity()).checkAdminPassword(password);
-                    if(passCorrect) {
-                        d.dismiss();
-                        if (listener != null) {
-                            listener.onPermissionGranted();
-                        }
+                boolean passCorrect = AdminSecurityManager.with(getActivity()).checkAdminPassword(password);
+                if(passCorrect) {
+                    d.dismiss();
+                    if (listener != null) {
+                        listener.onPermissionGranted();
                     }
-                    else{
-                        errorMessage.setVisibility(View.VISIBLE);
-                        SimpleAnimator.fade(errorMessage, SimpleAnimator.FADE_IN);
-                        passwordField.setText("");
-                    }
+                }
+                else{
+                    errorMessage.setVisibility(View.VISIBLE);
+                    SimpleAnimator.fade(errorMessage, SimpleAnimator.FADE_IN);
+                    passwordField.setText("");
                 }
             });
         }

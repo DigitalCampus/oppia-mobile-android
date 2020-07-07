@@ -41,7 +41,7 @@ public abstract class APIRequestTask<PARAMS, PROGRESS, RESULT> extends AsyncTask
         apiEndpoint = api;
     }
 
-    protected Request.Builder createRequestBuilderWithUserAuth(String url) {
+    Request.Builder createRequestBuilderWithUserAuth(String url) {
         DbHelper db = DbHelper.getInstance(ctx);
         Request.Builder requestBuilder = null;
         try {

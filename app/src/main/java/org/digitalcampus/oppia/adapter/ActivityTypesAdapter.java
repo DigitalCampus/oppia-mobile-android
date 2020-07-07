@@ -51,11 +51,11 @@ public class ActivityTypesAdapter extends RecyclerView.Adapter<ActivityTypesAdap
         if (activityType.isEnabled()) {
             holder.imgShowHide.setImageResource(R.drawable.ic_eye_show);
             holder.imgShowHide.getBackground().setAlpha(255);
-            holder.imgShowHide.setColorFilter(Color.WHITE);
+            holder.imgShowHide.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         } else {
             holder.imgShowHide.setImageResource(R.drawable.ic_eye_hide);
             holder.imgShowHide.getBackground().setAlpha(0);
-            holder.imgShowHide.setColorFilter(activityType.getColor());
+            holder.imgShowHide.setColorFilter(activityType.getColor(), PorterDuff.Mode.SRC_ATOP);
         }
     }
 
@@ -81,16 +81,13 @@ public class ActivityTypesAdapter extends RecyclerView.Adapter<ActivityTypesAdap
             tvActivityType = itemView.findViewById(R.id.tv_activity_type);
             imgShowHide = itemView.findViewById(R.id.img_show_hide);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityType activityType = getItemAtPosition(getAdapterPosition());
-                    activityType.setEnabled(!activityType.isEnabled());
-                    notifyDataSetChanged();
+            itemView.setOnClickListener(v -> {
+                ActivityType activityType = getItemAtPosition(getAdapterPosition());
+                activityType.setEnabled(!activityType.isEnabled());
+                notifyDataSetChanged();
 
-                    if (itemClickListener != null) {
-                        itemClickListener.onItemClick(getAdapterPosition(), activityType.getType(), activityType.isEnabled());
-                    }
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(getAdapterPosition(), activityType.getType(), activityType.isEnabled());
                 }
             });
         }

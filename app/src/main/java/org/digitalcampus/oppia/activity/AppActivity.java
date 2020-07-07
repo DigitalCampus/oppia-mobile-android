@@ -60,7 +60,6 @@ import org.digitalcampus.oppia.listener.GamificationEventListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.UIUtils;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -228,12 +227,9 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     @Override
     public void apiKeyInvalidated() {
-        UIUtils.showAlert(this, R.string.error, R.string.error_apikey_expired, new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                logoutAndRestartApp();
-                return true;
-            }
+        UIUtils.showAlert(this, R.string.error, R.string.error_apikey_expired, () -> {
+            logoutAndRestartApp();
+            return true;
         });
     }
 
@@ -393,11 +389,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         int durationViewPoints = Integer.parseInt(prefs.getString(PrefsActivity.PREF_DURATION_GAMIFICATION_POINTS_VIEW,
                 String.valueOf(Gamification.DURATION_GAMIFICATION_POINTS_VIEW)));
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                snackbar.dismiss();
-            }
-        }, TimeUnit.SECONDS.toMillis(durationViewPoints));
+        new Handler().postDelayed(snackbar::dismiss, TimeUnit.SECONDS.toMillis(durationViewPoints));
     }
 }

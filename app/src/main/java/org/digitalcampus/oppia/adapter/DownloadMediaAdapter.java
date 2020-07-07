@@ -119,13 +119,10 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
         //Sort the media list by filename
         SharedPreferences prefsCourse = PreferenceManager.getDefaultSharedPreferences(context);
         final String lang = prefsCourse.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-        Collections.sort(this.mediaList, new Comparator<Object>() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                String titleCourse1 = ((Media) o1).getCourses().get(0).getTitle(lang);
-                String titleCourse2 = ((Media) o2).getCourses().get(0).getTitle(lang);
-                return (titleCourse1.compareTo(titleCourse2));
-            }
+        Collections.sort(this.mediaList, (Comparator<Object>) (o1, o2) -> {
+            String titleCourse1 = ((Media) o1).getCourses().get(0).getTitle(lang);
+            String titleCourse2 = ((Media) o2).getCourses().get(0).getTitle(lang);
+            return (titleCourse1.compareTo(titleCourse2));
         });
 
         notifyDataSetChanged();
@@ -133,12 +130,7 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
 
     public void sortByFilename() {
         //Sort the media list by filename
-        Collections.sort(this.mediaList, new Comparator<Object>() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                return ((Media) o1).getFilename().compareTo(((Media) o2).getFilename());
-            }
-        });
+        Collections.sort(this.mediaList, (Comparator<Object>) (o1, o2) -> ((Media) o1).getFilename().compareTo(((Media) o2).getFilename()));
 
         notifyDataSetChanged();
     }
@@ -164,11 +156,9 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
             downloadBtn = itemView.findViewById(R.id.action_btn);
             downloadProgress = itemView.findViewById(R.id.download_progress);
 
-            downloadBtn.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    if (itemClickListener != null)
-                        itemClickListener.onDownloadClickListener(getAdapterPosition());
-                }
+            downloadBtn.setOnClickListener(v -> {
+                if (itemClickListener != null)
+                    itemClickListener.onDownloadClickListener(getAdapterPosition());
             });
 
             bind(multiChoiceHelper, getAdapterPosition());

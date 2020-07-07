@@ -18,14 +18,12 @@
 package org.digitalcampus.oppia.widgets;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,11 +36,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.splunk.mint.Mint;
 
@@ -59,10 +52,8 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
-import org.digitalcampus.oppia.adapter.QuizAnswersFeedbackAdapter;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.QuizAnswerFeedback;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
@@ -76,11 +67,14 @@ import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
 import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.text.HtmlCompat;
+import androidx.fragment.app.FragmentActivity;
 
 public abstract class AnswerWidget extends WidgetFactory {
 
@@ -205,7 +199,7 @@ public abstract class AnswerWidget extends WidgetFactory {
         qText.setVisibility(View.VISIBLE);
         // convert in case has any html special chars
         String questionText = stripAudioFromText(q);
-        qText.setText(Html.fromHtml(questionText));
+        qText.setText(HtmlCompat.fromHtml(questionText, HtmlCompat.FROM_HTML_MODE_LEGACY));
 
         if (q.getProp("image") == null) {
             questionImage.setVisibility(View.GONE);
@@ -272,17 +266,14 @@ public abstract class AnswerWidget extends WidgetFactory {
             Log.d(TAG, mp3Uri.getPath());
 
             playAudioBtn.setVisibility(View.VISIBLE);
-            playAudioBtn.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if ((mp != null) && mp.isPlaying() ) {
-                        mp.stop();
-                        mp.release();
-                        mp = null;
-                    }
-                    mp = MediaPlayer.create(getContext(), mp3Uri);
-                    mp.start();
+            playAudioBtn.setOnClickListener(v -> {
+                if ((mp != null) && mp.isPlaying() ) {
+                    mp.stop();
+                    mp.release();
+                    mp = null;
                 }
+                mp = MediaPlayer.create(getContext(), mp3Uri);
+                mp.start();
             });
         }
         else{
@@ -296,14 +287,12 @@ public abstract class AnswerWidget extends WidgetFactory {
         prevBtn.setVisibility(View.VISIBLE);
 
         if (quiz.hasPrevious()) {
-            prevBtn.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    // save answer
-                    saveAnswer();
-                    if (quiz.hasPrevious()) {
-                        quiz.movePrevious();
-                        showQuestion();
-                    }
+            prevBtn.setOnClickListener(v -> {
+                // save answer
+                saveAnswer();
+                if (quiz.hasPrevious()) {
+                    quiz.movePrevious();
+                    showQuestion();
                 }
             });
             prevBtn.setEnabled(true);
@@ -321,44 +310,40 @@ public abstract class AnswerWidget extends WidgetFactory {
     }
 
     private View.OnClickListener nextBtnClickListener(){
-        return new View.OnClickListener() {
-            public void onClick(View v) {
-                // save answer
-                if (saveAnswer()) {
-                    String feedback;
-                    try {
-                        feedback = quiz.getCurrentQuestion().getFeedback(prefLang);
-                        if (!feedback.equals("") &&
-                                quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS
-                                && !quiz.getCurrentQuestion().getFeedbackDisplayed()) {
-                            //We hide the keyboard before showing the dialog
-                            InputMethodManager imm =  (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                            showFeedback(feedback);
-                        } else {
-                            nextStep();
-                        }
-                    } catch (InvalidQuizException e) {
-                        Mint.logException(e);
-                        Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
+        return v -> {
+            // save answer
+            if (saveAnswer()) {
+                String feedback;
+                try {
+                    feedback = quiz.getCurrentQuestion().getFeedback(prefLang);
+                    if (!feedback.equals("") &&
+                            quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS
+                            && !quiz.getCurrentQuestion().getFeedbackDisplayed()) {
+                        //We hide the keyboard before showing the dialog
+                        InputMethodManager imm =  (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        showFeedback(feedback);
+                    } else {
+                        nextStep();
                     }
-                } else {
-                    CharSequence text = getString(R.string.widget_quiz_noanswergiven);
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(getContext(), text, duration);
-                    toast.show();
+                } catch (InvalidQuizException e) {
+                    Mint.logException(e);
+                    Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
                 }
+            } else {
+                CharSequence text = getString(R.string.widget_quiz_noanswergiven);
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(getContext(), text, duration);
+                toast.show();
             }
         };
     }
 
     private View.OnClickListener getCloseBtnListener(){
-        return new View.OnClickListener() {
-            public void onClick(View v) {
-                FragmentActivity act = getActivity();
-                if (act != null){
-                    getActivity().finish();
-                }
+        return v -> {
+            FragmentActivity act = getActivity();
+            if (act != null){
+                getActivity().finish();
             }
         };
     }
@@ -421,11 +406,7 @@ public abstract class AnswerWidget extends WidgetFactory {
             Mint.logException(e);
             Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
         }
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int arg1) {
-                nextStep();
-            }
-        });
+        builder.setPositiveButton(R.string.ok, (arg0, arg1) -> nextStep());
         builder.show();
         try {
             quiz.getCurrentQuestion().setFeedbackDisplayed(true);
@@ -482,9 +463,7 @@ public abstract class AnswerWidget extends WidgetFactory {
             actionBtn.setVisibility(View.GONE);
         } else{
             actionBtn.setText(getString(R.string.widget_quiz_results_restart));
-            actionBtn.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) { restart(); }
-            });
+            actionBtn.setOnClickListener(v -> restart());
         }
     }
 

@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -32,7 +31,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.fragments.prefs.MainPreferencesFragment;
 import org.digitalcampus.oppia.fragments.prefs.PreferenceChangedCallback;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
-import org.digitalcampus.oppia.listener.StorageAccessListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
@@ -300,25 +298,22 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                     Log.d(TAG, "Asking user for storage permissions");
                     final String finalStorageOption = storageOption;
                     final String finalPath = path;
-                    newStrategy.askUserPermissions(this, new StorageAccessListener() {
-                        @Override
-                        public void onAccessGranted(boolean isGranted) {
-                            Log.d(TAG, "Access granted for storage: " + isGranted);
-                            if (isGranted){
-                                executeChangeStorageTask(finalPath, finalStorageOption);
-                            }
-                            else{
-                                Toast.makeText(PrefsActivity.this, getString(R.string.storageAccessNotGranted), Toast.LENGTH_LONG).show();
-                                //If the user didn't grant access, we revert the preference selection
-                                String currentStorageOpt = Storage.getStorageStrategy().getStorageType();
-                                SharedPreferences.Editor editor = prefs.edit();
-                                editor.putString(PrefsActivity.PREF_STORAGE_OPTION, currentStorageOpt).apply();
-                                if (currentPrefScreen != null){
-                                    currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_STORAGE_OPTION, currentStorageOpt);
-                                }
-                            }
-
+                    newStrategy.askUserPermissions(this, isGranted -> {
+                        Log.d(TAG, "Access granted for storage: " + isGranted);
+                        if (isGranted){
+                            executeChangeStorageTask(finalPath, finalStorageOption);
                         }
+                        else{
+                            Toast.makeText(PrefsActivity.this, getString(R.string.storageAccessNotGranted), Toast.LENGTH_LONG).show();
+                            //If the user didn't grant access, we revert the preference selection
+                            String currentStorageOpt = Storage.getStorageStrategy().getStorageType();
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString(PrefsActivity.PREF_STORAGE_OPTION, currentStorageOpt).apply();
+                            if (currentPrefScreen != null){
+                                currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_STORAGE_OPTION, currentStorageOpt);
+                            }
+                        }
+
                     });
                 } else {
                     executeChangeStorageTask(path, storageOption);
@@ -337,25 +332,21 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                     .setPositiveButton(R.string.ok, null)
                     .create();
                 passwordDialog.show();
-                passwordDialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        String password = passwordInput.getText().toString();
-                        if (!password.equals("")) { passwordDialog.dismiss(); }
-                    }
+                passwordDialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(v -> {
+                    String password = passwordInput.getText().toString();
+                    if (!password.equals("")) { passwordDialog.dismiss(); }
                 });
-                passwordDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    public void onDismiss(DialogInterface dialog) {
-                        String password = passwordInput.getText().toString();
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        if (password.equals("")) {
-                            disableAdminProtection(sharedPreferences);
-                        }
-                        else{
-                            //Update the password preference
-                            editor.putString(PrefsActivity.PREF_ADMIN_PASSWORD, password).apply();
-                            //Update the UI value of the fragment
-                            currentPrefScreen.onPreferenceUpdated(PREF_ADMIN_PASSWORD, password);
-                        }
+                passwordDialog.setOnDismissListener(dialog -> {
+                    String password = passwordInput.getText().toString();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    if (password.equals("")) {
+                        disableAdminProtection(sharedPreferences);
+                    }
+                    else{
+                        //Update the password preference
+                        editor.putString(PrefsActivity.PREF_ADMIN_PASSWORD, password).apply();
+                        //Update the UI value of the fragment
+                        currentPrefScreen.onPreferenceUpdated(PREF_ADMIN_PASSWORD, password);
                     }
                 });
             }

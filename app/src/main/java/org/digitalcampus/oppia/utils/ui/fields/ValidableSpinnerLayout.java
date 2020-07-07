@@ -112,7 +112,7 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         if (tv == null){
             return;
         }
-        tv.setTextColor(getContext().getResources().getColor( !selected && position == 0 ? R.color.grey_dark : R.color.text_dark));
+        tv.setTextColor(ContextCompat.getColor(getContext(), !selected && position == 0 ? R.color.grey_dark : R.color.text_dark));
         tv.invalidate();
     }
 
@@ -205,6 +205,6 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
+        valueChangelistener.onValueChanged(null);
     }
 }
