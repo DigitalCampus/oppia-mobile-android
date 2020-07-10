@@ -1793,6 +1793,10 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public boolean isQuizFirstAttempt(String digest) {
+        // digest could be null (quiz wrongly configured)
+        if (digest == null){
+            return false;
+        }
         //get current user id
         long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 
@@ -1807,6 +1811,10 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public boolean isQuizFirstAttemptToday(String digest) {
+        // digest could be null (quiz wrongly configured)
+        if (digest == null){
+            return false;
+        }
         //get current user id
         long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 
@@ -1827,6 +1835,10 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public boolean isActivityFirstAttemptToday(String digest) {
+        // digest could be null (activity wrongly configured)
+        if (digest == null){
+            return false;
+        }
         //get current user id
         long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 
