@@ -2,6 +2,7 @@ package org.digitalcampus.oppia.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -50,7 +51,6 @@ public class ViewDigestActivity extends AppActivity {
         if (validDigest){
             Log.d(TAG, "Digest valid, checking activity");
             Activity activity = coursesRepository.getActivityByDigest(this, digest);
-            DbHelper db = DbHelper.getInstance(this);
 
             if (activity == null){
                 errorText.setText(this.getText(R.string.open_digest_errors_activity_not_found));
@@ -59,8 +59,7 @@ public class ViewDigestActivity extends AppActivity {
             }
             else{
                 Course course = coursesRepository.getCourse(this, activity.getCourseId(), user.getUserId());
-                activity.setCompleted(db.activityCompleted(course.getCourseId(), digest, user.getUserId()));
-                Intent i = new Intent(ViewDigestActivity.this, CourseIndexActivity.class);
+                Intent i = new Intent(this, CourseIndexActivity.class);
                 Bundle tb = new Bundle();
                 tb.putSerializable(Course.TAG, course);
                 tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, activity.getDigest());
@@ -80,7 +79,7 @@ public class ViewDigestActivity extends AppActivity {
             activityDetail.setVisibility(View.GONE);
             return false;
         }
-        if (user == null){
+        if (user == null || TextUtils.isEmpty(user.getUsername())){
             Log.d(TAG, "Not logged in");
             errorText.setText(this.getText(R.string.open_digest_errors_not_logged_in));
             errorText.setVisibility(View.VISIBLE);
