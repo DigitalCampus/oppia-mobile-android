@@ -26,6 +26,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+
+import androidx.core.graphics.BlendModeColorFilterCompat;
+import androidx.core.graphics.BlendModeCompat;
 import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -106,7 +109,7 @@ public class UIUtils {
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
             colorAnimation.setDuration(1000); // milliseconds
             colorAnimation.addUpdateListener(animator ->
-                    points.getBackground().setColorFilter((int) animator.getAnimatedValue(), android.graphics.PorterDuff.Mode.SRC_OVER));
+                    points.getBackground().setColorFilter(BlendModeColorFilterCompat.createBlendModeColorFilterCompat((int) animator.getAnimatedValue(), BlendModeCompat.SRC_OVER)));
             colorAnimation.start();
         }
 
