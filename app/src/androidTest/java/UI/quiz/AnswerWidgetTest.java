@@ -1,4 +1,4 @@
-package UI;
+package UI.quiz;
 
 
 
@@ -77,7 +77,24 @@ public class AnswerWidgetTest {
         args.putSerializable(Course.TAG, new Course(""));
         args.putBoolean(CourseActivity.BASELINE_TAG, false);
     }
-    
+
+
+    @Test
+    public void WrongQuizFormat() {
+        act = new Activity();
+        String quizContent = "not_a_json_string";
+        ArrayList<Lang> contents = new ArrayList<>();
+        contents.add(new Lang("en", quizContent));
+        act.setContents(contents);
+        args.putSerializable(Activity.TAG, act);
+        args.putSerializable(Course.TAG, new Course(""));
+
+        launchInContainer(this.widgetClass, args, R.style.Oppia_ToolbarTheme, null);
+
+        onView(withId(R.id.quiz_unavailable))
+                .check(matches(withText((R.string.quiz_loading_error))));
+
+    }
 
     @Test
     public void dontContinueIfQuestionUnaswered() {
