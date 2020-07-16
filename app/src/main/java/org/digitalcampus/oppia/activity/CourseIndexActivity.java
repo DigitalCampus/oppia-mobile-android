@@ -63,7 +63,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private CompleteCourse parsedCourse;
     private ArrayList<Section> sections;
     @Inject SharedPreferences prefs;
-    private Activity baselineActivity;
     private View loadingCourseView;
     private CourseIndexRecyclerViewAdapter adapter;
     private String digestJumpTo;
@@ -283,15 +282,18 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     }
 
-    private boolean isBaselineCompleted() {
+    private Activity getBaselineActivity(){
         ArrayList<Activity> baselineActs = (ArrayList<Activity>) parsedCourse.getBaselineActivities();
         for (Activity a : baselineActs) {
             if (!a.isAttempted()) {
-                this.baselineActivity = a;
-                return false;
+                return a;
             }
         }
-        return true;
+        return null;
+    }
+
+    private boolean isBaselineCompleted() {
+        return getBaselineActivity() == null;
     }
 
     private void showBaselineMessage(final String digest) {
@@ -308,7 +310,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                     Intent intent = new Intent(CourseIndexActivity.this, CourseActivity.class);
                     Bundle tb = new Bundle();
                     Section section = new Section();
-                    section.addActivity(CourseIndexActivity.this.baselineActivity);
+                    section.addActivity(getBaselineActivity());
                     tb.putSerializable(Section.TAG, section);
                     tb.putSerializable(CourseActivity.BASELINE_TAG, true);
                     tb.putSerializable(CourseActivity.NUM_ACTIVITY_TAG, 0);
