@@ -486,6 +486,8 @@
     <string name="options">Options</string>
     <string name="county_label">County</string>
     <string name="district_label">District</string>
+    <string name="continue_str">Continue</string>
+    <string name="other_position">Other position</string>
 
 </resources>
 
