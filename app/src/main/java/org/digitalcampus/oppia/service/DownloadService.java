@@ -242,8 +242,8 @@ public class DownloadService extends IntentService {
             if (fileDigest != null){
                 // check the file digest matches, otherwise delete the file
                 // (it's either been a corrupted download or it's the wrong file)
-                String MD5Digest = FileUtils.getDigestFromMessage(mDigest);
-                if(!MD5Digest.contains(fileDigest)){
+                String Md5Digest = FileUtils.getDigestFromMessage(mDigest);
+                if(!Md5Digest.contains(fileDigest)){
                     this.deleteFile(downloadedFile);
                     sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_media_download));
                     removeDownloading(fileUrl);

@@ -53,7 +53,6 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
 
         DbHelper db = DbHelper.getInstance(ctx);
         List<User> users = db.getAllUsers();
-        List<CustomField> customFields = db.getCustomFields();
 
         int trackersCount = 0;
         int offlineUsersCount = 0;
@@ -79,16 +78,7 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
             userJSON += "\"jobtitle\":\"" + u.getJobTitle() + "\", ";
             userJSON += "\"phoneno\":\"" + u.getPhoneNo() + "\", ";
 
-            for (CustomField field : customFields){
-                CustomValue value = u.getCustomField(field.getKey());
-                if (value != null){
-                    userJSON += "\"" + field.getKey() + "\":"
-                            + (field.isExportedAsString() ? "\"" : "")
-                            + value.getValue().toString()
-                            + (field.isExportedAsString() ? "\"" : "")
-                            + ", ";
-                }
-            }
+            addCustomFields(userJSON, u);
 
             userJSON += "\"trackers\":" + TrackerLog.asJSONCollectionString(userTrackers) + ", ";
             userJSON += "\"quizresponses\":" + QuizAttempt.asJSONCollectionString(userQuizzes) + ", ";
@@ -157,6 +147,22 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
             listener.onExportComplete(filename);
         }
 
+    }
+
+    private void addCustomFields(String json, User u){
+
+        List<CustomField> customFields = DbHelper.getInstance(ctx).getCustomFields();
+
+        for (CustomField field : customFields){
+            CustomValue value = u.getCustomField(field.getKey());
+            if (value != null){
+                json += "\"" + field.getKey() + "\":"
+                        + (field.isExportedAsString() ? "\"" : "")
+                        + value.getValue().toString()
+                        + (field.isExportedAsString() ? "\"" : "")
+                        + ", ";
+            }
+        }
     }
 }
 

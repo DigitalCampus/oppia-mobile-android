@@ -481,6 +481,7 @@
     <string name="videoplayer_play_again">Play again</string>
     <string name="videoplayer_continue">Continue to course</string>
     <string name="options">Options</string>
+    <string name="quiz_loading_error">Unexpected error loading quiz. Maybe the format was wrong or out-dated?</string>
 
 </resources>
 

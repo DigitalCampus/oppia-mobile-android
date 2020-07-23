@@ -95,6 +95,7 @@ public abstract class AnswerWidget extends WidgetFactory {
 
     boolean isOnResultsPage = false;
     private boolean quizAttemptSaved = false;
+    private boolean loadingQuizErrorDisplayed = false;
 
     private ProgressBar progressBar;
     private ProgressBarAnimator barAnim;
@@ -165,8 +166,15 @@ public abstract class AnswerWidget extends WidgetFactory {
 
     private void loadContent(){
         if (this.quiz == null) {
-            this.quiz = new Quiz();
-            this.quiz.load(contents, prefLang);
+            Quiz loadedQuiz = new Quiz();
+            boolean loadSuccess = loadedQuiz.load(contents, prefLang);
+            if (!loadSuccess){
+                if (!loadingQuizErrorDisplayed){
+                    showLoadingError();
+                }
+                return;
+            }
+            quiz = loadedQuiz;
         }
 
         if (this.isOnResultsPage) {
@@ -182,6 +190,21 @@ public abstract class AnswerWidget extends WidgetFactory {
             }
         }
 
+    }
+
+    private void showLoadingError() {
+        View localContainer = getView();
+        if (localContainer != null){
+            ViewGroup vg = localContainer.findViewById(activity.getActId());
+            if (vg!=null){
+                vg.removeAllViews();
+                vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
+
+                TextView tv = getView().findViewById(R.id.quiz_unavailable);
+                tv.setText(R.string.quiz_loading_error);
+                loadingQuizErrorDisplayed = true;
+            }
+        }
     }
 
     private void showQuestion() {

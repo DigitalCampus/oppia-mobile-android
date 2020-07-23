@@ -4,7 +4,7 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public abstract class RecyclerViewClickableAdapter<VH extends RecyclerViewClickableAdapter.ViewHolder> extends RecyclerView.Adapter<VH> {
+public abstract class RecyclerViewClickableAdapter<H extends RecyclerViewClickableAdapter.ViewHolder> extends RecyclerView.Adapter<H> {
 
     public interface OnItemClickListener {
         void onItemClick(View v, int position);

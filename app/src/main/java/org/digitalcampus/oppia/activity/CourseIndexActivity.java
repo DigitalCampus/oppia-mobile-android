@@ -63,7 +63,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private CompleteCourse parsedCourse;
     private ArrayList<Section> sections;
     @Inject SharedPreferences prefs;
-    private Activity baselineActivity;
     private View loadingCourseView;
     private CourseIndexRecyclerViewAdapter adapter;
     private String digestJumpTo;
@@ -283,15 +282,18 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     }
 
-    private boolean isBaselineCompleted() {
+    private Activity getBaselineActivity(){
         ArrayList<Activity> baselineActs = (ArrayList<Activity>) parsedCourse.getBaselineActivities();
         for (Activity a : baselineActs) {
             if (!a.isAttempted()) {
-                this.baselineActivity = a;
-                return false;
+                return a;
             }
         }
-        return true;
+        return null;
+    }
+
+    private boolean isBaselineCompleted() {
+        return getBaselineActivity() == null;
     }
 
     private void showBaselineMessage(final String digest) {
@@ -308,7 +310,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                     Intent intent = new Intent(CourseIndexActivity.this, CourseActivity.class);
                     Bundle tb = new Bundle();
                     Section section = new Section();
-                    section.addActivity(CourseIndexActivity.this.baselineActivity);
+                    section.addActivity(getBaselineActivity());
                     tb.putSerializable(Section.TAG, section);
                     tb.putSerializable(CourseActivity.BASELINE_TAG, true);
                     tb.putSerializable(CourseActivity.NUM_ACTIVITY_TAG, 0);
@@ -321,6 +323,24 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         aDialog.show();
     }
 
+    private void startActivityOrShowSequencingRationale(Section s, int position, boolean previousSectionsCompleted, boolean previousActivitiesCompleted){
+        if ((course.getSequencingMode().equals(Course.SEQUENCING_MODE_COURSE)) &&
+                (!previousSectionsCompleted || !previousActivitiesCompleted)) {
+            UIUtils.showAlert(this, R.string.sequencing_dialog_title, R.string.sequencing_course_message);
+        } else if ((course.getSequencingMode().equals(Course.SEQUENCING_MODE_SECTION))
+                && (!previousActivitiesCompleted)) {
+            UIUtils.showAlert(this, R.string.sequencing_dialog_title, R.string.sequencing_section_message);
+        } else {
+            Intent intent = new Intent(this, CourseActivity.class);
+            Bundle tb = new Bundle();
+            tb.putSerializable(Section.TAG, s);
+            tb.putSerializable(Course.TAG, course);
+            tb.putSerializable(CourseActivity.NUM_ACTIVITY_TAG, position);
+            intent.putExtras(tb);
+            startActivity(intent);
+        }
+    }
+
     private void startCourseActivityByDigest(String digest) {
 
         boolean allSectionsCompleted = true;
@@ -328,28 +348,12 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             boolean allActivitiesCompleted = true;
             for (int i = 0; i < section.getActivities().size(); i++) {
                 Activity act = section.getActivities().get(i);
-
                 if (act.getDigest().equals(digest)) {
-                    if ((course.getSequencingMode().equals(Course.SEQUENCING_MODE_COURSE)) &&
-                            (!allSectionsCompleted || !allActivitiesCompleted)) {
-                        UIUtils.showAlert(this, R.string.sequencing_dialog_title, R.string.sequencing_course_message);
-                    } else if ((course.getSequencingMode().equals(Course.SEQUENCING_MODE_SECTION))
-                            && (!allActivitiesCompleted)) {
-                        UIUtils.showAlert(this, R.string.sequencing_dialog_title, R.string.sequencing_section_message);
-                    } else {
-                        Intent intent = new Intent(this, CourseActivity.class);
-                        Bundle tb = new Bundle();
-                        tb.putSerializable(Section.TAG, section);
-                        tb.putSerializable(Course.TAG, course);
-                        tb.putSerializable(CourseActivity.NUM_ACTIVITY_TAG, i);
-                        intent.putExtras(tb);
-                        startActivity(intent);
-                    }
-                    //When we find the activity we are looking for, we can stop the search
+                    // When we find the activity we are looking for, we can stop the search
+                    startActivityOrShowSequencingRationale(section, i, allSectionsCompleted, allActivitiesCompleted);
                     return;
                 } else {
-                    //If is not the activity we are searching for, we check if it's completed
-                    //(for sequencing purposes)
+                    // If it's not the activity we are searching for, we check if it's completed (for sequencing purposes)
                     allActivitiesCompleted = allActivitiesCompleted && act.getCompleted();
                 }
             }
