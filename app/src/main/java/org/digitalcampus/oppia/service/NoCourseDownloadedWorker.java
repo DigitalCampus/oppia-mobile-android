@@ -16,6 +16,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Course;
@@ -55,7 +56,7 @@ public class NoCourseDownloadedWorker extends ListenableWorker {
     private void sendNoCourseNotification() {
         DbHelper db = DbHelper.getInstance(getApplicationContext());
         List<Course> courses = db.getAllCourses();
-        if (courses.isEmpty()){
+        if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY){
             Intent resultIntent = new Intent(getApplicationContext(), TagSelectActivity.class);
             PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
