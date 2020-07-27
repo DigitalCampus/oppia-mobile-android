@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,9 +35,7 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
     private List<Draggable> draggables = new ArrayList<>();
     private String courseLocation;
 
-
-
-    private int backgroundWidth = 0;
+    private int backgroundWidth;
     private int maxDragWidth = 0;
     private int maxDragHeight = 0;
 
@@ -60,38 +59,33 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
             viewTreeObserver.addOnGlobalLayoutListener(this);
         }
 
-        draggablesContainer.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                switch (event.getAction()) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        v.setBackgroundResource(R.drawable.dragscontainer_normal);
-                        return true;
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                        v.setBackgroundResource(R.drawable.dragscontainer_hover);
-                        return true;
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        v.setBackgroundResource(R.drawable.dragscontainer_normal);
-                        return true;
-                    case DragEvent.ACTION_DROP:
-                        // Dropped, reassign View to ViewGroup
-                        View view = (View) event.getLocalState();
-                        ViewGroup owner = (ViewGroup) view.getParent();
-                        owner.removeView(view);
-                        ViewGroup container = (ViewGroup) v;
-                        container.addView(view);
-                        view.setVisibility(View.VISIBLE);
-                        return true;
-                    case DragEvent.ACTION_DRAG_ENDED:
-                        v.setBackgroundResource(R.drawable.dragscontainer_normal);
-                        View v2 = (View) event.getLocalState();
-                        v2.setVisibility(View.VISIBLE);
-                        return true;
-                    default:
-                        break;
-                }
-                return false;
+        draggablesContainer.setOnDragListener((v1, event) -> {
+            switch (event.getAction()) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                case DragEvent.ACTION_DRAG_EXITED:
+                    v1.setBackgroundResource(R.drawable.dragscontainer_normal);
+                    return true;
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    v1.setBackgroundResource(R.drawable.dragscontainer_hover);
+                    return true;
+                case DragEvent.ACTION_DROP:
+                    // Dropped, reassign View to ViewGroup
+                    View view = (View) event.getLocalState();
+                    ViewGroup owner = (ViewGroup) view.getParent();
+                    owner.removeView(view);
+                    ViewGroup container1 = (ViewGroup) v1;
+                    container1.addView(view);
+                    view.setVisibility(View.VISIBLE);
+                    return true;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    v1.setBackgroundResource(R.drawable.dragscontainer_normal);
+                    View v2 = (View) event.getLocalState();
+                    v2.setVisibility(View.VISIBLE);
+                    return true;
+                default:
+                    break;
             }
+            return false;
         });
 
     }
@@ -108,68 +102,74 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
 
             String type = r.getProp("type");
             if (DragAndDrop.TYPE_DROPZONE.equals(type)){
-
-                String solution = r.getProp("choice");
-                Dropzone drop = new Dropzone(ctx, solution);
-
-                String xLeft= r.getProp("xleft");
-                String yTop = r.getProp("ytop");
-                if (xLeft != null && yTop != null){
-                    drop.setPosition(Integer.parseInt(xLeft), Integer.parseInt(yTop));
-                    drop.setOnDropListener(new OnDropListener() {
-                        @Override
-                        public void elemDropped(Draggable previousElem, Draggable newElem) {
-                            if ((previousElem != null) && (!previousElem.isInfinite())){
-                                draggablesContainer.addView(previousElem);
-                            }
-                        }
-                    });
-                    dropzones.add(drop);
-                    dropsContainer.addView(drop);
-                }
+                addDropZone(r);
             }
             else if (DragAndDrop.TYPE_DRAGGABLE.equals(type)){
-                String dragID = r.getProp("no");
-                Draggable drag = new Draggable(ctx, dragID);
-                String dragImage = r.getProp("dragimage");
-                String infinite = r.getProp("infinite");
-                if ((infinite != null) && (Integer.parseInt(infinite) == 1)){
-                    drag.setInfinite(true);
-                }
-                if (dragImage != null){
-                    dragImage = courseLocation + dragImage;
-                    drag.setImagePath(dragImage);
-                }
-                draggables.add(drag);
+                addDraggable(r);
             }
         }
-
 
         for (Draggable drag : draggables){
             boolean added = false;
             for (String answer : currentAnswers){
-                String[] temp = answer.split(Quiz.MATCHING_REGEX,-1);
-                if (temp.length < 2) continue;
-                String dropzone = temp[0].trim();
-                String draggable = temp[1].trim();
-
-                if (drag.getDragID().equals(draggable)){
-                    for (Dropzone drop : dropzones){
-                        if (drop.getDragSolution().equals(dropzone)){
-                            drop.addView(drag);
-                            added = true;
-                        }
-                    }
-                    break;
-                }
+                added = configureDraggableAnswers(drag, answer);
             }
-
             if (!added){
                 draggablesContainer.addView(drag);
             }
         }
         recalculateView();
 
+    }
+
+    private boolean configureDraggableAnswers(Draggable drag, String answer){
+        String[] definition = answer.split(Quiz.MATCHING_REGEX,-1);
+        if ((definition.length < 2) || !TextUtils.equals(drag.getDragID(), definition[1].trim())){
+            // If the definition is wrong or the drawable doesn't match, we don't configure this view
+            return false;
+        }
+        String dropzone = definition[0].trim();
+        for (Dropzone drop : dropzones){
+            if (drop.getDragSolution().equals(dropzone)){
+                drop.addView(drag);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void addDropZone(Response r){
+        String solution = r.getProp("choice");
+        Dropzone drop = new Dropzone(ctx, solution);
+
+        String xLeft= r.getProp("xleft");
+        String yTop = r.getProp("ytop");
+        if (xLeft != null && yTop != null){
+            drop.setPosition(Integer.parseInt(xLeft), Integer.parseInt(yTop));
+            drop.setOnDropListener((previousElem, newElem) -> {
+                if ((previousElem != null) && (!previousElem.isInfinite())){
+                    draggablesContainer.addView(previousElem);
+                }
+            });
+            dropzones.add(drop);
+            dropsContainer.addView(drop);
+        }
+    }
+
+    private void addDraggable(Response r){
+        String dragID = r.getProp("no");
+        Draggable drag = new Draggable(ctx, dragID);
+        String dragImage = r.getProp("dragimage");
+        String infinite = r.getProp("infinite");
+        if ((infinite != null) && (Integer.parseInt(infinite) == 1)){
+            drag.setInfinite(true);
+        }
+        if (dragImage != null){
+            dragImage = courseLocation + dragImage;
+            drag.setImagePath(dragImage);
+        }
+        draggables.add(drag);
     }
 
     @Override
@@ -332,15 +332,12 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
 
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
+                case DragEvent.ACTION_DRAG_EXITED:
                     setBackgroundResource(ACTIVE_STATE);
                     return true;
 
                 case DragEvent.ACTION_DRAG_ENTERED:
                     setBackgroundResource(HOVER_STATE);
-                    return true;
-
-                case DragEvent.ACTION_DRAG_EXITED:
-                    setBackgroundResource(ACTIVE_STATE);
                     return true;
 
                 case DragEvent.ACTION_DROP:
@@ -377,7 +374,6 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
             }
             return false;
         }
-
 
     }
 

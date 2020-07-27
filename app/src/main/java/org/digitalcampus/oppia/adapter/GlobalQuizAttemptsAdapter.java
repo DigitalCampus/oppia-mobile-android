@@ -13,53 +13,32 @@ import org.digitalcampus.oppia.utils.DateUtils;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
-public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAttemptsAdapter.GlobalQuizAttemptsViewHolder>{
+public class GlobalQuizAttemptsAdapter extends RecyclerViewClickableAdapter<GlobalQuizAttemptsAdapter.GlobalQuizAttemptsViewHolder>{
 
     private final Context ctx;
     private final List<QuizAttempt> quizAttempts;
-
-    private CourseQuizzesAdapter.OnItemClickListener itemClickListener;
 
     public GlobalQuizAttemptsAdapter(Context context, List<QuizAttempt> quizAttempts) {
         this.ctx = context;
         this.quizAttempts = quizAttempts;
     }
 
-
-    public class GlobalQuizAttemptsViewHolder extends RecyclerView.ViewHolder {
+    class GlobalQuizAttemptsViewHolder extends RecyclerViewClickableAdapter.ViewHolder {
 
         private TextView date;
         private TextView score;
         private TextView courseTitle;
         private TextView quizTitle;
 
-        public GlobalQuizAttemptsViewHolder(View itemView) {
+        GlobalQuizAttemptsViewHolder(View itemView) {
             super(itemView);
             date = itemView.findViewById(R.id.attempt_date);
             score = itemView.findViewById(R.id.score);
             courseTitle = itemView.findViewById(R.id.course_title);
             quizTitle = itemView.findViewById(R.id.quiz_title);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        itemClickListener.onItemClick(getAdapterPosition());
-                    }
-                }
-            });
         }
-    }
-
-
-    public void setOnItemClickListener(CourseQuizzesAdapter.OnItemClickListener listener) {
-        this.itemClickListener = listener;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(int position);
     }
 
     @NonNull

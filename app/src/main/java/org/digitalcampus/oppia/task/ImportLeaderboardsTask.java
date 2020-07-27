@@ -23,14 +23,10 @@ public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress,
     private static final String TAG = ImportLeaderboardsTask.class.getSimpleName();
 
     public interface ImportLeaderboardListener {
-        void onLeaderboardImportProgress(String message);
         void onLeaderboardImportComplete(Boolean success, String message);
     }
 
     private Context ctx;
-
-
-
     private ImportLeaderboardListener listener;
 
     public ImportLeaderboardsTask(Context ctx) {
@@ -53,22 +49,13 @@ public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress,
                 File jsonFile = new File(dir, leaderboardFile);
                 if (jsonFile.exists()){
                     try {
-
                         String json = FileUtils.readFile(jsonFile);
                         updatedPositions += LeaderboardUtils.importLeaderboardJSON(ctx, json);
 
-                    } catch (IOException e) {
+                    } catch (IOException | WrongServerException | ParseException | JSONException e) {
                         Mint.logException(e);
-                        Log.d(TAG, "IOException: ", e);
-                    } catch (ParseException e) {
-                        Mint.logException(e);
-                        Log.d(TAG, "ParseException: ", e);
-                    } catch (JSONException e) {
-                        Mint.logException(e);
-                        Log.d(TAG, "JSONException: ", e);
-                    } catch (WrongServerException e) {
-                        Mint.logException(e);
-                        Log.d(TAG, "WrongServerException: ", e);
+                        Log.d(TAG, "Error: ", e);
+                        payload.setResult(false);
                     }
 
                     FileUtils.deleteFile(jsonFile);

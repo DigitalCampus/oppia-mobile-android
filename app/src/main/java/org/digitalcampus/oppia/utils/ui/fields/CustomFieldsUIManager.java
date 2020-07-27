@@ -1,6 +1,8 @@
 package org.digitalcampus.oppia.utils.ui.fields;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -13,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
@@ -87,22 +90,28 @@ public class CustomFieldsUIManager {
 
             if (field.isDependantOnField()){
                 input.setVisibility(View.GONE);
-
-                ValidableField formField = getInputByKey(field.getFieldVisibleBy());
-                if (formField == null){
-                    continue;
-                }
-                formField.setChangeListener(new ValidableField.onChangeListener() {
-                    @Override
-                    public void onValueChanged(String newValue) {
-                        boolean valueFilled = newValue != null && !TextUtils.isEmpty(newValue);
-                        boolean condition = TextUtils.isEmpty(field.getValueVisibleBy()) || TextUtils.equals(field.getValueVisibleBy(), newValue);
-                        boolean visible = valueFilled && condition;
-                        input.setVisibility(visible ? View.VISIBLE : View.GONE);
-                    }
-                });
+                configureDepencency(input, field);
             }
+        }
+    }
 
+    private void configureDepencency(final ValidableField input, final CustomField field){
+
+        ValidableField formField = getInputByKey(field.getFieldVisibleBy());
+        if (formField != null) {
+            formField.setChangeListener(newValue -> {
+                boolean valueFilled = newValue != null && !TextUtils.isEmpty(newValue);
+                boolean condition = TextUtils.isEmpty(field.getValueVisibleBy()) || TextUtils.equals(field.getValueVisibleBy(), newValue);
+                boolean visible = valueFilled && condition;
+                input.setVisibility(visible ? View.VISIBLE : View.GONE);
+
+                ValidableField collectionField = getInputByKey(field.getCollectionNameBy());
+                if (collectionField != null && field.isChoices()) {
+                    String collectionName = collectionField.getCleanedValue();
+                    List<CustomField.CollectionItem> collection = DbHelper.getInstance(ctx).getCollection(collectionName);
+                    ((ValidableSpinnerLayout) input).updateCollection(collection);
+                }
+            });
         }
     }
 
@@ -129,7 +138,7 @@ public class CustomFieldsUIManager {
         if (field.isInteger() || field.isFloat()){
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         }
-        ValidableTextInputLayout input = (ValidableTextInputLayout) LayoutInflater.from(ctx).inflate(R.layout.view_customfield_text, null);;
+        ValidableTextInputLayout input = (ValidableTextInputLayout) LayoutInflater.from(ctx).inflate(R.layout.view_customfield_text, null);
         input.addView(editText, getDefaultLayoutParams());
         addAndConfigureInput(field, input);
         return input;
@@ -147,8 +156,14 @@ public class CustomFieldsUIManager {
                 input.setChecked((boolean) value.getValue());
             }
             else if(formField.first.isChoices()){
-                ValidableSpinnerLayout input = (ValidableSpinnerLayout) formField.second;
-                input.setSelection(value.toString());
+                final ValidableSpinnerLayout input = (ValidableSpinnerLayout) formField.second;
+                ValidableField dependOnField = getInputByKey(formField.first.getCollectionNameBy());
+                if (dependOnField == null){
+                    input.setSelection(value.toString());
+                }
+                else{
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> input.setSelection(value.toString()), 150);
+                }
             }
             else{
                 ValidableTextInputLayout input = (ValidableTextInputLayout) formField.second;
@@ -195,7 +210,7 @@ public class CustomFieldsUIManager {
         return values;
     }
 
-    public static LinearLayout.LayoutParams getLinearParams(){
+    static LinearLayout.LayoutParams getLinearParams(){
         return new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);

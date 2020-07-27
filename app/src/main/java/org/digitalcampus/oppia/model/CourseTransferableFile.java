@@ -29,12 +29,8 @@ public class CourseTransferableFile implements Serializable {
     private List<String> relatedMedia;
     private long relatedFilesize = 0;
 
-
     public List<String> getRelatedMedia() {
-
-        return (relatedMedia != null) ?
-                relatedMedia
-                : new ArrayList<String>();
+        return (relatedMedia != null) ? relatedMedia : new ArrayList<>();
     }
 
     public void setRelatedMedia(List<String> relatedMedia) {

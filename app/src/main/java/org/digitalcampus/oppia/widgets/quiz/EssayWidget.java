@@ -17,17 +17,14 @@
 
 package org.digitalcampus.oppia.widgets.quiz;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.quiz.model.Response;
-
 import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+
+import org.digitalcampus.mobile.learning.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EssayWidget extends TextInputQuizWidget{
 
@@ -40,28 +37,6 @@ public class EssayWidget extends TextInputQuizWidget{
 	@Override
 	public void setQuestionResponses(List<String> currentAnswers) {
 		// not used for this widget
-	}
-
-	@Override
-	public void setQuestionResponses(List<Response> responses, List<String> currentAnswers) {
-		EditText et = view.findViewById(R.id.responsetext);
-		Iterator<String> itr = currentAnswers.iterator(); 
-		while(itr.hasNext()) {
-		    String answer = itr.next(); 
-		    et.setText(answer);
-		}
-        hideOnFocusLoss(et);
-	}
-	
-	public List<String> getQuestionResponses(List<Response> responses){
-		EditText et = view.findViewById(R.id.responsetext);
-		if(et.getText().toString().equals("")){
-			return new ArrayList<>();
-		} else {
-			List<String> response = new ArrayList<>();
-			response.add(et.getText().toString());
-			return response;
-		}
 	}
 
 	@Override

@@ -3,13 +3,14 @@ package org.digitalcampus.oppia.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.core.graphics.BlendModeColorFilterCompat;
+import androidx.core.graphics.BlendModeCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
@@ -47,15 +48,15 @@ public class ActivityTypesAdapter extends RecyclerView.Adapter<ActivityTypesAdap
 
         holder.tvActivityType.setText(activityType.getName());
         holder.tvActivityType.setTextColor(activityType.getColor());
-        holder.imgShowHide.getBackground().setColorFilter(activityType.getColor(), PorterDuff.Mode.SRC_ATOP);
+        holder.imgShowHide.getBackground().setColorFilter(BlendModeColorFilterCompat.createBlendModeColorFilterCompat(activityType.getColor(), BlendModeCompat.SRC_OVER));
         if (activityType.isEnabled()) {
             holder.imgShowHide.setImageResource(R.drawable.ic_eye_show);
             holder.imgShowHide.getBackground().setAlpha(255);
-            holder.imgShowHide.setColorFilter(Color.WHITE);
+            holder.imgShowHide.setColorFilter(BlendModeColorFilterCompat.createBlendModeColorFilterCompat(Color.WHITE, BlendModeCompat.SRC_ATOP));
         } else {
             holder.imgShowHide.setImageResource(R.drawable.ic_eye_hide);
             holder.imgShowHide.getBackground().setAlpha(0);
-            holder.imgShowHide.setColorFilter(activityType.getColor());
+            holder.imgShowHide.setColorFilter(BlendModeColorFilterCompat.createBlendModeColorFilterCompat(activityType.getColor(), BlendModeCompat.SRC_ATOP));
         }
     }
 
@@ -81,16 +82,13 @@ public class ActivityTypesAdapter extends RecyclerView.Adapter<ActivityTypesAdap
             tvActivityType = itemView.findViewById(R.id.tv_activity_type);
             imgShowHide = itemView.findViewById(R.id.img_show_hide);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityType activityType = getItemAtPosition(getAdapterPosition());
-                    activityType.setEnabled(!activityType.isEnabled());
-                    notifyDataSetChanged();
+            itemView.setOnClickListener(v -> {
+                ActivityType activityType = getItemAtPosition(getAdapterPosition());
+                activityType.setEnabled(!activityType.isEnabled());
+                notifyDataSetChanged();
 
-                    if (itemClickListener != null) {
-                        itemClickListener.onItemClick(getAdapterPosition(), activityType.getType(), activityType.isEnabled());
-                    }
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(getAdapterPosition(), activityType.getType(), activityType.isEnabled());
                 }
             });
         }

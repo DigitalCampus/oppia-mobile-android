@@ -79,25 +79,15 @@ public class LoginFragment extends AppFragment implements SubmitListener {
 		appContext = super.getActivity().getApplicationContext();
 		getAppComponent().inject(this);
 
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				onLoginClick();
-			}
+        loginBtn.setOnClickListener(v -> onLoginClick());
+
+		resetPasswordBtn.setOnClickListener(v -> {
+			WelcomeActivity wa = (WelcomeActivity) LoginFragment.super.getActivity();
+			wa.switchTab(WelcomeActivity.TAB_PASSWORD);
 		});
-
-		resetPasswordBtn.setOnClickListener(new View.OnClickListener() {
-
-			public void onClick(View v) {
-				WelcomeActivity wa = (WelcomeActivity) LoginFragment.super.getActivity();
-				wa.switchTab(WelcomeActivity.TAB_PASSWORD);
-			}
-		});
-		registerBtn.setOnClickListener(new View.OnClickListener() {
-
-			public void onClick(View v) {
-				WelcomeActivity wa = (WelcomeActivity) LoginFragment.super.getActivity();
-				wa.switchTab(WelcomeActivity.TAB_REGISTER);
-			}
+		registerBtn.setOnClickListener(v -> {
+			WelcomeActivity wa = (WelcomeActivity) LoginFragment.super.getActivity();
+			wa.switchTab(WelcomeActivity.TAB_REGISTER);
 		});
 
 	}

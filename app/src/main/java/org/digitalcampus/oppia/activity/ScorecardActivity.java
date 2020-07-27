@@ -18,9 +18,7 @@
 package org.digitalcampus.oppia.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -47,9 +45,6 @@ public class ScorecardActivity extends AppActivity {
     public static final String TAB_TARGET_POINTS = "tab_points";
     public static final String TAB_TARGET_BADGES = "tab_badges";
 
-	private TabLayout tabs;
-	private ViewPager viewPager;
-	private SharedPreferences sharedPreferences;
 	private Course course = null;
 
     private String targetTabOnLoad;
@@ -63,9 +58,8 @@ public class ScorecardActivity extends AppActivity {
 
 		setContentView(R.layout.activity_scorecard);
 
-		viewPager = findViewById(R.id.activity_scorecard_pager);
-        tabs = findViewById(R.id.tabs_toolbar);
-		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		ViewPager viewPager = findViewById(R.id.activity_scorecard_pager);
+		TabLayout tabs = findViewById(R.id.tabs_toolbar);
 
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
@@ -85,17 +79,15 @@ public class ScorecardActivity extends AppActivity {
 		fragments.add(ActivitiesFragment.newInstance(course));
 		tabTitles.add(this.getString(R.string.tab_title_activity));
 
-		boolean scoringEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_SCORING_ENABLED, true);
+		boolean scoringEnabled = prefs.getBoolean(PrefsActivity.PREF_SCORING_ENABLED, true);
 		this.displayPoints(scoringEnabled);
 
-
-		boolean badgingEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_BADGING_ENABLED, true);
+		boolean badgingEnabled = prefs.getBoolean(PrefsActivity.PREF_BADGING_ENABLED, true);
 		if ((badgingEnabled) && (course == null)){
 			Fragment fBadges= BadgesFragment.newInstance();
 			fragments.add(fBadges);
 			tabTitles.add(this.getString(R.string.tab_title_badges));
 		}
-
 
 		ActivityPagerAdapter apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, tabTitles);
 		viewPager.setAdapter(apAdapter);

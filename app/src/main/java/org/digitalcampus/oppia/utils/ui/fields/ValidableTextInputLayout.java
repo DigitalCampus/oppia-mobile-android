@@ -2,7 +2,6 @@ package org.digitalcampus.oppia.utils.ui.fields;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -12,6 +11,8 @@ import android.widget.EditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.digitalcampus.mobile.learning.R;
+
+import androidx.core.text.HtmlCompat;
 
 public class ValidableTextInputLayout extends TextInputLayout implements ValidableField, View.OnFocusChangeListener {
 
@@ -55,7 +56,7 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
     public void initialize(){
         if (required && this.getEditText() != null){
             String html = String.format(REQUIRED_SPANNED_HINT, this.getHint());
-            Spanned requiredHint = Html.fromHtml(html);
+            Spanned requiredHint = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY);
             this.setHint(requiredHint);
         }
 
@@ -105,14 +106,11 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
 
     private void initializeLabelColorHintSelector() {
 
-        addOnEditTextAttachedListener(new OnEditTextAttachedListener() {
-            @Override
-            public void onEditTextAttached(TextInputLayout textInputLayout) {
-                getEditText().setFocusable(true);
-                getEditText().setFocusableInTouchMode(true);
-                getEditText().setOnFocusChangeListener(ValidableTextInputLayout.this);
-                setEditTextSelected();
-            }
+        addOnEditTextAttachedListener(textInputLayout -> {
+            getEditText().setFocusable(true);
+            getEditText().setFocusableInTouchMode(true);
+            getEditText().setOnFocusChangeListener(ValidableTextInputLayout.this);
+            setEditTextSelected();
         });
     }
 

@@ -60,7 +60,7 @@ import java.util.Random;
 
 import javax.inject.Inject;
 
-public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSelectedListener {
+public class PointsFragment extends AppFragment implements TabLayout.OnTabSelectedListener {
 
     private static final String ARG_COURSE = "arg_course";
 
@@ -378,9 +378,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-
         showPointsFiltered(tab.getPosition());
-
     }
 
     @Override

@@ -22,10 +22,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -71,19 +72,16 @@ public class SearchActivity extends AppActivity {
         adapterResults = new SearchResultsAdapter(this, results);
         recyclerResults = findViewById(R.id.recycler_results_search);
         recyclerResults.setAdapter(adapterResults);
-        adapterResults.setOnItemClickListener(new SearchResultsAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Course course = (Course) view.getTag(R.id.TAG_COURSE);
-                String digest = (String) view.getTag(R.id.TAG_ACTIVITY_DIGEST);
+        adapterResults.setOnItemClickListener((view, position) -> {
+            Course course = (Course) view.getTag(R.id.TAG_COURSE);
+            String digest = (String) view.getTag(R.id.TAG_ACTIVITY_DIGEST);
 
-                Intent i = new Intent(SearchActivity.this, CourseIndexActivity.class);
-                Bundle tb = new Bundle();
-                tb.putSerializable(Course.TAG, course);
-                tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, digest);
-                i.putExtras(tb);
-                SearchActivity.this.startActivity(i);
-            }
+            Intent i = new Intent(SearchActivity.this, CourseIndexActivity.class);
+            Bundle tb = new Bundle();
+            tb.putSerializable(Course.TAG, course);
+            tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, digest);
+            i.putExtras(tb);
+            SearchActivity.this.startActivity(i);
         });
 	}
 	
@@ -96,24 +94,20 @@ public class SearchActivity extends AppActivity {
 		userId = db.getUserId(sharedPreferences.getString("preUsername", ""));
 		
 		searchText = findViewById(R.id.search_string);
-        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            //@Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                hideKeyboard(v);
-                performSearch();
-                return false;
-            }
+        //@Override
+        searchText.setOnEditorActionListener((v, actionId, event) -> {
+            hideKeyboard(v);
+            performSearch();
+            return false;
         });
 		summary = findViewById(R.id.search_results_summary);
         loadingSpinner = findViewById(R.id.progressBar);
         searchButton = findViewById(R.id.searchbutton);
         if (searchButton != null) {
             searchButton.setClickable(true);
-            searchButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    hideKeyboard(v);
-                    performSearch();
-                }
+            searchButton.setOnClickListener(v -> {
+                hideKeyboard(v);
+                performSearch();
             });
         }
 
@@ -128,7 +122,7 @@ public class SearchActivity extends AppActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
+    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putString("currentSearch", currentSearch);
         if (summary.getVisibility() == View.VISIBLE){
@@ -140,7 +134,7 @@ public class SearchActivity extends AppActivity {
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         currentSearch = savedInstanceState.getString("currentSearch");
         String summaryMsg = savedInstanceState.getString("summaryMsg");

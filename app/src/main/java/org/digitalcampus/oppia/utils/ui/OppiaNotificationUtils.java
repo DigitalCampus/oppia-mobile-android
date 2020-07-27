@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import androidx.core.app.NotificationCompat;
@@ -63,9 +65,7 @@ public class OppiaNotificationUtils {
         notifBuilder.setSound(defaultSoundUri);
         notifBuilder.setAutoCancel(setAutoCancel);
         notifBuilder.setSmallIcon(R.drawable.ic_notification);
-
-        int color = ctx.getResources().getColor(R.color.theme_primary);
-        notifBuilder.setColor(color);
+        notifBuilder.setColor(ContextCompat.getColor(ctx, R.color.theme_primary));
 
         return notifBuilder;
     }

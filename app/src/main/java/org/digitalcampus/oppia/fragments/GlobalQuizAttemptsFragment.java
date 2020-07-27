@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.QuizAttemptActivity;
-import org.digitalcampus.oppia.adapter.CourseQuizzesAdapter;
 import org.digitalcampus.oppia.adapter.GlobalQuizAttemptsAdapter;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizAttemptRepository;
@@ -25,8 +24,6 @@ public class GlobalQuizAttemptsFragment extends AppFragment {
     @Inject
     QuizAttemptRepository attemptsRepository;
 
-    private List<QuizAttempt> attempts;
-
     public static GlobalQuizAttemptsFragment newInstance() {
         return new GlobalQuizAttemptsFragment();
     }
@@ -36,20 +33,17 @@ public class GlobalQuizAttemptsFragment extends AppFragment {
         View layout = inflater.inflate(R.layout.fragment_global_quiz_attempts, container, false);
         getAppComponent().inject(this);
 
-        attempts = attemptsRepository.getGlobalQuizAttempts(this.getContext());
+        List<QuizAttempt> attempts = attemptsRepository.getGlobalQuizAttempts(this.getContext());
         GlobalQuizAttemptsAdapter adapter = new GlobalQuizAttemptsAdapter(this.getContext(), attempts);
         RecyclerView attemptsList = layout.findViewById(R.id.attempts_list);
         attemptsList.setAdapter(adapter);
-        adapter.setOnItemClickListener(new CourseQuizzesAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Intent i = new Intent(getActivity(), QuizAttemptActivity.class);
-                Bundle tb = new Bundle();
-                QuizAttempt attempt = attempts.get(position);
-                tb.putSerializable(QuizAttempt.TAG, attempt);
-                i.putExtras(tb);
-                startActivity(i);
-            }
+        adapter.setOnItemClickListener((v, position) -> {
+            Intent i = new Intent(getActivity(), QuizAttemptActivity.class);
+            Bundle tb = new Bundle();
+            QuizAttempt attempt = attempts.get(position);
+            tb.putSerializable(QuizAttempt.TAG, attempt);
+            i.putExtras(tb);
+            startActivity(i);
         });
 
         layout.findViewById(R.id.empty_state).setVisibility(attempts.isEmpty() ? View.VISIBLE : View.GONE);

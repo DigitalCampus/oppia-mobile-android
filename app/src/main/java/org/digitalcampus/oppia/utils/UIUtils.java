@@ -22,11 +22,13 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+
+import androidx.core.graphics.BlendModeColorFilterCompat;
+import androidx.core.graphics.BlendModeCompat;
 import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -61,11 +63,7 @@ public class UIUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    /**
-     * Displays the users points and badges scores in the app header
-     *
-     * @param
-     */
+
     public static void showUserData(Menu menu, final Context ctx, final Course courseInContext) {
         showUserData(menu, ctx, courseInContext, false, -1);
     }
@@ -100,7 +98,6 @@ public class UIUtils {
         }
 
         final TextView points = pointsItem.getActionView().findViewById(R.id.userpoints);
-        TextView badges = pointsItem.getActionView().findViewById(R.id.userbadges);
 
         if (points == null) {
             return;
@@ -111,14 +108,8 @@ public class UIUtils {
             int colorTo = ContextCompat.getColor(ctx, R.color.points_badge);
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
             colorAnimation.setDuration(1000); // milliseconds
-            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-                @Override
-                public void onAnimationUpdate(ValueAnimator animator) {
-                    points.getBackground().setColorFilter((int) animator.getAnimatedValue(), android.graphics.PorterDuff.Mode.SRC_OVER);
-                }
-
-            });
+            colorAnimation.addUpdateListener(animator ->
+                    points.getBackground().setColorFilter(BlendModeColorFilterCompat.createBlendModeColorFilterCompat((int) animator.getAnimatedValue(), BlendModeCompat.SRC_OVER)));
             colorAnimation.start();
         }
 
@@ -127,47 +118,20 @@ public class UIUtils {
         if (scoringEnabled) {
             points.setVisibility(View.VISIBLE);
             points.setText(String.valueOf(u.getPoints() - pointsToSubstractForAnimationSaved));
-            points.setOnClickListener(new View.OnClickListener() {
-                //@Override
-                public void onClick(View view) {
-                    Intent i = new Intent(ctx, ScorecardActivity.class);
-                    Bundle tb = new Bundle();
-                    tb.putString(ScorecardActivity.TAB_TARGET, ScorecardActivity.TAB_TARGET_POINTS);
-                    if (courseInContext != null) {
-                        tb.putSerializable(Course.TAG, courseInContext);
-                    }
-                    i.putExtras(tb);
-                    ctx.startActivity(i);
+            points.setOnClickListener(view -> {
+                Intent i = new Intent(ctx, ScorecardActivity.class);
+                Bundle tb = new Bundle();
+                tb.putString(ScorecardActivity.TAB_TARGET, ScorecardActivity.TAB_TARGET_POINTS);
+                if (courseInContext != null) {
+                    tb.putSerializable(Course.TAG, courseInContext);
                 }
+                i.putExtras(tb);
+                ctx.startActivity(i);
             });
         } else {
             points.setVisibility(View.GONE);
         }
 
-        if (badges == null){
-            return;
-        }
-
-        boolean badgingEnabled = prefs.getBoolean(PrefsActivity.PREF_BADGING_ENABLED, true);
-        if (badgingEnabled) {
-            badges.setVisibility(View.VISIBLE);
-            badges.setText(String.valueOf(u.getBadges()));
-            badges.setOnClickListener(new View.OnClickListener() {
-                //@Override
-                public void onClick(View view) {
-                    Intent i = new Intent(ctx, ScorecardActivity.class);
-                    Bundle tb = new Bundle();
-                    tb.putString(ScorecardActivity.TAB_TARGET, ScorecardActivity.TAB_TARGET_BADGES);
-                    if (courseInContext != null) {
-                        tb.putSerializable(Course.TAG, courseInContext);
-                    }
-                    i.putExtras(tb);
-                    ctx.startActivity(i);
-                }
-            });
-        } else {
-            badges.setVisibility(View.GONE);
-        }
     }
 
     /**
@@ -214,11 +178,7 @@ public class UIUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         builder.setTitle(title);
         builder.setMessage(msg);
-        builder.setNeutralButton(btnText, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
+        builder.setNeutralButton(btnText, (dialog, id) -> dialog.cancel());
         AlertDialog alert = builder.create();
         alert.show();
         return alert;
@@ -273,21 +233,15 @@ public class UIUtils {
         builder.setTitle(title);
         builder.setMessage(msg);
         builder.setCancelable(true);
-        builder.setNeutralButton(btnText, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
+        builder.setNeutralButton(btnText, (dialog, id) -> dialog.cancel());
+        builder.setOnCancelListener(dialog -> {
+            try {
+                funct.call();
+            } catch (Exception e) {
+                Mint.logException(e);
+                Log.d(TAG, "Exception:", e);
             }
-        });
-        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            public void onCancel(DialogInterface dialog) {
-                try {
-                    funct.call();
-                } catch (Exception e) {
-                    Mint.logException(e);
-                    Log.d(TAG, "Exception:", e);
-                }
 
-            }
         });
         AlertDialog alert = builder.create();
         alert.show();
@@ -336,27 +290,21 @@ public class UIUtils {
         if (i > 0) {
             ArrayAdapter<String> arr = new ArrayAdapter<>(ctx, android.R.layout.select_dialog_singlechoice, langStringList);
             AlertDialog mAlertDialog = new AlertDialog.Builder(ctx)
-                    .setSingleChoiceItems(arr, prefLangPosition, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            String newLang = languagesList.get(whichButton).getLanguage();
-                            Editor editor = prefs.edit();
-                            editor.putString(PrefsActivity.PREF_LANGUAGE, newLang);
-                            editor.apply();
-                            dialog.dismiss();
-                            try {
-                                funct.call();
-                            } catch (Exception e) {
-                                Mint.logException(e);
-                                Log.d(TAG, "Exception:", e);
-                            }
+                    .setSingleChoiceItems(arr, prefLangPosition, (dialog, whichButton) -> {
+                        String newLang = languagesList.get(whichButton).getLanguage();
+                        Editor editor = prefs.edit();
+                        editor.putString(PrefsActivity.PREF_LANGUAGE, newLang);
+                        editor.apply();
+                        dialog.dismiss();
+                        try {
+                            funct.call();
+                        } catch (Exception e) {
+                            Mint.logException(e);
+                            Log.d(TAG, "Exception:", e);
                         }
                     }).setTitle(ctx.getString(R.string.change_language))
-                    .setNegativeButton(ctx.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                        }
-
+                    .setNegativeButton(ctx.getString(R.string.cancel), (dialog, which) -> {
+                        // do nothing
                     }).create();
             mAlertDialog.show();
         }

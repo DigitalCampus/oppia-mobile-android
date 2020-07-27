@@ -46,7 +46,7 @@ public class ActivityPagerAdapter extends FragmentStatePagerAdapter {
     private Context ctx;
 	
 	public ActivityPagerAdapter(Context ctx, FragmentManager fm, List<Fragment> fragments, List<String> titles) {
-		super(fm);
+		super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.ctx = ctx;
 		this.fragments = fragments;
         this.tabTitles = titles;
