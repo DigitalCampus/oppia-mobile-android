@@ -40,7 +40,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
     public static final String TAG = ExternalStorageStrategy.class.getSimpleName();
     private static String internalPath;
 
-    //@Override
+    @Override
     public boolean updateStorageLocation(Context ctx){
 
         String location = null;
@@ -76,7 +76,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         return (location != null);
     }
 
-    //@Override
+    @Override
     public boolean updateStorageLocation(Context ctx, String mount) {
 
         if ((mount == null ) || mount.equals("")){
@@ -91,7 +91,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         return true;
     }
 
-    //@Override
+    @Override
     public String getStorageLocation(Context ctx){
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -105,8 +105,8 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         return location;
     }
 
-    //@Override
-    public boolean isStorageAvailable(Context ctx) {
+    @Override
+    public boolean isStorageAvailable() {
         String cardStatus = ExternalStorageState.getExternalStorageState();
         if (cardStatus.equals(Environment.MEDIA_REMOVED)
                 || cardStatus.equals(Environment.MEDIA_UNMOUNTABLE)
@@ -123,18 +123,12 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
 
     @Override
     public boolean needsUserPermissions(Context ctx) {
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            //Only in versions >= Lollipop we need to check write permissions
-            return false;
-        }
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         if (prefs.contains(PrefsActivity.STORAGE_NEEDS_PERMISSIONS)){
             return prefs.getBoolean(PrefsActivity.STORAGE_NEEDS_PERMISSIONS, false);
         }
 
-        //If by some reason the value is not set yet (coming from previous installation)
+        // If by some reason the value is not set yet (coming from previous installation)
         String currentLocation = this.getStorageLocation(ctx);
         File currentPath = new File(currentLocation);
         if (!currentPath.canWrite()){
@@ -197,7 +191,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         fragmentTransaction.commitAllowingStateLoss();
     }
 
-    //@Override
+    @Override
     public String getStorageType() {
         return PrefsActivity.STORAGE_OPTION_EXTERNAL;
     }

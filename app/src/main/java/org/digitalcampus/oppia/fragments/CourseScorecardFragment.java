@@ -47,7 +47,7 @@ import java.util.Locale;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class CourseScorecardFragment extends AppFragment implements ParseCourseXMLTask.OnParseXmlListener, CourseQuizzesAdapter.OnItemClickListener {
+public class CourseScorecardFragment extends AppFragment implements ParseCourseXMLTask.OnParseXmlListener {
 
 	private Course course = null;
     private RecyclerView quizzesGrid;
@@ -124,10 +124,17 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         quizzesAdapter = new CourseQuizzesAdapter(getActivity(), quizStats);
         quizzesGrid.setAdapter(quizzesAdapter);
         quizzesGrid.setNestedScrollingEnabled(false);
-        quizzesAdapter.setOnItemClickListener(this);
+        quizzesAdapter.setOnItemClickListener((v, position)->{
+            QuizStats quiz = quizzesAdapter.getItemAtPosition(position);
+            Intent i = new Intent(getActivity(), CourseQuizAttemptsActivity.class);
+            Bundle tb = new Bundle();
+            tb.putSerializable(QuizStats.TAG, quiz);
+            i.putExtras(tb);
+            startActivityForResult(i, 1);
+        });
 	}
 
-    //@Override
+    @Override
     public void onParseComplete(CompleteCourse parsedCourse) {
 
         ArrayList<Activity> baseline = (ArrayList<Activity>) parsedCourse.getBaselineActivities();
@@ -203,18 +210,9 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         }
     }
 
-    //@Override
+    @Override
     public void onParseError() {
         // no need to do anything
     }
 
-    public void onItemClick(int position) {
-        QuizStats quiz = quizzesAdapter.getItemAtPosition(position);
-
-        Intent i = new Intent(getActivity(), CourseQuizAttemptsActivity.class);
-        Bundle tb = new Bundle();
-        tb.putSerializable(QuizStats.TAG, quiz);
-        i.putExtras(tb);
-        startActivityForResult(i, 1);
-    }
 }

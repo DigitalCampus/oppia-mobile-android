@@ -87,14 +87,6 @@ public class Numerical extends QuizQuestion implements Serializable {
     }
 
     @Override
-    public String getFeedback(String lang) {
-        // reset feedback back to nothing
-        this.feedback = "";
-        this.mark(lang);
-        return this.feedback;
-    }
-
-    @Override
     public JSONObject responsesToJSON() {
         JSONObject jo = new JSONObject();
         try {

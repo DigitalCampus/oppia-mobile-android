@@ -20,13 +20,15 @@ package org.digitalcampus.oppia.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.UtteranceProgressListener;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,10 +60,9 @@ import org.digitalcampus.oppia.widgets.UrlWidget;
 import org.digitalcampus.oppia.widgets.WidgetFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Callable;
 
 public class CourseActivity extends AppActivity implements OnInitListener, TabLayout.OnTabSelectedListener {
 
@@ -85,6 +86,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     TabLayout tabs;
     private ViewPager viewPager;
     private ActivityPagerAdapter apAdapter;
+    private boolean launchTTSAfterLanguageSelection;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,16 +126,17 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         super.onStart();
         initialize();
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("currentActivityNo", currentActivityNo);
     }
 
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
+    public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         currentActivityNo = savedInstanceState.getInt("currentActivityNo");
     }
@@ -141,20 +144,22 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     @Override
     public void onPause() {
         super.onPause();
-        if (myTTS != null) {
-            myTTS.shutdown();
-            myTTS = null;
+
+        if (!ttsRunning) {
+            WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
+            currentWidget.pauseTimeTracking();
+            currentWidget.saveTracker();
         }
-        WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
-        currentWidget.pauseTimeTracking();
-        currentWidget.saveTracker();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
-        currentWidget.resumeTimeTracking();
+
+        if (!ttsRunning) {
+            WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
+            currentWidget.resumeTimeTracking();
+        }
 
         DbHelper db = DbHelper.getInstance(this);
         userID = db.getUserId(SessionManager.getUsername(this));
@@ -162,10 +167,22 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     @Override
     protected void onDestroy() {
+
+        if (ttsRunning) {
+            WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
+            currentWidget.pauseTimeTracking();
+            currentWidget.saveTracker();
+        }
+
+        ttsRunning = false;
+
         if (myTTS != null) {
             myTTS.shutdown();
             myTTS = null;
         }
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         super.onDestroy();
     }
 
@@ -211,24 +228,51 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             startActivity(i);
             return true;
         } else if (itemId == R.id.menu_tts) {
-            if (myTTS == null && !ttsRunning) {
-                // check for TTS data
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                Intent checkTTSIntent = new Intent();
-                checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-                startActivityForResult(checkTTSIntent, ttsCheck);
-            } else if (myTTS != null && ttsRunning) {
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                this.stopReading();
-            } else {
-                // TTS not installed so show message
-                Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
-            }
+            manageTTS();
             supportInvalidateOptionsMenu();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void manageTTS() {
+        if (myTTS == null && !ttsRunning) {
+            if (checkLanguageSelected()) {
+                launchTTS();
+            } else {
+                launchTTSAfterLanguageSelection = true;
+                createLanguageDialog();
+            }
+        } else if (myTTS != null && ttsRunning) {
+            this.stopReading();
+        } else {
+            // TTS not installed so show message
+            Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void launchTTS() {
+        // check for TTS data
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        Intent checkTTSIntent = new Intent();
+        checkTTSIntent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+        checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        startActivityForResult(checkTTSIntent, ttsCheck);
+    }
+
+    private boolean checkLanguageSelected() {
+        String currentLang = sharedPreferences.getString(PrefsActivity.PREF_LANGUAGE, null);
+        return currentLang != null && checkCourseHasLanguage(currentLang);
+    }
+
+    private boolean checkCourseHasLanguage(String currentLang) {
+        for (Lang lang : course.getLangs()) {
+            if (TextUtils.equals(lang.getLanguage(), currentLang)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void loadActivities() {
@@ -292,11 +336,13 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private void createLanguageDialog() {
-        UIUtils.createLanguageDialog(this, course.getLangs(), sharedPreferences, new Callable<Boolean>() {
-            public Boolean call() {
-                CourseActivity.this.loadActivities();
-                return true;
+        UIUtils.createLanguageDialog(this, course.getLangs(), sharedPreferences, () -> {
+            CourseActivity.this.loadActivities();
+            if (launchTTSAfterLanguageSelection) {
+                launchTTSAfterLanguageSelection = false;
+                launchTTS();
             }
+            return true;
         });
     }
 
@@ -312,14 +358,11 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
             currentWidget.resetTimeTracking();
         } else {
-            Runnable setPreviousTab = new Runnable() {
-                @Override
-                public void run() {
-                    UIUtils.showAlert(CourseActivity.this, R.string.sequencing_dialog_title, R.string.sequencing_section_message);
-                    TabLayout.Tab target = tabs.getTabAt(currentActivityNo);
-                    if (target != null) {
-                        target.select();
-                    }
+            Runnable setPreviousTab = () -> {
+                UIUtils.showAlert(CourseActivity.this, R.string.sequencing_dialog_title, R.string.sequencing_section_message);
+                TabLayout.Tab target = tabs.getTabAt(currentActivityNo);
+                if (target != null) {
+                    target.select();
                 }
             };
             new Handler().post(setPreviousTab);
@@ -358,28 +401,35 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             ttsRunning = true;
             ((WidgetFactory) apAdapter.getItem(currentActivityNo)).setReadAloud(true);
             supportInvalidateOptionsMenu();
-            HashMap<String, String> params = new HashMap<>();
-            params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, TAG);
-            myTTS.speak(((WidgetFactory) apAdapter.getItem(currentActivityNo)).getContentToRead(), TextToSpeech.QUEUE_FLUSH, params);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                myTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-                    @Override
-                    public void onDone(String utteranceId) {
-                        CourseActivity.this.ttsRunning = false;
-                        myTTS = null;
-                    }
 
-                    @Override
-                    public void onError(String utteranceId) {
-                        // does not need completing
-                    }
-
-                    @Override
-                    public void onStart(String utteranceId) {
-                        // does not need completing
-                    }
-                });
+            String currentLang = sharedPreferences.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+            Locale localeContent = new Locale(currentLang);
+            List<Integer> validLangAvailableCodes = new ArrayList<>(Arrays.asList(
+                    TextToSpeech.LANG_AVAILABLE, TextToSpeech.LANG_COUNTRY_AVAILABLE, TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE));
+            if (validLangAvailableCodes.contains(myTTS.isLanguageAvailable(localeContent))) {
+                myTTS.setLanguage(localeContent);
             }
+
+            myTTS.speak(((WidgetFactory) apAdapter.getItem(currentActivityNo)).getContentToRead(), TextToSpeech.QUEUE_FLUSH, null, TAG);
+            myTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                @Override
+                public void onDone(String utteranceId) {
+                    CourseActivity.this.ttsRunning = false;
+                    myTTS = null;
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                }
+
+                @Override
+                public void onError(String utteranceId) {
+                    // does not need completing
+                }
+
+                @Override
+                public void onStart(String utteranceId) {
+                    // does not need completing
+                }
+            });
+
         } else {
             // TTS not installed so show message
             Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
@@ -401,5 +451,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             myTTS = null;
         }
         this.ttsRunning = false;
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 }

@@ -80,7 +80,7 @@ public class BaselineQuizTest {
 
         // TODO check that the feedback is *not* displayed
 
-        onView(withId(R.id.quiz_results_button))
+        onView(withId(R.id.quiz_exit_button))
                 .check(matches(withText(R.string.widget_quiz_baseline_goto_course)));
 
     }
@@ -106,7 +106,7 @@ public class BaselineQuizTest {
 
         // TODO check that the feedback is *not* displayed
 
-        onView(withId(R.id.quiz_results_button))
+        onView(withId(R.id.quiz_exit_button))
                 .check(matches(withText(R.string.widget_quiz_baseline_goto_course)));
     }
 
@@ -131,7 +131,7 @@ public class BaselineQuizTest {
 
         // TODO check that the feedback is *not* displayed
 
-        onView(withId(R.id.quiz_results_button))
+        onView(withId(R.id.quiz_exit_button))
                 .check(matches(withText(R.string.widget_quiz_baseline_goto_course)));
     }
 }

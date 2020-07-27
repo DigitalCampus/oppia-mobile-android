@@ -26,7 +26,7 @@ public class MockStorageStrategy implements StorageAccessStrategy {
     }
 
     @Override
-    public boolean isStorageAvailable(Context ctx) {
+    public boolean isStorageAvailable() {
         return true;
     }
 

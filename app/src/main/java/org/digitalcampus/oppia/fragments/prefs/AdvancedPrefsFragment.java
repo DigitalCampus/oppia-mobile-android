@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Patterns;
@@ -60,20 +60,17 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         if (serverPref == null || storagePref == null){
             return;
         }
-        serverPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                String url = ((String) newValue).trim();
-                if (!URLUtil.isNetworkUrl(url) || !Patterns.WEB_URL.matcher(url).matches()){
-                    UIUtils.showAlert(getActivity(),
-                            R.string.prefServer_errorTitle,
-                            R.string.prefServer_errorDescription);
-                    return false;
-                }
-
-                // If it is correct, we allow the change
-                return true;
+        serverPref.setOnPreferenceChangeListener((preference, newValue) -> {
+            String url = ((String) newValue).trim();
+            if (!URLUtil.isNetworkUrl(url) || !Patterns.WEB_URL.matcher(url).matches()){
+                UIUtils.showAlert(getActivity(),
+                        R.string.prefServer_errorTitle,
+                        R.string.prefServer_errorDescription);
+                return false;
             }
+
+            // If it is correct, we allow the change
+            return true;
         });
         protectAdminEditTextPreferences();
 
@@ -128,8 +125,8 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
 
         if (!compatible){
             String uncompatible = "\n" + getContext().getString(R.string.prefServerIncompatible);
-            summarySpan.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.red)), summary.length(), summary.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            summarySpan.setSpan(new StyleSpan(Typeface.BOLD), summary.length(), summary.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            summarySpan.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.red)), summary.length(), summary.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            summarySpan.setSpan(new StyleSpan(Typeface.BOLD), summary.length(), summary.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             summarySpan.insert(summary.length(), uncompatible);
         }
 

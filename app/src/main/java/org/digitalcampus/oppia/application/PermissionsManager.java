@@ -40,16 +40,19 @@ public class PermissionsManager {
 
     public static final String TAG = PermissionsManager.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST = 1246;
-    public static final List<String> STARTUP_PERMISSIONS_REQUIRED = Arrays.asList(
+    private static final List<String> STARTUP_PERMISSIONS_REQUIRED = Arrays.asList(
         //Remember to update this when the Manifest permissions change!
         Manifest.permission.READ_PHONE_STATE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     );
-    public static final List<String> BLUETOOTH_PERMISSIONS_REQUIRED = Arrays.asList(
+    private static final List<String> BLUETOOTH_PERMISSIONS_REQUIRED = Arrays.asList(
             //Remember to update this when the Manifest permissions change!
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
     );
+
+    public static final int STARTUP_PERMISSIONS = 1;
+    public static final int BLUETOOTH_PERMISSIONS = 2;
 
     private PermissionsManager() {
         throw new IllegalStateException("Utility class");
@@ -63,12 +66,14 @@ public class PermissionsManager {
          prefs.edit().putBoolean(permission + "_asked", true).apply();
     }
 
-    public static boolean checkPermissionsAndInform(final Activity act, final List<String> permissions){
+    public static boolean checkPermissionsAndInform(final Activity act, int perms){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             //If sdk version prior to 23 (Android M), the permissions are granted by manifest
             return true;
         }
 
+        final List<String> permissions = (perms == STARTUP_PERMISSIONS) ?
+                    STARTUP_PERMISSIONS_REQUIRED : BLUETOOTH_PERMISSIONS_REQUIRED;
         final List<String> permissionsToAsk = filterNotGrantedPermissions(act, permissions);
 
         ViewGroup container = act.findViewById(R.id.permissions_explanation);
@@ -87,13 +92,10 @@ public class PermissionsManager {
                 //First, set the permissions as asked
                 reqPermsBtn.setVisibility(View.VISIBLE);
                 permsNotAskable.setVisibility(View.GONE);
-                reqPermsBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //Open the dialog to ask for permissions
-                        requestPermissions(act, permissionsToAsk);
-                    }
-                });
+                reqPermsBtn.setOnClickListener(v ->
+                    //Open the dialog to ask for permissions
+                    requestPermissions(act, permissionsToAsk)
+                );
             }
             else{
                 //Just show the informative option

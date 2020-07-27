@@ -60,7 +60,7 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payl
                         .url(apiEndpoint.getFullURL(ctx, Paths.QUIZ_SUBMIT_PATH))
                         .addHeader(HTTPClientUtils.HEADER_AUTH,
                                 HTTPClientUtils.getAuthHeaderValue(qa.getUser().getUsername(), qa.getUser().getApiKey()))
-                        .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, qa.getData()))
+                        .post(RequestBody.create(qa.getData(), HTTPClientUtils.MEDIA_TYPE_JSON))
                         .build();
 
                 Response response = client.newCall(request).execute();

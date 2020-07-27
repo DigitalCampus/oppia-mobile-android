@@ -299,15 +299,6 @@ public class InstallDownloadedCoursesTest {
         InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
         imTask.setInstallerListener(new InstallCourseListener() {
             @Override
-            public void downloadComplete(Payload p) {  }
-
-            @Override
-            public void downloadProgressUpdate(DownloadProgress dp) {
-                Log.d(TAG, "Course download progress: " + dp.getProgress());
-
-            }
-
-            @Override
             public void installComplete(Payload r) {
                 Log.d(TAG, "Course installation complete!");
                 response[0] = r;
