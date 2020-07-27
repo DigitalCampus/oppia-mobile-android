@@ -25,9 +25,8 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.TransferableFileListAdapter;
-import org.digitalcampus.oppia.listener.ExportActivityListener;
+import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
-import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.service.bluetooth.BluetoothBroadcastReceiver;
@@ -44,11 +43,12 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SyncActivity extends AppActivity implements InstallCourseListener, BluetoothBroadcastReceiver.BluetoothTransferListener, TabLayout.BaseOnTabSelectedListener, ExportActivityListener {
+public class SyncActivity extends AppActivity implements InstallCourseListener, BluetoothBroadcastReceiver.BluetoothTransferListener, TabLayout.OnTabSelectedListener {
 
     // Intent request codes
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
@@ -89,6 +89,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     private BluetoothTransferServiceDelegate btServiceDelegate = null;
     private BluetoothBroadcastReceiver receiver;
     private boolean isReceiving = false;
+    private boolean hasPermissions = true;
     private TextView tvDeviceName;
 
     private MenuItem connectMenuItem;
@@ -136,23 +137,17 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
 
         coursesRecyclerView.setHasFixedSize(true);
         coursesRecyclerView.setLayoutManager( new LinearLayoutManager(this));
-        coursesAdapter = new TransferableFileListAdapter(transferableFiles, new ListInnerBtnOnClickListener() {
-            @Override
-            public void onClick(int position) {
-                CourseTransferableFile toShare = transferableFiles.get(position);
-                sendFile(toShare);
-            }
+        coursesAdapter = new TransferableFileListAdapter(transferableFiles, position -> {
+            CourseTransferableFile toShare = transferableFiles.get(position);
+            sendFile(toShare);
         }, true);
         tabsFilter.addOnTabSelectedListener(this);
 
         activitylogsRecyclerView.setHasFixedSize(true);
         activitylogsRecyclerView.setLayoutManager( new LinearLayoutManager(this));
-        activitylogsAdapter = new TransferableFileListAdapter(activityLogs, new ListInnerBtnOnClickListener() {
-            @Override
-            public void onClick(int position) {
-                if (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED){
-                    btServiceDelegate.sendFile(activityLogs.get(position));
-                }
+        activitylogsAdapter = new TransferableFileListAdapter(activityLogs, position -> {
+            if (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED){
+                btServiceDelegate.sendFile(activityLogs.get(position));
             }
         });
 
@@ -164,29 +159,15 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         activitylogsRecyclerView.addItemDecoration(divider);
         refreshFileList(false);
 
-        connectBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { manageBluetoothConnection(); }
-        });
-        tetherBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { ensureDiscoverable(); }
-        });
-
-        sendAllButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(currentSelectedTab == TAB_ACTIVITYLOGS) {
-                    sendAll(activityLogs);
-                } else if (currentSelectedTab == TAB_COURSES) {
-                    sendAll(transferableFiles);
-                }
-
-            }
-        });
+        connectBtn.setOnClickListener(v -> manageBluetoothConnection());
+        tetherBtn.setOnClickListener(v -> ensureDiscoverable());
+        sendAllButton.setOnClickListener(v -> sendAll());
 
         ExportActivityTask task = new ExportActivityTask(this);
-        task.setListener(this);
+        task.setListener(filename -> {
+            updateStatus(true);
+            refreshFileList(false);
+        });
         task.execute();
         sendTransferProgress.setVisibility(View.VISIBLE);
 
@@ -195,6 +176,12 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     @Override
     public void onResume() {
         super.onResume();
+
+        hasPermissions = PermissionsManager.checkPermissionsAndInform(this,
+                PermissionsManager.BLUETOOTH_PERMISSIONS);
+        if (!hasPermissions){
+            return;
+        }
 
         // If BT is not on, request that it be enabled.
         if ((bluetoothAdapter != null) && !bluetoothAdapter.isEnabled()) {
@@ -228,7 +215,10 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     public void onPause(){
         super.onPause();
         isReceiving = false;
-        unregisterReceiver(receiver);
+        if (receiver != null){
+            unregisterReceiver(receiver);
+        }
+
     }
 
     private void startBluetooth(){
@@ -310,8 +300,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             updateTabs();
 
             if (connectMenuItem != null){
-                connectMenuItem.setVisible(true);
-                discoverMenuItem.setVisible(true);
+                connectMenuItem.setVisible(hasPermissions);
+                discoverMenuItem.setVisible(hasPermissions);
                 disconnectMenuItem.setVisible(false);
             }
         }
@@ -328,7 +318,6 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             }
         }
     }
-
 
     private void ensureDiscoverable() {
         if (bluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
@@ -356,6 +345,14 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
 
     }
 
+    private void sendAll(){
+        if(currentSelectedTab == TAB_ACTIVITYLOGS) {
+            sendAll(activityLogs);
+        } else if (currentSelectedTab == TAB_COURSES) {
+            sendAll(transferableFiles);
+        }
+    }
+
     private void installCourses() {
         InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(this);
         imTask.setInstallerListener(this);
@@ -381,12 +378,9 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
                 if (pending && isAfterTransfer){
                     final Handler handler = new Handler();
                     Log.e(TAG, "Installing pending courses!");
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.e(TAG, "launch delayed task");
-                            installTransferredCourses();
-                        }
+                    handler.postDelayed(() -> {
+                        Log.e(TAG, "launch delayed task");
+                        installTransferredCourses();
                     }, 250);
                 }
                 else{
@@ -409,6 +403,11 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         task.execute();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionsManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 
     @Override
     public void onBackPressed() {
@@ -469,16 +468,6 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         pendingFiles.setVisibility(View.GONE);
         pendingSize.setVisibility(View.GONE);
         sendTransferProgress.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void downloadComplete(Payload p) {
-        // do nothing
-    }
-
-    @Override
-    public void downloadProgressUpdate(DownloadProgress dp) {
-        // do nothing
     }
 
     @Override
@@ -643,13 +632,6 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
 
 
 
-    @Override
-    public void onExportComplete(String filename) {
-        updateStatus(true);
-        refreshFileList(false);
-    }
-
-
     //static inner class doesn't hold an implicit reference to the outer class
     private class BluetoothTransferHandler extends Handler {
         //Using a weak reference means you won't prevent garbage collection
@@ -660,7 +642,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         }
 
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(@NonNull Message msg) {
 
             SyncActivity self = activity.get();
             if (self == null) return;

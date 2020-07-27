@@ -91,7 +91,7 @@ public class DeleteCourseTest {
     @Test
     public void deleteCourse_success() throws Exception {
 
-        if (!Storage.getStorageStrategy().isStorageAvailable(context)) {
+        if (!Storage.getStorageStrategy().isStorageAvailable()) {
             return;
         }
 
@@ -198,14 +198,6 @@ public class DeleteCourseTest {
         Payload payload = new Payload(data);
         InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
         imTask.setInstallerListener(new InstallCourseListener() {
-            @Override
-            public void downloadComplete(Payload p) {
-            }
-
-            @Override
-            public void downloadProgressUpdate(DownloadProgress dp) {
-            }
-
             @Override
             public void installComplete(Payload r) {
                 signal.countDown();

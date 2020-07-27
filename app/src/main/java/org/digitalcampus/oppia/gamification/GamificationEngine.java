@@ -22,6 +22,7 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.model.Activity;
@@ -229,11 +230,21 @@ public class GamificationEngine {
     }
 
     public GamificationEvent processEventFeedbackActivity(Course course, Activity activity){
-        try{
-            return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
-        } catch (GamificationEventNotFound genf) {
-            return Gamification.GAMIFICATION_UNDEFINED;
+        DbHelper db = DbHelper.getInstance(this.ctx);
+        int totalPoints = 0;
+        if(db.isQuizFirstAttempt(activity.getDigest())) {
+            try {
+                totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_FEEDBACK_COMPLETED).getPoints();
+            } catch (GamificationEventNotFound genf) {
+                Log.d(TAG, LOG_EVENT_NOT_FOUND + genf.getEventName(), genf);
+                Mint.logException(genf);
+            }
         }
+        else {
+            Log.d(TAG,"Not first attempt, nor first attempt today");
+        }
+
+        return new GamificationEvent(Gamification.EVENT_NAME_FEEDBACK_COMPLETED, totalPoints);
     }
 
     public GamificationEvent processEventURLActivity(Course course, Activity activity){
@@ -248,6 +259,10 @@ public class GamificationEngine {
         String prefLang = Locale.getDefault().getLanguage();
         int resId = ctx.getResources().getIdentifier("points_event_" + event.getEvent(), "string", ctx.getPackageName());
 
+        if (resId <= 0){
+            //The string resource for that event was not found
+            return (c == null) ? ctx.getString(R.string.points_event_default) : c.getTitle(prefLang);
+        }
         if (a != null){
             return ctx.getString(resId,
                 (c == null) ? "" : c.getTitle(prefLang),

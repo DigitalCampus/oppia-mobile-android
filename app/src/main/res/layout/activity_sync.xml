@@ -94,162 +94,178 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="org.digitalcampus.oppia.fragments.TransferFragment">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/connected_panel"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabs_filter"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginRight="10dp"
-                app:tabBackground="@drawable/bg_tab_text"
-                app:tabGravity="center"
-                app:tabIndicatorHeight="0dp"
-                app:tabTextAppearance="@style/TabLayoutAppearance">
-
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tab_activitylog"
-                    style="@style/TabText"
-                    android:text="@string/bluetooth.tab_activitylog" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tab_course"
-                    style="@style/TabText"
-                    android:text="@string/bluetooth.tab_course" />
-
-            </com.google.android.material.tabs.TabLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/course_backups_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical"
-                tools:itemCount="4"
-                tools:listitem="@layout/row_transferable_file" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/activitylogs_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical"
-                tools:itemCount="4"
-                tools:listitem="@layout/row_transferable_file" />
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/not_connected_info"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            tools:context="org.digitalcampus.oppia.fragments.TransferFragment">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/padding_large">
+                android:id="@+id/connected_panel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/bluetooth_ic"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:src="@drawable/ic_bluetooth"
-                    android:tint="@color/highlight_separator" />
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabs_filter"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="10dp"
+                    app:tabBackground="@drawable/bg_tab_text"
+                    app:tabGravity="center"
+                    app:tabIndicatorHeight="0dp"
+                    app:tabTextAppearance="@style/TabLayoutAppearance">
 
-                <TextView
-                    android:id="@+id/textView21"
-                    android:layout_width="190dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding_medium"
-                    android:gravity="center"
-                    android:text="@string/bluetooth.info_connect" />
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tab_activitylog"
+                        style="@style/TabText"
+                        android:text="@string/bluetooth.tab_activitylog" />
 
-                <Button
-                    android:id="@+id/connect_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding_medium"
-                    android:text="@string/bluetooth.btn_connect" />
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tab_course"
+                        style="@style/TabText"
+                        android:text="@string/bluetooth.tab_course" />
+
+                </com.google.android.material.tabs.TabLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/course_backups_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/row_transferable_file" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/activitylogs_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/row_transferable_file" />
+
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_device_name"
-                style="@style/ButtonText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="@dimen/padding_large"
-                android:textSize="18sp"
-                tools:text="Studio J1 " />
+            <RelativeLayout
+                android:id="@+id/not_connected_info"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/textView27"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/tv_device_name"
-                android:layout_alignLeft="@id/tv_device_name"
-                android:text="@string/bluetooth.device_name"
-                android:textColor="@color/theme_primary_dark" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/padding_large">
 
-            <ImageButton
-                android:id="@+id/tethering_btn"
-                style="@android:style/Widget.Material.ImageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/tv_device_name"
-                android:layout_alignBottom="@id/tv_device_name"
-                android:layout_toLeftOf="@id/tv_device_name"
-                android:adjustViewBounds="true"
-                android:background="@drawable/bg_transparent"
-                android:scaleType="fitEnd"
-                android:tint="@color/theme_primary"
-                app:srcCompat="@drawable/ic_wifi_tethering" />
+                    <ImageView
+                        android:id="@+id/bluetooth_ic"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_bluetooth"
+                        android:tint="@color/highlight_separator" />
 
-        </RelativeLayout>
+                    <TextView
+                        android:id="@+id/textView21"
+                        android:layout_width="190dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding_medium"
+                        android:gravity="center"
+                        android:text="@string/bluetooth.info_connect" />
 
-        <RelativeLayout
-            android:id="@+id/receiving_progress"
+                    <Button
+                        android:id="@+id/connect_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding_medium"
+                        android:text="@string/bluetooth.btn_connect" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_device_name"
+                    style="@style/ButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="@dimen/padding_large"
+                    android:textSize="18sp"
+                    tools:text="Studio J1 " />
+
+                <TextView
+                    android:id="@+id/textView27"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/tv_device_name"
+                    android:layout_alignLeft="@id/tv_device_name"
+                    android:text="@string/bluetooth.device_name"
+                    android:textColor="@color/theme_primary_dark" />
+
+                <ImageButton
+                    android:id="@+id/tethering_btn"
+                    style="@android:style/Widget.Material.ImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/tv_device_name"
+                    android:layout_alignBottom="@id/tv_device_name"
+                    android:layout_toLeftOf="@id/tv_device_name"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/bg_transparent"
+                    android:scaleType="fitEnd"
+                    android:tint="@color/theme_primary"
+                    app:srcCompat="@drawable/ic_wifi_tethering" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/receiving_progress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/background_cover"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:id="@+id/progressBar6"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="false"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    android:id="@+id/textView25"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/progressBar6"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/transfer_receiving_course"
+                    android:textColor="@color/text_light"/>
+            </RelativeLayout>
+
+        </FrameLayout>
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/background_cover"
-            android:clickable="true"
-            android:focusable="true"
+            android:id="@+id/permissions_explanation"
+            android:background="@android:color/white"
+            android:layout_margin="@dimen/margin_medium"
             android:visibility="gone">
-
-            <ProgressBar
-                android:id="@+id/progressBar6"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="false"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"/>
-
-            <TextView
-                android:id="@+id/textView25"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/progressBar6"
-                android:layout_centerHorizontal="true"
-                android:text="@string/transfer_receiving_course"
-                android:textColor="@color/text_light"/>
-        </RelativeLayout>
-
+        </FrameLayout>
     </FrameLayout>
+
+
 </LinearLayout>
 
 

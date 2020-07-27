@@ -40,6 +40,9 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 	public static final String TAG = ScanMediaTask.class.getSimpleName();
 	private ScanMediaListener mStateListener;
 	private Context ctx;
+
+	private ArrayList<Object> currentMedia;
+	private ArrayList<String> downloadingMedia;
 	
 	public ScanMediaTask(Context ctx) {
 		this.ctx = ctx;
@@ -49,8 +52,8 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 	protected Payload doInBackground(Payload... params) {
 
 		Payload payload = params[0];
-        ArrayList<Object> currentMedia = (ArrayList<Object>) payload.getResponseData();
-        ArrayList<String> downloadingMedia = (ArrayList<String>) DownloadService.getTasksDownloading();
+		currentMedia = (ArrayList<Object>) payload.getResponseData();
+		downloadingMedia = (ArrayList<String>) DownloadService.getTasksDownloading();
 
         List<?> courseObjs = payload.getData();
 		for (int i=0; i<courseObjs.size(); i++){
@@ -66,25 +69,7 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 
 				for(Media m: media){
 					publishProgress(m.getFilename());
-					String filename = Storage.getMediaPath(ctx) + m.getFilename();
-					File mediaFile = new File(filename);
-					if((!mediaFile.exists()) || ( (downloadingMedia!=null)&&(downloadingMedia.contains(m.getDownloadUrl())) )) {
-						// check media not already in list
-						boolean add = true;
-						for (Object cm: currentMedia){
-                            //We have to add it if there is not other object with that filename
-							add = !((Media) cm).getFilename().equals(m.getFilename());
-							if(!add){ ((Media) cm).getCourses().add(course); break; }
-						}
-						if (add){
-							m.getCourses().add(course);
-                            if (downloadingMedia!=null && downloadingMedia.contains(m.getDownloadUrl())){
-                                m.setDownloading(true);
-                            }
-							payload.addResponseData(m);
-							payload.setResult(true);
-						}
-					}
+					checkMedia(course, m, payload);
 				}
 			} catch (InvalidXMLException ixmle) {
 				Log.d(TAG,"Invalid course XML", ixmle);
@@ -96,7 +81,29 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 
 		return payload;
 	}
-	
+
+	private void checkMedia(Course course, Media m, Payload result){
+		String filename = Storage.getMediaPath(ctx) + m.getFilename();
+		File mediaFile = new File(filename);
+		if((!mediaFile.exists()) || ( (downloadingMedia!=null)&&(downloadingMedia.contains(m.getDownloadUrl())) )) {
+			// check media not already in list
+			boolean add = true;
+			for (Object cm: currentMedia){
+				//We have to add it if there is not other object with that filename
+				add = !((Media) cm).getFilename().equals(m.getFilename());
+				if(!add){ ((Media) cm).getCourses().add(course); break; }
+			}
+			if (add){
+				m.getCourses().add(course);
+				if (downloadingMedia!=null && downloadingMedia.contains(m.getDownloadUrl())){
+					m.setDownloading(true);
+				}
+				result.addResponseData(m);
+				result.setResult(true);
+			}
+		}
+	}
+
 	@Override
 	protected void onPreExecute(){
 		synchronized (this) {

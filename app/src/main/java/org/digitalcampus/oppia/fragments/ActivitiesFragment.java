@@ -59,7 +59,7 @@ import javax.inject.Inject;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnTabSelectedListener, ActivityTypesAdapter.OnItemClickListener {
+public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSelectedListener, ActivityTypesAdapter.OnItemClickListener {
 
     private static final String ARG_COURSE = "arg_course";
 
@@ -71,10 +71,10 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
 
     @Inject
     List<Points> pointsFull;
-    List<Points> pointsFiltered = new ArrayList<>();
+    private List<Points> pointsFiltered = new ArrayList<>();
+    private List<String> labels = new ArrayList<>();
     private Map<String, ActivityCount> activitiesGrouped = new LinkedHashMap<>(); // LinkedHashMap: ordered by insertion. TreeMap: sorts naturally by key
     private LineChart chart;
-    List<String> labels = new ArrayList<>();
     private int currentDatesRangePosition;
     private Course course;
     private RecyclerView recyclerActivityTypes;
@@ -266,31 +266,14 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
 
     private void loadPlot(boolean animate) {
 
-        labels.clear();
-
         for (ActivityType activityType : activityTypes) {
             activityType.getValues().clear();
         }
 
-        for (Map.Entry<String, ActivityCount> entryMap : activitiesGrouped.entrySet()) {
-            labels.add(entryMap.getKey());
-            ActivityCount activityCount = entryMap.getValue();
-            for (ActivityType activityType : activityTypes) {
-
-                if (!activityType.isEnabled()) {
-                    continue;
-                }
-
-                int value = activityCount.getValueForType(activityType.getType());
-                activityType.getValues().add(value);
-
-            }
-        }
+        loadLabels();
 
         LineData lineData = new LineData();
-
         int maxYValue = 0;
-
         for (ActivityType activityType : activityTypes) {
 
             if (!activityType.isEnabled()) {
@@ -310,24 +293,42 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
             dataSet.setDrawValues(false);
             dataSet.setDrawCircles(false);
             dataSet.setLineWidth(getResources().getDimension(R.dimen.width_line_chart_activities));
-
             lineData.addDataSet(dataSet);
         }
 
         if (chart.getData() != null) {
             chart.clear();
         }
-
         chart.setData(lineData);
+
+        configureAxis(maxYValue);
+        chart.invalidate(); // refresh
 
         if (animate) {
             chart.animateY(DURATION_CHART_Y_VALUES_ANIMATION, Easing.EaseInOutQuad);
         }
 
+    }
+
+    private void loadLabels(){
+        labels.clear();
+        for (Map.Entry<String, ActivityCount> entryMap : activitiesGrouped.entrySet()) {
+            labels.add(entryMap.getKey());
+            ActivityCount activityCount = entryMap.getValue();
+            for (ActivityType activityType : activityTypes) {
+                if (!activityType.isEnabled()) {
+                    continue;
+                }
+                int value = activityCount.getValueForType(activityType.getType());
+                activityType.getValues().add(value);
+            }
+        }
+    }
+
+    private void configureAxis(int maxYValue){
         XAxis xAxis = chart.getXAxis();
         xAxis.setLabelCount(Math.min(labels.size(), 12));
         xAxis.setValueFormatter(new ValueFormatter(){
-
             @Override
             public String getFormattedValue(float value) {
 
@@ -352,12 +353,9 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
                 return hasDecimals ? "" : String.valueOf((int) value);
             }
         });
-
         yAxis.setSpaceTop(0);
 
-        chart.invalidate(); // refresh
     }
-
 
     private void loadPoints() {
         DbHelper db = DbHelper.getInstance(super.getActivity());

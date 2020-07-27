@@ -380,15 +380,12 @@ public class ExpandableRecyclerView extends RecyclerView
         public abstract void onBindHeaderViewHolder(HVH holder);
 
         public void onBindChildViewHolder(CVH holder, final int group, final int position) {
-            holder.itemView.setOnClickListener(new OnClickListener()
-            {
-                public void onClick(View v) {
-                    if (Adapter.this.onChildItemClickedListener != null)
-                    {
-                        Adapter.this.onChildItemClickedListener.onChildItemClicked(group, position);
-                    }
-
+            holder.itemView.setOnClickListener(v -> {
+                if (Adapter.this.onChildItemClickedListener != null)
+                {
+                    Adapter.this.onChildItemClickedListener.onChildItemClicked(group, position);
                 }
+
             });
         }
 
@@ -397,18 +394,15 @@ public class ExpandableRecyclerView extends RecyclerView
             if (holder instanceof GroupViewHolder)
                 ((GroupViewHolder) holder).setExpanded(isExpanded(group));
 
-            holder.itemView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isExpanded(group)) {
-                        collapse(group);
-                        if (holder instanceof GroupViewHolder)
-                            ((GroupViewHolder) holder).collapse();
-                    } else {
-                        expand(group);
-                        if (holder instanceof GroupViewHolder)
-                            ((GroupViewHolder) holder).expand();
-                    }
+            holder.itemView.setOnClickListener(v -> {
+                if (isExpanded(group)) {
+                    collapse(group);
+                    if (holder instanceof GroupViewHolder)
+                        ((GroupViewHolder) holder).collapse();
+                } else {
+                    expand(group);
+                    if (holder instanceof GroupViewHolder)
+                        ((GroupViewHolder) holder).expand();
                 }
             });
         }
@@ -430,12 +424,9 @@ public class ExpandableRecyclerView extends RecyclerView
             ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
             animator.setInterpolator(new DecelerateInterpolator());
             animator.setDuration(200);
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    expandedIndicator.setRotation(180 * (float) (animation.getAnimatedValue()));
-                    expandedIndicator.postInvalidate();
-                }
+            animator.addUpdateListener(animation -> {
+                expandedIndicator.setRotation(180 * (float) (animation.getAnimatedValue()));
+                expandedIndicator.postInvalidate();
             });
             animator.start();
             expanded = true;
@@ -445,12 +436,9 @@ public class ExpandableRecyclerView extends RecyclerView
             ValueAnimator animator = ValueAnimator.ofFloat(1, 0);
             animator.setInterpolator(new DecelerateInterpolator());
             animator.setDuration(200);
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    expandedIndicator.setRotation(180 * (float) (animation.getAnimatedValue()));
-                    expandedIndicator.postInvalidate();
-                }
+            animator.addUpdateListener(animation -> {
+                expandedIndicator.setRotation(180 * (float) (animation.getAnimatedValue()));
+                expandedIndicator.postInvalidate();
             });
             animator.start();
             expanded = false;

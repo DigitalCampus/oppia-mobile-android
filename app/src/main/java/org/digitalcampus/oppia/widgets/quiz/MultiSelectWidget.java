@@ -26,11 +26,12 @@ import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;
-import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+
+import androidx.core.text.HtmlCompat;
 
 public class MultiSelectWidget extends QuestionWidget {
 
@@ -60,7 +61,7 @@ public class MultiSelectWidget extends QuestionWidget {
 
     	for (Response r : responses){
     		CheckBox chk= new CheckBox(ctx);
-			chk.setText(Html.fromHtml(r.getTitle(currentUserLang)));
+			chk.setText(HtmlCompat.fromHtml(r.getTitle(currentUserLang), HtmlCompat.FROM_HTML_MODE_LEGACY));
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 					ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
 			setResponseMarginInLayoutParams(params);

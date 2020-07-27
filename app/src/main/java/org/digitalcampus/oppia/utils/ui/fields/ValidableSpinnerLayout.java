@@ -89,15 +89,22 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     }
 
     public void setSelection(String key){
-        if (key == null){
+        if (key == null || items == null){
             return;
         }
         for (int i=0; i<items.size(); i++){
             if (TextUtils.equals(items.get(i).getKey(), key)){
-                input.setSelection(i + (selected ? 0 : 1));
+                int position = i + (selected ? 0 : 1);
+                input.setSelection(position);
+                onItemSelected(null, null, position, 0);
                 return;
             }
         }
+    }
+
+    public void updateCollection(List<CustomField.CollectionItem> items){
+        this.items = items;
+        initialize();
     }
 
     private void setDisabledTextColor(View view, int position){
@@ -105,7 +112,7 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         if (tv == null){
             return;
         }
-        tv.setTextColor(getContext().getResources().getColor( !selected && position == 0 ? R.color.grey_dark : R.color.text_dark));
+        tv.setTextColor(ContextCompat.getColor(getContext(), !selected && position == 0 ? R.color.grey_dark : R.color.text_dark));
         tv.invalidate();
     }
 
@@ -114,7 +121,9 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
 
         uiItems = new ArrayList<>();
         uiItems.add(new CustomField.CollectionItem(null, label));
-        uiItems.addAll(items);
+        if (items != null){
+            uiItems.addAll(items);
+        }
         adapter = new ArrayAdapter<CustomField.CollectionItem>(this.getContext(), R.layout.view_spinner_dropdown_item, uiItems){
             @Override
             public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -126,6 +135,7 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         input.setAdapter(adapter);
         input.setOnItemSelectedListener(this);
         input.setSelection(0);
+        selected = false;
 
         LayoutParams params = (LayoutParams) input.getLayoutParams();
         params.topMargin = -10;
@@ -174,13 +184,15 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-        setDisabledTextColor(view, position);
+        if (view != null){
+            setDisabledTextColor(view, position);
+        }
         if (!selected){
             selected = position !=0;
             if (selected){
                 uiItems.remove(0);
                 adapter.notifyDataSetChanged();
-                //As we removed the first item, we need to reselect the element in the dropdown
+                // As we removed the first item, we need to reselect the element in the dropdown
                 input.setSelection(position-1);
             }
         }
@@ -193,6 +205,6 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
+        valueChangelistener.onValueChanged(null);
     }
 }

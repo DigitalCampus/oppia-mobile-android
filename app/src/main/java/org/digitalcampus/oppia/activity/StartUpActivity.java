@@ -18,10 +18,11 @@
 package org.digitalcampus.oppia.activity;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
@@ -36,9 +37,6 @@ import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
-import org.digitalcampus.oppia.listener.PostInstallListener;
-import org.digitalcampus.oppia.listener.PreloadAccountsListener;
-import org.digitalcampus.oppia.listener.StorageAccessListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Media;
@@ -52,7 +50,7 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 import java.io.File;
 import java.util.ArrayList;
 
-public class StartUpActivity extends Activity implements UpgradeListener, PostInstallListener, InstallCourseListener, PreloadAccountsListener, ImportLeaderboardsTask.ImportLeaderboardListener {
+public class StartUpActivity extends Activity implements UpgradeListener, InstallCourseListener {
 
 	public static final String TAG = StartUpActivity.class.getSimpleName();
 	private TextView tvProgress;
@@ -75,7 +73,8 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     public void onResume(){
         super.onResume();
 
-        boolean shouldContinue = PermissionsManager.checkPermissionsAndInform(this);
+        boolean shouldContinue = PermissionsManager.checkPermissionsAndInform(this,
+                PermissionsManager.STARTUP_PERMISSIONS);
         if (!shouldContinue) return;
 
         UpgradeManagerTask umt = new UpgradeManagerTask(this);
@@ -87,7 +86,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 	}
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionsManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
@@ -121,27 +120,28 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 			imTask.execute(payload);
 		} else {
             preloadAccounts();
-
 		}
 	}
 
     private void preloadAccounts(){
-        SessionManager.preloadUserAccounts(this, this);
+        SessionManager.preloadUserAccounts(this, payload -> {
+            if ((payload!=null) && payload.isResult()){
+                Toast.makeText(StartUpActivity.this, payload.getResultResponse(), Toast.LENGTH_LONG).show();
+            }
+            importLeaderboard();
+        });
     }
 	
 	public void upgradeComplete(final Payload p) {
 
         if (Storage.getStorageStrategy().needsUserPermissions(this)){
             Log.d(TAG, "Asking user for storage permissions");
-            Storage.getStorageStrategy().askUserPermissions(this, new StorageAccessListener() {
-                @Override
-                public void onAccessGranted(boolean isGranted) {
-                    Log.d(TAG, "Access granted for storage: " + isGranted);
-                    if (!isGranted) {
-                        Toast.makeText(StartUpActivity.this, getString(R.string.storageAccessNotGranted), Toast.LENGTH_LONG).show();
-                    }
-                    afterUpgrade(p);
+            Storage.getStorageStrategy().askUserPermissions(this, isGranted -> {
+                Log.d(TAG, "Access granted for storage: " + isGranted);
+                if (!isGranted) {
+                    Toast.makeText(StartUpActivity.this, getString(R.string.storageAccessNotGranted), Toast.LENGTH_LONG).show();
                 }
+                afterUpgrade(p);
             });
         }
         else{
@@ -156,11 +156,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
             builder.setCancelable(false);
             builder.setTitle(R.string.error);
             builder.setMessage(R.string.error_sdcard);
-            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    StartUpActivity.this.finish();
-                }
-            });
+            builder.setPositiveButton(R.string.ok, (dialog, which) -> StartUpActivity.this.finish());
             builder.show();
             return;
         }
@@ -168,7 +164,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         if(p.isResult()){
             Payload payload = new Payload();
             PostInstallTask piTask = new PostInstallTask(this);
-            piTask.setPostInstallListener(this);
+            piTask.setPostInstallListener(this::installCourses);
             piTask.execute(payload);
         } else {
             // now install any new courses
@@ -176,18 +172,8 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         }
     }
 
+    @Override
 	public void upgradeProgressUpdate(String s) { this.updateProgress(s); }
-	public void postInstallComplete(Payload response) {
-		this.installCourses();
-	}
-
-	public void downloadComplete(Payload p) {
-        // no need to show download complete in this activity
-    }
-
-	public void downloadProgressUpdate(DownloadProgress dp) {
-        // no need to show download progress in this activity
-    }
 
 	public void installComplete(Payload p) {
 		if(!p.getResponseData().isEmpty()){
@@ -200,24 +186,9 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 		this.updateProgress(dp.getMessage());
 	}
 
-    @Override
-    public void onPreloadAccountsComplete(Payload payload) {
-        if ((payload!=null) && payload.isResult()){
-            Toast.makeText(this, payload.getResultResponse(), Toast.LENGTH_LONG).show();
-        }
-        ImportLeaderboardsTask imTask = new ImportLeaderboardsTask(this);
-        imTask.setListener(this);
-        imTask.execute(payload);
-
-    }
-
-    @Override
-    public void onLeaderboardImportProgress(String message) {
-        // do nothing
-    }
-
-    @Override
-    public void onLeaderboardImportComplete(Boolean success, String message) {
-        endStartUpScreen();
+	private void importLeaderboard(){
+        ImportLeaderboardsTask imTask = new ImportLeaderboardsTask(StartUpActivity.this);
+        imTask.setListener((success, message) -> endStartUpScreen());
+        imTask.execute(new Payload());
     }
 }

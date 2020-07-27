@@ -3,6 +3,8 @@ package org.digitalcampus.oppia.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
@@ -25,14 +25,13 @@ import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
-public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.SearchResultsViewHolder> {
+public class SearchResultsAdapter extends RecyclerViewClickableAdapter<SearchResultsAdapter.SearchResultsViewHolder> {
 
 
     private static final String TAG = "SearchResultsAdapter";
     private final String prefLang;
     private List<SearchResult> searchResults;
     private Context context;
-    private OnItemClickListener itemClickListener;
 
 
     public SearchResultsAdapter(Context context, List<SearchResult> searchResults) {
@@ -43,7 +42,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     }
 
     @Override
-    public SearchResultsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SearchResultsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_search_results, parent, false);
 
@@ -94,7 +93,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     }
 
 
-    public class SearchResultsViewHolder extends RecyclerView.ViewHolder {
+    class SearchResultsViewHolder extends RecyclerViewClickableAdapter.ViewHolder {
 
         private View rootView;
         private TextView activityTitle;
@@ -103,7 +102,6 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         private ImageView activityImage;
 
         public SearchResultsViewHolder(View itemView) {
-
             super(itemView);
 
             activityTitle = itemView.findViewById(R.id.activity_title);
@@ -112,27 +110,10 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
             activityImage = itemView.findViewById(R.id.activity_icon);
 
             rootView = itemView;
-
-            rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        itemClickListener.onItemClick(v, getAdapterPosition());
-                    }
-                }
-            });
         }
 
     }
 
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.itemClickListener = listener;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
 }
  
 

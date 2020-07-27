@@ -19,7 +19,6 @@ package org.digitalcampus.oppia.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -28,9 +27,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
-
+import androidx.preference.PreferenceManager;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -64,12 +61,7 @@ public class HTTPClientUtils {
                     .addInterceptor(getLoggingInterceptor())
                     .connectTimeout(timeoutConn, TimeUnit.MILLISECONDS)
                     .readTimeout(timeoutConn, TimeUnit.MILLISECONDS)
-                    .hostnameVerifier(new HostnameVerifier() {
-                        @Override
-                        public boolean verify(String hostname, SSLSession session) {
-                            return hostname.equalsIgnoreCase(session.getPeerHost());
-                        }
-                    })
+                    .hostnameVerifier((hostname, session) -> hostname.equalsIgnoreCase(session.getPeerHost()))
                     .build();
 
         }

@@ -158,12 +158,9 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
             courseAuthor = itemView.findViewById(R.id.course_author);
             labelAuthor = itemView.findViewById(R.id.label_author);
 
-            actionBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        itemClickListener.onDownloadButtonClick(v, getAdapterPosition());
-                    }
+            actionBtn.setOnClickListener(v -> {
+                if (itemClickListener != null) {
+                    itemClickListener.onDownloadButtonClick(v, getAdapterPosition());
                 }
             });
         }

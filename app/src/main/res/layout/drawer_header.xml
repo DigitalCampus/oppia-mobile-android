@@ -22,6 +22,7 @@
         android:layout_marginBottom="15dp"
         android:src="@drawable/covid2"
         android:visibility="gone"/>
+
     <RelativeLayout
         android:id="@+id/view_user_info"
         android:layout_width="match_parent"

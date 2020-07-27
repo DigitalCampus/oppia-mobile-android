@@ -27,10 +27,10 @@ import com.splunk.mint.Mint;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-// Code from StackOverflow: http://stackoverflow.com/questions/9340332/how-can-i-get-the-list-of-mounted-external-storage-of-android-device/19982338#19982338
 
 public class StorageUtils {
 
@@ -65,6 +65,7 @@ public class StorageUtils {
         return mInternalDrive;
     }
 
+    // Code from StackOverflow: http://stackoverflow.com/questions/9340332/how-can-i-get-the-list-of-mounted-external-storage-of-android-device/19982338#19982338
     public static DeviceFile getExternalMemoryDrive(Context ctx)
     {
         if (mExternalDrive != null && mExternalDrive.exists()){
@@ -91,11 +92,11 @@ public class StorageUtils {
 
         }
 
-        DeviceFile mDaddy = getInternalMemoryDrive().getParent();
-        while(mDaddy.getDepth() > 2)
-            mDaddy = mDaddy.getParent();
-        Log.d(TAG, "traversing root path " + mDaddy.getPath());
-        for (DeviceFile kid : mDaddy.listFiles()) {
+        DeviceFile parent = getInternalMemoryDrive().getParent();
+        while(parent.getDepth() > 2)
+            parent = parent.getParent();
+        Log.d(TAG, "traversing root path " + parent.getPath());
+        for (DeviceFile kid : parent.listFiles()) {
             Log.d(TAG, "  > " + kid.getPath() + " : " + (kid.canWrite()?"writable":"not writable!"));
             if ((kid.getName().toLowerCase().contains("ext") || kid.getName().toLowerCase().contains("sdcard1"))
                     && !kid.getPath().equals(getInternalMemoryDrive().getPath())
@@ -144,7 +145,7 @@ public class StorageUtils {
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
-            content = new String(buffer, "UTF-8");
+            content = new String(buffer, StandardCharsets.UTF_8);
         } catch (IOException e) {
             Mint.logException(e);
             return null;

@@ -21,10 +21,6 @@ import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.task.Payload;
 
 public interface InstallCourseListener {
-	
-	void downloadComplete(Payload p);
-    void downloadProgressUpdate(DownloadProgress dp);
-    
 	void installComplete(Payload p);
     void installProgressUpdate(DownloadProgress dp);
 }
