@@ -1,9 +1,7 @@
-
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
 
+import androidx.preference.PreferenceManager;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -17,9 +15,8 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-public class BuildChecksOppiaCore {
+public class BuildChecksOppiaCHA {
 
-    /*
     private Context context;
     private SharedPreferences prefs;
 
@@ -37,8 +34,8 @@ public class BuildChecksOppiaCore {
         String oppiaServerDefault = prefs.getString("prefServer", context.getString(R.string.prefServerDefault));
         String oppiaServerHost = context.getString(R.string.oppiaServerHost);
 
-        assertEquals("https://demo.oppia-mobile.org/", oppiaServerDefault);
-        assertEquals("demo.oppia-mobile.org", oppiaServerHost);
+        assertEquals("https://cha.oppia-mobile.org/", oppiaServerDefault);
+        assertEquals("cha.oppia-mobile.org", oppiaServerHost);
 
         assertEquals(false, BuildConfig.ADMIN_PROTECT_SETTINGS);
         assertEquals(false, BuildConfig.ADMIN_PROTECT_ACTIVITY_SYNC);
@@ -86,5 +83,4 @@ public class BuildChecksOppiaCore {
 
 
     }
-    */
 }
