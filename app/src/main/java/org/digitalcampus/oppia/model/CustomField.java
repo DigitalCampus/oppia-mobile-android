@@ -18,6 +18,8 @@ import androidx.annotation.NonNull;
 
 public class CustomField {
 
+    public static final String CUSTOMFIELDS_FILE = "custom_fields.json";
+
     private static final String TYPE_STRING = "str";
     private static final String TYPE_BOOLEAN = "bool";
     private static final String TYPE_INT = "int";
@@ -136,8 +138,8 @@ public class CustomField {
     public boolean isChoices(){ return TextUtils.equals(type, TYPE_CHOICES); }
     public boolean isExportedAsString(){ return isString() || isChoices(); }
 
-    public static void loadCustomFieldsFromAssets(Context ctx){
-        String data = StorageUtils.readFileFromAssets(ctx, "custom_fields.json");
+    public static void loadCustomFieldsFromAssets(Context ctx, String filename){
+        String data = StorageUtils.readFileFromAssets(ctx, filename);
         if (TextUtils.isEmpty(data)){
             return;
         }
