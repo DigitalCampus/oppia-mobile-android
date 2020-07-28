@@ -141,7 +141,7 @@ public class StorageUtils {
         String content = null;
         InputStream is = null;
         try {
-            is = ctx.getAssets().open(filename);
+            is = ctx.getResources().getAssets().open(filename);
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
