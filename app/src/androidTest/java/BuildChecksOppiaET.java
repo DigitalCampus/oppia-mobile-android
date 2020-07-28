@@ -1,9 +1,7 @@
-
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
 
+import androidx.preference.PreferenceManager;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -17,8 +15,8 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-public class BuildChecksOppiaCore {
-    /*
+public class BuildChecksOppiaET {
+
     private Context context;
     private SharedPreferences prefs;
 
@@ -36,8 +34,8 @@ public class BuildChecksOppiaCore {
         String oppiaServerDefault = prefs.getString("prefServer", context.getString(R.string.prefServerDefault));
         String oppiaServerHost = context.getString(R.string.oppiaServerHost);
 
-        assertEquals("https://demo.oppia-mobile.org/", oppiaServerDefault);
-        assertEquals("demo.oppia-mobile.org", oppiaServerHost);
+        assertEquals("https://covid.oppia-mobile.org/", oppiaServerDefault);
+        assertEquals("covid.oppia-mobile.org", oppiaServerHost);
 
         assertEquals(false, BuildConfig.ADMIN_PROTECT_SETTINGS);
         assertEquals(false, BuildConfig.ADMIN_PROTECT_ACTIVITY_SYNC);
@@ -54,11 +52,11 @@ public class BuildChecksOppiaCore {
         assertEquals(true, BuildConfig.MENU_ALLOW_SETTINGS);
         assertEquals(true, BuildConfig.MENU_ALLOW_COURSE_DOWNLOAD);
         assertEquals(true, BuildConfig.MENU_ALLOW_SYNC);
-        assertEquals(true, BuildConfig.MENU_ALLOW_LOGOUT);
+        assertEquals(false, BuildConfig.MENU_ALLOW_LOGOUT);
         assertEquals(true, BuildConfig.MENU_ALLOW_LANGUAGE);
-        assertEquals(1, BuildConfig.DOWNLOAD_COURSES_DISPLAY);
+        assertEquals(2, BuildConfig.DOWNLOAD_COURSES_DISPLAY);
 
-        assertEquals(false, BuildConfig.START_COURSEINDEX_COLLAPSED);
+        assertEquals(true, BuildConfig.START_COURSEINDEX_COLLAPSED);
 
         assertEquals(true, BuildConfig.METADATA_INCLUDE_NETWORK);
         assertEquals(true, BuildConfig.METADATA_INCLUDE_DEVICE_ID);
@@ -85,6 +83,4 @@ public class BuildChecksOppiaCore {
 
 
     }
-
-     */
 }
