@@ -11,7 +11,6 @@ import java.util.Arrays;
 
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
-import androidx.preference.Preference;
 
 public class SecurityPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback{
 
@@ -43,23 +42,17 @@ public class SecurityPrefsFragment extends BasePreferenceFragment implements Pre
 
     private void protectAdminPreferences(){
         final CheckBoxPreference adminEnabled = findPreference(PrefsActivity.PREF_ADMIN_PROTECTION);
-        adminEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-                final Boolean enableProtection = (Boolean) newValue;
-                if (Boolean.TRUE.equals(enableProtection)) {
-                    //If we are going to re-enable the preference, there is no need to prompt for the previous password
-                    return true;
-                }
-                AdminSecurityManager.with(getActivity()).promptAdminPassword(new AdminSecurityManager.AuthListener() {
-                    @Override
-                    public void onPermissionGranted() {
-                        adminEnabled.setChecked(enableProtection);
-                        preference.getSharedPreferences().edit().putBoolean(preference.getKey(), enableProtection).apply();
-                    }
-                });
-                return false;
+        adminEnabled.setOnPreferenceChangeListener((preference, newValue) -> {
+            final Boolean enableProtection = (Boolean) newValue;
+            if (Boolean.TRUE.equals(enableProtection)) {
+                //If we are going to re-enable the preference, there is no need to prompt for the previous password
+                return true;
             }
+            AdminSecurityManager.with(getActivity()).promptAdminPassword(() -> {
+                adminEnabled.setChecked(enableProtection);
+                preference.getSharedPreferences().edit().putBoolean(preference.getKey(), enableProtection).apply();
+            });
+            return false;
         });
 
     }

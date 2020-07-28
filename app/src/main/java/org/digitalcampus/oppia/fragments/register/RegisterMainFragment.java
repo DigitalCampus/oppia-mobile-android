@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -35,6 +36,7 @@ import androidx.fragment.app.Fragment;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
+import org.digitalcampus.oppia.activity.SearchActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
@@ -45,6 +47,7 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.RegisterTask;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -60,6 +63,9 @@ public class RegisterMainFragment extends AppFragment implements SubmitListener,
     private Button loginButton;
     private ProgressDialog pDialog;
     private View formBottom;
+    private View viewOtherRole;
+    private View btnRegOtherContinue;
+    private ValidableTextInputLayout editOtherRole;
 
     private void findViews(View layout) {
         viewRegisterRoleSelection = layout.findViewById(R.id.view_register_role_selection);
@@ -67,12 +73,16 @@ public class RegisterMainFragment extends AppFragment implements SubmitListener,
         btnRegCha = layout.findViewById(R.id.btn_reg_cha);
         btnRegChss = layout.findViewById(R.id.btn_reg_chss);
         btnRegOther = layout.findViewById(R.id.btn_reg_other);
+        viewOtherRole = layout.findViewById(R.id.view_other_role);
+        btnRegOtherContinue = layout.findViewById(R.id.btn_reg_other_continue);
+        editOtherRole = layout.findViewById(R.id.edit_other_role);
 
         loginButton = layout.findViewById(R.id.action_login_btn);
 
         btnRegCha.setOnClickListener(this);
         btnRegChss.setOnClickListener(this);
         btnRegOther.setOnClickListener(this);
+        btnRegOtherContinue.setOnClickListener(this);
     }
 
 
@@ -122,13 +132,31 @@ public class RegisterMainFragment extends AppFragment implements SubmitListener,
                 break;
 
             case R.id.btn_reg_other:
-                setFragment(new RegisterOtherFragment());
+                showOtherRoleField();
+                return;
+
+            case R.id.btn_reg_other_continue:
+
+                InputMethodManager imm =  (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                if (editOtherRole.validate()) {
+                    String role = editOtherRole.getEditText().getText().toString().trim();
+                    setFragment(RegisterCHFragment.getInstance(role));
+                } else {
+                    return;
+                }
                 break;
         }
 
 
         viewRegisterRoleSelection.setVisibility(View.GONE);
         formBottom.setVisibility(View.GONE);
+    }
+
+    private void showOtherRoleField() {
+        btnRegOther.setVisibility(View.GONE);
+        viewOtherRole.setVisibility(View.VISIBLE);
     }
 
     private void setFragment(Fragment fragment) {

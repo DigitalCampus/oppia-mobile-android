@@ -28,7 +28,6 @@ import androidx.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Pair;
 
 import com.splunk.mint.Mint;
 
@@ -1121,16 +1120,12 @@ public class DbHelper extends SQLiteOpenHelper {
                 course = this.getCourse(courseId, userId);
                 fetchedCourses.put(courseId, course);
             }
-            if (course == null) {
+
+            Activity activity = this.getActivityByDigest(qa.getActivityDigest());
+            if (activity == null || course == null) {
                 continue;
             }
             qa.setCourseTitle(course.getTitle(prefLang));
-
-            String digest = qa.getActivityDigest();
-            Activity activity = this.getActivityByDigest(digest);
-            if (activity == null) {
-                continue;
-            }
             qa.setQuizTitle(activity.getTitle(prefLang));
             int sectionOrderId = activity.getSectionId();
             CompleteCourse parsed = fetchedXMLCourses.get(courseId);
@@ -1297,11 +1292,8 @@ public class DbHelper extends SQLiteOpenHelper {
             String key = c.getString(c.getColumnIndex(CF_FIELD_KEY));
             for (CustomField field : cFields){
                 if (TextUtils.equals(key, field.getKey())){
-                    if (field.isString()){
-                        String value = c.getString(c.getColumnIndex(CF_VALUE_STR));
-                        u.putCustomField(key, new CustomValue<>(value));
-                    }
-                    else if (field.isChoices()){
+                    if (field.isString() || field.isChoices()){
+                        // Internally, we just save the choices key value as a str
                         String value = c.getString(c.getColumnIndex(CF_VALUE_STR));
                         u.putCustomField(key, new CustomValue<>(value));
                     }
@@ -1801,6 +1793,10 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public boolean isQuizFirstAttempt(String digest) {
+        // digest could be null (quiz wrongly configured)
+        if (digest == null){
+            return false;
+        }
         //get current user id
         long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 
@@ -1815,6 +1811,10 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public boolean isQuizFirstAttemptToday(String digest) {
+        // digest could be null (quiz wrongly configured)
+        if (digest == null){
+            return false;
+        }
         //get current user id
         long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 
@@ -1835,6 +1835,10 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public boolean isActivityFirstAttemptToday(String digest) {
+        // digest could be null (activity wrongly configured)
+        if (digest == null){
+            return false;
+        }
         //get current user id
         long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 

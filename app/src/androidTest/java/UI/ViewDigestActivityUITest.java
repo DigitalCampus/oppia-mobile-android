@@ -44,14 +44,12 @@ public class ViewDigestActivityUITest {
             new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
                     .getTargetContext()
                     .getApplicationContext())).set(
-                    new DaggerMockRule.ComponentSetter<AppComponent>() {
-                        @Override public void setComponent(AppComponent component) {
-                            App app =
-                                    (App) InstrumentationRegistry.getInstrumentation()
-                                            .getTargetContext()
-                                            .getApplicationContext();
-                            app.setComponent(component);
-                        }
+                    component -> {
+                        App app =
+                                (App) InstrumentationRegistry.getInstrumentation()
+                                        .getTargetContext()
+                                        .getApplicationContext();
+                        app.setComponent(component);
                     });
 
     @Rule
@@ -78,19 +76,21 @@ public class ViewDigestActivityUITest {
 
         doAnswer(new Answer() {
             @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+            public Object answer(InvocationOnMock invocationOnMock) {
                 Activity act = new Activity();
                 act.setDigest("XXXXX");
                 return act;
             }
-        }).when(coursesRepository).getActivityByDigest((Context) any(), anyString());
+        }).when(coursesRepository).getActivityByDigest(any(), anyString());
 
         doAnswer(new Answer() {
             @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+            public Object answer(InvocationOnMock invocationOnMock) {
                 return new Course("");
             }
         }).when(coursesRepository).getCourse((Context) any(), anyLong(), anyLong());
+
+        doAnswer(invocation -> "test").when(user).getUsername();
 
         Instrumentation.ActivityMonitor am = new Instrumentation.ActivityMonitor("org.digitalcampus.oppia.activity.CourseIndexActivity", null, true);
         InstrumentationRegistry.getInstrumentation().addMonitor(am);
@@ -106,11 +106,7 @@ public class ViewDigestActivityUITest {
     @Test
     public void showErrorWhenIncorrectDigest() throws Exception {
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable { return null;
-            }
-        }).when(coursesRepository).getActivityByDigest((Context) any(), anyString());
+        doAnswer(invocationOnMock -> null).when(coursesRepository).getActivityByDigest(any(), anyString());
 
         String digest = "XXXXX";
         Intent startIntent = new Intent(Intent.ACTION_VIEW, getUriForDigest(digest));

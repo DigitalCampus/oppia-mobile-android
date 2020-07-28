@@ -155,6 +155,9 @@
     <string name="notification_course_update_title">New course updates</string>
     <string name="notification_course_update_text">Updates are available for your courses.</string>
 
+    <string name="notification_course_download_title">Course Downloads</string>
+    <string name="notification_course_download_text">Courses are available for you Download</string>
+
     <string name="title_login">Login</string>
     <string name="login_username_title">Username</string>
     <string name="login_password_title">Password</string>
@@ -484,8 +487,13 @@
     <string name="videoplayer_play_again">Play again</string>
     <string name="videoplayer_continue">Continue to course</string>
     <string name="options">Options</string>
+
     <string name="county_label">County</string>
     <string name="district_label">District</string>
+    <string name="continue_str">Continue</string>
+    <string name="other_position">Other position</string>
+
+    <string name="quiz_loading_error">Unexpected error loading quiz. Maybe the format was wrong or out-dated?</string>
 
 </resources>
 

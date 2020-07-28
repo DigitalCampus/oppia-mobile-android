@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -32,7 +31,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.fragments.prefs.MainPreferencesFragment;
 import org.digitalcampus.oppia.fragments.prefs.PreferenceChangedCallback;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
-import org.digitalcampus.oppia.listener.StorageAccessListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
@@ -231,134 +229,13 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         Log.d(TAG, "Preference changed: " + key);
 
         if(key.equalsIgnoreCase(PrefsActivity.PREF_SERVER)){
-            String newServerURL = sharedPreferences.getString(PrefsActivity.PREF_SERVER, "").trim();
-            if(!newServerURL.endsWith("/")){
-                newServerURL = newServerURL +"/";
-                sharedPreferences.edit().putString(PrefsActivity.PREF_SERVER, newServerURL).apply();
-            }
-            sharedPreferences.edit().putBoolean(PrefsActivity.PREF_SERVER_CHECKED, false).apply();
-
-            if (fetchServerInfoTask != null && !fetchServerInfoTask.isCancelled()) {
-                fetchServerInfoTask.cancel(true);
-            }
-
-            fetchServerInfoTask = new FetchServerInfoTask(this);
-            fetchServerInfoTask.setListener(new FetchServerInfoTask.FetchServerInfoListener() {
-                @Override
-                public void onError(String message) {
-                    Toast.makeText(PrefsActivity.this, message, Toast.LENGTH_LONG).show();
-                    if (currentPrefScreen != null){
-                        currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_SERVER, null);
-                    }
-                }
-
-                @Override
-                public void onValidServer(String version, String name) {
-                    if (currentPrefScreen != null){
-                        currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_SERVER, null);
-                    }
-                }
-
-                @Override
-                public void onUnchecked() {
-                    if (currentPrefScreen != null){
-                        currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_SERVER, null);
-                    }
-                }
-            });
-            fetchServerInfoTask.execute();
-
-            if (currentPrefScreen != null){
-                currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_SERVER, null);
-            }
-
+            checkUpdatedServer(sharedPreferences);
         }
         else if (key.equalsIgnoreCase(PREF_STORAGE_OPTION)) {
-            String currentLocation = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
-            String storageOption   = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
-            String path = null;
-            boolean needsUserPermission = false;
-
-            Log.d(TAG, "Storage option selected: " + storageOption);
-
-            if ((!storageOption.equals(STORAGE_OPTION_EXTERNAL)) &&
-                (!storageOption.equals(STORAGE_OPTION_INTERNAL))){
-                //The option selected is a path
-                path = storageOption;
-                storageOption = STORAGE_OPTION_EXTERNAL;
-                needsUserPermission = ExternalStorageStrategy.needsUserPermissions(this, path);
-            }
-            if (
-                //The storage option is different from the current one
-                (!storageOption.equals(Storage.getStorageStrategy().getStorageType())) ||
-                //The storage is set to external, and is a different path
-                ((path != null) && !currentLocation.startsWith(path))
-            ){
-
-                StorageAccessStrategy newStrategy = StorageAccessStrategyFactory.createStrategy(storageOption);
-                if (needsUserPermission){
-                    Log.d(TAG, "Asking user for storage permissions");
-                    final String finalStorageOption = storageOption;
-                    final String finalPath = path;
-                    newStrategy.askUserPermissions(this, new StorageAccessListener() {
-                        @Override
-                        public void onAccessGranted(boolean isGranted) {
-                            Log.d(TAG, "Access granted for storage: " + isGranted);
-                            if (isGranted){
-                                executeChangeStorageTask(finalPath, finalStorageOption);
-                            }
-                            else{
-                                Toast.makeText(PrefsActivity.this, getString(R.string.storageAccessNotGranted), Toast.LENGTH_LONG).show();
-                                //If the user didn't grant access, we revert the preference selection
-                                String currentStorageOpt = Storage.getStorageStrategy().getStorageType();
-                                SharedPreferences.Editor editor = prefs.edit();
-                                editor.putString(PrefsActivity.PREF_STORAGE_OPTION, currentStorageOpt).apply();
-                                if (currentPrefScreen != null){
-                                    currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_STORAGE_OPTION, currentStorageOpt);
-                                }
-                            }
-
-                        }
-                    });
-                } else {
-                    executeChangeStorageTask(path, storageOption);
-                }
-            }
+            checkStorageOption(sharedPreferences);
         }
         else if (key.equalsIgnoreCase(PREF_ADMIN_PROTECTION)){
-            boolean protectionEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false);
-            if (protectionEnabled){
-                Log.d(TAG, "Admin protection enabled, prompting for new password");
-                final EditText passwordInput = new EditText(this);
-                final AlertDialog passwordDialog = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle)
-                    .setTitle(getString(R.string.admin_password_newpassword_dialog_title))
-                    .setMessage(getString(R.string.admin_password_newpassword_dialog_message))
-                    .setView(passwordInput)
-                    .setPositiveButton(R.string.ok, null)
-                    .create();
-                passwordDialog.show();
-                passwordDialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        String password = passwordInput.getText().toString();
-                        if (!password.equals("")) { passwordDialog.dismiss(); }
-                    }
-                });
-                passwordDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    public void onDismiss(DialogInterface dialog) {
-                        String password = passwordInput.getText().toString();
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        if (password.equals("")) {
-                            disableAdminProtection(sharedPreferences);
-                        }
-                        else{
-                            //Update the password preference
-                            editor.putString(PrefsActivity.PREF_ADMIN_PASSWORD, password).apply();
-                            //Update the UI value of the fragment
-                            currentPrefScreen.onPreferenceUpdated(PREF_ADMIN_PASSWORD, password);
-                        }
-                    }
-                });
-            }
+            checkAdminProtection(sharedPreferences);
         }
         else if (key.equalsIgnoreCase(PREF_ADMIN_PASSWORD)){
             String newPassword = sharedPreferences.getString(PrefsActivity.PREF_ADMIN_PASSWORD, "");
@@ -366,6 +243,133 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 //If the user introduced an empty password, disable the password protection
                 disableAdminProtection(sharedPreferences);
             }
+        }
+    }
+
+    private void checkUpdatedServer(SharedPreferences sharedPreferences){
+        String newServerURL = sharedPreferences.getString(PrefsActivity.PREF_SERVER, "").trim();
+        if(!newServerURL.endsWith("/")){
+            newServerURL = newServerURL +"/";
+            sharedPreferences.edit().putString(PrefsActivity.PREF_SERVER, newServerURL).apply();
+        }
+        sharedPreferences.edit().putBoolean(PrefsActivity.PREF_SERVER_CHECKED, false).apply();
+
+        if (fetchServerInfoTask != null && !fetchServerInfoTask.isCancelled()) {
+            fetchServerInfoTask.cancel(true);
+        }
+
+        fetchServerInfoTask = new FetchServerInfoTask(this);
+        fetchServerInfoTask.setListener(new FetchServerInfoTask.FetchServerInfoListener() {
+            @Override
+            public void onError(String message) {
+                Toast.makeText(PrefsActivity.this, message, Toast.LENGTH_LONG).show();
+                if (currentPrefScreen != null){
+                    currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_SERVER, null);
+                }
+            }
+
+            @Override
+            public void onValidServer(String version, String name) {
+                if (currentPrefScreen != null){
+                    currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_SERVER, null);
+                }
+            }
+
+            @Override
+            public void onUnchecked() {
+                if (currentPrefScreen != null){
+                    currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_SERVER, null);
+                }
+            }
+        });
+        fetchServerInfoTask.execute();
+
+        if (currentPrefScreen != null){
+            currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_SERVER, null);
+        }
+    }
+
+    private void checkStorageOption(SharedPreferences sharedPreferences){
+        String currentLocation = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+        String storageOption   = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
+        String path = null;
+        boolean needsUserPermission = false;
+
+        Log.d(TAG, "Storage option selected: " + storageOption);
+
+        if ((!storageOption.equals(STORAGE_OPTION_EXTERNAL)) &&
+                (!storageOption.equals(STORAGE_OPTION_INTERNAL))){
+            //The option selected is a path
+            path = storageOption;
+            storageOption = STORAGE_OPTION_EXTERNAL;
+            needsUserPermission = ExternalStorageStrategy.needsUserPermissions(this, path);
+        }
+        if (
+            //The storage option is different from the current one
+                (!storageOption.equals(Storage.getStorageStrategy().getStorageType())) ||
+                        //The storage is set to external, and is a different path
+                        ((path != null) && !currentLocation.startsWith(path))
+        ) {
+            return;
+        }
+
+        StorageAccessStrategy newStrategy = StorageAccessStrategyFactory.createStrategy(storageOption);
+        if (needsUserPermission){
+            Log.d(TAG, "Asking user for storage permissions");
+            final String finalStorageOption = storageOption;
+            final String finalPath = path;
+            newStrategy.askUserPermissions(this, isGranted -> {
+                Log.d(TAG, "Access granted for storage: " + isGranted);
+                if (isGranted){
+                    executeChangeStorageTask(finalPath, finalStorageOption);
+                }
+                else{
+                    Toast.makeText(PrefsActivity.this, getString(R.string.storageAccessNotGranted), Toast.LENGTH_LONG).show();
+                    //If the user didn't grant access, we revert the preference selection
+                    String currentStorageOpt = Storage.getStorageStrategy().getStorageType();
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString(PrefsActivity.PREF_STORAGE_OPTION, currentStorageOpt).apply();
+                    if (currentPrefScreen != null){
+                        currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_STORAGE_OPTION, currentStorageOpt);
+                    }
+                }
+
+            });
+        } else {
+            executeChangeStorageTask(path, storageOption);
+        }
+
+    }
+
+    private void checkAdminProtection(SharedPreferences sharedPreferences){
+        boolean protectionEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false);
+        if (protectionEnabled){
+            Log.d(TAG, "Admin protection enabled, prompting for new password");
+            final EditText passwordInput = new EditText(this);
+            final AlertDialog passwordDialog = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle)
+                    .setTitle(getString(R.string.admin_password_newpassword_dialog_title))
+                    .setMessage(getString(R.string.admin_password_newpassword_dialog_message))
+                    .setView(passwordInput)
+                    .setPositiveButton(R.string.ok, null)
+                    .create();
+            passwordDialog.show();
+            passwordDialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(v -> {
+                String password = passwordInput.getText().toString();
+                if (!password.equals("")) { passwordDialog.dismiss(); }
+            });
+            passwordDialog.setOnDismissListener(dialog -> {
+                String password = passwordInput.getText().toString();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                if (password.equals("")) {
+                    disableAdminProtection(sharedPreferences);
+                }
+                else{
+                    //Update the password preference
+                    editor.putString(PrefsActivity.PREF_ADMIN_PASSWORD, password).apply();
+                    //Update the UI value of the fragment
+                    currentPrefScreen.onPreferenceUpdated(PREF_ADMIN_PASSWORD, password);
+                }
+            });
         }
     }
 

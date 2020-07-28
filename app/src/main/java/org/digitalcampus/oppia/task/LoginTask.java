@@ -85,7 +85,7 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
                     .url(apiEndpoint.getFullURL(ctx, Paths.LOGIN_PATH))
-                    .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, json.toString()))
+                    .post(RequestBody.create(json.toString(), HTTPClientUtils.MEDIA_TYPE_JSON))
                     .build();
 
             Response response = client.newCall(request).execute();

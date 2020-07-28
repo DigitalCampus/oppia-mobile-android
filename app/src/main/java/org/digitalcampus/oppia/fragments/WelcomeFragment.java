@@ -52,20 +52,14 @@ public class WelcomeFragment extends AppFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		loginButton.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                WelcomeActivity wa = (WelcomeActivity) WelcomeFragment.super.getActivity();
-                wa.switchTab(WelcomeActivity.TAB_LOGIN);
-            }
+		loginButton.setOnClickListener(v -> {
+            WelcomeActivity wa = (WelcomeActivity) WelcomeFragment.super.getActivity();
+            wa.switchTab(WelcomeActivity.TAB_LOGIN);
         });
 		
-		registerButton.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                WelcomeActivity wa = (WelcomeActivity) WelcomeFragment.super.getActivity();
-                wa.switchTab(WelcomeActivity.TAB_REGISTER);
-            }
+		registerButton.setOnClickListener(v -> {
+            WelcomeActivity wa = (WelcomeActivity) WelcomeFragment.super.getActivity();
+            wa.switchTab(WelcomeActivity.TAB_REGISTER);
         });
 	}
 }

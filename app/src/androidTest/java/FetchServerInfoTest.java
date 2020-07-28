@@ -186,6 +186,7 @@ public class FetchServerInfoTest {
         startServer(200, Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), VALID_SERVERINFO_RESPONSE), timeoutConn+100);
         fetchServerInfoSync(context, getAvailableConnectivityManager());
 
-        assertFalse(prefs.getBoolean(PrefsActivity.PREF_SERVER_CHECKED, false));
+        assertTrue(prefs.getBoolean(PrefsActivity.PREF_SERVER_CHECKED, false));
+        assertFalse(prefs.getBoolean(PrefsActivity.PREF_SERVER_VALID, false));
     }
 }

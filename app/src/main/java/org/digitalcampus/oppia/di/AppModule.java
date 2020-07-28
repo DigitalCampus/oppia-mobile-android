@@ -70,7 +70,7 @@ public class AppModule {
             Mint.logException(e);
             Log.d(TAG, "User not found: ", e);
         }
-        return null;
+        return new User();
     }
 
     @Provides

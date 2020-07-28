@@ -1,4 +1,4 @@
-package UI;
+package UI.quiz;
 
 
 
@@ -11,15 +11,18 @@ import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.widgets.FeedbackWidget;
 import org.digitalcampus.oppia.widgets.QuizWidget;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.testing.FragmentScenario;
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;
@@ -39,12 +42,24 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 
-@RunWith(AndroidJUnit4.class)
-public class QuizUITest {
+@RunWith(Parameterized.class)
+public class AnswerWidgetTest {
 
     private static final String SIMPLE_QUIZ_JSON = "quizzes/simple_quiz.json";
+    private static final String FIRST_QUESTION_TITLE = "First question";
+
     private Activity act;
     private Bundle args;
+    private Class widgetClass;
+
+    @Parameterized.Parameters
+    public static Class<? extends Fragment>[] widgetClasses() {
+        return new Class[]{ QuizWidget.class, FeedbackWidget.class };
+    }
+
+    public AnswerWidgetTest(Class widgetClass){
+        this.widgetClass = widgetClass;
+    }
 
     @Before
     public void setup() throws Exception {
@@ -63,38 +78,49 @@ public class QuizUITest {
         args.putBoolean(CourseActivity.BASELINE_TAG, false);
     }
 
+
     @Test
-    public void showContinueIfQuizPassed() {
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+    public void WrongQuizFormat() {
+        act = new Activity();
+        String quizContent = "not_a_json_string";
+        ArrayList<Lang> contents = new ArrayList<>();
+        contents.add(new Lang("en", quizContent));
+        act.setContents(contents);
+        args.putSerializable(Activity.TAG, act);
+        args.putSerializable(Course.TAG, new Course(""));
 
-        onView(withText("correctanswer")).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
-        onView(withText("correctanswer")).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        launchInContainer(this.widgetClass, args, R.style.Oppia_ToolbarTheme, null);
 
-        //If the quiz is passed, we only have to show the "Continue" button
-        onView(withId(R.id.quiz_exit_button))
-                .check(matches(withText(R.string.widget_quiz_continue)));
-        onView(withId(R.id.quiz_results_button))
-                .check(matches(not(isDisplayed())));
+        onView(withId(R.id.quiz_unavailable))
+                .check(matches(withText((R.string.quiz_loading_error))));
+
     }
 
     @Test
-    public void showRetakeIfQuizNotPassed() {
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+    public void dontContinueIfQuestionUnaswered() {
+        launchInContainer(this.widgetClass, args, R.style.Oppia_ToolbarTheme, null);
+
+        onView(withId(R.id.question_text))
+                .check(matches(withText(startsWith(FIRST_QUESTION_TITLE))));
+        onView(withId(R.id.mquiz_next_btn)).perform(click());
+
+        //If we didn't select any option, it should have stayed in the same question
+        onView(withId(R.id.question_text))
+                .check(matches(withText(startsWith(FIRST_QUESTION_TITLE))));
+
+    }
+
+    @Test
+    public void continueIfQuestionAnswered() {
+        launchInContainer(this.widgetClass, args, R.style.Oppia_ToolbarTheme, null);
+        onView(withId(R.id.question_text))
+                .check(matches(withText(startsWith(FIRST_QUESTION_TITLE))));
 
         onView(withText("correctanswer")).perform(click());
         onView(withId(R.id.mquiz_next_btn)).perform(click());
-        onView(withText("wronganswer")).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
 
-        //If the quiz is passed, we only have to show the "Continue" button
-        onView(withId(R.id.quiz_exit_button))
-                .check(matches(withText(R.string.widget_quiz_continue)));
-        onView(withId(R.id.quiz_results_button))
-                .check(matches(isDisplayed()));
-        onView(withId(R.id.quiz_results_button))
-                .check(matches(withText(R.string.quiz_attempts_retake_quiz)));
+        onView(withId(R.id.question_text))
+                .check(matches(not(withText(startsWith(FIRST_QUESTION_TITLE)))));
+
     }
-
 }

@@ -110,45 +110,53 @@ public class GamificationService  extends IntentService {
                         trackerDigest = act.getDigest();
                     }
                 }
-                else if (SERVICE_EVENT_QUIZ.equals(eventName)){
+                else if (SERVICE_EVENT_QUIZ.equals(eventName) || SERVICE_EVENT_FEEDBACK.equals(eventName)){
                     act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
                     c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
                     Quiz quiz = (Quiz) intent.getSerializableExtra(SERVICE_QUIZ);
-                    float score = intent.getFloatExtra(SERVICE_QUIZ_SCORE, 0f);
-                    long timetaken = intent.getLongExtra(EVENTDATA_TIMETAKEN, 0);
-
-                    event = gEngine.processEventQuizAttempt(c, act, score);
-
+                    QuizAttempt qa = new QuizAttempt();
                     DbHelper db = DbHelper.getInstance(this);
+
+                    long timetaken = intent.getLongExtra(EVENTDATA_TIMETAKEN, 0);
                     long userId = db.getUserId(SessionManager.getUsername(this));
+
+                    qa.setCourseId(c.getCourseId());
+                    qa.setUserId(userId);
+                    qa.setActivityDigest(act.getDigest());
+                    qa.setPassed(isCompleted);
+                    qa.setTimetaken(timetaken);
+
+                    if (SERVICE_EVENT_QUIZ.equals(eventName)){
+                        float score = intent.getFloatExtra(SERVICE_QUIZ_SCORE, 0f);
+                        event = gEngine.processEventQuizAttempt(c, act, score);
+                        eventData.put(LOGDATA_SCORE, score);
+                        qa.setType(QuizAttempt.TYPE_QUIZ);
+                        qa.setScore(quiz.getUserscore());
+                        qa.setMaxscore(quiz.getMaxscore());
+                    }
+                    else { // FEEDBACK
+                        event = gEngine.processEventFeedbackActivity(c, act);
+                        qa.setType(QuizAttempt.TYPE_FEEDBACK);
+                    }
 
                     Log.d(TAG,"quiz points:" + event.getPoints());
                     // save results ready to send back to the quiz server
                     JSONObject result = quiz.getResultObject(event);
                     result.put(LOGDATA_TIMETAKEN, timetaken);
-
-                    QuizAttempt qa = new QuizAttempt();
-                    qa.setType(QuizAttempt.TYPE_QUIZ);
-                    qa.setCourseId(c.getCourseId());
-                    qa.setUserId(userId);
                     qa.setData(result.toString());
-                    qa.setActivityDigest(act.getDigest());
-                    qa.setScore(quiz.getUserscore());
-                    qa.setMaxscore(quiz.getMaxscore());
-                    qa.setPassed(isCompleted);
-                    qa.setTimetaken(timetaken);
+
                     qa.setSent(false);
                     qa.setEvent(event.getEvent());
                     db.insertQuizAttempt(qa);
 
-                    long now = System.currentTimeMillis()/1000;
-                    prefs.edit().putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
+                    if (event.getPoints() > 0){
+                        long now = System.currentTimeMillis()/1000;
+                        prefs.edit().putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
+                    }
 
                     eventData.put(LOGDATA_TIMETAKEN, timetaken);
                     eventData.put(LOGDATA_QUIZ_ID, quiz.getID());
                     eventData.put(LOGDATA_INSTANCE, quiz.getInstanceID());
-                    eventData.put(LOGDATA_SCORE, score);
-
                     trackerDigest = act.getDigest();
 
                 }
@@ -162,41 +170,6 @@ public class GamificationService  extends IntentService {
 
                         trackerDigest = act.getDigest();
                     }
-                }
-                else if (SERVICE_EVENT_FEEDBACK.equals(eventName)){
-                    act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
-                    c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
-                    event = gEngine.processEventFeedbackActivity(c, act);
-                    Quiz quiz = (Quiz) intent.getSerializableExtra(SERVICE_QUIZ);
-                    long timetaken = intent.getLongExtra(EVENTDATA_TIMETAKEN, 0);
-
-                    DbHelper db = DbHelper.getInstance(this);
-                    long userId = db.getUserId(SessionManager.getUsername(this));
-
-                    Log.d(TAG,"quiz points:" + event.getPoints());
-                    // save results ready to send back to the quiz server
-                    JSONObject result = quiz.getResultObject(event);
-                    result.put(LOGDATA_TIMETAKEN, timetaken);
-
-                    QuizAttempt qa = new QuizAttempt();
-                    qa.setType(QuizAttempt.TYPE_FEEDBACK);
-                    qa.setCourseId(c.getCourseId());
-                    qa.setUserId(userId);
-                    qa.setData(result.toString());
-                    qa.setActivityDigest(act.getDigest());
-                    qa.setScore(quiz.getUserscore());
-                    qa.setMaxscore(quiz.getMaxscore());
-                    qa.setPassed(isCompleted);
-                    qa.setTimetaken(timetaken);
-                    qa.setSent(false);
-                    qa.setEvent(event.getEvent());
-                    db.insertQuizAttempt(qa);
-
-                    eventData.put(LOGDATA_TIMETAKEN, timetaken);
-                    eventData.put(LOGDATA_QUIZ_ID, intent.getIntExtra(EVENTDATA_QUIZID, 0));
-                    eventData.put(LOGDATA_INSTANCE, quiz.getInstanceID());
-
-                    trackerDigest = act.getDigest();
                 }
                 else if (SERVICE_EVENT_MEDIAPLAYBACK.equals(eventName)){
                     act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);

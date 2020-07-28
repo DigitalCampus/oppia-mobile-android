@@ -47,7 +47,7 @@ public class WelcomeActivity extends AppActivity {
     public static final int TAB_PASSWORD = 3;
 
     private ViewPager viewPager;
-    private TabLayout tabs;
+	private TabLayout tabs;
     private int currentTab = TAB_WELCOME;
 	private RegisterMainFragment fRegister;
 
@@ -66,12 +66,7 @@ public class WelcomeActivity extends AppActivity {
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		toolbar.getMenu().clear();
 		toolbar.inflateMenu(R.menu.activity_welcome);
-		toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				return onOptionsItemSelected(item);
-			}
-		});
+		toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
 
 		List<Fragment> fragments = new ArrayList<>();
         List<String> tabTitles = new ArrayList<>();
@@ -94,9 +89,9 @@ public class WelcomeActivity extends AppActivity {
 
         ActivityPagerAdapter apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, tabTitles);
 		viewPager.setAdapter(apAdapter);
-
 		viewPager.setCurrentItem(currentTab);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+
 	}
 	
 	@Override

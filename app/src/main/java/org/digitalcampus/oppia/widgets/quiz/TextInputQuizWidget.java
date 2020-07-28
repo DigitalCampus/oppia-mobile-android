@@ -25,6 +25,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.quiz.model.Response;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 public abstract class TextInputQuizWidget extends QuestionWidget {
@@ -46,6 +51,29 @@ public abstract class TextInputQuizWidget extends QuestionWidget {
                 InputMethodManager imm =  (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
+        }
+    }
+
+    @Override
+    public void setQuestionResponses(List<Response> responses, List<String> currentAnswers) {
+        EditText et = view.findViewById(R.id.responsetext);
+        Iterator<String> itr = currentAnswers.iterator();
+        while(itr.hasNext()) {
+            String answer = itr.next();
+            et.setText(answer);
+        }
+        hideOnFocusLoss(et);
+    }
+
+    @Override
+    public List<String> getQuestionResponses(List<Response> responses){
+        EditText et = view.findViewById(R.id.responsetext);
+        if(et.getText().toString().trim().equals("")){
+            return new ArrayList<>();
+        } else {
+            List<String> response = new ArrayList<>();
+            response.add(et.getText().toString().trim());
+            return response;
         }
     }
 }

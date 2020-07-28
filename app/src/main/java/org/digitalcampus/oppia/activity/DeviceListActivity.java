@@ -33,6 +33,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
@@ -47,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 /**
  * This Activity appears as a dialog. It lists any paired devices and
@@ -66,7 +66,6 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
             Manifest.permission.ACCESS_FINE_LOCATION
     );
 
-    private Button scanButton;
     private View scanningMessage;
 
     private BluetoothBroadcastReceiver receiver;
@@ -87,39 +86,33 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
 
         scanningMessage = findViewById(R.id.scanning_message);
         // Initialize the button to perform device discovery
-        scanButton = findViewById(R.id.button_scan);
-        scanButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                final List<String> notGrantedPerms = PermissionsManager.filterNotGrantedPermissions(DeviceListActivity.this, BLUETOOTH_PERMISSIONS);
-                if (!notGrantedPerms.isEmpty()) {
-                    if (PermissionsManager.canAskForAllPermissions(DeviceListActivity.this, notGrantedPerms)) {
-                        UIUtils.showAlert(
-                                DeviceListActivity.this,
-                                R.string.permissions_simple_title,
-                                R.string.permissions_bluetooth_message,
-                                R.string.permissions_allow_btn_text,
-                                new Callable<Boolean>() {
-                                    @Override
-                                    public Boolean call() {
-                                        PermissionsManager.requestPermissions(
-                                                DeviceListActivity.this, notGrantedPerms);
-                                        return true;
-                                    }
-                                }
-                        );
-                    } else {
-                        UIUtils.showAlert(
-                                DeviceListActivity.this,
-                                R.string.permissions_simple_title,
-                                R.string.permissions_not_askable_message);
-                    }
+        Button scanButton = findViewById(R.id.button_scan);
+        scanButton.setOnClickListener(v -> {
+            final List<String> notGrantedPerms = PermissionsManager.filterNotGrantedPermissions(DeviceListActivity.this, BLUETOOTH_PERMISSIONS);
+            if (!notGrantedPerms.isEmpty()) {
+                if (PermissionsManager.canAskForAllPermissions(DeviceListActivity.this, notGrantedPerms)) {
+                    UIUtils.showAlert(
+                            DeviceListActivity.this,
+                            R.string.permissions_simple_title,
+                            R.string.permissions_bluetooth_message,
+                            R.string.permissions_allow_btn_text,
+                            () -> {
+                                PermissionsManager.requestPermissions(
+                                        DeviceListActivity.this, notGrantedPerms);
+                                return true;
+                            }
+                    );
                 } else {
-                    scanButton.setVisibility(View.GONE);
-                    doDiscovery();
+                    UIUtils.showAlert(
+                            DeviceListActivity.this,
+                            R.string.permissions_simple_title,
+                            R.string.permissions_not_askable_message);
                 }
-
+            } else {
+                scanButton.setVisibility(View.GONE);
+                doDiscovery();
             }
+
         });
 
 
@@ -147,7 +140,7 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
 
         // Find and set up the RecyclerView for paired devices
         RecyclerView recyclerPairedDevices = findViewById(R.id.recycler_paired_devices);
-        adapterPairedDevices.setOnItemClickListener(mDeviceClickListener);
+        adapterPairedDevices.setOnItemClickListener((v, position) -> selectDevice(v));
         recyclerPairedDevices.setAdapter(adapterPairedDevices);
 
         // Find and set up the RecyclerView for newly discovered devices
@@ -156,7 +149,7 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
         adapterNewDevices = new DevicesBTAdapter(this, newDevicesNames);
 
         RecyclerView recyclerNewDevices = findViewById(R.id.recycler_new_devices);
-        adapterNewDevices.setOnItemClickListener(mDeviceClickListener);
+        adapterNewDevices.setOnItemClickListener((v, position) -> selectDevice(v));
         recyclerNewDevices.setAdapter(adapterNewDevices);
 
         // Register for broadcasts when a device is discovered
@@ -221,30 +214,23 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
         return device.substring(device.length() - 17);
     }
 
-    /**
-     * The on-click listener for all devices in the ListViews
-     */
-    private DevicesBTAdapter.OnItemClickListener mDeviceClickListener
-            = new DevicesBTAdapter.OnItemClickListener() {
-        @Override
-        public void onItemClick(View v, int position) {
-            if (mBtAdapter.isDiscovering()) {
-                mBtAdapter.cancelDiscovery();
-            }
 
-            // Get the device MAC address, which is the last 17 chars in the View
-            String info = ((TextView) v).getText().toString();
-            String address = getAddress(info);
+    private void selectDevice(View v){
+        String info = ((TextView) v).getText().toString();
 
-            // Create the result Intent and include the MAC address
-            Intent intent = new Intent();
-            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
-
-            // Set result and finish this Activity
-            setResult(Activity.RESULT_OK, intent);
-            finish();
+        if (mBtAdapter.isDiscovering()) {
+            mBtAdapter.cancelDiscovery();
         }
-    };
+        // Get the device MAC address, which is the last 17 chars in the View
+        String address = getAddress(info);
+        // Create the result Intent and include the MAC address
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+        // Set result and finish this Activity
+        setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
 
     /**
      * The BroadcastReceiver that listens for discovered devices and changes the title when
@@ -298,7 +284,7 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (PermissionsManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
             doDiscovery();

@@ -42,8 +42,8 @@ android {
     buildToolsVersion '29.0.2'
 
     defaultConfig {
-        versionCode 77
-        versionName "7.1.1"
+        versionCode 78
+        versionName "7.1.2"
 
         applicationId "org.lastmilehealth.oppiamobile"
         minSdkVersion 21
@@ -68,6 +68,12 @@ android {
         checkReleaseBuilds true
         // Disable checks for String translations
         disable 'MissingTranslation', 'ExtraTranslation'
+    }
+
+    // Configure to use Java8 features like try-with-resources
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
 
@@ -190,6 +196,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.google.android:flexbox:0.2.5'
 
+    implementation 'androidx.core:core:1.3.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -250,8 +257,6 @@ dependencies {
 
     //Mockito Dependencies
     testImplementation 'org.mockito:mockito-core:2.4.0'
-
-
 
     def multidex_version = "2.0.1"
     implementation "androidx.multidex:multidex:$multidex_version"

@@ -70,12 +70,7 @@ public class ResetFragment extends AppFragment implements SubmitListener{
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		resetButton.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				onResetClick();
-			}
-		});
+		resetButton.setOnClickListener(v -> onResetClick());
 	}
 
 	public void submitComplete(Payload response) {

@@ -32,22 +32,16 @@ public class SimpleAnimator {
 
     public static void fade(final View view, boolean visible, int duration){
         ValueAnimator animator = ValueAnimator.ofFloat(visible?1f:0f, visible?0f:1f);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator){
-                view.setAlpha(1f - (Float) valueAnimator.getAnimatedValue());
-            }
-        });
+        animator.addUpdateListener(valueAnimator -> view.setAlpha(1f - (Float) valueAnimator.getAnimatedValue()));
         animator.setDuration(duration);
         animator.start();
     }
 
     public static void fadeFromTop(final View view, boolean visible, int duration){
         ValueAnimator animator = ValueAnimator.ofFloat(visible?1f:0f, visible?0f:1f);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator){
-                view.setTranslationY( (Float) valueAnimator.getAnimatedValue() * -80 );
-                view.setAlpha(1f - (Float) valueAnimator.getAnimatedValue());
-            }
+        animator.addUpdateListener(valueAnimator -> {
+            view.setTranslationY( (Float) valueAnimator.getAnimatedValue() * -80 );
+            view.setAlpha(1f - (Float) valueAnimator.getAnimatedValue());
         });
         animator.setDuration(duration);
         animator.start();
