@@ -56,7 +56,6 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
         if (required && input != null){
             this.input.setHint(input.getHint() + " *");
         }
-
     }
 
     @Override
@@ -84,7 +83,6 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
             this.addView(helperText);
         }
         helperText.setText(text);
-
     }
 
     @Override
