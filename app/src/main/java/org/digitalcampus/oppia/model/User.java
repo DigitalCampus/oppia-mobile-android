@@ -46,6 +46,8 @@ public class User {
 	public static final String CUSTOM_FIELD_COUNTY = "county";
 	public static final String CUSTOM_FIELD_DISTRICT = "district";
 	public static final String CUSTOM_FIELD_EMPLOYEE_ID = "employee_id";
+	public static final String CUSTOM_FIELD_GENDER = "gender";
+	public static final String CUSTOM_FIELD_YEAR_STARTED = "year_started";
 
 	private Map<String, CustomValue> userCustomFields = new HashMap<>();
 	
@@ -203,6 +205,14 @@ public class User {
 
 	public void setDistrict(String district) {
 		putCustomField(CUSTOM_FIELD_DISTRICT, new CustomValue<>(district));
+	}
+
+	public void setGender(String gender){
+		putCustomField(CUSTOM_FIELD_GENDER, new CustomValue<>(gender));
+	}
+
+	public void setYearStarted(int yearStarted){
+		putCustomField(CUSTOM_FIELD_YEAR_STARTED, new CustomValue<>(yearStarted));
 	}
 
 
