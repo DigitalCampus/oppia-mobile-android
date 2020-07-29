@@ -49,7 +49,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
         profileCustomFields = customFieldsRepo.getAll(this);
         fieldsManager = new CustomFieldsUIManager(this, profileCustomFields);
-        //fieldsManager.populateAndInitializeFields(binding.customFieldsContainer);
+        fieldsManager.populateAndInitializeFields(binding.customFieldsContainer);
 
         fillUserProfileData();
     }
@@ -110,7 +110,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
             user.setEmail(email);
             user.setJobTitle(jobTitle);
             user.setOrganisation(organisation);
-            //user.setUserCustomFields(fieldsManager.getCustomFieldValues());
+            user.setUserCustomFields(fieldsManager.getCustomFieldValues());
             executeUpdateProfileTask(user);
         }
     }

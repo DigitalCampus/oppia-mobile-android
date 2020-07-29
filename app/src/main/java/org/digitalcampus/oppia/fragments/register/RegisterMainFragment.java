@@ -142,7 +142,7 @@ public class RegisterMainFragment extends AppFragment implements SubmitListener,
 
                 if (editOtherRole.validate()) {
                     String role = editOtherRole.getEditText().getText().toString().trim();
-                    setFragment(RegisterCHFragment.getInstance(role));
+                    setFragment(RegisterOtherFragment.newInstance(role));
                 } else {
                     return;
                 }

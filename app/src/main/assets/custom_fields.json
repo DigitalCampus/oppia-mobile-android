@@ -2,13 +2,33 @@
   "fields": [
 
     {
+      "name":"role",
+      "label":"Position",
+      "required":true,
+      "helper_text":"",
+      "type":"choices",
+      "collection":"roles",
+      "order": 1
+    },
+
+    {
+      "name":"role_other",
+      "label":"Please specify",
+      "order":2,
+      "required":true,
+      "visible_byfield":"role",
+      "visible_byvalue":"other",
+      "type":"str"
+    },
+
+    {
       "name":"county",
       "label":"Select county",
       "required":true,
       "helper_text":"",
       "type":"choices",
       "collection": "counties",
-      "order": 1
+      "order": 3
     },
 
     {
@@ -19,28 +39,10 @@
       "type":"choices",
       "visible_byfield":"county",
       "collection_byfield":"county",
-      "order": 1
+      "order": 4
     },
 
-    {
-      "name":"role",
-      "label":"Position",
-      "required":true,
-      "helper_text":"",
-      "type":"choices",
-      "collection":"roles",
-      "order": 2
-    },
 
-    {
-      "name":"custom_role",
-      "label":"Please specify",
-      "order":3,
-      "required":true,
-      "visible_byfield":"role",
-      "visible_byvalue":"other",
-      "type":"str"
-    },
 
     {
       "name":"gender",
@@ -49,7 +51,7 @@
       "helper_text":"",
       "type":"choices",
       "collection": "gender",
-      "order": 2
+      "order": 5
     },
 
     {
@@ -58,7 +60,7 @@
       "required":true,
       "helper_text":"Introduce the four digit year",
       "type":"int",
-      "order": 2
+      "order": 6
     }
 
   ],

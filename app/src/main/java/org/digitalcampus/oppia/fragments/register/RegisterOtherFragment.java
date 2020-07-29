@@ -37,6 +37,7 @@ import java.util.List;
 
 public class RegisterOtherFragment extends AppFragment implements View.OnClickListener {
 
+    private static final String ARG_OTHER_ROLE = "arg_other_role";
 
     private ValidableTextInputLayout usernameField;
     private ValidableTextInputLayout emailField;
@@ -49,11 +50,17 @@ public class RegisterOtherFragment extends AppFragment implements View.OnClickLi
     private ValidableTextInputLayout organisationField;
     private List<ValidableTextInputLayout> fields;
 
+    private String role;
+
     private AppCompatButton btnPrevious;
     private AppCompatButton btnRegisterPerform;
 
-    public static RegisterOtherFragment newInstance() {
-        return new RegisterOtherFragment();
+    public static RegisterOtherFragment newInstance(String role) {
+        RegisterOtherFragment fragment = new RegisterOtherFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_OTHER_ROLE, role);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     public RegisterOtherFragment() {
@@ -64,6 +71,11 @@ public class RegisterOtherFragment extends AppFragment implements View.OnClickLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_register_other, container, false);
         findViews(layout);
+
+        role = getArguments().getString(ARG_OTHER_ROLE);
+        if (role == null) {
+            throw new IllegalArgumentException("Role argument missing");
+        }
 
         return layout;
     }
@@ -157,9 +169,12 @@ public class RegisterOtherFragment extends AppFragment implements View.OnClickLi
         u.setFirstname(firstname);
         u.setLastname(lastname);
         u.setEmail(email);
+        u.setRole("other");
+        u.setOtherRole(role);
         u.setJobTitle(jobTitle);
         u.setOrganisation(organisation);
         u.setPhoneNo(phoneNo);
+
         return u;
 
     }
