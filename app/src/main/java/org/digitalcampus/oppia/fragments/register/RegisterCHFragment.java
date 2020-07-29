@@ -18,10 +18,11 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import com.badoualy.stepperindicator.StepperIndicator;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.SearchActivity;
 import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.fragments.AppFragment;
 import org.digitalcampus.oppia.model.County;
+import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.District;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout;
@@ -40,17 +41,19 @@ public class RegisterCHFragment extends AppFragment implements View.OnClickListe
     private ValidableTextInputLayout editRegChFirstName;
     private ValidableTextInputLayout editRegChLastName;
     private ValidableTextInputLayout editRegChEmployeeId;
+    private ValidableTextInputLayout editRegYearStarted;
     private LinearLayout viewRegChScreen1;
     private ValidableTextInputLayout editRegChPassword;
     private ValidableTextInputLayout editRegChPasswordAgain;
     private LinearLayout viewRegChScreen2;
     private AppCompatSpinner spinnerCounties;
     private AppCompatSpinner spinnerDistricts;
+    private AppCompatSpinner spinnerGender;
     private TextView btnRegisterChPrevious;
     private TextView btnRegisterChNext;
     private List<County> counties = new ArrayList<>();
-    private ArrayAdapter<County> adapterCounties;
     private List<District> districts = new ArrayList<>();
+    private List<CustomField.CollectionItem> genders = new ArrayList<>();
     private ArrayAdapter<District> adapterDistricts;
     private StepperIndicator stepperIndicator;
     private AppCompatButton btnRegisterPerform;
@@ -62,12 +65,14 @@ public class RegisterCHFragment extends AppFragment implements View.OnClickListe
         editRegChFirstName = layout.findViewById(R.id.edit_reg_ch_first_name);
         editRegChLastName = layout.findViewById(R.id.edit_reg_ch_last_name);
         editRegChEmployeeId = layout.findViewById(R.id.edit_reg_ch_employee_id);
+        editRegYearStarted = layout.findViewById(R.id.edit_reg_year_started);
         viewRegChScreen1 = layout.findViewById(R.id.view_reg_ch_screen_1);
         editRegChPassword = layout.findViewById(R.id.edit_reg_ch_password);
         editRegChPasswordAgain = layout.findViewById(R.id.edit_reg_ch_password_again);
         viewRegChScreen2 = layout.findViewById(R.id.view_reg_ch_screen_2);
         spinnerCounties = layout.findViewById(R.id.spinner_counties);
         spinnerDistricts = layout.findViewById(R.id.spinner_districts);
+        spinnerGender = layout.findViewById(R.id.spinner_gender);
         btnRegisterChPrevious = layout.findViewById(R.id.btn_register_ch_previous);
         stepperIndicator = layout.findViewById(R.id.stepper_indicator);
         btnRegisterChNext = layout.findViewById(R.id.btn_register_ch_next);
@@ -115,7 +120,7 @@ public class RegisterCHFragment extends AppFragment implements View.OnClickListe
         counties.addAll(County.geCountries(this.getContext()));
         counties.add(0, new County(getString(R.string.select_county)));
 
-        adapterCounties = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, counties);
+        ArrayAdapter<County> adapterCounties = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, counties);
         spinnerCounties.setAdapter(adapterCounties);
         spinnerCounties.setOnItemSelectedListener(this);
 
@@ -124,6 +129,10 @@ public class RegisterCHFragment extends AppFragment implements View.OnClickListe
         spinnerDistricts.setAdapter(adapterDistricts);
         spinnerDistricts.setEnabled(false);
 
+        genders = DbHelper.getInstance(this.getContext()).getCollection("gender");
+        genders.add(0, new CustomField.CollectionItem("", "Select sex..."));
+        ArrayAdapter<CustomField.CollectionItem> genderAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, genders);
+        spinnerGender.setAdapter(genderAdapter);
     }
 
     private void updateScreen() {
@@ -196,9 +205,13 @@ public class RegisterCHFragment extends AppFragment implements View.OnClickListe
         user.autogenerateUsername();
         user.setPassword(editRegChPassword.getCleanedValue());
         user.setPasswordAgain(editRegChPasswordAgain.getCleanedValue());
-        user.setJobTitle(role);
-        user.setCounty(counties.get(spinnerCounties.getSelectedItemPosition()).getName());
-        user.setDistrict(districts.get(spinnerDistricts.getSelectedItemPosition()).getName());
+        user.setRole(role);
+        user.setYearStarted(Integer.parseInt(editRegYearStarted.getCleanedValue()));
+        if (spinnerGender.getSelectedItemPosition() != 0){
+            user.setGender(genders.get(spinnerGender.getSelectedItemPosition()).getKey());
+        }
+        user.setCounty(counties.get(spinnerCounties.getSelectedItemPosition()).getId());
+        user.setDistrict(districts.get(spinnerDistricts.getSelectedItemPosition()).getId());
         return user;
 
     }

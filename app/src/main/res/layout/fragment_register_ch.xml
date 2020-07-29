@@ -93,6 +93,37 @@
                         android:inputType="text" />
 
                 </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Oppia.CustomField.TextInputLayoutLabel"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/gender"/>
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinner_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-15dp"
+                    style="@style/Widget.AppCompat.Spinner.Underlined" />
+
+
+                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
+                    android:id="@+id/edit_reg_year_started"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cantContainSpaces="true"
+                    app:helperText="@string/year_started_helper_text"
+                    app:helperTextEnabled="true"
+                    app:required="true">
+
+                    <EditText
+                        style="@style/EditValidableForm"
+                        android:hint="@string/year_started"
+                        android:inputType="numberDecimal" android:maxLength="4" />
+
+                </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
             </LinearLayout>
 
             <LinearLayout

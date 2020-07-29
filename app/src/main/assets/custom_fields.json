@@ -1,12 +1,34 @@
 {
   "fields": [
+
+    {
+      "name":"role",
+      "label":"Position",
+      "required":true,
+      "helper_text":"",
+      "type":"choices",
+      "collection":"roles",
+      "order": 1
+    },
+
+    {
+      "name":"role_other",
+      "label":"Please specify",
+      "order":2,
+      "required":true,
+      "visible_byfield":"role",
+      "visible_byvalue":"other",
+      "type":"str"
+    },
+
     {
       "name":"county",
       "label":"Select county",
       "required":true,
       "helper_text":"",
-      "type":"str",
-      "order": 1
+      "type":"choices",
+      "collection": "counties",
+      "order": 3
     },
 
     {
@@ -14,21 +36,53 @@
       "label":"Select district",
       "required":true,
       "helper_text":"",
-      "type":"str",
-      "order": 1
+      "type":"choices",
+      "visible_byfield":"county",
+      "collection_byfield":"county",
+      "order": 4
+    },
+
+
+
+    {
+      "name":"gender",
+      "label":"Sex",
+      "required":false,
+      "helper_text":"",
+      "type":"choices",
+      "collection": "gender",
+      "order": 5
     },
 
     {
-      "name":"employee_id",
-      "label":"Employee ID",
+      "name":"year_started",
+      "label":"Year began working as CHA or CHSS",
       "required":true,
-      "helper_text":"",
-      "type":"str",
-      "order": 1
+      "helper_text":"Introduce the four digit year",
+      "type":"int",
+      "order": 6
     }
+
   ],
 
   "collections": [
+    {
+      "collection_name": "roles",
+      "items":[
+        {"id": "CHA", "value":"CHA"},
+        {"id": "CHSS", "value":"CHSS"},
+        {"id": "other", "value":"Other"}
+      ]
+    },
+
+    {
+      "collection_name": "gender",
+      "items": [
+        {"id": "male", "value":"Male"},
+        {"id": "female", "value":"Female"},
+        {"id": "other", "value":"Other"}
+      ]
+    },
     {
       "collection_name": "counties",
       "items": [

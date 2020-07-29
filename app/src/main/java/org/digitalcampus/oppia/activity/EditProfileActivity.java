@@ -37,6 +37,8 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
     List<CustomField> profileCustomFields;
 
+    String role;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,9 +50,12 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         getAppComponent().inject(this);
 
         profileCustomFields = customFieldsRepo.getAll(this);
-        fieldsManager = new CustomFieldsUIManager(this, profileCustomFields);
-        //fieldsManager.populateAndInitializeFields(binding.customFieldsContainer);
+        role = user.getRole();
 
+        if (!TextUtils.equals(role, "other")){
+            fieldsManager = new CustomFieldsUIManager(this, profileCustomFields);
+            fieldsManager.populateAndInitializeFields(binding.customFieldsContainer);
+        }
         fillUserProfileData();
     }
 
@@ -68,9 +73,19 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         binding.fieldLastname.setText(user.getLastname());
         binding.fieldOrganisation.setText(user.getOrganisation());
         binding.fieldJobtitle.setText(user.getJobTitle());
-        binding.districtTv.setText(user.getDistrict());
-        binding.countyTv.setText(user.getCounty());
-        fieldsManager.fillWithUserData(user);
+
+        String role = user.getRole();
+        if (TextUtils.equals(role, "other")){
+            binding.chaHeader.setVisibility(View.GONE);
+        }
+        else{
+            binding.fieldOrganisation.setVisibility(View.GONE);
+            binding.fieldJobtitle.setVisibility(View.GONE);
+            binding.districtTv.setText(user.getDistrict());
+            binding.countyTv.setText(user.getCounty());
+            fieldsManager.fillWithUserData(user);
+        }
+
     }
 
     @Override
@@ -95,7 +110,9 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         for (ValidableTextInputLayout field : fields){
             valid = field.validate() && valid;
         }
-        valid = fieldsManager.validateFields() && valid;
+        if (!TextUtils.equals(role, "other")){
+            valid = fieldsManager.validateFields() && valid;
+        }
 
         //If the rest of email validations passed, check that the email is valid
         if (binding.fieldEmail.validate() && !TextUtils.equals("", email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -110,7 +127,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
             user.setEmail(email);
             user.setJobTitle(jobTitle);
             user.setOrganisation(organisation);
-            //user.setUserCustomFields(fieldsManager.getCustomFieldValues());
+            user.setUserCustomFields(fieldsManager.getCustomFieldValues());
             executeUpdateProfileTask(user);
         }
     }

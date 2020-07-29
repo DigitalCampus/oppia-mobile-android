@@ -494,6 +494,9 @@
     <string name="other_position">Other position</string>
 
     <string name="quiz_loading_error">Unexpected error loading quiz. Maybe the format was wrong or out-dated?</string>
+    <string name="gender">Sex</string>
+    <string name="year_started">Year began working as CHA or CHSS</string>
+    <string name="year_started_helper_text">Introduce the four digit year</string>
 
 </resources>
 

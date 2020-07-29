@@ -46,6 +46,10 @@ public class User {
 	public static final String CUSTOM_FIELD_COUNTY = "county";
 	public static final String CUSTOM_FIELD_DISTRICT = "district";
 	public static final String CUSTOM_FIELD_EMPLOYEE_ID = "employee_id";
+	public static final String CUSTOM_FIELD_GENDER = "gender";
+	public static final String CUSTOM_FIELD_YEAR_STARTED = "year_started";
+	public static final String CUSTOM_FIELD_ROLE = "role";
+	public static final String CUSTOM_FIELD_ROLE_OTHER = "role_other";
 
 	private Map<String, CustomValue> userCustomFields = new HashMap<>();
 	
@@ -205,6 +209,29 @@ public class User {
 		putCustomField(CUSTOM_FIELD_DISTRICT, new CustomValue<>(district));
 	}
 
+	public void setGender(String gender){
+		putCustomField(CUSTOM_FIELD_GENDER, new CustomValue<>(gender));
+	}
+
+	public void setYearStarted(int yearStarted){
+		putCustomField(CUSTOM_FIELD_YEAR_STARTED, new CustomValue<>(yearStarted));
+	}
+
+	public void setRole(String role){
+		putCustomField(CUSTOM_FIELD_ROLE, new CustomValue<>(role));
+	}
+
+	public String getRole(){
+		return (String) getCustomField(CUSTOM_FIELD_ROLE).getValue();
+	}
+
+	public void setOtherRole(String role){
+		putCustomField(CUSTOM_FIELD_ROLE_OTHER, new CustomValue<>(role));
+	}
+
+	public String getOtherRole(){
+		return (String) getCustomField(CUSTOM_FIELD_ROLE_OTHER).getValue();
+	}
 
 	public void autogenerateUsername() {
 		this.username = (getFirstname() + getLastname() + getEmployeeID()).replace(" ", "").toLowerCase();
