@@ -67,6 +67,8 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         }
         else{
             labelText.setTextSize(getResources().getDimension(R.dimen.hint_text_size));
+            errorText.setTextSize(getResources().getDimension(R.dimen.hint_text_size));
+            labelText.setTextColor(ContextCompat.getColor(getContext(), R.color.theme_secondary));
             errorText.setTextColor(ContextCompat.getColor(getContext(), R.color.text_error));
         }
 

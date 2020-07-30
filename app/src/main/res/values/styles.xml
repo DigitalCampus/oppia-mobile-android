@@ -308,8 +308,8 @@
     </style>
 
     <style name="Oppia.CustomField.TextInputLayoutLabel" parent="Oppia.CustomField.TextInputLayoutHint">
-        <item name="android:textColor">@color/oppia_primary</item>
-        <item name="color">@color/oppia_primary</item>
+        <item name="android:textColor">@color/theme_secondary</item>
+        <item name="color">@color/theme_secondary</item>
         <item name="android:textSize">@dimen/hint_text_size</item>
     </style>
 
