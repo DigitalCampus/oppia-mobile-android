@@ -43,6 +43,7 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.DownloadMediaAdapter;
 import org.digitalcampus.oppia.listener.DownloadMediaListener;
+import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.service.DownloadBroadcastReceiver;
 import org.digitalcampus.oppia.service.DownloadService;
@@ -115,9 +116,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         mediaSelected = new ArrayList<>();
 
         adapterMedia = new DownloadMediaAdapter(this, missingMedia);
-        adapterMedia.sortByFilename();
-        multiChoiceHelper = adapterMedia.getMultiChoiceHelper(); //https://medium.com/@BladeCoder/implementing-a-modal-selection-helper-for-recyclerview-1e888b4cd5b9
-
+        multiChoiceHelper = new MultiChoiceHelper(this, adapterMedia);
         multiChoiceHelper.setMultiChoiceModeListener(new MultiChoiceHelper.MultiChoiceModeListener() {
             @Override
             public void onItemCheckedStateChanged(androidx.appcompat.view.ActionMode mode, int position, long id, boolean checked) {
@@ -213,17 +212,13 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             }
         });
 
+        adapterMedia.setMultiChoiceHelper(multiChoiceHelper);
+        adapterMedia.sortByFilename();
         recyclerMedia.setAdapter(adapterMedia);
 
-        adapterMedia.setOnItemClickListener(new DownloadMediaAdapter.OnItemClickListener() {
+        adapterMedia.setOnItemClickListener(new ListInnerBtnOnClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                // do nothing
-            }
-
-            @Override
-            public void onDownloadClickListener(int position) {
-
+            public void onClick(int position) {
                 Log.d(TAG, "Clicked " + position);
                 Media mediaToDownload = missingMedia.get(position);
 
@@ -232,7 +227,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         });
 
         downloadViaPCBtn.setOnClickListener(v -> downloadViaPC());
-
         Media.resetMediaScan(sharedPreferences);
 
     }
