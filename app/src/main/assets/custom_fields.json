@@ -77,9 +77,9 @@
       "conditional_byfield":"role",
       "conditional_byvalue":"!other",
       "fields":[
-        {"name":"first_name", "order": 1 },
-        {"name":"last_name", "order": 2 },
-        {"name":"gender", "order": 3 }
+        "first_name",
+        "last_name",
+        "gender"
       ]
     },
 
@@ -90,9 +90,9 @@
       "conditional_byvalue":"!other",
       "helper_text":"Introduce your basic info",
       "fields":[
-        {"name":"first_name", "order":1 },
-        {"name":"last_name", "order":2 },
-        {"name":"email", "order":2 }
+        "first_name",
+        "last_name",
+        "email"
       ]
     }
   ]

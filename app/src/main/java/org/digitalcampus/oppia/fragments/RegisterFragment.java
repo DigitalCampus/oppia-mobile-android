@@ -46,6 +46,7 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.RegisterTask;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.storage.StorageUtils;
 import org.digitalcampus.oppia.utils.ui.fields.CustomFieldsUIManager;
 import org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout;
 import org.json.JSONException;
@@ -71,8 +72,11 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	private ValidableTextInputLayout phoneNoField;
 	private List<ValidableTextInputLayout> fields = new ArrayList<>();
 
+	private List<CustomField.RegisterFormStep> registerSteps;
+
 	private LinearLayout customFieldsContainer;
 	private CustomFieldsUIManager fieldsManager;
+
 	private Button registerButton;
 	private Button loginButton;
 	private ProgressDialog pDialog;
@@ -122,8 +126,12 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		getAppComponent().inject(this);
 
 		profileCustomFields = customFieldsRepo.getAll(getContext());
+		registerSteps = customFieldsRepo.getRegisterSteps(getContext());
 		fieldsManager = new CustomFieldsUIManager(this.getActivity(), profileCustomFields);
 		fieldsManager.populateAndInitializeFields(customFieldsContainer);
+		if (registerSteps != null && !registerSteps.isEmpty()){
+			// Manage stepped register form
+		}
 
 		registerButton.setOnClickListener(v -> onRegisterClick());
 		loginButton.setOnClickListener(v -> {

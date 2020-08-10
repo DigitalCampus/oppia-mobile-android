@@ -46,7 +46,7 @@ public class CustomFieldsUIManager {
         inputs.add(new Pair<>(field, input));
     }
 
-    private ValidableField getInputByKey(String key){
+    public ValidableField getInputByKey(String key){
         for (final Pair<CustomField, ValidableField> formField : inputs){
             if (TextUtils.equals(formField.first.getKey(), key)) {
                 return formField.second;
@@ -221,4 +221,5 @@ public class CustomFieldsUIManager {
         params.topMargin = ctx.getResources().getDimensionPixelSize(R.dimen.margin_medium);
         return params;
     }
+
 }
