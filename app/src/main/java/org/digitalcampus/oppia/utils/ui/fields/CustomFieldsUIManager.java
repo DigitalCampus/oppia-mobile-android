@@ -104,7 +104,7 @@ public class CustomFieldsUIManager {
 
         ValidableField formField = getInputByKey(field.getFieldVisibleBy());
         if (formField != null) {
-            formField.setChangeListener(newValue -> {
+            formField.addChangeListener(newValue -> {
                 setDependencyVisibility(field, input, newValue);
 
                 ValidableField collectionField = getInputByKey(field.getCollectionNameBy());

@@ -114,7 +114,7 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
 
 
     @Override
-    public void setChangeListener(onChangeListener listener) { }
+    public void addChangeListener(onChangeListener listener) { }
 
     // Small hack to be able to show different label colors when the field is empty or filled
     // using the color selector based in the "selected" state.

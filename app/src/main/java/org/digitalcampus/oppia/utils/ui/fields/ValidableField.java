@@ -8,7 +8,7 @@ public interface ValidableField {
     boolean validate();
     void setHelperText(CharSequence text);
     String getCleanedValue();
-    void setChangeListener(onChangeListener listener);
+    void addChangeListener(onChangeListener listener);
     void setVisibility(final int VISIBLE_MODE);
     void setLayoutParams(ViewGroup.LayoutParams params);
 
