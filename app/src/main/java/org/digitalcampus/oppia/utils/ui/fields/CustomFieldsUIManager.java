@@ -95,15 +95,17 @@ public class CustomFieldsUIManager {
         }
     }
 
+    private void setDependencyVisibility(CustomField field, ValidableField input, String value){
+        boolean visible = assertValue(field.getValueVisibleBy(), value);
+        input.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
     private void configureDepencency(final ValidableField input, final CustomField field){
 
         ValidableField formField = getInputByKey(field.getFieldVisibleBy());
         if (formField != null) {
             formField.setChangeListener(newValue -> {
-                boolean valueFilled = newValue != null && !TextUtils.isEmpty(newValue);
-                boolean condition = TextUtils.isEmpty(field.getValueVisibleBy()) || TextUtils.equals(field.getValueVisibleBy(), newValue);
-                boolean visible = valueFilled && condition;
-                input.setVisibility(visible ? View.VISIBLE : View.GONE);
+                setDependencyVisibility(field, input, newValue);
 
                 ValidableField collectionField = getInputByKey(field.getCollectionNameBy());
                 if (collectionField != null && field.isChoices()) {
@@ -222,4 +224,13 @@ public class CustomFieldsUIManager {
         return params;
     }
 
+    private boolean assertValue(String assertValue, String value){
+        boolean negation = assertValue != null && assertValue.startsWith("!");
+        if (negation){ // We have to remove the starting "!"
+            assertValue = assertValue.substring(1);
+        }
+        boolean match = (TextUtils.isEmpty(assertValue) && !TextUtils.isEmpty(value)) ||
+                TextUtils.equals(assertValue, value);
+        return negation != match;
+    }
 }

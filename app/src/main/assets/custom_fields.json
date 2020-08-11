@@ -34,6 +34,8 @@
       "label":"Year began working as CHA or CHSS",
       "required":true,
       "helper_text":"Introduce the four digit year",
+      "visible_byfield":"role",
+      "visible_byvalue":"!other",
       "type":"int",
       "order": 4
     }
@@ -65,8 +67,8 @@
       "title":"First step",
       "helper_text":"Please select your role",
       "fields":[
-        {"name":"role", "order":1 },
-        {"name":"role_other", "order":2 }
+        "role",
+        "role_other"
       ]
     },
 
@@ -87,12 +89,33 @@
       "order": 2,
       "title":"Personal info",
       "conditional_byfield":"role",
-      "conditional_byvalue":"!other",
+      "conditional_byvalue":"other",
       "helper_text":"Introduce your basic info",
       "fields":[
         "first_name",
         "last_name",
         "email"
+      ]
+    },
+    {
+      "order": 3,
+      "title":"Extra data",
+      "conditional_byfield":"role",
+      "conditional_byvalue":"!other",
+      "helper_text":"Introduce extra CHA data",
+      "fields":[
+        "year_started"
+      ]
+    },
+
+    {
+      "order": 4,
+      "title":"Login info",
+      "helper_text":"Introduce your login info",
+      "fields":[
+        "username",
+        "password",
+        "passwordagain"
       ]
     }
   ]
