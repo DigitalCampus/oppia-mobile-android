@@ -100,24 +100,37 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = inflater.inflate(R.layout.fragment_register, container, false);
-		usernameField = vv.findViewById(R.id.register_form_username_field);
-		emailField = vv.findViewById(R.id.register_form_email_field);
-		passwordField = vv.findViewById(R.id.register_form_password_field);
-		passwordAgainField = vv.findViewById(R.id.register_form_password_again_field);
-		firstnameField = vv.findViewById(R.id.register_form_firstname_field);
-		lastnameField = vv.findViewById(R.id.register_form_lastname_field);
-		jobTitleField = vv.findViewById(R.id.register_form_jobtitle_field);
-		organisationField = vv.findViewById(R.id.register_form_organisation_field);
-		phoneNoField = vv.findViewById(R.id.register_form_phoneno_field);
-		registerButton = vv.findViewById(R.id.register_btn);
-		loginButton = vv.findViewById(R.id.action_login_btn);
-		customFieldsContainer = vv.findViewById(R.id.custom_fields_container);
+		View layout = inflater.inflate(R.layout.fragment_register, container, false);
+		usernameField = layout.findViewById(R.id.register_form_username_field);
+		emailField = layout.findViewById(R.id.register_form_email_field);
+		passwordField = layout.findViewById(R.id.register_form_password_field);
+		passwordAgainField = layout.findViewById(R.id.register_form_password_again_field);
+		firstnameField = layout.findViewById(R.id.register_form_firstname_field);
+		lastnameField = layout.findViewById(R.id.register_form_lastname_field);
+		jobTitleField = layout.findViewById(R.id.register_form_jobtitle_field);
+		organisationField = layout.findViewById(R.id.register_form_organisation_field);
+		phoneNoField = layout.findViewById(R.id.register_form_phoneno_field);
+		registerButton = layout.findViewById(R.id.register_btn);
+		loginButton = layout.findViewById(R.id.action_login_btn);
+		customFieldsContainer = layout.findViewById(R.id.custom_fields_container);
+		stepperIndicator = layout.findViewById(R.id.stepper_indicator);
+		stepperContainer = layout.findViewById(R.id.frame_stepper_indicator);
+		prevStepButton = layout.findViewById(R.id.prev_btn);
+		nextStepButton = layout.findViewById(R.id.next_btn);
+		loginContainer = layout.findViewById(R.id.login_container);
+		fields = new HashMap<String, ValidableField>() {{
+			put("username", usernameField);
+			put("email", emailField);
+			put("password", passwordField);
+			put("passwordagain", passwordAgainField);
+			put("first_name", firstnameField);
+			put("last_name", lastnameField);
+			put("jobtitle", jobTitleField);
+			put("organisation", organisationField);
+			put("phoneno", phoneNoField);
+		}};
 
-		fields.addAll(Arrays.asList(usernameField, emailField, passwordField, passwordAgainField,
-				firstnameField, lastnameField, jobTitleField, organisationField, phoneNoField));
-
-		return vv;
+		return layout;
 	}
 
 	@Override
@@ -127,20 +140,55 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 
 		profileCustomFields = customFieldsRepo.getAll(getContext());
 		registerSteps = customFieldsRepo.getRegisterSteps(getContext());
-		fieldsManager = new CustomFieldsUIManager(this.getActivity(), profileCustomFields);
+		fieldsManager = new CustomFieldsUIManager(this.getActivity(), fields, profileCustomFields);
 		fieldsManager.populateAndInitializeFields(customFieldsContainer);
-		if (registerSteps != null && !registerSteps.isEmpty()){
-			// Manage stepped register form
+		if (registerSteps == null || registerSteps.isEmpty()){
+			stepperContainer.setVisibility(View.GONE);
+			loginContainer.setVisibility(View.VISIBLE);
+		}
+		else{
+			stepsManager = new SteppedFormUIManager(stepperIndicator, registerSteps, fieldsManager);
+			stepperContainer.setVisibility(View.VISIBLE);
+			loginContainer.setVisibility(View.GONE);
+			registerButton.setVisibility(View.GONE);
+			nextStepButton.setVisibility(View.VISIBLE);
+			prevStepButton.setVisibility(View.INVISIBLE);
+			stepsManager.initialize();
+			steppedForm = true;
 		}
 
 		registerButton.setOnClickListener(v -> onRegisterClick());
+		nextStepButton.setOnClickListener(v -> nextStep());
+		prevStepButton.setOnClickListener(v -> prevStep());
 		loginButton.setOnClickListener(v -> {
-			WelcomeActivity wa = (WelcomeActivity) RegisterFragment.super.getActivity();
-			wa.switchTab(WelcomeActivity.TAB_LOGIN);
+			WelcomeActivity activity = (WelcomeActivity) RegisterFragment.super.getActivity();
+			if (activity != null){
+				activity.switchTab(WelcomeActivity.TAB_LOGIN);
+			}
+
 		});
-		for (ValidableTextInputLayout field : fields){
+		for (ValidableField field : fields.values()){
 			field.initialize();
 		}
+	}
+
+	private void nextStep(){
+		if (stepsManager.nextStep()){
+			prevStepButton.setVisibility(View.VISIBLE);
+		}
+		if (stepsManager.isLastStep()){
+			nextStepButton.setVisibility(View.GONE);
+			registerButton.setVisibility(View.VISIBLE);
+		}
+
+	}
+
+	private void prevStep(){
+		if (stepsManager.prevStep()){
+			prevStepButton.setVisibility(View.INVISIBLE);
+		}
+		registerButton.setVisibility(View.GONE);
+		nextStepButton.setVisibility(View.VISIBLE);
 	}
 
 	public void submitComplete(Payload response) {
@@ -182,7 +230,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		String organisation = organisationField.getCleanedValue();
 
 		boolean valid = true;
-		for (ValidableTextInputLayout field : fields){
+		for (ValidableField field : fields.values()){
 			valid = field.validate() && valid;
 		}
 		valid = fieldsManager.validateFields() && valid;

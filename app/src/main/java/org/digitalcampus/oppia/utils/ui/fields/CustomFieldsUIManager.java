@@ -29,11 +29,13 @@ import androidx.appcompat.widget.SwitchCompat;
 
 public class CustomFieldsUIManager {
 
+    private HashMap<String, ValidableField> baseFields;
     private List<CustomField> fields;
     private List<Pair<CustomField, ValidableField>> inputs = new ArrayList<>();
     private Context ctx;
 
-    public CustomFieldsUIManager(Context ctx, List<CustomField> fields){
+    public CustomFieldsUIManager(Context ctx, HashMap<String, ValidableField> baseFields, List<CustomField> fields){
+        this.baseFields = baseFields;
         this.fields = fields;
         this.ctx = ctx;
     }
@@ -47,6 +49,10 @@ public class CustomFieldsUIManager {
     }
 
     public ValidableField getInputByKey(String key){
+        if (baseFields.containsKey(key)){
+            return baseFields.get(key);
+        }
+
         for (final Pair<CustomField, ValidableField> formField : inputs){
             if (TextUtils.equals(formField.first.getKey(), key)) {
                 return formField.second;
@@ -232,5 +238,40 @@ public class CustomFieldsUIManager {
         boolean match = (TextUtils.isEmpty(assertValue) && !TextUtils.isEmpty(value)) ||
                 TextUtils.equals(assertValue, value);
         return negation != match;
+    }
+
+    boolean isConditionMet(String assertField, String assertValue){
+        ValidableField field = getInputByKey(assertField);
+        return assertValue(assertValue, field.getCleanedValue());
+
+    }
+
+    public void hideAll() {
+        for (ValidableField field : baseFields.values()){
+            field.setVisibility(View.GONE);
+        }
+        for (final Pair<CustomField, ValidableField> formField : inputs){
+            formField.second.setVisibility(View.GONE);
+        }
+    }
+
+    public void setVisible(String fieldName){
+
+        if (baseFields.containsKey(fieldName)){
+            baseFields.get(fieldName).setVisibility(View.VISIBLE);
+            return;
+        }
+
+        for (final Pair<CustomField, ValidableField> formField : inputs){
+            CustomField field = formField.first;
+            ValidableField input = formField.second;
+            if (TextUtils.equals(field.getKey(), fieldName)) {
+                input.setVisibility(View.VISIBLE);
+                ValidableField dependant = getInputByKey(field.getFieldVisibleBy());
+                if (dependant != null) {
+                    setDependencyVisibility(field, input, dependant.getCleanedValue());
+                }
+            }
+        }
     }
 }
