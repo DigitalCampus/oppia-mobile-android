@@ -96,6 +96,21 @@
 
             </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
 
+            <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
+                android:id="@+id/field_phoneno"
+                style="@style/Oppia.CustomField.TextInputLayout"
+                android:layout_marginTop="@dimen/margin_medium">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_form_phoneno_title"
+                    android:inputType="phone"
+                    android:textSize="15sp"/>
+
+            </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
+
+
             <LinearLayout
                 android:id="@+id/custom_fields_container"
                 android:layout_width="match_parent"
