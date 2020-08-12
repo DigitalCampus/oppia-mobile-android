@@ -83,6 +83,7 @@ public class SteppedFormUIManager {
         for (String field : currentStep.getFields()){
             fieldsManager.setVisible(field);
         }
+        updateDescription();
         stepIndicator.setCurrentStep(Math.max(currentStepNum - 1, 0));
     }
 
@@ -92,6 +93,16 @@ public class SteppedFormUIManager {
         return (currentStepNum <= 1);
     }
 
+    private void updateDescription(){
+
+        if (TextUtils.isEmpty(currentStep.getHelperText())) {
+            stepDescription.setVisibility(View.GONE);
+        }
+        else {
+            stepDescription.setVisibility(View.VISIBLE);
+            stepDescription.setText(currentStep.getHelperText());
+        }
+    }
     public boolean isLastStep(){
         return currentStepNum == numSteps;
     }

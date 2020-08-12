@@ -76,13 +76,13 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	private HashMap<String, ValidableField> fields = new HashMap<>();
 
 	private LinearLayout customFieldsContainer;
-	List<CustomField> profileCustomFields;
+	private List<CustomField> profileCustomFields;
 
 	private CustomFieldsUIManager fieldsManager;
 	private StepperIndicator stepperIndicator;
 	private List<CustomField.RegisterFormStep> registerSteps;
 	private SteppedFormUIManager stepsManager;
-	private boolean steppedForm = false;
+	private TextView stepDescription;
 
 	private Button registerButton;
 	private Button nextStepButton;
@@ -191,8 +191,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 			registerButton.setVisibility(View.GONE);
 			nextStepButton.setVisibility(View.VISIBLE);
 			prevStepButton.setVisibility(View.INVISIBLE);
-			stepsManager.initialize();
-			steppedForm = true;
+			stepsManager.initialize(customFieldsContainer, steppedFieldsContainer, stepDescription);
 		}
 
 		registerButton.setOnClickListener(v -> onRegisterClick());
