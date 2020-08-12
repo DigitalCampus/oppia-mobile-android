@@ -28,6 +28,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.badoualy.stepperindicator.StepperIndicator;
+
 import androidx.appcompat.app.AlertDialog;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
@@ -46,14 +48,15 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.RegisterTask;
 import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.storage.StorageUtils;
 import org.digitalcampus.oppia.utils.ui.fields.CustomFieldsUIManager;
+import org.digitalcampus.oppia.utils.ui.fields.SteppedFormUIManager;
+import org.digitalcampus.oppia.utils.ui.fields.ValidableField;
 import org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -70,21 +73,28 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	private ValidableTextInputLayout jobTitleField;
 	private ValidableTextInputLayout organisationField;
 	private ValidableTextInputLayout phoneNoField;
-	private List<ValidableTextInputLayout> fields = new ArrayList<>();
-
-	private List<CustomField.RegisterFormStep> registerSteps;
+	private HashMap<String, ValidableField> fields = new HashMap<>();
 
 	private LinearLayout customFieldsContainer;
+	List<CustomField> profileCustomFields;
+
 	private CustomFieldsUIManager fieldsManager;
+	private StepperIndicator stepperIndicator;
+	private List<CustomField.RegisterFormStep> registerSteps;
+	private SteppedFormUIManager stepsManager;
+	private boolean steppedForm = false;
 
 	private Button registerButton;
+	private Button nextStepButton;
+	private Button prevStepButton;
 	private Button loginButton;
 	private ProgressDialog pDialog;
+	private View stepperContainer;
+	private View loginContainer;
+
 
 	@Inject
 	CustomFieldsRepository customFieldsRepo;
-
-	List<CustomField> profileCustomFields;
 
 	@Inject
 	ApiEndpoint apiEndpoint;
@@ -118,6 +128,34 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		prevStepButton = layout.findViewById(R.id.prev_btn);
 		nextStepButton = layout.findViewById(R.id.next_btn);
 		loginContainer = layout.findViewById(R.id.login_container);
+
+		emailField.setCustomValidator(field -> {
+			String email = field.getCleanedValue();
+			if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+				emailField.setErrorEnabled(true);
+				emailField.setError(getString(R.string.error_register_email));
+				return false;
+			}
+			return true;
+		});
+
+		phoneNoField.setCustomValidator(field -> {
+			String phoneNo = field.getCleanedValue();
+			if (phoneNo.length() < 8) {
+				phoneNoField.setErrorEnabled(true);
+				phoneNoField.setError(getString(R.string.error_register_no_phoneno));
+				phoneNoField.requestFocus();
+				return false;
+			}
+			return true;
+		});
+
+		passwordField.setCustomValidator(field -> {
+			String password = passwordField.getCleanedValue();
+			String passwordAgain = passwordAgainField.getCleanedValue();
+			return checkPasswordCriteria(password, passwordAgain);
+		});
+
 		fields = new HashMap<String, ValidableField>() {{
 			put("username", usernameField);
 			put("email", emailField);
@@ -218,16 +256,6 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 
 
 	public void onRegisterClick() {
-		// get form fields
-		String username = usernameField.getCleanedValue();
-		String email = emailField.getCleanedValue();
-		String password = passwordField.getCleanedValue();
-		String passwordAgain = passwordAgainField.getCleanedValue();
-		String firstname = firstnameField.getCleanedValue();
-		String lastname = lastnameField.getCleanedValue();
-		String phoneNo = phoneNoField.getCleanedValue();
-		String jobTitle = jobTitleField.getCleanedValue();
-		String organisation = organisationField.getCleanedValue();
 
 		boolean valid = true;
 		for (ValidableField field : fields.values()){
@@ -235,65 +263,35 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		}
 		valid = fieldsManager.validateFields() && valid;
 
-		//If the rest of email validations passed, check that the email is valid
-		if (emailField.validate() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-			emailField.setErrorEnabled(true);
-			emailField.setError(getString(R.string.error_register_email));
-			if (valid){
-				emailField.requestFocus();
-			}
-			valid = false;
-		}
-
-		// check password
-		valid = checkPasswordCriteria(valid, password, passwordAgain);
-
-		// check phone no
-		if (phoneNo.length() < 8) {
-            phoneNoField.setErrorEnabled(true);
-            phoneNoField.setError(getString(R.string.error_register_no_phoneno ));
-			if (valid){
-				phoneNoField.requestFocus();
-			}
-			valid = false;
-		}
-
 		if (valid){
             User u = new User();
-            u.setUsername(username);
-            u.setPassword(password);
-            u.setPasswordAgain(passwordAgain);
-            u.setFirstname(firstname);
-            u.setLastname(lastname);
-            u.setEmail(email);
-            u.setJobTitle(jobTitle);
-            u.setOrganisation(organisation);
-            u.setPhoneNo(phoneNo);
+            u.setUsername(usernameField.getCleanedValue());
+            u.setPassword(passwordField.getCleanedValue());
+            u.setPasswordAgain(passwordAgainField.getCleanedValue());
+            u.setFirstname(firstnameField.getCleanedValue());
+            u.setLastname(lastnameField.getCleanedValue());
+            u.setEmail(emailField.getCleanedValue());
+            u.setJobTitle(jobTitleField.getCleanedValue());
+            u.setOrganisation(organisationField.getCleanedValue());
+            u.setPhoneNo(phoneNoField.getCleanedValue());
 			u.setUserCustomFields(fieldsManager.getCustomFieldValues());
             executeRegisterTask(u);
         }
 
 	}
 
-	private boolean checkPasswordCriteria(boolean currentValid, String password, String passwordAgain){
+	private boolean checkPasswordCriteria(String password, String passwordAgain){
 		if (password.length() < App.PASSWORD_MIN_LENGTH) {
 			passwordField.setErrorEnabled(true);
 			passwordField.setError(getString(R.string.error_register_password,  App.PASSWORD_MIN_LENGTH ));
-			if (currentValid){
-				passwordField.requestFocus();
-			}
-			currentValid = false;
-
+			return false;
 		}
 		else if (!password.equals(passwordAgain)) {
 			passwordField.setErrorEnabled(true);
 			passwordField.setError(getString(R.string.error_register_password_no_match ));
-			if (currentValid){
-				passwordField.requestFocus();
-			}
-			currentValid = false;
+			return false;
 		}
-		return currentValid;
+		return true;
 	}
 
 	@Override

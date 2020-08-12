@@ -17,6 +17,7 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
     private SwitchCompat input;
     private TextView helperText;
     private TextView errorText;
+    private CustomValidator validator;
 
     public ValidableSwitchLayout(Context context){
         super(context);
@@ -67,10 +68,19 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
     }
 
     @Override
+    public void setCustomValidator(CustomValidator v) {
+        validator = v;
+    }
+
+    @Override
     public boolean validate() {
         boolean valid = !required || input.isChecked();
+        if (valid && validator != null){
+            valid = validator.validate(this);
+        }
         errorText.setVisibility(valid ? GONE : VISIBLE);
         input.setHintTextColor(ContextCompat.getColor(getContext(), valid ? android.R.color.tab_indicator_text : R.color.text_error));
+
         return valid;
     }
 

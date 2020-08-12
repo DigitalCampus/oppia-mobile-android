@@ -153,12 +153,17 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     @Override
     public boolean validate() {
         boolean valid = !required || selected;
+        if (valid && validator != null){
+            valid = validator.validate(this);
+        }
+
         errorText.setVisibility(valid ? GONE : VISIBLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             labelText.setTextAppearance( valid ?
                     R.style.Oppia_CustomField_TextInputLayoutLabel :
                     R.style.Oppia_CustomField_TextInputLayoutError);
         }
+
         return valid;
     }
 
@@ -184,6 +189,10 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     public void addChangeListener(onChangeListener listener) {
         this.valueChangelisteners.add(listener);
     }
+
+    @Override
+    public void setCustomValidator(CustomValidator v) {
+        validator = v;
     }
 
     @Override
