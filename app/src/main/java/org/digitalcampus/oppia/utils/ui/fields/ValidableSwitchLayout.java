@@ -2,6 +2,7 @@ package org.digitalcampus.oppia.utils.ui.fields;
 
 import android.content.Context;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -65,6 +66,11 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
         LinearLayout.LayoutParams linearParams = (LinearLayout.LayoutParams) params;
         linearParams.setMargins(0, margin, 0, margin);
         super.setLayoutParams(linearParams);
+    }
+
+    @Override
+    public View getView() {
+        return this;
     }
 
     @Override

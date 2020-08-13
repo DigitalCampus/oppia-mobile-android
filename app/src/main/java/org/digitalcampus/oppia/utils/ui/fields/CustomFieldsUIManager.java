@@ -246,19 +246,29 @@ public class CustomFieldsUIManager {
 
     }
 
-    public void hideAll() {
+    public void moveAllFieldsTo(ViewGroup container) {
         for (ValidableField field : baseFields.values()){
             field.setVisibility(View.GONE);
+            moveToView(field, container);
         }
         for (final Pair<CustomField, ValidableField> formField : inputs){
             formField.second.setVisibility(View.GONE);
+            moveToView(formField.second, container);
         }
     }
 
-    public void setVisible(String fieldName){
+    private void moveToView(ValidableField field, ViewGroup container){
+        View fieldInput = field.getView();
+        ((ViewGroup)fieldInput.getParent()).removeView(fieldInput);
+        container.addView(fieldInput);
+    }
+
+    public void setVisibleInView(String fieldName, ViewGroup container){
 
         if (baseFields.containsKey(fieldName)){
-            baseFields.get(fieldName).setVisibility(View.VISIBLE);
+            ValidableField field = baseFields.get(fieldName);
+            field.setVisibility(View.VISIBLE);
+            moveToView(field, container);
             return;
         }
 
@@ -267,6 +277,7 @@ public class CustomFieldsUIManager {
             ValidableField input = formField.second;
             if (TextUtils.equals(field.getKey(), fieldName)) {
                 input.setVisibility(View.VISIBLE);
+                moveToView(input, container);
                 ValidableField dependant = getInputByKey(field.getFieldVisibleBy());
                 if (dependant != null) {
                     setDependencyVisibility(field, input, dependant.getCleanedValue());

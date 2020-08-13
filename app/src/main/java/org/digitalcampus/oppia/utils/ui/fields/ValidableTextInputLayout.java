@@ -122,6 +122,11 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
     public void addChangeListener(onChangeListener listener) { }
 
     @Override
+    public View getView() {
+        return this;
+    }
+
+    @Override
     public void setCustomValidator(CustomValidator v) {
         validator = v;
     }

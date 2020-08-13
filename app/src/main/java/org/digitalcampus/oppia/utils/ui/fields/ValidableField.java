@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.utils.ui.fields;
 
+import android.view.View;
 import android.view.ViewGroup;
 
 public interface ValidableField {
@@ -11,6 +12,7 @@ public interface ValidableField {
     void addChangeListener(onChangeListener listener);
     void setVisibility(final int VISIBLE_MODE);
     void setLayoutParams(ViewGroup.LayoutParams params);
+    View getView();
     void setCustomValidator(CustomValidator v);
     interface CustomValidator{
         boolean validate(ValidableField field);

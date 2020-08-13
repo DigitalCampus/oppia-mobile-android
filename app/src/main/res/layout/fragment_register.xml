@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
                 android:fillViewport="true"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -53,18 +54,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left"
+            android:paddingLeft="@dimen/padding_large"
+            android:paddingRight="@dimen/activity_horizontal_margin"
             android:orientation="vertical"
             >
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/padding_large"
-                android:paddingRight="@dimen/activity_horizontal_margin">
 
-                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
+            <TextView
+                android:id="@+id/step_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:textSize="17sp"
+                android:visibility="gone"
+                tools:text="Please, this is a form step description" />
+
+            <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                     android:id="@+id/register_form_username_field"
                     style="@style/Oppia.CustomField.TextInputLayout"
                     app:cantContainSpaces="true"
@@ -201,10 +206,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
+
+            <LinearLayout
+                android:id="@+id/stepped_fields_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
             </LinearLayout>
 
-
-        </LinearLayout>
     </ScrollView>
 
 

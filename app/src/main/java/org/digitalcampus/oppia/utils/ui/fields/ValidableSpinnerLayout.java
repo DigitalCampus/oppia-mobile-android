@@ -191,6 +191,11 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     }
 
     @Override
+    public View getView() {
+        return this;
+    }
+
+    @Override
     public void setCustomValidator(CustomValidator v) {
         validator = v;
     }

@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 
@@ -78,9 +79,9 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	private LinearLayout customFieldsContainer;
 	private List<CustomField> profileCustomFields;
 
+	private LinearLayout steppedFieldsContainer;
 	private CustomFieldsUIManager fieldsManager;
 	private StepperIndicator stepperIndicator;
-	private List<CustomField.RegisterFormStep> registerSteps;
 	private SteppedFormUIManager stepsManager;
 	private TextView stepDescription;
 
@@ -128,6 +129,8 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		prevStepButton = layout.findViewById(R.id.prev_btn);
 		nextStepButton = layout.findViewById(R.id.next_btn);
 		loginContainer = layout.findViewById(R.id.login_container);
+		stepDescription = layout.findViewById(R.id.step_description);
+		steppedFieldsContainer = layout.findViewById(R.id.stepped_fields_container);
 
 		emailField.setCustomValidator(field -> {
 			String email = field.getCleanedValue();
@@ -177,7 +180,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		getAppComponent().inject(this);
 
 		profileCustomFields = customFieldsRepo.getAll(getContext());
-		registerSteps = customFieldsRepo.getRegisterSteps(getContext());
+		List<CustomField.RegisterFormStep> registerSteps = customFieldsRepo.getRegisterSteps(getContext());
 		fieldsManager = new CustomFieldsUIManager(this.getActivity(), fields, profileCustomFields);
 		fieldsManager.populateAndInitializeFields(customFieldsContainer);
 		if (registerSteps == null || registerSteps.isEmpty()){

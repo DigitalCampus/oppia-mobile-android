@@ -2,6 +2,8 @@ package org.digitalcampus.oppia.utils.ui.fields;
 
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 
@@ -19,6 +21,10 @@ public class SteppedFormUIManager {
     private int currentStepNum;
     private int numSteps;
 
+    private TextView stepDescription;
+    private ViewGroup customFieldsContainer;
+    private ViewGroup steppedFieldsContainer;
+
     public SteppedFormUIManager(StepperIndicator indicator, List<CustomField.RegisterFormStep> steps, CustomFieldsUIManager fieldsManager){
         this.stepIndicator = indicator;
         this.fieldsManager = fieldsManager;
@@ -27,9 +33,13 @@ public class SteppedFormUIManager {
         numSteps = steps.get(steps.size() - 1).getOrder();
     }
 
-    public void initialize(){
+    public void initialize(ViewGroup customFieldsContainer, ViewGroup steppedFieldsContainer, TextView stepDescriptionTextView){
         currentStepNum = 0;
         stepIndicator.setStepCount(numSteps);
+        stepDescription = stepDescriptionTextView;
+        this.customFieldsContainer = customFieldsContainer;
+        this.steppedFieldsContainer = steppedFieldsContainer;
+        customFieldsContainer.setVisibility(View.GONE);
         loadStep(true);
     }
 
@@ -79,9 +89,9 @@ public class SteppedFormUIManager {
             }
         }
         currentStep = step;
-        fieldsManager.hideAll();
+        fieldsManager.moveAllFieldsTo(customFieldsContainer);
         for (String field : currentStep.getFields()){
-            fieldsManager.setVisible(field);
+            fieldsManager.setVisibleInView(field, steppedFieldsContainer);
         }
         updateDescription();
         stepIndicator.setCurrentStep(Math.max(currentStepNum - 1, 0));
