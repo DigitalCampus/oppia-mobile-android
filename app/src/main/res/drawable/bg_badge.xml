@@ -18,7 +18,7 @@
       android:strokeAlpha="1"
       android:strokeLineJoin="miter"
       android:strokeWidth="0.54027975"
-      android:fillColor="@color/theme_secondary"
+      android:fillColor="@color/white"
       android:strokeColor="#00000000"
       android:fillType="nonZero"
       android:fillAlpha="1"
