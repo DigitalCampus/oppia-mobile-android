@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_gravity="center"
-    android:background="@color/background_light">
+    android:layout_gravity="center">
 
     <LinearLayout
         android:id="@+id/loading_badges"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_gravity="center"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:visibility="gone">
 
         <ProgressBar
             android:id="@+id/progressBar2"
@@ -98,7 +99,8 @@
         android:id="@+id/recycler_badges"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:orientation="vertical"/>
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        tools:listitem="@layout/row_fragment_badges_list" />
 
 </FrameLayout>

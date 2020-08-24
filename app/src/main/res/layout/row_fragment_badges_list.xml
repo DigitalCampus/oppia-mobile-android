@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/badges_row"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/list_card_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="@dimen/list_card_horizontal_margin"
-        android:layout_marginRight="@dimen/list_card_horizontal_margin"
-        android:layout_marginBottom="4dp"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:contentPaddingBottom="@dimen/list_card_vertical_padding"
-        app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
-        app:contentPaddingRight="@dimen/list_card_horizontal_padding"
-        app:contentPaddingTop="@dimen/list_card_vertical_padding">
+    <FrameLayout
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:background="@drawable/bg_badge"
+        android:id="@+id/badge_icon"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:fitsSystemWindows="false">
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/course_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/badges_icon"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginRight="@dimen/list_card_icon_margin"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:src="@drawable/trophy"
-                android:background="@drawable/bg_points" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:contentDescription="@string/app_logo_alt"
+            android:padding="18dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/course_icon_placeholder" />
+    </FrameLayout>
 
-            <TextView
-                android:id="@+id/badges_date"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_toRightOf="@id/badges_icon"
-                android:layout_alignParentTop="true" />
 
-            <TextView
-                android:id="@+id/badges_description"
-                style="@style/NormalTextDark"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toRightOf="@id/badges_icon"
-                android:layout_below="@id/badges_date" />
-        </RelativeLayout>
+    <TextView
+        android:id="@+id/badges_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/badge_icon"
+        tools:text="2020-02-25" />
 
-    </androidx.cardview.widget.CardView>
+    <TextView
+        android:id="@+id/badges_description"
+        style="@style/NormalTextDark"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/badges_date"
+        android:layout_toRightOf="@id/badge_icon"
+        android:gravity="center_horizontal"
+        tools:text="Course completed: Test feedback" />
+
 
 </LinearLayout>
