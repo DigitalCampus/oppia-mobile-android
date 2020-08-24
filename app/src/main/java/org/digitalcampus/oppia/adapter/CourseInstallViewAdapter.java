@@ -73,6 +73,14 @@ public class CourseInstallViewAdapter extends Course {
         return installing;
     }
 
+    public boolean isToInstall(){
+        return !isInstalled() || isToUpdate();
+    }
+
+    public boolean isInProgress(){
+        return installing || downloading;
+    }
+
     public void setInstalling(boolean installing) {
         this.installing = installing;
     }
