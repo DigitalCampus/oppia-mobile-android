@@ -47,6 +47,7 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.storage.StorageUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.json.JSONException;
@@ -429,7 +430,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			String loadedConfig = "customfields_loaded_" + BuildConfig.LOAD_CUSTOMFIELDS_VERSION;
 			boolean alreadyLoaded = prefs.getBoolean(loadedConfig, false);
 			if (!alreadyLoaded){
-				CustomField.loadCustomFieldsFromAssets(ctx, CustomField.CUSTOMFIELDS_FILE);
+				String customFieldsData = StorageUtils.readFileFromAssets(ctx, CustomField.CUSTOMFIELDS_FILE);
+				CustomField.loadCustomFields(ctx, customFieldsData);
 				prefs.edit().putBoolean(loadedConfig, true).apply();
 			}
 		}

@@ -2,6 +2,7 @@ package org.digitalcampus.oppia.utils.ui.fields;
 
 import android.content.Context;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
     private SwitchCompat input;
     private TextView helperText;
     private TextView errorText;
+    private CustomValidator validator;
 
     public ValidableSwitchLayout(Context context){
         super(context);
@@ -67,10 +69,24 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
     }
 
     @Override
+    public View getView() {
+        return this;
+    }
+
+    @Override
+    public void setCustomValidator(CustomValidator v) {
+        validator = v;
+    }
+
+    @Override
     public boolean validate() {
         boolean valid = !required || input.isChecked();
+        if (valid && validator != null){
+            valid = validator.validate(this);
+        }
         errorText.setVisibility(valid ? GONE : VISIBLE);
         input.setHintTextColor(ContextCompat.getColor(getContext(), valid ? android.R.color.tab_indicator_text : R.color.text_error));
+
         return valid;
     }
 
@@ -92,7 +108,7 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
 
 
     @Override
-    public void setChangeListener(final onChangeListener listener) {
+    public void addChangeListener(final onChangeListener listener) {
         input.setOnCheckedChangeListener((compoundButton, checked) ->
                 listener.onValueChanged(input.isChecked() ? "true" : null));
     }

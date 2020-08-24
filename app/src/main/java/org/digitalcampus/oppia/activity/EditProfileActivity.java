@@ -13,9 +13,10 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.UpdateProfileTask;
 import org.digitalcampus.oppia.utils.ui.fields.CustomFieldsUIManager;
-import org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout;
+import org.digitalcampus.oppia.utils.ui.fields.ValidableField;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -24,6 +25,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
     private ActivityEditProfileBinding binding;
     private CustomFieldsUIManager fieldsManager;
+    private HashMap<String, ValidableField> fields = new HashMap<>();
 
     @Inject
     ApiEndpoint apiEndpoint;
@@ -46,8 +48,17 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
         getAppComponent().inject(this);
 
+        fields = new HashMap<String, ValidableField>() {{
+            put("email", binding.fieldEmail);
+            put("first_name", binding.fieldFirstname);
+            put("last_name", binding.fieldLastname);
+            put("jobtitle", binding.fieldJobtitle);
+            put("organisation", binding.fieldOrganisation);
+            put("phoneno", binding.fieldPhoneno);
+        }};
+
         profileCustomFields = customFieldsRepo.getAll(this);
-        fieldsManager = new CustomFieldsUIManager(this, profileCustomFields);
+        fieldsManager = new CustomFieldsUIManager(this, fields, profileCustomFields);
         fieldsManager.populateAndInitializeFields(binding.customFieldsContainer);
 
         fillUserProfileData();
@@ -61,12 +72,12 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
 
     private void fillUserProfileData() {
-
         binding.fieldEmail.setText(user.getEmail());
         binding.fieldFirstname.setText(user.getFirstname());
         binding.fieldLastname.setText(user.getLastname());
         binding.fieldOrganisation.setText(user.getOrganisation());
         binding.fieldJobtitle.setText(user.getJobTitle());
+        binding.fieldPhoneno.setText(user.getPhoneNo());
         fieldsManager.fillWithUserData(user);
     }
 
@@ -84,12 +95,10 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         String lastname = binding.fieldLastname.getCleanedValue();
         String jobTitle = binding.fieldJobtitle.getCleanedValue();
         String organisation = binding.fieldOrganisation.getCleanedValue();
-
-        ValidableTextInputLayout[] fields = new ValidableTextInputLayout[]{binding.fieldEmail, binding.fieldFirstname,
-                binding.fieldLastname, binding.fieldJobtitle, binding.fieldOrganisation};
+        String phoneNo = binding.fieldPhoneno.getCleanedValue();
 
         boolean valid = true;
-        for (ValidableTextInputLayout field : fields){
+        for (ValidableField field : fields.values()){
             valid = field.validate() && valid;
         }
         valid = fieldsManager.validateFields() && valid;
@@ -107,6 +116,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
             user.setEmail(email);
             user.setJobTitle(jobTitle);
             user.setOrganisation(organisation);
+            user.setPhoneNo(phoneNo);
             user.setUserCustomFields(fieldsManager.getCustomFieldValues());
             executeUpdateProfileTask(user);
         }
