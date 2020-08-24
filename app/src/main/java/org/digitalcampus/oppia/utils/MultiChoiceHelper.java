@@ -200,7 +200,7 @@ public class MultiChoiceHelper {
 
             if (choiceActionMode != null) {
                 multiChoiceModeCallback.onItemCheckedStateChanged(choiceActionMode, position, id, value);
-                if (checkedItemCount == 0) {
+                if (checkedItemCount == 0 && choiceActionMode != null) {
                     choiceActionMode.finish();
                 }
             }
