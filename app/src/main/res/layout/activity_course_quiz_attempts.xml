@@ -12,7 +12,7 @@
     <LinearLayout
         android:id="@+id/action_bar_subtitle"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/subtitle_bar_height"
         android:layout_below="@+id/toolbar"
         android:layout_centerVertical="true"
         android:layout_gravity="center"

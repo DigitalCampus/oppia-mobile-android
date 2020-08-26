@@ -3,7 +3,6 @@ package org.digitalcampus.oppia.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,53 +10,46 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.utils.MultiChoiceHelper;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdapter.DownloadMediaViewHolder> {
+import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
+
+public class DownloadMediaAdapter extends MultiChoiceRecyclerViewAdapter<DownloadMediaAdapter.DownloadMediaViewHolder> {
 
 
     private final SharedPreferences prefs;
-    private final MultiChoiceHelper multiChoiceHelper;
     private List<Media> mediaList;
     private Context context;
-    private OnItemClickListener itemClickListener;
-    private boolean isMultiChoiceMode;
-
+    private ListInnerBtnOnClickListener itemClickListener;
 
     public DownloadMediaAdapter(Context context, List<Media> mediaList) {
         this.context = context;
         this.mediaList = mediaList;
-
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-        multiChoiceHelper = new MultiChoiceHelper((AppCompatActivity) context, this);
     }
 
     @Override
-    public DownloadMediaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DownloadMediaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_media_download, parent, false);
-
-        // Return a new holder instance
         return new DownloadMediaViewHolder(contactView);
     }
 
 
     @Override
-    public void onBindViewHolder(final DownloadMediaViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull final DownloadMediaViewHolder viewHolder, final int position) {
 
+        updateViewHolder(viewHolder, position);
         final Media m = getItemAtPosition(position);
 
         StringBuilder courses =  new StringBuilder();
@@ -78,9 +70,7 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
         }
 
         viewHolder.downloadBtn.setVisibility(isMultiChoiceMode ? View.INVISIBLE : View.VISIBLE);
-
         viewHolder.downloadBtn.setTag(position); //For passing the list item index
-
 
         if (m.isDownloading()) {
             viewHolder.downloadBtn.setImageResource(R.drawable.ic_action_cancel);
@@ -97,8 +87,6 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
             viewHolder.downloadProgress.setVisibility(View.GONE);
             viewHolder.mediaPath.setVisibility(View.VISIBLE);
         }
-
-        viewHolder.updateCheckedState(position);
     }
 
     @Override
@@ -108,11 +96,6 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
 
     public Media getItemAtPosition(int position) {
         return mediaList.get(position);
-    }
-
-    public void setEnterOnMultiChoiceMode(boolean multiChoiceModeActive) {
-        this.isMultiChoiceMode = multiChoiceModeActive;
-
     }
 
     public void sortByCourse() {
@@ -131,12 +114,11 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
     public void sortByFilename() {
         //Sort the media list by filename
         Collections.sort(this.mediaList, (Comparator<Object>) (o1, o2) -> ((Media) o1).getFilename().compareTo(((Media) o2).getFilename()));
-
         notifyDataSetChanged();
     }
 
 
-    public class DownloadMediaViewHolder extends MultiChoiceHelper.ViewHolder {
+    public class DownloadMediaViewHolder extends MultiChoiceRecyclerViewAdapter.ViewHolder {
 
         private TextView mediaCourses;
         private TextView mediaTitle;
@@ -148,7 +130,6 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
         public DownloadMediaViewHolder(View itemView) {
 
             super(itemView);
-
             mediaCourses = itemView.findViewById(R.id.media_courses);
             mediaTitle = itemView.findViewById(R.id.media_title);
             mediaPath = itemView.findViewById(R.id.media_path);
@@ -158,26 +139,13 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
 
             downloadBtn.setOnClickListener(v -> {
                 if (itemClickListener != null)
-                    itemClickListener.onDownloadClickListener(getAdapterPosition());
+                    itemClickListener.onClick(getAdapterPosition());
             });
-
-            bind(multiChoiceHelper, getAdapterPosition());
         }
-
     }
 
-    public MultiChoiceHelper getMultiChoiceHelper() {
-        return multiChoiceHelper;
-    }
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(ListInnerBtnOnClickListener listener) {
         this.itemClickListener = listener;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-
-        void onDownloadClickListener(int position);
     }
 }
 
