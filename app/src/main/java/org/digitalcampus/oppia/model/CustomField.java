@@ -116,6 +116,10 @@ public class CustomField {
         return !TextUtils.isEmpty(fieldVisibleBy);
     }
 
+    public boolean isNegativeDependency(){
+        return !TextUtils.isEmpty(valueVisibleBy) && valueVisibleBy.startsWith("!");
+    }
+
     public String getFieldVisibleBy() {
         return fieldVisibleBy;
     }
