@@ -63,8 +63,8 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download);
-		TextView tagTitle = findViewById(R.id.category_title);
-		tagTitle.setVisibility(View.GONE);
+		View subtitleBar = findViewById(R.id.action_bar_subtitle);
+		subtitleBar.setVisibility(View.GONE);
 		getAppComponent().inject(this);
 
         tags = new ArrayList<>();
