@@ -31,7 +31,7 @@ import com.google.android.material.tabs.TabLayout;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.LoginFragment;
-import org.digitalcampus.oppia.fragments.register.RegisterMainFragment;
+import org.digitalcampus.oppia.fragments.RegisterFragment;
 import org.digitalcampus.oppia.fragments.ResetFragment;
 import org.digitalcampus.oppia.fragments.WelcomeFragment;
 import org.digitalcampus.oppia.model.Lang;
@@ -49,7 +49,7 @@ public class WelcomeActivity extends AppActivity {
     private ViewPager viewPager;
 	private TabLayout tabs;
     private int currentTab = TAB_WELCOME;
-	private RegisterMainFragment fRegister;
+	private RegisterFragment fRegister;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,7 @@ public class WelcomeActivity extends AppActivity {
 		fragments.add(fLogin);
         tabTitles.add(this.getString(R.string.tab_title_login));
 
-		fRegister = RegisterMainFragment.newInstance();
+		fRegister = RegisterFragment.newInstance();
 		fragments.add(fRegister);
         tabTitles.add(this.getString(R.string.tab_title_register));
 

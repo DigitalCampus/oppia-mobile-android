@@ -21,6 +21,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -223,6 +224,16 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 
 	}
 
+	public boolean goBack(){
+		if (prevStepButton.getVisibility() == View.INVISIBLE){
+			return false;
+		}
+		else {
+			prevStep();
+			return true;
+		}
+	}
+
 	private void prevStep(){
 		if (stepsManager.prevStep()){
 			prevStepButton.setVisibility(View.INVISIBLE);
@@ -271,7 +282,6 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 
 		if (valid){
             User u = new User();
-            u.setUsername(usernameField.getCleanedValue());
             u.setPassword(passwordField.getCleanedValue());
             u.setPasswordAgain(passwordAgainField.getCleanedValue());
             u.setFirstname(firstnameField.getCleanedValue());
@@ -281,6 +291,14 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
             u.setOrganisation(organisationField.getCleanedValue());
             u.setPhoneNo(phoneNoField.getCleanedValue());
 			u.setUserCustomFields(fieldsManager.getCustomFieldValues());
+
+			if (TextUtils.equals(u.getRole(), "other")){
+				u.setUsername(usernameField.getCleanedValue());
+			}
+			else{
+				u.autogenerateUsername();
+			}
+
             executeRegisterTask(u);
         }
 

@@ -263,7 +263,7 @@ dependencies {
     androidTestImplementation 'com.google.dexmaker:dexmaker:1.2'
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.2'
 
-//    debugImplementation 'im.dino:dbinspector:3.4.1@aar'
+    debugImplementation 'im.dino:dbinspector:3.4.1@aar'
 
 }
 

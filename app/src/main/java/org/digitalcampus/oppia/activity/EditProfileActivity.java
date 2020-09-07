@@ -36,10 +36,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
     @Inject
     CustomFieldsRepository customFieldsRepo;
-
     List<CustomField> profileCustomFields;
-
-    String role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +81,6 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         fieldsManager.fillWithUserData(user);
     }
 
-    }
 
     @Override
     public void onClick(View v) {
@@ -106,9 +102,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         for (ValidableField field : fields.values()){
             valid = field.validate() && valid;
         }
-        if (!TextUtils.equals(role, "other")){
-            valid = fieldsManager.validateFields() && valid;
-        }
+        valid = fieldsManager.validateFields() && valid;
 
         //If the rest of email validations passed, check that the email is valid
         if (binding.fieldEmail.validate() && !TextUtils.equals("", email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
