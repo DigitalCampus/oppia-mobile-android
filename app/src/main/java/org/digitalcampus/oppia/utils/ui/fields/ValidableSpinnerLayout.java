@@ -34,7 +34,8 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     private boolean selected = false;
     private ArrayAdapter<CustomField.CollectionItem> adapter;
 
-    private onChangeListener valueChangelistener;
+    private CustomValidator validator;
+    private List<onChangeListener> valueChangelisteners = new ArrayList<>();
 
     public ValidableSpinnerLayout(Context context){
         super(context);
@@ -67,6 +68,8 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         }
         else{
             labelText.setTextSize(getResources().getDimension(R.dimen.hint_text_size));
+            errorText.setTextSize(getResources().getDimension(R.dimen.hint_text_size));
+            labelText.setTextColor(ContextCompat.getColor(getContext(), R.color.theme_secondary));
             errorText.setTextColor(ContextCompat.getColor(getContext(), R.color.text_error));
         }
 
@@ -150,12 +153,17 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     @Override
     public boolean validate() {
         boolean valid = !required || selected;
+        if (valid && validator != null){
+            valid = validator.validate(this);
+        }
+
         errorText.setVisibility(valid ? GONE : VISIBLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             labelText.setTextAppearance( valid ?
                     R.style.Oppia_CustomField_TextInputLayoutLabel :
                     R.style.Oppia_CustomField_TextInputLayoutError);
         }
+
         return valid;
     }
 
@@ -173,13 +181,35 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
 
     @Override
     public String getCleanedValue() {
+        if (items == null || items.isEmpty()){
+            return null;
+        }
         int pos = input.getSelectedItemPosition();
         return items.get(pos).getKey();
     }
 
     @Override
-    public void setChangeListener(onChangeListener listener) {
-        this.valueChangelistener = listener;
+    public void addChangeListener(onChangeListener listener) {
+        this.valueChangelisteners.add(listener);
+    }
+
+    private void notifyListeners(){
+        for (onChangeListener listener : valueChangelisteners){
+            listener.onValueChanged(getCleanedValue());
+        }
+    }
+
+    @Override
+    public void invalidateValue() { notifyListeners(); }
+
+    @Override
+    public View getView() {
+        return this;
+    }
+
+    @Override
+    public void setCustomValidator(CustomValidator v) {
+        validator = v;
     }
 
     @Override
@@ -197,14 +227,14 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
             }
         }
 
-        if(selected && valueChangelistener != null){
-            valueChangelistener.onValueChanged(getCleanedValue());
+        if(selected){
+            notifyListeners();
         }
 
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        valueChangelistener.onValueChanged(null);
+        notifyListeners();
     }
 }

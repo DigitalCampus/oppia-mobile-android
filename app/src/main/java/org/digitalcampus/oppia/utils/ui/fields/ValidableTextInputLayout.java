@@ -20,6 +20,7 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
 
     private boolean required = false;
     private boolean cantContainSpaces = false;
+    private CustomValidator validator;
 
     public ValidableTextInputLayout(Context context) {
         super(context);
@@ -63,8 +64,10 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
         if (!TextUtils.isEmpty(getHelperText())){
             // We add some additional bottom margin
             LayoutParams params = (LayoutParams) getLayoutParams();
-            params.bottomMargin = getContext().getResources().getDimensionPixelOffset(R.dimen.margin_medium);
-            setLayoutParams(params);
+            if (params != null){
+                params.bottomMargin = getContext().getResources().getDimensionPixelOffset(R.dimen.margin_medium);
+                setLayoutParams(params);
+            }
         }
         initializeLabelColorHintSelector();
 
@@ -87,6 +90,10 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
             this.setError(getContext().getString(R.string.field_spaces_error));
             valid = false;
         }
+        if (valid && validator != null){
+            valid = validator.validate(this);
+        }
+
         if (valid){
             this.setError(null);
             this.setErrorEnabled(false);
@@ -114,7 +121,20 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
 
 
     @Override
-    public void setChangeListener(onChangeListener listener) { }
+    public void addChangeListener(onChangeListener listener) { }
+
+    @Override
+    public void invalidateValue() { }
+
+    @Override
+    public View getView() {
+        return this;
+    }
+
+    @Override
+    public void setCustomValidator(CustomValidator v) {
+        validator = v;
+    }
 
     // Small hack to be able to show different label colors when the field is empty or filled
     // using the color selector based in the "selected" state.

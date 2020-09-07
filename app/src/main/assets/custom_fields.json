@@ -135,5 +135,6 @@
         {"id": "male", "value":"Male"}
       ]
     }
-  ]
+  ],
+  "register_steps": []
 }

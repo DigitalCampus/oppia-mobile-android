@@ -29,11 +29,13 @@ import androidx.appcompat.widget.SwitchCompat;
 
 public class CustomFieldsUIManager {
 
+    private HashMap<String, ValidableField> baseFields;
     private List<CustomField> fields;
     private List<Pair<CustomField, ValidableField>> inputs = new ArrayList<>();
     private Context ctx;
 
-    public CustomFieldsUIManager(Context ctx, List<CustomField> fields){
+    public CustomFieldsUIManager(Context ctx, HashMap<String, ValidableField> baseFields, List<CustomField> fields){
+        this.baseFields = baseFields;
         this.fields = fields;
         this.ctx = ctx;
     }
@@ -46,7 +48,11 @@ public class CustomFieldsUIManager {
         inputs.add(new Pair<>(field, input));
     }
 
-    private ValidableField getInputByKey(String key){
+    public ValidableField getInputByKey(String key){
+        if (baseFields.containsKey(key)){
+            return baseFields.get(key);
+        }
+
         for (final Pair<CustomField, ValidableField> formField : inputs){
             if (TextUtils.equals(formField.first.getKey(), key)) {
                 return formField.second;
@@ -81,8 +87,9 @@ public class CustomFieldsUIManager {
             final ValidableField input = dependField.second;
 
             LinearLayout.LayoutParams params = getDefaultLayoutParams();
-            if (field.isDependantOnField()) {
+            if (field.isDependantOnField() && !field.isNegativeDependency()) {
                 // We remove the bottom separation from the field it depends on
+                // (unless is a negative dependecy)
                 params.topMargin = -ctx.getResources().getDimensionPixelSize(R.dimen.margin_medium)/2;
             }
             input.setLayoutParams(params);
@@ -95,16 +102,26 @@ public class CustomFieldsUIManager {
         }
     }
 
+    private void setDependencyVisibility(CustomField field, ValidableField input, String value){
+        boolean visible = assertValue(field.getValueVisibleBy(), value);
+        input.setVisibility(visible ? View.VISIBLE : View.GONE);
+        input.invalidateValue();
+    }
+
     private void configureDepencency(final ValidableField input, final CustomField field){
 
         ValidableField formField = getInputByKey(field.getFieldVisibleBy());
         if (formField != null) {
-            formField.setChangeListener(newValue -> {
-                boolean valueFilled = newValue != null && !TextUtils.isEmpty(newValue);
-                boolean condition = TextUtils.isEmpty(field.getValueVisibleBy()) || TextUtils.equals(field.getValueVisibleBy(), newValue);
-                boolean visible = valueFilled && condition;
-                input.setVisibility(visible ? View.VISIBLE : View.GONE);
+            formField.addChangeListener(newValue -> {
 
+                if (formField.getView().getVisibility() != View.VISIBLE){
+                    // If the dependant field is not currently visible, hide it as well
+                    input.setVisibility(View.GONE);
+                    input.invalidateValue();
+                    return;
+                }
+
+                setDependencyVisibility(field, input, newValue);
                 ValidableField collectionField = getInputByKey(field.getCollectionNameBy());
                 if (collectionField != null && field.isChoices()) {
                     String collectionName = collectionField.getCleanedValue();
@@ -191,13 +208,17 @@ public class CustomFieldsUIManager {
             }
             else if (field.isChoices()){
                 ValidableSpinnerLayout input = (ValidableSpinnerLayout) formField.second;
-                values.put(field.getKey(), new CustomValue<>(input.getCleanedValue()));
+                String value = input.getCleanedValue();
+                if (value != null && !TextUtils.isEmpty(value)){
+                    values.put(field.getKey(), new CustomValue<>(input.getCleanedValue()));
+                }
+
             }
             else{
                 ValidableTextInputLayout input = (ValidableTextInputLayout) formField.second;
                 if (field.isInteger()){
                     String value = input.getCleanedValue();
-                    if (!TextUtils.isEmpty(value)){
+                    if (value != null && !TextUtils.isEmpty(value)){
                         values.put(field.getKey(), new CustomValue<>(Integer.parseInt(value)));
                     }
                 }
@@ -220,5 +241,61 @@ public class CustomFieldsUIManager {
         LinearLayout.LayoutParams params = getLinearParams();
         params.topMargin = ctx.getResources().getDimensionPixelSize(R.dimen.margin_medium);
         return params;
+    }
+
+    private boolean assertValue(String assertValue, String value){
+        boolean negation = assertValue != null && assertValue.startsWith("!");
+        if (negation){ // We have to remove the starting "!"
+            assertValue = assertValue.substring(1);
+        }
+        boolean match = (TextUtils.isEmpty(assertValue) && !TextUtils.isEmpty(value)) ||
+                TextUtils.equals(assertValue, value);
+        return negation != match;
+    }
+
+    boolean isConditionMet(String assertField, String assertValue){
+        ValidableField field = getInputByKey(assertField);
+        return assertValue(assertValue, field.getCleanedValue());
+
+    }
+
+    public void moveAllFieldsTo(ViewGroup container) {
+        for (ValidableField field : baseFields.values()){
+            field.setVisibility(View.GONE);
+            moveToView(field, container);
+        }
+        for (final Pair<CustomField, ValidableField> formField : inputs){
+            formField.second.setVisibility(View.GONE);
+            moveToView(formField.second, container);
+        }
+    }
+
+    private void moveToView(ValidableField field, ViewGroup container){
+        View fieldInput = field.getView();
+        ((ViewGroup)fieldInput.getParent()).removeView(fieldInput);
+        container.addView(fieldInput);
+    }
+
+    public void setVisibleInView(String fieldName, ViewGroup container){
+
+        if (baseFields.containsKey(fieldName)){
+            ValidableField field = baseFields.get(fieldName);
+            field.setVisibility(View.VISIBLE);
+            moveToView(field, container);
+            return;
+        }
+
+        for (final Pair<CustomField, ValidableField> formField : inputs){
+            CustomField field = formField.first;
+            ValidableField input = formField.second;
+            if (TextUtils.equals(field.getKey(), fieldName)) {
+                input.setVisibility(View.VISIBLE);
+                moveToView(input, container);
+                ValidableField dependant = getInputByKey(field.getFieldVisibleBy());
+                if (dependant != null) {
+                    setDependencyVisibility(field, input, dependant.getCleanedValue());
+                }
+            }
+        }
     }
 }
