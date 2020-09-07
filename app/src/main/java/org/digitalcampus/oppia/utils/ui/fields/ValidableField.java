@@ -10,6 +10,7 @@ public interface ValidableField {
     void setHelperText(CharSequence text);
     String getCleanedValue();
     void addChangeListener(onChangeListener listener);
+    void invalidateValue();
     void setVisibility(final int VISIBLE_MODE);
     void setLayoutParams(ViewGroup.LayoutParams params);
     View getView();

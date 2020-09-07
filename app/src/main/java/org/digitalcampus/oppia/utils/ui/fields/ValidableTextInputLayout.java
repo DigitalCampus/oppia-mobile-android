@@ -64,8 +64,10 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
         if (!TextUtils.isEmpty(getHelperText())){
             // We add some additional bottom margin
             LayoutParams params = (LayoutParams) getLayoutParams();
-            params.bottomMargin = getContext().getResources().getDimensionPixelOffset(R.dimen.margin_medium);
-            setLayoutParams(params);
+            if (params != null){
+                params.bottomMargin = getContext().getResources().getDimensionPixelOffset(R.dimen.margin_medium);
+                setLayoutParams(params);
+            }
         }
         initializeLabelColorHintSelector();
 
@@ -120,6 +122,9 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
 
     @Override
     public void addChangeListener(onChangeListener listener) { }
+
+    @Override
+    public void invalidateValue() { }
 
     @Override
     public View getView() {
