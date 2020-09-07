@@ -260,10 +260,14 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	public void onRegisterClick() {
 
 		boolean valid = true;
-		for (ValidableField field : fields.values()){
-			valid = field.validate() && valid;
+		if (stepsManager == null){
+			// Only validate fields if we are not in a stepped form
+			// (if the form was stepped, we already validated each conditional step)
+			for (ValidableField field : fields.values()){
+				valid = field.validate() && valid;
+			}
+			valid = fieldsManager.validateFields() && valid;
 		}
-		valid = fieldsManager.validateFields() && valid;
 
 		if (valid){
             User u = new User();

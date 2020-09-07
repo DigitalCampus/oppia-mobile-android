@@ -87,8 +87,9 @@ public class CustomFieldsUIManager {
             final ValidableField input = dependField.second;
 
             LinearLayout.LayoutParams params = getDefaultLayoutParams();
-            if (field.isDependantOnField()) {
+            if (field.isDependantOnField() && !field.isNegativeDependency()) {
                 // We remove the bottom separation from the field it depends on
+                // (unless is a negative dependecy)
                 params.topMargin = -ctx.getResources().getDimensionPixelSize(R.dimen.margin_medium)/2;
             }
             input.setLayoutParams(params);
@@ -104,6 +105,7 @@ public class CustomFieldsUIManager {
     private void setDependencyVisibility(CustomField field, ValidableField input, String value){
         boolean visible = assertValue(field.getValueVisibleBy(), value);
         input.setVisibility(visible ? View.VISIBLE : View.GONE);
+        input.invalidateValue();
     }
 
     private void configureDepencency(final ValidableField input, final CustomField field){
@@ -111,8 +113,15 @@ public class CustomFieldsUIManager {
         ValidableField formField = getInputByKey(field.getFieldVisibleBy());
         if (formField != null) {
             formField.addChangeListener(newValue -> {
-                setDependencyVisibility(field, input, newValue);
 
+                if (formField.getView().getVisibility() != View.VISIBLE){
+                    // If the dependant field is not currently visible, hide it as well
+                    input.setVisibility(View.GONE);
+                    input.invalidateValue();
+                    return;
+                }
+
+                setDependencyVisibility(field, input, newValue);
                 ValidableField collectionField = getInputByKey(field.getCollectionNameBy());
                 if (collectionField != null && field.isChoices()) {
                     String collectionName = collectionField.getCleanedValue();
@@ -199,13 +208,17 @@ public class CustomFieldsUIManager {
             }
             else if (field.isChoices()){
                 ValidableSpinnerLayout input = (ValidableSpinnerLayout) formField.second;
-                values.put(field.getKey(), new CustomValue<>(input.getCleanedValue()));
+                String value = input.getCleanedValue();
+                if (value != null && !TextUtils.isEmpty(value)){
+                    values.put(field.getKey(), new CustomValue<>(input.getCleanedValue()));
+                }
+
             }
             else{
                 ValidableTextInputLayout input = (ValidableTextInputLayout) formField.second;
                 if (field.isInteger()){
                     String value = input.getCleanedValue();
-                    if (!TextUtils.isEmpty(value)){
+                    if (value != null && !TextUtils.isEmpty(value)){
                         values.put(field.getKey(), new CustomValue<>(Integer.parseInt(value)));
                     }
                 }
