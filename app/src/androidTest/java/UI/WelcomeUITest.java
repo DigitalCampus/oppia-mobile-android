@@ -41,7 +41,7 @@ public class WelcomeUITest {
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
 
-        onView(withText(R.string.register_select_role_explanation))
+        onView(withId(R.id.register_title))
                 .check(matches(isDisplayed()));
     }
 

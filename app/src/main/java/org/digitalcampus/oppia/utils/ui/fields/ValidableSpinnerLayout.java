@@ -34,7 +34,8 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     private boolean selected = false;
     private ArrayAdapter<CustomField.CollectionItem> adapter;
 
-    private onChangeListener valueChangelistener;
+    private CustomValidator validator;
+    private List<onChangeListener> valueChangelisteners = new ArrayList<>();
 
     public ValidableSpinnerLayout(Context context){
         super(context);
@@ -152,12 +153,17 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     @Override
     public boolean validate() {
         boolean valid = !required || selected;
+        if (valid && validator != null){
+            valid = validator.validate(this);
+        }
+
         errorText.setVisibility(valid ? GONE : VISIBLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             labelText.setTextAppearance( valid ?
                     R.style.Oppia_CustomField_TextInputLayoutLabel :
                     R.style.Oppia_CustomField_TextInputLayoutError);
         }
+
         return valid;
     }
 
@@ -180,8 +186,18 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     }
 
     @Override
-    public void setChangeListener(onChangeListener listener) {
-        this.valueChangelistener = listener;
+    public void addChangeListener(onChangeListener listener) {
+        this.valueChangelisteners.add(listener);
+    }
+
+    @Override
+    public View getView() {
+        return this;
+    }
+
+    @Override
+    public void setCustomValidator(CustomValidator v) {
+        validator = v;
     }
 
     @Override
@@ -199,14 +215,18 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
             }
         }
 
-        if(selected && valueChangelistener != null){
-            valueChangelistener.onValueChanged(getCleanedValue());
+        if(selected){
+            for (onChangeListener listener : valueChangelisteners){
+                listener.onValueChanged(getCleanedValue());
+            }
         }
 
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        valueChangelistener.onValueChanged(null);
+        for (onChangeListener listener : valueChangelisteners){
+            listener.onValueChanged(getCleanedValue());
+        }
     }
 }

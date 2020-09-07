@@ -3,7 +3,6 @@ package org.digitalcampus.oppia.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +11,16 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 
 import java.util.List;
 import java.util.Locale;
 
-public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCoursesAdapter.DownloadCoursesViewHolder> {
+import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 
+public class DownloadCoursesAdapter extends MultiChoiceRecyclerViewAdapter<DownloadCoursesAdapter.DownloadCoursesViewHolder> {
 
     private List<CourseInstallViewAdapter> courses;
     private Context context;
@@ -51,18 +50,18 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
     public DownloadCoursesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_course_download, parent, false);
-
-        // Return a new holder instance
         return new DownloadCoursesViewHolder(contactView);
     }
 
 
     @Override
-    public void onBindViewHolder(final DownloadCoursesViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull final DownloadCoursesViewHolder viewHolder, final int position) {
 
+        updateViewHolder(viewHolder, position);
         final CourseInstallViewAdapter c = getItemAtPosition(position);
 
         viewHolder.courseTitle.setText(c.getTitle(prefLang));
+        viewHolder.actionBtn.setVisibility(isMultiChoiceMode ? View.INVISIBLE : View.VISIBLE);
 
         if (c.isDraft()){
             viewHolder.courseDraft.setVisibility(View.VISIBLE);
@@ -115,6 +114,7 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
                     viewHolder.actionBtn.setImageResource(R.drawable.ic_action_accept);
                     viewHolder.actionBtn.setContentDescription(installedDescription);
                     viewHolder.actionBtn.setEnabled(false);
+                    viewHolder.actionBtn.setVisibility(View.VISIBLE);
                 }
             } else {
                 viewHolder.actionBtn.setImageResource(R.drawable.ic_action_download);
@@ -136,7 +136,7 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
     }
 
 
-    public class DownloadCoursesViewHolder extends RecyclerView.ViewHolder {
+    public class DownloadCoursesViewHolder extends MultiChoiceRecyclerViewAdapter.ViewHolder {
 
         private TextView courseTitle;
         private TextView courseDraft;
@@ -173,8 +173,6 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-
         void onDownloadButtonClick(View view, int position);
     }
 }
