@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         versionCode 83
-        versionName "7.1.2-et.1-int"
+        versionName "7.1.3-et.1-int"
 
         applicationId "et.gov.moh.oppia.covid"
 
@@ -43,6 +43,7 @@ android {
         checkReleaseBuilds true
         // Disable checks for String translations
         disable 'MissingTranslation', 'ExtraTranslation'
+        abortOnError false
     }
 
     // Configure to use Java8 features like try-with-resources
