@@ -22,9 +22,11 @@ public class RemoteApiEndpoint implements ApiEndpoint{
     }
 
     public static boolean isServerVersionCompatible(String version){
+
         if (version.startsWith("v")){
             version = version.substring(1);
         }
+
         String[] versioning = version.split("\\.");
         if (versioning.length < 3){
             // No correct format (expected x.x.x)
@@ -34,7 +36,7 @@ public class RemoteApiEndpoint implements ApiEndpoint{
         try{
             int majorVersion = Integer.parseInt(versioning[0]);
             int minorVersion = Integer.parseInt(versioning[1]);
-            int buildVersion = Integer.parseInt(versioning[2]);
+            int buildVersion = Integer.parseInt(versioning[2].split("-")[0]);
 
             return ((majorVersion > MIN_MAJOR_VERSION) ||
                     (majorVersion == MIN_MAJOR_VERSION && minorVersion > MIN_MIN_VERSION) ||
