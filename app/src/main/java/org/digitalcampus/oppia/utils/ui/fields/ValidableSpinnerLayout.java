@@ -181,6 +181,9 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
 
     @Override
     public String getCleanedValue() {
+        if (items == null || items.isEmpty()){
+            return null;
+        }
         int pos = input.getSelectedItemPosition();
         return items.get(pos).getKey();
     }
@@ -189,6 +192,15 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
     public void addChangeListener(onChangeListener listener) {
         this.valueChangelisteners.add(listener);
     }
+
+    private void notifyListeners(){
+        for (onChangeListener listener : valueChangelisteners){
+            listener.onValueChanged(getCleanedValue());
+        }
+    }
+
+    @Override
+    public void invalidateValue() { notifyListeners(); }
 
     @Override
     public View getView() {
@@ -216,17 +228,13 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         }
 
         if(selected){
-            for (onChangeListener listener : valueChangelisteners){
-                listener.onValueChanged(getCleanedValue());
-            }
+            notifyListeners();
         }
 
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        for (onChangeListener listener : valueChangelisteners){
-            listener.onValueChanged(getCleanedValue());
-        }
+        notifyListeners();
     }
 }

@@ -12,13 +12,14 @@ import org.digitalcampus.mobile.learning.R;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 
-public class ValidableSwitchLayout extends LinearLayout implements ValidableField{
+public class ValidableSwitchLayout extends LinearLayout implements ValidableField {
 
     private boolean required = false;
     private SwitchCompat input;
     private TextView helperText;
     private TextView errorText;
     private CustomValidator validator;
+    private onChangeListener listener;
 
     public ValidableSwitchLayout(Context context){
         super(context);
@@ -63,7 +64,7 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
     @Override
     public void setLayoutParams(ViewGroup.LayoutParams params){
         int margin = getContext().getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin);
-        LinearLayout.LayoutParams linearParams = (LinearLayout.LayoutParams) params;
+        LayoutParams linearParams = (LayoutParams) params;
         linearParams.setMargins(0, margin, 0, margin);
         super.setLayoutParams(linearParams);
     }
@@ -109,7 +110,13 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
 
     @Override
     public void addChangeListener(final onChangeListener listener) {
+        this.listener = listener;
         input.setOnCheckedChangeListener((compoundButton, checked) ->
                 listener.onValueChanged(input.isChecked() ? "true" : null));
+    }
+
+    @Override
+    public void invalidateValue() {
+        listener.onValueChanged(getCleanedValue());
     }
 }
