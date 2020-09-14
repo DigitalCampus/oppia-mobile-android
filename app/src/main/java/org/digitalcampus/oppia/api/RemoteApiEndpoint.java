@@ -36,7 +36,7 @@ public class RemoteApiEndpoint implements ApiEndpoint{
         try{
             int majorVersion = Integer.parseInt(versioning[0]);
             int minorVersion = Integer.parseInt(versioning[1]);
-            int buildVersion = Integer.parseInt(versioning[2].split("-")[0]);
+            int buildVersion = Integer.parseInt(versioning[2]);
 
             return ((majorVersion > MIN_MAJOR_VERSION) ||
                     (majorVersion == MIN_MAJOR_VERSION && minorVersion > MIN_MIN_VERSION) ||

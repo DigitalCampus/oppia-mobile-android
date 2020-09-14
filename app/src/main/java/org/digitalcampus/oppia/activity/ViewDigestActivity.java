@@ -1,6 +1,7 @@
 package org.digitalcampus.oppia.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,16 +12,18 @@ import android.widget.TextView;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityViewDigestBinding;
 import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
+import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
+import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 
 import javax.inject.Inject;
 
-public class ViewDigestActivity extends AppActivity {
+public class ViewDigestActivity extends AppActivity implements CourseInstallerListener, View.OnClickListener {
 
     public static final String ACTIVITY_DIGEST_PARAM = "digest";
     public static final String COURSE_SHORTNAME_PARAM = "course";
@@ -34,12 +37,9 @@ public class ViewDigestActivity extends AppActivity {
     @Inject
     CourseInstallerServiceDelegate courseInstallerServiceDelegate;
     private ActivityViewDigestBinding binding;
+    private InstallerBroadcastReceiver receiver;
+    private String courseShortname;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        initialize();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,29 @@ public class ViewDigestActivity extends AppActivity {
 
         processLinkPath(getIntent().getData());
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        initialize();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        receiver = new InstallerBroadcastReceiver();
+        receiver.setCourseInstallerListener(this);
+        IntentFilter broadcastFilter = new IntentFilter(CourseInstallerService.BROADCAST_ACTION);
+        broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        registerReceiver(receiver, broadcastFilter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
     }
 
     private void processLinkPath(Uri data) {
@@ -86,16 +109,17 @@ public class ViewDigestActivity extends AppActivity {
             finish();
         } else {
             binding.courseTitle.setText(shortname);
+            this.courseShortname = shortname;
+            binding.downloadCourseBtn.setOnClickListener(this);
         }
 
     }
 
-    private void downloadCourse(CourseInstallViewAdapter course){
-        if (course.isToInstall() && !course.isInProgress()){
-            Intent serviceIntent = new Intent(this, CourseInstallerService.class);
-            courseInstallerServiceDelegate.installCourse(this, serviceIntent, course);
-//            resetCourseProgress(course, true, false);
-        }
+    private void downloadCourse() {
+
+        Intent serviceIntent = new Intent(this, CourseInstallerService.class);
+        courseInstallerServiceDelegate.installCourse(this, serviceIntent, course);
+
     }
 
     private void processActivityDigestLink(Uri data) {
@@ -140,6 +164,41 @@ public class ViewDigestActivity extends AppActivity {
             return false;
         }
         return true;
+    }
+
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.btn_download_courses:
+
+                downloadCourse();
+
+                break;
+        }
+    }
+
+    // DOWNLOAD COURSE LISTENERS
+
+    @Override
+    public void onDownloadProgress(String fileUrl, int progress) {
+
+    }
+
+    @Override
+    public void onInstallProgress(String fileUrl, int progress) {
+
+    }
+
+    @Override
+    public void onInstallFailed(String fileUrl, String message) {
+
+    }
+
+    @Override
+    public void onInstallComplete(String fileUrl) {
+
     }
 
 }
