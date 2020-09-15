@@ -415,5 +415,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         // Fixed with this workaround
         checkParsedCourse();
 
+        if (course.getNoActivitiesCompleted() == course.getNoActivities()){
+            launchExternalApp();
+        }
+
     }
 }

@@ -59,6 +59,7 @@ import org.digitalcampus.oppia.listener.APIKeyRequestListener;
 import org.digitalcampus.oppia.listener.GamificationEventListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 
 import java.util.concurrent.TimeUnit;
 
@@ -297,6 +298,13 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         }
     }
 
+    protected void launchExternalApp(){
+        Intent i = ExternalResourceOpener.getExternalActivityIntent(this);
+        if (i != null){
+            startActivity(i);
+            finish();
+        }
+    }
 
     private void animatePoints(final Snackbar snackbar, boolean withSound) {
 

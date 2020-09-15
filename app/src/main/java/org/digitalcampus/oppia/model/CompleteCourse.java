@@ -87,6 +87,7 @@ public class CompleteCourse extends Course implements IMediaXMLHandler{
         DbHelper db = DbHelper.getInstance(ctx);
         long userId = db.getUserId(SessionManager.getUsername(ctx));
 
+        db.updateCourseProgress(this, userId);
         for (Section section : sections){
             for (Activity activity : section.getActivities()){
                 activity.setCompleted(db.activityCompleted(getCourseId(), activity.getDigest(), userId));
