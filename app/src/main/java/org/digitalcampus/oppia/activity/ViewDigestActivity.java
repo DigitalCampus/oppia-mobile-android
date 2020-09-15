@@ -127,6 +127,8 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
 
     private void downloadCourse() {
 
+        updateProgress(0);
+
         Intent serviceIntent = new Intent(this, CourseInstallerService.class);
         Course courseDownload = new Course();
         String oppiaServer = prefs.getString("prefServer", getString(R.string.prefServerDefault));
@@ -198,26 +200,38 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
 
     @Override
     public void onDownloadProgress(String fileUrl, int progress) {
-
-        Log.i(TAG, "DOWNLOAD COURSE LISTENERS onDownloadProgress: ");
-
+        Log.i(TAG, "DOWNLOAD COURSE LISTENERS onDownloadProgress: " + progress);
+        updateProgress(progress);
     }
 
     @Override
     public void onInstallProgress(String fileUrl, int progress) {
-        Log.i(TAG, "DOWNLOAD COURSE LISTENERS onInstallProgress: ");
+        Log.i(TAG, "DOWNLOAD COURSE LISTENERS onInstallProgress: " + progress);
+        updateProgress(progress);
+    }
 
+    private void updateProgress(int progress) {
+
+        binding.downloadProgress.setVisibility(View.VISIBLE);
+        if (progress > 0) {
+            binding.downloadProgress.setIndeterminate(false);
+            binding.downloadProgress.setProgress(progress);
+        } else {
+            binding.downloadProgress.setIndeterminate(true);
+        }
     }
 
     @Override
     public void onInstallFailed(String fileUrl, String message) {
         Log.i(TAG, "DOWNLOAD COURSE LISTENERS onInstallFailed: ");
+        binding.downloadProgress.setVisibility(View.GONE);
 
     }
 
     @Override
     public void onInstallComplete(String fileUrl) {
         Log.i(TAG, "DOWNLOAD COURSE LISTENERS onInstallComplete: ");
+        binding.downloadProgress.setVisibility(View.GONE);
 
     }
 
