@@ -237,6 +237,8 @@ public class CourseInstallerService extends IntentService {
         long startTime = System.currentTimeMillis();
         File downloadedFile = null;
 
+        fileUrl = "http://staging.oppia-mobile.org/api/v2/course/ayrh-all/download/";
+
         try {
         	DbHelper db = DbHelper.getInstance(this);
         	User u = db.getUser(SessionManager.getUsername(this));

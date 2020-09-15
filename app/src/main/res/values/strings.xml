@@ -486,6 +486,7 @@
     <string name="options">Options</string>
     <string name="quiz_loading_error">Unexpected error loading quiz. Maybe the format was wrong or out-dated?</string>
     <string name="weblink_not_supported">Weblink not supported</string>
+    <string name="login_to_continue">You must be logged in to continue</string>
 
 </resources>
 

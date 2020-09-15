@@ -11,7 +11,8 @@ import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityViewDigestBinding;
-import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
+import org.digitalcampus.oppia.api.Paths;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -20,6 +21,8 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
+
+import java.nio.file.Path;
 
 import javax.inject.Inject;
 
@@ -47,6 +50,13 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
         binding = ActivityViewDigestBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getAppComponent().inject(this);
+
+        if (TextUtils.isEmpty(SessionManager.getUsername(this))) {
+            toast(R.string.login_to_continue);
+            startActivity(new Intent(this, WelcomeActivity.class));
+            finish();
+            return;
+        }
 
         processLinkPath(getIntent().getData());
 
@@ -118,7 +128,12 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
     private void downloadCourse() {
 
         Intent serviceIntent = new Intent(this, CourseInstallerService.class);
-        courseInstallerServiceDelegate.installCourse(this, serviceIntent, course);
+        Course courseDownload = new Course();
+        String oppiaServer = prefs.getString("prefServer", getString(R.string.prefServerDefault));
+        courseDownload.setDownloadUrl(oppiaServer + String.format(Paths.COURSE_DOWNLOAD_SHORTNAME_PATH, courseShortname));
+        courseDownload.setShortname(courseShortname);
+        courseDownload.setVersionId((double) 1);
+        courseInstallerServiceDelegate.installCourse(this, serviceIntent, courseDownload);
 
     }
 
@@ -171,7 +186,7 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.btn_download_courses:
+            case R.id.download_course_btn:
 
                 downloadCourse();
 
@@ -184,20 +199,25 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
     @Override
     public void onDownloadProgress(String fileUrl, int progress) {
 
+        Log.i(TAG, "DOWNLOAD COURSE LISTENERS onDownloadProgress: ");
+
     }
 
     @Override
     public void onInstallProgress(String fileUrl, int progress) {
+        Log.i(TAG, "DOWNLOAD COURSE LISTENERS onInstallProgress: ");
 
     }
 
     @Override
     public void onInstallFailed(String fileUrl, String message) {
+        Log.i(TAG, "DOWNLOAD COURSE LISTENERS onInstallFailed: ");
 
     }
 
     @Override
     public void onInstallComplete(String fileUrl) {
+        Log.i(TAG, "DOWNLOAD COURSE LISTENERS onInstallComplete: ");
 
     }
 
