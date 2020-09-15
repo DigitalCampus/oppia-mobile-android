@@ -7,10 +7,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityViewDigestBinding;
+import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
@@ -18,20 +19,22 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.service.courseinstall.CourseInstall;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
+import org.digitalcampus.oppia.task.CourseInfoTask;
+import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.UpdateProfileTask;
 
-import java.nio.file.Path;
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
-public class ViewDigestActivity extends AppActivity implements CourseInstallerListener, View.OnClickListener {
+public class ViewDigestActivity extends AppActivity implements CourseInstallerListener, View.OnClickListener, CourseInfoTask.CourseInfoListener {
 
     public static final String ACTIVITY_DIGEST_PARAM = "digest";
     public static final String COURSE_SHORTNAME_PARAM = "course";
-
-    private TextView errorText;
 
     @Inject
     CoursesRepository coursesRepository;
@@ -39,9 +42,13 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
     User user;
     @Inject
     CourseInstallerServiceDelegate courseInstallerServiceDelegate;
+
+    @Inject
+    ApiEndpoint apiEndpoint;
+
     private ActivityViewDigestBinding binding;
     private InstallerBroadcastReceiver receiver;
-    private String courseShortname;
+    private CourseInstallViewAdapter course;
 
 
     @Override
@@ -51,14 +58,9 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
         setContentView(binding.getRoot());
         getAppComponent().inject(this);
 
-        if (TextUtils.isEmpty(SessionManager.getUsername(this))) {
-            toast(R.string.login_to_continue);
-            startActivity(new Intent(this, WelcomeActivity.class));
-            finish();
-            return;
+        if (isUserLoggedIn()) {
+            processLinkPath(getIntent().getData());
         }
-
-        processLinkPath(getIntent().getData());
 
     }
 
@@ -92,9 +94,8 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
                 throw new IllegalArgumentException("Incorrect path segment");
             }
         } catch (Exception e) {
-            // catches data == null, path segment empty or != "view"
-            toast(R.string.weblink_not_supported);
-            finish();
+            // catches: data == null, path segment empty or != "view"
+            showError(getString(R.string.weblink_not_supported));
             return;
         }
 
@@ -118,11 +119,20 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
             startActivity(i);
             finish();
         } else {
-            binding.courseTitle.setText(shortname);
-            this.courseShortname = shortname;
-            binding.downloadCourseBtn.setOnClickListener(this);
+            fetchCourseInfo(shortname);
         }
 
+    }
+
+    private void fetchCourseInfo(String shortname) {
+
+        binding.courseTitle.setText(R.string.fetching_course_info);
+        binding.downloadProgress.setVisibility(View.VISIBLE);
+
+        Payload p = new Payload(Arrays.asList(shortname));
+        CourseInfoTask task = new CourseInfoTask(this, apiEndpoint);
+        task.setListener(this);
+        task.execute(p);
     }
 
     private void downloadCourse() {
@@ -130,12 +140,7 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
         updateProgress(0);
 
         Intent serviceIntent = new Intent(this, CourseInstallerService.class);
-        Course courseDownload = new Course();
-        String oppiaServer = prefs.getString("prefServer", getString(R.string.prefServerDefault));
-        courseDownload.setDownloadUrl(oppiaServer + String.format(Paths.COURSE_DOWNLOAD_SHORTNAME_PATH, courseShortname));
-        courseDownload.setShortname(courseShortname);
-        courseDownload.setVersionId((double) 1);
-        courseInstallerServiceDelegate.installCourse(this, serviceIntent, courseDownload);
+        courseInstallerServiceDelegate.installCourse(this, serviceIntent, course);
 
     }
 
@@ -143,16 +148,13 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
 
         String digest = data.getQueryParameter(ACTIVITY_DIGEST_PARAM);
 
-        errorText = findViewById(R.id.error_text);
-
-        boolean validDigest = validate(digest);
+        boolean validDigest = validateDigest(digest);
         if (validDigest) {
             Log.d(TAG, "Digest valid, checking activity");
             Activity activity = coursesRepository.getActivityByDigest(this, digest);
 
             if (activity == null) {
-                errorText.setText(this.getText(R.string.open_digest_errors_activity_not_found));
-                errorText.setVisibility(View.VISIBLE);
+                showError(getString(R.string.open_digest_errors_activity_not_found));
             } else {
                 Course course = coursesRepository.getCourse(this, activity.getCourseId(), user.getUserId());
                 Intent i = new Intent(this, CourseIndexActivity.class);
@@ -166,21 +168,29 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
         }
     }
 
-    private boolean validate(String digest) {
+    private boolean validateDigest(String digest) {
         if (digest == null) {
             //The query parameter is missing or misconfigured
             Log.d(TAG, "Invalid digest");
-            errorText.setText(this.getText(R.string.open_digest_errors_invalid_param));
-            errorText.setVisibility(View.VISIBLE);
-            return false;
-        }
-        if (user == null || TextUtils.isEmpty(user.getUsername())) {
-            Log.d(TAG, "Not logged in");
-            errorText.setText(this.getText(R.string.open_digest_errors_not_logged_in));
-            errorText.setVisibility(View.VISIBLE);
+            showError(getString(R.string.open_digest_errors_invalid_param));
             return false;
         }
         return true;
+    }
+
+    private boolean isUserLoggedIn() {
+
+        if (user == null || TextUtils.isEmpty(user.getUsername())) {
+            Log.d(TAG, "Not logged in");
+            showError(getString(R.string.open_digest_errors_not_logged_in));
+            return false;
+        }
+        return true;
+    }
+
+    private void showError(String errorMessage) {
+        binding.errorText.setVisibility(View.VISIBLE);
+        binding.errorText.setText(errorMessage);
     }
 
 
@@ -189,11 +199,51 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
 
         switch (v.getId()) {
             case R.id.download_course_btn:
-
                 downloadCourse();
+                break;
 
+            case R.id.btn_go_to_course:
+
+                Course courseInstalled = coursesRepository.getCourseByShortname(this, course.getShortname(), user.getUserId());
+                if (course != null) {
+                    Intent i = new Intent(this, CourseIndexActivity.class);
+                    Bundle tb = new Bundle();
+                    tb.putSerializable(Course.TAG, courseInstalled);
+                    i.putExtras(tb);
+                    startActivity(i);
+                    finish();
+                }
                 break;
         }
+    }
+
+    // COURSE INFO LISTENERS
+
+    @Override
+    public void onSuccess(CourseInstallViewAdapter course) {
+        this.course = course;
+        binding.downloadProgress.setVisibility(View.GONE);
+        binding.downloadCourseBtn.setOnClickListener(this);
+
+        showCourseInfo();
+    }
+
+    private void showCourseInfo() {
+        binding.courseTitle.setText(course.getTitle(prefs));
+        binding.courseDescription.setText(course.getDescription(prefs));
+    }
+
+    @Override
+    public void onError(String error) {
+        showError(error);
+        binding.downloadProgress.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void onConnectionError(String error, User u) {
+        showError(error);
+        binding.downloadProgress.setVisibility(View.GONE);
     }
 
     // DOWNLOAD COURSE LISTENERS
@@ -232,6 +282,8 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
     public void onInstallComplete(String fileUrl) {
         Log.i(TAG, "DOWNLOAD COURSE LISTENERS onInstallComplete: ");
         binding.downloadProgress.setVisibility(View.GONE);
+        binding.btnGoToCourse.setVisibility(View.VISIBLE);
+        binding.btnGoToCourse.setOnClickListener(this);
 
     }
 

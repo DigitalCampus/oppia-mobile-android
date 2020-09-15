@@ -68,16 +68,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:text="asdfasdfasdf"
                 android:layout_toLeftOf="@+id/download_course_btn" />
+
+            <TextView
+                android:id="@+id/course_description"
+                style="@style/MediumTextDarkItalic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/course_title"
+                android:layout_alignLeft="@+id/course_title"
+                android:layout_alignRight="@+id/course_title"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="5dp"/>
 
             <ProgressBar
                 android:id="@+id/download_progress"
                 style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/download_course_btn"
+                android:layout_below="@+id/course_description"
                 android:layout_toLeftOf="@+id/download_course_btn"
                 android:indeterminate="true"
                 android:indeterminateOnly="false"
@@ -97,6 +106,14 @@
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_go_to_course"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:visibility="gone"
+        android:text="@string/go_to_course"
+        android:theme="@style/PrimaryButton"/>
 
     <TextView
         android:id="@+id/error_text"
