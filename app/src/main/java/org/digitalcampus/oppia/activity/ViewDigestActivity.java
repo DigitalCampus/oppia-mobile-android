@@ -12,20 +12,16 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityViewDigestBinding;
 import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.service.courseinstall.CourseInstall;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.CourseInfoTask;
 import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.UpdateProfileTask;
 
 import java.util.Arrays;
 
@@ -95,7 +91,7 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
             }
         } catch (Exception e) {
             // catches: data == null, path segment empty or != "view"
-            showError(getString(R.string.weblink_not_supported));
+            showError(getString(R.string.open_digest_weblink_not_supported), true);
             return;
         }
 
@@ -119,6 +115,7 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
             startActivity(i);
             finish();
         } else {
+            showError(getString(R.string.open_digest_course_not_installed), false);
             fetchCourseInfo(shortname);
         }
 
@@ -126,7 +123,7 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
 
     private void fetchCourseInfo(String shortname) {
 
-        binding.courseTitle.setText(R.string.fetching_course_info);
+        binding.courseTitle.setText(R.string.open_digest_fetching_course_info);
         binding.downloadProgress.setVisibility(View.VISIBLE);
 
         Payload p = new Payload(Arrays.asList(shortname));
@@ -154,7 +151,7 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
             Activity activity = coursesRepository.getActivityByDigest(this, digest);
 
             if (activity == null) {
-                showError(getString(R.string.open_digest_errors_activity_not_found));
+                showError(getString(R.string.open_digest_errors_activity_not_found), true);
             } else {
                 Course course = coursesRepository.getCourse(this, activity.getCourseId(), user.getUserId());
                 Intent i = new Intent(this, CourseIndexActivity.class);
@@ -172,7 +169,7 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
         if (digest == null) {
             //The query parameter is missing or misconfigured
             Log.d(TAG, "Invalid digest");
-            showError(getString(R.string.open_digest_errors_invalid_param));
+            showError(getString(R.string.open_digest_errors_invalid_param), true);
             return false;
         }
         return true;
@@ -182,14 +179,14 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
 
         if (user == null || TextUtils.isEmpty(user.getUsername())) {
             Log.d(TAG, "Not logged in");
-            showError(getString(R.string.open_digest_errors_not_logged_in));
+            showError(getString(R.string.open_digest_errors_not_logged_in), true);
             return false;
         }
         return true;
     }
 
-    private void showError(String errorMessage) {
-        binding.courseCard.setVisibility(View.GONE);
+    private void showError(String errorMessage, boolean hideCourseCard) {
+        binding.courseCard.setVisibility(hideCourseCard ? View.GONE : View.VISIBLE);
         binding.errorText.setVisibility(View.VISIBLE);
         binding.errorText.setText(errorMessage);
     }
@@ -233,18 +230,21 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
         binding.courseTitle.setText(course.getTitle(prefs));
         String description = course.getDescription(prefs);
         binding.courseDescription.setText(description != null ? description : "");
+        if (description == null){
+            binding.courseDescription.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void onError(String error) {
-        showError(error);
+        showError(error, true);
         binding.downloadProgress.setVisibility(View.GONE);
 
     }
 
     @Override
     public void onConnectionError(String error, User u) {
-        showError(error);
+        showError(error, true);
         binding.downloadProgress.setVisibility(View.GONE);
     }
 
