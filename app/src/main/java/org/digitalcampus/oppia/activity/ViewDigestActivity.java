@@ -189,6 +189,7 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
     }
 
     private void showError(String errorMessage) {
+        binding.courseCard.setVisibility(View.GONE);
         binding.errorText.setVisibility(View.VISIBLE);
         binding.errorText.setText(errorMessage);
     }
