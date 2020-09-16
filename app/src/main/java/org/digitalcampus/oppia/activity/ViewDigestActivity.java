@@ -189,6 +189,7 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
     }
 
     private void showError(String errorMessage) {
+        binding.courseCard.setVisibility(View.GONE);
         binding.errorText.setVisibility(View.VISIBLE);
         binding.errorText.setText(errorMessage);
     }
@@ -230,7 +231,8 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
 
     private void showCourseInfo() {
         binding.courseTitle.setText(course.getTitle(prefs));
-        binding.courseDescription.setText(course.getDescription(prefs));
+        String description = course.getDescription(prefs);
+        binding.courseDescription.setText(description != null ? description : "");
     }
 
     @Override

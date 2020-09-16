@@ -203,6 +203,7 @@
     <string name="installed">Installed</string>
     <string name="install">Install</string>
     <string name="courses_install_pending">There are new received courses not installed yet.</string>
+    <string name="course_completed">Course completed!</string>
 
     <string name="download_starting">Download starting</string>
     <string name="downloading">Downloading &#8230;</string>
@@ -490,8 +491,7 @@
     <string name="login_to_continue">You must be logged in to continue</string>
     <string name="fetching_course_info">Fetching course info...</string>
     <string name="go_to_course">Go to the course</string>
-    <string name="course_completed">Course completed!</string>
-    <string name="launch_external_app">Open CHT app</string>
+    <string name="error_course_not_found">Couldn\'t find course in the server. Either it doesn\'t exist or you don\'t have permissions to access it.</string>
 
 </resources>
 

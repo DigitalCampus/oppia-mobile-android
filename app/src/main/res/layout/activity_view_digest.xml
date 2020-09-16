@@ -45,10 +45,11 @@
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/course_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/list_card_horizontal_margin"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="-25dp"
         android:layout_marginRight="@dimen/list_card_horizontal_margin"
         android:layout_marginBottom="7dp"
         android:foreground="@drawable/bg_selectable"
