@@ -97,6 +97,8 @@ public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
                 payload.setResult(false);
                 if (response.code() == 400) {
                     payload.setResultResponse(ctx.getString(R.string.error_reset));
+                } else if (response.code() == 404){
+                    payload.setResultResponse(ctx.getString(R.string.error_course_not_found));
                 } else {
                     payload.setResultResponse(ctx.getString(R.string.error_connection));
                 }
