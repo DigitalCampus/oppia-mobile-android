@@ -153,4 +153,27 @@ public class MultiLangInfoModel implements Serializable {
             Log.d(TAG, "Null pointer error: ", npe);
         }
     }
+
+    public void setTitlesFromJSONObjectMap(JSONObject jsonObjectMultilang) throws JSONException {
+        List<Lang> langs = parseLangs(jsonObjectMultilang);
+        this.titles = langs;
+    }
+
+    public void setDescriptionsFromJSONObjectMap(JSONObject jsonObjectMultilang) throws JSONException {
+        List<Lang> langs = parseLangs(jsonObjectMultilang);
+        this.descriptions = langs;
+    }
+
+    private List<Lang> parseLangs(JSONObject jsonObjectMultilang) throws JSONException {
+        Iterator<String> keys = jsonObjectMultilang.keys();
+        List<Lang> langs = new ArrayList<>();
+
+        while(keys.hasNext()) {
+            String key = keys.next();
+            String value = jsonObjectMultilang.getString(key);
+            langs.add(new Lang(key, value));
+        }
+
+        return langs;
+    }
 }

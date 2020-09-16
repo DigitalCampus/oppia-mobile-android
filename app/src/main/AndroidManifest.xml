@@ -144,6 +144,7 @@
                     android:host="@string/oppiaServerHost"
                     android:pathPrefix="/view"
                     android:scheme="oppiamobile" />
+
             </intent-filter>
         </activity>
 
