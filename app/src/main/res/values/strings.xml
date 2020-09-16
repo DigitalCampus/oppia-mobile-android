@@ -489,6 +489,7 @@
     <string name="login_to_continue">You must be logged in to continue</string>
     <string name="fetching_course_info">Fetching course info...</string>
     <string name="go_to_course">Go to the course</string>
+    <string name="error_course_not_found">Couldn\'t find course in the server. Either it doesn\'t exist or you don\'t have permissions to access it.</string>
 
 </resources>
 

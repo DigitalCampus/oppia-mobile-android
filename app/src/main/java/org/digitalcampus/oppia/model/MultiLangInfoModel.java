@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.model;
 
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.splunk.mint.Mint;
@@ -171,7 +172,9 @@ public class MultiLangInfoModel implements Serializable {
         while(keys.hasNext()) {
             String key = keys.next();
             String value = jsonObjectMultilang.getString(key);
-            langs.add(new Lang(key, value));
+            if (!TextUtils.isEmpty(value) && !TextUtils.equals(value,"null")){
+                langs.add(new Lang(key, value));
+            }
         }
 
         return langs;
