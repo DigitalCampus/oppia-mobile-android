@@ -27,21 +27,13 @@
             android:src="@drawable/brand_icon" />
 
         <TextView
-            android:id="@+id/welcome_title"
-            style="@style/HeaderText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:text="@string/app_name" />
-
-        <TextView
             android:id="@+id/welcome_desc"
             style="@style/NormalTextDark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:gravity="center"
-            android:text="" />
+            android:text="@string/open_digest.description" />
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
@@ -60,6 +52,7 @@
 
         <RelativeLayout
             android:id="@+id/course_row"
+            android:layout_marginLeft="@dimen/list_card_horizontal_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -80,6 +73,7 @@
                 android:layout_alignLeft="@+id/course_title"
                 android:layout_alignRight="@+id/course_title"
                 android:layout_gravity="center_vertical"
+                android:layout_marginBottom="@dimen/padding_medium"
                 android:layout_marginTop="5dp"/>
 
             <ProgressBar
@@ -113,7 +107,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:visibility="gone"
-        android:text="@string/go_to_course"
+        android:text="@string/open_digest.go_to_course"
         android:theme="@style/PrimaryButton"/>
 
     <TextView
