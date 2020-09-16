@@ -29,7 +29,6 @@ import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
-import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
@@ -98,7 +97,7 @@ public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
                 if (response.code() == 400) {
                     payload.setResultResponse(ctx.getString(R.string.error_reset));
                 } else if (response.code() == 404){
-                    payload.setResultResponse(ctx.getString(R.string.error_course_not_found));
+                    payload.setResultResponse(ctx.getString(R.string.open_digest_errors_course_not_found));
                 } else {
                     payload.setResultResponse(ctx.getString(R.string.error_connection));
                 }

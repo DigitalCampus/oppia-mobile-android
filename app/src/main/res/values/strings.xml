@@ -358,9 +358,15 @@
     <string name="open_digest.errors.invalid_param">The \"digest\" parameter is either misconfigured or missing. Please, check that the link is valid.</string>
     <string name="open_digest.errors.not_logged_in">You are not logged in. Please, login and try to open the link again.</string>
     <string name="open_digest.errors.activity_not_found">Activity not found. Are you sure you have installed the course that contains this activity?</string>
-    <string name="open_digest.description">&appName; has the functionality to open activities based in its URL (opened from an SMS, for example)</string>
+    <string name="open_digest.errors.course_not_found">Couldn\'t find course in the server. Either it doesn\'t exist or you don\'t have permissions to access it.</string>
+    <string name="open_digest.description">&appName; has the functionality to open specific activities or courses based in its URL (opened from an SMS or an external app, for example)</string>
+    <string name="open_digest.course_not_installed">You don\'t have this course installed in the device. You can install it clicking the download icon </string>
     <string name="open_digest.btn_action">Open activity</string>
     <string name="open_digest.activity_completed">Activity completed</string>
+    <string name="open_digest.weblink_not_supported">Weblink not supported</string>
+    <string name="open_digest.fetching_course_info">Fetching course info…</string>
+    <string name="open_digest.go_to_course">Go to the course</string>
+
     <string name="menu_sync">Synchronise</string>
     <string name="title_sync">Synchronise</string>
     <string name="export_activity.text">Export latest activity and quiz trackers to an external file</string>
@@ -485,11 +491,7 @@
     <string name="videoplayer_continue">Continue to course</string>
     <string name="options">Options</string>
     <string name="quiz_loading_error">Unexpected error loading quiz. Maybe the format was wrong or out-dated?</string>
-    <string name="weblink_not_supported">Weblink not supported</string>
-    <string name="login_to_continue">You must be logged in to continue</string>
-    <string name="fetching_course_info">Fetching course info...</string>
-    <string name="go_to_course">Go to the course</string>
-    <string name="error_course_not_found">Couldn\'t find course in the server. Either it doesn\'t exist or you don\'t have permissions to access it.</string>
+
 
 </resources>
 
