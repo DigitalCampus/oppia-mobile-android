@@ -145,6 +145,19 @@
                     android:pathPrefix="/view"
                     android:scheme="oppiamobile" />
 
+                <data
+                    android:host="staging.cha.oppia-mobile.org"
+                    android:pathPrefix="/view"
+                    android:scheme="http" />
+                <data
+                    android:host="staging.cha.oppia-mobile.org"
+                    android:pathPrefix="/view"
+                    android:scheme="https" />
+                <data
+                    android:host="staging.cha.oppia-mobile.org"
+                    android:pathPrefix="/view"
+                    android:scheme="oppiamobile" />
+
             </intent-filter>
         </activity>
 
