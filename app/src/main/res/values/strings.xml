@@ -268,6 +268,7 @@
     <string name="error_resource_not_found">File: \'%1$s\' not found.</string>
     <string name="error_preloading_accounts">Error preloading accounts from CSV file</string>
     <string name="error_reset">Username or email not found\nPlease try again</string>
+    <string name="error_external_app">App with packageId \'%1$s\' not found.</string>
     <string name="no_title_set">No title set</string>
 
     <string name="error_insufficient_storage_available">Insufficient storage available</string>
@@ -489,6 +490,8 @@
     <string name="login_to_continue">You must be logged in to continue</string>
     <string name="fetching_course_info">Fetching course info...</string>
     <string name="go_to_course">Go to the course</string>
+    <string name="course_completed">Course completed!</string>
+    <string name="launch_external_app">Open CHT app</string>
 
 </resources>
 

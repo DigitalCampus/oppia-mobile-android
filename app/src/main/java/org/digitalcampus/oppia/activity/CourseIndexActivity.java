@@ -28,6 +28,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseIndexRecyclerViewAdapter;
 import org.digitalcampus.oppia.model.Activity;
@@ -49,6 +51,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
@@ -163,7 +166,20 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 showBaselineMessage(null);
             } else {
                 closeBaselineDialogIfOpen();
+                showSnackbarIfCourseCompleted();
             }
+        }
+    }
+
+    private void showSnackbarIfCourseCompleted(){
+        if (parsedCourse.getNoActivitiesCompleted() == parsedCourse.getNoActivities()){
+
+            View parentLayout = findViewById(android.R.id.content);
+            Snackbar notice = Snackbar.make(parentLayout, R.string.course_completed, Snackbar.LENGTH_INDEFINITE);
+            notice.setAction(R.string.launch_external_app, v -> launchExternalApp());
+            notice.getView().setOnClickListener(v -> notice.dismiss());
+            notice.setActionTextColor(ContextCompat.getColor(this, R.color.text_dark));
+            notice.show();
         }
     }
 
@@ -382,13 +398,10 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         course.setMetaPages(parsedCourse.getMetaPages());
         course.setMedia(parsedCourse.getMedia());
         course.setGamificationEvents(parsedCourse.getGamification());
-        sections = (ArrayList<Section>) parsedCourse.getSections();
 
-        boolean baselineCompleted = isBaselineCompleted();
-        if (!baselineCompleted) {
-            showBaselineMessage(null);
-        }
+        sections = (ArrayList<Section>) parsedCourse.getSections();
         initializeCourseIndex(true);
+        checkParsedCourse();
     }
 
     //@Override
@@ -409,15 +422,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     @Override
     public void onGamificationEvent(String message, int points) {
         super.onGamificationEvent(message, points);
-
-        // This solves a non usual bug which shows pretest dialog event when it is done
-        // This happens in few devices when GamificationService ends (and stores data) after onResume() of this class is called
-        // Fixed with this workaround
         checkParsedCourse();
-
-        if (course.getNoActivitiesCompleted() == course.getNoActivities()){
-            launchExternalApp();
-        }
-
     }
+
 }

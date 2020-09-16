@@ -67,6 +67,8 @@ import javax.inject.Inject;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
+import static org.digitalcampus.oppia.utils.resources.ExternalResourceOpener.EXTERNAL_APP_PACKAGE;
+
 
 public class AppActivity extends AppCompatActivity implements APIKeyRequestListener, GamificationEventListener {
 
@@ -300,7 +302,12 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     protected void launchExternalApp(){
         Intent i = ExternalResourceOpener.getExternalActivityIntent(this);
-        if (i != null){
+        if (i == null) {
+            Toast.makeText(this, getString(R.string.error_external_app,
+                    EXTERNAL_APP_PACKAGE),
+                    Toast.LENGTH_LONG).show();
+        }
+        else{
             startActivity(i);
             finish();
         }

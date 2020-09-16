@@ -87,8 +87,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     private ActivityPagerAdapter apAdapter;
     private boolean launchTTSAfterLanguageSelection;
 
-    private boolean launchExternalIntent = false;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -150,14 +148,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
             currentWidget.pauseTimeTracking();
             currentWidget.saveTracker();
-        }
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        if (this.launchExternalIntent){
-            launchExternalApp();
         }
     }
 
@@ -452,19 +442,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             myTTS = new TextToSpeech(this, this);
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onGamificationEvent(String message, int points) {
-        super.onGamificationEvent(message, points);
-
-        DbHelper db = DbHelper.getInstance(this);
-        long userId = db.getUserId(SessionManager.getUsername(this));
-        db.updateCourseProgress(course, userId);
-        if (course.getNoActivities() == course.getNoActivitiesCompleted()){
-            launchExternalIntent = true;
-        }
-
     }
 
     private void stopReading() {
