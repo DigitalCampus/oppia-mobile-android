@@ -10,7 +10,6 @@ public class Paths {
     public static final String SERVER_TAG_PATH = OPPIAMOBILE_API + "tag/";
     public static final String SERVER_COURSES_PATH = OPPIAMOBILE_API + "course/";
     public static final String COURSE_ACTIVITY_PATH = SERVER_COURSES_PATH + "%s/activity/";
-    public static final String COURSE_DOWNLOAD_SHORTNAME_PATH = SERVER_COURSES_PATH + "%s/download/";
     public static final String COURSE_INFO_PATH = SERVER_COURSES_PATH + "%s";
     public static final String QUIZ_SUBMIT_PATH = OPPIAMOBILE_API + "quizattempt/";
     public static final String RESET_PATH = OPPIAMOBILE_API + "reset/";
