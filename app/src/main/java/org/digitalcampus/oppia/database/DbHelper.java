@@ -964,7 +964,7 @@ public class DbHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Course course = setupCourseObject(c);
-            this.courseSetProgress(course, userId);
+            this.updateCourseProgress(course, userId);
             courses.add(course);
             c.moveToNext();
         }
@@ -980,7 +980,7 @@ public class DbHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         while (!c.isAfterLast()) {
             course = setupCourseObject(c);
-            this.courseSetProgress(course, userId);
+            this.updateCourseProgress(course, userId);
             c.moveToNext();
         }
         c.close();
@@ -1016,7 +1016,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return course;
     }
 
-    private Course courseSetProgress(Course course, long userId) {
+    public Course updateCourseProgress(Course course, long userId) {
         // get no activities
         String s = ACTIVITY_C_COURSEID + "=?";
         String[] args = new String[]{String.valueOf(course.getCourseId())};

@@ -22,9 +22,6 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.UtteranceProgressListener;
@@ -35,16 +32,12 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
@@ -63,6 +56,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
+import androidx.viewpager.widget.ViewPager;
 
 public class CourseActivity extends AppActivity implements OnInitListener, TabLayout.OnTabSelectedListener {
 
@@ -87,6 +86,8 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     private ViewPager viewPager;
     private ActivityPagerAdapter apAdapter;
     private boolean launchTTSAfterLanguageSelection;
+
+    private boolean launchExternalIntent = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,6 +150,14 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
             currentWidget.pauseTimeTracking();
             currentWidget.saveTracker();
+        }
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if (this.launchExternalIntent){
+            launchExternalApp();
         }
     }
 
@@ -443,6 +452,19 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             myTTS = new TextToSpeech(this, this);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onGamificationEvent(String message, int points) {
+        super.onGamificationEvent(message, points);
+
+        DbHelper db = DbHelper.getInstance(this);
+        long userId = db.getUserId(SessionManager.getUsername(this));
+        db.updateCourseProgress(course, userId);
+        if (course.getNoActivities() == course.getNoActivitiesCompleted()){
+            launchExternalIntent = true;
+        }
+
     }
 
     private void stopReading() {
