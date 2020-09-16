@@ -16,7 +16,7 @@ import androidx.core.content.FileProvider;
 public class ExternalResourceOpener {
 
     private static final String FILEPROVIDER_AUTHORITY = BuildConfig.APPLICATION_ID  + ".provider";
-    public static final String EXTERNAL_APP_PACKAGE = "org.medicmobile.webapp.mobile";
+    public static final String EXTERNAL_APP_PACKAGE = "org.medicmobile.webapp.mobile.cht_cha_learning_care";
 
     private ExternalResourceOpener() {
         throw new IllegalStateException("Utility class");
