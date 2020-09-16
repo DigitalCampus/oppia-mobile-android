@@ -987,6 +987,21 @@ public class DbHelper extends SQLiteOpenHelper {
         return course;
     }
 
+    public long getCourseIdByShortname(String shortname) {
+        Course course = null;
+        String s = COURSE_C_SHORTNAME + "=?";
+        String[] args = new String[]{shortname};
+        Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
+
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            long couseId = c.getLong(c.getColumnIndex(COURSE_C_ID));
+            return couseId;
+        }
+        c.close();
+        return -1;
+    }
+
     private Course setupCourseObject(Cursor c){
         Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
         course.setCourseId(c.getInt(c.getColumnIndex(COURSE_C_ID)));

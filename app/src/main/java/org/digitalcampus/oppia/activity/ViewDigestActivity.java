@@ -1,29 +1,68 @@
 package org.digitalcampus.oppia.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityViewDigestBinding;
+import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
+import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.api.Paths;
+import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.service.courseinstall.CourseInstall;
+import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
+import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
+import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
+import org.digitalcampus.oppia.task.CourseInfoTask;
+import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.UpdateProfileTask;
+
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
-public class ViewDigestActivity extends AppActivity {
+public class ViewDigestActivity extends AppActivity implements CourseInstallerListener, View.OnClickListener, CourseInfoTask.CourseInfoListener {
 
     public static final String ACTIVITY_DIGEST_PARAM = "digest";
+    public static final String COURSE_SHORTNAME_PARAM = "course";
 
-    private TextView errorText;
-    private View activityDetail;
+    @Inject
+    CoursesRepository coursesRepository;
+    @Inject
+    User user;
+    @Inject
+    CourseInstallerServiceDelegate courseInstallerServiceDelegate;
 
-    @Inject CoursesRepository coursesRepository;
-    @Inject User user;
+    @Inject
+    ApiEndpoint apiEndpoint;
+
+    private ActivityViewDigestBinding binding;
+    private InstallerBroadcastReceiver receiver;
+    private CourseInstallViewAdapter course;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityViewDigestBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        getAppComponent().inject(this);
+
+        if (isUserLoggedIn()) {
+            processLinkPath(getIntent().getData());
+        }
+
+    }
 
     @Override
     public void onStart() {
@@ -32,65 +71,220 @@ public class ViewDigestActivity extends AppActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_digest);
-        getAppComponent().inject(this);
+    public void onResume() {
+        super.onResume();
 
-        Intent intent = getIntent();
-        String digest = null;
-        if (intent.getData() != null){
-            digest = intent.getData().getQueryParameter(ACTIVITY_DIGEST_PARAM);
+        receiver = new InstallerBroadcastReceiver();
+        receiver.setCourseInstallerListener(this);
+        IntentFilter broadcastFilter = new IntentFilter(CourseInstallerService.BROADCAST_ACTION);
+        broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        registerReceiver(receiver, broadcastFilter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+    }
+
+    private void processLinkPath(Uri data) {
+
+        try {
+            if (!TextUtils.equals(data.getPathSegments().get(0), "view")) {
+                throw new IllegalArgumentException("Incorrect path segment");
+            }
+        } catch (Exception e) {
+            // catches: data == null, path segment empty or != "view"
+            showError(getString(R.string.weblink_not_supported));
+            return;
         }
 
-        activityDetail = findViewById(R.id.activity_detail);
-        errorText = findViewById(R.id.error_text);
+        if (data.getQueryParameterNames().contains(ACTIVITY_DIGEST_PARAM)) {
+            processActivityDigestLink(data);
+        } else if (data.getQueryParameterNames().contains(COURSE_SHORTNAME_PARAM)) {
+            processCourseLink(data);
+        }
 
-        boolean validDigest = validate(digest);
-        if (validDigest){
+    }
+
+    private void processCourseLink(Uri data) {
+
+        String shortname = data.getQueryParameter(COURSE_SHORTNAME_PARAM);
+        Course course = coursesRepository.getCourseByShortname(this, shortname, user.getUserId());
+        if (course != null) {
+            Intent i = new Intent(this, CourseIndexActivity.class);
+            Bundle tb = new Bundle();
+            tb.putSerializable(Course.TAG, course);
+            i.putExtras(tb);
+            startActivity(i);
+            finish();
+        } else {
+            fetchCourseInfo(shortname);
+        }
+
+    }
+
+    private void fetchCourseInfo(String shortname) {
+
+        binding.courseTitle.setText(R.string.fetching_course_info);
+        binding.downloadProgress.setVisibility(View.VISIBLE);
+
+        Payload p = new Payload(Arrays.asList(shortname));
+        CourseInfoTask task = new CourseInfoTask(this, apiEndpoint);
+        task.setListener(this);
+        task.execute(p);
+    }
+
+    private void downloadCourse() {
+
+        updateProgress(0);
+
+        Intent serviceIntent = new Intent(this, CourseInstallerService.class);
+        courseInstallerServiceDelegate.installCourse(this, serviceIntent, course);
+
+    }
+
+    private void processActivityDigestLink(Uri data) {
+
+        String digest = data.getQueryParameter(ACTIVITY_DIGEST_PARAM);
+
+        boolean validDigest = validateDigest(digest);
+        if (validDigest) {
             Log.d(TAG, "Digest valid, checking activity");
             Activity activity = coursesRepository.getActivityByDigest(this, digest);
 
-            if (activity == null){
-                errorText.setText(this.getText(R.string.open_digest_errors_activity_not_found));
-                errorText.setVisibility(View.VISIBLE);
-                activityDetail.setVisibility(View.GONE);
-            }
-            else{
+            if (activity == null) {
+                showError(getString(R.string.open_digest_errors_activity_not_found));
+            } else {
                 Course course = coursesRepository.getCourse(this, activity.getCourseId(), user.getUserId());
                 Intent i = new Intent(this, CourseIndexActivity.class);
                 Bundle tb = new Bundle();
                 tb.putSerializable(Course.TAG, course);
                 tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, activity.getDigest());
                 i.putExtras(tb);
-                ViewDigestActivity.this.startActivity(i);
+                startActivity(i);
+                finish();
             }
         }
-
     }
 
-    private boolean validate(String digest){
-        if (digest == null){
+    private boolean validateDigest(String digest) {
+        if (digest == null) {
             //The query parameter is missing or misconfigured
             Log.d(TAG, "Invalid digest");
-            errorText.setText(this.getText(R.string.open_digest_errors_invalid_param));
-            errorText.setVisibility(View.VISIBLE);
-            activityDetail.setVisibility(View.GONE);
-            return false;
-        }
-        if (user == null || TextUtils.isEmpty(user.getUsername())){
-            Log.d(TAG, "Not logged in");
-            errorText.setText(this.getText(R.string.open_digest_errors_not_logged_in));
-            errorText.setVisibility(View.VISIBLE);
-            activityDetail.setVisibility(View.GONE);
+            showError(getString(R.string.open_digest_errors_invalid_param));
             return false;
         }
         return true;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        this.finish();
+    private boolean isUserLoggedIn() {
+
+        if (user == null || TextUtils.isEmpty(user.getUsername())) {
+            Log.d(TAG, "Not logged in");
+            showError(getString(R.string.open_digest_errors_not_logged_in));
+            return false;
+        }
+        return true;
     }
+
+    private void showError(String errorMessage) {
+        binding.errorText.setVisibility(View.VISIBLE);
+        binding.errorText.setText(errorMessage);
+    }
+
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.download_course_btn:
+                downloadCourse();
+                break;
+
+            case R.id.btn_go_to_course:
+
+                Course courseInstalled = coursesRepository.getCourseByShortname(this, course.getShortname(), user.getUserId());
+                if (course != null) {
+                    Intent i = new Intent(this, CourseIndexActivity.class);
+                    Bundle tb = new Bundle();
+                    tb.putSerializable(Course.TAG, courseInstalled);
+                    i.putExtras(tb);
+                    startActivity(i);
+                    finish();
+                }
+                break;
+        }
+    }
+
+    // COURSE INFO LISTENERS
+
+    @Override
+    public void onSuccess(CourseInstallViewAdapter course) {
+        this.course = course;
+        binding.downloadProgress.setVisibility(View.GONE);
+        binding.downloadCourseBtn.setOnClickListener(this);
+
+        showCourseInfo();
+    }
+
+    private void showCourseInfo() {
+        binding.courseTitle.setText(course.getTitle(prefs));
+        binding.courseDescription.setText(course.getDescription(prefs));
+    }
+
+    @Override
+    public void onError(String error) {
+        showError(error);
+        binding.downloadProgress.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void onConnectionError(String error, User u) {
+        showError(error);
+        binding.downloadProgress.setVisibility(View.GONE);
+    }
+
+    // DOWNLOAD COURSE LISTENERS
+
+    @Override
+    public void onDownloadProgress(String fileUrl, int progress) {
+        Log.i(TAG, "DOWNLOAD COURSE LISTENERS onDownloadProgress: " + progress);
+        updateProgress(progress);
+    }
+
+    @Override
+    public void onInstallProgress(String fileUrl, int progress) {
+        Log.i(TAG, "DOWNLOAD COURSE LISTENERS onInstallProgress: " + progress);
+        updateProgress(progress);
+    }
+
+    private void updateProgress(int progress) {
+
+        binding.downloadProgress.setVisibility(View.VISIBLE);
+        if (progress > 0) {
+            binding.downloadProgress.setIndeterminate(false);
+            binding.downloadProgress.setProgress(progress);
+        } else {
+            binding.downloadProgress.setIndeterminate(true);
+        }
+    }
+
+    @Override
+    public void onInstallFailed(String fileUrl, String message) {
+        Log.i(TAG, "DOWNLOAD COURSE LISTENERS onInstallFailed: ");
+        binding.downloadProgress.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void onInstallComplete(String fileUrl) {
+        Log.i(TAG, "DOWNLOAD COURSE LISTENERS onInstallComplete: ");
+        binding.downloadProgress.setVisibility(View.GONE);
+        binding.btnGoToCourse.setVisibility(View.VISIBLE);
+        binding.btnGoToCourse.setOnClickListener(this);
+
+    }
+
 }
