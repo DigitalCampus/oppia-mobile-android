@@ -31,7 +31,6 @@
     <string name="fragment_welcome_title">أهلا وسهلا في التطبيق طبشورة أوبيا</string>
     <string name="fragment_welcome_desc">طبشورة أوبيا هي تطبيق تعليمي مخصص لنظام أندرويد يعمل على الهاتف النقال أو الجهاز اللوحي ويسمح بتحميل الدروس من منصة طبشورة الإلكترونية. كلمة أوبيا تعود إلى الفنلندي وتعني التعلم</string>
     <string name="fragment_welcome_login_info">لإستخدام طبشورة أوبيا عليك تسجيل الدخول أو إنشاء حساب</string>
-    <string name="fragment_welcome_privacy">تنطبق سياسة الخصوصية على كافة البيانات الشخصية التي تقوم بتزويدنا بها عبر هذا الموقع<a href="http://tabshoura.com/wordpress/politique-de-confidentialite/">للمزيد حول سياسة الخصوصية المعتمدة لدى ديجيتيل كامبوس</a></string>
 
     <string name="tab_title_about">عن طبشورة أوبيا</string>
     <string name="tab_title_badges">شارات</string>

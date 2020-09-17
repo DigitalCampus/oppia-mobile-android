@@ -28,8 +28,7 @@
     <string name="fragment_welcome_title"> میں خوش آمدید &appName;</string>
     <string name="fragment_welcome_desc">اس پروگرام کے ذریعے آپ اپنے موبائل پر صحت  کے متعلق معلومات حاصل کر سکتے ہیں اور صحت کے متعلق فلمز دیکھ بھی دیکھ سکتے ہیں اور دوسروں کو دکھا بھی سکتے ہیں۔</string>
     <string name="fragment_welcome_login_info">اس پروگرام کو شروع کرنے سے پہلے آپ کو اپنا رجسٹریشن کرنا ہوگا۔</string>
-    <string name="fragment_welcome_privacy">ہم آپ خیال ركھتے ہیں<a href="http://digital-campus.org/privacy/">find out more about Digital Campus\'s privacy policy</a></string>
-    
+
     <string name="tab_title_about">پروگرام کے بارے میں معالومات</string>
     <string name="tab_title_badges">Badges</string>
     <string name="tab_title_help">مدد</string>
