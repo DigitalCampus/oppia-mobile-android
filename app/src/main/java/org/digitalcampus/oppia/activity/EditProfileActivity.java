@@ -48,7 +48,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
         getAppComponent().inject(this);
 
-        HashMap fields = new HashMap<String, ValidableField>();
+        fields = new HashMap<>();
         fields.put("email", binding.fieldEmail);
         fields.put("first_name", binding.fieldFirstname);
         fields.put("last_name", binding.fieldLastname);
