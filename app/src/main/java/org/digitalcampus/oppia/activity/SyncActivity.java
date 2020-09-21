@@ -590,6 +590,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
                             Toast.LENGTH_SHORT).show();
                     this.finish();
                 }
+                break;
             default:
                 // do nothing
         }
