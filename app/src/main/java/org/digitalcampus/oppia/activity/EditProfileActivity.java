@@ -48,14 +48,13 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
         getAppComponent().inject(this);
 
-        fields = new HashMap<String, ValidableField>() {{
-            put("email", binding.fieldEmail);
-            put("first_name", binding.fieldFirstname);
-            put("last_name", binding.fieldLastname);
-            put("jobtitle", binding.fieldJobtitle);
-            put("organisation", binding.fieldOrganisation);
-            put("phoneno", binding.fieldPhoneno);
-        }};
+        HashMap fields = new HashMap<String, ValidableField>();
+        fields.put("email", binding.fieldEmail);
+        fields.put("first_name", binding.fieldFirstname);
+        fields.put("last_name", binding.fieldLastname);
+        fields.put("jobtitle", binding.fieldJobtitle);
+        fields.put("organisation", binding.fieldOrganisation);
+        fields.put("phoneno", binding.fieldPhoneno);
 
         profileCustomFields = customFieldsRepo.getAll(this);
         fieldsManager = new CustomFieldsUIManager(this, fields, profileCustomFields);

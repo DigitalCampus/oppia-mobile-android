@@ -156,27 +156,27 @@ public class MultiLangInfoModel implements Serializable {
     }
 
     public void setTitlesFromJSONObjectMap(JSONObject jsonObjectMultilang) throws JSONException {
-        List<Lang> langs = parseLangs(jsonObjectMultilang);
-        this.titles = langs;
+        List<Lang> localLangs = parseLangs(jsonObjectMultilang);
+        this.titles = localLangs;
     }
 
     public void setDescriptionsFromJSONObjectMap(JSONObject jsonObjectMultilang) throws JSONException {
-        List<Lang> langs = parseLangs(jsonObjectMultilang);
-        this.descriptions = langs;
+        List<Lang> localLangs = parseLangs(jsonObjectMultilang);
+        this.descriptions = localLangs;
     }
 
     private List<Lang> parseLangs(JSONObject jsonObjectMultilang) throws JSONException {
         Iterator<String> keys = jsonObjectMultilang.keys();
-        List<Lang> langs = new ArrayList<>();
+        List<Lang> localLangs = new ArrayList<>();
 
         while(keys.hasNext()) {
             String key = keys.next();
             String value = jsonObjectMultilang.getString(key);
             if (!TextUtils.isEmpty(value) && !TextUtils.equals(value,"null")){
-                langs.add(new Lang(key, value));
+                localLangs.add(new Lang(key, value));
             }
         }
 
-        return langs;
+        return localLangs;
     }
 }

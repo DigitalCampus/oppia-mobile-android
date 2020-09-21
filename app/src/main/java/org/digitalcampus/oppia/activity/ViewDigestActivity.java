@@ -106,11 +106,11 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
     private void processCourseLink(Uri data) {
 
         String shortname = data.getQueryParameter(COURSE_SHORTNAME_PARAM);
-        Course course = coursesRepository.getCourseByShortname(this, shortname, user.getUserId());
-        if (course != null) {
+        Course localCourse = coursesRepository.getCourseByShortname(this, shortname, user.getUserId());
+        if (localCourse != null) {
             Intent i = new Intent(this, CourseIndexActivity.class);
             Bundle tb = new Bundle();
-            tb.putSerializable(Course.TAG, course);
+            tb.putSerializable(Course.TAG, localCourse);
             i.putExtras(tb);
             startActivity(i);
             finish();
@@ -153,7 +153,6 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
             if (activity == null) {
                 showError(getString(R.string.open_digest_errors_activity_not_found), true);
             } else {
-                Course course = coursesRepository.getCourse(this, activity.getCourseId(), user.getUserId());
                 Intent i = new Intent(this, CourseIndexActivity.class);
                 Bundle tb = new Bundle();
                 tb.putSerializable(Course.TAG, course);
@@ -212,6 +211,8 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
                     finish();
                 }
                 break;
+            default:
+                //do nothing
         }
     }
 
