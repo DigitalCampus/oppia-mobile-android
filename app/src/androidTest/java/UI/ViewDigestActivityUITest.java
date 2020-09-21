@@ -112,8 +112,8 @@ public class ViewDigestActivityUITest {
         Intent startIntent = new Intent(Intent.ACTION_VIEW, getUriForDigest(digest));
         viewDigestActivityTestRule.launchActivity(startIntent);
 
-        // onView(withId(R.id.activity_detail))
-        //        .check(matches(not(isDisplayed())));
+        onView(withId(R.id.course_card))
+                .check(matches(not(isDisplayed())));
     }
 
     @Test
@@ -124,8 +124,8 @@ public class ViewDigestActivityUITest {
         Intent startIntent = new Intent(Intent.ACTION_VIEW, getUriForDigest(digest));
         viewDigestActivityTestRule.launchActivity(startIntent);
 
-        // onView(withId(R.id.activity_detail))
-        //        .check(matches(not(isDisplayed())));
+        onView(withId(R.id.course_card))
+                .check(matches(not(isDisplayed())));
     }
 
     @Test
@@ -133,8 +133,8 @@ public class ViewDigestActivityUITest {
 
         viewDigestActivityTestRule.launchActivity(null);
 
-        // onView(withId(R.id.activity_detail))
-        //        .check(matches(not(isDisplayed())));
+        onView(withId(R.id.course_card))
+                .check(matches(not(isDisplayed())));
     }
 
 }
