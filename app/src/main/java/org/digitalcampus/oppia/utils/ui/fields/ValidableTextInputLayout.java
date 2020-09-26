@@ -126,7 +126,9 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
     }
 
     @Override
-    public void invalidateValue() { }
+    public void invalidateValue() {
+        // do nothing
+    }
 
     @Override
     public View getView() {

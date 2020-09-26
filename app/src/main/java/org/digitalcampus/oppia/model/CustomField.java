@@ -27,6 +27,8 @@ public class CustomField {
     private static final String TYPE_FLOAT = "float";
     private static final String TYPE_CHOICES = "choices";
 
+    private static final String STR_ORDER = "order";
+
     private String key;
     private String label;
     private boolean required;
@@ -182,7 +184,7 @@ public class CustomField {
                 JSONObject regStep = regSteps.getJSONObject(i);
                 RegisterFormStep step = new RegisterFormStep();
                 step.setTitle(regStep.getString("title"));
-                step.setOrder(regStep.getInt("order"));
+                step.setOrder(regStep.getInt(STR_ORDER));
                 if (regStep.has("helper_text")){
                     step.setHelperText(regStep.getString("helper_text"));
                 }
@@ -215,8 +217,8 @@ public class CustomField {
         if (f.has("helper_text")){
             field.setHelperText(f.getString("helper_text"));
         }
-        if (f.has("order")){
-            field.setOrder(f.getInt("order"));
+        if (f.has(STR_ORDER)){
+            field.setOrder(f.getInt(STR_ORDER));
         }
         if (f.has("collection")){
             field.setCollectionName(f.getString("collection"));
