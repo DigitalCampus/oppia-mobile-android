@@ -24,12 +24,7 @@ import java.io.Serializable;
 public class QuizStats implements Serializable {
 
 	public static final String TAG = QuizStats.class.getSimpleName();
-	
-    public static final String JSONPROP_QUIZID = "quiz_id";
-    public static final String JSONPROP_SCORE = "score";
-    public static final String JSONPROP_MAXSCORE = "maxscore";
 
-    private int quizId;
     private String digest;
     private int numAttempts;
     private boolean attempted;
@@ -41,11 +36,8 @@ public class QuizStats implements Serializable {
     private String quizTitle;
     private String sectionTitle;
 
-    public QuizStats(int quizId){ this.quizId = quizId; }
     public QuizStats(){ }
 
-    public int getQuizId() { return quizId; }
-    public void setQuizId(int quizId) { this.quizId = quizId; }
 
     public String getDigest() { return digest; }
     public void setDigest(String digest) { this.digest = digest; }
@@ -60,7 +52,6 @@ public class QuizStats implements Serializable {
     public float getUserScore() { return userScore; }
     public void setUserScore(float userScore) { this.userScore = userScore; }
 
-    public float getAverageScore() { return averageScore; }
     public void setAverageScore(float averageScore) {
         this.averageScore = averageScore;
     }
