@@ -872,12 +872,6 @@ public class DbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void updateScheduleVersion(long courseId, long scheduleVersion) {
-        ContentValues values = new ContentValues();
-        values.put(COURSE_C_SCHEDULE, scheduleVersion);
-        db.update(COURSE_TABLE, values, COURSE_C_ID + "=" + courseId, null);
-    }
-
     public void insertActivities(List<Activity> acts) {
 
         beginTransaction();

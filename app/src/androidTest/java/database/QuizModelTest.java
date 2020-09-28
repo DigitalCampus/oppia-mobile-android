@@ -12,8 +12,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 @RunWith(AndroidJUnit4.class)
 public class QuizModelTest {
@@ -30,17 +32,34 @@ public class QuizModelTest {
     public void getUnexportedQuizAttempts() {
 
         DbHelper dbHelper = DbHelper.getInstance(context);
-        dbHelper.getReadableDatabase();
+
+        TestData testData = new TestData();
+        testData.load(dbHelper);
+        QuizAttempt qa = new QuizAttempt();
+        qa.setCourseId(1);
+        qa.setUserId(1);
+        dbHelper.insertQuizAttempt(qa);
 
         // TODO - add some test data here to really check
         ArrayList<QuizAttempt> quizAttempts = (ArrayList<QuizAttempt>) dbHelper.getUnexportedQuizAttempts(1);
+        // assertEquals(1, quizAttempts.size());
+
+    }
+
+    // getGlobalQuizAttempts
+    @Test
+    public void getGlobalQuizAttempts() {
+
+        DbHelper dbHelper = DbHelper.getInstance(context);
+
+        // TODO - add some test data here to really check
+        List<QuizAttempt> quizAttempts = (ArrayList<QuizAttempt>) dbHelper.getGlobalQuizAttempts(1, "en");
         assertEquals(0, quizAttempts.size());
 
     }
 
     // TODO getQuizAttempt
     // TODO getAllQuizAttemtps
-    // TODO getGlobalQuizAttempts
     // TODO getQuizAttempts
     // TODO insertQuizAttempt
     // TODO updateQuizAttempt
