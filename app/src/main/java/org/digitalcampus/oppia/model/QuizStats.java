@@ -36,9 +36,6 @@ public class QuizStats implements Serializable {
     private String quizTitle;
     private String sectionTitle;
 
-    public QuizStats(){ }
-
-
     public String getDigest() { return digest; }
     public void setDigest(String digest) { this.digest = digest; }
 
