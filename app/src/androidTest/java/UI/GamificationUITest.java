@@ -16,7 +16,7 @@ import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
-import org.digitalcampus.oppia.model.Badges;
+import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
@@ -79,7 +79,7 @@ public class GamificationUITest {
     @Mock
     ArrayList<Points> pointList;
     @Mock
-    ArrayList<Badges> badgesList;
+    ArrayList<Badge> badgeList;
 
     @Before
     public void setUp() throws Exception {

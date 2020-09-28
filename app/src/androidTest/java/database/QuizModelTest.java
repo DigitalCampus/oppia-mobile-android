@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
 
 @RunWith(AndroidJUnit4.class)
 public class QuizModelTest {
@@ -40,9 +39,8 @@ public class QuizModelTest {
         qa.setUserId(1);
         dbHelper.insertQuizAttempt(qa);
 
-        // TODO - add some test data here to really check
         ArrayList<QuizAttempt> quizAttempts = (ArrayList<QuizAttempt>) dbHelper.getUnexportedQuizAttempts(1);
-        // assertEquals(1, quizAttempts.size());
+        assertEquals(1, quizAttempts.size());
 
     }
 
