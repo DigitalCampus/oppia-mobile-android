@@ -17,7 +17,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-public class QuizModelTest {
+public class QuizTest {
 
     private Context context;
 
