@@ -1,4 +1,4 @@
-package database;
+package database.model;
 
 import android.content.Context;
 
@@ -15,13 +15,6 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class BadgeModelTest {
-
-    private Context context;
-
-    @Before
-    public void setUp() throws Exception {
-        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-    }
 
     @Test
     public void setAndGetTestEmptyConstructor() {
