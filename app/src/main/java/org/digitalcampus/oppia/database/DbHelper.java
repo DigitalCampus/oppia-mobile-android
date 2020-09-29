@@ -1908,54 +1908,6 @@ public class DbHelper extends SQLiteOpenHelper {
         return isCompleted;
     }
 
-    public void getCourseQuizResults(List<QuizStats> stats, int courseId, long userId) {
-
-        String quizResultsWhereClause = QUIZATTEMPTS_C_COURSEID + STR_EQUALS_AND + QUIZATTEMPTS_C_USERID + "=?";
-        String[] quizResultsArgs = new String[]{String.valueOf(courseId), String.valueOf(userId)};
-        String[] quizResultsColumns = new String[]{QUIZATTEMPTS_C_ACTIVITY_DIGEST, QUIZATTEMPTS_C_PASSED, QUIZATTEMPTS_C_MAXSCORE, QUIZATTEMPTS_C_SCORE};
-
-        //We get the attempts made by the user for this course's quizzes
-        Cursor c = db.query(QUIZATTEMPTS_TABLE, quizResultsColumns, quizResultsWhereClause, quizResultsArgs, null, null, null);
-        if (c.getCount() <= 0) return; //we return the empty array
-
-        if (stats == null) stats = new ArrayList<>();
-
-        c.moveToFirst();
-        while (!c.isAfterLast()) {
-            String quizDigest = c.getString(c.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST));
-            int score = (int) (c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)) * 100);
-            int maxScore = (int) (c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)) * 100);
-            boolean passed = c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_PASSED)) > 0;
-
-            boolean alreadyInserted = false;
-            for (QuizStats quiz : stats) {
-                if (quiz.getDigest().equals(quizDigest)) {
-                    if (quiz.getUserScore() < score) quiz.setUserScore(score);
-                    if (quiz.getMaxScore() < maxScore) quiz.setMaxScore(maxScore);
-                    quiz.setAttempted(true);
-                    quiz.setPassed(passed);
-                    Log.d(TAG, "quiz score: " + quiz.getUserScore());
-                    Log.d(TAG, "quiz passed: " + quiz.isPassed());
-                    alreadyInserted = true;
-                    break;
-                }
-            }
-            if (!alreadyInserted) {
-                QuizStats quiz = new QuizStats();
-                quiz.setAttempted(true);
-                quiz.setDigest(quizDigest);
-                quiz.setUserScore(score);
-                quiz.setMaxScore(maxScore);
-                quiz.setPassed(passed);
-                stats.add(quiz);
-            }
-
-            c.moveToNext();
-        }
-        c.close();
-
-    }
-
 
     public Activity getActivityByDigest(String digest) {
         String sql = "SELECT * FROM  " + ACTIVITY_TABLE + " a " +
