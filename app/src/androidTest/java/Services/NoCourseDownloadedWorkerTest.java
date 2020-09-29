@@ -114,7 +114,7 @@ public class NoCourseDownloadedWorkerTest {
 
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         device.openNotification();
-        device.wait(Until.hasObject(By.text(context.getString(R.string.notification_course_download_title))), 1000);
+        device.wait(Until.hasObject(By.text(context.getString(R.string.notification_course_download_title))), 5000);
         Assert.assertNotNull(device.findObject(By.text(context.getString(R.string.notification_course_download_title))));
 
         device.pressBack(); // To close notification panel.
