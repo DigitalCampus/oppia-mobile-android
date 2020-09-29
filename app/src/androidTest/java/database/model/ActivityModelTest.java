@@ -3,16 +3,18 @@ package database.model;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.GamificationEvent;
+import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Media;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;;
 
 @RunWith(AndroidJUnit4.class)
 public class ActivityModelTest {
@@ -64,6 +66,98 @@ public class ActivityModelTest {
         Activity a = new Activity();
         a.setActType("page");
         assertEquals(R.drawable.default_icon_activity, a.getDefaultResourceImage());
+    }
+
+    @Test
+    public void getMedia(){
+        Activity a = new Activity();
+        a.setActType("page");
+        Media m = new Media();
+        m.setDigest("abcd");
+        m.setFilename("myvideo.mp4");
+        List<Media> mediaList = new ArrayList<>();
+        mediaList.add(m);
+        a.setMedia(mediaList);
+
+        assertEquals(1, a.getMedia().size());
+        assertEquals(m, a.getMedia("myvideo.mp4"));
+        assertEquals(null, a.getMedia("none.mp4"));
+    }
+
+    @Test
+    public void getLocation(){
+        Activity a = new Activity();
+        a.setActType("page");
+        assertEquals(null, a.getLocation("en"));
+
+        Lang l = new Lang("en", "my content");
+        l.setLocation("mfile.html");
+        List<Lang> langList = new ArrayList<>();
+        langList.add(l);
+        a.setLocations(langList);
+
+        assertEquals("my content", a.getLocation("en"));
+        assertEquals("my content", a.getLocation("en-US"));
+        assertEquals("my content", a.getLocation("en_UK"));
+        assertEquals("my content", a.getLocation("fi"));
+
+        Lang lFi = new Lang("fi", "kiitos");
+        lFi.setLocation("mfile_fi.html");
+        langList.add(lFi);
+        a.setLocations(langList);
+
+        assertEquals("kiitos", a.getLocation("fi"));
+    }
+
+    @Test
+    public void getMimeType(){
+        Activity a = new Activity();
+        a.setMimeType("text/html");
+        assertEquals("text/html", a.getMimeType());
+    }
+
+    @Test
+    public void getContents(){
+        Activity a = new Activity();
+        a.setActType("page");
+        assertEquals("No content", a.getContents("en"));
+
+        Lang l = new Lang("en", "my content");
+        List<Lang> langList = new ArrayList<>();
+        langList.add(l);
+        a.setContents(langList);
+
+        assertEquals("my content", a.getContents("en"));
+        assertEquals("my content", a.getContents("en-US"));
+        assertEquals("my content", a.getContents("en_UK"));
+        assertEquals("my content", a.getContents("fi"));
+
+        Lang lFi = new Lang("fi", "kiitos");
+        langList.add(lFi);
+        a.setContents(langList);
+
+        assertEquals("kiitos", a.getContents("fi"));
+    }
+
+    @Test
+    public void findGamificationEvent() {
+        Activity a = new Activity();
+        a.setActType("page");
+
+        // TODO not got this working right yet
+        // assertThrows(a.findGamificationEvent("fi"), GamificationEventNotFound);
+        GamificationEvent ge = new GamificationEvent();
+        ge.setEvent("completed");
+        List<GamificationEvent> geList = new ArrayList<>();
+        geList.add(ge);
+        a.setGamificationEvents(geList);
+
+        // TODO this part is not the best way either
+        try {
+            assertEquals(ge, a.findGamificationEvent("completed"));
+        } catch (GamificationEventNotFound genf){
+            // do nothing
+        }
     }
 
 }
