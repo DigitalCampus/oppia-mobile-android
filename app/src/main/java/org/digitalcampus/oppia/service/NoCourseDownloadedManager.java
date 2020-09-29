@@ -3,6 +3,7 @@ package org.digitalcampus.oppia.service;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -13,6 +14,7 @@ import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.util.List;
@@ -28,6 +30,9 @@ public class NoCourseDownloadedManager {
     @Inject
     CoursesRepository coursesRepository;
 
+    @Inject
+    User user;
+
     public NoCourseDownloadedManager(Context context) {
         this.context = context;
         initializeDaggerBase();
@@ -40,12 +45,15 @@ public class NoCourseDownloadedManager {
 
     public void checkNoCoursesNotification() {
 
-        boolean isLoggedIn = SessionManager.isLoggedIn(context);
-        if (isLoggedIn) {
+        if (isUserLoggedIn()) {
             checkSendNoCourseNotification();
         } else {
             Log.i(TAG, "startWork: user not logged in. exiting NoCourseDownloadWorker");
         }
+    }
+
+    private boolean isUserLoggedIn() {
+        return user != null && !TextUtils.isEmpty(user.getUsername());
     }
 
 

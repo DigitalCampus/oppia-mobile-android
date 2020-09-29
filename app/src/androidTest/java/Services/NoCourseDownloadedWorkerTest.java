@@ -20,6 +20,7 @@ import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.NoCourseDownloadedManager;
 import org.digitalcampus.oppia.service.NoCourseDownloadedWorker;
 import org.junit.Assert;
@@ -63,6 +64,8 @@ public class NoCourseDownloadedWorkerTest {
 
     @Mock
     CoursesRepository coursesRepository;
+    @Mock
+    User user;
 
     @Before
     public void setUp() throws Exception {
@@ -105,16 +108,35 @@ public class NoCourseDownloadedWorkerTest {
 
     }
 
-
     @Test
-    public void showsNotificationIfCoursesLessThanConfiguredParameter() throws Exception {
-        givenThereAreSomeCourses(App.DOWNLOAD_COURSES_DISPLAY -1);
+    public void doesNotshowNotificationIfNoUserIsLoggedIn() throws Exception {
+
+        when(user.getUsername()).thenReturn(null);
+
+        givenThereAreSomeCourses(App.DOWNLOAD_COURSES_DISPLAY - 1);
 
         new NoCourseDownloadedManager(context).checkNoCoursesNotification();
 
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         device.openNotification();
-        device.wait(Until.hasObject(By.text(context.getString(R.string.notification_course_download_title))), 5000);
+        device.wait(Until.hasObject(By.text(context.getString(R.string.notification_course_download_title))), 1000);
+        Assert.assertNull(device.findObject(By.text(context.getString(R.string.notification_course_download_title))));
+        device.pressBack(); // To close notification panel.
+
+    }
+
+    @Test
+    public void showsNotificationIfCoursesLessThanConfiguredParameter() throws Exception {
+
+        when(user.getUsername()).thenReturn("test_user");
+
+        givenThereAreSomeCourses(App.DOWNLOAD_COURSES_DISPLAY - 1);
+
+        new NoCourseDownloadedManager(context).checkNoCoursesNotification();
+
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        device.openNotification();
+        device.wait(Until.hasObject(By.text(context.getString(R.string.notification_course_download_title))), 1000);
         Assert.assertNotNull(device.findObject(By.text(context.getString(R.string.notification_course_download_title))));
 
         device.pressBack(); // To close notification panel.
@@ -124,6 +146,9 @@ public class NoCourseDownloadedWorkerTest {
 
     @Test
     public void doesNotshowNotificationIfCoursesEqualThanConfiguredParameter() throws Exception {
+
+        when(user.getUsername()).thenReturn("test_user");
+
         givenThereAreSomeCourses(App.DOWNLOAD_COURSES_DISPLAY);
 
         new NoCourseDownloadedManager(context).checkNoCoursesNotification();
