@@ -12,7 +12,8 @@ import androidx.work.impl.utils.futures.SettableFuture;
 import com.google.common.util.concurrent.ListenableFuture;
 
 public class NoCourseDownloadedWorker extends ListenableWorker {
-    private final String TAG = this.getClass().getSimpleName() ;
+
+    public static final String TAG = NoCourseDownloadedWorker.class.getSimpleName() ;
     private SettableFuture<Result> future;
 
     public NoCourseDownloadedWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {

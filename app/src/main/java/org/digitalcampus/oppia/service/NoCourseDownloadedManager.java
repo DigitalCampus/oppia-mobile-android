@@ -11,7 +11,6 @@ import androidx.core.app.NotificationCompat;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.User;
@@ -23,7 +22,7 @@ import javax.inject.Inject;
 
 public class NoCourseDownloadedManager {
 
-    private final String TAG = this.getClass().getSimpleName();
+    public static final String TAG = NoCourseDownloadedManager.class.getSimpleName();
     
     private Context context;
     
@@ -58,7 +57,6 @@ public class NoCourseDownloadedManager {
 
 
     private void checkSendNoCourseNotification() {
-//        DbHelper db = DbHelper.getInstance(getApplicationContext());
         List<Course> courses = coursesRepository.getCourses(context);
         if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY){
             Intent resultIntent = new Intent(context, TagSelectActivity.class);
