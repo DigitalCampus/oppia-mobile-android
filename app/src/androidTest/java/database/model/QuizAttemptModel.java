@@ -7,7 +7,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
 import org.joda.time.DateTime;
 import org.junit.Before;
