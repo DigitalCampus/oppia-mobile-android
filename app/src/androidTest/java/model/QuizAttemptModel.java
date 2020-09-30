@@ -1,4 +1,4 @@
-package database.model;
+package model;
 
 import android.content.Context;
 

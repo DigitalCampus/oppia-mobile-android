@@ -1,4 +1,4 @@
-package database.model;
+package model;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 

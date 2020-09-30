@@ -1,4 +1,4 @@
-package database.model;
+package model;
 
 public class CourseModelTest {
 
