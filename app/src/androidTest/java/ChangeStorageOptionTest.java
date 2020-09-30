@@ -51,6 +51,7 @@ public class ChangeStorageOptionTest {
         signal.countDown();
     }
 
+    /*
     @Test
     public void fromInternalToExternal_success() throws Exception {
 
@@ -82,6 +83,8 @@ public class ChangeStorageOptionTest {
         assertTrue(response.isResult());
         assertEquals(PrefsActivity.STORAGE_OPTION_EXTERNAL, prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, ""));
     }
+    */
+
 
 
     //Is Storage Available Tests

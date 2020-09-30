@@ -92,7 +92,9 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String STR_TEXT_NULL = " text null";
     private static final String STR_DATETIME_NULL = " datetime null";
     private static final String STR_WHERE = " WHERE ";
-
+    private static final String STR_EQUALS_NUMBER = " = %d ";
+    private static final String STR_TEXT_DEFAULT = " text default '";
+    private static final String STR_EQUALS_AND = "=? AND ";
 
     private static final String COURSE_TABLE = "Module";
     private static final String COURSE_C_ID = BaseColumns._ID;
@@ -275,7 +277,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 + COURSE_C_DESC + STR_TEXT_COMMA
                 + COURSE_C_ORDER_PRIORITY + STR_INT_DEFAULT_O + ", "
                 + COURSE_C_LANGS + STR_TEXT_COMMA
-                + COURSE_C_SEQUENCING + " text default '" + Course.SEQUENCING_MODE_NONE + "' )";
+                + COURSE_C_SEQUENCING + STR_TEXT_DEFAULT + Course.SEQUENCING_MODE_NONE + "' )";
         db.execSQL(mSql);
     }
 
@@ -327,7 +329,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 QUIZATTEMPTS_C_EXPORTED + STR_INT_DEFAULT_O + ", " +
                 QUIZATTEMPTS_C_EVENT + STR_TEXT_COMMA +
                 QUIZATTEMPTS_C_TIMETAKEN + STR_INT_DEFAULT_O + ", " +
-                QUIZATTEMPTS_C_TYPE + " text default '" + QuizAttempt.TYPE_QUIZ + "', " +
+                QUIZATTEMPTS_C_TYPE + STR_TEXT_DEFAULT + QuizAttempt.TYPE_QUIZ + "', " +
                 QUIZATTEMPTS_C_POINTS + STR_INT_DEFAULT_O + ")";
         db.execSQL(sql);
     }
@@ -551,7 +553,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         if (oldVersion <= 23 && newVersion >= 24) {
             // add field "sequencingMode" to Course table
-            String sql1 = STR_ALTER_TABLE + COURSE_TABLE + STR_ADD_COLUMN + COURSE_C_SEQUENCING + " text default '" + Course.SEQUENCING_MODE_NONE + "';";
+            String sql1 = STR_ALTER_TABLE + COURSE_TABLE + STR_ADD_COLUMN + COURSE_C_SEQUENCING + STR_TEXT_DEFAULT + Course.SEQUENCING_MODE_NONE + "';";
             db.execSQL(sql1);
         }
 
@@ -612,7 +614,7 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         if (oldVersion < 43){
-            db.execSQL(STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_TYPE + " text default '" + QuizAttempt.TYPE_QUIZ + "';");
+            db.execSQL(STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_TYPE + STR_TEXT_DEFAULT + QuizAttempt.TYPE_QUIZ + "';");
         }
 
         if (oldVersion < 44){
@@ -671,7 +673,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     c.moveToFirst();
                     String trackerData = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
                     JSONObject trackerJSON = new JSONObject(trackerData);
-                    time = trackerJSON.getLong("timetaken");
+                    time = trackerJSON.getLong(QUIZATTEMPTS_C_TIMETAKEN);
                 }
                 c.close();
 
@@ -799,7 +801,7 @@ public class DbHelper extends SQLiteOpenHelper {
             try {
                 db.insertOrThrow(USER_CF_TABLE, null, contentValues);
             } catch (SQLiteException e) {
-                String s = USER_CF_USERNAME + "=? AND " + CF_FIELD_KEY + "=?";
+                String s = USER_CF_USERNAME + STR_EQUALS_AND + CF_FIELD_KEY + "=?";
                 String[] args = new String[] { String.valueOf(user.getUsername()), contentValues.getAsString(CF_FIELD_KEY) };
                 db.update(USER_CF_TABLE, contentValues, s, args);
             }
@@ -868,12 +870,6 @@ public class DbHelper extends SQLiteOpenHelper {
             c.close();
             return courseId;
         }
-    }
-
-    public void updateScheduleVersion(long courseId, long scheduleVersion) {
-        ContentValues values = new ContentValues();
-        values.put(COURSE_C_SCHEDULE, scheduleVersion);
-        db.update(COURSE_TABLE, values, COURSE_C_ID + "=" + courseId, null);
     }
 
     public void insertActivities(List<Activity> acts) {
@@ -988,15 +984,13 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public long getCourseIdByShortname(String shortname) {
-        Course course = null;
         String s = COURSE_C_SHORTNAME + "=?";
         String[] args = new String[]{shortname};
         Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
 
         if (c.getCount() > 0) {
             c.moveToFirst();
-            long couseId = c.getLong(c.getColumnIndex(COURSE_C_ID));
-            return couseId;
+            return c.getLong(c.getColumnIndex(COURSE_C_ID));
         }
         c.close();
         return -1;
@@ -1057,7 +1051,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public List<Activity> getCourseQuizzes(long courseId) {
         ArrayList<Activity> quizzes = new ArrayList<>();
-        String s = ACTIVITY_C_COURSEID + "=? AND " + ACTIVITY_C_ACTTYPE + "=? AND " + ACTIVITY_C_SECTIONID + ">0";
+        String s = ACTIVITY_C_COURSEID + STR_EQUALS_AND + ACTIVITY_C_ACTTYPE + STR_EQUALS_AND + ACTIVITY_C_SECTIONID + ">0";
         String[] args = new String[]{String.valueOf(courseId), "quiz"};
         Cursor c = db.query(ACTIVITY_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
@@ -1080,7 +1074,7 @@ public class DbHelper extends SQLiteOpenHelper {
         qs.setPassed(false);
 
         // find if attempted
-        String s1 = QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_ACTIVITY_DIGEST + "=?";
+        String s1 = QUIZATTEMPTS_C_USERID + STR_EQUALS_AND + QUIZATTEMPTS_C_ACTIVITY_DIGEST + "=?";
         String[] args1 = new String[]{String.valueOf(userId), digest};
         Cursor query = db.query(QUIZATTEMPTS_TABLE, null, s1, args1, null, null, null);
         qs.setNumAttempts(query.getCount());
@@ -1115,7 +1109,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public List<QuizAttempt> getGlobalQuizAttempts(long userId, String prefLang) {
 
         // find if attempted
-        String s1 = QUIZATTEMPTS_C_USERID + "=? and " + QUIZATTEMPTS_C_TYPE + "=?";
+        String s1 = QUIZATTEMPTS_C_USERID + STR_EQUALS_AND + QUIZATTEMPTS_C_TYPE + "=?";
         String order = QUIZATTEMPTS_C_DATETIME + " DESC";
         String[] args1 = new String[]{String.valueOf(userId), QuizAttempt.TYPE_QUIZ};
         Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s1, args1, null, null, order);
@@ -1171,7 +1165,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public List<QuizAttempt> getQuizAttempts(String digest, long userId) {
 
         // find if attempted
-        String s1 = QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_ACTIVITY_DIGEST + "=?";
+        String s1 = QUIZATTEMPTS_C_USERID + STR_EQUALS_AND + QUIZATTEMPTS_C_ACTIVITY_DIGEST + "=?";
         String[] args1 = new String[]{String.valueOf(userId), digest};
         Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s1, args1, null, null, null);
 
@@ -1248,7 +1242,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public boolean toUpdate(String shortname, Double version) {
-        String s = COURSE_C_SHORTNAME + "=? AND " + COURSE_C_VERSIONID + "< ?";
+        String s = COURSE_C_SHORTNAME + STR_EQUALS_AND + COURSE_C_VERSIONID + "< ?";
         String[] args = new String[]{shortname, String.format("%.0f", version)};
         Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
         boolean toUpdate = (c.getCount() > 0);
@@ -1417,7 +1411,7 @@ public class DbHelper extends SQLiteOpenHelper {
         ArrayList<Points> points = new ArrayList<>();
 
         // Points from Tracker
-        String s = TRACKER_LOG_C_USERID + "=? AND " + TRACKER_LOG_C_POINTS + "!=0";
+        String s = TRACKER_LOG_C_USERID + STR_EQUALS_AND + TRACKER_LOG_C_POINTS + "!=0";
         String[] args = new String[]{String.valueOf(userId)};
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
@@ -1505,7 +1499,7 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         // Points from QuizAttempts
-        String qa = QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_POINTS + "!=0";
+        String qa = QUIZATTEMPTS_C_USERID + STR_EQUALS_AND + QUIZATTEMPTS_C_POINTS + "!=0";
         String[] qaargs = new String[]{String.valueOf(userId)};
         Cursor qac = db.query(QUIZATTEMPTS_TABLE, null, qa, qaargs, null, null, null);
         qac.moveToFirst();
@@ -1581,7 +1575,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public int getUnexportedTrackersCount() {
-        String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_EXPORTED + "=? ";
+        String s = TRACKER_LOG_C_SUBMITTED + STR_EQUALS_AND + TRACKER_LOG_C_EXPORTED + "=? ";
         String[] args = new String[]{"0", "0"};
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         int count = c.getCount();
@@ -1591,7 +1585,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
     public Payload getUnsentTrackers(long userId) {
-        String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
+        String s = TRACKER_LOG_C_SUBMITTED + STR_EQUALS_AND + TRACKER_LOG_C_USERID + "=? ";
         String[] args = new String[]{"0", String.valueOf(userId)};
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
@@ -1636,7 +1630,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<TrackerLog> getUnexportedTrackers(long userId) {
-        String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? AND " + TRACKER_LOG_C_EXPORTED + "=? ";
+        String s = TRACKER_LOG_C_SUBMITTED + STR_EQUALS_AND + TRACKER_LOG_C_USERID + STR_EQUALS_AND + TRACKER_LOG_C_EXPORTED + "=? ";
         String[] args = new String[]{"0", String.valueOf(userId), "0"};
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
@@ -1764,7 +1758,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<QuizAttempt> getUnexportedQuizAttempts(long userId) {
-        String s = QUIZATTEMPTS_C_SENT + "=? AND " + QUIZATTEMPTS_C_EXPORTED + "=? AND " + QUIZATTEMPTS_C_USERID + "=? ";
+        String s = QUIZATTEMPTS_C_SENT + STR_EQUALS_AND + QUIZATTEMPTS_C_EXPORTED + STR_EQUALS_AND + QUIZATTEMPTS_C_USERID + "=? ";
         String[] args = new String[]{"0", "0", String.valueOf(userId)};
         Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
@@ -1802,7 +1796,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public void deleteQuizAttempts(long courseId, long userId) {
         // delete any quiz attempts
-        String s = QUIZATTEMPTS_C_COURSEID + "=? AND " + QUIZATTEMPTS_C_USERID + "=?";
+        String s = QUIZATTEMPTS_C_COURSEID + STR_EQUALS_AND + QUIZATTEMPTS_C_USERID + "=?";
         String[] args = new String[]{String.valueOf(courseId), String.valueOf(userId)};
         db.delete(QUIZATTEMPTS_TABLE, s, args);
     }
@@ -1815,7 +1809,7 @@ public class DbHelper extends SQLiteOpenHelper {
         //get current user id
         long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 
-        String s = QUIZATTEMPTS_C_ACTIVITY_DIGEST + "=? AND " + QUIZATTEMPTS_C_USERID + "=? ";
+        String s = QUIZATTEMPTS_C_ACTIVITY_DIGEST + STR_EQUALS_AND + QUIZATTEMPTS_C_USERID + "=? ";
         String[] args = new String[]{digest, String.valueOf(userId)};
         Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
         int count = c.getCount();
@@ -1840,7 +1834,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         String todayString = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(today.getTime());
 
-        String s = QUIZATTEMPTS_C_ACTIVITY_DIGEST + "=? AND " + QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_DATETIME + ">=?";
+        String s = QUIZATTEMPTS_C_ACTIVITY_DIGEST + STR_EQUALS_AND + QUIZATTEMPTS_C_USERID + STR_EQUALS_AND + QUIZATTEMPTS_C_DATETIME + ">=?";
         String[] args = new String[]{digest, String.valueOf(userId), todayString};
         Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
         int count = c.getCount();
@@ -1864,7 +1858,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         String todayString = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(today.getTime());
 
-        String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " + TRACKER_LOG_C_USERID + "=? AND " + TRACKER_LOG_C_DATETIME + ">=?";
+        String s = TRACKER_LOG_C_ACTIVITYDIGEST + STR_EQUALS_AND + TRACKER_LOG_C_USERID + STR_EQUALS_AND + TRACKER_LOG_C_DATETIME + ">=?";
         String[] args = new String[]{digest, String.valueOf(userId), todayString};
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         int count = c.getCount();
@@ -1876,7 +1870,7 @@ public class DbHelper extends SQLiteOpenHelper {
         //get current user id
         long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 
-        String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " + TRACKER_LOG_C_USERID + "=? AND " + TRACKER_LOG_C_COMPLETED + "=1";
+        String s = TRACKER_LOG_C_ACTIVITYDIGEST + STR_EQUALS_AND + TRACKER_LOG_C_USERID + STR_EQUALS_AND + TRACKER_LOG_C_COMPLETED + "=1";
         String[] args = new String[]{digest, String.valueOf(userId)};
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         int count = c.getCount();
@@ -1886,14 +1880,14 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public void deleteTrackers(long courseId, long userId) {
         // delete any trackers
-        String s = TRACKER_LOG_C_COURSEID + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
+        String s = TRACKER_LOG_C_COURSEID + STR_EQUALS_AND + TRACKER_LOG_C_USERID + "=? ";
         String[] args = new String[]{String.valueOf(courseId), String.valueOf(userId)};
         db.delete(TRACKER_LOG_TABLE, s, args);
     }
 
     public boolean activityAttempted(long courseId, String digest, long userId) {
-        String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " +
-                TRACKER_LOG_C_USERID + "=? AND " +
+        String s = TRACKER_LOG_C_ACTIVITYDIGEST + STR_EQUALS_AND +
+                TRACKER_LOG_C_USERID + STR_EQUALS_AND +
                 TRACKER_LOG_C_COURSEID + "=?";
         String[] args = new String[]{digest, String.valueOf(userId), String.valueOf(courseId)};
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
@@ -1903,63 +1897,15 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public boolean activityCompleted(int courseId, String digest, long userId) {
-        String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " +
-                TRACKER_LOG_C_COURSEID + "=? AND " +
-                TRACKER_LOG_C_USERID + "=? AND " +
+        String s = TRACKER_LOG_C_ACTIVITYDIGEST + STR_EQUALS_AND +
+                TRACKER_LOG_C_COURSEID + STR_EQUALS_AND +
+                TRACKER_LOG_C_USERID + STR_EQUALS_AND +
                 TRACKER_LOG_C_COMPLETED + "=1";
         String[] args = new String[]{digest, String.valueOf(courseId), String.valueOf(userId)};
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         boolean isCompleted = (c.getCount() > 0);
         c.close();
         return isCompleted;
-    }
-
-    public void getCourseQuizResults(List<QuizStats> stats, int courseId, long userId) {
-
-        String quizResultsWhereClause = QUIZATTEMPTS_C_COURSEID + " =? AND " + QUIZATTEMPTS_C_USERID + "=?";
-        String[] quizResultsArgs = new String[]{String.valueOf(courseId), String.valueOf(userId)};
-        String[] quizResultsColumns = new String[]{QUIZATTEMPTS_C_ACTIVITY_DIGEST, QUIZATTEMPTS_C_PASSED, QUIZATTEMPTS_C_MAXSCORE, QUIZATTEMPTS_C_SCORE};
-
-        //We get the attempts made by the user for this course's quizzes
-        Cursor c = db.query(QUIZATTEMPTS_TABLE, quizResultsColumns, quizResultsWhereClause, quizResultsArgs, null, null, null);
-        if (c.getCount() <= 0) return; //we return the empty array
-
-        if (stats == null) stats = new ArrayList<>();
-
-        c.moveToFirst();
-        while (!c.isAfterLast()) {
-            String quizDigest = c.getString(c.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST));
-            int score = (int) (c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)) * 100);
-            int maxScore = (int) (c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)) * 100);
-            boolean passed = c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_PASSED)) > 0;
-
-            boolean alreadyInserted = false;
-            for (QuizStats quiz : stats) {
-                if (quiz.getDigest().equals(quizDigest)) {
-                    if (quiz.getUserScore() < score) quiz.setUserScore(score);
-                    if (quiz.getMaxScore() < maxScore) quiz.setMaxScore(maxScore);
-                    quiz.setAttempted(true);
-                    quiz.setPassed(passed);
-                    Log.d(TAG, "quiz score: " + quiz.getUserScore());
-                    Log.d(TAG, "quiz passed: " + quiz.isPassed());
-                    alreadyInserted = true;
-                    break;
-                }
-            }
-            if (!alreadyInserted) {
-                QuizStats quiz = new QuizStats();
-                quiz.setAttempted(true);
-                quiz.setDigest(quizDigest);
-                quiz.setUserScore(score);
-                quiz.setMaxScore(maxScore);
-                quiz.setPassed(passed);
-                stats.add(quiz);
-            }
-
-            c.moveToNext();
-        }
-        c.close();
-
     }
 
 
@@ -2147,8 +2093,8 @@ public class DbHelper extends SQLiteOpenHelper {
         // get all the previous activities in this section
         String sql = String.format("SELECT * FROM " + ACTIVITY_TABLE +
                 STR_WHERE + ACTIVITY_C_ACTID + " < %d " +
-                " AND " + ACTIVITY_C_COURSEID + " = %d " +
-                " AND " + ACTIVITY_C_SECTIONID + " = %d", activity.getActId(), activity.getCourseId(), activity.getSectionId());
+                " AND " + ACTIVITY_C_COURSEID + STR_EQUALS_NUMBER +
+                " AND " + ACTIVITY_C_SECTIONID + STR_EQUALS_NUMBER, activity.getActId(), activity.getCourseId(), activity.getSectionId());
 
         Log.d(TAG, "sql: " + sql);
         Cursor c = db.rawQuery(sql, null);
@@ -2160,7 +2106,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 String sqlCheck = String.format("SELECT * FROM " + TRACKER_LOG_TABLE +
                         STR_WHERE + TRACKER_LOG_C_ACTIVITYDIGEST + " = '%s'" +
                         " AND " + TRACKER_LOG_C_COMPLETED + " =1" +
-                        " AND " + TRACKER_LOG_C_USERID + " = %d", c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)), userId);
+                        " AND " + TRACKER_LOG_C_USERID + STR_EQUALS_NUMBER, c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)), userId);
                 Cursor c2 = db.rawQuery(sqlCheck, null);
                 if (c2 == null || c2.getCount() == 0) {
                     completed = false;
@@ -2185,10 +2131,10 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "this sectionid = " + activity.getSectionId());
         // get all the previous activities in this section
         String sql = String.format("SELECT * FROM " + ACTIVITY_TABLE +
-                " WHERE (" + ACTIVITY_C_COURSEID + " = %d " +
+                " WHERE (" + ACTIVITY_C_COURSEID + STR_EQUALS_NUMBER +
                 " AND " + ACTIVITY_C_SECTIONID + " < %d )" +
                 " OR (" + ACTIVITY_C_ACTID + " < %d " +
-                " AND " + ACTIVITY_C_COURSEID + " = %d " +
+                " AND " + ACTIVITY_C_COURSEID + STR_EQUALS_NUMBER +
                 " AND " + ACTIVITY_C_SECTIONID + " = %d)", activity.getCourseId(), activity.getSectionId(), activity.getActId(), activity.getCourseId(), activity.getSectionId());
 
         Log.d(TAG, "sql: " + sql);
@@ -2201,7 +2147,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 String sqlCheck = String.format("SELECT * FROM " + TRACKER_LOG_TABLE +
                         STR_WHERE + TRACKER_LOG_C_ACTIVITYDIGEST + " = '%s'" +
                         " AND " + TRACKER_LOG_C_COMPLETED + " =1" +
-                        " AND " + TRACKER_LOG_C_USERID + " = %d", c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)), userId);
+                        " AND " + TRACKER_LOG_C_USERID + STR_EQUALS_NUMBER, c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)), userId);
                 Cursor c2 = db.rawQuery(sqlCheck, null);
                 if (c2 == null || c2.getCount() == 0) {
                     completed = false;
@@ -2260,7 +2206,7 @@ public class DbHelper extends SQLiteOpenHelper {
             values.put(CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY, item.getKey());
             values.put(CUSTOM_FIELDS_COLLECTION_C_ITEM_VALUE, item.getLabel());
 
-            String s = CUSTOM_FIELDS_COLLECTION_C_COLLECTION_ID + "=? AND " + CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY + "=?";
+            String s = CUSTOM_FIELDS_COLLECTION_C_COLLECTION_ID + STR_EQUALS_AND + CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY + "=?";
             String[] args = new String[]{ collectionName, item.getKey() };
             Cursor c = db.query(CUSTOM_FIELDS_COLLECTION_TABLE, null, s, args, null, null, null);
             boolean toUpdate = c.getCount() > 0;

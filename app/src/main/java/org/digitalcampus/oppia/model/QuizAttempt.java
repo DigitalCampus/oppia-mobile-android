@@ -222,7 +222,7 @@ public class QuizAttempt implements Serializable {
 
 	public String getDisplayTitle(Context ctx){
 	    if (sectionTitle == null || quizTitle == null){
-	        return ctx.getString(R.string.quiz_attempts_unkwnown_quiz);
+	        return ctx.getString(R.string.quiz_attempts_unknown_quiz);
         }
 	    return sectionTitle + " > " + quizTitle;
     }

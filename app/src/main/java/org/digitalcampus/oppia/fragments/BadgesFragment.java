@@ -31,7 +31,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.BadgesAdapter;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.listener.APIRequestListener;
-import org.digitalcampus.oppia.model.Badges;
+import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
@@ -50,7 +50,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
     private BadgesAdapter adapterBadges;
 
 	@Inject
-	List<Badges> badges;
+	List<Badge> badges;
 	
 	public static BadgesFragment newInstance() {
 	    return new BadgesFragment();
@@ -100,7 +100,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 			}
 			for (int i = 0; i < (json.getJSONArray(STR_JSON_OBJECTS).length()); i++) {
 				JSONObject jsonObj = (JSONObject) json.getJSONArray(STR_JSON_OBJECTS).get(i);
-				Badges b = new Badges();
+				Badge b = new Badge();
 				b.setDescription(jsonObj.getString("description"));
 				b.setDateTime(jsonObj.getString("award_date"));
 				badges.add(b);

@@ -244,7 +244,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
             final View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
 
-            Snackbar snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_INDEFINITE);
+            Snackbar snackbar = Snackbar.make(rootView, "", BaseTransientBottomBar.LENGTH_INDEFINITE);
             Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
             layout.setClickable(false);
 

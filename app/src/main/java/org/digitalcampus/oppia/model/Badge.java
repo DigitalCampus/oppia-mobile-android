@@ -20,27 +20,23 @@ package org.digitalcampus.oppia.model;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 
-public class Badges {
+public class Badge {
 
 	private DateTime datetime;
 	private String description;
 	private String icon;
 
-	public Badges(){
+	public Badge(){
 
 	}
 
-	public Badges(DateTime datetime, String description) {
+	public Badge(DateTime datetime, String description) {
 		this.datetime = datetime;
 		this.description = description;
 	}
 
 	public String getDateAsString() {
 		return DateUtils.DATE_FORMAT.print(datetime);
-	}
-	
-	public String getTimeAsString() {
-		return DateUtils.TIME_FORMAT.print(datetime);
 	}
 	
 	public void setDateTime(String date) {
@@ -59,7 +55,7 @@ public class Badges {
 		return icon;
 	}
 	
-	public void setPoints(String icon) {
+	public void setIcon(String icon) {
 		this.icon = icon;
 	}
 }

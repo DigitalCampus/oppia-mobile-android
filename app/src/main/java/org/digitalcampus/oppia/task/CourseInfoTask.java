@@ -70,9 +70,6 @@ public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
         payload.getResponseData().clear();
 
         try {
-            // update progress dialog
-//            publishProgress(ctx.getString(R.string.loading));
-
             DbHelper db = DbHelper.getInstance(ctx);
             User u = db.getUser(SessionManager.getUsername(ctx));
 

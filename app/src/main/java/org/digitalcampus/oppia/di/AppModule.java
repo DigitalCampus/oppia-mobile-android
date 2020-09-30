@@ -13,7 +13,7 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.ActivityLogRepository;
-import org.digitalcampus.oppia.model.Badges;
+import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.CoursesRepository;
@@ -79,7 +79,7 @@ public class AppModule {
     }
 
     @Provides
-    public List<Badges> provideBadgesList(){
+    public List<Badge> provideBadgesList(){
         return new ArrayList<>();
     }
 
