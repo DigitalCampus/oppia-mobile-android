@@ -156,7 +156,7 @@
     <string name="notification_course_update_text">Updates are available for your courses.</string>
 
     <string name="notification_course_download_title">Course Downloads</string>
-    <string name="notification_course_download_text">Courses are available for you Download</string>
+    <string name="notification_course_download_text">Courses are available for you to download</string>
 
     <string name="title_login">Login</string>
     <string name="login_username_title">Username</string>
