@@ -33,7 +33,7 @@ import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
-import org.digitalcampus.oppia.model.Badges;
+import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.Course;
@@ -124,7 +124,7 @@ public class MainActivityUITest {
     @Mock
     ArrayList<Points> pointList;
     @Mock
-    ArrayList<Badges> badgesList;
+    ArrayList<Badge> badgeList;
 
     @Before
     public void setUp() throws Exception {
@@ -328,14 +328,14 @@ public class MainActivityUITest {
 
         when(user.getBadges()).thenReturn(0);
 
-        doReturn(true).when(badgesList).add((Badges) any());
+        doReturn(true).when(badgeList).add((Badge) any());
 
         mainActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.nav_bottom_points)).perform(click());
         onView(withId(R.id.tabs)).perform(selectTabAtPosition(2));
 
-        assertEquals(0, badgesList.size());
+        assertEquals(0, badgeList.size());
 
     }
 

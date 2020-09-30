@@ -155,14 +155,13 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 			return checkPasswordCriteria(password, passwordAgain);
 		});
 
-		fields = new HashMap<String, ValidableField>() {{
-			put("username", usernameField);
-			put("password", passwordField);
-			put("passwordagain", passwordAgainField);
-			put("first_name", firstnameField);
-			put("last_name", lastnameField);
-			put("phoneno", phoneNoField);
-		}};
+		fields = new HashMap<>();
+		fields.put("username", usernameField);
+		fields.put("password", passwordField);
+		fields.put("passwordagain", passwordAgainField);
+		fields.put("first_name", firstnameField);
+		fields.put("last_name", lastnameField);
+		fields.put("phoneno", phoneNoField);
 
 		return layout;
 	}

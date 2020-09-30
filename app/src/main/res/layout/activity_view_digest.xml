@@ -1,167 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="org.digitalcampus.oppia.activity.ViewDigestActivity"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="org.digitalcampus.oppia.activity.ViewDigestActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_toolbar"
         android:gravity="left"
         android:orientation="vertical"
-        android:background="@drawable/bg_toolbar"
-        android:paddingBottom="60dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin" >
+        android:paddingBottom="60dp">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView12"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/brand_icon"
+            android:layout_marginTop="@dimen/padding_large"
             android:layout_marginBottom="@dimen/padding_medium"
-            android:layout_marginTop="@dimen/padding_large"/>
-
-        <TextView
-            android:id="@+id/welcome_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:gravity="center"
-            android:layout_marginBottom="20dp"
-            style="@style/HeaderText" />
+            android:src="@drawable/brand_icon" />
 
         <TextView
             android:id="@+id/welcome_desc"
+            style="@style/NormalTextDark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=""
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:gravity="center"
-            style="@style/NormalTextDark" />
+            android:text="@string/open_digest.description" />
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/activity_detail"
-        android:layout_gravity="center"
+        android:id="@+id/course_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardElevation="8dp"
-        card_view:cardCornerRadius="4dp"
-        android:layout_marginTop="-40dp"
-        android:layout_marginLeft="@dimen/padding_large"
-        android:layout_marginRight="@dimen/padding_large">
+        android:layout_marginLeft="@dimen/list_card_horizontal_margin"
+        android:layout_marginTop="-25dp"
+        android:layout_marginRight="@dimen/list_card_horizontal_margin"
+        android:layout_marginBottom="7dp"
+        android:foreground="@drawable/bg_selectable"
+        app:contentPaddingBottom="@dimen/list_card_vertical_padding"
+        app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
+        app:contentPaddingRight="@dimen/list_card_horizontal_padding"
+        app:contentPaddingTop="@dimen/list_card_vertical_padding">
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/course_row"
+            android:layout_marginLeft="@dimen/list_card_horizontal_margin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="5dp">
+            android:layout_height="wrap_content">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="5dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/padding_medium">
-                    <ImageView
-                        android:id="@+id/course_image"
-                        android:layout_width="@dimen/course_icon_size"
-                        android:layout_height="@dimen/course_icon_size"
-                        android:layout_alignParentLeft="true"
-                        android:layout_margin="4dp"
-                        android:contentDescription="@string/app_logo_alt"
-                        android:src="@drawable/course_icon_placeholder"
-                        android:layout_centerVertical="true"/>
-
-                    <TextView
-                        android:id="@+id/activity_title"
-                        android:layout_width="wrap_content"
-                        android:layout_toRightOf="@+id/course_image"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/course_image"
-                        android:paddingLeft="@dimen/padding_medium"
-                        android:textSize="16sp"
-                        android:paddingRight="@dimen/padding_medium"/>
-
-                    <TextView
-                        android:id="@+id/course_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/activity_title"
-                        android:layout_toRightOf="@+id/course_image"
-                        android:paddingLeft="@dimen/padding_medium"
-                        android:textSize="14sp"
-                        android:textColor="@color/highlight_label"
-                        android:paddingRight="@dimen/padding_medium"/>
-
-                </RelativeLayout>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/activity_completed"
-                    android:src="@drawable/ic_action_accept"
-                    android:tint="@color/theme_primary"
-                    android:baselineAlignBottom="false"
-                    android:cropToPadding="false"
-                    android:adjustViewBounds="false"
-                    android:layout_gravity="bottom|right"
-                    android:contentDescription="@string/open_digest.activity_completed"/>
-            </FrameLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/stroke"
-                />
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/course_title"
+                style="@style/NormalTextBoldDark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/activity_actions">
-                <Button
-                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                    android:id="@+id/btn_show_activity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/open_digest.btn_action"
-                    android:layout_marginLeft="@dimen/padding_medium"
-                    android:layout_marginStart="@dimen/padding_medium"
-                    />
-                <Button
-                    android:id="@+id/btn_cancel"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_grey"
-                    android:text="@string/cancel"
-                    />
-            </LinearLayout>
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/download_course_btn" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/course_description"
+                style="@style/MediumTextDarkItalic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/course_title"
+                android:layout_alignLeft="@+id/course_title"
+                android:layout_alignRight="@+id/course_title"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="@dimen/padding_medium"
+                android:layout_marginTop="5dp"/>
+
+            <ProgressBar
+                android:id="@+id/download_progress"
+                style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/course_description"
+                android:layout_toLeftOf="@+id/download_course_btn"
+                android:indeterminate="true"
+                android:indeterminateOnly="false"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/download_course_btn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/download"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_action_download" />
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_go_to_course"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:visibility="gone"
+        android:text="@string/open_digest.go_to_course"
+        android:theme="@style/PrimaryButton"/>
+
+    <TextView
+        android:id="@+id/error_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/padding_large"
         android:drawableLeft="@android:drawable/ic_dialog_alert"
         android:drawablePadding="15dp"
-        android:text="@string/open_digest.errors.invalid_param"
-        android:id="@+id/error_text"
-        android:layout_gravity="center_horizontal"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:layout_margin="@dimen/padding_large"
+        android:text="@string/open_digest.errors.invalid_param"
         android:textColor="@color/text_light"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>

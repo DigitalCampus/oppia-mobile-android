@@ -56,7 +56,6 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -333,47 +332,6 @@ public class PointsFragment extends AppFragment implements TabLayout.OnTabSelect
         DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
         pointsFull = db.getUserPoints(userId, course, false);
-
-//        pointsFull = getMockPoints();
-    }
-
-    // Useful for testing
-    private List<Points> getMockPoints() {
-
-        List<Points> pointsMock = new ArrayList<>();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.YEAR, -1);
-
-        for (int i = 0; i < 366; i++) {
-
-            Points mockPoint = new Points();
-            mockPoint.setDateTime(DateUtils.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
-            mockPoint.setPointsAwarded(new Random().nextInt(70));
-            mockPoint.setEvent("Event mock " + i);
-            mockPoint.setDescription("Description mock " + i);
-
-            if (i % 13 == 0) {
-                // to add some days with 0 points
-                mockPoint.setPointsAwarded(0);
-            }
-
-            pointsMock.add(mockPoint);
-
-            if (i % 7 == 0) {
-                // to add some days with more than one number of points
-                Points mockPointExtra = new Points();
-                mockPointExtra.setDateTime(DateUtils.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
-                mockPointExtra.setPointsAwarded(new Random().nextInt(70));
-                mockPointExtra.setEvent("Event extra " + i);
-                mockPointExtra.setDescription("Description extra " + i);
-                pointsMock.add(mockPointExtra);
-            }
-
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-        }
-
-        return pointsMock;
     }
 
     @Override

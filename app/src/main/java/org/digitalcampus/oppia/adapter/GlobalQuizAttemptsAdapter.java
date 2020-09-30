@@ -54,7 +54,7 @@ public class GlobalQuizAttemptsAdapter extends RecyclerViewClickableAdapter<Glob
 
         viewHolder.quizTitle.setText(quiz.getDisplayTitle(ctx));
         String course = quiz.getCourseTitle();
-        viewHolder.courseTitle.setText(course == null ? ctx.getString(R.string.quiz_attempts_unkwnown_course) : course);
+        viewHolder.courseTitle.setText(course == null ? ctx.getString(R.string.quiz_attempts_unknown_course) : course);
         viewHolder.date.setText(DateUtils.DISPLAY_DATETIME_FORMAT.print(quiz.getDatetime()));
         viewHolder.score.setText(quiz.getScorePercentLabel());
         viewHolder.score.setBackgroundResource(

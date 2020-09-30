@@ -58,6 +58,9 @@ public class Course extends MultiLangInfoModel implements Serializable {
 
     private String root;
 
+    public Course() {
+    }
+
     public Course(String root) {
         this.root = root;
     }
