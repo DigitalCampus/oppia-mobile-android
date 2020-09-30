@@ -419,8 +419,8 @@
     <string name="quiz_attempts.number">Intentos</string>
     <string name="quiz_attempts.loading">Cargando intentos…</string>
     <string name="quiz_attempts.empty_state">Todavía no ha hecho este cuestionario</string>
-    <string name="quiz_attempts.unkwnown_course">Curso desconocido/eliminado</string>
-    <string name="quiz_attempts.unkwnown_quiz">Cuestionario desconocido/eliminado</string>
+    <string name="quiz_attempts.unknown_course">Curso desconocido/eliminado</string>
+    <string name="quiz_attempts.unknown_quiz">Cuestionario desconocido/eliminado</string>
     <string name="quiz_attempts.global_empty_state">Todavía no ha realizado ningún cuestionario</string>
     <string name="quiz_attempt.title">Cuestionario</string>
     <string name="quiz_attempts.take_quiz">Hacer cuestionario</string>

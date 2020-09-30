@@ -2,12 +2,10 @@ package org.digitalcampus.oppia.model;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Pair;
 
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.utils.storage.StorageUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +25,9 @@ public class CustomField {
     private static final String TYPE_FLOAT = "float";
     private static final String TYPE_CHOICES = "choices";
 
+    private static final String STR_ORDER = "order";
+
+    private static final String STR_HELPER_TEXT = "helper_text";
     private String key;
     private String label;
     private boolean required;
@@ -182,9 +183,9 @@ public class CustomField {
                 JSONObject regStep = regSteps.getJSONObject(i);
                 RegisterFormStep step = new RegisterFormStep();
                 step.setTitle(regStep.getString("title"));
-                step.setOrder(regStep.getInt("order"));
-                if (regStep.has("helper_text")){
-                    step.setHelperText(regStep.getString("helper_text"));
+                step.setOrder(regStep.getInt(STR_ORDER));
+                if (regStep.has(STR_HELPER_TEXT)){
+                    step.setHelperText(regStep.getString(STR_HELPER_TEXT));
                 }
                 if (regStep.has("conditional_byfield")){
                     step.setConditionalByField(regStep.getString("conditional_byfield"));
@@ -212,11 +213,11 @@ public class CustomField {
         field.setLabel(f.getString("label"));
         field.setRequired(f.getBoolean("required"));
         field.setType(f.getString("type"));
-        if (f.has("helper_text")){
-            field.setHelperText(f.getString("helper_text"));
+        if (f.has(STR_HELPER_TEXT)){
+            field.setHelperText(f.getString(STR_HELPER_TEXT));
         }
-        if (f.has("order")){
-            field.setOrder(f.getInt("order"));
+        if (f.has(STR_ORDER)){
+            field.setOrder(f.getInt(STR_ORDER));
         }
         if (f.has("collection")){
             field.setCollectionName(f.getString("collection"));

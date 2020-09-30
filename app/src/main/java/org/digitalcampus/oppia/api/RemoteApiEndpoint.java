@@ -2,12 +2,13 @@ package org.digitalcampus.oppia.api;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import androidx.preference.PreferenceManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 
-public class RemoteApiEndpoint implements ApiEndpoint{
+public class RemoteApiEndpoint implements ApiEndpoint {
 
     private static final int MIN_MAJOR_VERSION = 0;
     private static final int MIN_MIN_VERSION = 12;
@@ -21,17 +22,23 @@ public class RemoteApiEndpoint implements ApiEndpoint{
         return url + apiPath;
     }
 
-    public static boolean isServerVersionCompatible(String version){
-        if (version.startsWith("v")){
+    public static boolean isServerVersionCompatible(String version) {
+
+        if (version.startsWith("v")) {
             version = version.substring(1);
         }
+
+        if (version.contains("-")) {
+            version = version.split("-")[0];
+        }
+
         String[] versioning = version.split("\\.");
-        if (versioning.length < 3){
+        if (versioning.length < 3) {
             // No correct format (expected x.x.x)
             return false;
         }
 
-        try{
+        try {
             int majorVersion = Integer.parseInt(versioning[0]);
             int minorVersion = Integer.parseInt(versioning[1]);
             int buildVersion = Integer.parseInt(versioning[2]);
@@ -39,8 +46,7 @@ public class RemoteApiEndpoint implements ApiEndpoint{
             return ((majorVersion > MIN_MAJOR_VERSION) ||
                     (majorVersion == MIN_MAJOR_VERSION && minorVersion > MIN_MIN_VERSION) ||
                     (majorVersion == MIN_MAJOR_VERSION && minorVersion == MIN_MIN_VERSION && buildVersion >= MIN_BUILD_VERSION));
-        }
-        catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return false;
         }
 

@@ -10,17 +10,17 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.Badges;
+import org.digitalcampus.oppia.model.Badge;
 
 import java.util.List;
 
 public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.BadgesViewHolder> {
 
 
-    private List<Badges> badges;
+    private List<Badge> badges;
     private Context context;
 
-    public BadgesAdapter(Context context, List<Badges> badges) {
+    public BadgesAdapter(Context context, List<Badge> badges) {
         this.context = context;
         this.badges = badges;
     }
@@ -38,7 +38,7 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.BadgesView
     @Override
     public void onBindViewHolder(final BadgesViewHolder viewHolder, final int position) {
 
-        final Badges b = getItemAtPosition(position);
+        final Badge b = getItemAtPosition(position);
 
         viewHolder.badgeDescription.setText(b.getDescription());
         viewHolder.badgeDate.setText(b.getDateAsString());
@@ -50,7 +50,7 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.BadgesView
         return badges.size();
     }
 
-    public Badges getItemAtPosition(int position) {
+    public Badge getItemAtPosition(int position) {
         return badges.get(position);
     }
 
