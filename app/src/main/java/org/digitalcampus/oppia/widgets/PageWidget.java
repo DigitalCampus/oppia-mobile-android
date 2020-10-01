@@ -45,6 +45,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -89,7 +90,7 @@ public class PageWidget extends WidgetFactory {
 	@Override
 	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable(WidgetFactory.WIDGET_CONFIG, getWidgetConfig());
+		outState.putSerializable(WidgetFactory.WIDGET_CONFIG, (Serializable) getWidgetConfig());
 	}
 	
 	@Override
@@ -124,7 +125,11 @@ public class PageWidget extends WidgetFactory {
             }
 
             // set up the page to intercept videos
+			/**      
+			 * @deprecated (replace as soon as possible)
+			 */
 			@Override
+			@Deprecated
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
 				if (url.contains("/video/")) {
