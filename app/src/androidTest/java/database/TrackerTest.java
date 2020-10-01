@@ -1,6 +1,6 @@
 package database;
 
-public class TrackerModelTest {
+public class TrackerTest {
 
     // TODO getSentTrackersCount
     // TODO getUnsentTrackersCount
