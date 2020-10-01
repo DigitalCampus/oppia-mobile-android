@@ -208,7 +208,6 @@
 <string name="info_no_badges">ليس لديك شارة أنهي الدرس الأول للحصول على الشارة الأولى</string>
 
 <string name="scan_media_download_button">تحميل</string>
-<string name="scan_media_download_via_pc_button">تحميل من الحاسوب</string>
 <string name="success_media_download">تحميل ملف الوسائط : \'%1$s\' بنجاح</string>
 <string name="media_file_size">%1$.1fMb</string>
 <string name="missing_media_download_selected">تحميل المجموعة المحددة</string>
@@ -279,12 +278,6 @@
 <string name="reset_complete">تمت إعادة تعيين كلمة السر بنجاح رجاء مراجعة البريد الالكتروني للحصول على كلمة السر الجديدة</string>
 
 <string name="change_language">تغيير اللغة</string>
-
-<string name="download_via_pc_message">الملف   \'%1$s\' موجود على بطاقة الذاكرة الرقمية للجهاز إفتحه على الحاسوب واتبع التعليمات لتحميل ملفات الوسائط وانسخها على بطاقة
-الذاكرة الرقمية للجهاز المستعمل</string>
-<string name="download_via_pc_title">تحميل ملفات الوسائط</string>
-<string name="download_via_pc_intro">تحميل كافة الملفات أدناه على الحاسوب إضغط على زر الفأرة الأيمن واختار العبارة حفظ بإسم</string>
-<string name="download_via_pc_final">بعد تحميل الملفات إنسخها على الدليل  \'%1$s\' من بطاقة الذاكرة الرقمية للجهاز المستعمل</string>
 
 <string name="course_draft">(مسودة)</string>
 

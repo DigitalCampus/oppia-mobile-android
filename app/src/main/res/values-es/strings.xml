@@ -187,7 +187,6 @@
 	<string name="info_no_badges">Todavía no tiene ninguna insignia. Termine un curso completo para ganarse tu primera insignia.</string>
 	
 	<string name="scan_media_download_button">Descarga</string>
-	<string name="scan_media_download_via_pc_button">Descarga vía PC</string>
 	<string name="success_media_download">Media: \'%1$s\' descargado correctamente.</string>
 	<string name="media_file_size">%1$.1fMb</string>
     <string name="notification_media_title">&appName;: gestión de descargas</string>
@@ -238,11 +237,6 @@
 	<string name="register_complete">Registro completo</string>
 	
 	<string name="change_language">Cambiar idioma</string>
-	
-	<string name="download_via_pc_message">Se ha añadido un pequeño fichero \'%1$s\' en su tarjeta SD, abra este archivo en el ordenador y siga las instrucciones para descargar los ficheros multimedia y copiarlos en su tarjeta SD.</string>
-	<string name="download_via_pc_title">Descargar Multimedia</string>
-	<string name="download_via_pc_intro">Descargue cada uno de los ficheros a continuación en tu PC (usa botón derecho, guardar como)</string>
-	<string name="download_via_pc_final">Una vez haya descargado los archivos cópielos en el directorio \'%1$s\' de su tarjeta SD.</string>
 
     <string name="search.result_summary">%1$d resultados para \"%2$s\"</string>
     <string name="search.message.searching">Buscando…</string>
