@@ -38,7 +38,6 @@ import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.PointsComparator;
-import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
@@ -1965,7 +1964,7 @@ public class DbHelper extends SQLiteOpenHelper {
     /*
      * Perform a search
      */
-    public List<SearchResult> search(String searchText, int limit, long userId, Context ctx, DBListener listener) {
+    public List<SearchResult> search(String searchText, int limit, long userId, Context ctx) {
         ArrayList<SearchResult> results = new ArrayList<>();
         String sqlSeachFullText = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 1 AS ranking FROM %s ft " +
                         " INNER JOIN %s a ON a.%s = ft.docid" +
@@ -2007,9 +2006,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
         Cursor c = db.rawQuery(sql, null);
         if (c != null && c.getCount() > 0) {
-
-            //We inform the AsyncTask that the query has been performed
-            listener.onQueryPerformed();
 
             long startTime = System.currentTimeMillis();
             Map<Long, Course> fetchedCourses = new HashMap<>();
