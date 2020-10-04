@@ -6,7 +6,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.SearchResult;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,14 +34,9 @@ public class SearchTest {
         DbHelper dbHelper = DbHelper.getInstance(context);
         dbHelper.getReadableDatabase(); // To force migration if needed
 
-        DBListener dbListener = new DBListener() {
-            @Override
-            public void onQueryPerformed() {
-            }
-        };
         // TODO add some real data to test with
         ArrayList<SearchResult> searchResults = (ArrayList<SearchResult>)
-                dbHelper.search("test", 50, 1, context, dbListener);
+                dbHelper.search("test", 50, 1, context);
         assertEquals(0, searchResults.size());
     }
 

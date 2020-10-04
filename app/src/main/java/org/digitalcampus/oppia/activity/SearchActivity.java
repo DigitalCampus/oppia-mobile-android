@@ -40,7 +40,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SearchResultsAdapter;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.Tracker;
-import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
@@ -177,13 +176,19 @@ public class SearchActivity extends AppActivity {
         }
     }
 
-    private class SearchTask extends AsyncTask<String, Object, List<SearchResult>> implements DBListener{
+    private class SearchTask extends AsyncTask<String, Object, List<SearchResult>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            summary.setText(getString(R.string.search_message_fetching));
+        }
 
         @Override
         protected List<SearchResult> doInBackground(String... urls) {
             Log.d(TAG, "Starting search...");
             DbHelper db = DbHelper.getInstance(SearchActivity.this);
-            List<SearchResult> searchResults = db.search(currentSearch, 100, userId, SearchActivity.this, this);
+            List<SearchResult> searchResults = db.search(currentSearch, 100, userId, SearchActivity.this);
 
             //Save the search tracker
             new Tracker(SearchActivity.this)
@@ -206,15 +211,6 @@ public class SearchActivity extends AppActivity {
                     getString(R.string.search_message_no_results, currentSearch));
         }
 
-        @Override
-        public void onProgressUpdate(Object... values){
-            summary.setText(getString(R.string.search_message_fetching));
-        }
-
-        //@Override
-        public void onQueryPerformed() {
-            publishProgress(true);
-        }
     }
 
 }
