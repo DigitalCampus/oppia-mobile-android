@@ -204,7 +204,7 @@
     <string name="install">Install</string>
     <string name="courses_install_pending">There are new received courses not installed yet.</string>
     <string name="course_completed">Course completed!</string>
-    <string name="launch_external_app">Open CHT app</string>
+    <string name="launch_external_app">Back to CHT app</string>
     <string name="download_starting">Download starting</string>
     <string name="downloading">Downloading &#8230;</string>
     <string name="download_complete">Download complete</string>
