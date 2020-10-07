@@ -1,0 +1,122 @@
+{
+  "id": 3487,
+  "title": {
+    "en": "with description question"
+  },
+  "description": {
+    "en": ""
+  },
+  "props": {
+    "digest": "b472c8ccb6066091701393fc61ede656516cr0s2p80m0",
+    "courseversion": "20200216160414",
+    "showfeedback": 2,
+    "passthreshold": 80,
+    "maxattempts": 1,
+    "maxscore": 2
+  },
+  "questions": [
+    {
+      "order": 1,
+      "id": 36126,
+      "question": {
+        "id": 19765,
+        "type": "description",
+        "title": {
+          "en": "Answer the following questions about European capitals"
+        },
+        "props": {
+          "maxscore": 0
+        },
+        "responses": []
+      }
+    },
+    {
+      "order": 2,
+      "id": 36127,
+      "question": {
+        "id": 19766,
+        "type": "multichoice",
+        "title": {
+          "en": "What is the capital of Germany?"
+        },
+        "props": {
+          "maxscore": 1,
+          "shuffleanswers": "1"
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 103320,
+            "props": {
+              "id": 462
+            },
+            "title": {
+              "en": "Berlin"
+            },
+            "score": "1.0000"
+          },
+          {
+            "order": 2,
+            "id": 103321,
+            "props": {
+              "id": 439
+            },
+            "title": {
+              "en": "Bonn"
+            },
+            "score": "0.0000"
+          },
+          {
+            "order": 3,
+            "id": 103322,
+            "props": {
+              "id": 997
+            },
+            "title": {
+              "en": "Munich"
+            },
+            "score": "0.0000"
+          }
+        ]
+      }
+    },
+    {
+      "order": 3,
+      "id": 36128,
+      "question": {
+        "id": 19767,
+        "type": "multichoice",
+        "title": {
+          "en": "The capital of Finland is Helsinki"
+        },
+        "props": {
+          "maxscore": 1
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 103323,
+            "props": {
+              "id": 579
+            },
+            "title": {
+              "en": "True"
+            },
+            "score": "1.0000"
+          },
+          {
+            "order": 2,
+            "id": 103324,
+            "props": {
+              "id": 726
+            },
+            "title": {
+              "en": "False"
+            },
+            "score": "0.0000"
+          }
+        ]
+      }
+    }
+  ]
+}
