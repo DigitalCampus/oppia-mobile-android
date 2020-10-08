@@ -156,26 +156,22 @@ public class Quiz implements Serializable {
         return true;
     }
 
-    private void generateQuestionSet(JSONArray questionChoices, int randomSelect){
+    private void generateQuestionSet(JSONArray questionChoices, int randomSelect) throws JSONException {
         while(this.questions.size() < randomSelect){
             int randomNum = generator.nextInt(questionChoices.length());
             boolean found = false;
             JSONObject quizquestion;
-            try {
-                quizquestion = (JSONObject) questionChoices.get(randomNum);
-                JSONObject q = quizquestion.getJSONObject(JSON_PROPERTY_QUESTION);
-                int qid = q.getInt(JSON_PROPERTY_ID);
-                for(int i=0; i < this.questions.size(); i++){
-                    if (qid == this.questions.get(i).getID()){
-                        found = true;
-                    }
+
+            quizquestion = (JSONObject) questionChoices.get(randomNum);
+            JSONObject q = quizquestion.getJSONObject(JSON_PROPERTY_QUESTION);
+            int qid = q.getInt(JSON_PROPERTY_ID);
+            for(int i=0; i < this.questions.size(); i++){
+                if (qid == this.questions.get(i).getID()){
+                    found = true;
                 }
-                if(!found){
-                    this.addQuestion(quizquestion);
-                }
-            } catch (JSONException jsone) {
-                Log.d(TAG,"Error parsing question set", jsone);
-                Mint.logException(jsone);
+            }
+            if(!found) {
+                this.addQuestion(quizquestion);
             }
         }
 
@@ -187,107 +183,113 @@ public class Quiz implements Serializable {
         this.maxscore = newMax;
     }
 
-    private boolean addQuestion(JSONObject qObj) {
+    private void addQuestion(JSONObject qObj) throws JSONException{
 
         // determine question type
         QuizQuestion question;
         String qtype;
+        JSONObject q = qObj.getJSONObject(JSON_PROPERTY_QUESTION);
+        qtype = (String) q.get(JSON_PROPERTY_TYPE);
+
         try {
-            JSONObject q = qObj.getJSONObject(JSON_PROPERTY_QUESTION);
-            qtype = (String) q.get(JSON_PROPERTY_TYPE);
-            if (qtype.equalsIgnoreCase(Essay.TAG)) {
-                question = new Essay();
-            } else if (qtype.equalsIgnoreCase(MultiChoice.TAG)) {
-                question = new MultiChoice();
-            } else if (qtype.equalsIgnoreCase(Numerical.TAG)) {
-                question = new Numerical();
-            } else if (qtype.equalsIgnoreCase(Matching.TAG)) {
-                question = new Matching();
-            } else if (qtype.equalsIgnoreCase(ShortAnswer.TAG)) {
-                question = new ShortAnswer();
-            } else if (qtype.equalsIgnoreCase(MultiSelect.TAG)) {
-                question = new MultiSelect();
-            } else if (qtype.equalsIgnoreCase(Description.TAG)) {
-                question = new Description();
-            } else if (qtype.equalsIgnoreCase(DragAndDrop.TAG)) {
-            question = new DragAndDrop();
-            } else {
-                Log.d(TAG, "Question type " + qtype + " is not yet supported");
-                return false;
-            }
-
-            question.setID(q.getInt(JSON_PROPERTY_ID));
-
-            if (q.get(JSON_PROPERTY_TITLE) instanceof JSONObject){
-                JSONObject titleLangs = q.getJSONObject(JSON_PROPERTY_TITLE);
-                Iterator<?> keys = titleLangs.keys();
-
-                while( keys.hasNext() ){
-                    String key = (String) keys.next();
-                    question.setTitleForLang(key, titleLangs.getString(key));
-                }
-            } else if (q.get(JSON_PROPERTY_TITLE) instanceof Integer){
-                question.setTitleForLang(this.defaultLang, String.valueOf(q.getInt(JSON_PROPERTY_TITLE)));
-            } else {
-                question.setTitleForLang(this.defaultLang, q.getString(JSON_PROPERTY_TITLE));
-            }
-
-            JSONObject questionProps = (JSONObject) q.get(JSON_PROPERTY_PROPS);
-
-            HashMap<String, String> qProps = new HashMap<>();
-            if (questionProps.names() != null){
-                for (int k = 0; k < questionProps.names().length(); k++) {
-                    qProps.put(questionProps.names().getString(k),
-                            questionProps.getString(questionProps.names().getString(k)));
-                }
-                question.setProps(qProps);
-            }
-            this.questions.add(question);
-
-            // now add response options for this question
-            JSONArray responses = (JSONArray) q.get(JSON_PROPERTY_RESPONSES);
-            for (int j = 0; j < responses.length(); j++) {
-                JSONObject r = (JSONObject) responses.get(j);
-                Response responseOption = new Response();
-
-                if (r.get(JSON_PROPERTY_TITLE) instanceof JSONObject){
-                    JSONObject titleLangs = r.getJSONObject(JSON_PROPERTY_TITLE);
-                    Iterator<?> keys = titleLangs.keys();
-
-                    while( keys.hasNext() ){
-                        String key = (String) keys.next();
-                        if (titleLangs.get(key) instanceof Integer){
-                            responseOption.setTitleForLang(key, String.valueOf(titleLangs.getInt(key)));
-                        } else {
-                            responseOption.setTitleForLang(key, titleLangs.getString(key));
-                        }
-                    }
-                } else if (r.get(JSON_PROPERTY_TITLE) instanceof Integer){
-                    responseOption.setTitleForLang(this.defaultLang, String.valueOf(r.getInt(JSON_PROPERTY_TITLE)));
-                } else {
-                    responseOption.setTitleForLang(this.defaultLang, r.getString(JSON_PROPERTY_TITLE));
-                }
-
-                responseOption.setScore(Float.parseFloat((String) r.get(Quiz.JSON_PROPERTY_SCORE)));
-                JSONObject responseProps = (JSONObject) r.get(JSON_PROPERTY_PROPS);
-                HashMap<String, String> rProps = new HashMap<>();
-                if (responseProps.names() != null) {
-                    for (int m = 0; m < responseProps.names().length(); m++) {
-                        rProps.put(responseProps.names().getString(m),
-                                responseProps.getString(responseProps.names().getString(m)));
-                    }
-                }
-                responseOption.setProps(rProps);
-                responseOption.setFeedback(this.defaultLang);
-                question.addResponseOption(responseOption);
-            }
-
-        } catch (JSONException jsone) {
-            Log.d(TAG,"Error parsing question & responses",jsone);
-            Mint.logException(jsone);
-            return false;
+            question = this.setQuestionType(qtype);
+        } catch (UnsupportedQuestionType uqt){
+            return;
         }
-        return true;
+        question.setID(q.getInt(JSON_PROPERTY_ID));
+
+        if (q.get(JSON_PROPERTY_TITLE) instanceof JSONObject){
+            JSONObject titleLangs = q.getJSONObject(JSON_PROPERTY_TITLE);
+            Iterator<?> keys = titleLangs.keys();
+
+            while( keys.hasNext() ){
+                String key = (String) keys.next();
+                question.setTitleForLang(key, titleLangs.getString(key));
+            }
+        } else if (q.get(JSON_PROPERTY_TITLE) instanceof Integer){
+            question.setTitleForLang(this.defaultLang, String.valueOf(q.getInt(JSON_PROPERTY_TITLE)));
+        } else {
+            question.setTitleForLang(this.defaultLang, q.getString(JSON_PROPERTY_TITLE));
+        }
+
+        JSONObject questionProps = (JSONObject) q.get(JSON_PROPERTY_PROPS);
+
+        HashMap<String, String> qProps = new HashMap<>();
+        if (questionProps.names() != null){
+            for (int k = 0; k < questionProps.names().length(); k++) {
+                qProps.put(questionProps.names().getString(k),
+                        questionProps.getString(questionProps.names().getString(k)));
+            }
+            question.setProps(qProps);
+        }
+        this.questions.add(question);
+
+        // now add response options for this question
+        JSONArray responses = (JSONArray) q.get(JSON_PROPERTY_RESPONSES);
+        for (int j = 0; j < responses.length(); j++) {
+            JSONObject r = (JSONObject) responses.get(j);
+            Response responseOption = this.setResponseOptions(r);
+            question.addResponseOption(responseOption);
+        }
+    }
+
+    private QuizQuestion setQuestionType(String qtype) throws UnsupportedQuestionType{
+        QuizQuestion question;
+        if (qtype.equalsIgnoreCase(Essay.TAG)) {
+            question = new Essay();
+        } else if (qtype.equalsIgnoreCase(MultiChoice.TAG)) {
+            question = new MultiChoice();
+        } else if (qtype.equalsIgnoreCase(Numerical.TAG)) {
+            question = new Numerical();
+        } else if (qtype.equalsIgnoreCase(Matching.TAG)) {
+            question = new Matching();
+        } else if (qtype.equalsIgnoreCase(ShortAnswer.TAG)) {
+            question = new ShortAnswer();
+        } else if (qtype.equalsIgnoreCase(MultiSelect.TAG)) {
+            question = new MultiSelect();
+        } else if (qtype.equalsIgnoreCase(Description.TAG)) {
+            question = new Description();
+        } else if (qtype.equalsIgnoreCase(DragAndDrop.TAG)) {
+            question = new DragAndDrop();
+        } else {
+            Log.d(TAG, "Question type " + qtype + " is not yet supported");
+            throw new UnsupportedQuestionType();
+        }
+        return question;
+    }
+    private Response setResponseOptions(JSONObject r) throws JSONException{
+        Response responseOption = new Response();
+
+        if (r.get(JSON_PROPERTY_TITLE) instanceof JSONObject){
+            JSONObject titleLangs = r.getJSONObject(JSON_PROPERTY_TITLE);
+            Iterator<?> keys = titleLangs.keys();
+
+            while( keys.hasNext() ){
+                String key = (String) keys.next();
+                if (titleLangs.get(key) instanceof Integer){
+                    responseOption.setTitleForLang(key, String.valueOf(titleLangs.getInt(key)));
+                } else {
+                    responseOption.setTitleForLang(key, titleLangs.getString(key));
+                }
+            }
+        } else if (r.get(JSON_PROPERTY_TITLE) instanceof Integer){
+            responseOption.setTitleForLang(this.defaultLang, String.valueOf(r.getInt(JSON_PROPERTY_TITLE)));
+        } else {
+            responseOption.setTitleForLang(this.defaultLang, r.getString(JSON_PROPERTY_TITLE));
+        }
+
+        responseOption.setScore(Float.parseFloat((String) r.get(Quiz.JSON_PROPERTY_SCORE)));
+        JSONObject responseProps = (JSONObject) r.get(JSON_PROPERTY_PROPS);
+        HashMap<String, String> rProps = new HashMap<>();
+        if (responseProps.names() != null) {
+            for (int m = 0; m < responseProps.names().length(); m++) {
+                rProps.put(responseProps.names().getString(m),
+                        responseProps.getString(responseProps.names().getString(m)));
+            }
+        }
+        responseOption.setProps(rProps);
+        responseOption.setFeedback(this.defaultLang);
+        return responseOption;
     }
 
     public boolean hasNext() {
