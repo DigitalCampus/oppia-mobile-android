@@ -1,13 +1,10 @@
-package model;
+package org.digitalcampus.oppia.model;
 import android.content.Context;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.CoursesRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

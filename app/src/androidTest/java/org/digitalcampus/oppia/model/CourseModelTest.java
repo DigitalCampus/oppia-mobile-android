@@ -1,4 +1,4 @@
-package model;
+package org.digitalcampus.oppia.model;
 
 public class CourseModelTest {
 

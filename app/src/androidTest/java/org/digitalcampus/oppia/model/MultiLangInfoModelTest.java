@@ -1,8 +1,7 @@
-package model;
+package org.digitalcampus.oppia.model;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.digitalcampus.oppia.model.MultiLangInfoModel;
 import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;

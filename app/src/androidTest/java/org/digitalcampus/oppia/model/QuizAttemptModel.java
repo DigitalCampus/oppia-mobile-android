@@ -1,4 +1,4 @@
-package model;
+package org.digitalcampus.oppia.model;
 
 import android.content.Context;
 
@@ -6,8 +6,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.model.User;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;

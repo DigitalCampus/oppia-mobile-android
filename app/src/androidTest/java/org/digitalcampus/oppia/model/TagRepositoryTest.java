@@ -1,8 +1,6 @@
-package model;
+package org.digitalcampus.oppia.model;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.digitalcampus.oppia.model.Tag;
-import org.digitalcampus.oppia.model.TagRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
