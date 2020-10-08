@@ -15,18 +15,9 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class ScorecardActivityTest {
 
-    private Activity act;
-    private Bundle args;
-
     @Rule
     public ActivityTestRule<ScorecardActivity> scorecardActivityTestRule =
             new ActivityTestRule<>(ScorecardActivity.class, false, false);
-
-    @Before
-    public void setup() throws Exception {
-        // Setting up before every test
-        act = new Activity();
-    }
 
     @Test
     public void testActivityOpen() {
