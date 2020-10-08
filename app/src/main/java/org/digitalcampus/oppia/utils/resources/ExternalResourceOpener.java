@@ -60,7 +60,7 @@ public class ExternalResourceOpener {
         PackageManager pm = ctx.getPackageManager();
         Intent intent =  pm.getLaunchIntentForPackage(EXTERNAL_APP_PACKAGE);
         if (intent != null){
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         }
         return intent;
     }
