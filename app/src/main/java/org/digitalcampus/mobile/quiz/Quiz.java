@@ -24,7 +24,6 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
-import org.digitalcampus.mobile.quiz.model.questiontypes.DragAndDrop;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Essay;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Matching;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
@@ -249,8 +248,6 @@ public class Quiz implements Serializable {
             question = new MultiSelect();
         } else if (qtype.equalsIgnoreCase(Description.TAG)) {
             question = new Description();
-        } else if (qtype.equalsIgnoreCase(DragAndDrop.TAG)) {
-            question = new DragAndDrop();
         } else {
             Log.d(TAG, "Question type " + qtype + " is not yet supported");
             throw new UnsupportedQuestionType();
