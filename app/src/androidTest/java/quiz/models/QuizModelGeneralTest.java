@@ -226,7 +226,7 @@ public class QuizModelGeneralTest {
                 InstrumentationRegistry.getInstrumentation().getContext(), UNSUPPORTED_QUESTION_TYPE);
         quiz.load(quizContent, DEFAULT_LANG);
         assertEquals("Questions", quiz.getTitle(DEFAULT_LANG));
-        assertEquals(0, quiz.getTotalNoQuestions());
+        assertEquals(1, quiz.getTotalNoQuestions());
     }
 
     // essay question type
