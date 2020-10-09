@@ -1,7 +1,11 @@
 package database;
 
 import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
+
+import java.util.ArrayList;
 
 public class TestData {
 
@@ -9,6 +13,7 @@ public class TestData {
     public void load(DbHelper dbHelper){
         this.db = dbHelper;
         this.addUsers();
+        this.addCourses();
     }
 
     // add users
@@ -30,9 +35,18 @@ public class TestData {
         db.addOrUpdateUser(u);
     }
 
-    // course 1
+    // courses
+    private void addCourses(){
+        Course c = new Course();
+        c.setCourseId(100);
+        c.setShortname("my-course");
+        Lang l = new Lang("en", "course title");
+        ArrayList langList = new ArrayList<>();
+        langList.add(l);
+        c.setTitles(langList);
+        db.addOrUpdateCourse(c);
+    }
 
-    // course 2
 
 
     // activities/sections

@@ -238,13 +238,16 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public synchronized void resetDatabase() {
         //Remove the data from all the tables
-        List<String> tables = Arrays.asList(USER_PREFS_TABLE, USER_TABLE, SEARCH_TABLE, QUIZATTEMPTS_TABLE,
+        List<String> tables = Arrays.asList(USER_TABLE, SEARCH_TABLE, QUIZATTEMPTS_TABLE,
                 TRACKER_LOG_TABLE, ACTIVITY_TABLE, COURSE_TABLE);
         for (String tablename : tables) {
             db.delete(tablename, null, null);
         }
     }
 
+    public SQLiteDatabase getDB(){
+        return db;
+    }
     @Override
     public void onCreate(SQLiteDatabase db) {
         createCourseTable(db);
