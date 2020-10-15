@@ -121,8 +121,7 @@
                     android:id="@+id/register_form_email_field"
                     style="@style/Oppia.CustomField.TextInputLayout"
                     android:layout_marginTop="@dimen/margin_medium"
-                    app:cantContainSpaces="true"
-                    app:required="true">
+                    app:cantContainSpaces="true">
 
                     <EditText
                         android:layout_width="match_parent"
