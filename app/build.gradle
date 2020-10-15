@@ -111,6 +111,7 @@ android {
             resValue "string", "START_COURSEINDEX_COLLAPSED", runtimeProps['START_COURSEINDEX_COLLAPSED']
             resValue "string", "prefServerDefault", runtimeProps['OPPIA_SERVER_DEFAULT']
             resValue "string", "oppiaServerHost", runtimeProps['OPPIA_SERVER_HOST']
+            resValue "string", "oppiaServerDomain", runtimeProps['OPPIA_SERVER_DOMAIN']
             resValue "string", "prefAdminPasswordDefault", runtimeProps['ADMIN_PROTECT_INITIAL_PASSWORD']
             resValue "string", "prefGamificationPointsAnimationDefault", runtimeProps['GAMIFICATION_POINTS_ANIMATION']
             resValue "string", "prefDurationGamificationPointsViewDefault", runtimeProps['DURATION_GAMIFICATION_POINTS_VIEW']
