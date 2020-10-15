@@ -1,15 +1,149 @@
 {
   "fields": [
-
-
+    {
+      "name":"country",
+      "label":"Select country",
+      "required":true,
+      "helper_text":"",
+      "type":"choices",
+      "collection": "countries",
+      "order": 3
+    },
+    {
+      "name":"employer_name",
+      "label":"Name of employer or institution",
+      "required":false,
+      "helper_text":"Name of employer or institution",
+      "type":"str",
+      "order": 4
+    },
+    {
+      "name":"employer_type",
+      "label":"Employer or institution type",
+      "required":true,
+      "helper_text":"",
+      "type":"choices",
+      "collection": "employer_types",
+      "order": 5
+    },
+    {
+      "name":"profession",
+      "label":"Profession",
+      "required":true,
+      "helper_text":"",
+      "type":"choices",
+      "collection": "profession_types",
+      "order": 6
+    },
+    {
+      "name":"profession_other",
+      "label":"Profession (please specify)",
+      "required":true,
+      "helper_text":"",
+      "type":"str",
+      "order": 7,
+      "visible_byfield":"profession",
+      "visible_byvalue":"other"
+    },
+    {
+      "name":"work_area",
+      "label":"Which best describes the area where you work?",
+      "required":false,
+      "helper_text":"",
+      "type":"choices",
+      "collection": "work_areas",
+      "order": 1
+    },
+    {
+      "name":"gender",
+      "label":"Gender",
+      "required":false,
+      "helper_text":"",
+      "type":"choices",
+      "collection": "genders",
+      "order": 2
+    },
+    {
+      "name":"age_range",
+      "label":"Age range",
+      "required":false,
+      "helper_text":"",
+      "type":"choices",
+      "collection": "age_ranges",
+      "order": 3
+    },
+    {
+      "name":"education_level",
+      "label":"What is the highest level of education you have completed?",
+      "required":false,
+      "helper_text":"",
+      "type":"choices",
+      "collection": "education_levels",
+      "order": 4
+    }
   ],
 
   "collections": [
     {
       "collection_name": "countries",
       "items": [
-        {"id": "Area1", "value":"Area1"},
-        {"id": "Area2", "value":"Area2"}
+        {"id": "UK", "value":"United Kingdom"},
+        {"id": "USA", "value":"USA"}
+      ]
+    },
+    {
+      "collection_name": "employer_types",
+      "items": [
+        {"id": "UK", "value":"United Kingdom"},
+        {"id": "USA", "value":"USA"}
+      ]
+    },
+    {
+      "collection_name": "profession_types",
+      "items": [
+        {"id": "UK", "value":"United Kingdom"},
+        {"id": "other", "value":"Other"}
+      ]
+    },
+    {
+      "collection_name": "work_areas",
+      "items": [
+        {"id": "urban", "value":"Urban"},
+        {"id": "suburban", "value":"Suburban"},
+        {"id": "rural", "value":"Rural"},
+        {"id": "n_a", "value":"N/A - not currently working"}
+      ]
+    },
+    {
+      "collection_name": "genders",
+      "items": [
+        {"id": "female", "value":"Female"},
+        {"id": "male", "value":"Male"},
+        {"id": "transgender", "value":"Transgender"},
+        {"id": "non_binary", "value":"Non-binary"},
+        {"id": "prefer_no", "value":"Prefer not to say"}
+      ]
+    },
+    {
+      "collection_name": "age_ranges",
+      "items": [
+        {"id": "under25", "value":"Under 25"},
+        {"id": "25_39", "value":"25 - 39"},
+        {"id": "40_59", "value":"40 - 59"},
+        {"id": "60plus", "value":"60+"},
+        {"id": "prefer_no", "value":"Prefer not to say"}
+      ]
+    },
+    {
+      "collection_name": "education_levels",
+      "items": [
+        {"id": "elementary_less", "value":"Less than primary/elementary school"},
+        {"id": "elementary", "value":"Primary/elementary school"},
+        {"id": "secondary", "value":"Secondary/high school"},
+        {"id": "2_year_college", "value":"Associate or trade degree (2 year college)"},
+        {"id": "4_year_college", "value":"Bachelor's degree (4 year college)"},
+        {"id": "masters", "value":"Master's degree"},
+        {"id": "doctorate", "value":"Professional degree or doctorate"}
       ]
     }
   ],
@@ -17,7 +151,7 @@
   "register_steps": [
     {
       "order": 1,
-      "title":"First step",
+      "title":"Basic info",
       "helper_text":"",
       "fields":[
         "username",
@@ -26,26 +160,32 @@
         "email",
         "phoneno"
       ]
-    }
+    },
 
     {
       "order": 2,
       "title":"Personal info",
-      "helper_text":"Introduce your personal info",
+      "helper_text":"",
       "fields":[
         "first_name",
-        "last_name"
+        "last_name",
+        "country",
+        "employer_name",
+        "employer_type",
+        "profession",
+        "profession_other"
       ]
     },
 
     {
       "order": 3,
       "title":"Extra data",
-      "helper_text":"Please fill the additional personal info",
+      "helper_text":"",
       "fields":[
-        "phoneno",
-        "organisation",
-        "jobtitle"
+        "work_area",
+        "gender",
+        "age_range",
+        "education_level"
       ]
     }
   ]

@@ -132,6 +132,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		stepDescription = layout.findViewById(R.id.step_description);
 		steppedFieldsContainer = layout.findViewById(R.id.stepped_fields_container);
 
+		/*
 		emailField.setCustomValidator(field -> {
 			String email = field.getCleanedValue();
 			if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -141,6 +142,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 			}
 			return true;
 		});
+
 
 		phoneNoField.setCustomValidator(field -> {
 			String phoneNo = field.getCleanedValue();
@@ -152,6 +154,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 			}
 			return true;
 		});
+		 */
 
 		passwordField.setCustomValidator(field -> {
 			String password = passwordField.getCleanedValue();

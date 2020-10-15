@@ -15,7 +15,7 @@ android {
     buildToolsVersion '29.0.2'
 
     defaultConfig {
-        versionCode 82
+        versionCode 84
         versionName "7.1.4-cha.3.int"
 
         applicationId "org.lmh.cha"
