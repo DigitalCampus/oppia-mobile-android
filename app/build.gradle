@@ -3,7 +3,7 @@ plugins {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco-android'
+apply plugin: "com.hiya.jacoco-android"
 
 repositories {
     maven { url "https://mint.splunk.com/gradle/" }
@@ -15,8 +15,8 @@ android {
     buildToolsVersion '29.0.2'
 
     defaultConfig {
-        versionCode 80
-        versionName "7.1.4-cha.3.int"
+        versionCode 81
+        versionName "7.1.5-cha.1.int"
 
         applicationId "org.lmh.cha"
 
@@ -152,7 +152,7 @@ android {
 
     useLibrary 'android.test.mock'
 
-    viewBinding.enabled = true
+    android.buildFeatures.viewBinding = true
 }
 
 // Setup Jacoco version. It's recommended way to exclude conflicts between components

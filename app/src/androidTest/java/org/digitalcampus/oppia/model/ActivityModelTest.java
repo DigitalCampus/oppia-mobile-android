@@ -1,13 +1,9 @@
-package database.model;
+package org.digitalcampus.oppia.model;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
-import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.GamificationEvent;
-import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.model.Media;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

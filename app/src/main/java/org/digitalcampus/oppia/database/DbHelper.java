@@ -38,7 +38,6 @@ import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.PointsComparator;
-import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
@@ -95,6 +94,9 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String STR_EQUALS_NUMBER = " = %d ";
     private static final String STR_TEXT_DEFAULT = " text default '";
     private static final String STR_EQUALS_AND = "=? AND ";
+    private static final String STR_INNERJOIN_FULLTEXT = " INNER JOIN %s a ON a.%s = ft.docid";
+    private static final String STR_INNERJOIN_COURSE = " INNER JOIN %s c ON a.%s = c.%s ";
+    private static final String STR_WHERE_MATCH = " WHERE %s MATCH '%s' ";
 
     private static final String COURSE_TABLE = "Module";
     private static final String COURSE_C_ID = BaseColumns._ID;
@@ -236,13 +238,16 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public synchronized void resetDatabase() {
         //Remove the data from all the tables
-        List<String> tables = Arrays.asList(USER_PREFS_TABLE, USER_TABLE, SEARCH_TABLE, QUIZATTEMPTS_TABLE,
+        List<String> tables = Arrays.asList(USER_TABLE, SEARCH_TABLE, QUIZATTEMPTS_TABLE,
                 TRACKER_LOG_TABLE, ACTIVITY_TABLE, COURSE_TABLE);
         for (String tablename : tables) {
             db.delete(tablename, null, null);
         }
     }
 
+    public SQLiteDatabase getDB(){
+        return db;
+    }
     @Override
     public void onCreate(SQLiteDatabase db) {
         createCourseTable(db);
@@ -1965,37 +1970,37 @@ public class DbHelper extends SQLiteOpenHelper {
     /*
      * Perform a search
      */
-    public List<SearchResult> search(String searchText, int limit, long userId, Context ctx, DBListener listener) {
+    public List<SearchResult> search(String searchText, int limit, long userId, Context ctx) {
         ArrayList<SearchResult> results = new ArrayList<>();
         String sqlSeachFullText = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 1 AS ranking FROM %s ft " +
-                        " INNER JOIN %s a ON a.%s = ft.docid" +
-                        " INNER JOIN %s c ON a.%s = c.%s " +
-                        " WHERE %s MATCH '%s' ",
+                        STR_INNERJOIN_FULLTEXT +
+                        STR_INNERJOIN_COURSE +
+                        STR_WHERE_MATCH,
                 COURSE_C_ID, ACTIVITY_C_ACTIVITYDIGEST, ACTIVITY_C_SECTIONID, SEARCH_TABLE,
                 ACTIVITY_TABLE, ACTIVITY_C_ID,
                 COURSE_TABLE, ACTIVITY_C_COURSEID, COURSE_C_ID,
                 SEARCH_C_TEXT, searchText);
         String sqlActivityTitle = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 5 AS ranking FROM %s ft " +
-                        " INNER JOIN %s a ON a.%s = ft.docid" +
-                        " INNER JOIN %s c ON a.%s = c.%s " +
-                        " WHERE %s MATCH '%s' ",
+                        STR_INNERJOIN_FULLTEXT +
+                        STR_INNERJOIN_COURSE +
+                        STR_WHERE_MATCH,
                 COURSE_C_ID, ACTIVITY_C_ACTIVITYDIGEST, ACTIVITY_C_SECTIONID, SEARCH_TABLE,
                 ACTIVITY_TABLE, ACTIVITY_C_ID,
                 COURSE_TABLE, ACTIVITY_C_COURSEID, COURSE_C_ID,
                 SEARCH_C_ACTIVITYTITLE, searchText);
 
         String sqlSectionTitle = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 10 AS ranking FROM %s ft " +
-                        " INNER JOIN %s a ON a.%s = ft.docid" +
-                        " INNER JOIN %s c ON a.%s = c.%s " +
-                        " WHERE %s MATCH '%s' ",
+                        STR_INNERJOIN_FULLTEXT +
+                        STR_INNERJOIN_COURSE +
+                        STR_WHERE_MATCH,
                 COURSE_C_ID, ACTIVITY_C_ACTIVITYDIGEST, ACTIVITY_C_SECTIONID, SEARCH_TABLE,
                 ACTIVITY_TABLE, ACTIVITY_C_ID,
                 COURSE_TABLE, ACTIVITY_C_COURSEID, COURSE_C_ID,
                 SEARCH_C_SECTIONTITLE, searchText);
         String sqlCourseTitle = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 15 AS ranking FROM %s ft " +
-                        " INNER JOIN %s a ON a.%s = ft.docid" +
-                        " INNER JOIN %s c ON a.%s = c.%s " +
-                        " WHERE %s MATCH '%s' ",
+                        STR_INNERJOIN_FULLTEXT +
+                        STR_INNERJOIN_COURSE +
+                        STR_WHERE_MATCH,
                 COURSE_C_ID, ACTIVITY_C_ACTIVITYDIGEST, ACTIVITY_C_SECTIONID, SEARCH_TABLE,
                 ACTIVITY_TABLE, ACTIVITY_C_ID,
                 COURSE_TABLE, ACTIVITY_C_COURSEID, COURSE_C_ID,
@@ -2007,9 +2012,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
         Cursor c = db.rawQuery(sql, null);
         if (c != null && c.getCount() > 0) {
-
-            //We inform the AsyncTask that the query has been performed
-            listener.onQueryPerformed();
 
             long startTime = System.currentTimeMillis();
             Map<Long, Course> fetchedCourses = new HashMap<>();

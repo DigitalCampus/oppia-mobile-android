@@ -199,7 +199,6 @@
     <string name="info_no_badges">Vous n\'avez pas encore de badges. Terminez votre premier cours pour obtenir votre premier badge.</string>
 
     <string name="scan_media_download_button">Télécharger</string>
-    <string name="scan_media_download_via_pc_button">Télécharger à partir d\'un PC</string>
     <string name="success_media_download">Fichier média : \'%1$s\' téléchargé avec succès.</string>
     <string name="media_file_size">%1$.1fMb</string>
     <string name="missing_media_download_selected">Télécharger la sélection</string>
@@ -258,11 +257,6 @@
     <string name="reset_complete">Votre mot de passe a bien été réinitialisé.\n\nVeuillez consulter votre email pour obtenir votre nouveau mot de passe.</string>
 
     <string name="change_language">Changer la langue</string>
-
-    <string name="download_via_pc_message">Le fichier  \'%1$s\' est à présent sur la carte SD de votre appareil, ouvrez-le sur votre ordinateur et suivez les instructions pour télécharger les fichiers média et les copier sur la carte SD de votre appareil.</string>
-    <string name="download_via_pc_title">Téléchargement des fichiers média</string>
-    <string name="download_via_pc_intro">Téléchargez tous les fichiers ci-dessous sur votre ordinateur (utiliser le bouton droit de la souris et choisissez enregistrer-sous)</string>
-    <string name="download_via_pc_final">Une fois que vous aurez téléchargé les fichiers, copiez-les sur le repertoire \'%1$s\' de la carte SD de votre appareil.</string>
 
     <string name="course_draft">(Brouillon)</string>
 

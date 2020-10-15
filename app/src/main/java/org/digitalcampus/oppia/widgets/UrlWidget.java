@@ -96,7 +96,11 @@ public class UrlWidget extends WidgetFactory {
 		wv.getSettings().setDefaultFontSize(defaultFontSize);
 		wv.getSettings().setJavaScriptEnabled(true);
 		wv.setWebViewClient(new WebViewClient() {
+			/**      
+			 * @deprecated (replace as soon as possible)
+			 */
 	        @Override
+			@Deprecated
 	        public boolean shouldOverrideUrlLoading(WebView view, String url)
 	        {
 	            return false;

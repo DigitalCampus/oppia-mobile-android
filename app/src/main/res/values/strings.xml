@@ -156,7 +156,7 @@
     <string name="notification_course_update_text">Updates are available for your courses.</string>
 
     <string name="notification_course_download_title">Course Downloads</string>
-    <string name="notification_course_download_text">Courses are available for you Download</string>
+    <string name="notification_course_download_text">Courses are available for you to download</string>
 
     <string name="title_login">Login</string>
     <string name="login_username_title">Username</string>
@@ -236,7 +236,6 @@
     <string name="info_no_badges">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
 
     <string name="scan_media_download_button">Download</string>
-    <string name="scan_media_download_via_pc_button">Download via PC</string>
     <string name="success_media_download">Media file: \'%1$s\' successfully downloaded.</string>
     <string name="media_file_size">%1$.1fMb</string>
     <string name="missing_media_download_selected">Download selected</string>
@@ -300,12 +299,6 @@
     <string name="reset_complete">Your password has now been reset.\n\nPlease check your email for your new password.</string>
 
     <string name="change_language">Change Language</string>
-
-    <string name="download_via_pc_message">A small file \'%1$s\' has been placed on your phone SD card, open this on your computer and follow the instructions to download the media files and copy them onto your phone SD card.</string>
-    <string name="download_via_pc_title">Download Media Files</string>
-    <string name="download_via_pc_intro">Download each of the files below to your PC (use right click, save-as)</string>
-    <string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
-    <string name="download_via_pc_extenal_storage">You need to set an external storage option to be able to place the files downloaded from your PC inside the app directory. Please, go to "Settings" and change your storage option.</string>
 
     <string name="course_draft">Draft version</string>
 
