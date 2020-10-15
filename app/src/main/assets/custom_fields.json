@@ -1,5 +1,54 @@
 {
-  "fields": [],
-  "collections": [],
-  "register_steps": []
+  "fields": [
+
+
+  ],
+
+  "collections": [
+    {
+      "collection_name": "countries",
+      "items": [
+        {"id": "Area1", "value":"Area1"},
+        {"id": "Area2", "value":"Area2"}
+      ]
+    }
+  ],
+
+  "register_steps": [
+    {
+      "order": 1,
+      "title":"First step",
+      "helper_text":"",
+      "fields":[
+        "username",
+        "password",
+        "passwordagain",
+        "email",
+        "phoneno"
+      ]
+    }
+
+    {
+      "order": 2,
+      "title":"Personal info",
+      "helper_text":"Introduce your personal info",
+      "fields":[
+        "first_name",
+        "last_name"
+      ]
+    },
+
+    {
+      "order": 3,
+      "title":"Extra data",
+      "helper_text":"Please fill the additional personal info",
+      "fields":[
+        "phoneno",
+        "organisation",
+        "jobtitle"
+      ]
+    }
+  ]
+
+
 }
