@@ -46,6 +46,10 @@ public class Tag implements Serializable{
 		this.name = name;
 	}
 	public int getCount() {
+		// count should not be under 0
+		if (this.count < 0){
+			return 0;
+		}
 		return count;
 	}
 	public void setCount(int count) {

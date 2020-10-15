@@ -90,7 +90,8 @@
                     style="@style/Oppia.CustomField.TextInputLayout"
                     android:layout_marginTop="@dimen/margin_medium"
                     app:cantContainSpaces="true"
-                    app:required="true">
+                    app:required="true"
+                    app:passwordToggleEnabled="true">
 
                     <EditText
                         android:layout_width="match_parent"
@@ -105,7 +106,8 @@
                     style="@style/Oppia.CustomField.TextInputLayout"
                     android:layout_marginTop="@dimen/margin_medium"
                     app:cantContainSpaces="true"
-                    app:required="true">
+                    app:required="true"
+                    app:passwordToggleEnabled="true">
 
                     <EditText
                         android:layout_width="match_parent"

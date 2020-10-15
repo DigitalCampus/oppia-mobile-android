@@ -24,12 +24,20 @@ public class RemoteApiEndpoint implements ApiEndpoint {
 
     public static boolean isServerVersionCompatible(String version) {
 
+        if (version == null){
+            return false;
+        }
+
         if (version.startsWith("v")) {
             version = version.substring(1);
         }
 
         if (version.contains("-")) {
-            version = version.split("-")[0];
+            try {
+                version = version.split("-")[0];
+            } catch (ArrayIndexOutOfBoundsException e) {
+                return false;
+            }
         }
 
         String[] versioning = version.split("\\.");
