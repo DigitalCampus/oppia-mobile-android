@@ -54,7 +54,7 @@ public class RegisterUITest extends MockedApiEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        when(customFieldsRepo.getAll((Context) any())).thenReturn(new ArrayList<CustomField>());
+        when(customFieldsRepo.getAll(any())).thenReturn(new ArrayList<>());
     }
 
     @Test

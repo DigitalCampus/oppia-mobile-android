@@ -3,10 +3,6 @@ package UI;
 import android.content.Context;
 import android.content.Intent;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
@@ -16,19 +12,19 @@ import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.MultiLangInfoModel;
-import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
+import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.task.Payload;
-import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static Matchers.EspressoTestsMatchers.withDrawable;
@@ -53,14 +49,12 @@ public class DownloadActivityUITest {
             new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
                     .getTargetContext()
                     .getApplicationContext())).set(
-                    new DaggerMockRule.ComponentSetter<AppComponent>() {
-                        @Override public void setComponent(AppComponent component) {
-                            App app =
-                                    (App) InstrumentationRegistry.getInstrumentation()
-                                            .getTargetContext()
-                                            .getApplicationContext();
-                            app.setComponent(component);
-                        }
+                    component -> {
+                        App app =
+                                (App) InstrumentationRegistry.getInstrumentation()
+                                        .getTargetContext()
+                                        .getApplicationContext();
+                        app.setComponent(component);
                     });
 
     @Rule
@@ -72,31 +66,25 @@ public class DownloadActivityUITest {
 
     private void givenThereAreSomeCourses(final int numberOfCourses, final CourseInstallViewAdapter course) throws Exception{
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Payload response = new Payload();
-                response.setResult(true);
-                response.setResultResponse("{}");
-                ((DownloadActivity) ctx).apiRequestComplete(response);
-                return null;
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            Payload response = new Payload();
+            response.setResult(true);
+            response.setResultResponse("{}");
+            ((DownloadActivity) ctx).apiRequestComplete(response);
+            return null;
+        }).when(courseInstallRepository).getCourseList(any(), anyString());
+
+
+        doAnswer(invocationOnMock -> {
+            ArrayList<CourseInstallViewAdapter>  courses = (ArrayList<CourseInstallViewAdapter>) invocationOnMock.getArguments()[1];
+
+            for(int i = 0; i < numberOfCourses; i++) {
+                courses.add(course);
             }
-        }).when(courseInstallRepository).getCourseList((Context) any(), anyString());
-
-
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                ArrayList<CourseInstallViewAdapter>  courses = (ArrayList<CourseInstallViewAdapter>) invocationOnMock.getArguments()[1];
-
-                for(int i = 0; i < numberOfCourses; i++) {
-                    courses.add(course);
-                }
-                return null;
-            }
-        }).when(courseInstallRepository).refreshCourseList((Context) any(), (ArrayList<CourseInstallViewAdapter>) any(),
-                (JSONObject) any(), anyString(), anyBoolean());
+            return null;
+        }).when(courseInstallRepository).refreshCourseList(any(), (ArrayList<CourseInstallViewAdapter>) any(),
+                any(), anyString(), anyBoolean());
 
     }
 
@@ -243,13 +231,10 @@ public class DownloadActivityUITest {
 
         givenThereAreSomeCourses(2, getBaseCourse());
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                sendBroadcast(ctx, CourseInstallerService.ACTION_DOWNLOAD);
-                return null;
-            }
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            sendBroadcast(ctx, CourseInstallerService.ACTION_DOWNLOAD);
+            return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
         downloadActivityTestRule.launchActivity(null);
@@ -268,14 +253,11 @@ public class DownloadActivityUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                sendBroadcast(ctx, CourseInstallerService.ACTION_DOWNLOAD);
-                sendBroadcast(ctx, CourseInstallerService.ACTION_INSTALL);
-                return null;
-            }
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            sendBroadcast(ctx, CourseInstallerService.ACTION_DOWNLOAD);
+            sendBroadcast(ctx, CourseInstallerService.ACTION_INSTALL);
+            return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
         downloadActivityTestRule.launchActivity(null);
@@ -292,13 +274,10 @@ public class DownloadActivityUITest {
 
         givenThereAreSomeCourses(2, getBaseCourse());
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                sendBroadcast(ctx, CourseInstallerService.ACTION_DOWNLOAD);
-                return null;
-            }
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            sendBroadcast(ctx, CourseInstallerService.ACTION_DOWNLOAD);
+            return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
         downloadActivityTestRule.launchActivity(null);
@@ -318,14 +297,11 @@ public class DownloadActivityUITest {
 
         givenThereAreSomeCourses(2, getBaseCourse());
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                sendBroadcast(ctx, CourseInstallerService.ACTION_DOWNLOAD);
-                sendBroadcast(ctx, CourseInstallerService.ACTION_INSTALL);
-                return null;
-            }
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            sendBroadcast(ctx, CourseInstallerService.ACTION_DOWNLOAD);
+            sendBroadcast(ctx, CourseInstallerService.ACTION_INSTALL);
+            return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
         downloadActivityTestRule.launchActivity(null);
@@ -362,15 +338,12 @@ public class DownloadActivityUITest {
 
         givenThereAreSomeCourses(2, getBaseCourse());
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                sendBroadcast(ctx, CourseInstallerService.ACTION_DOWNLOAD);
-                sendBroadcast(ctx, CourseInstallerService.ACTION_INSTALL);
-                sendBroadcast(ctx, CourseInstallerService.ACTION_COMPLETE);
-                return null;
-            }
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            sendBroadcast(ctx, CourseInstallerService.ACTION_DOWNLOAD);
+            sendBroadcast(ctx, CourseInstallerService.ACTION_INSTALL);
+            sendBroadcast(ctx, CourseInstallerService.ACTION_COMPLETE);
+            return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
         downloadActivityTestRule.launchActivity(null);
@@ -444,15 +417,12 @@ public class DownloadActivityUITest {
 
         givenThereAreSomeCourses(2, getBaseCourse());
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                sendBroadcast(ctx, CourseInstallerService.ACTION_DOWNLOAD);
-                sendBroadcast(ctx, CourseInstallerService.ACTION_INSTALL);
-                sendBroadcast(ctx, CourseInstallerService.ACTION_COMPLETE);
-                return null;
-            }
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            sendBroadcast(ctx, CourseInstallerService.ACTION_DOWNLOAD);
+            sendBroadcast(ctx, CourseInstallerService.ACTION_INSTALL);
+            sendBroadcast(ctx, CourseInstallerService.ACTION_COMPLETE);
+            return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
         downloadActivityTestRule.launchActivity(null);
@@ -473,24 +443,18 @@ public class DownloadActivityUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                sendBroadcast(ctx, CourseInstallerService.ACTION_UPDATE);
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).updateCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            sendBroadcast(ctx, CourseInstallerService.ACTION_UPDATE);
+            return null;
+        }).when(courseInstallerServiceDelegate).updateCourse(any(), any(), any());
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                sendBroadcast(ctx, CourseInstallerService.ACTION_INSTALL);
-                sendBroadcast(ctx, CourseInstallerService.ACTION_COMPLETE);
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            sendBroadcast(ctx, CourseInstallerService.ACTION_INSTALL);
+            sendBroadcast(ctx, CourseInstallerService.ACTION_COMPLETE);
+            return null;
+        }).when(courseInstallerServiceDelegate).installCourse(any(), any(), any());
 
 
         downloadActivityTestRule.launchActivity(null);

@@ -1,7 +1,6 @@
 package UI;
 
 import android.app.Instrumentation;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -18,8 +17,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -74,21 +71,13 @@ public class ViewDigestActivityUITest {
     @Test
     public void showActivityWhenCorrectDigest() throws Exception {
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                Activity act = new Activity();
-                act.setDigest("XXXXX");
-                return act;
-            }
+        doAnswer(invocationOnMock -> {
+            Activity act = new Activity();
+            act.setDigest("XXXXX");
+            return act;
         }).when(coursesRepository).getActivityByDigest(any(), anyString());
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                return new Course("");
-            }
-        }).when(coursesRepository).getCourse((Context) any(), anyLong(), anyLong());
+        doAnswer(invocationOnMock -> new Course("")).when(coursesRepository).getCourse(any(), anyLong(), anyLong());
 
         doAnswer(invocation -> "test").when(user).getUsername();
 

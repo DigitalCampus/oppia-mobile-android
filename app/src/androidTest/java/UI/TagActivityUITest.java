@@ -2,10 +2,6 @@ package UI;
 
 import android.content.Context;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.application.App;
@@ -14,7 +10,6 @@ import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.task.Payload;
-import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +19,9 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static Utils.RecyclerViewMatcher.withRecyclerView;
@@ -41,14 +39,12 @@ public class TagActivityUITest {
             new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
                     .getTargetContext()
                     .getApplicationContext())).set(
-                    new DaggerMockRule.ComponentSetter<AppComponent>() {
-                        @Override public void setComponent(AppComponent component) {
-                            App app =
-                                    (App) InstrumentationRegistry.getInstrumentation()
-                                            .getTargetContext()
-                                            .getApplicationContext();
-                            app.setComponent(component);
-                        }
+                    component -> {
+                        App app =
+                                (App) InstrumentationRegistry.getInstrumentation()
+                                        .getTargetContext()
+                                        .getApplicationContext();
+                        app.setComponent(component);
                     });
 
     @Rule
@@ -72,7 +68,7 @@ public class TagActivityUITest {
                 ((TagSelectActivity) ctx).apiRequestComplete(response);
                 return null;
             }
-        }).when(tagRepository).getTagList((Context) any());
+        }).when(tagRepository).getTagList(any());
 
 
         doAnswer(new Answer() {
@@ -85,7 +81,7 @@ public class TagActivityUITest {
                 }});
                 return null;
             }
-        }).when(tagRepository).refreshTagList((ArrayList<Tag>) any(), (JSONObject) any());
+        }).when(tagRepository).refreshTagList(any(), any());
 
         tagSelectActivityTestRule.launchActivity(null);
 
