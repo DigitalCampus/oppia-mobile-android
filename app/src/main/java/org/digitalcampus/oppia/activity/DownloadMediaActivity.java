@@ -20,9 +20,7 @@ package org.digitalcampus.oppia.activity;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,10 +29,6 @@ import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.DownloadMediaAdapter;
@@ -49,11 +43,13 @@ import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class DownloadMediaActivity extends AppActivity implements DownloadMediaListener {
 
     public static final String MISSING_MEDIA = "missing_media";
 
-    private SharedPreferences sharedPreferences;
     private ArrayList<Media> missingMedia;
     private DownloadBroadcastReceiver receiver;
     private TextView emptyState;
@@ -87,7 +83,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_media);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         findViews();
 
         Bundle bundle = this.getIntent().getExtras();
@@ -210,7 +205,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             }
         });
 
-        Media.resetMediaScan(sharedPreferences);
+        Media.resetMediaScan(prefs);
 
     }
 
@@ -350,7 +345,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     }
 
     private void downloadMedia(Media mediaToDownload, DownloadMode mode) {
-        if (!ConnectionUtils.isOnWifi(DownloadMediaActivity.this) && !DownloadMediaActivity.this.sharedPreferences.getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, false)) {
+        if (!ConnectionUtils.isOnWifi(DownloadMediaActivity.this) && !prefs.getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, false)) {
             UIUtils.showAlert(DownloadMediaActivity.this, R.string.warning, R.string.warning_wifi_required);
             return;
         }

@@ -2,19 +2,11 @@ package UI;
 
 import android.content.Context;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.EditProfileActivity;
-import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.di.AppComponent;
-import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
-import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.User;
 import org.junit.Before;
@@ -24,10 +16,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import Utils.MockedApiEndpointTest;
-import it.cosenonjaviste.daggermock.DaggerMockRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 
 import static Utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
 import static Utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;

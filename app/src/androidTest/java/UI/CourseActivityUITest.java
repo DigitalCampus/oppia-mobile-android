@@ -47,7 +47,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
@@ -64,7 +63,6 @@ public class CourseActivityUITest {
     SharedPreferences prefs;
     @Mock
     SharedPreferences.Editor editor;
-    String currentLang;
 
     @Rule
     public DaggerMockRule<AppComponent> daggerRule =

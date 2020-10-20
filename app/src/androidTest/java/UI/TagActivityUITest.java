@@ -14,8 +14,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
@@ -58,29 +56,23 @@ public class TagActivityUITest {
 
     @Test
     public void showCorrectCategory() throws Exception {
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Payload response = new Payload();
-                response.setResult(true);
-                response.setResultResponse("{}");
-                ((TagSelectActivity) ctx).apiRequestComplete(response);
-                return null;
-            }
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            Payload response = new Payload();
+            response.setResult(true);
+            response.setResultResponse("{}");
+            ((TagSelectActivity) ctx).apiRequestComplete(response);
+            return null;
         }).when(tagRepository).getTagList(any());
 
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                ArrayList<Tag> tags = (ArrayList<Tag>) invocationOnMock.getArguments()[0];
-                tags.add(new Tag() {{
-                    setName("Mocked Course Name");
-                    setDescription("Mocked Course Description");
-                }});
-                return null;
-            }
+        doAnswer(invocationOnMock -> {
+            ArrayList<Tag> tags = (ArrayList<Tag>) invocationOnMock.getArguments()[0];
+            tags.add(new Tag() {{
+                setName("Mocked Course Name");
+                setDescription("Mocked Course Description");
+            }});
+            return null;
         }).when(tagRepository).refreshTagList(any(), any());
 
         tagSelectActivityTestRule.launchActivity(null);

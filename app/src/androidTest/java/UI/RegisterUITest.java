@@ -1,19 +1,11 @@
 package UI;
 
-import android.content.Context;
-
-import Utils.MockedApiEndpointTest;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
-
 import junit.framework.AssertionFailedError;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,7 +14,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import Utils.MockedApiEndpointTest;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 
 import static Utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
 import static Utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;

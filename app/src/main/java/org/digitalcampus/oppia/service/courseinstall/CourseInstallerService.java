@@ -17,16 +17,16 @@
 
 package org.digitalcampus.oppia.service.courseinstall;
 
-import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.service.FileIntentService;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -44,26 +44,16 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class CourseInstallerService extends IntentService {
+public class CourseInstallerService extends FileIntentService {
 
     public static final String TAG = CourseInstallerService.class.getSimpleName();
     public static final String BROADCAST_ACTION = "com.digitalcampus.oppia.COURSEINSTALLERSERVICE";
 
-    public static final String SERVICE_ACTION = "action";
-    public static final String SERVICE_URL = "fileurl"; //field for providing file URL
     public static final String SERVICE_SHORTNAME = "shortname"; //field for providing Course shortname
     public static final String SERVICE_VERSIONID = "versionid"; //field for providing file URL
     public static final String SERVICE_MESSAGE = "message";
 
-    public static final String ACTION_CANCEL = "cancel";
-    public static final String ACTION_DOWNLOAD = "download";
-    public static final String ACTION_UPDATE = "update";
     public static final String ACTION_INSTALL = "install";
-    public static final String ACTION_COMPLETE = "complete";
-    public static final String ACTION_FAILED = "failed";
-
-    private ArrayList<String> tasksCancelled;
-    private ArrayList<String> tasksDownloading;
 
     private static CourseInstallerService currentInstance;
 
@@ -82,6 +72,10 @@ public class CourseInstallerService extends IntentService {
 
     public CourseInstallerService() {
         super(TAG);
+    }
+
+    protected String getBroadcastAction(){
+        return BROADCAST_ACTION;
     }
 
     @Override
@@ -170,66 +164,6 @@ public class CourseInstallerService extends IntentService {
     public void onDestroy(){
         super.onDestroy();
         CourseInstallerService.setInstance(null);
-    }
-
-    private void logAndNotifyError(String fileUrl, Exception e){
-        Log.d(TAG, "Error: " + e.getMessage(), e);
-        sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_media_download));
-        removeDownloading(fileUrl);
-    }
-
-    /*
-    * Sends a new Broadcast with the results of the action
-    */
-    private void sendBroadcast(String fileUrl, String result, String message){
-
-        Intent localIntent = new Intent(BROADCAST_ACTION);
-        localIntent.putExtra(SERVICE_ACTION, result);
-        localIntent.putExtra(SERVICE_URL, fileUrl);
-        if (message != null){
-            localIntent.putExtra(SERVICE_MESSAGE, message);
-        }
-        // Broadcasts the Intent to receivers in this app.
-        Log.d(TAG, fileUrl + "=" + result + ":" + message);
-        sendOrderedBroadcast(localIntent, null);
-
-    }
-
-    private void addCancelledTask(String fileUrl){
-        if (tasksCancelled == null){
-            tasksCancelled = new ArrayList<>();
-        }
-        if (!tasksCancelled.contains(fileUrl)){
-            tasksCancelled.add(fileUrl);
-        }
-    }
-
-    private boolean isCancelled(String fileUrl){
-        return (tasksCancelled != null) && (tasksCancelled.contains(fileUrl));
-    }
-
-    private boolean removeCancelled(String fileUrl) {
-        return tasksCancelled != null && tasksCancelled.remove(fileUrl);
-    }
-
-    private void addDownloadingTask(String fileUrl){
-        if (tasksDownloading == null){
-            tasksDownloading = new ArrayList<>();
-        }
-        if (!tasksDownloading.contains(fileUrl)){
-            synchronized (this){
-                tasksDownloading.add(fileUrl);
-            }
-        }
-    }
-
-    private boolean removeDownloading(String fileUrl){
-        if (tasksDownloading != null){
-            synchronized (this){
-                return tasksDownloading.remove(fileUrl);
-            }
-        }
-        return false;
     }
 
     private boolean downloadCourseFile(String fileUrl, String shortname, Double versionID){
