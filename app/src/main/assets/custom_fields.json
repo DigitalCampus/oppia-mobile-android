@@ -1245,10 +1245,6 @@
         {
           "id": "non_binary",
           "value": "Non-binary"
-        },
-        {
-          "id": "prefer_no",
-          "value": "Prefer not to say"
         }
       ]
     },
@@ -1270,10 +1266,6 @@
         {
           "id": "60plus",
           "value": "60+"
-        },
-        {
-          "id": "prefer_no",
-          "value": "Prefer not to say"
         }
       ]
     },
@@ -1318,8 +1310,8 @@
       "helper_text": "",
       "fields": [
         "username",
-        "password",
-        "passwordagain",
+        "first_name",
+        "last_name",
         "email",
         "phoneno"
       ]
@@ -1329,8 +1321,15 @@
       "title": "Personal info",
       "helper_text": "",
       "fields": [
-        "first_name",
-        "last_name",
+        "password",
+        "passwordagain"
+      ]
+    },
+    {
+      "order": 3,
+      "title": "Personal info",
+      "helper_text": "",
+      "fields": [
         "country",
         "employer_name",
         "employer_type",
@@ -1339,7 +1338,7 @@
       ]
     },
     {
-      "order": 3,
+      "order": 4,
       "title": "Extra data",
       "helper_text": "",
       "fields": [
