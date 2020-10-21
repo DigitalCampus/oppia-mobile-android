@@ -89,6 +89,10 @@ public class SteppedFormUIManager {
             }
         }
         currentStep = step;
+        if (step == null){
+            // Something went wrong, we don't have more steps...
+            return;
+        }
         fieldsManager.moveAllFieldsTo(customFieldsContainer);
         for (String field : currentStep.getFields()){
             fieldsManager.setVisibleInView(field, steppedFieldsContainer);

@@ -18,13 +18,9 @@
 package org.digitalcampus.oppia.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.UtteranceProgressListener;
@@ -35,16 +31,12 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
@@ -64,6 +56,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 public class CourseActivity extends AppActivity implements OnInitListener, TabLayout.OnTabSelectedListener {
 
     public static final String BASELINE_TAG = "BASELINE";
@@ -74,7 +71,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     private int currentActivityNo = 0;
 
-    private SharedPreferences sharedPreferences;
     private ArrayList<Activity> activities;
     private boolean isBaseline = false;
     private long userID;
@@ -94,7 +90,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
         setContentView(R.layout.activity_course);
         ActionBar actionBar = getSupportActionBar();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         viewPager = findViewById(R.id.activity_widget_pager);
 
         Bundle bundle = this.getIntent().getExtras();
@@ -262,7 +257,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private boolean checkLanguageSelected() {
-        String currentLang = sharedPreferences.getString(PrefsActivity.PREF_LANGUAGE, null);
+        String currentLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, null);
         return currentLang != null && checkCourseHasLanguage(currentLang);
     }
 
@@ -276,7 +271,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private void loadActivities() {
-        String currentLang = sharedPreferences.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        String currentLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         String actionBarTitle = section.getTitle(currentLang);
         if (actionBarTitle != null && !actionBarTitle.equals(MultiLangInfoModel.DEFAULT_NOTITLE)) {
             setTitle(actionBarTitle);
@@ -293,7 +288,9 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
         for (int i = 0; i < activities.size(); i++) {
             Activity activity = determineActivityType(i, fragments);
-            titles.add(activity.getTitle(currentLang));
+            if (activity != null){
+                titles.add(activity.getTitle(currentLang));
+            }
         }
 
         apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles);
@@ -302,6 +299,13 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         tabs.setTabMode(activities.size() > 1 ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED);
         tabs.addOnTabSelectedListener(this);
         apAdapter.updateTabViews(tabs);
+
+        if (currentActivityNo >= fragments.size()){
+            //Wrong activity number passed
+            Toast.makeText(this, "Wrong activity parameter", Toast.LENGTH_SHORT).show();
+            this.finish();
+            return;
+        }
         viewPager.setCurrentItem(currentActivityNo);
     }
 
@@ -332,11 +336,15 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             UrlWidget f = UrlWidget.newInstance(activities.get(i), course, isBaseline);
             fragments.add(f);
         }
+        else {
+            return null;
+        }
+
         return activity;
     }
 
     private void createLanguageDialog() {
-        UIUtils.createLanguageDialog(this, course.getLangs(), sharedPreferences, () -> {
+        UIUtils.createLanguageDialog(this, course.getLangs(), prefs, () -> {
             CourseActivity.this.loadActivities();
             if (launchTTSAfterLanguageSelection) {
                 launchTTSAfterLanguageSelection = false;
@@ -402,7 +410,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             ((WidgetFactory) apAdapter.getItem(currentActivityNo)).setReadAloud(true);
             supportInvalidateOptionsMenu();
 
-            String currentLang = sharedPreferences.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+            String currentLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
             Locale localeContent = new Locale(currentLang);
             List<Integer> validLangAvailableCodes = new ArrayList<>(Arrays.asList(
                     TextToSpeech.LANG_AVAILABLE, TextToSpeech.LANG_COUNTRY_AVAILABLE, TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE));

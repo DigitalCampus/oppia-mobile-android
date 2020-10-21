@@ -19,12 +19,8 @@ package org.digitalcampus.oppia.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -34,12 +30,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SearchResultsAdapter;
-import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
@@ -47,9 +42,11 @@ import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class SearchActivity extends AppActivity {
 
-    private SharedPreferences sharedPreferences;
     private long userId = 0;
 
 	private EditText searchText;
@@ -67,7 +64,6 @@ public class SearchActivity extends AppActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         adapterResults = new SearchResultsAdapter(this, results);
         recyclerResults = findViewById(R.id.recycler_results_search);
         recyclerResults.setAdapter(adapterResults);
@@ -90,7 +86,7 @@ public class SearchActivity extends AppActivity {
         initialize();
 
 		DbHelper db = DbHelper.getInstance(this);
-		userId = db.getUserId(sharedPreferences.getString("preUsername", ""));
+		userId = db.getUserId(SessionManager.getUsername(this));
 		
 		searchText = findViewById(R.id.search_string);
         //@Override

@@ -52,7 +52,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
 
 public class PrefsActivity extends AppActivity implements SharedPreferences.OnSharedPreferenceChangeListener,
         MoveStorageListener, PreferenceFragmentCompat.OnPreferenceStartFragmentCallback{
@@ -135,7 +134,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_NOTIFICATIONS_SCREEN = "prefNotifications";
     public static final String PREF_ADVANCED_SCREEN = "prefsAdvanced";
 
-    private SharedPreferences prefs;
     private ProgressDialog pDialog;
     private PreferenceChangedCallback currentPrefScreen;
 
@@ -154,7 +152,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
         getAppComponent().inject(this);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (savedInstanceState == null) {
             // Create the fragment only when the activity is created for the first time.
