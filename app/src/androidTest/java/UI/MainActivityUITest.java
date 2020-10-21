@@ -95,15 +95,12 @@ public class MainActivityUITest {
             new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
                     .getTargetContext()
                     .getApplicationContext())).set(
-                    new DaggerMockRule.ComponentSetter<AppComponent>() {
-                        @Override
-                        public void setComponent(AppComponent component) {
-                            App app =
-                                    (App) InstrumentationRegistry.getInstrumentation()
-                                            .getTargetContext()
-                                            .getApplicationContext();
-                            app.setComponent(component);
-                        }
+                    component -> {
+                        App app =
+                                (App) InstrumentationRegistry.getInstrumentation()
+                                        .getTargetContext()
+                                        .getApplicationContext();
+                        app.setComponent(component);
                     });
 
     @Rule
@@ -147,12 +144,12 @@ public class MainActivityUITest {
             courses.add(CourseUtils.createMockCourse());
         }
 
-        when(coursesRepository.getCourses((Context) any())).thenReturn(courses);
+        when(coursesRepository.getCourses(any())).thenReturn(courses);
 
     }
 
     private int getCoursesCount() {
-        return coursesRepository.getCourses((Context) any()).size();
+        return coursesRepository.getCourses(any()).size();
     }
 
 
@@ -194,15 +191,12 @@ public class MainActivityUITest {
     public void showsCourseIndexOnCourseClick() throws Exception {
 
         final CompleteCourse completeCourse = CourseUtils.createMockCompleteCourse(5, 7);
-        Mockito.doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                Context ctx = (Context) invocation.getArguments()[0];
-                ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(completeCourse);
+        Mockito.doAnswer((Answer<Void>) invocation -> {
+            Context ctx = (Context) invocation.getArguments()[0];
+            ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(completeCourse);
 
-                return null;
+            return null;
 
-            }
         }).when(completeCourseProvider).getCompleteCourseAsync(any(Context.class), any(Course.class));
 
         givenThereAreSomeCourses(1);
@@ -685,15 +679,12 @@ public class MainActivityUITest {
 
 
         final CompleteCourse completeCourse = CourseUtils.createMockCompleteCourse(5, 7);
-        Mockito.doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                Context ctx = (Context) invocation.getArguments()[0];
-                ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(completeCourse);
+        Mockito.doAnswer((Answer<Void>) invocation -> {
+            Context ctx = (Context) invocation.getArguments()[0];
+            ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(completeCourse);
 
-                return null;
+            return null;
 
-            }
         }).when(completeCourseProvider).getCompleteCourseAsync(any(Context.class), any(Course.class));
 
         givenThereAreSomeCourses(1);
