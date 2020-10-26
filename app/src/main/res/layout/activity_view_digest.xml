@@ -110,6 +110,7 @@
         android:text="@string/open_digest.go_to_course"
         android:theme="@style/PrimaryButton"/>
 
+
     <TextView
         android:id="@+id/error_text"
         android:layout_width="wrap_content"
@@ -123,5 +124,14 @@
         android:text="@string/open_digest.errors.invalid_param"
         android:textColor="@color/text_light"
         android:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_login_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:visibility="gone"
+        android:text="@string/open_digest.login_register"
+        android:theme="@style/PrimaryButton"/>
 
 </LinearLayout>
