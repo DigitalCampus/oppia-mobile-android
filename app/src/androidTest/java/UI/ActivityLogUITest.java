@@ -36,14 +36,12 @@ public class ActivityLogUITest {
             new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
                     .getTargetContext()
                     .getApplicationContext())).set(
-                    new DaggerMockRule.ComponentSetter<AppComponent>() {
-                        @Override public void setComponent(AppComponent component) {
-                            App app =
-                                    (App) InstrumentationRegistry.getInstrumentation()
-                                            .getTargetContext()
-                                            .getApplicationContext();
-                            app.setComponent(component);
-                        }
+                    component -> {
+                        App app =
+                                (App) InstrumentationRegistry.getInstrumentation()
+                                        .getTargetContext()
+                                        .getApplicationContext();
+                        app.setComponent(component);
                     });
 
     @Rule

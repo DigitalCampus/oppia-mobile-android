@@ -217,7 +217,6 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
     }
 
     // COURSE INFO LISTENERS
-
     @Override
     public void onSuccess(CourseInstallViewAdapter course) {
         this.course = course;
@@ -238,13 +237,6 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
 
     @Override
     public void onError(String error) {
-        showError(error, true);
-        binding.downloadProgress.setVisibility(View.GONE);
-
-    }
-
-    @Override
-    public void onConnectionError(String error, User u) {
         showError(error, true);
         binding.downloadProgress.setVisibility(View.GONE);
     }
