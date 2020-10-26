@@ -35,7 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -46,20 +46,13 @@ public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
 
     private CourseInfoListener listener;
 
-    public CourseInfoTask(Context ctx) {
-        super(ctx);
-    }
-
     public CourseInfoTask(Context ctx, ApiEndpoint api) {
         super(ctx, api);
     }
 
     public interface CourseInfoListener {
         void onSuccess(CourseInstallViewAdapter course);
-
         void onError(String error);
-
-        void onConnectionError(String error, User u);
     }
 
     @Override
@@ -81,12 +74,10 @@ public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
                     .get()
                     .build();
 
-
-
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 CourseInstallViewAdapter course = parseCourse(response.body().string());
-                payload.setResponseData(Arrays.asList(course));
+                payload.setResponseData(Collections.singletonList(course));
                 payload.setResult(true);
                 payload.setResultResponse(ctx.getString(R.string.reset_complete));
             } else {
