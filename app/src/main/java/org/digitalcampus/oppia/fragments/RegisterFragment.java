@@ -64,7 +64,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class RegisterFragment extends AppFragment implements SubmitListener, RegisterTask.RegisterListener {
+public class RegisterFragment extends AppFragment implements RegisterTask.RegisterListener {
 
 
 	private ValidableTextInputLayout usernameField;
@@ -274,31 +274,6 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 			return false;
 		}
 		return true;
-	}
-
-	public void submitComplete(Payload response) {
-		pDialog.dismiss();
-		if (response.isResult()) {
-			User user = (User) response.getData().get(0);
-			SessionManager.loginUser(getActivity(), user);
-			// registration gamification
-			GamificationEngine gamificationEngine = new GamificationEngine(super.getActivity());
-			gamificationEngine.processEventRegister();
-			//Save the search tracker
-			new Tracker(super.getActivity()).saveRegisterTracker();
-			startActivity(new Intent(getActivity(), MainActivity.class));
-			super.getActivity().finish();
-		} else {
-			Context ctx = super.getActivity();
-			if (ctx != null){
-				try {
-					JSONObject jo = new JSONObject(response.getResultResponse());
-					UIUtils.showAlert(ctx,R.string.error,jo.getString("error"));
-				} catch (JSONException je) {
-					UIUtils.showAlert(ctx,R.string.error,response.getResultResponse());
-				}
-			}
-		}
 	}
 
 	@Override
