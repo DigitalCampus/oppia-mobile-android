@@ -359,6 +359,8 @@
     <string name="open_digest.weblink_not_supported">Weblink not supported</string>
     <string name="open_digest.fetching_course_info">Fetching course info…</string>
     <string name="open_digest.go_to_course">Go to the course</string>
+    <string name="open_digest.login_register">Login / Register</string>
+    <string name="open_digest.login_text">You are not logged in. Please login/register to continue.</string>
 
     <string name="menu_sync">Synchronise</string>
     <string name="title_sync">Synchronise</string>

@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +37,7 @@ import androidx.appcompat.app.AlertDialog;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
+import org.digitalcampus.oppia.activity.ViewDigestActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.App;
@@ -230,31 +232,6 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		nextStepButton.setVisibility(View.VISIBLE);
 	}
 
-	public void submitComplete(Payload response) {
-		pDialog.dismiss();
-		if (response.isResult()) {
-			User user = (User) response.getData().get(0);
-            SessionManager.loginUser(getActivity(), user);
-			// registration gamification
-			GamificationEngine gamificationEngine = new GamificationEngine(super.getActivity());
-			gamificationEngine.processEventRegister();
-            //Save the search tracker
-            new Tracker(super.getActivity()).saveRegisterTracker();
-	    	startActivity(new Intent(getActivity(), MainActivity.class));
-	    	super.getActivity().finish();
-		} else {
-			Context ctx = super.getActivity();
-			if (ctx != null){
-				try {
-					JSONObject jo = new JSONObject(response.getResultResponse());
-					UIUtils.showAlert(ctx,R.string.error,jo.getString("error"));
-				} catch (JSONException je) {
-					UIUtils.showAlert(ctx,R.string.error,response.getResultResponse());
-				}
-			}
-		}
-	}
-
 
 	public void onRegisterClick() {
 
@@ -299,6 +276,31 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		return true;
 	}
 
+	public void submitComplete(Payload response) {
+		pDialog.dismiss();
+		if (response.isResult()) {
+			User user = (User) response.getData().get(0);
+			SessionManager.loginUser(getActivity(), user);
+			// registration gamification
+			GamificationEngine gamificationEngine = new GamificationEngine(super.getActivity());
+			gamificationEngine.processEventRegister();
+			//Save the search tracker
+			new Tracker(super.getActivity()).saveRegisterTracker();
+			startActivity(new Intent(getActivity(), MainActivity.class));
+			super.getActivity().finish();
+		} else {
+			Context ctx = super.getActivity();
+			if (ctx != null){
+				try {
+					JSONObject jo = new JSONObject(response.getResultResponse());
+					UIUtils.showAlert(ctx,R.string.error,jo.getString("error"));
+				} catch (JSONException je) {
+					UIUtils.showAlert(ctx,R.string.error,response.getResultResponse());
+				}
+			}
+		}
+	}
+
 	@Override
 	public void onSubmitComplete(User registeredUser) {
 		pDialog.dismiss();
@@ -309,7 +311,15 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 
 		//Save the search tracker
 		new Tracker(super.getActivity()).saveRegisterTracker();
-		startActivity(new Intent(getActivity(), MainActivity.class));
+
+		boolean fromViewDigest = getActivity().getIntent().getBooleanExtra(ViewDigestActivity.EXTRA_FROM_VIEW_DIGEST, false);
+
+		if (fromViewDigest) {
+			getActivity().setResult(Activity.RESULT_OK);
+		} else {
+			startActivity(new Intent(getActivity(), MainActivity.class));
+		}
+
 		super.getActivity().finish();
 	}
 
