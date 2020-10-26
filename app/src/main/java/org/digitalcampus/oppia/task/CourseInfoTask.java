@@ -40,6 +40,7 @@ import java.util.Collections;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
@@ -63,16 +64,9 @@ public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
         payload.getResponseData().clear();
 
         try {
-            DbHelper db = DbHelper.getInstance(ctx);
-            User u = db.getUser(SessionManager.getUsername(ctx));
-
             String url = apiEndpoint.getFullURL(ctx, String.format(Paths.COURSE_INFO_PATH, courseShortname));
-            HttpUrl urlWithCredentials = HTTPClientUtils.getUrlWithCredentials(url, u.getUsername(), u.getApiKey());
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
-            Request request = new Request.Builder()
-                    .url(urlWithCredentials)
-                    .get()
-                    .build();
+            Request request = createRequestBuilderWithUserAuth(url).get().build();
 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
@@ -99,8 +93,6 @@ public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
             Log.d(TAG, "JSONException:", e);
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_processing_response));
-        } catch (UserNotFoundException e) {
-            e.printStackTrace();
         }
         return payload;
     }

@@ -40,7 +40,7 @@ public class CourseInfoTaskTest  extends MockedApiEndpointTaskTest {
     }
 
 
-    private void fetchCourseInfoSync(Context context){
+    private void fetchCourseInfoSync(){
         final CountDownLatch signal = new CountDownLatch(1);  //Control AsyncTask sincronization for testing
 
         Payload p = new Payload(Collections.singletonList("test"));
@@ -73,7 +73,7 @@ public class CourseInfoTaskTest  extends MockedApiEndpointTaskTest {
 
         startServer(200, Utils.FileUtils.getStringFromFile(
                 InstrumentationRegistry.getInstrumentation().getContext(), VALID_COURSEINFO_RESPONSE));
-        fetchCourseInfoSync(context);
+        fetchCourseInfoSync();
 
         assertNull(errorMsg);
         assertEquals(courseResult.getTitle("en"), "Test course");
@@ -84,7 +84,7 @@ public class CourseInfoTaskTest  extends MockedApiEndpointTaskTest {
     public void fetchCourseInfo_malformedResponse() throws Exception{
         startServer(200, Utils.FileUtils.getStringFromFile(
                 InstrumentationRegistry.getInstrumentation().getContext(), NOT_JSON_RESPONSE));
-        fetchCourseInfoSync(context);
+        fetchCourseInfoSync();
         assertNull(courseResult);
         assertEquals(errorMsg, context.getString(R.string.error_processing_response));
     }
@@ -92,7 +92,7 @@ public class CourseInfoTaskTest  extends MockedApiEndpointTaskTest {
     @Test
     public void fetchCourseInfo_notFoundCourse() {
         startServer(404, "");
-        fetchCourseInfoSync(context);
+        fetchCourseInfoSync();
         assertNull(courseResult);
         assertEquals(errorMsg, context.getString(R.string.open_digest_errors_course_not_found));
     }
@@ -100,7 +100,7 @@ public class CourseInfoTaskTest  extends MockedApiEndpointTaskTest {
     @Test
     public void fetchCourseInfo_badRequest() {
         startServer(500, "");
-        fetchCourseInfoSync(context);
+        fetchCourseInfoSync();
         assertNull(courseResult);
         assertEquals(errorMsg, context.getString(R.string.error_connection));
     }
