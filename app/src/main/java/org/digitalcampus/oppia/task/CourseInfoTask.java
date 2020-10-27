@@ -26,10 +26,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.exception.UserNotFoundException;
-import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,10 +33,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Collections;
 
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
