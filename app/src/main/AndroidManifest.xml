@@ -132,18 +132,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+                <!-- https://developer.android.com/training/app-links/deep-linking -->
                 <data
-                    android:host="@string/oppiaServerHost"
+                    android:host="@string/oppiaServerDomain"
                     android:pathPrefix="/view"
                     android:scheme="http" />
-                <data
-                    android:host="@string/oppiaServerHost"
-                    android:pathPrefix="/view"
-                    android:scheme="https" />
-                <data
-                    android:host="@string/oppiaServerHost"
-                    android:pathPrefix="/view"
-                    android:scheme="oppiamobile" />
+                <data android:scheme="https" />
+                <data android:scheme="oppiamobile" />
 
                 <data
                     android:host="staging.cha.oppia-mobile.org"

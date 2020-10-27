@@ -26,18 +26,13 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.exception.UserNotFoundException;
-import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -46,20 +41,13 @@ public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
 
     private CourseInfoListener listener;
 
-    public CourseInfoTask(Context ctx) {
-        super(ctx);
-    }
-
     public CourseInfoTask(Context ctx, ApiEndpoint api) {
         super(ctx, api);
     }
 
     public interface CourseInfoListener {
         void onSuccess(CourseInstallViewAdapter course);
-
         void onError(String error);
-
-        void onConnectionError(String error, User u);
     }
 
     @Override
@@ -70,23 +58,14 @@ public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
         payload.getResponseData().clear();
 
         try {
-            DbHelper db = DbHelper.getInstance(ctx);
-            User u = db.getUser(SessionManager.getUsername(ctx));
-
             String url = apiEndpoint.getFullURL(ctx, String.format(Paths.COURSE_INFO_PATH, courseShortname));
-            HttpUrl urlWithCredentials = HTTPClientUtils.getUrlWithCredentials(url, u.getUsername(), u.getApiKey());
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
-            Request request = new Request.Builder()
-                    .url(urlWithCredentials)
-                    .get()
-                    .build();
-
-
+            Request request = createRequestBuilderWithUserAuth(url).get().build();
 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 CourseInstallViewAdapter course = parseCourse(response.body().string());
-                payload.setResponseData(Arrays.asList(course));
+                payload.setResponseData(Collections.singletonList(course));
                 payload.setResult(true);
                 payload.setResultResponse(ctx.getString(R.string.reset_complete));
             } else {
@@ -108,8 +87,6 @@ public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
             Log.d(TAG, "JSONException:", e);
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_processing_response));
-        } catch (UserNotFoundException e) {
-            e.printStackTrace();
         }
         return payload;
     }
