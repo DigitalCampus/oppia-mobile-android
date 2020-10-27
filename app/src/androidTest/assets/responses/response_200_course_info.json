@@ -1,0 +1,18 @@
+{
+  "author": "Alex Little",
+  "description": {
+    "en": "HEACM HEAT Module Part 1, full content, designed for use in Ethiopia"
+  },
+  "id": 65,
+  "is_draft": false,
+  "organisation": "Digital Campus",
+  "priority": 0,
+  "resource_uri": "/api/v2/course/65/",
+  "shortname": "heacm1-et",
+  "title": {
+    "en": "Health Education, Advocacy and Community Mobilisation Part 1 - Ethiopia (Full)"
+  },
+  "url": "https://staging.oppia-mobile.org/api/v2/course/65/download/",
+  "username": "alex",
+  "version": 20150218163637
+}

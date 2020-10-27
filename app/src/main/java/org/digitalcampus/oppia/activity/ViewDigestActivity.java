@@ -96,12 +96,12 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        getAppComponent().inject(this);
+
         if (requestCode == REQ_CODE_LOGIN && resultCode == RESULT_OK) {
 
             binding.errorText.setVisibility(View.GONE);
             binding.btnLoginRegister.setVisibility(View.GONE);
-
-            getAppComponent().inject(this);
 
             if (isUserLoggedIn()) {
                 processLinkPath(getIntent().getData());
