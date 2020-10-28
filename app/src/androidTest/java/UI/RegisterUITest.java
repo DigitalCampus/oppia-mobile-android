@@ -89,6 +89,8 @@ public class RegisterUITest extends MockedApiEndpointTest {
 
     }
 
+    /*
+    @TODO to update for new stepped registration (email will be always optional)
     @Test
     public void showsErrorMessageWhenThereIsNoEmail() throws  Exception {
         welcomeActivityTestRule.launchActivity(null);
@@ -108,6 +110,8 @@ public class RegisterUITest extends MockedApiEndpointTest {
         onErrorViewWithinTextInputLayoutWithId(R.id.register_form_email_field)
                 .check(matches(withText(R.string.field_required)));
     }
+
+     */
 
     @Test
     public void showErrorMessageWhenTheEmailIsWrong() throws Exception {
