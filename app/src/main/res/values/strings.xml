@@ -352,6 +352,7 @@
     <string name="open_digest.errors.not_logged_in">You are not logged in. Please, login and try to open the link again.</string>
     <string name="open_digest.errors.activity_not_found">Activity not found. Are you sure you have installed the course that contains this activity?</string>
     <string name="open_digest.errors.course_not_found">Couldn\'t find course in the server. Either it doesn\'t exist or you don\'t have permissions to access it.</string>
+    <string name="open_digest.errors.bad_request">Couldn\'t find course in the server. Either it doesn\'t exist or you don\'t have permissions to access it.</string>
     <string name="open_digest.description">&appName; has the functionality to open specific activities or courses based in its URL (opened from an SMS or an external app, for example)</string>
     <string name="open_digest.course_not_installed">You don\'t have this course installed in the device. You can install it clicking the download icon </string>
     <string name="open_digest.btn_action">Open activity</string>
@@ -359,6 +360,8 @@
     <string name="open_digest.weblink_not_supported">Weblink not supported</string>
     <string name="open_digest.fetching_course_info">Fetching course info…</string>
     <string name="open_digest.go_to_course">Go to the course</string>
+    <string name="open_digest.login_register">Login / Register</string>
+    <string name="open_digest.login_text">You are not logged in. Please login/register to continue.</string>
 
     <string name="menu_sync">Synchronise</string>
     <string name="title_sync">Synchronise</string>
