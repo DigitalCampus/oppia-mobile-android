@@ -4,26 +4,17 @@ import android.content.Context;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.ActivityLogActivity;
-import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.ActivityLogRepository;
-import org.digitalcampus.oppia.model.Tag;
-import org.digitalcampus.oppia.model.TagRepository;
-import org.digitalcampus.oppia.task.Payload;
-import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import javax.inject.Inject;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -45,14 +36,12 @@ public class ActivityLogUITest {
             new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
                     .getTargetContext()
                     .getApplicationContext())).set(
-                    new DaggerMockRule.ComponentSetter<AppComponent>() {
-                        @Override public void setComponent(AppComponent component) {
-                            App app =
-                                    (App) InstrumentationRegistry.getInstrumentation()
-                                            .getTargetContext()
-                                            .getApplicationContext();
-                            app.setComponent(component);
-                        }
+                    component -> {
+                        App app =
+                                (App) InstrumentationRegistry.getInstrumentation()
+                                        .getTargetContext()
+                                        .getApplicationContext();
+                        app.setComponent(component);
                     });
 
     @Rule
@@ -66,13 +55,10 @@ public class ActivityLogUITest {
     @Test
     public void showActivityLogListIfAny() throws Exception {
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                ArrayList<File> files = new ArrayList<>();
-                files.add(new File("username_202001251800.json"));
-                return files;
-            }
+        doAnswer(invocationOnMock -> {
+            ArrayList<File> files = new ArrayList<>();
+            files.add(new File("username_202001251800.json"));
+            return files;
         }).when(logsRepository).getExportedActivityLogs((Context) any());
 
         activityLogActivityTestRule.launchActivity(null);

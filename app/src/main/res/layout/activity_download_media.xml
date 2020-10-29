@@ -13,7 +13,6 @@
         android:id="@+id/missing_media_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_control_bar"
         android:layout_below="@+id/toolbar"
         android:layout_marginTop="5dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -46,7 +45,6 @@
         android:id="@+id/empty_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/bottom_control_bar"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:layout_marginLeft="50dp"
@@ -57,20 +55,5 @@
         android:paddingBottom="50dp"
         android:text="@string/empty_state_media"
         android:visibility="gone" />
-
-    <LinearLayout
-        android:id="@+id/bottom_control_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/download_media_via_pc_btn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:text="@string/scan_media_download_via_pc_button" />
-    </LinearLayout>
 
 </RelativeLayout>

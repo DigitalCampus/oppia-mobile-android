@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.MockApiEndpoint;
+import org.digitalcampus.oppia.api.MockedApiEndpointTaskTest;
 import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.junit.After;
 import org.junit.Before;
@@ -30,15 +31,12 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 
 @RunWith(AndroidJUnit4.class)
-public class FetchServerInfoTest {
+public class FetchServerInfoTest extends MockedApiEndpointTaskTest {
 
     private static final String VALID_SERVERINFO_RESPONSE = "responses/response_200_serverinfo.json";
 
     private Context context;
     private SharedPreferences prefs;
-    private MockWebServer mockServer;
-
-
 
     @Before
     public void setUp() throws Exception {
@@ -55,43 +53,6 @@ public class FetchServerInfoTest {
     public void tearDown() throws Exception {
         if (mockServer!=null)
         mockServer.shutdown();
-    }
-
-    private void startServer(int responseCode, String responseBody, int timeoutDelay){
-        try {
-            mockServer = new MockWebServer();
-            MockResponse response = new MockResponse();
-            response.setResponseCode(responseCode);
-            if (responseBody!=null) { response.setBody(responseBody); }
-            if (timeoutDelay > 0){
-                response.setBodyDelay(timeoutDelay, TimeUnit.MILLISECONDS);
-
-            }
-            mockServer.enqueue(response);
-            mockServer.start();
-
-        }catch(IOException ioe) {
-            ioe.printStackTrace();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-    }
-
-    private void startServer(int responseCode, String responseBody){
-        startServer(responseCode, responseBody, 0);
-    }
-
-    private ConnectivityManager getAvailableConnectivityManager(){
-        final ConnectivityManager connectivityManager = Mockito.mock( ConnectivityManager.class );
-        final NetworkInfo networkInfo = Mockito.mock(NetworkInfo.class);
-
-        Mockito.when( networkInfo.isAvailable()).thenReturn(true);
-        Mockito.when( networkInfo.isConnected()).thenReturn(true);
-
-        Mockito.when( connectivityManager.getActiveNetworkInfo()).thenReturn( networkInfo );
-
-        return connectivityManager;
     }
 
     private void fetchServerInfoSync(Context context, ConnectivityManager manager){

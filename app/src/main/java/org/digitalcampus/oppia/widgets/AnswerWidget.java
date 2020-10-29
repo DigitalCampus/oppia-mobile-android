@@ -44,7 +44,6 @@ import org.digitalcampus.mobile.quiz.InvalidQuizException;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
-import org.digitalcampus.mobile.quiz.model.questiontypes.DragAndDrop;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Essay;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Matching;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
@@ -57,7 +56,6 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
-import org.digitalcampus.oppia.widgets.quiz.DragAndDropWidget;
 import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
 import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
@@ -263,9 +261,7 @@ public abstract class AnswerWidget extends WidgetFactory {
             currentQuestion = new NumericalWidget(super.getActivity(), getView(), container);
         } else if (q instanceof Description) {
             currentQuestion = new DescriptionWidget(getView());
-        } else if (q instanceof DragAndDrop) {
-            currentQuestion = new DragAndDropWidget(super.getActivity(), getView(), container, q, course.getLocation());
-        }	else {
+        } else {
             return;
         }
         currentQuestion.setQuestionResponses(q.getResponseOptions(), q.getUserResponses());

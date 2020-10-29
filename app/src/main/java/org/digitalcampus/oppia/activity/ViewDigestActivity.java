@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityViewDigestBinding;
 import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
@@ -27,10 +29,12 @@ import java.util.Arrays;
 
 import javax.inject.Inject;
 
-public class ViewDigestActivity extends AppActivity implements CourseInstallerListener, View.OnClickListener, CourseInfoTask.CourseInfoListener {
+public class ViewDigestActivity extends AppActivity implements CourseInstallerListener, CourseInfoTask.CourseInfoListener {
 
     public static final String ACTIVITY_DIGEST_PARAM = "digest";
     public static final String COURSE_SHORTNAME_PARAM = "course";
+    private static final int REQ_CODE_LOGIN = 2233;
+    public static final String EXTRA_FROM_VIEW_DIGEST = "extra_from_view_digest";
 
     @Inject
     CoursesRepository coursesRepository;
@@ -54,11 +58,14 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
         setContentView(binding.getRoot());
         getAppComponent().inject(this);
 
+        configureButtonsActions();
+
         if (isUserLoggedIn()) {
             processLinkPath(getIntent().getData());
         }
 
     }
+
 
     @Override
     public void onStart() {
@@ -81,6 +88,24 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
     public void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        getAppComponent().inject(this);
+
+        if (requestCode == REQ_CODE_LOGIN && resultCode == RESULT_OK) {
+
+            binding.errorText.setVisibility(View.GONE);
+            binding.btnLoginRegister.setVisibility(View.GONE);
+
+            if (isUserLoggedIn()) {
+                processLinkPath(getIntent().getData());
+            }
+        }
+
     }
 
     private void processLinkPath(Uri data) {
@@ -108,17 +133,21 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
         String shortname = data.getQueryParameter(COURSE_SHORTNAME_PARAM);
         Course localCourse = coursesRepository.getCourseByShortname(this, shortname, user.getUserId());
         if (localCourse != null) {
-            Intent i = new Intent(this, CourseIndexActivity.class);
-            Bundle tb = new Bundle();
-            tb.putSerializable(Course.TAG, localCourse);
-            i.putExtras(tb);
-            startActivity(i);
-            finish();
+            openCourse(localCourse);
         } else {
             showError(getString(R.string.open_digest_course_not_installed), false);
             fetchCourseInfo(shortname);
         }
 
+    }
+
+    private void openCourse(Course course) {
+        Intent i = new Intent(this, CourseIndexActivity.class);
+        Bundle tb = new Bundle();
+        tb.putSerializable(Course.TAG, course);
+        i.putExtras(tb);
+        startActivity(i);
+        finish();
     }
 
     private void fetchCourseInfo(String shortname) {
@@ -178,10 +207,17 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
 
         if (user == null || TextUtils.isEmpty(user.getUsername())) {
             Log.d(TAG, "Not logged in");
-            showError(getString(R.string.open_digest_errors_not_logged_in), true);
+            showLoginAccess();
             return false;
         }
         return true;
+    }
+
+    private void showLoginAccess() {
+
+        showError(getString(R.string.open_digest_login_text), true);
+        binding.btnLoginRegister.setVisibility(View.VISIBLE);
+        
     }
 
     private void showError(String errorMessage, boolean hideCourseCard) {
@@ -191,38 +227,32 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
     }
 
 
-    @Override
-    public void onClick(View v) {
+    private void configureButtonsActions() {
 
-        switch (v.getId()) {
-            case R.id.download_course_btn:
-                downloadCourse();
-                break;
+        binding.downloadCourseBtn.setOnClickListener(v -> downloadCourse());
 
-            case R.id.btn_go_to_course:
+        binding.btnGoToCourse.setOnClickListener(v -> {
+            Course courseInstalled = coursesRepository.getCourseByShortname(this, course.getShortname(), user.getUserId());
+            if (courseInstalled != null) {
+                openCourse(courseInstalled);
+            }
+        });
 
-                Course courseInstalled = coursesRepository.getCourseByShortname(this, course.getShortname(), user.getUserId());
-                if (course != null) {
-                    Intent i = new Intent(this, CourseIndexActivity.class);
-                    Bundle tb = new Bundle();
-                    tb.putSerializable(Course.TAG, courseInstalled);
-                    i.putExtras(tb);
-                    startActivity(i);
-                    finish();
-                }
-                break;
-            default:
-                //do nothing
-        }
+        binding.btnLoginRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(this, WelcomeActivity.class);
+            intent.putExtra(EXTRA_FROM_VIEW_DIGEST, true);
+            startActivityForResult(intent, REQ_CODE_LOGIN);
+        });
+
+
     }
 
-    // COURSE INFO LISTENERS
 
+    // COURSE INFO LISTENERS
     @Override
     public void onSuccess(CourseInstallViewAdapter course) {
         this.course = course;
         binding.downloadProgress.setVisibility(View.GONE);
-        binding.downloadCourseBtn.setOnClickListener(this);
 
         showCourseInfo();
     }
@@ -238,13 +268,6 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
 
     @Override
     public void onError(String error) {
-        showError(error, true);
-        binding.downloadProgress.setVisibility(View.GONE);
-
-    }
-
-    @Override
-    public void onConnectionError(String error, User u) {
         showError(error, true);
         binding.downloadProgress.setVisibility(View.GONE);
     }
@@ -285,8 +308,8 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
     public void onInstallComplete(String fileUrl) {
         Log.i(TAG, "DOWNLOAD COURSE LISTENERS onInstallComplete: ");
         binding.downloadProgress.setVisibility(View.GONE);
+        binding.downloadCourseBtn.setVisibility(View.GONE);
         binding.btnGoToCourse.setVisibility(View.VISIBLE);
-        binding.btnGoToCourse.setOnClickListener(this);
 
     }
 

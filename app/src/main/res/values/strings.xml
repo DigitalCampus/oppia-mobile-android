@@ -156,7 +156,7 @@
     <string name="notification_course_update_text">Updates are available for your courses.</string>
 
     <string name="notification_course_download_title">Course Downloads</string>
-    <string name="notification_course_download_text">Courses are available for you Download</string>
+    <string name="notification_course_download_text">Courses are available for you to download</string>
 
     <string name="title_login">Login</string>
     <string name="login_username_title">Username</string>
@@ -235,7 +235,6 @@
     <string name="info_no_badges">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
 
     <string name="scan_media_download_button">Download</string>
-    <string name="scan_media_download_via_pc_button">Download via PC</string>
     <string name="success_media_download">Media file: \'%1$s\' successfully downloaded.</string>
     <string name="media_file_size">%1$.1fMb</string>
     <string name="missing_media_download_selected">Download selected</string>
@@ -299,12 +298,6 @@
 
     <string name="change_language">Change Language</string>
 
-    <string name="download_via_pc_message">A small file \'%1$s\' has been placed on your phone SD card, open this on your computer and follow the instructions to download the media files and copy them onto your phone SD card.</string>
-    <string name="download_via_pc_title">Download Media Files</string>
-    <string name="download_via_pc_intro">Download each of the files below to your PC (use right click, save-as)</string>
-    <string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
-    <string name="download_via_pc_extenal_storage">You need to set an external storage option to be able to place the files downloaded from your PC inside the app directory. Please, go to "Settings" and change your storage option.</string>
-
     <string name="course_draft">Draft version</string>
 
     <string name="search.activity_title">Search</string>
@@ -359,6 +352,7 @@
     <string name="open_digest.errors.not_logged_in">You are not logged in. Please, login and try to open the link again.</string>
     <string name="open_digest.errors.activity_not_found">Activity not found. Are you sure you have installed the course that contains this activity?</string>
     <string name="open_digest.errors.course_not_found">Couldn\'t find course in the server. Either it doesn\'t exist or you don\'t have permissions to access it.</string>
+    <string name="open_digest.errors.bad_request">Couldn\'t find course in the server. Either it doesn\'t exist or you don\'t have permissions to access it.</string>
     <string name="open_digest.description">&appName; has the functionality to open specific activities or courses based in its URL (opened from an SMS or an external app, for example)</string>
     <string name="open_digest.course_not_installed">You don\'t have this course installed in the device. You can install it clicking the download icon </string>
     <string name="open_digest.btn_action">Open activity</string>
@@ -366,6 +360,8 @@
     <string name="open_digest.weblink_not_supported">Weblink not supported</string>
     <string name="open_digest.fetching_course_info">Fetching course info…</string>
     <string name="open_digest.go_to_course">Go to the course</string>
+    <string name="open_digest.login_register">Login / Register</string>
+    <string name="open_digest.login_text">You are not logged in. Please login/register to continue.</string>
 
     <string name="menu_sync">Synchronise</string>
     <string name="title_sync">Synchronise</string>

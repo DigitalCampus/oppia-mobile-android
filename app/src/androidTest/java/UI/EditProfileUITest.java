@@ -2,19 +2,11 @@ package UI;
 
 import android.content.Context;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.EditProfileActivity;
-import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.di.AppComponent;
-import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
-import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.User;
 import org.junit.Before;
@@ -24,10 +16,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import Utils.MockedApiEndpointTest;
-import it.cosenonjaviste.daggermock.DaggerMockRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 
 import static Utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
 import static Utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
@@ -50,8 +43,6 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class)
 public class EditProfileUITest extends MockedApiEndpointTest {
 
-    private static final String ERROR_MESSAGE_BODY = "responses/response_body_error_message.txt";
-
     private static final String VALID_EMAIL = "test2@oppia.org";
     private static final String VALID_FIRST_NAME = "First Name";
     private static final String VALID_LAST_NAME = "Last Name";
@@ -70,7 +61,7 @@ public class EditProfileUITest extends MockedApiEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        when(customFieldsRepo.getAll((Context) any())).thenReturn(new ArrayList<CustomField>());
+        when(customFieldsRepo.getAll(any())).thenReturn(new ArrayList<>());
     }
 
     private void enterValidData() {

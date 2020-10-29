@@ -37,10 +37,11 @@ public class QuizTest {
         QuizAttempt qa = new QuizAttempt();
         qa.setCourseId(1);
         qa.setUserId(1);
+        qa.setSent(true);
         dbHelper.insertQuizAttempt(qa);
 
         ArrayList<QuizAttempt> quizAttempts = (ArrayList<QuizAttempt>) dbHelper.getUnexportedQuizAttempts(1);
-        assertEquals(1, quizAttempts.size());
+        assertEquals(0, quizAttempts.size());
 
     }
 
@@ -59,7 +60,6 @@ public class QuizTest {
     // TODO getQuizAttempt
     // TODO getAllQuizAttemtps
     // TODO getQuizAttempts
-    // TODO insertQuizAttempt
     // TODO updateQuizAttempt
     // TODO insertQuizAttempts
     // TODO getUnsentQuizAttempts

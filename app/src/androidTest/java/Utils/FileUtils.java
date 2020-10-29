@@ -53,7 +53,7 @@ public class FileUtils {
         return ret;
     }
 
-    public static void copyFileFromAssets(Context context, String assetsDir, String filename, File destination){
+    public static void copyFileFromAssets(Context context, String assetsDir, String filename, File destination, String destinationFilename){
         try {
             String source = assetsDir + File.separator + filename;
             InputStream is = InstrumentationRegistry.getInstrumentation().getContext().getResources().getAssets().open(source);
@@ -64,7 +64,7 @@ public class FileUtils {
             }
 
 
-            OutputStream os = new FileOutputStream(new File(destination, filename));
+            OutputStream os = new FileOutputStream(new File(destination, destinationFilename));
             //Copy File
             byte[] buffer = new byte[1024];
             int read;
@@ -76,6 +76,11 @@ public class FileUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public static void copyFileFromAssets(Context context, String assetsDir, String filename, File destination){
+        copyFileFromAssets(context, assetsDir, filename, destination, filename);
     }
 
     public static void copyZipFromAssets(Context context, String filename){
