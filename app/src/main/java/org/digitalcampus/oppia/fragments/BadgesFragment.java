@@ -29,6 +29,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.BadgesAdapter;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Badge;
@@ -48,6 +49,9 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 
 	private JSONObject json;
     private BadgesAdapter adapterBadges;
+
+	@Inject
+	ApiEndpoint apiEndpoint;
 
 	@Inject
 	List<Badge> badges;
@@ -79,7 +83,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 
 
 	private void getBadges(){		
-		APIUserRequestTask task = new APIUserRequestTask(super.getActivity());
+		APIUserRequestTask task = new APIUserRequestTask(super.getActivity(), apiEndpoint);
 		Payload p = new Payload(Paths.SERVER_AWARDS_PATH);
 		task.setAPIRequestListener(this);
 		task.execute(p);
