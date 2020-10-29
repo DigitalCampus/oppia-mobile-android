@@ -42,7 +42,6 @@ android {
         checkReleaseBuilds true
         // Disable checks for String translations
         disable 'MissingTranslation', 'ExtraTranslation'
-        abortOnError false
     }
 
     // Configure to use Java8 features like try-with-resources
