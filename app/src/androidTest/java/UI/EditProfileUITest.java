@@ -43,8 +43,6 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class)
 public class EditProfileUITest extends MockedApiEndpointTest {
 
-    private static final String ERROR_MESSAGE_BODY = "responses/response_body_error_message.txt";
-
     private static final String VALID_EMAIL = "test2@oppia.org";
     private static final String VALID_FIRST_NAME = "First Name";
     private static final String VALID_LAST_NAME = "Last Name";
