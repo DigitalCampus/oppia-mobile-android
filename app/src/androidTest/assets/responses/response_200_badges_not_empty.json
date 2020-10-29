@@ -1,0 +1,12 @@
+{
+  "objects": [
+    {
+      "description": "Badge 1",
+      "award_date": "2020-10-01 12:00:00"
+    },
+    {
+      "description": "Badge 2",
+      "award_date": "2020-10-02 12:00:00"
+    }
+  ]
+}

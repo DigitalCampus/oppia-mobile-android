@@ -20,25 +20,15 @@ package org.digitalcampus.oppia.activity;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.DownloadMediaAdapter;
@@ -50,27 +40,18 @@ import org.digitalcampus.oppia.service.DownloadService;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.MultiChoiceHelper;
 import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
-import org.digitalcampus.oppia.utils.storage.Storage;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class DownloadMediaActivity extends AppActivity implements DownloadMediaListener {
 
     public static final String MISSING_MEDIA = "missing_media";
 
-    private SharedPreferences sharedPreferences;
     private ArrayList<Media> missingMedia;
     private DownloadBroadcastReceiver receiver;
-    Button downloadViaPCBtn;
     private TextView emptyState;
     private boolean isSortByCourse;
     private TextView downloadSelected;
@@ -92,7 +73,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         missingMediaContainer = findViewById(R.id.home_messages);
         downloadSelected = findViewById(R.id.download_selected);
-        downloadViaPCBtn = findViewById(R.id.download_media_via_pc_btn);
         emptyState = findViewById(R.id.empty_state);
         recyclerMedia = findViewById(R.id.missing_media_list);
 
@@ -103,7 +83,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_media);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         findViews();
 
         Bundle bundle = this.getIntent().getExtras();
@@ -226,8 +205,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             }
         });
 
-        downloadViaPCBtn.setOnClickListener(v -> downloadViaPC());
-        Media.resetMediaScan(sharedPreferences);
+        Media.resetMediaScan(prefs);
 
     }
 
@@ -240,10 +218,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             isSortByCourse = false;
             adapterMedia.notifyDataSetChanged();
             emptyState.setVisibility(View.GONE);
-            downloadViaPCBtn.setVisibility(View.VISIBLE);
         } else {
             emptyState.setVisibility(View.VISIBLE);
-            downloadViaPCBtn.setVisibility(View.GONE);
         }
         receiver = new DownloadBroadcastReceiver();
         receiver.setMediaListener(this);
@@ -323,46 +299,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         }
     }
 
-    private void downloadViaPC() {
-
-        if (Storage.getStorageStrategy().getStorageType().equals(PrefsActivity.STORAGE_OPTION_INTERNAL)) {
-            UIUtils.showAlert(this, R.string.prefStorageLocation, this.getString(R.string.download_via_pc_extenal_storage));
-            return;
-        }
-        try (InputStream input = this.getAssets().open("templates/download_via_pc.html")) {
-            String filename = "oppia-media.html";
-            String path = ExternalStorageStrategy.getInternalBasePath(this);
-
-            String html = FileUtils.readFile(input);
-            html = html.replace("##page_title##", getString(R.string.download_via_pc_title));
-            html = html.replace("##app_name##", getString(R.string.app_name));
-            html = html.replace("##primary_color##", "#" + Integer.toHexString(ContextCompat.getColor(this, R.color.theme_primary) & 0x00ffffff));
-            html = html.replace("##secondary_color##", "#" + Integer.toHexString(ContextCompat.getColor(this, R.color.theme_dark) & 0x00ffffff));
-            html = html.replace("##download_via_pc_title##", getString(R.string.download_via_pc_title));
-            html = html.replace("##download_via_pc_intro##", getString(R.string.download_via_pc_intro));
-            html = html.replace("##download_via_pc_final##", getString(R.string.download_via_pc_final, path));
-
-            StringBuilder downloadData = new StringBuilder();
-            for (Media m : missingMedia) {
-                downloadData.append("<li><a href='" + m.getDownloadUrl() + "'>" + m.getFilename() + "</a></li>");
-            }
-            html = html.replace("##download_files##", downloadData.toString());
-            File file = new File(Environment.getExternalStorageDirectory(), filename);
-
-            try(Writer out = new OutputStreamWriter(new FileOutputStream(file))){
-                out.write(html);
-                UIUtils.showAlert(this, R.string.info, this.getString(R.string.download_via_pc_message, filename));
-            }
-
-        } catch (FileNotFoundException fnfe) {
-            Mint.logException(fnfe);
-            Log.d(TAG, "File not found", fnfe);
-        } catch (IOException ioe) {
-            Mint.logException(ioe);
-            Log.d(TAG, "IOException", ioe);
-        }
-    }
-
     @Override
     public void onDownloadProgress(String fileUrl, int progress) {
         Media mediaFile = findMedia(fileUrl);
@@ -393,7 +329,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             missingMedia.remove(mediaFile);
             adapterMedia.notifyDataSetChanged();
             emptyState.setVisibility((missingMedia.isEmpty()) ? View.VISIBLE : View.GONE);
-            downloadViaPCBtn.setVisibility((missingMedia.isEmpty()) ? View.GONE : View.VISIBLE);
             invalidateOptionsMenu();
         }
     }
@@ -410,7 +345,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     }
 
     private void downloadMedia(Media mediaToDownload, DownloadMode mode) {
-        if (!ConnectionUtils.isOnWifi(DownloadMediaActivity.this) && !DownloadMediaActivity.this.sharedPreferences.getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, false)) {
+        if (!ConnectionUtils.isOnWifi(DownloadMediaActivity.this) && !prefs.getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, false)) {
             UIUtils.showAlert(DownloadMediaActivity.this, R.string.warning, R.string.warning_wifi_required);
             return;
         }

@@ -17,15 +17,12 @@
 
 package org.digitalcampus.oppia.service;
 
-import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
-
-import androidx.core.app.NotificationCompat;
 
 import com.splunk.mint.Mint;
 
@@ -47,32 +44,22 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.core.app.NotificationCompat;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class DownloadService extends IntentService {
+public class DownloadService extends FileIntentService {
 
     public static final String TAG = DownloadService.class.getSimpleName();
     public static final String BROADCAST_ACTION = "com.digitalcampus.oppia.DOWNLOADSERVICE";
 
-    public static final String SERVICE_ACTION = "action"; //field for providing action
-    public static final String SERVICE_URL = "fileurl"; //field for providing file URL
     public static final String SERVICE_MESSAGE = "message";
     public static final String SERVICE_FILENAME = "filename";
     public static final String SERVICE_DIGEST = "digest";
 
-    public static final String ACTION_CANCEL = "cancel";
-    public static final String ACTION_DOWNLOAD = "download";
-    public static final String ACTION_COMPLETE = "complete";
-    public static final String ACTION_FAILED = "failed";
-
-    private ArrayList<String> tasksCancelled;
-    private ArrayList<String> tasksDownloading;
-
     private static DownloadService currentInstance;
     private BroadcastReceiver alternativeNotifier;
-
 
     private static void setInstance(DownloadService instance){
         currentInstance = instance;
@@ -87,8 +74,11 @@ public class DownloadService extends IntentService {
         return new ArrayList<>();
     }
 
-
     public DownloadService() { super(TAG); }
+
+    protected String getBroadcastAction(){
+        return BROADCAST_ACTION;
+    }
 
     @Override
     public void onCreate(){
@@ -116,7 +106,7 @@ public class DownloadService extends IntentService {
 
     private void notifyDownloads(String action) {
         //If there are no more pending downloads after the completion of this one, send a Notification
-        if (action.equals(ACTION_COMPLETE) && (tasksDownloading==null || tasksDownloading.isEmpty())){
+        if (action.equals(FileIntentService.ACTION_COMPLETE) && (tasksDownloading==null || tasksDownloading.isEmpty())){
             Log.d(TAG, "Sending notification from Service for the completion of all pending media downloads");
 
             PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
@@ -272,65 +262,6 @@ public class DownloadService extends IntentService {
         sendBroadcast(fileUrl, ACTION_COMPLETE, null);
     }
 
-    private void logAndNotifyError(String fileUrl, Exception e){
-        Log.d(TAG, "Error: " + e.getMessage());
-        sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_media_download));
-        removeDownloading(fileUrl);
-    }
-
-    /*
-    * Sends a new Broadcast with the results of the action
-    */
-    private void sendBroadcast(String fileUrl, String result, String message){
-
-        Intent localIntent = new Intent(BROADCAST_ACTION);
-        localIntent.putExtra(SERVICE_ACTION, result);
-        localIntent.putExtra(SERVICE_URL, fileUrl);
-        if (message != null){
-            localIntent.putExtra(SERVICE_MESSAGE, message);
-        }
-        // Broadcasts the Intent to receivers in this app.
-        Log.d(TAG, fileUrl + "=" + result + ":" + message);
-        sendOrderedBroadcast(localIntent, null);
-
-    }
-
-    private void addCancelledTask(String fileUrl){
-        if (tasksCancelled == null){
-            tasksCancelled = new ArrayList<>();
-        }
-        if (!tasksCancelled.contains(fileUrl)){
-            tasksCancelled.add(fileUrl);
-        }
-    }
-
-    private boolean isCancelled(String fileUrl){
-        return (tasksCancelled != null) && (tasksCancelled.contains(fileUrl));
-    }
-
-    private boolean removeCancelled(String fileUrl) {
-        return tasksCancelled != null && tasksCancelled.remove(fileUrl);
-    }
-
-    private void addDownloadingTask(String fileUrl){
-        if (tasksDownloading == null){
-            tasksDownloading = new ArrayList<>();
-        }
-        if (!tasksDownloading.contains(fileUrl)){
-            synchronized (this){
-                tasksDownloading.add(fileUrl);
-            }
-        }
-    }
-
-    private boolean removeDownloading(String fileUrl){
-        if (tasksDownloading != null){
-            synchronized (this){
-                return tasksDownloading.remove(fileUrl);
-            }
-        }
-        return false;
-    }
 
     private void deleteFile(File file){
         if ((file != null) && file.exists() && !file.isDirectory()){

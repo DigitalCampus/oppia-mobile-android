@@ -1,0 +1,34 @@
+{
+  "id": 3488,
+  "title": {
+    "en": "Questions"
+  },
+  "description": {
+    "en": ""
+  },
+  "props": {
+    "digest": "595e067faa3a6f1cb85e03f0193ce677517cr0s2p80m0",
+    "courseversion": "20200216163021",
+    "showfeedback": 2,
+    "passthreshold": 80,
+    "maxattempts": 0,
+    "maxscore": 1
+  },
+  "questions": [
+    {
+      "order": 1,
+      "id": 36129,
+      "question": {
+        "id": 19768,
+        "type": "essay",
+        "title": {
+          "en": "What is your name?"
+        },
+        "props": {
+          "maxscore": 0
+        },
+        "responses": []
+      }
+    }
+  ]
+}

@@ -52,6 +52,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -108,7 +109,7 @@ public class ResourceWidget extends WidgetFactory {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable(WidgetFactory.WIDGET_CONFIG, this.getWidgetConfig());
+		outState.putSerializable(WidgetFactory.WIDGET_CONFIG, (Serializable) this.getWidgetConfig());
 	}
 	
 	@Override

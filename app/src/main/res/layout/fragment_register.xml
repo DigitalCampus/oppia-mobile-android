@@ -85,12 +85,13 @@
 
             </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
 
-            <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
-                android:id="@+id/register_form_password_field"
-                style="@style/Oppia.CustomField.TextInputLayout"
-                android:layout_marginTop="@dimen/margin_medium"
-                app:cantContainSpaces="true"
-                app:required="true">
+                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
+                    android:id="@+id/register_form_password_field"
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    app:cantContainSpaces="true"
+                    app:required="true"
+                    app:passwordToggleEnabled="true">
 
                 <EditText
                     android:layout_width="match_parent"
@@ -100,12 +101,13 @@
                     android:textSize="15sp" />
             </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
 
-            <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
-                android:id="@+id/register_form_password_again_field"
-                style="@style/Oppia.CustomField.TextInputLayout"
-                android:layout_marginTop="@dimen/margin_medium"
-                app:cantContainSpaces="true"
-                app:required="true">
+                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
+                    android:id="@+id/register_form_password_again_field"
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    app:cantContainSpaces="true"
+                    app:required="true"
+                    app:passwordToggleEnabled="true">
 
                 <EditText
                     android:layout_width="match_parent"
