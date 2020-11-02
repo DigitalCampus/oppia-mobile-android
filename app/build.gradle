@@ -17,7 +17,7 @@ android {
     defaultConfig {
 
         versionCode 83
-        versionName "7.1.4-et.1-int"
+        versionName "7.1.5-et.1-int"
 
         applicationId "et.gov.moh.oppia.covid"
 
