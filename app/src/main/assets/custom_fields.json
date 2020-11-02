@@ -136,5 +136,41 @@
       ]
     }
   ],
-  "register_steps": []
+  "register_steps": [
+    {
+      "order": 1,
+      "title": "Basic info",
+      "helper_text": "",
+      "fields": [
+        "username",
+        "first_name",
+        "last_name",
+        "gender"
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Personal info",
+      "helper_text": "",
+      "fields": [
+        "password",
+        "passwordagain",
+        "email",
+        "phoneno"
+      ]
+    },
+    {
+      "order": 3,
+      "title": "Personal info",
+      "helper_text": "",
+      "fields": [
+        "region",
+        "woreda",
+        "profession",
+        "profession_other",
+        "place_of_work",
+        "org_facility_name"
+      ]
+    }
+  ]
 }
