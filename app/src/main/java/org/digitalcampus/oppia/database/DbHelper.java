@@ -76,7 +76,6 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final int DB_VERSION = 46;
 
     private static DbHelper instance;
-    private static DbHelper inMemoryInstance;
     private SQLiteDatabase db;
     private SharedPreferences prefs;
     private Context ctx;
@@ -236,11 +235,18 @@ public class DbHelper extends SQLiteOpenHelper {
         return instance;
     }
 
-    public static synchronized DbHelper getInMemoryInstance(Context ctx) {
-        if (inMemoryInstance == null) {
-            inMemoryInstance = new DbHelper(ctx, null); // null dbName creates a "in memory" database
+    public static void clearInstance() {
+        if (instance != null) {
+            instance.getWritableDatabase().close();
         }
-        return inMemoryInstance;
+        instance = null;
+    }
+
+    public static synchronized DbHelper getInMemoryInstance(Context ctx) {
+        if (instance == null) {
+            instance = new DbHelper(ctx, null); // null dbName creates a "in memory" database
+        }
+        return instance;
     }
 
     public synchronized void resetDatabase() {

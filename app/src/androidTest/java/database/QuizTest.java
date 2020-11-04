@@ -1,13 +1,8 @@
 package database;
 
-import android.content.Context;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.QuizAttempt;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -17,13 +12,13 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-public class QuizTest extends BaseDBTests {
+public class QuizTest extends BaseTestDB {
 
     @Test
     public void getUnexportedQuizAttempts() {
 
-        addUsers();
-        addCourses();
+        getTestDataManager().addUsers();
+        getTestDataManager().addCourses();
 
         QuizAttempt qa = new QuizAttempt();
         qa.setCourseId(1);

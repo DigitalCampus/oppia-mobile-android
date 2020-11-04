@@ -1,49 +1,25 @@
 package database;
 
-import android.content.Context;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RunWith(AndroidJUnit4.class)
-public class BaseDBTests {
+/**
+ * Use this class to insert test data.
+ */
+public class TestDataManager {
 
-    private Context context;
-    private DbHelper dbHelper;
 
-    @Before
-    public void setUp() throws Exception {
-        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+    private final DbHelper dbHelper;
 
-        dbHelper = DbHelper.getInMemoryInstance(context);
-        dbHelper.getReadableDatabase(); // To force migration if needed
+    public TestDataManager(DbHelper dbHelper) {
+        this.dbHelper = dbHelper;
     }
-
-    @After
-    public void tearDown() throws Exception {
-        dbHelper.resetDatabase();
-    }
-
-    public DbHelper getDbHelper() {
-        return dbHelper;
-    }
-
-    public Context getContext() {
-        return context;
-    }
-
 
     // add users
     public void addUsers(){
