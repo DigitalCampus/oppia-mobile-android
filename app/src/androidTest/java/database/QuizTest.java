@@ -17,42 +17,34 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-public class QuizTest {
-
-    private Context context;
-
-    @Before
-    public void setUp() throws Exception {
-        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-
-    }
+public class QuizTest extends BaseDBTests {
 
     @Test
     public void getUnexportedQuizAttempts() {
 
-        DbHelper dbHelper = DbHelper.getInstance(context);
+        addUsers();
+        addCourses();
 
-        TestData testData = new TestData();
-        testData.load(dbHelper);
         QuizAttempt qa = new QuizAttempt();
         qa.setCourseId(1);
         qa.setUserId(1);
         qa.setSent(true);
-        dbHelper.insertQuizAttempt(qa);
+        getDbHelper().insertQuizAttempt(qa);
 
-        ArrayList<QuizAttempt> quizAttempts = (ArrayList<QuizAttempt>) dbHelper.getUnexportedQuizAttempts(1);
+        ArrayList<QuizAttempt> quizAttempts = (ArrayList<QuizAttempt>)
+                getDbHelper().getUnexportedQuizAttempts(1);
         assertEquals(0, quizAttempts.size());
 
+        // TODO this test is not passing. insertQuizAttempt method does not add "sent" value.
     }
 
     // getGlobalQuizAttempts
     @Test
     public void getGlobalQuizAttempts() {
 
-        DbHelper dbHelper = DbHelper.getInstance(context);
-
         // TODO - add some test data here to really check
-        List<QuizAttempt> quizAttempts = (ArrayList<QuizAttempt>) dbHelper.getGlobalQuizAttempts(1, "en");
+        List<QuizAttempt> quizAttempts = (ArrayList<QuizAttempt>)
+                getDbHelper().getGlobalQuizAttempts(1, "en");
         assertEquals(0, quizAttempts.size());
 
     }

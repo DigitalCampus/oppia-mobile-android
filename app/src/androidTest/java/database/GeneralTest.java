@@ -11,26 +11,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
-public class GeneralTest {
+public class GeneralTest extends BaseDBTests{
 
-    private Context context;
-
-    @Before
-    public void setUp() throws Exception {
-        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-
-    }
     @Test
     public void resetAndUpgrade() {
 
-        DbHelper dbHelper = DbHelper.getInstance(context);
-
         for (int i=7; i<47; i++){
-            dbHelper.resetDatabase();
-            dbHelper.onUpgrade(dbHelper.getDB(), 6, i);
+            getDbHelper().resetDatabase();
+            getDbHelper().onUpgrade(getDbHelper().getDB(), 6, i);
         }
 
-        dbHelper.resetDatabase();
-        dbHelper.onUpgrade(dbHelper.getDB(), 6, 7);
+        getDbHelper().resetDatabase();
+        getDbHelper().onUpgrade(getDbHelper().getDB(), 6, 7);
     }
 }

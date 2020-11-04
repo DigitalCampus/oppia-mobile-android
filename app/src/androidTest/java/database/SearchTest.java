@@ -16,27 +16,15 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-public class SearchTest {
-
-    private Context context;
-
-    @Before
-    public void setUp() throws Exception {
-        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-
-    }
-
+public class SearchTest extends BaseDBTests {
 
     // searchWithTerm
     @Test
     public void searchWithTerm() {
 
-        DbHelper dbHelper = DbHelper.getInstance(context);
-        dbHelper.getReadableDatabase(); // To force migration if needed
-
         // TODO add some real data to test with
         ArrayList<SearchResult> searchResults = (ArrayList<SearchResult>)
-                dbHelper.search("test", 50, 1, context);
+                getDbHelper().search("test", 50, 1, getContext());
         assertEquals(0, searchResults.size());
     }
 

@@ -15,43 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
-public class GamificationTest {
+public class GamificationTest extends BaseDBTests {
 
-    private Context context;
-
-    @Before
-    public void setUp() throws Exception {
-        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-
-    }
-
-    @Test
-    public void insertActivityGamification() {
-
-        DbHelper dbHelper = DbHelper.getInstance(context);
-        List<GamificationEvent> gamificationEvents = new ArrayList<>();
-        GamificationEvent ge = new GamificationEvent();
-        ge.setEvent("completed");
-        ge.setCompleted(true);
-        ge.setPoints(10);
-        gamificationEvents.add(ge);
-
-        dbHelper.insertActivityGamification(123, gamificationEvents);
-    }
-
-    @Test
-    public void insertCourseGamification() {
-
-        DbHelper dbHelper = DbHelper.getInstance(context);
-        List<GamificationEvent> gamificationEvents = new ArrayList<>();
-        GamificationEvent ge = new GamificationEvent();
-        ge.setEvent("downloaded");
-        ge.setCompleted(true);
-        ge.setPoints(50);
-        gamificationEvents.add(ge);
-
-        dbHelper.insertCourseGamification(1234, gamificationEvents);
-    }
     // TODO getUserPoints - with the gamifcation options
     // TODO getLeaderboardList
 }
