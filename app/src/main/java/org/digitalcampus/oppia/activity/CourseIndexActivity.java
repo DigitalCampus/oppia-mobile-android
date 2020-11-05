@@ -166,7 +166,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 showBaselineMessage(null);
             } else {
                 closeBaselineDialogIfOpen();
-                showSnackbarIfCourseCompleted();
+                //showSnackbarIfCourseCompleted();
             }
         }
     }
