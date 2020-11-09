@@ -74,7 +74,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.FragmentActivity;
 
-public abstract class AnswerWidget extends WidgetFactory {
+public abstract class AnswerWidget extends BaseWidget {
 
     public static final String TAG = QuizWidget.class.getSimpleName();
     static final int QUIZ_AVAILABLE = -1;
@@ -122,8 +122,8 @@ public abstract class AnswerWidget extends WidgetFactory {
 
         setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
         vv.setId(activity.getActId());
-        if ((savedInstanceState != null) && (savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG) != null)){
-            setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG));
+        if ((savedInstanceState != null) && (savedInstanceState.getSerializable(BaseWidget.WIDGET_CONFIG) != null)){
+            setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable(BaseWidget.WIDGET_CONFIG));
         }
 
         return vv;
@@ -132,7 +132,7 @@ public abstract class AnswerWidget extends WidgetFactory {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(WidgetFactory.WIDGET_CONFIG, getWidgetConfig());
+        outState.putSerializable(BaseWidget.WIDGET_CONFIG, getWidgetConfig());
 
     }
 
@@ -521,26 +521,26 @@ public abstract class AnswerWidget extends WidgetFactory {
     @Override
     public HashMap<String, Object> getWidgetConfig() {
         HashMap<String, Object> config = new HashMap<>();
-        config.put(WidgetFactory.PROPERTY_QUIZ, this.quiz);
-        config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
-        config.put(WidgetFactory.PROPERTY_ON_RESULTS_PAGE, this.isOnResultsPage);
-        config.put(WidgetFactory.PROPERTY_ATTEMPT_SAVED, this.quizAttemptSaved);
+        config.put(BaseWidget.PROPERTY_QUIZ, this.quiz);
+        config.put(BaseWidget.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
+        config.put(BaseWidget.PROPERTY_ON_RESULTS_PAGE, this.isOnResultsPage);
+        config.put(BaseWidget.PROPERTY_ATTEMPT_SAVED, this.quizAttemptSaved);
         return config;
     }
 
     @Override
     public void setWidgetConfig(HashMap<String, Object> config) {
-        if (config.containsKey(WidgetFactory.PROPERTY_QUIZ)) {
-            this.quiz = (Quiz) config.get(WidgetFactory.PROPERTY_QUIZ);
+        if (config.containsKey(BaseWidget.PROPERTY_QUIZ)) {
+            this.quiz = (Quiz) config.get(BaseWidget.PROPERTY_QUIZ);
         }
-        if (config.containsKey(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME)) {
-            this.setStartTime((Long) config.get(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME));
+        if (config.containsKey(BaseWidget.PROPERTY_ACTIVITY_STARTTIME)) {
+            this.setStartTime((Long) config.get(BaseWidget.PROPERTY_ACTIVITY_STARTTIME));
         }
-        if (config.containsKey(WidgetFactory.PROPERTY_ON_RESULTS_PAGE)) {
-            this.isOnResultsPage = (Boolean) config.get(WidgetFactory.PROPERTY_ON_RESULTS_PAGE);
+        if (config.containsKey(BaseWidget.PROPERTY_ON_RESULTS_PAGE)) {
+            this.isOnResultsPage = (Boolean) config.get(BaseWidget.PROPERTY_ON_RESULTS_PAGE);
         }
-        if (config.containsKey(WidgetFactory.PROPERTY_ATTEMPT_SAVED)) {
-            this.quizAttemptSaved = (Boolean) config.get(WidgetFactory.PROPERTY_ATTEMPT_SAVED);
+        if (config.containsKey(BaseWidget.PROPERTY_ATTEMPT_SAVED)) {
+            this.quizAttemptSaved = (Boolean) config.get(BaseWidget.PROPERTY_ATTEMPT_SAVED);
         }
     }
 
