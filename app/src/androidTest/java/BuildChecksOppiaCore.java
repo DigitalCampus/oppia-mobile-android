@@ -11,6 +11,7 @@ import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.App;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,6 +31,7 @@ public class BuildChecksOppiaCore {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    @Ignore
     @Test
     public void checkDefaultSettingsParameters() {
 

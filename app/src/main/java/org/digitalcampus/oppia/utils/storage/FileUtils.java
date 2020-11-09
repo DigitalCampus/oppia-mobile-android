@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.utils.storage;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
@@ -55,49 +56,32 @@ public class FileUtils {
     // destination directory should be created first
     public static boolean unzipFiles(String srcDirectory, String srcFile, String destDirectory) {
 
+        // first make sure that all the arguments are valid and not null
+        if (TextUtils.isEmpty(srcDirectory)
+                || TextUtils.isEmpty(srcFile)
+                || TextUtils.isEmpty(destDirectory)) {
+            return false;
+        }
+
+        // now make sure that these directories exist
+        File sourceDirectory = new File(srcDirectory);
+        File sourceFile = new File(srcDirectory + File.separator + srcFile);
+        File destinationDirectory = new File(destDirectory);
+
+        if (!sourceDirectory.exists()
+                || !sourceFile.exists()
+                || !destinationDirectory.exists()) {
+            return false;
+        }
+
         BufferedOutputStream dest = null;
         FileOutputStream fos = null;
-        FileInputStream fis = null;
-        ZipInputStream zis = null;
 
-        try {
-            // first make sure that all the arguments are valid and not null
-            if (srcDirectory == null) {
-                return false;
-            }
-            if (srcFile == null) {
-                return false;
-            }
-            if (destDirectory == null) {
-                return false;
-            }
-            if (srcDirectory.equals("")) {
-                return false;
-            }
-            if (srcFile.equals("")) {
-                return false;
-            }
-            if (destDirectory.equals("")) {
-                return false;
-            }
-            // now make sure that these directories exist
-            File sourceDirectory = new File(srcDirectory);
-            File sourceFile = new File(srcDirectory + File.separator + srcFile);
-            File destinationDirectory = new File(destDirectory);
-
-            if (!sourceDirectory.exists()) {
-                return false;
-            }
-            if (!sourceFile.exists()) {
-                return false;
-            }
-            if (!destinationDirectory.exists()) {
-                return false;
-            }
+        try (FileInputStream fis = new FileInputStream(sourceFile);
+             ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis))) {
 
             // now start with unzip process
-            fis = new FileInputStream(sourceFile); //NOSONAR (Sonar is not understanding closeSafely() method
-            zis = new ZipInputStream(new BufferedInputStream(fis)); //NOSONAR
+
             ZipEntry entry;
 
             while ((entry = zis.getNextEntry()) != null) {
@@ -113,8 +97,8 @@ public class FileUtils {
 
                 // write the file to the disk
                 if (!f.isDirectory()) {
-                    fos = new FileOutputStream(f); //NOSONAR
-                    dest = new BufferedOutputStream(fos, BUFFER_SIZE); //NOSONAR
+                    fos = new FileOutputStream(f);
+                    dest = new BufferedOutputStream(fos, BUFFER_SIZE);
 
                     while ((count = zis.read(data, 0, BUFFER_SIZE)) != -1) {
                         dest.write(data, 0, count);
@@ -131,15 +115,13 @@ public class FileUtils {
         } finally {
             closeSafely(dest);
             closeSafely(fos);
-            closeSafely(zis);
-            closeSafely(fis);
         }
 
         return true;
     }
 
 
-    public static String getDigestFromMessage(MessageDigest mDigest){
+    public static String getDigestFromMessage(MessageDigest mDigest) {
         byte[] digest = mDigest.digest();
         StringBuilder resultMD5 = new StringBuilder();
 
