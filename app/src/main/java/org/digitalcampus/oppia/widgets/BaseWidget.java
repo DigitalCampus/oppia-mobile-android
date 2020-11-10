@@ -38,9 +38,9 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 import java.util.HashMap;
 import java.util.Locale;
 
-public abstract class WidgetFactory extends Fragment {
+public abstract class BaseWidget extends Fragment {
 	
-	public static final String TAG = WidgetFactory.class.getSimpleName();
+	public static final String TAG = BaseWidget.class.getSimpleName();
 
 	protected static final String QUIZ_EXCEPTION_MESSAGE = "Invalid Quiz Error: ";
 
