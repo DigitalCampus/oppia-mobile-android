@@ -236,9 +236,6 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public static void clearInstance() {
-        if (instance != null) {
-            instance.getWritableDatabase().close();
-        }
         instance = null;
     }
 

@@ -47,6 +47,7 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
     private final String INCORRECT_COURSE = "Incorrect_Course.zip";
     private final String NOXML_COURSE = "NoXML_Course.zip";
     private final String MALFORMEDXML_COURSE = "MalformedXML_Course.zip";
+    private final String INSECURE_COURSE = "Insecure_Course.zip";
 
     private Context context;
     private SharedPreferences prefs;
@@ -167,6 +168,16 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
         Course c = getDbHelper().getCourse(courseId, userId);
         assertNull(c);   //Check that the course exists in the database
 
+    }
+
+    @Test
+    public void installCourse_insecureCourse()throws Exception {
+
+        CourseUtils.cleanUp();
+        copyCourseFromAssets(INSECURE_COURSE);
+        response = runInstallCourseTask(context);//Run test task
+
+        assertFalse(response.isResult());
     }
 
   /*  @Test
