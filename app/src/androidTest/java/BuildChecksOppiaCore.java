@@ -31,7 +31,6 @@ public class BuildChecksOppiaCore {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    @Ignore
     @Test
     public void checkDefaultSettingsParameters() {
 
