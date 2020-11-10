@@ -49,7 +49,7 @@ import org.digitalcampus.oppia.widgets.PageWidget;
 import org.digitalcampus.oppia.widgets.QuizWidget;
 import org.digitalcampus.oppia.widgets.ResourceWidget;
 import org.digitalcampus.oppia.widgets.UrlWidget;
-import org.digitalcampus.oppia.widgets.WidgetFactory;
+import org.digitalcampus.oppia.widgets.BaseWidget;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -141,7 +141,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         super.onPause();
 
         if (!ttsRunning) {
-            WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
+            BaseWidget currentWidget = (BaseWidget) apAdapter.getItem(currentActivityNo);
             currentWidget.pauseTimeTracking();
             currentWidget.saveTracker();
         }
@@ -152,7 +152,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         super.onResume();
 
         if (!ttsRunning) {
-            WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
+            BaseWidget currentWidget = (BaseWidget) apAdapter.getItem(currentActivityNo);
             currentWidget.resumeTimeTracking();
         }
 
@@ -164,7 +164,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     protected void onDestroy() {
 
         if (ttsRunning) {
-            WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
+            BaseWidget currentWidget = (BaseWidget) apAdapter.getItem(currentActivityNo);
             currentWidget.pauseTimeTracking();
             currentWidget.saveTracker();
         }
@@ -363,7 +363,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             viewPager.setCurrentItem(tabSelected);
             currentActivityNo = tabSelected;
             this.stopReading();
-            WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
+            BaseWidget currentWidget = (BaseWidget) apAdapter.getItem(currentActivityNo);
             currentWidget.resetTimeTracking();
         } else {
             Runnable setPreviousTab = () -> {
@@ -379,7 +379,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
-        ((WidgetFactory) apAdapter.getItem(currentActivityNo)).saveTracker();
+        ((BaseWidget) apAdapter.getItem(currentActivityNo)).saveTracker();
     }
 
     @Override
@@ -387,7 +387,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         int tabSelected = tab.getPosition();
         Log.d(TAG, "Tab selected " + tabSelected + " current act " + currentActivityNo);
 
-        WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
+        BaseWidget currentWidget = (BaseWidget) apAdapter.getItem(currentActivityNo);
         currentWidget.resetTimeTracking();
     }
 
@@ -407,7 +407,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         // check for successful instantiation
         if (status == TextToSpeech.SUCCESS) {
             ttsRunning = true;
-            ((WidgetFactory) apAdapter.getItem(currentActivityNo)).setReadAloud(true);
+            ((BaseWidget) apAdapter.getItem(currentActivityNo)).setReadAloud(true);
             supportInvalidateOptionsMenu();
 
             String currentLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
@@ -418,7 +418,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 myTTS.setLanguage(localeContent);
             }
 
-            myTTS.speak(((WidgetFactory) apAdapter.getItem(currentActivityNo)).getContentToRead(), TextToSpeech.QUEUE_FLUSH, null, TAG);
+            myTTS.speak(((BaseWidget) apAdapter.getItem(currentActivityNo)).getContentToRead(), TextToSpeech.QUEUE_FLUSH, null, TAG);
             myTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                 @Override
                 public void onDone(String utteranceId) {
