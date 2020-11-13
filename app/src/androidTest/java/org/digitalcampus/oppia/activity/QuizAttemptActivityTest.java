@@ -1,22 +1,15 @@
 package org.digitalcampus.oppia.activity;
 
 import android.content.Context;
-import android.content.Intent;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
-import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.model.QuizStats;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import database.TestData;
 
 import static org.junit.Assert.assertEquals;
 

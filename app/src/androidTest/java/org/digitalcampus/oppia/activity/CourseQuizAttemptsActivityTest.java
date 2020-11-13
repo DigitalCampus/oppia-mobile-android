@@ -7,23 +7,23 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import database.TestData;
+import database.BaseTestDB;
 
 @RunWith(AndroidJUnit4.class)
-public class CourseQuizAttemptsActivityTest {
+public class CourseQuizAttemptsActivityTest extends BaseTestDB {
 
 
     private Context context;
 
     @Before
     public void setUp() throws Exception {
+        super.setUp();
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
     }
@@ -39,10 +39,10 @@ public class CourseQuizAttemptsActivityTest {
 
     @Test
     public void testActivityOpenWithAttempts() {
-        DbHelper db = DbHelper.getInstance(context);
-        db.getReadableDatabase(); // To force migration if needed;
-        TestData td = new TestData();
-        td.load(db);
+
+        getTestDataManager().addUsers();
+        getTestDataManager().addCourses();
+
         QuizStats qs = new QuizStats();
         qs.setSectionTitle("my section");
         qs.setQuizTitle("my quiz");
@@ -52,14 +52,16 @@ public class CourseQuizAttemptsActivityTest {
         Intent intent = new Intent();
         intent.putExtra(QuizStats.TAG, qs);
         courseQuizAttemptsActivityTestRule.launchActivity(intent);
+
+        // TODO assertions
     }
 
     @Test
     public void testActivityOpenWithNoAttempts() {
-        DbHelper db = DbHelper.getInstance(context);
-        db.getReadableDatabase(); // To force migration if needed;
-        TestData td = new TestData();
-        td.load(db);
+
+        getTestDataManager().addUsers();
+        getTestDataManager().addCourses();
+
         QuizStats qs = new QuizStats();
         qs.setSectionTitle("my section");
         qs.setQuizTitle("my quiz");
@@ -69,6 +71,8 @@ public class CourseQuizAttemptsActivityTest {
         Intent intent = new Intent();
         intent.putExtra(QuizStats.TAG, qs);
         courseQuizAttemptsActivityTestRule.launchActivity(intent);
+
+        // TODO assertions
     }
 
 }
