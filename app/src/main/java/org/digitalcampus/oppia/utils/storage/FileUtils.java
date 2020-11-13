@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.utils.storage;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
@@ -27,7 +28,6 @@ import org.digitalcampus.oppia.application.App;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,52 +55,38 @@ public class FileUtils {
     // destination directory should be created first
     public static boolean unzipFiles(String srcDirectory, String srcFile, String destDirectory) {
 
-        BufferedOutputStream dest = null;
-        FileOutputStream fos = null;
-        FileInputStream fis = null;
-        ZipInputStream zis = null;
+        // first make sure that all the arguments are valid and not null
+        if (TextUtils.isEmpty(srcDirectory)
+                || TextUtils.isEmpty(srcFile)
+                || TextUtils.isEmpty(destDirectory)) {
+            return false;
+        }
 
-        try {
-            // first make sure that all the arguments are valid and not null
-            if (srcDirectory == null) {
-                return false;
-            }
-            if (srcFile == null) {
-                return false;
-            }
-            if (destDirectory == null) {
-                return false;
-            }
-            if (srcDirectory.equals("")) {
-                return false;
-            }
-            if (srcFile.equals("")) {
-                return false;
-            }
-            if (destDirectory.equals("")) {
-                return false;
-            }
-            // now make sure that these directories exist
-            File sourceDirectory = new File(srcDirectory);
-            File sourceFile = new File(srcDirectory + File.separator + srcFile);
-            File destinationDirectory = new File(destDirectory);
+        // now make sure that these directories exist
+        File sourceDirectory = new File(srcDirectory);
+        File sourceFile = new File(srcDirectory + File.separator + srcFile);
+        File destinationDirectory = new File(destDirectory);
 
-            if (!sourceDirectory.exists()) {
-                return false;
-            }
-            if (!sourceFile.exists()) {
-                return false;
-            }
-            if (!destinationDirectory.exists()) {
-                return false;
-            }
+        if (!sourceDirectory.exists()
+                || !sourceFile.exists()
+                || !destinationDirectory.exists()) {
+            return false;
+        }
+
+        try (FileInputStream fis = new FileInputStream(sourceFile);
+             ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis))) {
 
             // now start with unzip process
-            fis = new FileInputStream(sourceFile); //NOSONAR (Sonar is not understanding closeSafely() method
-            zis = new ZipInputStream(new BufferedInputStream(fis)); //NOSONAR
+
             ZipEntry entry;
 
             while ((entry = zis.getNextEntry()) != null) {
+
+                if (entry.getName().startsWith("..")) {
+                    throw new SecurityException("Suspect file: " + entry.getName()
+                            + ". Possibility of trying to access parent directory");
+                }
+
                 String outputFilename = destDirectory + File.separator + entry.getName();
 
                 createDirIfNeeded(destDirectory, entry);
@@ -113,14 +99,15 @@ public class FileUtils {
 
                 // write the file to the disk
                 if (!f.isDirectory()) {
-                    fos = new FileOutputStream(f); //NOSONAR
-                    dest = new BufferedOutputStream(fos, BUFFER_SIZE); //NOSONAR
 
-                    while ((count = zis.read(data, 0, BUFFER_SIZE)) != -1) {
-                        dest.write(data, 0, count);
+                    try (FileOutputStream fos = new FileOutputStream(f);
+                         BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER_SIZE)) {
+
+                        while ((count = zis.read(data, 0, BUFFER_SIZE)) != -1) {
+                            dest.write(data, 0, count);
+                        }
                     }
 
-                    closeSafely(dest);
                 }
             }
 
@@ -128,18 +115,13 @@ public class FileUtils {
             Mint.logException(e);
             Log.d(TAG, "Exception:", e);
             return false;
-        } finally {
-            closeSafely(dest);
-            closeSafely(fos);
-            closeSafely(zis);
-            closeSafely(fis);
         }
 
         return true;
     }
 
 
-    public static String getDigestFromMessage(MessageDigest mDigest){
+    public static String getDigestFromMessage(MessageDigest mDigest) {
         byte[] digest = mDigest.digest();
         StringBuilder resultMD5 = new StringBuilder();
 
@@ -152,19 +134,16 @@ public class FileUtils {
     public static boolean zipFileAtPath(File sourceFile, File zipDestination) {
         final int BUFFER = 2048;
         Log.d(TAG, "Zipping " + sourceFile + " into " + zipDestination);
-        ZipOutputStream out = null;
-        FileOutputStream dest = null;
-        BufferedInputStream origin = null;
-        FileInputStream fi = null;
-        try {
-            dest = new FileOutputStream(zipDestination); //NOSONAR
-            out = new ZipOutputStream(new BufferedOutputStream(dest)); //NOSONAR
+
+        try (FileOutputStream dest = new FileOutputStream(zipDestination);
+             ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+             FileInputStream fi = new FileInputStream(zipDestination);
+             BufferedInputStream origin = new BufferedInputStream(fi, BUFFER)) {
+
             if (sourceFile.isDirectory()) {
                 zipSubFolder(out, sourceFile, sourceFile.getParent().length());
             } else {
                 byte[] data = new byte[BUFFER];
-                fi = new FileInputStream(zipDestination); //NOSONAR
-                origin = new BufferedInputStream(fi, BUFFER); //NOSONAR
                 ZipEntry entry = new ZipEntry(getLastPathComponent(zipDestination.getPath()));
                 out.putNextEntry(entry);
                 int count;
@@ -176,12 +155,8 @@ public class FileUtils {
             Mint.logException(e);
             Log.d(TAG, "Exception:", e);
             return false;
-        } finally {
-            closeSafely(out);
-            closeSafely(dest);
-            closeSafely(origin);
-            closeSafely(fi);
         }
+
         return true;
     }
 
@@ -194,19 +169,18 @@ public class FileUtils {
         Log.d(TAG, "Zipping folder " + folder.getPath());
 
         File[] fileList = folder.listFiles();
-        BufferedInputStream origin = null;
-        FileInputStream fi = null;
+
         for (File file : fileList) {
-            try {
                 if (file.isDirectory()) {
                     zipSubFolder(out, file, basePathLength);
                 } else {
-                    byte[] data = new byte[BUFFER];
                     String unmodifiedFilePath = file.getPath();
+                    try (FileInputStream fi = new FileInputStream(unmodifiedFilePath);
+                         BufferedInputStream origin = new BufferedInputStream(fi, BUFFER)) {
+
+                    byte[] data = new byte[BUFFER];
                     String relativePath = unmodifiedFilePath
                             .substring(basePathLength);
-                    fi = new FileInputStream(unmodifiedFilePath); // NOSONAR
-                    origin = new BufferedInputStream(fi, BUFFER); // NOSONAR
                     ZipEntry entry = new ZipEntry(relativePath);
                     out.putNextEntry(entry);
                     int count;
@@ -214,9 +188,6 @@ public class FileUtils {
                         out.write(data, 0, count);
                     }
                 }
-            } finally {
-                closeSafely(origin);
-                closeSafely(fi);
             }
         }
     }
@@ -289,7 +260,7 @@ public class FileUtils {
 
         // delete zip file from download dir
         File zip = new File(path);
-        return zip.delete();
+        return zip.delete(); //NOSONAR (Files.delete() is available from API 26)
     }
 
     public static String readFile(String file) throws IOException {
@@ -304,37 +275,21 @@ public class FileUtils {
 
     public static String readFile(InputStream fileStream) throws IOException {
 
-        DataInputStream in = null;
-        BufferedReader br = null;
+        try (DataInputStream in = new DataInputStream(fileStream);
+             BufferedReader br = new BufferedReader(new InputStreamReader(in));){
 
-        try {
-            in = new DataInputStream(fileStream);
-            br = new BufferedReader(new InputStreamReader(in));
             String strLine;
             StringBuilder stringBuilder = new StringBuilder();
             while ((strLine = br.readLine()) != null) {
                 stringBuilder.append(strLine);
             }
             return stringBuilder.toString();
-        } finally {
-            closeSafely(br);
-            closeSafely(in);
-        }
-    }
-
-    private static void closeSafely(Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (IOException e) {
-                Log.e(TAG, "closeSafely: ", e);
-            }
         }
     }
 
     public static boolean deleteFile(File file) {
         if ((file != null) && file.exists() && !file.isDirectory()) {
-            boolean deleted = file.delete();
+            boolean deleted = file.delete(); //NOSONAR (Files.delete() is available from API 26)
             Log.d(TAG, file.getName() + (deleted ? " deleted succesfully." : " deletion failed!"));
             return deleted;
         }

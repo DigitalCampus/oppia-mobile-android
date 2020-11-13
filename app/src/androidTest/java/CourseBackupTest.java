@@ -8,7 +8,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.task.Payload;
@@ -25,6 +24,7 @@ import java.io.File;
 import java.util.Locale;
 
 import Utils.CourseUtils;
+import database.BaseTestDB;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -32,7 +32,7 @@ import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
-public class CourseBackupTest {
+public class CourseBackupTest extends BaseTestDB {
 
     public static final String TAG = InstallDownloadedCoursesTest.class.getSimpleName();
 
@@ -54,6 +54,7 @@ public class CourseBackupTest {
 
     @Before
     public void setUp() throws Exception {
+        super.setUp();
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -101,11 +102,10 @@ public class CourseBackupTest {
         children = modulesPath.list();
         assertEquals(1, children.length);  //Check that the course exists in the "modules" directory
 
-        DbHelper db = DbHelper.getInstance(context);
-        long userId = db.getUserId(SessionManager.getUsername(context));
+        long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
         String shortName = children[0].toLowerCase(Locale.US);
-        long courseId = db.getCourseID(shortName);
-        Course c = db.getCourse(courseId, userId);
+        long courseId = getDbHelper().getCourseID(shortName);
+        Course c = getDbHelper().getCourse(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
 
         DeleteCourseTest.deleteTestCourse(c, context);
@@ -118,8 +118,8 @@ public class CourseBackupTest {
         response = InstallDownloadedCoursesTest.runInstallCourseTask(context);//Run test task
         // Check if result is true
         assertTrue(response.isResult());
-        courseId = db.getCourseID(shortName);
-        c = db.getCourse(courseId, userId);
+        courseId = getDbHelper().getCourseID(shortName);
+        c = getDbHelper().getCourse(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
 
 
