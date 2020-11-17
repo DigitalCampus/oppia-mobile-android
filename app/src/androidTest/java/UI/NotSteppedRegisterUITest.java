@@ -37,7 +37,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
-public class RegisterUITest extends MockedApiEndpointTest {
+public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
     private static final String VALID_REGISTER_RESPONSE = "responses/response_200_register.json";
 
@@ -88,30 +88,6 @@ public class RegisterUITest extends MockedApiEndpointTest {
                 .check(matches(withText(R.string.field_spaces_error)));
 
     }
-
-    /*
-    @TODO to update for new stepped registration (email will be always optional)
-    @Test
-    public void showsErrorMessageWhenThereIsNoEmail() throws  Exception {
-        welcomeActivityTestRule.launchActivity(null);
-
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
-
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("UsernameWithoutSpaces"));
-
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
-
-        onView(withId(R.id.register_btn))
-                .perform(click());
-
-        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .check(matches(withText(R.string.field_required)));
-    }
-
-     */
 
     @Test
     public void showErrorMessageWhenTheEmailIsWrong() throws Exception {
