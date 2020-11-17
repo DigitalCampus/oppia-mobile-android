@@ -22,6 +22,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +64,8 @@ import javax.inject.Inject;
 
 public class RegisterFragment extends AppFragment implements RegisterTask.RegisterListener {
 
+
+	private static final int USERNAME_MIN_CHARACTERS = 4;
 
 	private ValidableTextInputLayout usernameField;
 	private ValidableTextInputLayout emailField;
@@ -156,6 +159,14 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 			String password = passwordField.getCleanedValue();
 			String passwordAgain = passwordAgainField.getCleanedValue();
 			return checkPasswordCriteria(password, passwordAgain);
+		});
+
+		usernameField.setCustomValidator(field -> {
+			boolean validValue = !TextUtils.isEmpty(field.getCleanedValue()) && field.getCleanedValue().length() >= USERNAME_MIN_CHARACTERS;
+			if (!validValue) {
+				usernameField.setError(getString(R.string.error_register_username_lenght, USERNAME_MIN_CHARACTERS));
+			}
+			return validValue;
 		});
 
 		fields = new HashMap<>();
