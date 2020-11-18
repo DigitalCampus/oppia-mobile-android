@@ -1,6 +1,5 @@
 {
   "fields": [
-
     {
       "name":"role",
       "label":"Position",
@@ -19,29 +18,6 @@
       "visible_byfield":"role",
       "visible_byvalue":"other",
       "type":"str"
-    },
-
-    {
-      "name":"county",
-      "label":"Select county",
-      "required":true,
-      "helper_text":"",
-      "type":"choices",
-      "collection": "counties",
-      "visible_byfield":"role",
-      "visible_byvalue":"!other",
-      "order": 3
-    },
-
-    {
-      "name":"district",
-      "label":"Select district",
-      "required":true,
-      "helper_text":"",
-      "type":"choices",
-      "visible_byfield":"county",
-      "collection_byfield":"county",
-      "order": 4
     }
 
   ],
@@ -54,30 +30,6 @@
         {"id": "role2", "value":"Role2"},
         {"id": "other", "value":"Other"}
       ]
-    },
-
-    {
-      "collection_name": "counties",
-      "items": [
-        {"id": "Area1", "value":"Area1"},
-        {"id": "Area2", "value":"Area2"}
-      ]
-    },
-
-    {
-      "collection_name": "Area1",
-      "items": [
-        {"id": "region1", "value":"region1"},
-        {"id": "region2", "value":"region2"}
-      ]
-    },
-
-    {
-      "collection_name": "Area2",
-      "items": [
-        {"id": "region3", "value":"region3"},
-        {"id": "region4", "value":"region4"}
-      ]
     }
   ],
 
@@ -86,16 +38,6 @@
     {
       "order": 1,
       "title":"First step",
-      "helper_text":"First step",
-      "fields":[
-        "username",
-        "password",
-        "passwordagain"
-      ]
-    },
-    {
-      "order": 2,
-      "title":"Second step",
       "helper_text":"Second step",
       "fields":[
         "role",
@@ -104,7 +46,7 @@
     },
 
     {
-      "order": 3,
+      "order": 2,
       "title":"Personal info",
       "helper_text":"Personal info",
       "conditional_byfield":"role",
@@ -118,7 +60,7 @@
     },
 
     {
-      "order": 3,
+      "order": 2,
       "title":"Personal info (other)",
       "conditional_byfield":"role",
       "conditional_byvalue":"other",

@@ -244,6 +244,9 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
+        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
+
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
@@ -270,6 +273,9 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
+
+        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
 
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
@@ -300,6 +306,9 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
+        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
+
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
@@ -313,23 +322,14 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
 
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("1234"));
 
         onView(withId(R.id.register_btn))
-                .perform(click());
-
+                .perform(click(), closeSoftKeyboard());
 
         onErrorViewWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
                 .check(matches(withText(R.string.error_register_no_phoneno)));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("1234567"));
-
-        onView(withId(R.id.register_btn))
-                .perform(click());
-
-        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-                .check(matches(withText(R.string.error_register_no_phoneno)));
     }
 
     @Test
@@ -358,9 +358,6 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
-
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("12345678"));
 
         onView(withId(R.id.register_btn))
                 .perform( click());
