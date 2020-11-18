@@ -487,6 +487,8 @@
     <string name="videoplayer_continue">Continue to course</string>
     <string name="options">Options</string>
     <string name="quiz_loading_error">Unexpected error loading quiz. Maybe the format was wrong or out-dated?</string>
+    <string name="error_register_username_lenght">Username must have at least %d characters</string>
+
 
 
 </resources>
