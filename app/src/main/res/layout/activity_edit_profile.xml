@@ -27,7 +27,6 @@
             <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                 android:id="@+id/field_email"
                 style="@style/Oppia.CustomField.TextInputLayout"
-                app:required="true"
                 app:cantContainSpaces="true">
 
                 <EditText

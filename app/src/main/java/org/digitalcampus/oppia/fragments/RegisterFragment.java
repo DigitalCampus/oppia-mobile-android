@@ -22,6 +22,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -133,7 +134,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 		emailField.setCustomValidator(field -> {
 			String email = field.getCleanedValue();
-			if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+			if (!TextUtils.isEmpty(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 				emailField.setErrorEnabled(true);
 				emailField.setError(getString(R.string.error_register_email));
 				return false;
@@ -143,7 +144,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 		phoneNoField.setCustomValidator(field -> {
 			String phoneNo = field.getCleanedValue();
-			if (phoneNo.length() < 8) {
+			if ((phoneNo.length() > 0) && (phoneNo.length() < App.PHONENO_MIN_LENGTH)) {
 				phoneNoField.setErrorEnabled(true);
 				phoneNoField.setError(getString(R.string.error_register_no_phoneno));
 				phoneNoField.requestFocus();
@@ -156,6 +157,14 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 			String password = passwordField.getCleanedValue();
 			String passwordAgain = passwordAgainField.getCleanedValue();
 			return checkPasswordCriteria(password, passwordAgain);
+		});
+
+		usernameField.setCustomValidator(field -> {
+			boolean validValue = !TextUtils.isEmpty(field.getCleanedValue()) && field.getCleanedValue().length() >= App.USERNAME_MIN_CHARACTERS;
+			if (!validValue) {
+				usernameField.setError(getString(R.string.error_register_username_lenght, App.USERNAME_MIN_CHARACTERS));
+			}
+			return validValue;
 		});
 
 		fields = new HashMap<>();
@@ -240,6 +249,9 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 				valid = field.validate() && valid;
 			}
 			valid = fieldsManager.validateFields() && valid;
+		}
+		else{
+			valid = stepsManager.validate();
 		}
 
 		if (valid){

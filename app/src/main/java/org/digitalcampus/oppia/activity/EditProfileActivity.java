@@ -1,12 +1,14 @@
 package org.digitalcampus.oppia.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityEditProfileBinding;
 import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.User;
@@ -78,6 +80,28 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         binding.fieldJobtitle.setText(user.getJobTitle());
         binding.fieldPhoneno.setText(user.getPhoneNo());
         fieldsManager.fillWithUserData(user);
+
+        binding.fieldPhoneno.setCustomValidator(field -> {
+            String phoneNo = field.getCleanedValue();
+            if ((phoneNo.length() > 0) && (phoneNo.length() < App.PHONENO_MIN_LENGTH)) {
+                binding.fieldPhoneno.setErrorEnabled(true);
+                binding.fieldPhoneno.setError(getString(R.string.error_register_no_phoneno));
+                binding.fieldPhoneno.requestFocus();
+                return false;
+            }
+            return true;
+        });
+
+        binding.fieldEmail.setCustomValidator(field -> {
+            String email = field.getCleanedValue();
+            if (!TextUtils.isEmpty(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                binding.fieldEmail.setErrorEnabled(true);
+                binding.fieldEmail.setError(getString(R.string.error_register_email));
+                return false;
+            }
+            return true;
+        });
+
     }
 
     @Override
@@ -101,13 +125,6 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
             valid = field.validate() && valid;
         }
         valid = fieldsManager.validateFields() && valid;
-
-        //If the rest of email validations passed, check that the email is valid
-        if (binding.fieldEmail.validate() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.fieldEmail.setErrorEnabled(true);
-            binding.fieldEmail.setError(getString(R.string.error_register_email));
-            valid = false;
-        }
 
         if (valid){
             user.setFirstname(firstname);

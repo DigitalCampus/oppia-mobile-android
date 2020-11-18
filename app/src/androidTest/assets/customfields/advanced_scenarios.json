@@ -1,0 +1,89 @@
+{
+  "fields": [
+    {
+      "name":"county",
+      "label":"Select county",
+      "required":true,
+      "helper_text":"",
+      "type":"choices",
+      "collection": "counties",
+      "visible_byfield":"role",
+      "visible_byvalue":"!other",
+      "order": 1
+    },
+
+    {
+      "name":"district",
+      "label":"Select district",
+      "required":false,
+      "helper_text":"",
+      "type":"choices",
+      "visible_byfield":"county",
+      "collection_byfield":"county",
+      "order": 2
+    },
+
+    {
+      "name":"dependant",
+      "label":"Area1 dependant",
+      "required":true,
+      "helper_text":"",
+      "type":"choices",
+      "visible_byfield":"county",
+      "visible_byvalue":"Area1",
+      "order": 3
+    }
+
+  ],
+
+  "collections": [
+    {
+      "collection_name": "counties",
+      "items": [
+        {"id": "Area1", "value":"Area1"},
+        {"id": "Area2", "value":"Area2"}
+      ]
+    },
+
+    {
+      "collection_name": "Area1",
+      "items": [
+        {"id": "region1", "value":"region1"},
+        {"id": "region2", "value":"region2"}
+      ]
+    },
+
+    {
+      "collection_name": "Area2",
+      "items": [
+        {"id": "region3", "value":"region3"},
+        {"id": "region4", "value":"region4"}
+      ]
+    }
+  ],
+
+  "register_steps": [
+
+    {
+      "order": 1,
+      "title":"First step",
+      "helper_text":"First step",
+      "fields":[
+        "county",
+        "district"
+      ]
+    },
+    {
+      "order": 2,
+      "title":"Second step",
+      "helper_text":"Second step",
+      "fields":[
+        "username",
+        "dependant"
+      ]
+    }
+
+  ]
+
+
+}
