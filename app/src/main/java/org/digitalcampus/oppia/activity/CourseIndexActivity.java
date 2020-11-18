@@ -58,6 +58,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     public static final String JUMPTO_TAG = "JumpTo";
     public static final int RESULT_JUMPTO = 99;
+    public static final String EXTRA_FROM_WEBLINK = "extra_from_weblink";
 
     private Course course;
     private CompleteCourse parsedCourse;
@@ -225,7 +226,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 return true;
 
             case android.R.id.home:
-                onBackPressed();
+                onUpButtonPressed();
                 return true;
 
             default:
@@ -241,6 +242,16 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
         return super.onOptionsItemSelected(item);
 
+    }
+
+    private void onUpButtonPressed() {
+        if (getIntent().hasExtra(EXTRA_FROM_WEBLINK)
+                && getIntent().getBooleanExtra(EXTRA_FROM_WEBLINK, false)) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        finish();
     }
 
     private void createLanguageDialog() {
