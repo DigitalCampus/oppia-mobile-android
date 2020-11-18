@@ -65,8 +65,6 @@ import javax.inject.Inject;
 public class RegisterFragment extends AppFragment implements RegisterTask.RegisterListener {
 
 
-	private static final int USERNAME_MIN_CHARACTERS = 4;
-
 	private ValidableTextInputLayout usernameField;
 	private ValidableTextInputLayout emailField;
 	private ValidableTextInputLayout passwordField;
@@ -136,7 +134,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 		emailField.setCustomValidator(field -> {
 			String email = field.getCleanedValue();
-			if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+			if (!TextUtils.isEmpty(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 				emailField.setErrorEnabled(true);
 				emailField.setError(getString(R.string.error_register_email));
 				return false;
@@ -146,7 +144,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 		phoneNoField.setCustomValidator(field -> {
 			String phoneNo = field.getCleanedValue();
-			if (phoneNo.length() < 8) {
+			if ((phoneNo.length() > 0) && (phoneNo.length() < App.PHONENO_MIN_LENGTH)) {
 				phoneNoField.setErrorEnabled(true);
 				phoneNoField.setError(getString(R.string.error_register_no_phoneno));
 				phoneNoField.requestFocus();
@@ -162,9 +160,9 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		});
 
 		usernameField.setCustomValidator(field -> {
-			boolean validValue = !TextUtils.isEmpty(field.getCleanedValue()) && field.getCleanedValue().length() >= USERNAME_MIN_CHARACTERS;
+			boolean validValue = !TextUtils.isEmpty(field.getCleanedValue()) && field.getCleanedValue().length() >= App.USERNAME_MIN_CHARACTERS;
 			if (!validValue) {
-				usernameField.setError(getString(R.string.error_register_username_lenght, USERNAME_MIN_CHARACTERS));
+				usernameField.setError(getString(R.string.error_register_username_lenght, App.USERNAME_MIN_CHARACTERS));
 			}
 			return validValue;
 		});
@@ -251,6 +249,9 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 				valid = field.validate() && valid;
 			}
 			valid = fieldsManager.validateFields() && valid;
+		}
+		else{
+			valid = stepsManager.validate();
 		}
 
 		if (valid){

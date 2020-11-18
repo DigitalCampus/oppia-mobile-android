@@ -72,6 +72,27 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
     }
 
     @Test
+    public void showsErrorMessageWhenTheUsernameIsTooShort() throws  Exception {
+        welcomeActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.welcome_register))
+                .perform(scrollTo(), click());
+
+        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Us"));
+
+        onView(withId(R.id.register_btn))
+                .perform(click());
+
+        String usernameLengthError = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().getString(
+                R.string.error_register_username_lenght, App.USERNAME_MIN_CHARACTERS);
+
+        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                .check(matches(withText(usernameLengthError)));
+
+    }
+
+    @Test
     public void showsErrorMessageWhenTheUsernameContainsSpaces() throws  Exception {
         welcomeActivityTestRule.launchActivity(null);
 
@@ -223,9 +244,6 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
-
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
@@ -252,9 +270,6 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
-
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
 
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
@@ -284,9 +299,6 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
-
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
 
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
