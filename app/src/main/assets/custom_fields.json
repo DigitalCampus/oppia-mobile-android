@@ -1,5 +1,36 @@
 {
   "fields": [],
   "collections": [],
-  "register_steps": []
+  "register_steps": [
+    {
+      "order": 1,
+      "title":"First step",
+      "helper_text":"Please enter a username and your name",
+      "fields":[
+        "username",
+        "first_name",
+        "last_name"
+      ]
+    },
+    {
+      "order": 2,
+      "title":"Second step",
+      "helper_text":"Please enter a password",
+      "fields":[
+        "password",
+        "passwordagain"
+      ]
+    },
+    {
+      "order": 3,
+      "title":"Third step",
+      "helper_text":"Please provide some extra contact information",
+      "fields":[
+        "email",
+        "phoneno",
+        "organisation",
+        "jobtitle"
+      ]
+    }
+  ]
 }

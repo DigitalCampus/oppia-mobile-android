@@ -60,7 +60,7 @@ public class SteppedFormUIManager {
         return null;
     }
 
-    private boolean validate(){
+    public boolean validate(){
         boolean valid = true;
         for (String field : currentStep.getFields()){
             valid = fieldsManager.getInputByKey(field).validate() && valid;
