@@ -110,9 +110,6 @@ public class EditProfileUITest extends MockedApiEndpointTest {
 
         onView(withId(R.id.btn_save_profile)).perform(click());
 
-        onErrorViewWithinTextInputLayoutWithId(R.id.field_email)
-                .check(matches(withText(R.string.field_required)));
-
         onErrorViewWithinTextInputLayoutWithId(R.id.field_firstname)
                 .check(matches(withText(R.string.field_required)));
 
