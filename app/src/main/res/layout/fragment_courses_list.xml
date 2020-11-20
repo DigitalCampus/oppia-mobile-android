@@ -70,44 +70,9 @@
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/home_messages"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/subtitle_bar"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="@dimen/padding_medium"
-            android:visibility="gone"
-            android:weightSum="1.0">
-
-            <Button
-                android:id="@+id/message_action_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding_medium"
-                android:layout_marginStart="@dimen/padding_medium"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:text="@string/scan_media_download_button"
-                android:textColor="@color/text_dark"
-                 />
-
-            <TextView
-                android:id="@+id/home_message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/message_action_button"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@id/message_action_button"
-                android:gravity="center_vertical"
-                android:textColor="@color/text_dark"
-                android:textSize="14sp"
-                 />
-
-        </RelativeLayout>
+    <org.digitalcampus.oppia.utils.ui.MediaScanView
+        android:id="@+id/view_media_scan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </FrameLayout>
