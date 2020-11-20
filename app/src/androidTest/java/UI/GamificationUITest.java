@@ -126,10 +126,10 @@ public class GamificationUITest {
                         Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        Espresso.onView(ViewMatchers.withId(R.id.section_list))
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_course_sections))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        Espresso.onView(ViewMatchers.withId(R.id.section_list))
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_course_sections))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
 
     }

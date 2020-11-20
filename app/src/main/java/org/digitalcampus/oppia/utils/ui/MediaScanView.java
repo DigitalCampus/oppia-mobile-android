@@ -1,7 +1,5 @@
 package org.digitalcampus.oppia.utils.ui;
 
-import android.animation.LayoutTransition;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
@@ -12,16 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
-
-import com.github.florent37.viewanimator.ViewAnimator;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ViewMediaScanBinding;
@@ -42,6 +35,7 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
     private SharedPreferences prefs;
     private View viewBelow;
     private int initialViewBelowPadding = 0;
+    private boolean updateMediaScan;
 
     public MediaScanView(@NonNull Context context) {
         super(context);
@@ -66,12 +60,23 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
         binding = ViewMediaScanBinding.inflate(LayoutInflater.from(getContext()));
         addView(binding.getRoot());
 
+        binding.tvMediaMessage.setText(R.string.info_scan_media_missing);
+        binding.btnMediaDownload.setText(R.string.scan_media_download_button);
+
         setVisibility(GONE);
     }
 
     public void setViewBelow(View viewBelow) {
         this.viewBelow = viewBelow;
         initialViewBelowPadding = viewBelow.getPaddingTop();
+    }
+
+    public void setMessage(String message) {
+        binding.tvMediaMessage.setText(message);
+    }
+
+    public void setUpdateMediaScan(boolean updateMediaScan) {
+        this.updateMediaScan = updateMediaScan;
     }
 
     //region ScanMedia
@@ -111,39 +116,22 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
 
     }
 
-    //    private void animateScanMediaMessage(){
-//        TranslateAnimation anim = new TranslateAnimation(0, 0, -200, 0);
-//        anim.setDuration(900);
-//        messageContainer.startAnimation(anim);
-//
-//        messageContainer.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        ValueAnimator animator = ValueAnimator.ofInt(initialCourseListPadding, messageContainer.getMeasuredHeight());
-//        animator.addUpdateListener(valueAnimator -> recyclerCourses.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0));
-//        animator.setStartDelay(200);
-//        animator.setDuration(700);
-//        animator.start();
-//    }
-//
-//    private void hideScanMediaMessage(){
-//        messageContainer.setVisibility(View.GONE);
-//        recyclerCourses.setPadding(0, initialCourseListPadding, 0, 0);
-//    }
 
     /* ScanMediaListener implementation */
+
+    // View is not showing until scanComplete() so the messages have been removed
     public void scanStart() {
-        binding.tvMediaMessage.setText(R.string.info_scan_media_start);
+//        binding.tvMediaMessage.setText(R.string.info_scan_media_start);
     }
 
     public void scanProgressUpdate(String msg) {
-        binding.tvMediaMessage.setText(getContext().getString(R.string.info_scan_media_checking, msg));
+//        binding.tvMediaMessage.setText(getContext().getString(R.string.info_scan_media_checking, msg));
     }
 
     public void scanComplete(Payload response) {
 
         if (response.getResponseData() != null && !response.getResponseData().isEmpty()) {
 
-            binding.tvMediaMessage.setText(R.string.info_scan_media_missing);
-            binding.btnMediaDownload.setText(R.string.scan_media_download_button);
             binding.btnMediaDownload.setTag(response.getResponseData());
 
             binding.btnMediaDownload.setOnClickListener(view -> {
@@ -157,18 +145,18 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
             });
 
             if (getVisibility() != View.VISIBLE) {
-
                 showView();
-//                animateScanMediaMessage();
             }
 
             Media.resetMediaScan(prefs);
         } else {
-//            hideScanMediaMessage();
             hideView();
             binding.btnMediaDownload.setOnClickListener(null);
             binding.btnMediaDownload.setTag(null);
-            Media.updateMediaScan(prefs);
+
+            if (updateMediaScan) {
+                Media.updateMediaScan(prefs);
+            }
         }
     }
 

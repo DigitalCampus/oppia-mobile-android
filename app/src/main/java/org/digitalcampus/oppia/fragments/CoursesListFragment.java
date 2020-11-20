@@ -116,6 +116,9 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         adapterListCourses.setOnItemClickListener(this);
         recyclerCourses.setAdapter(adapterListCourses);
 
+        mediaScanView.setViewBelow(recyclerCourses);
+        mediaScanView.setUpdateMediaScan(true);
+
         return layout;
     }
 
@@ -160,7 +163,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         adapterListCourses.notifyDataSetChanged();
 
-        mediaScanView.setViewBelow(recyclerCourses);
         mediaScanView.scanMedia(courses);
     }
 
