@@ -63,7 +63,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private ArrayList<Course> courses;
     private Course tempCourse;
-    private int initialCourseListPadding = 0;
 
     private View noCoursesView;
 
@@ -73,7 +72,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     @Inject CoursesRepository coursesRepository;
     @Inject SharedPreferences sharedPrefs;
     @Inject ApiEndpoint apiEndpoint;
-    private LinearLayout llLoading;
     private TextView tvManageCourses;
     private Button manageBtn;
     private RecyclerView recyclerCourses;
@@ -85,7 +83,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         mediaScanView = layout.findViewById(R.id.view_media_scan);
         recyclerCourses = layout.findViewById(R.id.recycler_courses);
         noCoursesView = layout.findViewById(R.id.no_courses);
-        llLoading = layout.findViewById(R.id.loading_courses);
 
         tvManageCourses = layout.findViewById(R.id.manage_courses_text);
         manageBtn = layout.findViewById(R.id.manage_courses_btn);
@@ -118,8 +115,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         adapterListCourses = new CoursesListAdapter(getActivity(), courses);
         adapterListCourses.setOnItemClickListener(this);
         recyclerCourses.setAdapter(adapterListCourses);
-
-        initialCourseListPadding = recyclerCourses.getPaddingTop();
 
         return layout;
     }
@@ -156,8 +151,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         courses.clear();
         courses.addAll(coursesRepository.getCourses(getActivity()));
 
-        llLoading.setVisibility(View.GONE);
-
         if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY){
             displayDownloadSection();
         } else {
@@ -167,6 +160,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         adapterListCourses.notifyDataSetChanged();
 
+        mediaScanView.setViewBelow(recyclerCourses);
         mediaScanView.scanMedia(courses);
     }
 
