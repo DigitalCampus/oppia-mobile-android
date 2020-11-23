@@ -1,16 +1,22 @@
 package UI;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
+import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
+import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +45,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 
 @RunWith(AndroidJUnit4.class)
-public class MediaMissingUITest {
+public class DownloadMediaUITest {
 
     private static final String COURSE_WITH_NO_MEDIA = "Course_with_no_media.zip";
     private static final String COURSE_WITH_MEDIA_1 = "Course_with_media_1.zip";
@@ -60,6 +66,15 @@ public class MediaMissingUITest {
         // First ensure to use in-memory database
         testDBHelper = new TestDBHelper(InstrumentationRegistry.getInstrumentation().getTargetContext());
         testDBHelper.setUp();
+
+        StorageAccessStrategy storageStrategy = new ExternalStorageStrategy();
+        Storage.setStorageStrategy(storageStrategy);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageStrategy.getStorageType());
+        storageStrategy.updateStorageLocation(context);
+        editor.commit();
 
         CourseUtils.cleanUp();
     }
@@ -176,7 +191,7 @@ public class MediaMissingUITest {
     }
 
     @Test
-    public void courseIndex_mediaViewHiddenWhenThereAreCourseWithNoMedia(){
+    public void courseIndex_mediaViewHiddenWhenTheCourseHasNoMedia() throws InterruptedException {
 
         copyCourseFromAssets(COURSE_WITH_NO_MEDIA);
 
@@ -193,9 +208,6 @@ public class MediaMissingUITest {
                     .check(matches(not(isDisplayed())));
         }
     }
-
-
-    ////////////////
 
 
     @Test
@@ -246,7 +258,9 @@ public class MediaMissingUITest {
         Payload response = runInstallCourseTask(context);
         assertTrue(response.isResult());
 
+
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+
             onView(withId(R.id.btn_media_download)).perform(click());
 
             onView(withId(R.id.missing_media_list)).check(new RecyclerViewItemCountAssertion(2));
