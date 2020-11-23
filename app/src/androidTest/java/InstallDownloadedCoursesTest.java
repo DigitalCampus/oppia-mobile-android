@@ -31,6 +31,7 @@ import database.BaseTestDB;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import static Utils.CourseUtils.runInstallCourseTask;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
@@ -299,39 +300,6 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
 
     private void copyCourseFromAssets(String filename){
         FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
-    }
-
-    public static Payload runInstallCourseTask(Context context){
-
-        final CountDownLatch signal = new CountDownLatch(1);  //Control AsyncTask sincronization for testing
-        ArrayList<Object> data = new ArrayList<>();
-        Payload payload = new Payload(data);
-        final Payload[] response = new Payload[1];
-        response[0] = null;
-        InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
-        imTask.setInstallerListener(new InstallCourseListener() {
-            @Override
-            public void installComplete(Payload r) {
-                Log.d(TAG, "Course installation complete!");
-                response[0] = r;
-                signal.countDown();
-            }
-
-            @Override
-            public void installProgressUpdate(DownloadProgress dp) {
-                Log.d(TAG, "Course installation progress: " + dp.getProgress());
-
-            }
-        });
-        imTask.execute(payload);
-
-        try {
-            signal.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return response[0];
     }
 
 }

@@ -30,7 +30,6 @@ import static junit.framework.Assert.assertTrue;
 public class XMLReadersTest {
 
     private Context context;
-    private SharedPreferences prefs;
 
     private static final String ASSETS_FOLDER = "course_xmls";
     private static final String CORRECT_XML = "correct_course.xml";
@@ -39,7 +38,6 @@ public class XMLReadersTest {
     @Before
     public void setUp() throws Exception {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
     }
 

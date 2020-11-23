@@ -88,6 +88,11 @@ public class FileUtils {
         copyFileFromAssets(context, "courses", filename, downloadPath);
     }
 
+    public static void copyZipFromAssetsPath(Context context, String path, String filename){
+        File downloadPath = new File(Storage.getDownloadPath(context));
+        copyFileFromAssets(context, path, filename, downloadPath);
+    }
+
     public static void copyFileToDir(File file, File mediaDir, boolean deleteOnError) {
         try {
             org.apache.commons.io.FileUtils.copyFileToDirectory(file, mediaDir, true);
