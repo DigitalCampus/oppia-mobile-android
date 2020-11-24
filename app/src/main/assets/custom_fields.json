@@ -1,6 +1,14 @@
 {
   "fields": [
     {
+      "name":"phone_no",
+      "label":"Phone number",
+      "order":1,
+      "required":true,
+      "helper_text":"",
+      "type":"str"
+    },
+    {
       "name":"region",
       "label":"Region",
       "order":1,
@@ -10,7 +18,7 @@
       "type":"choices"
     },
     {
-      "name":"other_region",
+      "name":"region_other",
       "label":"Other region",
       "order":1,
       "required":true,
@@ -247,7 +255,7 @@
       "fields": [
         "region",
         "sub_city",
-        "other_region",
+        "region_other",
         "woreda"
       ]
     },
