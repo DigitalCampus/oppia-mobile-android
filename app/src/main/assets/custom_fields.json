@@ -184,7 +184,7 @@
         {"id": "self_employed", "value":"Self-employed"},
         {"id": "school", "value":"School (KG, Primary, Secondary)"},
         {"id": "other_public", "value":"Other public/government institution"},
-        {"id": "other_private", "value":"Other private sector institution/company"},
+        {"id": "other_private", "value":"Other private sector institution/company"}
       ]
     },
     {
@@ -243,18 +243,18 @@
     {
       "order": 3,
       "title": "Region",
-      "helper_text": "",
+      "helper_text": "Region",
       "fields": [
         "region",
         "sub_city",
-        "region_other",
+        "other_region",
         "woreda"
       ]
     },
     {
       "order": 4,
       "title": "Profession",
-      "helper_text": "",
+      "helper_text": "Profession",
       "fields": [
         "profession",
         "profession_other",

@@ -1,16 +1,16 @@
-/* 
+/*
  * This file is part of OppiaMobile - https://digital-campus.org/
- * 
+ *
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * OppiaMobile is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -71,6 +71,8 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 	private ValidableTextInputLayout passwordAgainField;
 	private ValidableTextInputLayout firstnameField;
 	private ValidableTextInputLayout lastnameField;
+	private ValidableTextInputLayout jobTitleField;
+	private ValidableTextInputLayout organisationField;
 	private ValidableTextInputLayout phoneNoField;
 	private HashMap<String, ValidableField> fields = new HashMap<>();
 
@@ -100,7 +102,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 
 	public static RegisterFragment newInstance() {
-	    return new RegisterFragment();
+		return new RegisterFragment();
 	}
 
 	public RegisterFragment(){
@@ -116,6 +118,8 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		passwordAgainField = layout.findViewById(R.id.register_form_password_again_field);
 		firstnameField = layout.findViewById(R.id.register_form_firstname_field);
 		lastnameField = layout.findViewById(R.id.register_form_lastname_field);
+		jobTitleField = layout.findViewById(R.id.register_form_jobtitle_field);
+		organisationField = layout.findViewById(R.id.register_form_organisation_field);
 		phoneNoField = layout.findViewById(R.id.register_form_phoneno_field);
 		registerButton = layout.findViewById(R.id.register_btn);
 		loginButton = layout.findViewById(R.id.action_login_btn);
@@ -128,7 +132,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		stepDescription = layout.findViewById(R.id.step_description);
 		steppedFieldsContainer = layout.findViewById(R.id.stepped_fields_container);
 
-		/*emailField.setCustomValidator(field -> {
+		emailField.setCustomValidator(field -> {
 			String email = field.getCleanedValue();
 			if (!TextUtils.isEmpty(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 				emailField.setErrorEnabled(true);
@@ -136,7 +140,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 				return false;
 			}
 			return true;
-		});*/
+		});
 
 		phoneNoField.setCustomValidator(field -> {
 			String phoneNo = field.getCleanedValue();
@@ -165,10 +169,13 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 		fields = new HashMap<>();
 		fields.put("username", usernameField);
+		fields.put("email", emailField);
 		fields.put("password", passwordField);
 		fields.put("passwordagain", passwordAgainField);
 		fields.put("first_name", firstnameField);
 		fields.put("last_name", lastnameField);
+		fields.put("jobtitle", jobTitleField);
+		fields.put("organisation", organisationField);
 		fields.put("phoneno", phoneNoField);
 
 		return layout;
@@ -248,17 +255,19 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		}
 
 		if (valid){
-            User u = new User();
-            u.setUsername(usernameField.getCleanedValue());
-            u.setPassword(passwordField.getCleanedValue());
-            u.setPasswordAgain(passwordAgainField.getCleanedValue());
-            u.setFirstname(firstnameField.getCleanedValue());
-            u.setLastname(lastnameField.getCleanedValue());
-            u.setEmail(emailField.getCleanedValue());
-            u.setPhoneNo(phoneNoField.getCleanedValue());
+			User u = new User();
+			u.setUsername(usernameField.getCleanedValue());
+			u.setPassword(passwordField.getCleanedValue());
+			u.setPasswordAgain(passwordAgainField.getCleanedValue());
+			u.setFirstname(firstnameField.getCleanedValue());
+			u.setLastname(lastnameField.getCleanedValue());
+			u.setEmail(emailField.getCleanedValue());
+			u.setJobTitle(jobTitleField.getCleanedValue());
+			u.setOrganisation(organisationField.getCleanedValue());
+			u.setPhoneNo(phoneNoField.getCleanedValue());
 			u.setUserCustomFields(fieldsManager.getCustomFieldValues());
-            executeRegisterTask(u);
-        }
+			executeRegisterTask(u);
+		}
 
 	}
 
