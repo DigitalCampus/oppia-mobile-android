@@ -64,14 +64,18 @@
       "required":true,
       "helper_text":"",
       "collection":"places_of_work",
+      "visible_byfield":"profession",
+      "visible_byvalue":"!n_a",
       "type":"choices"
     },
     {
       "name":"org_facility_name",
-      "label":"Name of health facility or organization",
+      "label":"Name of health facility, organization, or institution where you work",
       "order":7,
       "required":true,
       "helper_text":"",
+      "visible_byfield":"profession",
+      "visible_byvalue":"!n_a",
       "type":"str"
     },
     {
@@ -81,6 +85,27 @@
       "required":true,
       "helper_text":"",
       "collection":"genders",
+      "type":"choices"
+    },
+    {
+      "name":"work_area",
+      "label":"Which best describes the area where you work",
+      "order":8,
+      "required":true,
+      "helper_text":"",
+      "visible_byfield":"profession",
+      "visible_byvalue":"!n_a",
+      "collection":"work_areas",
+      "type":"choices"
+    }
+  ,
+    {
+      "name":"referral",
+      "label":"How did you hear about the COVID-19 Ethiopia app?",
+      "order":8,
+      "required":false,
+      "helper_text":"",
+      "collection":"referrals",
       "type":"choices"
     }
   ],
@@ -155,12 +180,11 @@
         {"id": "ngo_nonprofit", "value":"NGO / nonprofit"},
         {"id": "pharmacy", "value":"Pharmacy"},
         {"id": "private_clinic", "value":"Private clinic"},
-        {"id": "research institution", "value":"Research institution"},
-
-
+        {"id": "research_institution", "value":"Research institution"},
+        {"id": "self_employed", "value":"Self-employed"},
+        {"id": "school", "value":"School (KG, Primary, Secondary)"},
         {"id": "other_public", "value":"Other public/government institution"},
         {"id": "other_private", "value":"Other private sector institution/company"},
-        {"id": "n_a", "value":"N/A - Not currently working"}
       ]
     },
     {
@@ -169,6 +193,27 @@
         {"id": "female", "value":"Female"},
         {"id": "male", "value":"Male"},
         {"id": "prefer_not_to_say", "value":"Prefer not to say"}
+      ]
+    },
+    {
+      "collection_name": "work_areas",
+      "items": [
+        {"id": "urban", "value":"Urban"},
+        {"id": "peri_urban", "value":"Peri-urban"},
+        {"id": "rural", "value":"Rural"},
+        {"id": "pastoralist", "value":"Pastoralist"}
+      ]
+    },
+    {
+      "collection_name": "referrals",
+      "items": [
+        {"id": "ephi", "value":"Ethiopia Public Health Institute (EPHI)"},
+        {"id": "lmh_cha", "value":"Last Mile Health / Community Health Academy"},
+        {"id": "moh", "value":"Ministry of Health"},
+        {"id": "media", "value":"Media (e.g. news article, blog)"},
+        {"id": "social_media", "value":"Social media (e.g. Facebook, Twitter)"},
+        {"id": "rec_employer", "value":"Recommended by my employer or instructor"},
+        {"id": "rec_friend", "value":"Recommended by a friend or colleague"}
       ]
     }
   ],
@@ -201,11 +246,22 @@
       "helper_text": "",
       "fields": [
         "region",
-        "woreda",
+        "sub_city",
+        "region_other",
+        "woreda"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "Profession",
+      "helper_text": "",
+      "fields": [
         "profession",
         "profession_other",
         "place_of_work",
-        "org_facility_name"
+        "org_facility_name",
+        "work_area",
+        "referral"
       ]
     }
   ]
