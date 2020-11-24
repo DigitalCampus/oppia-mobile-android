@@ -9,6 +9,7 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.User;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,6 +19,8 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 
 import Utils.MockedApiEndpointTest;
+import database.TestDBHelper;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -58,10 +61,20 @@ public class EditProfileUITest extends MockedApiEndpointTest {
     @Rule
     public ActivityTestRule<EditProfileActivity> editProfileActivityTestRule =
             new ActivityTestRule<>(EditProfileActivity.class, false, false);
+    private TestDBHelper testDBHelper;
 
     @Before
     public void setUp() throws Exception {
         when(customFieldsRepo.getAll(any())).thenReturn(new ArrayList<>());
+
+        testDBHelper = new TestDBHelper(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        testDBHelper.setUp();
+
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        testDBHelper.tearDown();
     }
 
     private void enterValidData() {
@@ -96,9 +109,6 @@ public class EditProfileUITest extends MockedApiEndpointTest {
                 .perform(scrollTo(), clearText(), closeSoftKeyboard());
 
         onView(withId(R.id.btn_save_profile)).perform(click());
-
-        onErrorViewWithinTextInputLayoutWithId(R.id.field_email)
-                .check(matches(withText(R.string.field_required)));
 
         onErrorViewWithinTextInputLayoutWithId(R.id.field_firstname)
                 .check(matches(withText(R.string.field_required)));
@@ -135,10 +145,9 @@ public class EditProfileUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_save_profile)).perform(click());
 
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
-        DbHelper dbHelper = DbHelper.getInstance(context);
 
         try {
-            User user1 = dbHelper.getUser(SessionManager.getUsername(context));
+            User user1 = testDBHelper.getDbHelper().getUser(SessionManager.getUsername(context));
             assertEquals(VALID_EMAIL, user1.getEmail());
             assertEquals(VALID_FIRST_NAME, user1.getFirstname());
             assertEquals(VALID_LAST_NAME, user1.getLastname());

@@ -7,19 +7,25 @@ import android.net.Uri;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
+import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.ViewDigestActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.CompleteCourse;
+import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 
 import androidx.test.espresso.core.internal.deps.guava.collect.Iterables;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -27,16 +33,23 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
+import androidx.test.uiautomator.UiDevice;
 
+import junit.framework.Assert;
+
+import Utils.CourseUtils;
 import Utils.MockedApiEndpointTest;
 import Utils.TestUtils;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.Espresso.pressBackUnconditionally;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -72,6 +85,8 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
 
     @Mock
     CoursesRepository coursesRepository;
+    @Mock
+    CompleteCourseProvider completeCourseProvider;
     @Mock
     User user;
 
@@ -255,5 +270,62 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
 
     }
 
+
+    @Test
+    public void goBackToWeblinkSourceWhenBackButtonPressed() throws Exception {
+
+        final CompleteCourse completeCourse = CourseUtils.createMockCompleteCourse(5, 7);
+        Mockito.doAnswer((Answer<Void>) invocation -> {
+            Context ctx = (Context) invocation.getArguments()[0];
+            ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(completeCourse);
+
+            return null;
+
+        }).when(completeCourseProvider).getCompleteCourseAsync(any(Context.class), any(Course.class));
+
+        doAnswer(invocationOnMock -> completeCourse).when(coursesRepository).getCourseByShortname((Context) any(), anyString(), anyLong());
+
+        doAnswer(invocation -> "test").when(user).getUsername();
+
+        String course = completeCourse.getShortname();
+        Intent startIntent = new Intent(Intent.ACTION_VIEW, getUriForCourse(course));
+        viewDigestActivityTestRule.launchActivity(startIntent);
+
+        android.app.Activity courseIndexActivity = TestUtils.getCurrentActivity();
+        assertEquals(CourseIndexActivity.class, courseIndexActivity.getClass());
+
+        pressBackUnconditionally();
+
+        assertTrue(courseIndexActivity.isDestroyed());
+    }
+
+
+    @Test
+    public void goToMainActivityWhenHomeButtonPressed() throws Exception {
+
+        final CompleteCourse completeCourse = CourseUtils.createMockCompleteCourse(5, 7);
+        Mockito.doAnswer((Answer<Void>) invocation -> {
+            Context ctx = (Context) invocation.getArguments()[0];
+            ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(completeCourse);
+
+            return null;
+
+        }).when(completeCourseProvider).getCompleteCourseAsync(any(Context.class), any(Course.class));
+
+
+        doAnswer(invocationOnMock -> completeCourse).when(coursesRepository).getCourseByShortname((Context) any(), anyString(), anyLong());
+
+        doAnswer(invocation -> "test").when(user).getUsername();
+
+        String course = completeCourse.getShortname();
+        Intent startIntent = new Intent(Intent.ACTION_VIEW, getUriForCourse(course));
+        viewDigestActivityTestRule.launchActivity(startIntent);
+
+        assertEquals(CourseIndexActivity.class, TestUtils.getCurrentActivity().getClass());
+
+        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
+
+        assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
+    }
 
 }

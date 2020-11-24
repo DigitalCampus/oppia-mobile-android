@@ -8,7 +8,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
@@ -34,6 +33,7 @@ import java.util.concurrent.CountDownLatch;
 
 import Utils.CourseUtils;
 import Utils.FileUtils;
+import database.BaseTestDB;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -42,7 +42,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 @RunWith(Parameterized.class)
-public class DeleteCourseTest {
+public class DeleteCourseTest extends BaseTestDB {
     public static final String TAG = DeleteCourseTest.class.getSimpleName();
 
     private final String CORRECT_COURSE = "Correct_Course.zip";
@@ -70,6 +70,7 @@ public class DeleteCourseTest {
 
     @Before
     public void setUp() throws Exception {
+        super.setUp();
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -104,18 +105,17 @@ public class DeleteCourseTest {
         String[] children = modulesPath.list();
         assertEquals(1, children.length);  //Check that the course exists in the "modules" directory
 
-        DbHelper db = DbHelper.getInstance(context);
-        long userId = db.getUserId(SessionManager.getUsername(context));
+        long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
         String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
-        long courseId = db.getCourseID(shortName);
-        Course c = db.getCourse(courseId, userId);
+        long courseId = getDbHelper().getCourseID(shortName);
+        Course c = getDbHelper().getCourse(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
 
         deleteTestCourse(c, context);
 
 //        assertTrue(response.isResult());
 
-        c = db.getCourse(courseId, userId);
+        c = getDbHelper().getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
 
         File finalPath = new File(modulesPath, children[0]);
@@ -135,16 +135,15 @@ public class DeleteCourseTest {
         String[] children = modulesPath.list();
         assertEquals(0, children.length); //Check that the course does not exists in the "modules" directory
 
-        DbHelper db = DbHelper.getInstance(context);
-        long userId = db.getUserId(SessionManager.getUsername(context));
+        long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
         String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
-        long courseId = db.getCourseID(shortName);
-        Course c = db.getCourse(courseId, userId);
+        long courseId = getDbHelper().getCourseID(shortName);
+        Course c = getDbHelper().getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
 
         deleteTestCourse(c, context);
 
-        c = db.getCourse(courseId, userId);
+        c = getDbHelper().getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
 
         assertEquals(0, modulesPath.list().length);    //Check that the course does not exists in the "modules" directory
@@ -162,17 +161,15 @@ public class DeleteCourseTest {
         String[] children = modulesPath.list();
         assertEquals(1, children.length);  //Check that the course exists in the "modules" directory
 
-
-        DbHelper db = DbHelper.getInstance(context);
-        long userId = db.getUserId(SessionManager.getUsername(context));
+        long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
         String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
-        long courseId = db.getCourseID(shortName);
-        Course c = db.getCourse(courseId, userId);
+        long courseId = getDbHelper().getCourseID(shortName);
+        Course c = getDbHelper().getCourse(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
 
         deleteTestCourse(c, context);
 
-        c = db.getCourse(courseId, userId);
+        c = getDbHelper().getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
 
 

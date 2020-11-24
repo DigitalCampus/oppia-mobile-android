@@ -42,39 +42,6 @@
       "visible_byfield":"county",
       "collection_byfield":"county",
       "order": 4
-    },
-
-    {
-      "name":"gender",
-      "label":"Sex",
-      "required":false,
-      "helper_text":"",
-      "type":"choices",
-      "visible_byfield":"role",
-      "visible_byvalue":"!other",
-      "collection": "gender",
-      "order": 5
-    },
-
-    {
-      "name":"year_started",
-      "label":"Year began working as CHA or CHSS",
-      "required":true,
-      "helper_text":"Introduce the four digit year",
-      "visible_byfield":"role",
-      "visible_byvalue":"!other",
-      "type":"int",
-      "order": 6
-    },
-
-    {
-      "name":"employee_id",
-      "label":"Employee ID",
-      "required":true,
-      "visible_byfield":"role",
-      "visible_byvalue":"!other",
-      "type":"str",
-      "order": 7
     }
 
   ],
@@ -83,20 +50,12 @@
     {
       "collection_name": "roles",
       "items":[
-        {"id": "CHA", "value":"CHA"},
-        {"id": "CHSS", "value":"CHSS"},
+        {"id": "role1", "value":"Role1"},
+        {"id": "role2", "value":"Role2"},
         {"id": "other", "value":"Other"}
       ]
     },
 
-    {
-      "collection_name": "gender",
-      "items": [
-        {"id": "male", "value":"Male"},
-        {"id": "female", "value":"Female"},
-        {"id": "other", "value":"Other"}
-      ]
-    },
     {
       "collection_name": "counties",
       "items": [
@@ -123,10 +82,21 @@
   ],
 
   "register_steps": [
+
     {
       "order": 1,
       "title":"First step",
-      "helper_text":"Please select your role and press on the \"Next\" button.",
+      "helper_text":"First step",
+      "fields":[
+        "username",
+        "password",
+        "passwordagain"
+      ]
+    },
+    {
+      "order": 2,
+      "title":"Second step",
+      "helper_text":"Second step",
       "fields":[
         "role",
         "role_other"
@@ -134,81 +104,32 @@
     },
 
     {
-      "order": 2,
+      "order": 3,
       "title":"Personal info",
-      "helper_text":"Introduce your personal info (all fields required)",
+      "helper_text":"Personal info",
       "conditional_byfield":"role",
       "conditional_byvalue":"!other",
       "fields":[
         "first_name",
         "last_name",
-        "employee_id",
-        "gender"
+        "county",
+        "district"
       ]
     },
 
     {
-      "order": 2,
-      "title":"Personal info",
+      "order": 3,
+      "title":"Personal info (other)",
       "conditional_byfield":"role",
       "conditional_byvalue":"other",
-      "helper_text":"Introduce your personal info",
+      "helper_text":"Other role info",
       "fields":[
         "first_name",
         "last_name",
         "email"
       ]
-    },
-
-    {
-      "order": 3,
-      "title":"Extra data",
-      "conditional_byfield":"role",
-      "conditional_byvalue":"other",
-      "helper_text":"Please fill the additional personal info",
-      "fields":[
-        "phoneno",
-        "organisation",
-        "jobtitle"
-      ]
-    },
-    {
-      "order": 3,
-      "title":"Extra data",
-      "conditional_byfield":"role",
-      "conditional_byvalue":"!other",
-      "helper_text":"Please select the year you began working in your role and your county and then select your district",
-      "fields":[
-        "county",
-        "district",
-        "year_started"
-      ]
-    },
-
-    {
-      "order": 4,
-      "title":"Login info",
-      "conditional_byfield":"role",
-      "conditional_byvalue":"other",
-      "helper_text":"Please enter your login info",
-      "fields":[
-        "username",
-        "password",
-        "passwordagain"
-      ]
-    },
-
-    {
-      "order": 4,
-      "title":"Login info",
-      "conditional_byfield":"role",
-      "conditional_byvalue":"!other",
-      "helper_text":"Please enter a password. It must have at least 6 characters",
-      "fields":[
-        "password",
-        "passwordagain"
-      ]
     }
+
   ]
 
 

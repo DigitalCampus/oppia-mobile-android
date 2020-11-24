@@ -43,7 +43,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class UrlWidget extends WidgetFactory {
+public class UrlWidget extends BaseWidget {
 
 	public static final String TAG = UrlWidget.class.getSimpleName();	
 	

@@ -5,7 +5,6 @@ import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.Course;
@@ -28,15 +27,18 @@ import java.util.concurrent.CountDownLatch;
 
 import Utils.CourseUtils;
 import Utils.FileUtils;
+import database.BaseTestDB;
+
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import static Utils.CourseUtils.runInstallCourseTask;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 @RunWith(Parameterized.class)
-public class InstallDownloadedCoursesTest {
+public class InstallDownloadedCoursesTest extends BaseTestDB {
     public static final String TAG = InstallDownloadedCoursesTest.class.getSimpleName();
 
 
@@ -46,6 +48,7 @@ public class InstallDownloadedCoursesTest {
     private final String INCORRECT_COURSE = "Incorrect_Course.zip";
     private final String NOXML_COURSE = "NoXML_Course.zip";
     private final String MALFORMEDXML_COURSE = "MalformedXML_Course.zip";
+    private final String INSECURE_COURSE = "Insecure_Course.zip";
 
     private Context context;
     private SharedPreferences prefs;
@@ -63,6 +66,7 @@ public class InstallDownloadedCoursesTest {
 
     @Before
     public void setUp() throws Exception {
+        super.setUp();
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -160,12 +164,21 @@ public class InstallDownloadedCoursesTest {
         assertEquals(0, children.length);    //Check that the course does not exists in the "modules" directory
 
         String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
-        DbHelper db = DbHelper.getInstance(context);
-        long courseId = db.getCourseID(shortName);
-        long userId = db.getUserId(SessionManager.getUsername(context));
-        Course c = db.getCourse(courseId, userId);
+        long courseId = getDbHelper().getCourseID(shortName);
+        long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
+        Course c = getDbHelper().getCourse(courseId, userId);
         assertNull(c);   //Check that the course exists in the database
 
+    }
+
+    @Test
+    public void installCourse_insecureCourse()throws Exception {
+
+        CourseUtils.cleanUp();
+        copyCourseFromAssets(INSECURE_COURSE);
+        response = runInstallCourseTask(context);//Run test task
+
+        assertFalse(response.isResult());
     }
 
   /*  @Test
@@ -193,9 +206,9 @@ public class InstallDownloadedCoursesTest {
         assertFalse(finalPath.exists()); //Check that the course exists in the "modules" directory
 
         DbHelper db = DbHelper.getInstance(context);
-        long courseId = db.getCourseID(shortTitle);
-        long userId = db.getUserId(SessionManager.getUsername(context));
-        Course c = db.getCourse(courseId, userId);
+        long courseId = getDbHelper().getCourseID(shortTitle);
+        long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
+        Course c = getDbHelper().getCourse(courseId, userId);
         assertNull(c);   //Check that the course exists in the database
 
     }*/
@@ -221,10 +234,10 @@ public class InstallDownloadedCoursesTest {
         assertEquals(0, children.length);    //Check that the course does not exists in the "modules" directory
 
         String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
-        DbHelper db = DbHelper.getInstance(context);
-        long courseId = db.getCourseID(shortName);
-        long userId = db.getUserId(SessionManager.getUsername(context));
-        Course c = db.getCourse(courseId, userId);
+
+        long courseId = getDbHelper().getCourseID(shortName);
+        long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
+        Course c = getDbHelper().getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
 
     }
@@ -273,13 +286,13 @@ public class InstallDownloadedCoursesTest {
         assertEquals(1, children.length);    //Check that the course exists in the "modules" directory
 
         String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
-        DbHelper db = DbHelper.getInstance(context);
-        long courseId = db.getCourseID(shortName);
-        long userId = db.getUserId(SessionManager.getUsername(context));
-        Course c = db.getCourse(courseId, userId);
+
+        long courseId = getDbHelper().getCourseID(shortName);
+        long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
+        Course c = getDbHelper().getCourse(courseId, userId);
         assertNotNull(c);                   //Check that the course exists in the database
-        db.deleteCourse((int) courseId);    //Delete course from database
-        c = db.getCourse(courseId, userId);
+        getDbHelper().deleteCourse((int) courseId);    //Delete course from database
+        c = getDbHelper().getCourse(courseId, userId);
         assertNull(c);                      //Check that the course does not exists in the database
 
         installCourse_correctCourse();
@@ -287,39 +300,6 @@ public class InstallDownloadedCoursesTest {
 
     private void copyCourseFromAssets(String filename){
         FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
-    }
-
-    public static Payload runInstallCourseTask(Context context){
-
-        final CountDownLatch signal = new CountDownLatch(1);  //Control AsyncTask sincronization for testing
-        ArrayList<Object> data = new ArrayList<>();
-        Payload payload = new Payload(data);
-        final Payload[] response = new Payload[1];
-        response[0] = null;
-        InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
-        imTask.setInstallerListener(new InstallCourseListener() {
-            @Override
-            public void installComplete(Payload r) {
-                Log.d(TAG, "Course installation complete!");
-                response[0] = r;
-                signal.countDown();
-            }
-
-            @Override
-            public void installProgressUpdate(DownloadProgress dp) {
-                Log.d(TAG, "Course installation progress: " + dp.getProgress());
-
-            }
-        });
-        imTask.execute(payload);
-
-        try {
-            signal.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return response[0];
     }
 
 }

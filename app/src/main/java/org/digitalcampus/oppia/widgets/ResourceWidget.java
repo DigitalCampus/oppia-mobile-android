@@ -56,7 +56,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ResourceWidget extends WidgetFactory {
+public class ResourceWidget extends BaseWidget {
 
 	public static final String TAG = ResourceWidget.class.getSimpleName();
 
@@ -100,8 +100,8 @@ public class ResourceWidget extends WidgetFactory {
 
 		View vv = inflater.inflate(R.layout.widget_resource, container, false);
 		vv.setId(activity.getActId());
-		if ((savedInstanceState != null) && (savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG) != null)){
-			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG));
+		if ((savedInstanceState != null) && (savedInstanceState.getSerializable(BaseWidget.WIDGET_CONFIG) != null)){
+			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable(BaseWidget.WIDGET_CONFIG));
 		}
 		return vv;
 	}
@@ -109,7 +109,7 @@ public class ResourceWidget extends WidgetFactory {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable(WidgetFactory.WIDGET_CONFIG, (Serializable) this.getWidgetConfig());
+		outState.putSerializable(BaseWidget.WIDGET_CONFIG, (Serializable) this.getWidgetConfig());
 	}
 	
 	@Override
@@ -250,7 +250,7 @@ public class ResourceWidget extends WidgetFactory {
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
 		HashMap<String, Object> config = new HashMap<>();
-		config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
+		config.put(BaseWidget.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
 		config.put(PROPERTY_RESOURCE_VIEWING, this.isResourceViewing());
 		config.put(PROPERTY_RESOURCE_STARTTIME, this.getResourceStartTime());
 		config.put(PROPERTY_RESOURCE_FILENAME, this.getResourceFileName());
@@ -259,8 +259,8 @@ public class ResourceWidget extends WidgetFactory {
 
 	@Override
 	public void setWidgetConfig(HashMap<String, Object> config) {
-		if (config.containsKey(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME)){
-			this.setStartTime((Long) config.get(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME));
+		if (config.containsKey(BaseWidget.PROPERTY_ACTIVITY_STARTTIME)){
+			this.setStartTime((Long) config.get(BaseWidget.PROPERTY_ACTIVITY_STARTTIME));
 		}
 		if (config.containsKey(PROPERTY_RESOURCE_VIEWING)){
 			this.setResourceViewing((Boolean) config.get(PROPERTY_RESOURCE_VIEWING));

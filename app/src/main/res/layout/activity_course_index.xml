@@ -3,55 +3,59 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <View
-        android:id="@+id/subtitle_placeholder"
-        android:layout_width="match_parent"
-        android:background="@color/subtitle_bar"
-        android:layout_height="80dp"
-        android:layout_below="@id/toolbar"
-        />
-
-    <org.digitalcampus.oppia.utils.ui.ExpandableRecyclerView
-        android:id="@+id/section_list"
+    <FrameLayout
+        android:id="@+id/view_course_sections"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:cacheColorHint="#00000000"
-        android:divider="@color/list_divider"
-        android:foreground="?android:windowContentOverlay"
-        android:orientation="vertical"
-        app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/row_course_index_section_item" />
+        android:layout_below="@id/toolbar">
 
-    <LinearLayout
-        android:id="@+id/loading_course"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_below="@id/subtitle_placeholder"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <ProgressBar
-            android:id="@+id/progressBar2"
-            style="?android:attr/progressBarStyleLarge"
+        <org.digitalcampus.oppia.utils.ui.ExpandableRecyclerView
+            android:id="@+id/recycler_course_sections"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
+            android:layout_height="match_parent"
+            android:cacheColorHint="#00000000"
+            android:divider="@color/list_divider"
+            android:foreground="?android:windowContentOverlay"
+            android:orientation="vertical"
+            app:layoutManager="LinearLayoutManager"
+            tools:listitem="@layout/row_course_index_section_item" />
 
-        <TextView
-            android:id="@+id/textView"
-            style="@style/SmallTextDark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:id="@+id/loading_course"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:text="@string/loading_course" />
-    </LinearLayout>
+            android:gravity="center"
+            android:orientation="vertical">
 
+            <ProgressBar
+                android:id="@+id/progressBar2"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/textView"
+                style="@style/SmallTextDark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/loading_course" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <org.digitalcampus.oppia.utils.ui.MediaScanView
+        android:id="@+id/view_media_scan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar" />
 </RelativeLayout>

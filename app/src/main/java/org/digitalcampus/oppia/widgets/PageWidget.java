@@ -52,7 +52,7 @@ import java.util.HashMap;
 import androidx.annotation.NonNull;
 import androidx.core.text.HtmlCompat;
 
-public class PageWidget extends WidgetFactory {
+public class PageWidget extends BaseWidget {
 
 	public static final String TAG = PageWidget.class.getSimpleName();
 
@@ -81,8 +81,8 @@ public class PageWidget extends WidgetFactory {
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		isBaseline = getArguments().getBoolean(CourseActivity.BASELINE_TAG);
 		vv.setId(activity.getActId());
-		if ((savedInstanceState != null) && (savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG) != null)){
-			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG));
+		if ((savedInstanceState != null) && (savedInstanceState.getSerializable(BaseWidget.WIDGET_CONFIG) != null)){
+			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable(BaseWidget.WIDGET_CONFIG));
 		}
 		return vv;
 	}
@@ -90,7 +90,7 @@ public class PageWidget extends WidgetFactory {
 	@Override
 	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable(WidgetFactory.WIDGET_CONFIG, (Serializable) getWidgetConfig());
+		outState.putSerializable(BaseWidget.WIDGET_CONFIG, (Serializable) getWidgetConfig());
 	}
 	
 	@Override
@@ -196,23 +196,23 @@ public class PageWidget extends WidgetFactory {
 
 	@Override
 	public void setWidgetConfig(HashMap<String, Object> config) {
-		if (config.containsKey(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME)) {
-			this.setStartTime((Long) config.get(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME));
+		if (config.containsKey(BaseWidget.PROPERTY_ACTIVITY_STARTTIME)) {
+			this.setStartTime((Long) config.get(BaseWidget.PROPERTY_ACTIVITY_STARTTIME));
 		}
-		if (config.containsKey(WidgetFactory.PROPERTY_ACTIVITY)) {
-			activity = (Activity) config.get(WidgetFactory.PROPERTY_ACTIVITY);
+		if (config.containsKey(BaseWidget.PROPERTY_ACTIVITY)) {
+			activity = (Activity) config.get(BaseWidget.PROPERTY_ACTIVITY);
 		}
-		if (config.containsKey(WidgetFactory.PROPERTY_COURSE)) {
-			course = (Course) config.get(WidgetFactory.PROPERTY_COURSE);
+		if (config.containsKey(BaseWidget.PROPERTY_COURSE)) {
+			course = (Course) config.get(BaseWidget.PROPERTY_COURSE);
 		}
 	}
 
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
 		HashMap<String, Object> config = new HashMap<>();
-		config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
-		config.put(WidgetFactory.PROPERTY_ACTIVITY, this.activity);
-		config.put(WidgetFactory.PROPERTY_COURSE, this.course);
+		config.put(BaseWidget.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
+		config.put(BaseWidget.PROPERTY_ACTIVITY, this.activity);
+		config.put(BaseWidget.PROPERTY_COURSE, this.course);
 		return config;
 	}
 

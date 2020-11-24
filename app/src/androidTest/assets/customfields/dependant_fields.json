@@ -1,0 +1,78 @@
+{
+  "fields": [
+    {
+      "name":"role",
+      "label":"Position",
+      "required":true,
+      "helper_text":"",
+      "type":"choices",
+      "collection":"roles",
+      "order": 1
+    },
+
+    {
+      "name":"role_other",
+      "label":"Please specify",
+      "order":2,
+      "required":true,
+      "visible_byfield":"role",
+      "visible_byvalue":"other",
+      "type":"str"
+    }
+
+  ],
+
+  "collections": [
+    {
+      "collection_name": "roles",
+      "items":[
+        {"id": "role1", "value":"Role1"},
+        {"id": "role2", "value":"Role2"},
+        {"id": "other", "value":"Other"}
+      ]
+    }
+  ],
+
+  "register_steps": [
+
+    {
+      "order": 1,
+      "title":"First step",
+      "helper_text":"Second step",
+      "fields":[
+        "role",
+        "role_other"
+      ]
+    },
+
+    {
+      "order": 2,
+      "title":"Personal info",
+      "helper_text":"Personal info",
+      "conditional_byfield":"role",
+      "conditional_byvalue":"!other",
+      "fields":[
+        "first_name",
+        "last_name",
+        "county",
+        "district"
+      ]
+    },
+
+    {
+      "order": 2,
+      "title":"Personal info (other)",
+      "conditional_byfield":"role",
+      "conditional_byvalue":"other",
+      "helper_text":"Other role info",
+      "fields":[
+        "first_name",
+        "last_name",
+        "email"
+      ]
+    }
+
+  ]
+
+
+}
