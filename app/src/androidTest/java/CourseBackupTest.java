@@ -80,7 +80,7 @@ public class CourseBackupTest extends BaseTestDB {
         CourseUtils.cleanUp();
 
         copyCourseFromAssets(CORRECT_COURSE);
-        response = InstallDownloadedCoursesTest.runInstallCourseTask(context);//Run test task
+        response = CourseUtils.runInstallCourseTask(context);//Run test task
 
         // Check if result is true
         assertTrue(response.isResult());
@@ -115,7 +115,7 @@ public class CourseBackupTest extends BaseTestDB {
         assertEquals(0, children.length);
 
         // Try to install again from backup file
-        response = InstallDownloadedCoursesTest.runInstallCourseTask(context);//Run test task
+        response = CourseUtils.runInstallCourseTask(context);//Run test task
         // Check if result is true
         assertTrue(response.isResult());
         courseId = getDbHelper().getCourseID(shortName);
