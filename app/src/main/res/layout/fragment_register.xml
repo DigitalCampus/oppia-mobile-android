@@ -164,7 +164,8 @@
             <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                 android:id="@+id/register_form_phoneno_field"
                 style="@style/Oppia.CustomField.TextInputLayout"
-                android:layout_marginTop="@dimen/margin_medium">
+                android:layout_marginTop="@dimen/margin_medium"
+                app:required="true">
 
                 <EditText
                     android:layout_width="match_parent"

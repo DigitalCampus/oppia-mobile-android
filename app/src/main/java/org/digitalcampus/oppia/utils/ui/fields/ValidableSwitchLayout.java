@@ -81,6 +81,10 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
 
     @Override
     public boolean validate() {
+        if (input == null || this.getVisibility() == GONE){
+            return true;
+        }
+
         boolean valid = !required || input.isChecked();
         if (valid && validator != null){
             valid = validator.validate(this);
