@@ -152,6 +152,10 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
 
     @Override
     public boolean validate() {
+        if (input == null || this.getVisibility() == GONE){
+            return true;
+        }
+
         boolean valid = !required || selected;
         if (valid && validator != null){
             valid = validator.validate(this);
