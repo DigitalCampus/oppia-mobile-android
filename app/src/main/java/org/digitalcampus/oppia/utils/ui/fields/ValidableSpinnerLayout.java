@@ -185,7 +185,7 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
 
     @Override
     public String getCleanedValue() {
-        if (items == null || items.isEmpty()){
+        if (!selected || items == null || items.isEmpty()){
             return null;
         }
         int pos = input.getSelectedItemPosition();
