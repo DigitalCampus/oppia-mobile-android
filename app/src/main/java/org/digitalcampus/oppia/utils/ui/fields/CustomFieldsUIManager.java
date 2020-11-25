@@ -295,6 +295,8 @@ public class CustomFieldsUIManager {
                 if (dependant != null) {
                     setDependencyVisibility(field, input, dependant.getCleanedValue());
                 }
+                // If it's found, we don't need to keep traversing the list
+                break;
             }
         }
     }
