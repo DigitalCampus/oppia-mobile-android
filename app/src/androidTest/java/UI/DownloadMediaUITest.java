@@ -45,55 +45,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 
 @RunWith(AndroidJUnit4.class)
-public class DownloadMediaUITest {
+public class DownloadMediaUITest extends CourseMediaBaseTest {
 
-    private static final String COURSE_WITH_NO_MEDIA = "Course_with_no_media.zip";
-    private static final String COURSE_WITH_MEDIA_1 = "Course_with_media_1.zip";
-    private static final String COURSE_WITH_MEDIA_2 = "Course_with_media_2.zip";
-
-    private static final String MEDIA_FILE_VIDEO_TEST_1 = "video-test-1.mp4";
-    private static final String MEDIA_FILE_VIDEO_TEST_2 = "video-test-2.mp4";
-
-    @Mock
-    CoursesRepository coursesRepository;
-    private Context context;
-    private TestDBHelper testDBHelper;
-
-    @Before
-    public void setUp() throws Exception {
-        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-
-        // First ensure to use in-memory database
-        testDBHelper = new TestDBHelper(InstrumentationRegistry.getInstrumentation().getTargetContext());
-        testDBHelper.setUp();
-
-        StorageAccessStrategy storageStrategy = new ExternalStorageStrategy();
-        Storage.setStorageStrategy(storageStrategy);
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageStrategy.getStorageType());
-        storageStrategy.updateStorageLocation(context);
-        editor.commit();
-
-        CourseUtils.cleanUp();
-    }
-
-
-    @After
-    public void tearDown() throws Exception {
-        testDBHelper.tearDown();
-        CourseUtils.cleanUp();
-    }
-
-    private void copyCourseFromAssets(String filename){
-        FileUtils.copyZipFromAssetsPath(context, "courses_media", filename);  //Copy course zip from assets to download path
-    }
-
-    private void copyMediaFromAssets(String filename){
-        File mediaPath = new File(Storage.getMediaPath(context));
-        FileUtils.copyFileFromAssets(context, "courses_media", filename, mediaPath);  //Copy course zip from assets to download path
-    }
 
     @Test
     public void main_mediaViewHiddenWhenThereAreNoCourses(){
