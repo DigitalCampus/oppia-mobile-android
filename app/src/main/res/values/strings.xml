@@ -167,9 +167,9 @@
 
     <string name="register_form_username_title">Username</string>
     <string name="register_form_email_title">Email address</string>
-    <string name="register_form_firstname_title">First name</string>
+    <string name="register_form_firstname_title">First name (name)</string>
     <string name="register_form_jobtitle_title">Job Title</string>
-    <string name="register_form_lastname_title">Last name</string>
+    <string name="register_form_lastname_title">Last name (father\'s name)</string>
     <string name="register_form_organisation_title">Organisation</string>
     <string name="register_form_password_title">Password</string>
     <string name="register_form_password_again_title">Password (again)</string>
