@@ -7,16 +7,23 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Section;
+import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
+import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.storage.*;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+
+import database.TestDBHelper;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -112,4 +119,39 @@ public class CourseUtils {
         return completeCourse;
 
     }
+
+
+    public static Payload runInstallCourseTask(Context context){
+
+        final CountDownLatch signal = new CountDownLatch(1);  //Control AsyncTask sincronization for testing
+        ArrayList<Object> data = new ArrayList<>();
+        Payload payload = new Payload(data);
+        final Payload[] response = new Payload[1];
+        response[0] = null;
+        InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
+        imTask.setInstallerListener(new InstallCourseListener() {
+            @Override
+            public void installComplete(Payload r) {
+                Log.d(TAG, "Course installation complete!");
+                response[0] = r;
+                signal.countDown();
+            }
+
+            @Override
+            public void installProgressUpdate(DownloadProgress dp) {
+                Log.d(TAG, "Course installation progress: " + dp.getProgress());
+
+            }
+        });
+        imTask.execute(payload);
+
+        try {
+            signal.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return response[0];
+    }
+
 }

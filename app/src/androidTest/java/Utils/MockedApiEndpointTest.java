@@ -30,12 +30,7 @@ public abstract class MockedApiEndpointTest {
     @Rule
     public DaggerMockRule<AppComponent> daggerRule =
             new DaggerMockRule<>(AppComponent.class, new AppModule(getApp())).set(
-                    new DaggerMockRule.ComponentSetter<AppComponent>() {
-                        @Override
-                        public void setComponent(AppComponent component) {
-                            getApp().setComponent(component);
-                        }
-                    });
+                    component -> getApp().setComponent(component));
 
     @Mock
     protected ApiEndpoint apiEndpoint;

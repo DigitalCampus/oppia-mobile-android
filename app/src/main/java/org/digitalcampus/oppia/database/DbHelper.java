@@ -190,7 +190,6 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String USER_C_ORGANIZATION = "organisation";
     private static final String USER_C_PHONE = "phoneNo";
 
-
     private static final String CUSTOM_FIELD_TABLE = "customfield";
     private static final String CUSTOM_FIELD_C_ID = BaseColumns._ID;
     private static final String CUSTOM_FIELD_C_KEY = "field_key";
@@ -222,8 +221,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
     // Constructor
-    private DbHelper(Context ctx) { //
-        super(ctx, DB_NAME, null, DB_VERSION);
+    private DbHelper(Context ctx, String dbName) { //
+        super(ctx, dbName, null, DB_VERSION);
         prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         db = this.getWritableDatabase();
         this.ctx = ctx;
@@ -231,15 +230,29 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public static synchronized DbHelper getInstance(Context ctx) {
         if (instance == null) {
-            instance = new DbHelper(ctx.getApplicationContext());
+            instance = new DbHelper(ctx, DB_NAME);
+        }
+        return instance;
+    }
+
+    public static void clearInstance() {
+        instance = null;
+    }
+
+    public static synchronized DbHelper getInMemoryInstance(Context ctx) {
+        if (instance == null) {
+            instance = new DbHelper(ctx, null); // null dbName creates a "in memory" database
         }
         return instance;
     }
 
     public synchronized void resetDatabase() {
         //Remove the data from all the tables
-        List<String> tables = Arrays.asList(USER_TABLE, SEARCH_TABLE, QUIZATTEMPTS_TABLE,
-                TRACKER_LOG_TABLE, ACTIVITY_TABLE, COURSE_TABLE);
+
+        List<String> tables = Arrays.asList(COURSE_TABLE, COURSE_GAME_TABLE, ACTIVITY_TABLE,
+                ACTIVITY_GAME_TABLE, TRACKER_LOG_TABLE, QUIZATTEMPTS_TABLE, SEARCH_TABLE,
+                USER_TABLE, CUSTOM_FIELD_TABLE, CUSTOM_FIELDS_COLLECTION_TABLE, USER_CF_TABLE);
+
         for (String tablename : tables) {
             db.delete(tablename, null, null);
         }

@@ -145,6 +145,7 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
         Intent i = new Intent(this, CourseIndexActivity.class);
         Bundle tb = new Bundle();
         tb.putSerializable(Course.TAG, course);
+        tb.putBoolean(CourseIndexActivity.EXTRA_FROM_WEBLINK, true);
         i.putExtras(tb);
         startActivity(i);
         finish();

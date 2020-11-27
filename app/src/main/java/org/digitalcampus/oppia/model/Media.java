@@ -44,7 +44,12 @@ public class Media implements Serializable{
 	public Media(){
 		courses = new ArrayList<>();
 	}
-	
+
+	public Media(String filename, int lenght) {
+		this.filename = filename;
+		this.length = lenght;
+	}
+
 	public String getFilename() {
 		return filename;
 	}

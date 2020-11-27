@@ -47,26 +47,23 @@ import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
 import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
+import org.digitalcampus.oppia.utils.ui.MediaScanView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
 
 
 public class CoursesListFragment extends AppFragment implements SharedPreferences.OnSharedPreferenceChangeListener,
-        ScanMediaListener,
         DeleteCourseListener,
         CourseInstallerListener,
         UpdateActivityListener, CoursesListAdapter.OnItemClickListener {
 
     private ArrayList<Course> courses;
     private Course tempCourse;
-    private int initialCourseListPadding = 0;
 
-    private TextView messageText;
-    private Button messageButton;
-    private View messageContainer;
     private View noCoursesView;
 
     private ProgressDialog progressDialog;
@@ -75,20 +72,17 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     @Inject CoursesRepository coursesRepository;
     @Inject SharedPreferences sharedPrefs;
     @Inject ApiEndpoint apiEndpoint;
-    private LinearLayout llLoading;
     private TextView tvManageCourses;
     private Button manageBtn;
     private RecyclerView recyclerCourses;
     private CoursesListAdapter adapterListCourses;
+    private MediaScanView mediaScanView;
 
     private void findViews(View layout) {
 
-        messageContainer = layout.findViewById(R.id.home_messages);
-        messageText = layout.findViewById(R.id.home_message);
-        messageButton = layout.findViewById(R.id.message_action_button);
+        mediaScanView = layout.findViewById(R.id.view_media_scan);
         recyclerCourses = layout.findViewById(R.id.recycler_courses);
         noCoursesView = layout.findViewById(R.id.no_courses);
-        llLoading = layout.findViewById(R.id.loading_courses);
 
         tvManageCourses = layout.findViewById(R.id.manage_courses_text);
         manageBtn = layout.findViewById(R.id.manage_courses_btn);
@@ -122,7 +116,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         adapterListCourses.setOnItemClickListener(this);
         recyclerCourses.setAdapter(adapterListCourses);
 
-        initialCourseListPadding = recyclerCourses.getPaddingTop();
+        mediaScanView.setViewBelow(recyclerCourses);
+        mediaScanView.setUpdateMediaScan(true);
 
         return layout;
     }
@@ -159,8 +154,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         courses.clear();
         courses.addAll(coursesRepository.getCourses(getActivity()));
 
-        llLoading.setVisibility(View.GONE);
-
         if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY){
             displayDownloadSection();
         } else {
@@ -169,7 +162,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         }
 
         adapterListCourses.notifyDataSetChanged();
-        this.scanMedia();
+
+        mediaScanView.scanMedia(courses);
     }
 
     private void displayDownloadSection(){
@@ -269,77 +263,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
             displayCourses();
         }
 
-    }
-
-    //region ScanMedia
-    ///Everything related to the ScanMediaTask, including UI management
-
-    private void scanMedia() {
-
-        if (Media.shouldScanMedia(sharedPrefs)){
-            ScanMediaTask task = new ScanMediaTask(getActivity());
-            Payload p = new Payload(this.courses);
-            task.setScanMediaListener(this);
-            task.execute(p);
-        }
-        else{
-            hideScanMediaMessage();
-        }
-    }
-
-    private void animateScanMediaMessage(){
-        TranslateAnimation anim = new TranslateAnimation(0, 0, -200, 0);
-        anim.setDuration(900);
-        messageContainer.startAnimation(anim);
-
-        messageContainer.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        ValueAnimator animator = ValueAnimator.ofInt(initialCourseListPadding, messageContainer.getMeasuredHeight());
-        animator.addUpdateListener(valueAnimator -> recyclerCourses.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0));
-        animator.setStartDelay(200);
-        animator.setDuration(700);
-        animator.start();
-    }
-
-    private void hideScanMediaMessage(){
-        messageContainer.setVisibility(View.GONE);
-        recyclerCourses.setPadding(0, initialCourseListPadding, 0, 0);
-    }
-
-    /* ScanMediaListener implementation */
-    public void scanStart() {
-        messageText.setText(this.getString(R.string.info_scan_media_start));
-    }
-
-    public void scanProgressUpdate(String msg) {
-        messageText.setText(this.getString(R.string.info_scan_media_checking, msg));
-    }
-
-    public void scanComplete(Payload response) {
-        if (!response.getResponseData().isEmpty()) {
-            if (messageContainer.getVisibility() != View.VISIBLE){
-                messageContainer.setVisibility(View.VISIBLE);
-                messageButton.setOnClickListener(view -> {
-                    @SuppressWarnings("unchecked")
-                    ArrayList<Object> m = (ArrayList<Object>) view.getTag();
-                    Intent i = new Intent(getActivity(), DownloadMediaActivity.class);
-                    Bundle tb = new Bundle();
-                    tb.putSerializable(DownloadMediaActivity.MISSING_MEDIA, m);
-                    i.putExtras(tb);
-                    startActivity(i);
-                });
-                animateScanMediaMessage();
-            }
-
-            messageText.setText(this.getString(R.string.info_scan_media_missing));
-            messageButton.setText(this.getString(R.string.scan_media_download_button));
-            messageButton.setTag(response.getResponseData());
-            Media.resetMediaScan(prefs);
-        } else {
-            hideScanMediaMessage();
-            messageButton.setOnClickListener(null);
-            messageButton.setTag(null);
-            Media.updateMediaScan(prefs);
-        }
     }
 
     @Override

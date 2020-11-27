@@ -5,109 +5,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/loading_courses"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_courses"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dip"
-                android:gravity="center"
-                android:text="@string/loading_courses"
-                android:textColor="@color/text_light"
-                android:textSize="18sp" />
-        </LinearLayout>
+            android:visibility="visible"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            tools:listitem="@layout/row_course_list" />
 
         <LinearLayout
+            android:id="@+id/no_courses"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_courses"
+            <ImageView
+                android:id="@+id/empty_state_img"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                tools:listitem="@layout/row_course_list" />
+                android:contentDescription="@string/no_courses"
+                app:srcCompat="@drawable/empty_state_add" />
 
-            <LinearLayout
-                android:id="@+id/no_courses"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <TextView
+                android:id="@+id/manage_courses_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:text="@string/no_courses" />
 
-                <ImageView
-                    android:id="@+id/empty_state_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/empty_state_add"
-                    android:contentDescription="@string/no_courses" />
-
-                <TextView
-                    android:id="@+id/manage_courses_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:text="@string/no_courses" />
-
-                <Button
-                    android:id="@+id/manage_courses_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:text="@string/title_download_activity" />
-
-            </LinearLayout>
+            <Button
+                android:id="@+id/manage_courses_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:text="@string/title_download_activity" />
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/home_messages"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/subtitle_bar"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="@dimen/padding_medium"
-            android:visibility="gone"
-            android:weightSum="1.0">
+    </LinearLayout>
 
-            <Button
-                android:id="@+id/message_action_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding_medium"
-                android:layout_marginStart="@dimen/padding_medium"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:text="@string/scan_media_download_button"
-                android:textColor="@color/text_dark"
-                 />
-
-            <TextView
-                android:id="@+id/home_message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/message_action_button"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@id/message_action_button"
-                android:gravity="center_vertical"
-                android:textColor="@color/text_dark"
-                android:textSize="14sp"
-                 />
-
-        </RelativeLayout>
+    <org.digitalcampus.oppia.utils.ui.MediaScanView
+        android:id="@+id/view_media_scan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </FrameLayout>
