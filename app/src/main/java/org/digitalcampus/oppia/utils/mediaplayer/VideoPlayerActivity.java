@@ -1,19 +1,19 @@
-/* 
+/*
  * This file is part of OppiaMobile - https://digital-campus.org/
- * 
+ *
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * OppiaMobile is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * - See more at: http://www.brightec.co.uk/blog/custom-android-media-controller#sthash.v281GcNw.dpuf
  */
 
@@ -50,11 +50,11 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 
 	public static final String TAG = VideoPlayerActivity.class.getSimpleName();
 	public static final String MEDIA_TAG = "mediaFileName";
-	
+
     SurfaceView videoSurface;
     MediaPlayer player;
     VideoControllerView controller;
-    
+
     private String mediaFileName;
     private long startTime = System.currentTimeMillis()/1000;
     private Activity activity;
@@ -76,7 +76,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         player = new MediaPlayer();
 
         controller = new VideoControllerView(this);
-        
+
         Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			mediaFileName = (String) bundle.getSerializable(MEDIA_TAG);
@@ -85,7 +85,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 		} else {
 			this.finish();
 		}
-        
+
         try {
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             player.setDataSource(this, Uri.parse(Storage.getMediaPath(this) + mediaFileName));
@@ -120,40 +120,63 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         videoHolder.addCallback(this);
     }
 
-    
+
     @Override
     protected void onStop(){
         super.onStop();
 
-    	saveTracker();
-        controller.setMediaPlayer(null);
-        if (player != null ) player.reset();
     }
-    
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         controller.show();
         return false;
     }
 
-    private void saveTracker(){
-    	long endTime = System.currentTimeMillis() / 1000;
-		long timeTaken = endTime - startTime;
+    @Override
+    public void finish() {
 
-		// digest should be that of the video not the page
+        saveTracker();
+        controller.setMediaPlayer(null);
+        if (player != null ) {
+            try {
+                player.reset();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
+        }
+
+        super.finish();
+    }
+
+    private void saveTracker() {
+        long endTime = System.currentTimeMillis() / 1000;
+        long timeTaken = endTime - startTime;
+
+        // digest should be that of the video not the page
         Log.d(TAG, "Attempting to save media tracker. Time: " + timeTaken);
 
-		for (Media m : this.activity.getMedia()) {
-		    Log.d(TAG, mediaFileName + "/" + m.getFilename());
-			if (m.getFilename().equals(mediaFileName)) {
-				Log.d(TAG,"saving tracker... " + m.getLength());
-				boolean completed = (timeTaken >= m.getLength());
-                new GamificationServiceDelegate(this)
-                        .createActivityIntent(course, activity, completed, false)
-                        .registerMediaPlaybackEvent(timeTaken, mediaFileName);
-			}
-		}
-	}
+        Media media = getMedia();
+        Log.d(TAG, "saving tracker... " + media.getLength());
+        boolean completed = (timeTaken >= media.getLength());
+        new GamificationServiceDelegate(this)
+                .createActivityIntent(course, activity, completed, false)
+                .registerMediaPlaybackEvent(timeTaken, mediaFileName);
+
+        setResult(completed ? RESULT_OK : RESULT_CANCELED); // For testing purposes
+
+    }
+
+    private Media getMedia() {
+
+        for (Media m : this.activity.getMedia()) {
+            Log.d(TAG, mediaFileName + "/" + m.getFilename());
+            if (m.getFilename().equals(mediaFileName)) {
+                return m;
+            }
+        }
+        return null;
+    }
 
     // Implement MediaPlayer.OnPreparedListener
     public void onPrepared(MediaPlayer mp) {
