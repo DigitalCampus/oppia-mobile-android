@@ -11,7 +11,7 @@
     },
     {
       "name":"region_other",
-      "label":"Other region",
+      "label":"Other region (please specify)",
       "order":1,
       "required":true,
       "helper_text":"",
@@ -82,7 +82,7 @@
       "name":"gender",
       "label":"Gender",
       "order":8,
-      "required":true,
+      "required":false,
       "helper_text":"",
       "collection":"genders",
       "type":"choices"
@@ -169,7 +169,7 @@
     {
       "collection_name": "places_of_work",
       "items":[
-        {"id": "academic_institution", "value":"Academic institution"},
+        {"id": "academic_institution", "value":"Academic institution (e.g. university, college)"},
         {"id": "civil_society_organization", "value":"Civil society organization"},
         {"id": "government_office", "value":"Government office"},
         {"id": "health_center", "value":"Health center"},
@@ -253,7 +253,7 @@
     },
     {
       "order": 4,
-      "title": "Profession",
+      "title": "Profession and place of work",
       "helper_text": "Profession",
       "fields": [
         "profession",
