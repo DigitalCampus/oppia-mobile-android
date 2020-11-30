@@ -367,10 +367,7 @@ public class BluetoothTransferService extends Service {
                 localIntent.putExtra(SERVICE_FILE, trFile);
                 sendOrderedBroadcast(localIntent, null);
 
-                File destinationDir = (CourseTransferableFile
-                        .TYPE_COURSE_BACKUP.equals(type)) ?
-                        new File(Storage.getDownloadPath(BluetoothTransferService.this)) :
-                        new File(Storage.getBluetoothTransferTempPath(BluetoothTransferService.this));
+                File destinationDir = new File(Storage.getBluetoothTransferTempPath(BluetoothTransferService.this));
                 if (!destinationDir.exists()){
                     destinationDir.mkdirs();
                 }
@@ -386,7 +383,11 @@ public class BluetoothTransferService extends Service {
                     sendOrderedBroadcast(localIntent, null);
                 }
                 else{
-                    if (type.equals(CourseTransferableFile.TYPE_COURSE_MEDIA)){
+                    if (type.equals(CourseTransferableFile.TYPE_COURSE_BACKUP)){
+                        File mediaDir = new File(Storage.getDownloadPath(BluetoothTransferService.this));
+                        FileUtils.moveFileToDir(file, mediaDir, true);
+                    }
+                    else if (type.equals(CourseTransferableFile.TYPE_COURSE_MEDIA)){
                         File mediaDir = new File(Storage.getMediaPath(BluetoothTransferService.this));
                         FileUtils.moveFileToDir(file, mediaDir, true);
                     }
