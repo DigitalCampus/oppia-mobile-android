@@ -77,6 +77,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     private RecyclerView recyclerCourses;
     private CoursesListAdapter adapterListCourses;
     private MediaScanView mediaScanView;
+    private View emptyStateImage;
 
     private void findViews(View layout) {
 
@@ -86,6 +87,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         tvManageCourses = layout.findViewById(R.id.manage_courses_text);
         manageBtn = layout.findViewById(R.id.manage_courses_btn);
+        emptyStateImage = layout.findViewById(R.id.empty_state_img);
         
         
     }
@@ -169,10 +171,14 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     private void displayDownloadSection(){
         noCoursesView.setVisibility(View.VISIBLE);
         tvManageCourses.setText((!courses.isEmpty())? R.string.more_courses : R.string.no_courses);
-        manageBtn.setOnClickListener(v ->
-            AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.menu_download, () ->
-                    startActivity(new Intent(getActivity(), TagSelectActivity.class)))
-        );
+        manageBtn.setOnClickListener(v -> onManageCoursesClick());
+        emptyStateImage.setOnClickListener(v -> onManageCoursesClick());
+
+    }
+
+    private void onManageCoursesClick() {
+        AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.menu_download, () ->
+                startActivity(new Intent(getActivity(), TagSelectActivity.class)));
     }
 
     // Recycler callbacks
