@@ -188,6 +188,20 @@ public class MainActivityUITest {
     }
 
     @Test
+    public void showsTagSelectActivityOnClickManageCoursesImage() throws Exception {
+
+        givenThereAreSomeCourses(0);
+
+        mainActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.empty_state_img))
+                .perform(click());
+
+        checkCorrectActivity(TagSelectActivity.class);
+
+    }
+
+    @Test
     public void showsCourseIndexOnCourseClick() throws Exception {
 
         final CompleteCourse completeCourse = CourseUtils.createMockCompleteCourse(5, 7);
