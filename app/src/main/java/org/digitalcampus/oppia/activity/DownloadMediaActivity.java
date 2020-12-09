@@ -195,14 +195,11 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         adapterMedia.sortByFilename();
         recyclerMedia.setAdapter(adapterMedia);
 
-        adapterMedia.setOnItemClickListener(new ListInnerBtnOnClickListener() {
-            @Override
-            public void onClick(int position) {
-                Log.d(TAG, "Clicked " + position);
-                Media mediaToDownload = missingMedia.get(position);
+        adapterMedia.setOnItemClickListener(position -> {
+            Log.d(TAG, "Clicked " + position);
+            Media mediaToDownload = missingMedia.get(position);
 
-                downloadMedia(mediaToDownload, DownloadMode.INDIVIDUALLY);
-            }
+            downloadMedia(mediaToDownload, DownloadMode.INDIVIDUALLY);
         });
 
         Media.resetMediaScan(prefs);
