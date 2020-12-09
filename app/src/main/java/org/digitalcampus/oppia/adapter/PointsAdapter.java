@@ -39,7 +39,7 @@ public class PointsAdapter extends RecyclerView.Adapter<PointsAdapter.PointsView
 
         final Points point = getItemAtPosition(position);
 
-        viewHolder.pointsDescription.setText(point.getDescription());
+        viewHolder.pointsDescription.setText(point.getDescriptionPrettified());
         viewHolder.pointsTime.setText(point.getTimeHoursMinutes());
         viewHolder.pointsDate.setText(point.getDateDayMonth());
         viewHolder.pointsPoints.setText(String.valueOf(point.getPointsAwarded()));
