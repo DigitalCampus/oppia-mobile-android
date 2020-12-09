@@ -312,6 +312,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
             mediaFile.setDownloading(false);
+            mediaFile.setFailed(true);
             mediaFile.setProgress(0);
             adapterMedia.notifyDataSetChanged();
         }

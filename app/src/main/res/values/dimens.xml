@@ -2,6 +2,10 @@
 
     <bool name="is_tablet">false</bool>
 
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+
     <dimen name="padding_medium">8dp</dimen>
     <dimen name="padding_medium_2">16dp</dimen>
     <dimen name="hint_text_size">14sp</dimen>
