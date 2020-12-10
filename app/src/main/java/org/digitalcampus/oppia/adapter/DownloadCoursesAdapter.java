@@ -89,8 +89,10 @@ public class DownloadCoursesAdapter extends MultiChoiceRecyclerViewAdapter<Downl
             viewHolder.courseAuthor.setVisibility(View.GONE);
         }
 
+
+        int actionBtnImageRes;
         if (c.isDownloading() || c.isInstalling()){
-            viewHolder.actionBtn.setImageResource(R.drawable.ic_action_cancel);
+            actionBtnImageRes =  R.drawable.ic_action_cancel;
             viewHolder.actionBtn.setContentDescription(cancelDescription);
             viewHolder.actionBtn.setEnabled(!c.isInstalling());
 
@@ -105,25 +107,27 @@ public class DownloadCoursesAdapter extends MultiChoiceRecyclerViewAdapter<Downl
         }
         else{
             viewHolder.actionProgress.setVisibility(View.GONE);
+
             if(c.isInstalled()){
                 if(c.isToUpdate()){
-                    viewHolder.actionBtn.setImageResource(R.drawable.ic_action_refresh);
+                    actionBtnImageRes = R.drawable.ic_action_refresh;
                     viewHolder.actionBtn.setContentDescription(updateDescription);
                     viewHolder.actionBtn.setEnabled(true);
                 } else {
-                    viewHolder.actionBtn.setImageResource(R.drawable.ic_action_accept);
+                    actionBtnImageRes = R.drawable.ic_action_accept;
                     viewHolder.actionBtn.setContentDescription(installedDescription);
                     viewHolder.actionBtn.setEnabled(false);
                     viewHolder.actionBtn.setVisibility(View.VISIBLE);
                 }
             } else {
-                viewHolder.actionBtn.setImageResource(R.drawable.ic_action_download);
+                actionBtnImageRes = R.drawable.ic_action_download;
                 viewHolder.actionBtn.setContentDescription(installDescription);
                 viewHolder.actionBtn.setEnabled(true);
             }
         }
 
-        viewHolder.actionBtn.setTag(position); //For passing the list item index
+        viewHolder.actionBtn.setImageResource(actionBtnImageRes);
+        viewHolder.actionBtn.setTag(actionBtnImageRes);
     }
 
     @Override

@@ -11,6 +11,9 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.di.AppComponent;
+import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
@@ -19,6 +22,7 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -28,7 +32,9 @@ import java.io.File;
 import Utils.Assertions.RecyclerViewItemCountAssertion;
 import Utils.CourseUtils;
 import Utils.FileUtils;
+import androidx.test.rule.ActivityTestRule;
 import database.TestDBHelper;
+import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static Utils.CourseUtils.runInstallCourseTask;
 import static Utils.RecyclerViewMatcher.withRecyclerView;
@@ -46,6 +52,23 @@ import static org.mockito.Matchers.any;
 
 @RunWith(AndroidJUnit4.class)
 public class MissingMediaUITest extends CourseMediaBaseTest {
+
+    @Rule
+    public DaggerMockRule<AppComponent> daggerRule =
+            new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
+                    .getTargetContext()
+                    .getApplicationContext())).set(
+                    component -> {
+                        App app =
+                                (App) InstrumentationRegistry.getInstrumentation()
+                                        .getTargetContext()
+                                        .getApplicationContext();
+                        app.setComponent(component);
+                    });
+
+    @Rule
+    public ActivityTestRule<MainActivity> mainActivityTestRule =
+            new ActivityTestRule<>(MainActivity.class, false, false);
 
 
     @Test
@@ -66,11 +89,11 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
         Payload response = runInstallCourseTask(context);
         assertTrue(response.isResult());
 
+        mainActivityTestRule.launchActivity(null);
 
-        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.view_media_missing))
-                    .check(matches(not(isDisplayed())));
-        }
+        onView(withId(R.id.view_media_missing))
+                .check(matches(not(isDisplayed())));
+
 
     }
 
@@ -82,10 +105,11 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
         Payload response = runInstallCourseTask(context);
         assertTrue(response.isResult());
 
-        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.view_media_missing))
-                    .check(matches(isDisplayed()));
-        }
+        mainActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.view_media_missing))
+                .check(matches(isDisplayed()));
+
 
     }
 
@@ -99,10 +123,10 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
 
         copyMediaFromAssets(MEDIA_FILE_VIDEO_TEST_1);
 
-        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.view_media_missing))
-                    .check(matches(not(isDisplayed())));
-        }
+        mainActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.view_media_missing))
+                .check(matches(not(isDisplayed())));
 
     }
 
@@ -117,10 +141,9 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
 
         copyMediaFromAssets(MEDIA_FILE_VIDEO_TEST_1);
 
-        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.view_media_missing))
-                    .check(matches(isDisplayed()));
-        }
+        mainActivityTestRule.launchActivity(null);
+        onView(withId(R.id.view_media_missing))
+                .check(matches(isDisplayed()));
 
     }
 
@@ -136,10 +159,9 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
         copyMediaFromAssets(MEDIA_FILE_VIDEO_TEST_1);
         copyMediaFromAssets(MEDIA_FILE_VIDEO_TEST_2);
 
-        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.view_media_missing))
-                    .check(matches(not(isDisplayed())));
-        }
+        mainActivityTestRule.launchActivity(null);
+        onView(withId(R.id.view_media_missing))
+                .check(matches(not(isDisplayed())));
 
     }
 
@@ -151,15 +173,14 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
         Payload response = runInstallCourseTask(context);
         assertTrue(response.isResult());
 
-        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+        mainActivityTestRule.launchActivity(null);
+        onView(withRecyclerView(R.id.recycler_courses)
+                .atPosition(0))
+                .perform(click());
 
-            onView(withRecyclerView(R.id.recycler_courses)
-                    .atPosition(0))
-                    .perform(click());
+        onView(withId(R.id.view_media_missing))
+                .check(matches(not(isDisplayed())));
 
-            onView(withId(R.id.view_media_missing))
-                    .check(matches(not(isDisplayed())));
-        }
     }
 
 
@@ -173,15 +194,14 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
 
         copyMediaFromAssets(MEDIA_FILE_VIDEO_TEST_2);
 
-        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+        mainActivityTestRule.launchActivity(null);
+        onView(withRecyclerView(R.id.recycler_courses)
+                .atPosition(0))
+                .perform(click());
 
-            onView(withRecyclerView(R.id.recycler_courses)
-                    .atPosition(0))
-                    .perform(click());
+        onView(withId(R.id.view_media_missing))
+                .check(matches(isDisplayed()));
 
-            onView(withId(R.id.view_media_missing))
-                    .check(matches(isDisplayed()));
-        }
 
     }
 
@@ -195,10 +215,10 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
 
         copyMediaFromAssets(MEDIA_FILE_VIDEO_TEST_1);
 
-        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.view_media_missing))
-                    .check(matches(not(isDisplayed())));
-        }
+        mainActivityTestRule.launchActivity(null);
+        onView(withId(R.id.view_media_missing))
+                .check(matches(not(isDisplayed())));
+
 
     }
 
@@ -212,13 +232,10 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
         assertTrue(response.isResult());
 
 
-        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+        mainActivityTestRule.launchActivity(null);
+        onView(withId(R.id.btn_media_download)).perform(click());
 
-            onView(withId(R.id.btn_media_download)).perform(click());
-
-            onView(withId(R.id.missing_media_list)).check(new RecyclerViewItemCountAssertion(2));
-
-        }
+        onView(withId(R.id.missing_media_list)).check(new RecyclerViewItemCountAssertion(2));
 
     }
 
@@ -231,17 +248,15 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
         Payload response = runInstallCourseTask(context);
         assertTrue(response.isResult());
 
-        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+        mainActivityTestRule.launchActivity(null);
 
-            onView(withRecyclerView(R.id.recycler_courses)
-                    .atPosition(0))
-                    .perform(click());
+        onView(withRecyclerView(R.id.recycler_courses)
+                .atPosition(0))
+                .perform(click());
 
-            onView(withId(R.id.btn_media_download)).perform(click());
+        onView(withId(R.id.btn_media_download)).perform(click());
 
-            onView(withId(R.id.missing_media_list)).check(new RecyclerViewItemCountAssertion(1));
-
-        }
+        onView(withId(R.id.missing_media_list)).check(new RecyclerViewItemCountAssertion(1));
 
     }
 

@@ -29,7 +29,7 @@ public class DownloadMediaAdapter extends MultiChoiceRecyclerViewAdapter<Downloa
 
     private final SharedPreferences prefs;
     private List<Media> mediaList;
-    private Context context;
+    private final Context context;
     private ListInnerBtnOnClickListener itemClickListener;
 
     public DownloadMediaAdapter(Context context, List<Media> mediaList) {
@@ -70,10 +70,11 @@ public class DownloadMediaAdapter extends MultiChoiceRecyclerViewAdapter<Downloa
         }
 
         viewHolder.downloadBtn.setVisibility(isMultiChoiceMode ? View.INVISIBLE : View.VISIBLE);
-        viewHolder.downloadBtn.setTag(position); //For passing the list item index
 
+        int actionBtnimagRes;
         if (m.isDownloading()) {
-            viewHolder.downloadBtn.setImageResource(R.drawable.ic_action_cancel);
+            actionBtnimagRes = R.drawable.ic_action_cancel;
+
             viewHolder.downloadProgress.setVisibility(View.VISIBLE);
             viewHolder.mediaPath.setVisibility(View.GONE);
             viewHolder.errorText.setVisibility(View.GONE);
@@ -84,11 +85,13 @@ public class DownloadMediaAdapter extends MultiChoiceRecyclerViewAdapter<Downloa
                 viewHolder.downloadProgress.setIndeterminate(true);
             }
         } else {
-            viewHolder.downloadBtn.setImageResource(m.hasFailed() ? R.drawable.dialog_ic_action_update : R.drawable.ic_action_download);
+            actionBtnimagRes = m.hasFailed() ? R.drawable.dialog_ic_action_update : R.drawable.ic_action_download;
             viewHolder.errorText.setVisibility(m.hasFailed() ? View.VISIBLE : View.GONE);
             viewHolder.downloadProgress.setVisibility(View.GONE);
             viewHolder.mediaPath.setVisibility(View.VISIBLE);
         }
+        viewHolder.downloadBtn.setImageResource(actionBtnimagRes);
+        viewHolder.downloadBtn.setTag(actionBtnimagRes);
     }
 
     @Override
