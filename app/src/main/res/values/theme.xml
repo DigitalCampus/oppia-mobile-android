@@ -42,6 +42,7 @@
 
     <!-- Other common elements -->
     <color name="listitem_icon_tint">@color/theme_primary</color>
+    <color name="listitem_action_item_tint">@color/quiz_navigation_button</color>
     <color name="design_snackbar_background_color" tools:override="true">@color/theme_primary</color>
     <color name="gamification_snackbar_gradient_start">@color/theme_secondary_light</color>
     <color name="gamification_snackbar_gradient_end">@color/theme_primary</color>

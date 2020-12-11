@@ -235,7 +235,7 @@ public class DownloadActivityUITest {
             Context ctx = (Context) invocationOnMock.getArguments()[0];
             sendBroadcast(ctx, CourseInstallerService.ACTION_DOWNLOAD);
             return null;
-        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
+        }).when(courseInstallerServiceDelegate).installCourse(any(), any(), any());
 
         downloadActivityTestRule.launchActivity(null);
 

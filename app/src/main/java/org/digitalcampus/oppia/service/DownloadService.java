@@ -233,7 +233,10 @@ public class DownloadService extends FileIntentService {
                 // check the file digest matches, otherwise delete the file
                 // (it's either been a corrupted download or it's the wrong file)
                 String md5Digest = FileUtils.getDigestFromMessage(mDigest);
-                if(!md5Digest.contains(fileDigest)){
+                if(md5Digest.contains(fileDigest)) {
+                    sendBroadcast(fileUrl, ACTION_COMPLETE, null);
+                }
+                else {
                     this.deleteFile(downloadedFile);
                     sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_media_download));
                     removeDownloading(fileUrl);
@@ -257,9 +260,8 @@ public class DownloadService extends FileIntentService {
             }
         }
 
-        Log.d(TAG, fileUrl + " successfully downloaded");
+        Log.d(TAG, fileUrl + " process completed");
         removeDownloading(fileUrl);
-        sendBroadcast(fileUrl, ACTION_COMPLETE, null);
     }
 
 

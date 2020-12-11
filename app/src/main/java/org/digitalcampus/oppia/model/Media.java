@@ -98,7 +98,8 @@ public class Media implements Serializable{
 
     //ONLY FOR UI PURPOSES
     private boolean downloading;
-    private int progress;
+	private boolean failed;
+	private int progress;
 
     public boolean isDownloading() {
         return downloading;
@@ -109,6 +110,13 @@ public class Media implements Serializable{
 
     public int getProgress() { return progress; }
     public void setProgress(int progress) { this.progress = progress; }
+
+	public boolean hasFailed() {
+		return failed;
+	}
+	public void setFailed(boolean failed) {
+		this.failed = failed;
+	}
 
     public static boolean shouldScanMedia(SharedPreferences prefs){
 		long now = System.currentTimeMillis()/1000;

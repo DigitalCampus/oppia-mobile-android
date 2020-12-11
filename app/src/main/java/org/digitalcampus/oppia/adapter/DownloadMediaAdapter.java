@@ -29,7 +29,7 @@ public class DownloadMediaAdapter extends MultiChoiceRecyclerViewAdapter<Downloa
 
     private final SharedPreferences prefs;
     private List<Media> mediaList;
-    private Context context;
+    private final Context context;
     private ListInnerBtnOnClickListener itemClickListener;
 
     public DownloadMediaAdapter(Context context, List<Media> mediaList) {
@@ -70,12 +70,14 @@ public class DownloadMediaAdapter extends MultiChoiceRecyclerViewAdapter<Downloa
         }
 
         viewHolder.downloadBtn.setVisibility(isMultiChoiceMode ? View.INVISIBLE : View.VISIBLE);
-        viewHolder.downloadBtn.setTag(position); //For passing the list item index
 
+        int actionBtnimagRes;
         if (m.isDownloading()) {
-            viewHolder.downloadBtn.setImageResource(R.drawable.ic_action_cancel);
+            actionBtnimagRes = R.drawable.ic_action_cancel;
+
             viewHolder.downloadProgress.setVisibility(View.VISIBLE);
             viewHolder.mediaPath.setVisibility(View.GONE);
+            viewHolder.errorText.setVisibility(View.GONE);
             if (m.getProgress() > 0) {
                 viewHolder.downloadProgress.setIndeterminate(false);
                 viewHolder.downloadProgress.setProgress(m.getProgress());
@@ -83,10 +85,13 @@ public class DownloadMediaAdapter extends MultiChoiceRecyclerViewAdapter<Downloa
                 viewHolder.downloadProgress.setIndeterminate(true);
             }
         } else {
-            viewHolder.downloadBtn.setImageResource(R.drawable.ic_action_download);
+            actionBtnimagRes = m.hasFailed() ? R.drawable.dialog_ic_action_update : R.drawable.ic_action_download;
+            viewHolder.errorText.setVisibility(m.hasFailed() ? View.VISIBLE : View.GONE);
             viewHolder.downloadProgress.setVisibility(View.GONE);
             viewHolder.mediaPath.setVisibility(View.VISIBLE);
         }
+        viewHolder.downloadBtn.setImageResource(actionBtnimagRes);
+        viewHolder.downloadBtn.setTag(actionBtnimagRes);
     }
 
     @Override
@@ -120,12 +125,13 @@ public class DownloadMediaAdapter extends MultiChoiceRecyclerViewAdapter<Downloa
 
     public class DownloadMediaViewHolder extends MultiChoiceRecyclerViewAdapter.ViewHolder {
 
-        private TextView mediaCourses;
-        private TextView mediaTitle;
-        private TextView mediaPath;
-        private TextView mediaFileSize;
-        private ImageButton downloadBtn;
-        private ProgressBar downloadProgress;
+        private final TextView mediaCourses;
+        private final TextView mediaTitle;
+        private final TextView mediaPath;
+        private final TextView mediaFileSize;
+        private final ImageButton downloadBtn;
+        private final ProgressBar downloadProgress;
+        private final TextView errorText;
 
         public DownloadMediaViewHolder(View itemView) {
 
@@ -136,6 +142,7 @@ public class DownloadMediaAdapter extends MultiChoiceRecyclerViewAdapter<Downloa
             mediaFileSize = itemView.findViewById(R.id.media_file_size);
             downloadBtn = itemView.findViewById(R.id.action_btn);
             downloadProgress = itemView.findViewById(R.id.download_progress);
+            errorText = itemView.findViewById(R.id.download_error);
 
             downloadBtn.setOnClickListener(v -> {
                 if (itemClickListener != null)
