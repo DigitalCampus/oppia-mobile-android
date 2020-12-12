@@ -147,41 +147,38 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
 
         final FragmentManager fragManager = act.getFragmentManager();
         GrantStorageAccessFragment f = new GrantStorageAccessFragment();
-        f.setListener(new GrantStorageAccessFragment.AccessGrantedListener() {
-            @Override
-            public void onAccessGranted(Uri pathAccessGranted) {
-                if (pathAccessGranted == null){
-                    listener.onAccessGranted(false);
-                    return;
-                }
-                String[] treePath = pathAccessGranted.getPath().split(":");
-                if ((treePath.length > 1)){
-                    //The user didn't select the root directory or selected the internal storage
-                    listener.onAccessGranted(false);
-                }
-                else{
-                    Log.d(TAG, "Creating Oppia folders in SD-card with granted access");
-                    DocumentFile rootDir = DocumentFile.fromTreeUri(act, pathAccessGranted);
-                    DocumentFile tempDir = null;
-                    if (rootDir.isDirectory()){
-                        tempDir = rootDir;
-                        String[] dirs = getInternalBasePath(act).split(File.separator);
-                        for (int i=1; i<dirs.length; i++) {
-                            DocumentFile childDir = tempDir.findFile(dirs[i]);
-                            if((childDir!=null) && childDir.exists() && childDir.isDirectory()){
-                                tempDir = childDir;
-                            }
-                            else{
-                                tempDir = tempDir.createDirectory(dirs[i]);
-                                if (tempDir == null) break;
-                            }
-
+        f.setListener(pathAccessGranted -> {
+            if (pathAccessGranted == null){
+                listener.onAccessGranted(false);
+                return;
+            }
+            String[] treePath = pathAccessGranted.getPath().split(":");
+            if ((treePath.length > 1)){
+                //The user didn't select the root directory or selected the internal storage
+                listener.onAccessGranted(false);
+            }
+            else{
+                Log.d(TAG, "Creating Oppia folders in SD-card with granted access");
+                DocumentFile rootDir = DocumentFile.fromTreeUri(act, pathAccessGranted);
+                DocumentFile tempDir = null;
+                if (rootDir.isDirectory()){
+                    tempDir = rootDir;
+                    String[] dirs = getInternalBasePath(act).split(File.separator);
+                    for (int i=1; i<dirs.length; i++) {
+                        DocumentFile childDir = tempDir.findFile(dirs[i]);
+                        if((childDir!=null) && childDir.exists() && childDir.isDirectory()){
+                            tempDir = childDir;
                         }
+                        else{
+                            tempDir = tempDir.createDirectory(dirs[i]);
+                            if (tempDir == null) break;
+                        }
+
                     }
-                    //Everything is correct if we were able to create all the tree directory
-                    setPermissionsNeeded(act, false);
-                    listener.onAccessGranted( (tempDir != null) );
                 }
+                //Everything is correct if we were able to create all the tree directory
+                setPermissionsNeeded(act, false);
+                listener.onAccessGranted( (tempDir != null) );
             }
         });
 

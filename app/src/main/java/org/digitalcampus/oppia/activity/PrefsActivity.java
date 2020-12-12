@@ -385,6 +385,15 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         ChangeStorageOptionTask changeStorageTask = new ChangeStorageOptionTask(PrefsActivity.this.getApplicationContext());
         changeStorageTask.setMoveStorageListener(this);
 
+        if (pDialog != null && pDialog.isShowing()) {
+//            pDialog.dismiss();
+//            pDialog = null;
+
+            // Still executing the task
+            return;
+
+        }
+
         pDialog = new ProgressDialog(this, R.style.Oppia_AlertDialogStyle);
         pDialog.setTitle(R.string.loading);
         pDialog.setMessage(getString(R.string.moving_storage_location));
@@ -396,7 +405,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
     //@Override
     public void moveStorageComplete(Payload p) {
-        pDialog.dismiss();
 
         String storageOption = prefs.getString(PREF_STORAGE_OPTION, "");
         if (p.isResult()){
@@ -417,6 +425,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(PrefsActivity.PREF_STORAGE_OPTION, STORAGE_OPTION_EXTERNAL).apply();
         }
+
+        pDialog.dismiss();
     }
 
     //@Override
