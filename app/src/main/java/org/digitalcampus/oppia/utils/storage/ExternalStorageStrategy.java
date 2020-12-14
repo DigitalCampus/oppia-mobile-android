@@ -27,6 +27,7 @@ import android.os.Environment;
 import androidx.preference.PreferenceManager;
 import androidx.documentfile.provider.DocumentFile;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -47,7 +48,12 @@ public class ExternalStorageStrategy implements StorageAccessStrategy {
 
     @Override
     public boolean isStorageAvailable(Context ctx) {
-        String cardStatus = ExternalStorageState.getExternalStorageState(new File(getStorageLocation(ctx)));
+        String externalStorageLocation = getStorageLocation(ctx);
+        if (TextUtils.isEmpty(externalStorageLocation)) {
+            return false;
+        }
+
+        String cardStatus = ExternalStorageState.getExternalStorageState(new File(externalStorageLocation));
         if (cardStatus.equals(Environment.MEDIA_REMOVED)
                 || cardStatus.equals(Environment.MEDIA_UNMOUNTABLE)
                 || cardStatus.equals(Environment.MEDIA_UNMOUNTED)

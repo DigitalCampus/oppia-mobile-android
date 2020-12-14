@@ -24,6 +24,8 @@ import android.content.SharedPreferences;
 
 import androidx.multidex.MultiDex;
 import androidx.preference.PreferenceManager;
+
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.room.Room;
@@ -169,21 +171,18 @@ public class App extends Application {
     private void configureStorageType() {
 
         String storageOption = getPrefs(this).getString(PrefsActivity.PREF_STORAGE_OPTION, "");
-
-        if (storageOption.trim().equals("")) {
-
-            StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_EXTERNAL);
-            if (!strategy.isStorageAvailable(this)) {
-                strategy = StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_INTERNAL);
-            }
-
-            StorageUtils.saveStorageData(this, strategy.getStorageType());
-            Storage.setStorageStrategy(strategy);
-
-        } else {
-            StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
-            Storage.setStorageStrategy(strategy);
+        if (TextUtils.isEmpty(storageOption)) {
+            storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
         }
+
+        StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
+        if (!strategy.isStorageAvailable(this)) {
+            strategy = StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_INTERNAL);
+        }
+
+        StorageUtils.saveStorageData(this, strategy.getStorageType());
+        Storage.setStorageStrategy(strategy);
+
 
         Log.d(TAG, "Storage option set: " + Storage.getStorageStrategy().getStorageType());
     }
@@ -228,7 +227,7 @@ public class App extends Application {
         WorkManager.getInstance(this).cancelUniqueWork(NAME_TRACKER_SEND_WORK);
     }
 
-    private void scheduleNoCourseDownloadedNotification(){
+    private void scheduleNoCourseDownloadedNotification() {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
@@ -242,7 +241,7 @@ public class App extends Application {
 
     }
 
-    public void cancleNoCourseDownloadedNotification(){
+    public void cancleNoCourseDownloadedNotification() {
         WorkManager.getInstance(this).cancelUniqueWork(NAME_NO_COURSE_DOWNLOADED_WORKER);
     }
 
@@ -250,7 +249,7 @@ public class App extends Application {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public static void loadDefaultPreferenceValues(Context ctx, boolean readAgain){
+    public static void loadDefaultPreferenceValues(Context ctx, boolean readAgain) {
         PreferenceManager.setDefaultValues(ctx, R.xml.prefs, readAgain);
     }
 
@@ -277,7 +276,6 @@ public class App extends Application {
             editor.apply();
         }
     }
-
 
 
     public AppComponent getComponent() {
