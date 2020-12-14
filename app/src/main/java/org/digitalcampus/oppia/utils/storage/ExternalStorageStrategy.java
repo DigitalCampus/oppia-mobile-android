@@ -47,7 +47,19 @@ public class ExternalStorageStrategy implements StorageAccessStrategy {
 
     @Override
     public boolean isStorageAvailable(Context ctx) {
-        return StorageUtils.getExternalMemoryDrive(ctx, true) != null;
+        String cardStatus = ExternalStorageState.getExternalStorageState(new File(getStorageLocation(ctx)));
+        if (cardStatus.equals(Environment.MEDIA_REMOVED)
+                || cardStatus.equals(Environment.MEDIA_UNMOUNTABLE)
+                || cardStatus.equals(Environment.MEDIA_UNMOUNTED)
+                || cardStatus.equals(Environment.MEDIA_MOUNTED_READ_ONLY)
+                || cardStatus.equals(Environment.MEDIA_SHARED)) {
+            Log.d(TAG, "card status: " + cardStatus);
+            return false;
+        }
+        else{
+            return true;
+        }
+//        return StorageUtils.getExternalMemoryDrive(ctx, true) != null;
     }
 
     @Override
