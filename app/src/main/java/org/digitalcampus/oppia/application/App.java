@@ -46,9 +46,12 @@ import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
+import org.digitalcampus.oppia.utils.storage.StorageUtils;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
@@ -90,7 +93,6 @@ public class App extends Application {
     public static final int PAGE_READ_TIME = 3;
     public static final int RESOURCE_READ_TIME = 3;
     public static final int URL_READ_TIME = 5;
-    public static final String DEFAULT_STORAGE_OPTION = PrefsActivity.STORAGE_OPTION_EXTERNAL;
 
     public static final long SCORECARD_ANIM_DURATION = 800;
     public static final long MEDIA_SCAN_TIME_LIMIT = 3600;
@@ -119,6 +121,9 @@ public class App extends Application {
     private AppComponent appComponent;
     private static MyDatabase db;
 
+    @Inject
+    public SharedPreferences prefs;
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -128,6 +133,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        getComponent().inject(this);
 
         db = Room.databaseBuilder(getApplicationContext(),
                 MyDatabase.class, MyDatabase.DB_NAME_ROOM)
@@ -156,31 +163,36 @@ public class App extends Application {
         checkAdminProtectionOnFirstRun(prefs);
         checkShowDescriptionOverrideUpdate();
 
-
-        String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
-
-        if (storageOption.trim().equals("")) {
-            //If there is not storage option set, set the default option
-
-            storageOption = DEFAULT_STORAGE_OPTION;
-            boolean defaultOptionSuccessful = setStorageOption(ctx, prefs, storageOption);
-            if (!defaultOptionSuccessful) {
-                //If the default option didn't work (supposing it was external), fallback to internal
-                Log.d(TAG, storageOption + " didn't work, trying internall fallback");
-                storageOption = PrefsActivity.STORAGE_OPTION_INTERNAL;
-                setStorageOption(ctx, prefs, storageOption);
-            }
-        } else {
-            StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
-            Storage.setStorageStrategy(strategy);
-        }
-        Log.d(TAG, "Storage option set: " + storageOption);
+        configureStorageType();
 
         setupPeriodicTrackerWorker();
 
         OppiaNotificationUtils.initializeOreoNotificationChannels(this);
 
     }
+
+    private void configureStorageType() {
+
+        String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
+
+        if (storageOption.trim().equals("")) {
+
+            StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_EXTERNAL);
+            if (!strategy.isStorageAvailable(this)) {
+                strategy = StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_INTERNAL);
+            }
+
+            StorageUtils.saveStorageData(this, strategy.getStorageType(), strategy.getStorageLocation(this));
+            Storage.setStorageStrategy(strategy);
+
+        } else {
+            StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
+            Storage.setStorageStrategy(strategy);
+        }
+
+        Log.d(TAG, "Storage option set: " + Storage.getStorageStrategy().getStorageType());
+    }
+
 
     public static MyDatabase getDb() {
         return db;
@@ -240,7 +252,11 @@ public class App extends Application {
     }
 
     public static SharedPreferences getPrefs(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context);
+        return ((App) context.getApplicationContext()).getPrefs();
+    }
+
+    public SharedPreferences getPrefs() {
+        return prefs;
     }
 
     public static void loadDefaultPreferenceValues(Context ctx, boolean readAgain){
@@ -271,16 +287,6 @@ public class App extends Application {
         }
     }
 
-
-    private boolean setStorageOption(Context ctx, SharedPreferences prefs, String storageOption) {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageOption).apply();
-
-        StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
-        boolean success = strategy.updateStorageLocation(ctx);
-        if (success) Storage.setStorageStrategy(strategy);
-        return success;
-    }
 
 
     public AppComponent getComponent() {

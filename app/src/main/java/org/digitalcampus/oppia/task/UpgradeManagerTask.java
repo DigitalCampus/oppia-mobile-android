@@ -238,7 +238,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		
 		String source = Environment.getExternalStorageDirectory() + File.separator + Storage.APP_ROOT_DIR_NAME  + File.separator;
     	
-    	File[] dirs = ContextCompat.getExternalFilesDirs(ctx,null);
+    	File[] dirs = ctx.getExternalFilesDirs(null);
     	if(dirs.length > 0){
 
 	    	String destination = dirs[dirs.length-1].getAbsolutePath();

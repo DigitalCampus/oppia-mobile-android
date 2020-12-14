@@ -18,13 +18,14 @@
 package org.digitalcampus.oppia.utils.storage;
 
 import android.content.Context;
-import android.os.Build;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.util.Log;
 
-import androidx.core.content.ContextCompat;
-
 import com.splunk.mint.Mint;
+
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.App;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +33,8 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 
 public class StorageUtils {
@@ -44,94 +47,47 @@ public class StorageUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    public static DeviceFile getInternalMemoryDrive() {
-        DeviceFile ret = null;
-        if (mInternalDrive != null)
-            return mInternalDrive;
-        ret = new DeviceFile(Environment.getExternalStorageDirectory());
-        Log.d(TAG, "Storage: " + ret.getPath());
-        if (!ret.exists()) {
-            DeviceFile mnt = new DeviceFile("/mnt");
-            if (mnt.exists())
-                for (DeviceFile kid : mnt.listFiles())
-                    if (kid.getName().toLowerCase().contains("sd") && kid.canWrite()) {
-                        mInternalDrive = kid;
-                        return mInternalDrive;
-                    }
+    public static DeviceFile getInternalMemoryDrive(Context ctx) {
 
-        } else if (ret.getName().endsWith("1")) {
-            DeviceFile sdcard0 = new DeviceFile(ret.getPath().substring(0, ret.getPath().length() - 1) + "0");
-            if (sdcard0.exists()) ret = sdcard0;
+        if (mInternalDrive != null) {
+            return mInternalDrive;
         }
-        mInternalDrive = ret;
+
+        mInternalDrive = new DeviceFile(ctx.getFilesDir().getPath());
         return mInternalDrive;
     }
 
-    // Code from StackOverflow: http://stackoverflow.com/questions/9340332/how-can-i-get-the-list-of-mounted-external-storage-of-android-device/19982338#19982338
-    public static DeviceFile getExternalMemoryDrive(Context ctx) {
-        if (mExternalDrive != null && mExternalDrive.exists()) {
+    public static DeviceFile getExternalMemoryDrive(Context ctx, boolean forzeRecreate) {
+
+        // TODO ¿remove singletones and always create?
+
+        if (mExternalDrive != null && mExternalDrive.exists() && !forzeRecreate) {
             return mExternalDrive;
         }
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            File[] dirs = ContextCompat.getExternalFilesDirs(ctx, null);
-            if (dirs.length > 1) {
-
-                DeviceFile externalDrive = null;
-                for (int i = 1; i < dirs.length; i++) {
-                    if (dirs[i] != null) {
-                        Log.d(TAG, "Filedirs: " + dirs[i].getPath() + ": " + (dirs[i].canWrite() ? "writable" : "not writable!"));
-                        if (dirs[i].canWrite() && externalDrive == null) {
-                            externalDrive = new DeviceFile(dirs[i]);
-                        }
-                    }
-                }
-
-                if ((externalDrive != null) && externalDrive.canRead() && externalDrive.canWrite()) {
-                    mExternalDrive = externalDrive;
-                    return externalDrive;
-                }
-            }
-
-        }
-
-        DeviceFile parent = getInternalMemoryDrive().getParent();
-        while (parent.getDepth() > 2)
-            parent = parent.getParent();
-        Log.d(TAG, "traversing root path " + parent.getPath());
-        for (DeviceFile kid : parent.listFiles()) {
-            Log.d(TAG, "  > " + kid.getPath() + " : " + (kid.canWrite() ? "writable" : "not writable!"));
-            if ((kid.getName().toLowerCase().contains("ext") || kid.getName().toLowerCase().contains("sdcard1"))
-                    && !kid.getPath().equals(getInternalMemoryDrive().getPath())
-                    && kid.canRead()
-                    && kid.canWrite()) {
-                mExternalDrive = kid;
-                return mExternalDrive;
+        File[] dirs = ctx.getExternalFilesDirs(null);
+        // Removable SD card, if available, is second item in dirs array
+        if (dirs.length > 1) {
+            DeviceFile externalDrive = new DeviceFile(dirs[1].getPath());
+            if (externalDrive.exists() && externalDrive.canWrite()) {
+                mExternalDrive = externalDrive;
             }
         }
-        if (new File("/Removable").exists())
-            for (DeviceFile kid : new DeviceFile("/Removable").listFiles())
-                if (kid.getName().toLowerCase().contains("ext") && kid.canRead()
-                        && !kid.getPath().equals(getInternalMemoryDrive().getPath())
-                        && kid.list().length > 0) {
-                    mExternalDrive = kid;
-                    return mExternalDrive;
-                }
-        return null;
+
+        return mExternalDrive;
     }
 
 
     public static List<StorageLocationInfo> getStorageList(Context ctx) {
 
         List<StorageLocationInfo> list = new ArrayList<>();
-        DeviceFile internalStorage = getInternalMemoryDrive();
-        DeviceFile externalStorage = getExternalMemoryDrive(ctx);
+        DeviceFile internalStorage = getInternalMemoryDrive(ctx);
+        DeviceFile externalStorage = getExternalMemoryDrive(ctx, false);
 
-        if ((internalStorage != null) && internalStorage.canWrite()) {
-            StorageLocationInfo internal = new StorageLocationInfo(internalStorage.getPath(), false, false, 1);
-            list.add(internal);
-        }
-        if ((externalStorage != null) && externalStorage.canWrite()) {
+        StorageLocationInfo internal = new StorageLocationInfo(internalStorage.getPath(), false, false, 1);
+        list.add(internal);
+
+        if (externalStorage != null && externalStorage.canWrite()) {
             StorageLocationInfo external = new StorageLocationInfo(externalStorage.getPath(), false, true, 1);
             list.add(external);
         }
@@ -141,25 +97,24 @@ public class StorageUtils {
 
 
     public static String readFileFromAssets(Context ctx, String filename) {
-        String content = null;
-        InputStream is = null;
-        try {
-            is = ctx.getResources().getAssets().open(filename);
+
+        try (InputStream is = ctx.getResources().getAssets().open(filename)) {
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
-            content = new String(buffer, StandardCharsets.UTF_8);
+            String content = new String(buffer, StandardCharsets.UTF_8);
+            return content;
         } catch (IOException e) {
             Mint.logException(e);
             return null;
-        } finally {
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) { /* Pass */ }
         }
-        return content;
     }
 
+    public static void saveStorageData(Context context, String storageType, String storageLocation) {
+
+        SharedPreferences.Editor editor = App.getPrefs(context).edit();
+        editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageType);
+        editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, storageLocation);
+        editor.apply();
+    }
 }
