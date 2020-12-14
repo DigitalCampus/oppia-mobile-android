@@ -61,29 +61,25 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
         Payload payload = params[0];
         String storageType = (String) payload.getData().get(0);
 
-        String previousLocation = App.getPrefs(ctx).getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
         StorageAccessStrategy previousStrategy = Storage.getStorageStrategy();
         String sourcePath = previousStrategy.getStorageLocation(ctx);
         StorageAccessStrategy newStrategy = StorageAccessStrategyFactory.createStrategy(storageType);
 
-        Log.d(TAG, "Checking if storage is available...");
-        if (!newStrategy.isStorageAvailable()) {
-            resetStrategy(previousStrategy, previousLocation);
-            payload.setResult(false);
-            payload.setResultResponse(ctx.getString(R.string.error_sdcard));
-            return payload;
-        }
-
-        Log.d(TAG, "Getting storage sizes...");
-        long currentSize = Storage.getTotalStorageUsed(ctx);
-
-        String destPath = newStrategy.getStorageLocation(ctx);
-        Log.d(TAG, destPath);
-        Storage.setStorageStrategy(newStrategy);
-        Log.d(TAG, "FileUtils.setStorageStrategy");
-
-        long availableDestSize;
         try {
+            Log.d(TAG, "Checking if storage is available...");
+            if (!newStrategy.isStorageAvailable(ctx)) {
+                throw new ChangeStorageException(ctx.getString(R.string.error_sdcard));
+            }
+
+            Log.d(TAG, "Getting storage sizes...");
+            long currentSize = Storage.getTotalStorageUsed(ctx);
+
+            String destPath = newStrategy.getStorageLocation(ctx);
+            Log.d(TAG, destPath);
+            Storage.setStorageStrategy(newStrategy);
+            Log.d(TAG, "FileUtils.setStorageStrategy");
+
+            long availableDestSize;
             File destDir = new File(destPath);
             Log.d(TAG, "destDir created: " + destDir.getAbsolutePath());
             if (destDir.exists()) {
@@ -99,43 +95,42 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
                     throw new IOException("No file created!");
                 }
             }
+
             Storage.createNoMediaFile(ctx);
 
             availableDestSize = Storage.getAvailableStorageSize(ctx);
             Log.d(TAG, "Needed (source):" + currentSize + " - Available(destination): " + availableDestSize);
-        } catch (Exception e) {
-            resetStrategy(previousStrategy, previousLocation);
-            payload.setResult(false);
-            payload.setResultResponse(ctx.getString(R.string.error));
-            return payload;
-        }
 
-        if (availableDestSize < currentSize) {
-            resetStrategy(previousStrategy, previousLocation);
-            payload.setResult(false);
-            payload.setResultResponse(ctx.getString(R.string.error_insufficient_storage_available));
-            return payload;
-        } else {
-            if (moveStorageDirs(sourcePath, destPath)) {
-                //Delete the files from source
-                FileUtils.deleteDir(new File(sourcePath));
-                Log.d(TAG, "Update storage location succeeded!");
-                payload.setResult(true);
+            if (availableDestSize < currentSize) {
+                throw new ChangeStorageException(ctx.getString(R.string.error_insufficient_storage_available));
             } else {
-                //Delete the files that were actually copied
-                File destDir = new File(destPath);
-                FileUtils.deleteDir(destDir);
-                resetStrategy(previousStrategy, previousLocation);
-                payload.setResult(false);
-                payload.setResultResponse(ctx.getString(R.string.error));
-                return payload;
+                if (moveStorageDirs(sourcePath, destPath)) {
+                    //Delete the files from source
+                    FileUtils.deleteDir(new File(sourcePath));
+                    Log.d(TAG, "Update storage location succeeded!");
+                    payload.setResult(true);
+                } else {
+                    //Delete the files that were actually copied
+                    File destDirDelete = new File(destPath);
+                    FileUtils.deleteDir(destDirDelete);
+
+                    throw new ChangeStorageException(ctx.getString(R.string.error));
+
+                }
+
             }
 
+        } catch (Exception e) {
+            resetStrategy(previousStrategy);
+            payload.setResult(false);
+            String errorMessage = e instanceof ChangeStorageException ? e.getMessage() : ctx.getString(R.string.error);
+            payload.setResultResponse(errorMessage);
+            return payload;
         }
 
         StorageUtils.saveStorageData(ctx, storageType, newStrategy.getStorageLocation(ctx));
-
         return payload;
+
     }
 
     private boolean copyDirectory(String sourcePath, String destPath, boolean optional) {
@@ -173,12 +168,12 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
                 copyDirectory(coursePath, destinationPath, false));
     }
 
-    private void resetStrategy(StorageAccessStrategy previousStrategy, String previousLocation) {
+    private void resetStrategy(StorageAccessStrategy previousStrategy) {
         // If it fails, we reset the strategy to the previous one
         Storage.setStorageStrategy(previousStrategy);
 
         // And revert the storage option to the previos one
-        StorageUtils.saveStorageData(ctx, previousStrategy.getStorageType(), previousLocation);
+        StorageUtils.saveStorageData(ctx, previousStrategy.getStorageType(), previousStrategy.getStorageLocation(ctx));
 
 
     }
@@ -195,6 +190,12 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
     public void setMoveStorageListener(MoveStorageListener srl) {
         synchronized (this) {
             mStateListener = srl;
+        }
+    }
+
+    public class ChangeStorageException extends Exception {
+        public ChangeStorageException(String message) {
+            super(message);
         }
     }
 }

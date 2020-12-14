@@ -341,6 +341,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     }
 
     private void executeChangeStorageTask(String storageOption) {
+
+        Log.i(TAG, "executeChangeStorageTask: enter");
+
         ArrayList<Object> data = new ArrayList<>();
         data.add(storageOption);
         Payload p = new Payload(data);
@@ -352,6 +355,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 //            pDialog = null;
 
             // Still executing the task
+            Log.i(TAG, "executeChangeStorageTask: Exiting. Previous task is being executed");
             return;
 
         }
@@ -363,6 +367,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         pDialog.show();
 
         changeStorageTask.execute(p);
+
+        Log.i(TAG, "executeChangeStorageTask: executing task");
     }
 
     //@Override

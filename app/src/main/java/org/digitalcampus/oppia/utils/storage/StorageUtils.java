@@ -84,11 +84,13 @@ public class StorageUtils {
         DeviceFile internalStorage = getInternalMemoryDrive(ctx);
         DeviceFile externalStorage = getExternalMemoryDrive(ctx, false);
 
-        StorageLocationInfo internal = new StorageLocationInfo(internalStorage.getPath(), false, false, 1);
+        StorageLocationInfo internal = new StorageLocationInfo(PrefsActivity.STORAGE_OPTION_INTERNAL,
+                internalStorage.getPath(), false, false, 1);
         list.add(internal);
 
         if (externalStorage != null && externalStorage.canWrite()) {
-            StorageLocationInfo external = new StorageLocationInfo(externalStorage.getPath(), false, true, 1);
+            StorageLocationInfo external = new StorageLocationInfo(PrefsActivity.STORAGE_OPTION_EXTERNAL,
+                    externalStorage.getPath(), false, true, 1);
             list.add(external);
         }
 

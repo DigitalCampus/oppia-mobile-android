@@ -37,6 +37,10 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+
 @RunWith(Parameterized.class)
 public class InstallDownloadedCoursesTest extends BaseTestDB {
     public static final String TAG = InstallDownloadedCoursesTest.class.getSimpleName();
@@ -51,7 +55,6 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
     private final String INSECURE_COURSE = "Insecure_Course.zip";
 
     private Context context;
-    private SharedPreferences prefs;
     private Payload response;
     private StorageAccessStrategy storageStrategy;
 
@@ -68,7 +71,6 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
     public void setUp() throws Exception {
         super.setUp();
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         setStorageStrategy();
     }
@@ -79,10 +81,8 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
         Log.v(TAG, "Using Strategy: " + storageStrategy.getStorageType());
         Storage.setStorageStrategy(storageStrategy);
 
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageStrategy.getStorageType());
-        storageStrategy.updateStorageLocation(context);
-        editor.commit();
+        when(prefs.getString(eq(PrefsActivity.PREF_STORAGE_OPTION), anyString())).thenReturn(storageStrategy.getStorageType());
+
     }
 
     @Test
