@@ -67,7 +67,7 @@ public class StorageUtils {
 
         File[] dirs = ctx.getExternalFilesDirs(null);
         // Removable SD card, if available, is second item in dirs array
-        if (dirs.length > 1) {
+        if (dirs.length > 1 && dirs[1] != null) {
             DeviceFile externalDrive = new DeviceFile(dirs[1].getPath());
             if (externalDrive.exists() && externalDrive.canWrite()) {
                 mExternalDrive = externalDrive;
