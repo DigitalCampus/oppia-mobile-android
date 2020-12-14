@@ -56,7 +56,6 @@ import androidx.preference.PreferenceFragmentCompat;
 public class PrefsActivity extends AppActivity implements SharedPreferences.OnSharedPreferenceChangeListener,
         MoveStorageListener, PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
-    public static final String PREF_STORAGE_LOCATION = "prefStorageLocation";
 
     public static final String PREF_INFO = "prefInfo";
     public static final String PREF_USER_NAME = "prefUsername";

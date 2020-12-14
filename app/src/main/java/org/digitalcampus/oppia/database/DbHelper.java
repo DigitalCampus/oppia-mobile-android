@@ -54,6 +54,7 @@ import org.digitalcampus.oppia.model.db_model.Leaderboard;
 import org.digitalcampus.oppia.model.db_model.UserCustomField;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.joda.time.DateTime;
 import org.json.JSONException;
@@ -1015,7 +1016,8 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private Course setupCourseObject(Cursor c){
-        Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
+        String location = Storage.getStorageLocationRoot(ctx);
+        Course course = new Course(location);
         course.setCourseId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
         course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
         course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));

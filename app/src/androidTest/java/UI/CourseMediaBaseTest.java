@@ -42,15 +42,9 @@ public abstract class CourseMediaBaseTest {
     protected Context context;
     protected TestDBHelper testDBHelper;
 
-    @Mock
-    SharedPreferences prefs;
-    @Mock
-    SharedPreferences.Editor editor;
-
     @Before
     public void setUp() throws Exception {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        initMockEditor();
 
         // First ensure to use in-memory database
         testDBHelper = new TestDBHelper(InstrumentationRegistry.getInstrumentation().getTargetContext());
@@ -59,18 +53,9 @@ public abstract class CourseMediaBaseTest {
         StorageAccessStrategy storageStrategy = new ExternalStorageStrategy();
         Storage.setStorageStrategy(storageStrategy);
 
-        when(prefs.getString(eq(PrefsActivity.PREF_STORAGE_OPTION), anyString())).thenReturn(storageStrategy.getStorageType());
-
         CourseUtils.cleanUp();
     }
 
-    private void initMockEditor() {
-        when(prefs.edit()).thenReturn(editor);
-        when(editor.putString(anyString(), anyString())).thenReturn(editor);
-        when(editor.putLong(anyString(), anyLong())).thenReturn(editor);
-        when(editor.putBoolean(anyString(), anyBoolean())).thenReturn(editor);
-        when(editor.putInt(anyString(), anyInt())).thenReturn(editor);
-    }
 
 
     @After

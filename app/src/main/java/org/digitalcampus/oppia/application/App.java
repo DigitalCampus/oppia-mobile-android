@@ -121,9 +121,6 @@ public class App extends Application {
     private AppComponent appComponent;
     private static MyDatabase db;
 
-    @Inject
-    public SharedPreferences prefs;
-
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -133,8 +130,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        getComponent().inject(this);
 
         db = Room.databaseBuilder(getApplicationContext(),
                 MyDatabase.class, MyDatabase.DB_NAME_ROOM)
@@ -173,7 +168,7 @@ public class App extends Application {
 
     private void configureStorageType() {
 
-        String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
+        String storageOption = getPrefs(this).getString(PrefsActivity.PREF_STORAGE_OPTION, "");
 
         if (storageOption.trim().equals("")) {
 
@@ -182,7 +177,7 @@ public class App extends Application {
                 strategy = StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_INTERNAL);
             }
 
-            StorageUtils.saveStorageData(this, strategy.getStorageType(), strategy.getStorageLocation(this));
+            StorageUtils.saveStorageData(this, strategy.getStorageType());
             Storage.setStorageStrategy(strategy);
 
         } else {
@@ -252,11 +247,7 @@ public class App extends Application {
     }
 
     public static SharedPreferences getPrefs(Context context) {
-        return ((App) context.getApplicationContext()).getPrefs();
-    }
-
-    public SharedPreferences getPrefs() {
-        return prefs;
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public static void loadDefaultPreferenceValues(Context ctx, boolean readAgain){

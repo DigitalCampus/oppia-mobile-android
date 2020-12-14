@@ -112,11 +112,10 @@ public class StorageUtils {
         }
     }
 
-    public static void saveStorageData(Context context, String storageType, String storageLocation) {
+    public static void saveStorageData(Context context, String storageType) {
 
         SharedPreferences.Editor editor = App.getPrefs(context).edit();
         editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageType);
-        editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, storageLocation);
         editor.apply();
     }
 }

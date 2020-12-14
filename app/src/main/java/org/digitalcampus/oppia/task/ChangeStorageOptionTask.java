@@ -128,7 +128,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
             return payload;
         }
 
-        StorageUtils.saveStorageData(ctx, storageType, newStrategy.getStorageLocation(ctx));
+        StorageUtils.saveStorageData(ctx, storageType);
         return payload;
 
     }
@@ -173,7 +173,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
         Storage.setStorageStrategy(previousStrategy);
 
         // And revert the storage option to the previos one
-        StorageUtils.saveStorageData(ctx, previousStrategy.getStorageType(), previousStrategy.getStorageLocation(ctx));
+        StorageUtils.saveStorageData(ctx, previousStrategy.getStorageType());
 
 
     }
