@@ -25,6 +25,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.Mock;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,6 +41,12 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 
 @RunWith(Parameterized.class)
 public class DeleteCourseTest extends BaseTestDB {
@@ -48,13 +55,12 @@ public class DeleteCourseTest extends BaseTestDB {
     private final String CORRECT_COURSE = "Correct_Course.zip";
 
     private Context context;
-    private SharedPreferences prefs;
     private StorageAccessStrategy storageStrategy;
 
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
+//            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//            Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.READ_PHONE_STATE
     );
 
@@ -72,10 +78,10 @@ public class DeleteCourseTest extends BaseTestDB {
     public void setUp() throws Exception {
         super.setUp();
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         setStorageStrategy();
     }
+
 
     //Run test once for every StorageStrategy (Internal, External)
     public void setStorageStrategy() {
@@ -83,16 +89,14 @@ public class DeleteCourseTest extends BaseTestDB {
         Log.v(TAG, "Using Strategy: " + storageStrategy.getStorageType());
         Storage.setStorageStrategy(storageStrategy);
 
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageStrategy.getStorageType());
-        storageStrategy.updateStorageLocation(context);
-        editor.commit();
+        when(prefs.getString(eq(PrefsActivity.PREF_STORAGE_OPTION), anyString())).thenReturn(storageStrategy.getStorageType());
+
     }
 
     @Test
     public void deleteCourse_success() throws Exception {
 
-        if (!Storage.getStorageStrategy().isStorageAvailable()) {
+        if (!Storage.getStorageStrategy().isStorageAvailable(context)) {
             return;
         }
 
@@ -222,12 +226,7 @@ public class DeleteCourseTest extends BaseTestDB {
         ArrayList<Object> payloadData = new ArrayList<>();
         payloadData.add(course);
         Payload p = new Payload(payloadData);
-        task.setOnDeleteCourseListener(new DeleteCourseListener() {
-            @Override
-            public void onCourseDeletionComplete(Payload r) {
-                signal.countDown();
-            }
-        });
+        task.setOnDeleteCourseListener(r -> signal.countDown());
         task.execute(p);
 
         try {

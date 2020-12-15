@@ -23,6 +23,8 @@ import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Environment;
 import androidx.preference.PreferenceManager;
+
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
@@ -233,12 +235,12 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	 */
 	protected void upgradeV49(){
 		
-		String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
-		if (!location.equals("")){ return; }
+		String location = Storage.getStorageLocationRoot(ctx);
+		if (TextUtils.isEmpty(location)){ return; }
 		
 		String source = Environment.getExternalStorageDirectory() + File.separator + Storage.APP_ROOT_DIR_NAME  + File.separator;
     	
-    	File[] dirs = ContextCompat.getExternalFilesDirs(ctx,null);
+    	File[] dirs = ctx.getExternalFilesDirs(null);
     	if(dirs.length > 0){
 
 	    	String destination = dirs[dirs.length-1].getAbsolutePath();
@@ -286,11 +288,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			} catch (IOException e) {
                 Log.d(TAG, MSG_FAILED, e);
             }
-			
-			Editor editor = prefs.edit();
-			editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, destination);
-			editor.apply();
-			
+
 			// delete original dir
 			try {
 				org.apache.commons.io.FileUtils.forceDelete(new File(source));
