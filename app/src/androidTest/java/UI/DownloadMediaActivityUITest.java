@@ -6,9 +6,6 @@ import android.os.Bundle;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadMediaActivity;
-import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.di.AppComponent;
-import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.service.DownloadService;
 import org.digitalcampus.oppia.service.DownloadServiceDelegate;
@@ -18,9 +15,8 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import androidx.test.platform.app.InstrumentationRegistry;
+import TestRules.DaggerInjectMockUITest;
 import androidx.test.rule.ActivityTestRule;
-import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static Utils.RecyclerViewMatcher.withRecyclerView;
 import static androidx.test.espresso.Espresso.onView;
@@ -31,20 +27,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 
-public class DownloadMediaActivityUITest {
-
-    @Rule
-    public DaggerMockRule<AppComponent> daggerRule =
-            new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
-                    .getTargetContext()
-                    .getApplicationContext())).set(
-                    component -> {
-                        App app =
-                                (App) InstrumentationRegistry.getInstrumentation()
-                                        .getTargetContext()
-                                        .getApplicationContext();
-                        app.setComponent(component);
-                    });
+public class DownloadMediaActivityUITest extends DaggerInjectMockUITest {
 
     @Rule
     public ActivityTestRule<DownloadMediaActivity> downloadActivityTestRule =

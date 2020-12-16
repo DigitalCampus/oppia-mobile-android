@@ -3,19 +3,8 @@ package UI;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.test.espresso.Espresso;
-import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.espresso.matcher.RootMatchers;
-import androidx.test.espresso.matcher.ViewMatchers;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
-import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.di.AppComponent;
-import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.Course;
@@ -32,8 +21,14 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
+import TestRules.DaggerInjectMockUITest;
 import Utils.CourseUtils;
-import it.cosenonjaviste.daggermock.DaggerMockRule;
+import androidx.test.espresso.Espresso;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.matcher.RootMatchers;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.action.ViewActions.click;
 import static org.mockito.Matchers.any;
@@ -44,23 +39,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
-public class GamificationUITest {
-
-    @Rule
-    public DaggerMockRule<AppComponent> daggerRule =
-            new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
-                    .getTargetContext()
-                    .getApplicationContext())).set(
-                    new DaggerMockRule.ComponentSetter<AppComponent>() {
-                        @Override
-                        public void setComponent(AppComponent component) {
-                            App app =
-                                    (App) InstrumentationRegistry.getInstrumentation()
-                                            .getTargetContext()
-                                            .getApplicationContext();
-                            app.setComponent(component);
-                        }
-                    });
+public class GamificationUITest extends DaggerInjectMockUITest {
 
     @Rule
     public ActivityTestRule<MainActivity> mainActivityTestRule =
@@ -69,17 +48,9 @@ public class GamificationUITest {
     @Mock
     CoursesRepository coursesRepository;
     @Mock
-    CompleteCourseProvider completeCourseProvider;
-    @Mock
     SharedPreferences prefs;
     @Mock
     SharedPreferences.Editor editor;
-    @Mock
-    User user;
-    @Mock
-    ArrayList<Points> pointList;
-    @Mock
-    ArrayList<Badge> badgeList;
 
     @Before
     public void setUp() throws Exception {
@@ -102,7 +73,7 @@ public class GamificationUITest {
             courses.add(CourseUtils.createMockCourse());
         }
 
-        when(coursesRepository.getCourses((Context) any())).thenReturn(courses);
+        when(coursesRepository.getCourses(any())).thenReturn(courses);
 
     }
 
@@ -114,7 +85,7 @@ public class GamificationUITest {
 
         if (true) {
             //Working on this test
-            Assert.assertEquals(1, coursesRepository.getCourses((Context) any()).size());
+            Assert.assertEquals(1, coursesRepository.getCourses(any()).size());
             return;
         }
 

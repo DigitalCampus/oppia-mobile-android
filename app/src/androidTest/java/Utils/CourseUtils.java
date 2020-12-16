@@ -18,6 +18,7 @@ import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.storage.*;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.concurrent.CountDownLatch;
 
 import database.TestDBHelper;
 
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -96,7 +98,7 @@ public class CourseUtils {
             Activity activity = new Activity();
             activity.setTitles(new ArrayList<Lang>(){{ add(new Lang("en", "Activity " + n)); }});
             activity.setDigest("");
-            activity.setActType("ActType");
+            activity.setActType("page");
             activities.add(activity);
         }
 
@@ -118,6 +120,16 @@ public class CourseUtils {
 
         return completeCourse;
 
+    }
+
+    public static CompleteCourse mockCourse(CompleteCourse courseToMock){
+        CompleteCourse mockCourse = mock(CompleteCourse.class);
+        Mockito.doAnswer(invocation -> courseToMock.getActivities(1)).when(mockCourse).getActivities(anyLong());
+        Mockito.doAnswer(invocation -> courseToMock.getSections()).when(mockCourse).getSections();
+        Mockito.doAnswer(invocation -> courseToMock.getBaselineActivities()).when(mockCourse).getBaselineActivities();
+        Mockito.doAnswer(invocation -> courseToMock.getMetaPages()).when(mockCourse).getMetaPages();
+
+        return mockCourse;
     }
 
 

@@ -3,18 +3,15 @@ package UI;
 
 import android.os.Bundle;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.fragments.BadgesFragment;
-import org.digitalcampus.oppia.model.Activity;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 import Utils.Assertions.RecyclerViewItemCountAssertion;
 import Utils.MockedApiEndpointTest;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;

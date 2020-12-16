@@ -3,6 +3,7 @@ package Utils;
 import android.content.Context;
 import android.text.TextUtils;
 
+import TestRules.DaggerInjectMockUITest;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.oppia.api.ApiEndpoint;
@@ -23,14 +24,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
-public abstract class MockedApiEndpointTest {
+public abstract class MockedApiEndpointTest extends DaggerInjectMockUITest {
 
     public static final String ERROR_MESSAGE_BODY = "responses/response_body_error_message.txt";
-
-    @Rule
-    public DaggerMockRule<AppComponent> daggerRule =
-            new DaggerMockRule<>(AppComponent.class, new AppModule(getApp())).set(
-                    component -> getApp().setComponent(component));
 
     @Mock
     protected ApiEndpoint apiEndpoint;
