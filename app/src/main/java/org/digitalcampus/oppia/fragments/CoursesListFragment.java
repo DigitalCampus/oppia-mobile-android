@@ -1,6 +1,5 @@
 package org.digitalcampus.oppia.fragments;
 
-import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -10,9 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,18 +21,16 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
-import org.digitalcampus.oppia.activity.DownloadMediaActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.CoursesListAdapter;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
-import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.listener.UpdateActivityListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
@@ -45,12 +40,10 @@ import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.ScanMediaTask;
 import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
 import org.digitalcampus.oppia.utils.ui.MediaScanView;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -77,6 +70,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     private RecyclerView recyclerCourses;
     private CoursesListAdapter adapterListCourses;
     private MediaScanView mediaScanView;
+    private View emptyStateImage;
 
     private void findViews(View layout) {
 
@@ -86,6 +80,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         tvManageCourses = layout.findViewById(R.id.manage_courses_text);
         manageBtn = layout.findViewById(R.id.manage_courses_btn);
+        emptyStateImage = layout.findViewById(R.id.empty_state_img);
         
         
     }
@@ -169,10 +164,14 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     private void displayDownloadSection(){
         noCoursesView.setVisibility(View.VISIBLE);
         tvManageCourses.setText((!courses.isEmpty())? R.string.more_courses : R.string.no_courses);
-        manageBtn.setOnClickListener(v ->
-            AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.menu_download, () ->
-                    startActivity(new Intent(getActivity(), TagSelectActivity.class)))
-        );
+        manageBtn.setOnClickListener(v -> onManageCoursesClick());
+        emptyStateImage.setOnClickListener(v -> onManageCoursesClick());
+
+    }
+
+    private void onManageCoursesClick() {
+        AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.menu_download, () ->
+                startActivity(new Intent(getActivity(), TagSelectActivity.class)));
     }
 
     // Recycler callbacks

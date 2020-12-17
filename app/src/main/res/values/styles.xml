@@ -55,7 +55,7 @@
     </style>
 
     <style name="HeaderText">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
@@ -67,66 +67,66 @@
     </style>
 
     <style name="ButtonText">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
 
     <style name="ButtonTextSmall">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
 
     <style name="PageHeadingText">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/text_light</item>
     </style>
 
     <style name="FieldLabelText">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:textColor">@color/text_light</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="FieldText">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="MediumTextDarkItalic">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:textStyle">italic</item>
         <item name="android:textColor">@color/text_grey</item>
     </style>
 
     <style name="MediumTextItalic">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:textStyle">italic</item>
         <item name="android:textColor">@color/text_light</item>
     </style>
 
     <style name="SmallTextLight">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_light</item>
     </style>
 
     <style name="SmallTextLightItalic">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textStyle">italic</item>
         <item name="android:textColor">@color/text_light</item>
     </style>
 
     <style name="SmallTextDarkItalic">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textStyle">italic</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
 
     <style name="SmallTextDark">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
@@ -135,6 +135,12 @@
         <item name="android:textSize">11sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_grey</item>
+    </style>
+
+    <style name="ErrorText">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_error</item>
     </style>
 
     <style name="PointsText">
@@ -206,7 +212,7 @@
     </style>
 
     <style name="Highlight.Label" parent="android:TextAppearance">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:layout_marginTop">-5dp</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:gravity">center</item>
@@ -215,7 +221,7 @@
     </style>
 
     <style name="Oppia.Theme.InputError" parent="android:TextAppearance">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:layout_marginTop">-15dp</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginBottom">18dp</item>

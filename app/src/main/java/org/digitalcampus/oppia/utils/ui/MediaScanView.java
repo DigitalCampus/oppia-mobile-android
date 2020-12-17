@@ -19,7 +19,6 @@ import androidx.preference.PreferenceManager;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ViewMediaScanBinding;
 import org.digitalcampus.oppia.activity.DownloadMediaActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;

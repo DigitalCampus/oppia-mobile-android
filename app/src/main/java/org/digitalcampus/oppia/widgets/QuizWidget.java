@@ -29,8 +29,8 @@ import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.adapter.QuizAnswersFeedbackAdapter;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -98,10 +98,8 @@ public class QuizWidget extends AnswerWidget {
     private boolean isUserOverLimitedAttempts(){
         if (this.quiz.limitAttempts()){
             //Check if the user has attempted the quiz the max allowed
-            DbHelper db = DbHelper.getInstance(getActivity());
-            long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-            QuizStats qs = db.getQuizAttempt(this.activity.getDigest(), userId);
-            return qs.getNumAttempts() > quiz.getMaxAttempts();
+            QuizStats qs = attemptsRepository.getQuizAttemptStats(this.getActivity(), activity.getDigest());
+            return qs.getNumAttempts() >= quiz.getMaxAttempts();
         }
         return false;
     }

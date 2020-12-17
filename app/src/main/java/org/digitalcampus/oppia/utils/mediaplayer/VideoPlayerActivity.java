@@ -120,13 +120,6 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         videoHolder.addCallback(this);
     }
 
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-
-    }
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         controller.show();
@@ -157,14 +150,15 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         Log.d(TAG, "Attempting to save media tracker. Time: " + timeTaken);
 
         Media media = getMedia();
-        Log.d(TAG, "saving tracker... " + media.getLength());
-        boolean completed = (timeTaken >= media.getLength());
-        new GamificationServiceDelegate(this)
-                .createActivityIntent(course, activity, completed, false)
-                .registerMediaPlaybackEvent(timeTaken, mediaFileName);
+        if (media != null){
+            Log.d(TAG, "saving tracker... " + media.getLength());
+            boolean completed = (timeTaken >= media.getLength());
+            new GamificationServiceDelegate(this)
+                    .createActivityIntent(course, activity, completed, false)
+                    .registerMediaPlaybackEvent(timeTaken, mediaFileName);
 
-        setResult(completed ? RESULT_OK : RESULT_CANCELED); // For testing purposes
-
+            setResult(completed ? RESULT_OK : RESULT_CANCELED); // For testing purposes
+        }
     }
 
     private Media getMedia() {

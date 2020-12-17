@@ -6,9 +6,6 @@ import android.content.Intent;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
-import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.di.AppComponent;
-import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.MultiLangInfoModel;
@@ -22,10 +19,9 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
+import TestRules.DaggerInjectMockUITest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
-import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static Matchers.EspressoTestsMatchers.withDrawable;
 import static Utils.RecyclerViewMatcher.withRecyclerView;
@@ -42,20 +38,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 
 @RunWith(AndroidJUnit4.class)
-public class DownloadActivityUITest {
-
-    @Rule
-    public DaggerMockRule<AppComponent> daggerRule =
-            new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
-                    .getTargetContext()
-                    .getApplicationContext())).set(
-                    component -> {
-                        App app =
-                                (App) InstrumentationRegistry.getInstrumentation()
-                                        .getTargetContext()
-                                        .getApplicationContext();
-                        app.setComponent(component);
-                    });
+public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
     @Rule
     public ActivityTestRule<DownloadActivity> downloadActivityTestRule =
@@ -235,7 +218,7 @@ public class DownloadActivityUITest {
             Context ctx = (Context) invocationOnMock.getArguments()[0];
             sendBroadcast(ctx, CourseInstallerService.ACTION_DOWNLOAD);
             return null;
-        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
+        }).when(courseInstallerServiceDelegate).installCourse(any(), any(), any());
 
         downloadActivityTestRule.launchActivity(null);
 

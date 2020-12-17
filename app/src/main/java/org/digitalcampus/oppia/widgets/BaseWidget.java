@@ -29,6 +29,8 @@ import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
@@ -97,7 +99,12 @@ public abstract class BaseWidget extends Fragment {
 		this.startTime = (startTime != 0) ? startTime : (System.currentTimeMillis()/1000);
         currentTimeAccounted = false;
 	}
-	
+
+    public AppComponent getAppComponent(){
+        App app = (App) getActivity().getApplication();
+        return app.getComponent();
+    }
+
 	public long getStartTime(){
 		return (startTime != 0) ? startTime : (System.currentTimeMillis()/1000);
 	}

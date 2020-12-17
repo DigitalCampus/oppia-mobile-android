@@ -375,7 +375,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         task.setListener(new FetchCourseTransferableFilesTask.FetchBackupsListener() {
             @Override
             public void coursesPendingToInstall(boolean pending) {
-                if (pending && isAfterTransfer){
+                if (pending && isAfterTransfer && !isReceiving){
                     final Handler handler = new Handler();
                     Log.e(TAG, "Installing pending courses!");
                     handler.postDelayed(() -> {
