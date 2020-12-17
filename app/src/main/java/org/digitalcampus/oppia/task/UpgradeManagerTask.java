@@ -42,6 +42,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.SearchUtils;
@@ -150,6 +151,13 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			payload.setResult(true);
 		}
 
+		if(!prefs.getBoolean("upgradeV82",false)){
+			upgradeV82();
+			prefs.edit().putBoolean("upgradeV82", true).apply();
+			publishProgress(this.ctx.getString(R.string.info_upgrading,"v82"));
+			payload.setResult(true);
+		}
+
 		DBMigration.newInstance(ctx).checkMigrationStatus();
 
 		overrideAdminPasswordTask();
@@ -167,8 +175,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		if (children != null) {
             for (String course : children) {
                 publishProgress("checking: " + course);
-                String courseXMLPath = "";
-                String courseTrackerXMLPath = "";
+                String courseXMLPath;
+                String courseTrackerXMLPath;
                 // check that it's unzipped etc correctly
                 try {
                     courseXMLPath = dir + File.separator + course + File.separator + App.COURSE_XML;
@@ -450,6 +458,41 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		int badges = prefs.getInt(UpgradeManagerTask.PREF_BADGES, 0);
 		Log.d(TAG, "points: " + points);
 		db.updateUserBadges(userId, badges);
+	}
+
+	protected void upgradeV82(){
+		// Populate media database with currently installed media
+
+		DbHelper db = DbHelper.getInstance(ctx);
+		List<Course> courses = db.getAllCourses();
+		for (Course course : courses){
+			CourseXMLReader cxr;
+			try {
+				cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
+				cxr.parse(CourseXMLReader.ParseMode.ONLY_MEDIA);
+				List<Media> media = cxr.getMediaResponses().getCourseMedia();
+				db.insertCourseMedia(course.getCourseId(), media);
+
+			} catch (InvalidXMLException ixmle) {
+				Log.d(TAG,"Invalid course XML", ixmle);
+				Mint.logException(ixmle);
+			}
+		}
+
+		File mediaPath = new File(Storage.getMediaPath(ctx));
+		String[] mediaFiles = mediaPath.list();
+		if (mediaFiles != null && mediaFiles.length > 0) {
+			for (String mediaFile : mediaFiles) {
+				File file = new File(mediaPath, mediaFile);
+				if (db.getMediaUsages(mediaFile) == 0){
+					// The media file was only used by this course, we can delete it
+					boolean success = file.delete();
+					Log.d(TAG, "Removing unused media file " + mediaFile +
+							(success ? " successfully" : "failed"));
+				}
+			}
+		}
+
 	}
 	
 	@Override
