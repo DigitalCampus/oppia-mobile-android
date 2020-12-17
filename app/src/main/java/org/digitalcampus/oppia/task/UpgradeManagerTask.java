@@ -175,8 +175,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		if (children != null) {
             for (String course : children) {
                 publishProgress("checking: " + course);
-                String courseXMLPath = "";
-                String courseTrackerXMLPath = "";
+                String courseXMLPath;
+                String courseTrackerXMLPath;
                 // check that it's unzipped etc correctly
                 try {
                     courseXMLPath = dir + File.separator + course + File.separator + App.COURSE_XML;
