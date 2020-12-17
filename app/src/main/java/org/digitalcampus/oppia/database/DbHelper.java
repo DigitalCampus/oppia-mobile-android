@@ -2474,4 +2474,12 @@ public class DbHelper extends SQLiteOpenHelper {
         return media;
     }
 
+    public int getMediaUsages(String mediaFilename){
+        String s = MEDIA_FILENAME + "=?";
+        String[] args = new String[]{ mediaFilename };
+        Cursor c = db.query(MEDIA_TABLE, null, s, args, null, null, null);
+        int usages = c.getCount();
+        c.close();
+        return usages;
+    }
 }
