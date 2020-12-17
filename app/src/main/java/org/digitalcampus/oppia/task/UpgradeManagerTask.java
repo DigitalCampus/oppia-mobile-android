@@ -42,6 +42,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.SearchUtils;
@@ -147,6 +148,13 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			upgradeV54a();
 			prefs.edit().putBoolean("upgradeV54a", true).apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading,"v54a"));
+			payload.setResult(true);
+		}
+
+		if(!prefs.getBoolean("upgradeV82",false)){
+			upgradeV82();
+			prefs.edit().putBoolean("upgradeV82", true).apply();
+			publishProgress(this.ctx.getString(R.string.info_upgrading,"v82"));
 			payload.setResult(true);
 		}
 
@@ -450,6 +458,28 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		int badges = prefs.getInt(UpgradeManagerTask.PREF_BADGES, 0);
 		Log.d(TAG, "points: " + points);
 		db.updateUserBadges(userId, badges);
+	}
+
+	protected void upgradeV82(){
+		// Populate media database with currently installed media
+
+		DbHelper db = DbHelper.getInstance(ctx);
+		List<Course> courses = db.getAllCourses();
+		for (Course course : courses){
+			CourseXMLReader cxr;
+			try {
+				cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
+				cxr.parse(CourseXMLReader.ParseMode.ONLY_MEDIA);
+				List<Media> media = cxr.getMediaResponses().getCourseMedia();
+				db.insertCourseMedia(course.getCourseId(), media);
+
+			} catch (InvalidXMLException ixmle) {
+				Log.d(TAG,"Invalid course XML", ixmle);
+				Mint.logException(ixmle);
+			}
+		}
+
+
 	}
 	
 	@Override
