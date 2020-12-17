@@ -6,14 +6,13 @@
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants">
 
-
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/list_card_horizontal_margin"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="4dp"
         android:layout_marginRight="@dimen/list_card_horizontal_margin"
-        android:layout_marginBottom="7dp"
+        android:layout_marginBottom="6dp"
         android:foreground="@drawable/bg_selectable"
         app:contentPaddingBottom="@dimen/list_card_vertical_padding"
         app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
@@ -63,13 +62,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/action_btn"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="-10dp"
                 android:gravity="center"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp" />
+
+            <TextView
+                android:id="@+id/download_error"
+                style="@style/Oppia.Theme.CardBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/media_file_size"
+                android:layout_alignStart="@id/action_btn"
+                android:layout_alignEnd="@id/action_btn"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:text="@string/error"
+                android:paddingRight="10dp"
+                android:background="@drawable/badge_error"
+                android:layout_marginTop="@dimen/list_card_vertical_padding"
+                android:layout_marginBottom="@dimen/list_card_vertical_padding"
+                android:visibility="gone"
+                />
 
             <ProgressBar
                 android:id="@+id/download_progress"
@@ -89,12 +105,13 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:contentDescription="@string/download"
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingRight="10dp"
                 android:scaleType="fitCenter"
+                android:tint="@color/listitem_action_item_tint"
                 android:src="@drawable/ic_action_download" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

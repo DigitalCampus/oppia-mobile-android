@@ -33,15 +33,17 @@ import android.widget.Toast;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.DownloadMediaAdapter;
 import org.digitalcampus.oppia.listener.DownloadMediaListener;
-import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.service.DownloadBroadcastReceiver;
 import org.digitalcampus.oppia.service.DownloadService;
+import org.digitalcampus.oppia.service.DownloadServiceDelegate;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.MultiChoiceHelper;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,6 +65,9 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
     public enum DownloadMode {INDIVIDUALLY, DOWNLOAD_ALL, STOP_ALL}
 
+    @Inject
+    DownloadServiceDelegate downloadServiceDelegate;
+
     @Override
     public void onStart() {
         super.onStart();
@@ -70,12 +75,10 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     }
 
     private void findViews() {
-
         missingMediaContainer = findViewById(R.id.home_messages);
         downloadSelected = findViewById(R.id.download_selected);
         emptyState = findViewById(R.id.empty_state);
         recyclerMedia = findViewById(R.id.missing_media_list);
-
     }
 
     @SuppressWarnings("unchecked")
@@ -83,6 +86,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_media);
+        getAppComponent().inject(this);
         findViews();
 
         Bundle bundle = this.getIntent().getExtras();
@@ -145,7 +149,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
                 adapterMedia.setEnterOnMultiChoiceMode(true);
                 adapterMedia.notifyDataSetChanged();
-
                 downloadSelected.setText(getString(R.string.missing_media_stop_selected));
 
                 menu.findItem(R.id.menu_sort_by).setVisible(false);
@@ -195,14 +198,11 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         adapterMedia.sortByFilename();
         recyclerMedia.setAdapter(adapterMedia);
 
-        adapterMedia.setOnItemClickListener(new ListInnerBtnOnClickListener() {
-            @Override
-            public void onClick(int position) {
-                Log.d(TAG, "Clicked " + position);
-                Media mediaToDownload = missingMedia.get(position);
+        adapterMedia.setOnItemClickListener(position -> {
+            Log.d(TAG, "Clicked " + position);
+            Media mediaToDownload = missingMedia.get(position);
 
-                downloadMedia(mediaToDownload, DownloadMode.INDIVIDUALLY);
-            }
+            downloadMedia(mediaToDownload, DownloadMode.INDIVIDUALLY);
         });
 
         Media.resetMediaScan(prefs);
@@ -315,6 +315,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
             mediaFile.setDownloading(false);
+            mediaFile.setFailed(true);
             mediaFile.setProgress(0);
             adapterMedia.notifyDataSetChanged();
         }
@@ -366,12 +367,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     }
 
     private void startDownload(Media mediaToDownload) {
-        Intent mServiceIntent = new Intent(DownloadMediaActivity.this, DownloadService.class);
-        mServiceIntent.putExtra(DownloadService.SERVICE_ACTION, DownloadService.ACTION_DOWNLOAD);
-        mServiceIntent.putExtra(DownloadService.SERVICE_URL, mediaToDownload.getDownloadUrl());
-        mServiceIntent.putExtra(DownloadService.SERVICE_DIGEST, mediaToDownload.getDigest());
-        mServiceIntent.putExtra(DownloadService.SERVICE_FILENAME, mediaToDownload.getFilename());
-        DownloadMediaActivity.this.startService(mServiceIntent);
+
+        downloadServiceDelegate.startDownload(this, mediaToDownload);
 
         mediaToDownload.setDownloading(true);
         mediaToDownload.setProgress(0);
@@ -387,10 +384,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     }
 
     private void stopDownload(Media mediaToDownload) {
-        Intent mServiceIntent = new Intent(DownloadMediaActivity.this, DownloadService.class);
-        mServiceIntent.putExtra(DownloadService.SERVICE_ACTION, DownloadService.ACTION_CANCEL);
-        mServiceIntent.putExtra(DownloadService.SERVICE_URL, mediaToDownload.getDownloadUrl());
-        DownloadMediaActivity.this.startService(mServiceIntent);
+
+        downloadServiceDelegate.stopDownload(this, mediaToDownload);
 
         mediaToDownload.setDownloading(false);
         mediaToDownload.setProgress(0);

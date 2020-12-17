@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.digitalcampus.mobile.learning.R;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -50,7 +51,7 @@ public class ViewsUtils {
      * Use this method to find the error view within the TextInputLayout. Useful for asseting that certain errors are displayed to the user
      */
     public static ViewInteraction onErrorViewWithinTextInputLayoutWithId(@IdRes int textInputLayoutId) {
-        return onView(allOf(isDescendantOfA(withId(textInputLayoutId)), not(isAssignableFrom(EditText.class)), isAssignableFrom(TextView.class)));
+        return onView(allOf(isDescendantOfA(withId(textInputLayoutId)), withId(R.id.textinput_error)));
     }
 
     public static Matcher<View> withHintInInputLayout(final Matcher<String> stringMatcher) {

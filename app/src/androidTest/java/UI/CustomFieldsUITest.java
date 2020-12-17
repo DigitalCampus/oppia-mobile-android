@@ -47,7 +47,6 @@ public class CustomFieldsUITest extends MockedApiEndpointTest {
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
             new ActivityTestRule<>(WelcomeActivity.class, false, false);
 
-
     @Test
     public void checkFieldsAreShownAndValidated() throws  Exception {
 

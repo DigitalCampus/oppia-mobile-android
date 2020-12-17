@@ -23,10 +23,8 @@ public class WelcomeUITest {
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
             new ActivityTestRule<>(WelcomeActivity.class);
 
-
-
     @Test
-    public void showsLoginFragmentOnLoginButtonClick() throws Exception{
+    public void showsLoginFragmentOnLoginButtonClick(){
         onView(withId(R.id.welcome_login))
                 .perform(scrollTo(), click());
 
@@ -36,7 +34,7 @@ public class WelcomeUITest {
     }
 
     @Test
-    public void showsRegisterFragmentOnRegisterButtonClick() throws Exception{
+    public void showsRegisterFragmentOnRegisterButtonClick() {
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
 
@@ -45,7 +43,7 @@ public class WelcomeUITest {
     }
 
     @Test
-    public void showsResetFragmentOnResetTabClicked() throws Exception{
+    public void showsResetFragmentOnResetTabClicked() {
 
         onView(withId(R.id.welcome_login))
                 .perform(scrollTo(), click());

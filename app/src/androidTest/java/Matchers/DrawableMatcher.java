@@ -36,11 +36,21 @@ public class DrawableMatcher extends TypeSafeMatcher<View> {
         if (expectedDrawable == null) {
             return false;
         }
-        BitmapDrawable bmd = (BitmapDrawable) imageView.getDrawable();
-        Bitmap bitmap = bmd.getBitmap();
-        BitmapDrawable expected = (BitmapDrawable) expectedDrawable;
-        Bitmap otherBitmap = expected.getBitmap();
-        return bitmap.sameAs(otherBitmap);
+        Drawable drawable = imageView.getDrawable();
+        if (drawable instanceof BitmapDrawable){
+            BitmapDrawable bmd = (BitmapDrawable) imageView.getDrawable();
+            Bitmap bitmap = bmd.getBitmap();
+            BitmapDrawable expected = (BitmapDrawable) expectedDrawable;
+            Bitmap otherBitmap = expected.getBitmap();
+            return bitmap.sameAs(otherBitmap);
+        }
+        else{
+            //If it's a vector drawable, we need to manually have set a tag with the resource ID
+            int resourceID = (int) imageView.getTag();
+            return resourceID == expectedId;
+        }
+
+
     }
 
     @Override

@@ -67,4 +67,12 @@ public class Points {
 	public void setPointsAwarded(int points) {
 		this.pointsAwarded = points;
 	}
+
+	public String getDescriptionPrettified() {
+		return getDescription() == null ? null : capitalize(getDescription()).replace("_", " ");
+	}
+
+	public String capitalize(String str) {
+		return str.substring(0, 1).toUpperCase() + str.substring(1);
+	}
 }

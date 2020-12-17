@@ -3,6 +3,7 @@ package UI;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import TestRules.DaggerInjectMockUITest;
 import androidx.preference.PreferenceManager;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -22,7 +23,7 @@ import Utils.FileUtils;
 import database.TestDBHelper;
 
 @RunWith(AndroidJUnit4.class)
-public abstract class CourseMediaBaseTest {
+public abstract class CourseMediaBaseTest extends DaggerInjectMockUITest {
 
     protected static final String COURSE_WITH_NO_MEDIA = "Course_with_no_media.zip";
     protected static final String COURSE_WITH_MEDIA_1 = "Course_with_media_1.zip";

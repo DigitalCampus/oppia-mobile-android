@@ -125,8 +125,10 @@ public class CustomFieldsUIManager {
                 ValidableField collectionField = getInputByKey(field.getCollectionNameBy());
                 if (collectionField != null && field.isChoices()) {
                     String collectionName = collectionField.getCleanedValue();
-                    List<CustomField.CollectionItem> collection = DbHelper.getInstance(ctx).getCollection(collectionName);
-                    ((ValidableSpinnerLayout) input).updateCollection(collection);
+                    if (collectionName != null) {
+                        List<CustomField.CollectionItem> collection = DbHelper.getInstance(ctx).getCollection(collectionName);
+                        ((ValidableSpinnerLayout) input).updateCollection(collection);
+                    }
                 }
             });
         }

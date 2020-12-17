@@ -1,8 +1,12 @@
 package UI;
 
+import android.content.Intent;
+import android.os.Bundle;
+
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
+import org.digitalcampus.oppia.model.Section;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,6 +55,19 @@ public class AboutUITest {
                 .perform(click());
 
         onView(withId(R.id.about_versionno)).check(matches(withText(containsString(BuildConfig.VERSION_NAME))));
+    }
+
+    @Test
+    public void withBundleTab() {
+        Intent i = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putInt(AboutActivity.TAB_ACTIVE, AboutActivity.TAB_PRIVACY);
+        i.putExtras(bundle);
+        aboutActivityTestRule.launchActivity(i);
+
+        onView(allOf(withText(R.string.tab_title_privacy), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                isDescendantOfA(withId(R.id.tabs_toolbar))))
+                .perform(click());
     }
 
 }

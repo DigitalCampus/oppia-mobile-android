@@ -5,6 +5,7 @@ import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
 import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.activity.DownloadMediaActivity;
 import org.digitalcampus.oppia.activity.EditProfileActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -25,6 +26,7 @@ import org.digitalcampus.oppia.fragments.RegisterFragment;
 import org.digitalcampus.oppia.fragments.ResetFragment;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.NoCourseDownloadedManager;
+import org.digitalcampus.oppia.widgets.AnswerWidget;
 
 import javax.inject.Singleton;
 
@@ -39,6 +41,7 @@ public interface AppComponent {
     void inject(ViewDigestActivity activity);
     void inject(ActivityLogActivity activity);
     void inject(DownloadActivity activity);
+    void inject(DownloadMediaActivity activity);
     void inject(AppActivity activity);
     void inject(PrefsActivity activity);
     void inject(CourseQuizAttemptsActivity activity);
@@ -53,7 +56,7 @@ public interface AppComponent {
     void inject(AppFragment fragment);
     void inject(GlobalQuizAttemptsFragment fragment);
     void inject(RegisterFragment fragment);
-
+    void inject(AnswerWidget fragment);
     void inject(EditProfileActivity activity);
 
     void inject(AdminSecurityManager adminSecurityManager);
