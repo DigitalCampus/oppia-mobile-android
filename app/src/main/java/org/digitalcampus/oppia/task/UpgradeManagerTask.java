@@ -479,6 +479,19 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			}
 		}
 
+		File mediaPath = new File(Storage.getMediaPath(ctx));
+		String[] mediaFiles = mediaPath.list();
+		if (mediaFiles != null && mediaFiles.length > 0) {
+			for (String mediaFile : mediaFiles) {
+				File file = new File(mediaPath, mediaFile);
+				if (db.getMediaUsages(mediaFile) == 0){
+					// The media file was only used by this course, we can delete it
+					boolean success = file.delete();
+					Log.d(TAG, "Removing unused media file " + mediaFile +
+							(success ? " successfully" : "failed"));
+				}
+			}
+		}
 
 	}
 	
