@@ -46,13 +46,10 @@ public class StorageUtils {
     }
 
     public static DeviceFile getInternalMemoryDrive(Context ctx) {
-
-//        return new DeviceFile(ctx.getFilesDir().getPath());
         return getFirstDeviceIfRemovable(ctx, false);
     }
 
     public static DeviceFile getExternalMemoryDrive(Context ctx) {
-
         return getFirstDeviceIfRemovable(ctx, true);
     }
 
