@@ -152,6 +152,13 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			payload.setResult(true);
 		}
 
+		if(!prefs.getBoolean("upgradeV55",false)){
+			upgradeV55();
+			prefs.edit().putBoolean("upgradeV55", true).apply();
+			publishProgress(this.ctx.getString(R.string.info_upgrading,"v55"));
+			payload.setResult(true);
+		}
+
 		DBMigration.newInstance(ctx).checkMigrationStatus();
 
 		overrideAdminPasswordTask();
@@ -159,7 +166,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		
 		return payload;
 	}
-	
+
 	/* rescans all the installed courses and reinstalls them, to ensure that 
 	 * the new titles etc are picked up
 	 */
@@ -448,6 +455,69 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		int badges = prefs.getInt(UpgradeManagerTask.PREF_BADGES, 0);
 		Log.d(TAG, "points: " + points);
 		db.updateUserBadges(userId, badges);
+	}
+
+
+	/**
+	 * After storage locations refactor, move file from internal private storage
+	 * to internal public (or external built-in device storage), if needed.
+	 */
+	private void upgradeV55() {
+
+		String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, PrefsActivity.STORAGE_OPTION_EXTERNAL);
+		if (TextUtils.equals(storageOption, PrefsActivity.STORAGE_OPTION_INTERNAL)) {
+
+			String sourcePath = ctx.getFilesDir().getPath();
+			String destPath = StorageUtils.getInternalMemoryDrive(ctx).getPath();
+
+			try {
+
+				Log.d(TAG, "Getting storage sizes...");
+				long currentSize = Storage.getTotalStorageUsed(ctx);
+
+				long availableDestSize;
+				File destDir = new File(destPath);
+				Log.d(TAG, "destDir created: " + destDir.getAbsolutePath());
+				if (destDir.exists()) {
+					Log.d(TAG, "cleaning courses dir");
+					File coursesDir = new File(Storage.getCoursesPath(ctx));
+					FileUtils.cleanDir(coursesDir);
+					Log.d(TAG, "courses dir cleaned");
+				} else {
+					boolean makeDirs = destDir.mkdirs();
+					if (!makeDirs) {
+						boolean canWrite = destDir.canWrite();
+						Log.d(TAG, "Error creating destination dir " + destPath + ": canWrite=" + canWrite);
+						throw new IOException("No file created!");
+					}
+				}
+
+				Storage.createNoMediaFile(ctx);
+
+				availableDestSize = Storage.getAvailableStorageSize(ctx);
+				Log.d(TAG, "Needed (source):" + currentSize + " - Available(destination): " + availableDestSize);
+
+				if (availableDestSize < currentSize) {
+					throw new Exception(ctx.getString(R.string.error_insufficient_storage_available));
+				} else {
+					if (ChangeStorageOptionTask.moveStorageDirs(sourcePath, destPath)) {
+						//Delete the files from source
+						FileUtils.deleteDir(new File(sourcePath));
+						Log.d(TAG, "Update storage location succeeded!");
+					} else {
+						//Delete the files that were actually copied
+						File destDirDelete = new File(destPath);
+						FileUtils.deleteDir(destDirDelete);
+						throw new Exception(ctx.getString(R.string.error));
+					}
+
+				}
+
+			} catch (Exception e) {
+				Log.e(TAG, "upgradeV55: ", e);
+			}
+		}
+
 	}
 	
 	@Override

@@ -133,7 +133,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
 
     }
 
-    private boolean copyDirectory(String sourcePath, String destPath, boolean optional) {
+    public static boolean copyDirectory(String sourcePath, String destPath, boolean optional) {
 
         try {
             File source = new File(sourcePath);
@@ -152,7 +152,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
         return true;
     }
 
-    private boolean moveStorageDirs(String sourcePath, String destinationPath) {
+    public static boolean moveStorageDirs(String sourcePath, String destinationPath) {
 
         String downloadPath = sourcePath + File.separator + Storage.APP_DOWNLOAD_DIR_NAME;
         String mediaPath = sourcePath + File.separator + Storage.APP_MEDIA_DIR_NAME;

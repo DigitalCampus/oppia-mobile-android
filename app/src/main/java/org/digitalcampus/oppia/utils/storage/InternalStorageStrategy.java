@@ -32,13 +32,12 @@ public class InternalStorageStrategy implements StorageAccessStrategy{
 
     @Override
     public String getStorageLocation(Context ctx) {
-        File location = ctx.getFilesDir();
-        return location.getPath();
+        DeviceFile internal = StorageUtils.getInternalMemoryDrive(ctx);
+        return internal != null ? internal.getPath() : null;
     }
 
     @Override
     public boolean isStorageAvailable(Context ctx) {
-        //Internal storage is always available :)
         return true;
     }
 

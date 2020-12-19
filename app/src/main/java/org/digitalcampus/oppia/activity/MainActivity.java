@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StatFs;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +35,7 @@ import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,13 +101,16 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 //            if (fileExternal == null) {
 //                Log.i(TAG, String.format(">> external[%d]: null", i));
 //            } else {
-//                Log.i(TAG, String.format(">> external[%d]: %s, available: %d", i, fileExternal.getPath(), getAvailableSpace(fileExternal.getPath())));
+//                Log.i(TAG, String.format(">> external[%d]: %s, available: %d. removable: %s",
+//                        i, fileExternal.getPath(), getAvailableSpace(fileExternal.getPath()),
+//                        Environment.isExternalStorageRemovable(fileExternal)));
 //            }
 //        }
 //
 //        Log.i(TAG, ">> environment: " + Environment.getExternalStorageDirectory().getPath());
 //
-//        Log.i(TAG, String.format(">> internal: %s, available: %d", getFilesDir().getPath(), getAvailableSpace(getFilesDir().getPath())));
+//        Log.i(TAG, String.format(">> internal: %s, available: %d",
+//                getFilesDir().getPath(), getAvailableSpace(getFilesDir().getPath())));
 
 
     }

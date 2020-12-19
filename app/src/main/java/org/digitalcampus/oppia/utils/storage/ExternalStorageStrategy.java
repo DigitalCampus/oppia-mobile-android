@@ -42,7 +42,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy {
 
     @Override
     public String getStorageLocation(Context ctx) {
-        DeviceFile external = StorageUtils.getExternalMemoryDrive(ctx, true);
+        DeviceFile external = StorageUtils.getExternalMemoryDrive(ctx);
         return external != null ? external.getPath() : null;
     }
 

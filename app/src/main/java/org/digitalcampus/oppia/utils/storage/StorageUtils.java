@@ -40,8 +40,6 @@ import javax.inject.Inject;
 public class StorageUtils {
 
     public static final String TAG = StorageUtils.class.getSimpleName();
-    private static DeviceFile mExternalDrive;
-    private static DeviceFile mInternalDrive;
 
     private StorageUtils() {
         throw new IllegalStateException("Utility class");
@@ -49,40 +47,32 @@ public class StorageUtils {
 
     public static DeviceFile getInternalMemoryDrive(Context ctx) {
 
-        if (mInternalDrive != null) {
-            return mInternalDrive;
-        }
-
-        mInternalDrive = new DeviceFile(ctx.getFilesDir().getPath());
-        return mInternalDrive;
+//        return new DeviceFile(ctx.getFilesDir().getPath());
+        return getFirstDeviceIfRemovable(ctx, false);
     }
 
-    public static DeviceFile getExternalMemoryDrive(Context ctx, boolean forzeRecreate) {
+    public static DeviceFile getExternalMemoryDrive(Context ctx) {
 
-        // TODO ¿remove singletones and always create?
+        return getFirstDeviceIfRemovable(ctx, true);
+    }
 
-        if (mExternalDrive != null && mExternalDrive.exists() && !forzeRecreate) {
-            return mExternalDrive;
-        }
+    private static DeviceFile getFirstDeviceIfRemovable(Context ctx, boolean removable) {
 
         File[] dirs = ctx.getExternalFilesDirs(null);
-        // Removable SD card, if available, is second item in dirs array
-        if (dirs.length > 1 && dirs[1] != null) {
-            DeviceFile externalDrive = new DeviceFile(dirs[1].getPath());
-            if (externalDrive.exists() && externalDrive.canWrite()) {
-                mExternalDrive = externalDrive;
+        for (File dir : dirs) {
+            if (dir != null && Environment.isExternalStorageRemovable(dir) == removable) {
+                return new DeviceFile(dir);
             }
         }
 
-        return mExternalDrive;
+        return null;
     }
-
 
     public static List<StorageLocationInfo> getStorageList(Context ctx) {
 
         List<StorageLocationInfo> list = new ArrayList<>();
         DeviceFile internalStorage = getInternalMemoryDrive(ctx);
-        DeviceFile externalStorage = getExternalMemoryDrive(ctx, false);
+        DeviceFile externalStorage = getExternalMemoryDrive(ctx);
 
         StorageLocationInfo internal = new StorageLocationInfo(PrefsActivity.STORAGE_OPTION_INTERNAL,
                 internalStorage.getPath(), false, false, 1);
