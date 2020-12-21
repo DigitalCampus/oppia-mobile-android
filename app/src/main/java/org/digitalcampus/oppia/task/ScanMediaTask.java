@@ -17,23 +17,19 @@
 
 package org.digitalcampus.oppia.task;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
+import android.os.AsyncTask;
 
-import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.service.DownloadService;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
-
-import com.splunk.mint.Mint;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 
@@ -54,29 +50,16 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 		Payload payload = params[0];
 		currentMedia = (ArrayList<Object>) payload.getResponseData();
 		downloadingMedia = (ArrayList<String>) DownloadService.getTasksDownloading();
+		DbHelper db = DbHelper.getInstance(ctx);
 
         List<?> courseObjs = payload.getData();
 		for (int i=0; i<courseObjs.size(); i++){
 			Course course = (Course) courseObjs.get(i);
-            File courseXML = new File(course.getCourseXMLLocation());
-            if (!courseXML.exists()){ continue; }
-
-			CourseXMLReader cxr;
-			try {
-				cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
-                cxr.parse(CourseXMLReader.ParseMode.ONLY_MEDIA);
-				List<Media> media = cxr.getMediaResponses().getCourseMedia();
-
-				for(Media m: media){
-					publishProgress(m.getFilename());
-					checkMedia(course, m, payload);
-				}
-			} catch (InvalidXMLException ixmle) {
-				Log.d(TAG,"Invalid course XML", ixmle);
-                Mint.logException(ixmle);
-				payload.setResult(false);
+			List<Media> courseMedia = db.getCourseMedia(course.getCourseId());
+			for(Media m: courseMedia){
+				publishProgress(m.getFilename());
+				checkMedia(course, m, payload);
 			}
-			
 		}
 
 		return payload;

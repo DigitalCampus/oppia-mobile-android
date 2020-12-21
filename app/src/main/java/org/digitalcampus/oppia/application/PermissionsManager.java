@@ -42,8 +42,8 @@ public class PermissionsManager {
     private static final int PERMISSIONS_REQUEST = 1246;
     private static final List<String> STARTUP_PERMISSIONS_REQUIRED = Arrays.asList(
         //Remember to update this when the Manifest permissions change!
-        Manifest.permission.READ_PHONE_STATE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
+        Manifest.permission.READ_PHONE_STATE
+//        Manifest.permission.WRITE_EXTERNAL_STORAGE
     );
     private static final List<String> BLUETOOTH_PERMISSIONS_REQUIRED = Arrays.asList(
             //Remember to update this when the Manifest permissions change!

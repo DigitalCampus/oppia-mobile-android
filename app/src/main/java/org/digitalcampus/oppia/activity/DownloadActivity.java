@@ -49,6 +49,7 @@ import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.MultiChoiceHelper;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -290,7 +291,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		// process the response and display on screen in listview
 		// Create an array of courses, that will be put to our ListActivity
 		try {
-            String storage = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+            String storage = Storage.getStorageLocationRoot(this);
             courses.clear();
             courseInstallRepository.refreshCourseList(this, courses, json, storage, showUpdatesOnly);
             coursesAdapter.notifyDataSetChanged();

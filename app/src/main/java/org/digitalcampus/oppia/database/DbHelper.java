@@ -44,6 +44,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.GamificationEvent;
+import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizStats;
@@ -54,6 +55,7 @@ import org.digitalcampus.oppia.model.db_model.Leaderboard;
 import org.digitalcampus.oppia.model.db_model.UserCustomField;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.joda.time.DateTime;
 import org.json.JSONException;
@@ -73,7 +75,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String TAG = DbHelper.class.getSimpleName();
     public static final String DB_NAME = "mobilelearning.db";
-    public static final int DB_VERSION = 46;
+    public static final int DB_VERSION = 47;
 
     private static DbHelper instance;
     private SQLiteDatabase db;
@@ -133,6 +135,14 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String ACTIVITY_GAME_C_ACTIVITYID = "activityid"; // reference to ACTIVITY_C_ID
     private static final String ACTIVITY_GAME_C_EVENT = "event";
     private static final String ACTIVITY_GAME_C_POINTS = "points";
+
+    private static final String MEDIA_TABLE = "media";
+    private static final String MEDIA_COURSE = "course";
+    private static final String MEDIA_FILENAME = "filename";
+    private static final String MEDIA_DOWNLOADURL = "download_url";
+    private static final String MEDIA_FILESIZE = "filesize";
+    private static final String MEDIA_LENGTH = "length";
+    private static final String MEDIA_DIGEST = "digest";
 
     private static final String TRACKER_LOG_TABLE = "TrackerLog";
     private static final String TRACKER_LOG_C_ID = BaseColumns._ID;
@@ -219,7 +229,6 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String CF_VALUE_BOOL = "value_bool";
     private static final String CF_VALUE_FLOAT = "value_float";
 
-
     // Constructor
     private DbHelper(Context ctx, String dbName) { //
         super(ctx, dbName, null, DB_VERSION);
@@ -265,6 +274,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         createCourseTable(db);
         createActivityTable(db);
+        createMediaTable(db);
         createLogTable(db);
         createQuizAttemptsTable(db);
         createSearchTable(db);
@@ -274,6 +284,7 @@ public class DbHelper extends SQLiteOpenHelper {
         createUserCustomFieldsTable(db);
         createCustomFieldTable(db);
         createCustomFieldsCollectionTable(db);
+
     }
 
     public void beginTransaction() {
@@ -444,6 +455,19 @@ public class DbHelper extends SQLiteOpenHelper {
                 + CUSTOM_FIELDS_COLLECTION_C_ITEM_VALUE + " text)";
         db.execSQL(mSql);
     }
+
+    private void createMediaTable(SQLiteDatabase db) {
+        String aSql = STR_CREATE_TABLE + MEDIA_TABLE + " (" +
+                ACTIVITY_C_ID + STR_INT_PRIMARY_KEY_AUTO +
+                MEDIA_COURSE + STR_INT_COMMA +
+                MEDIA_DIGEST + STR_TEXT_COMMA +
+                MEDIA_FILENAME + STR_TEXT_COMMA +
+                MEDIA_LENGTH + STR_INT_COMMA +
+                MEDIA_FILESIZE + STR_INT_COMMA +
+                MEDIA_DOWNLOADURL + " text)";
+        db.execSQL(aSql);
+    }
+
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
@@ -647,6 +671,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 46){
             db.execSQL(STR_ALTER_TABLE + CUSTOM_FIELD_TABLE + STR_ADD_COLUMN + CUSTOM_FIELD_C_COLLECTION_BY + STR_TEXT_NULL + ";");
+        }
+
+        if (oldVersion < 47){
+            createMediaTable(db);
         }
 
     }
@@ -1015,7 +1043,8 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private Course setupCourseObject(Cursor c){
-        Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
+        String location = Storage.getStorageLocationRoot(ctx);
+        Course course = new Course(location);
         course.setCourseId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
         course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
         course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
@@ -1236,17 +1265,19 @@ public class DbHelper extends SQLiteOpenHelper {
     public void deleteCourse(int courseId) {
         // remove from search index
         this.searchIndexRemoveCourse(courseId);
+        String[] args = new String[]{String.valueOf(courseId)};
 
         // delete activities
         String s = ACTIVITY_C_COURSEID + "=?";
-        String[] args = new String[]{String.valueOf(courseId)};
         db.delete(ACTIVITY_TABLE, s, args);
+
+        // delete media
+        s = MEDIA_COURSE  + "=?";
+        db.delete(MEDIA_TABLE, s, args);
 
         // delete course
         s = COURSE_C_ID + "=?";
-        args = new String[]{String.valueOf(courseId)};
         db.delete(COURSE_TABLE, s, args);
-
     }
 
 
@@ -2408,4 +2439,49 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
+    public void insertCourseMedia(long courseID, List<Media> media) {
+
+        beginTransaction();
+        for (Media m : media) {
+            ContentValues values = new ContentValues();
+            values.put(MEDIA_COURSE, courseID);
+            values.put(MEDIA_FILENAME, m.getFilename());
+            values.put(MEDIA_DIGEST, m.getDigest());
+            values.put(MEDIA_DOWNLOADURL, m.getDownloadUrl());
+            values.put(MEDIA_FILESIZE, m.getFileSize());
+            values.put(MEDIA_LENGTH, m.getLength());
+
+            db.insertOrThrow(MEDIA_TABLE, null, values);
+        }
+        endTransaction(true);
+    }
+
+    public List<Media> getCourseMedia(long courseId){
+        ArrayList<Media> media = new ArrayList<>();
+        String s = MEDIA_COURSE + "=?";
+        String[] args = new String[]{String.valueOf(courseId)};
+        Cursor c = db.query(MEDIA_TABLE, null, s, args, null, null, null);
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            Media m = new Media();
+            m.setFilename(c.getString(c.getColumnIndex(MEDIA_FILENAME)));
+            m.setDigest(c.getString(c.getColumnIndex(MEDIA_DIGEST)));
+            m.setDownloadUrl(c.getString(c.getColumnIndex(MEDIA_DOWNLOADURL)));
+            m.setFileSize(c.getInt((c.getColumnIndex(MEDIA_FILESIZE))));
+            m.setLength(c.getInt((c.getColumnIndex(MEDIA_LENGTH))));
+            media.add(m);
+            c.moveToNext();
+        }
+        c.close();
+        return media;
+    }
+
+    public int getMediaUsages(String mediaFilename){
+        String s = MEDIA_FILENAME + "=?";
+        String[] args = new String[]{ mediaFilename };
+        Cursor c = db.query(MEDIA_TABLE, null, s, args, null, null, null);
+        int usages = c.getCount();
+        c.close();
+        return usages;
+    }
 }
