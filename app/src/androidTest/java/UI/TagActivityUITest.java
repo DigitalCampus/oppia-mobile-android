@@ -4,9 +4,6 @@ import android.content.Context;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
-import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.di.AppComponent;
-import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.task.Payload;
@@ -17,10 +14,9 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
+import TestRules.DaggerInjectMockUITest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
-import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static Utils.RecyclerViewMatcher.withRecyclerView;
 import static androidx.test.espresso.Espresso.onView;
@@ -31,28 +27,13 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 
 @RunWith(AndroidJUnit4.class)
-public class TagActivityUITest {
-
-    @Rule public DaggerMockRule<AppComponent> daggerRule =
-            new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
-                    .getTargetContext()
-                    .getApplicationContext())).set(
-                    component -> {
-                        App app =
-                                (App) InstrumentationRegistry.getInstrumentation()
-                                        .getTargetContext()
-                                        .getApplicationContext();
-                        app.setComponent(component);
-                    });
+public class TagActivityUITest extends DaggerInjectMockUITest {
 
     @Rule
     public ActivityTestRule<TagSelectActivity> tagSelectActivityTestRule =
             new ActivityTestRule<>(TagSelectActivity.class, false, false);
 
-
-
     @Mock TagRepository tagRepository;
-
 
     @Test
     public void showCorrectCategory() throws Exception {

@@ -53,6 +53,7 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.QuizAttemptRepository;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
@@ -69,6 +70,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.inject.Inject;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.text.HtmlCompat;
@@ -98,6 +101,8 @@ public abstract class AnswerWidget extends BaseWidget {
     private ProgressBar progressBar;
     private ProgressBarAnimator barAnim;
 
+    @Inject QuizAttemptRepository attemptsRepository;
+
     public AnswerWidget() {
         // Required empty public constructor
     }
@@ -119,6 +124,8 @@ public abstract class AnswerWidget extends BaseWidget {
         course = (Course) getArguments().getSerializable(Course.TAG);
         activity = ((Activity) getArguments().getSerializable(Activity.TAG));
         contents = activity.getContents(prefLang);
+
+        getAppComponent().inject(this);
 
         setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
         vv.setId(activity.getActId());

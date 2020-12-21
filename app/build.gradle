@@ -10,8 +10,8 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-def version_code = 82
-def version_name = "7.1.6"
+def version_code = 83
+def version_name = "7.1.7"
 
 android {
     compileSdkVersion 29

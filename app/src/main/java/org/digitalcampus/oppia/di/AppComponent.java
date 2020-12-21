@@ -27,6 +27,7 @@ import org.digitalcampus.oppia.fragments.RegisterFragment;
 import org.digitalcampus.oppia.fragments.ResetFragment;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.NoCourseDownloadedManager;
+import org.digitalcampus.oppia.widgets.AnswerWidget;
 
 import javax.inject.Singleton;
 
@@ -58,6 +59,7 @@ public interface AppComponent {
     void inject(RegisterFragment fragment);
     void inject(App app);
 
+    void inject(AnswerWidget fragment);
     void inject(EditProfileActivity activity);
 
     void inject(AdminSecurityManager adminSecurityManager);

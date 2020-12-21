@@ -26,4 +26,10 @@ public class QuizAttemptRepository {
         String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         return db.getGlobalQuizAttempts(userId, lang);
     }
+
+    public QuizStats getQuizAttemptStats(Context ctx, String digest){
+        DbHelper db = DbHelper.getInstance(ctx);
+        long userId = db.getUserId(SessionManager.getUsername(ctx));
+        return db.getQuizAttempt(digest, userId);
+    }
 }

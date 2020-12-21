@@ -134,4 +134,5 @@ public class BaselineQuizTest {
         onView(withId(R.id.quiz_exit_button))
                 .check(matches(withText(R.string.widget_quiz_baseline_goto_course)));
     }
+
 }
