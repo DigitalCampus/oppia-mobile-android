@@ -43,7 +43,6 @@ public class PermissionsManager {
     private static final List<String> STARTUP_PERMISSIONS_REQUIRED = Arrays.asList(
         //Remember to update this when the Manifest permissions change!
         Manifest.permission.READ_PHONE_STATE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_FINE_LOCATION
     );

@@ -29,39 +29,16 @@ import java.io.File;
 
 public class InternalStorageStrategy implements StorageAccessStrategy{
 
-    @Override
-    public boolean updateStorageLocation(Context ctx) {
-        String location = this.getStorageLocation(ctx);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, location);
-        editor.commit();
-        return true;
-    }
-
-    @Override
-    public boolean updateStorageLocation(Context ctx, String mount) {
-        updateStorageLocation(ctx);
-        return true;
-    }
 
     @Override
     public String getStorageLocation(Context ctx) {
-        File location = ctx.getFilesDir();
-        return location.toString();
+        DeviceFile internal = StorageUtils.getInternalMemoryDrive(ctx);
+        return internal != null ? internal.getPath() : null;
     }
 
     @Override
-    public boolean isStorageAvailable() {
-        //Internal storage is always available :)
+    public boolean isStorageAvailable(Context ctx) {
         return true;
-    }
-
-    @Override
-    public boolean needsUserPermissions(Context ctx) { return false; }
-    @Override
-    public void askUserPermissions(Activity activity, StorageAccessListener listener) {
-        listener.onAccessGranted(true);
     }
 
     @Override

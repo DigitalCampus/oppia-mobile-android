@@ -86,7 +86,7 @@ public class Storage {
 
     public static boolean createFolderStructure(Context ctx) {
 
-        if (!storageStrategy.isStorageAvailable()){
+        if (!storageStrategy.isStorageAvailable(ctx)){
             Log.d(TAG, "Storage not available");
             return false;
         }
@@ -146,17 +146,11 @@ public class Storage {
         }
     }
 
-    @SuppressWarnings("deprecation")
+
     public static long getAvailableStorageSize(Context ctx){
         String path = getStorageLocationRoot(ctx);
         StatFs stat = new StatFs(path);
-        long bytesAvailable;
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            bytesAvailable = stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
-        }
-        else{
-            bytesAvailable = (long)stat.getBlockSize() * (long)stat.getAvailableBlocks();
-        }
+        long bytesAvailable = stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
         return bytesAvailable;
     }
 

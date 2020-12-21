@@ -12,6 +12,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.activity.ViewDigestActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.database.DBMigration;
 import org.digitalcampus.oppia.fragments.ActivitiesFragment;
 import org.digitalcampus.oppia.fragments.AppFragment;
@@ -56,6 +57,8 @@ public interface AppComponent {
     void inject(AppFragment fragment);
     void inject(GlobalQuizAttemptsFragment fragment);
     void inject(RegisterFragment fragment);
+    void inject(App app);
+
     void inject(AnswerWidget fragment);
     void inject(EditProfileActivity activity);
 

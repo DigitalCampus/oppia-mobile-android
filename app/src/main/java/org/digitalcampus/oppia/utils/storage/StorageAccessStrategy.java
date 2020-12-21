@@ -24,11 +24,7 @@ import android.content.Context;
 import org.digitalcampus.oppia.listener.StorageAccessListener;
 
 public interface StorageAccessStrategy {
-    boolean updateStorageLocation(Context ctx);
-    boolean updateStorageLocation(Context ctx, String mount);
     String  getStorageLocation(Context ctx);
-    boolean isStorageAvailable();
-    boolean needsUserPermissions(Context ctx);
-    void askUserPermissions(Activity activity, final StorageAccessListener listener);
+    boolean isStorageAvailable(Context ctx);
     String getStorageType();
 }

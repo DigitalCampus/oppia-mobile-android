@@ -128,6 +128,7 @@ public class CourseInstall {
             File dest = new File(Storage.getCoursesPath(ctx));
 
             db.insertActivities(c.getActivities(courseId));
+            db.insertCourseMedia(courseId, c.getCourseMedia());
             listener.onInstallProgress(40);
 
             long userId = db.getUserId(SessionManager.getUsername(ctx));

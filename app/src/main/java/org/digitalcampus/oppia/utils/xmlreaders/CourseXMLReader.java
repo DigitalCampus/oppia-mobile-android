@@ -31,6 +31,7 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -116,8 +117,8 @@ public class CourseXMLReader {
         if (completeParseHandler == null){
             parse(ParseMode.COMPLETE);
         }
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+
+        String location = Storage.getStorageLocationRoot(ctx);
         return completeParseHandler.getCourse(location);
     }
 

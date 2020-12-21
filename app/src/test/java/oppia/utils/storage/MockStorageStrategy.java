@@ -10,15 +10,6 @@ import UnitTests.StorageTest;
 
 public class MockStorageStrategy implements StorageAccessStrategy {
 
-    @Override
-    public boolean updateStorageLocation(Context ctx) {
-        return true;
-    }
-
-    @Override
-    public boolean updateStorageLocation(Context ctx, String mount) {
-        return true;
-    }
 
     @Override
     public String getStorageLocation(Context ctx) {
@@ -26,18 +17,8 @@ public class MockStorageStrategy implements StorageAccessStrategy {
     }
 
     @Override
-    public boolean isStorageAvailable() {
+    public boolean isStorageAvailable(Context context) {
         return true;
-    }
-
-    @Override
-    public boolean needsUserPermissions(Context ctx) {
-        return false;
-    }
-
-    @Override
-    public void askUserPermissions(Activity activity, StorageAccessListener listener) {
-
     }
 
     @Override

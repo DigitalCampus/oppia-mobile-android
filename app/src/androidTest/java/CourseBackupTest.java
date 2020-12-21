@@ -30,6 +30,9 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 
 @RunWith(Parameterized.class)
 public class CourseBackupTest extends BaseTestDB {
@@ -39,7 +42,6 @@ public class CourseBackupTest extends BaseTestDB {
     private final String CORRECT_COURSE = "Correct_Course.zip";
 
     private Context context;
-    private SharedPreferences prefs;
     private Payload response;
     private StorageAccessStrategy storageStrategy;
 
@@ -56,7 +58,6 @@ public class CourseBackupTest extends BaseTestDB {
     public void setUp() throws Exception {
         super.setUp();
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         setStorageStrategy();
     }
@@ -67,10 +68,7 @@ public class CourseBackupTest extends BaseTestDB {
         Log.v(TAG, "Using Strategy: " + storageStrategy.getStorageType());
         Storage.setStorageStrategy(storageStrategy);
 
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageStrategy.getStorageType());
-        storageStrategy.updateStorageLocation(context);
-        editor.commit();
+        when(prefs.getString(eq(PrefsActivity.PREF_STORAGE_OPTION), anyString())).thenReturn(storageStrategy.getStorageType());
     }
 
 
@@ -97,7 +95,7 @@ public class CourseBackupTest extends BaseTestDB {
         File downloadPath = new File(Storage.getDownloadPath(context));
         FileUtils.copyFileToDir(backupFile, downloadPath, false);
 
-        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
+        File modulesPath = new File(Storage.getCoursesPath(context));
         assertTrue(modulesPath.exists());
         children = modulesPath.list();
         assertEquals(1, children.length);  //Check that the course exists in the "modules" directory
