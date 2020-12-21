@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StatFs;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +35,7 @@ import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -89,32 +92,9 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
 
 
-        //TODO REMOVE
-
-//        File[] dirsExternal = getExternalFilesDirs(null);
-//        for (int i = 0; i < dirsExternal.length; i++) {
-//            File fileExternal = dirsExternal[i];
-//
-//            if (fileExternal == null) {
-//                Log.i(TAG, String.format(">> external[%d]: null", i));
-//            } else {
-//                Log.i(TAG, String.format(">> external[%d]: %s, available: %d", i, fileExternal.getPath(), getAvailableSpace(fileExternal.getPath())));
-//            }
-//        }
-//
-//        Log.i(TAG, ">> environment: " + Environment.getExternalStorageDirectory().getPath());
-//
-//        Log.i(TAG, String.format(">> internal: %s, available: %d", getFilesDir().getPath(), getAvailableSpace(getFilesDir().getPath())));
-
 
     }
 
-
-//    private long getAvailableSpace(String path) {
-//        StatFs stat = new StatFs(path);
-//        long bytesAvailable = stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
-//        return bytesAvailable;
-//    }
 
     private void configureBadgePointsView() {
 
