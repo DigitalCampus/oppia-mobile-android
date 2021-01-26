@@ -237,7 +237,8 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     public void onGamificationEvent(String message, int points) {
         SharedPreferences prefsGame = PreferenceManager.getDefaultSharedPreferences(this);
         boolean notifEnabled = prefsGame.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
-        if (notifEnabled) {
+        boolean scoringEnabled = prefsGame.getBoolean(PrefsActivity.PREF_SCORING_ENABLED, true);
+        if (notifEnabled && scoringEnabled) {
 
             final View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
 
