@@ -58,9 +58,8 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
 		User u = (User) payload.getData().get(0);
 		
 		// firstly try to login locally
-		DbHelper db0 = DbHelper.getInstance(ctx);
 		try {
-			User localUser = db0.getUser(u.getUsername());
+			User localUser = DbHelper.getInstance(ctx).getUser(u.getUsername());
 
 			Log.d(TAG,"logged pw: " + localUser.getPasswordEncrypted());
 			Log.d(TAG,"entered pw: " + u.getPasswordEncrypted());

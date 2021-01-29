@@ -71,16 +71,13 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 
 		RecyclerView recyclerTags = findViewById(R.id.recycler_tags);
 		recyclerTags.setAdapter(adapterTags);
-		adapterTags.setOnItemClickListener(new TagsAdapter.OnItemClickListener() {
-			@Override
-			public void onItemClick(View view, int position) {
-				Tag selectedTag = tags.get(position);
-				Intent i = new Intent(TagSelectActivity.this, DownloadActivity.class);
-				Bundle tb = new Bundle();
-				tb.putSerializable(Tag.TAG_CLASS, selectedTag);
-				i.putExtras(tb);
-				startActivity(i);
-			}
+		adapterTags.setOnItemClickListener((view, position) -> {
+			Tag selectedTag = tags.get(position);
+			Intent i = new Intent(TagSelectActivity.this, DownloadActivity.class);
+			Bundle tb = new Bundle();
+			tb.putSerializable(Tag.TAG_CLASS, selectedTag);
+			i.putExtras(tb);
+			startActivity(i);
 		});
 
 	}
@@ -168,13 +165,10 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 		// close dialog and process results
 		pDialog.dismiss();
 
-        Callable<Boolean> finishActivity = new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                TagSelectActivity.this.finish();
-                return true;
-            }
-        };
+        Callable<Boolean> finishActivity = () -> {
+			TagSelectActivity.this.finish();
+			return true;
+		};
 	
 		if(response.isResult()){
 			try {

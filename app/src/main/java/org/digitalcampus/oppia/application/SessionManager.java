@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Pair;
 
 import com.splunk.mint.Mint;
 import com.splunk.mint.MintLogLevel;
@@ -198,10 +197,6 @@ public class SessionManager {
     }
 
     public static void setUserApiKeyValid(User user, boolean valid) {
-        ArrayList<Pair<String, String>> userPrefs = new ArrayList<>();
-        Pair<String, String> userPref = new Pair<>(APIKEY_VALID, valid ? STR_TRUE : STR_FALSE);
-        userPrefs.add(userPref);
-
         UserPreference userPreference = new UserPreference(user.getUsername(), APIKEY_VALID, valid ? STR_TRUE : STR_FALSE);
         App.getDb().userPreferenceDao().insert(userPreference);
     }
@@ -217,7 +212,7 @@ public class SessionManager {
     public static boolean isUserApiKeyValid(String username) {
 
         UserPreference userPref = App.getDb().userPreferenceDao().getUserPreference(username, APIKEY_VALID);
-        return (userPref == null || STR_TRUE    .equals(userPref.getValue()));
+        return (userPref == null || STR_TRUE.equals(userPref.getValue()));
     }
 
     public static void preloadUserAccounts(Context ctx, PreloadAccountsListener listener) {
