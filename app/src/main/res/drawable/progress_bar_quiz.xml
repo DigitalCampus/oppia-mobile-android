@@ -2,7 +2,7 @@
 
     <item android:id="@android:id/background">
         <shape>
-            <solid android:color="@color/text_light" />
+            <solid android:color="@color/background_light" />
         </shape>
     </item>
     <item android:id="@android:id/secondaryProgress">

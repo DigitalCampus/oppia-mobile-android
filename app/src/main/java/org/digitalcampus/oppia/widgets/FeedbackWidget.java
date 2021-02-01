@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.widgets;
 
 import android.os.Bundle;
+import android.view.ViewGroup;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
@@ -64,6 +65,16 @@ public class FeedbackWidget extends AnswerWidget {
 	@Override
 	void showContentUnavailableRationale(int unavailabilityReasonStringResId) {
 		// Always available, so no need to show any kind of message
+	}
+
+	@Override
+	boolean shouldShowInitialInfo() {
+		return false;
+	}
+
+	@Override
+	void loadInitialInfo(ViewGroup infoContainer) {
+		// Don't need to show anything specific
 	}
 
 	@Override
