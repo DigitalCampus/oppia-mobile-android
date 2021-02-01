@@ -164,8 +164,12 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			upgradeV82();
 			prefs.edit().putBoolean("upgradeV82", true).apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading, "v82"));
+		}
 
-
+		if (!prefs.getBoolean("upgradeV86c", false)) {
+			prefs.edit().putBoolean("upgradeV86c", true).apply();
+			publishProgress(this.ctx.getString(R.string.info_upgrading, "v86c"));
+			payload.setResult(true);
 		}
 
 		DBMigration.newInstance(ctx).checkMigrationStatus();
