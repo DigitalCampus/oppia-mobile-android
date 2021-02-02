@@ -140,8 +140,7 @@ public class QuizWidget extends AnswerWidget {
     void loadInitialInfo(ViewGroup infoContainer) {
         infoContainer.removeAllViews();
         View info = View.inflate(infoContainer.getContext(), R.layout.view_quiz_info, infoContainer);
-
-        QuizStats stats = DbHelper.getInstance(getContext()).getQuizAttempt(activity.getDigest(), SessionManager.getUserId(getContext()));
+        QuizStats stats = attemptsRepository.getQuizAttemptStats(getContext(), activity.getDigest());
 
         TextView average = info.findViewById(R.id.highlight_average);
         TextView best = info.findViewById(R.id.highlight_best);

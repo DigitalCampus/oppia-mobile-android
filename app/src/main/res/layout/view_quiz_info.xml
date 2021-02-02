@@ -20,7 +20,8 @@
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             app:tint="@color/activity_icon_background"
-            app:srcCompat="@drawable/ic_quiz" />
+            app:srcCompat="@drawable/ic_quiz"
+            android:contentDescription="@string/quiz_attempt.title" />
 
     </FrameLayout>
 
