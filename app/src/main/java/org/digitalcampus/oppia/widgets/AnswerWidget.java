@@ -114,12 +114,12 @@ public abstract class AnswerWidget extends BaseWidget {
     abstract int getContentAvailability();
     abstract void showContentUnavailableRationale(int unavailabilityReasonStringResId);
     abstract String getFinishButtonLabel();
-    abstract String getResultsTitle();
     abstract void showBaselineResultMessage();
     abstract void saveAttemptTracker();
     abstract void showAnswersFeedback();
     abstract boolean shouldShowInitialInfo();
     abstract void loadInitialInfo(ViewGroup infoContainer);
+    abstract void showResultsInfo();
 
     @SuppressWarnings("unchecked")
     @Override
@@ -146,7 +146,6 @@ public abstract class AnswerWidget extends BaseWidget {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(BaseWidget.WIDGET_CONFIG, getWidgetConfig());
-
     }
 
     @Override
@@ -478,10 +477,10 @@ public abstract class AnswerWidget extends BaseWidget {
             parent.addView(progressContainer, index);
         }
 
-        TextView title = getView().findViewById(R.id.quiz_results_score);
+
         Button actionBtn = getView().findViewById(R.id.quiz_results_button);
         Button exitBtn = getView().findViewById(R.id.quiz_exit_button);
-        title.setText(getResultsTitle());
+        showResultsInfo();
 
         if (this.isBaseline) {
             showBaselineResultMessage();

@@ -70,6 +70,7 @@
     <string name="widget_quiz_media_caption">Press the image to start the video</string>
     <string name="widget_quiz_feedback_response_title">You answered: </string>
     <string name="widget_quiz_feedback_feedback_title">Feedback: </string>
+    <string name="widget_quiz_num_questions">%1$d questions</string>
     <string name="widget_quiz_pass_threshold">%1$d%% pass threshold </string>
     <string name="widget_quiz_unavailable_section">You must complete all the previous activities in this section before this quiz becomes available to you.</string>
     <string name="widget_quiz_unavailable_course">You must complete all the previous activities in this course before this quiz becomes available to you.</string>

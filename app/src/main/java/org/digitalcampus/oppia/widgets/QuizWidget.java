@@ -127,8 +127,13 @@ public class QuizWidget extends AnswerWidget {
     }
 
     @Override
-    String getResultsTitle() {
-        return getString(R.string.widget_quiz_results_score, this.getPercentScore());
+    void showResultsInfo() {
+        TextView title = getView().findViewById(R.id.quiz_results_score);
+        title.setText(getString(R.string.widget_quiz_results_score, this.getPercentScore()));
+
+        ViewGroup stats = getView().findViewById(R.id.quiz_stats);
+        stats.setVisibility(View.VISIBLE);
+        loadAndShowStats(stats);
     }
 
     @Override
@@ -136,25 +141,17 @@ public class QuizWidget extends AnswerWidget {
         return !this.isBaseline;
     }
 
-    @Override
-    void loadInitialInfo(ViewGroup infoContainer) {
-        infoContainer.removeAllViews();
-        View info = View.inflate(infoContainer.getContext(), R.layout.view_quiz_info, infoContainer);
+    private void loadAndShowStats(ViewGroup infoContainer){
         QuizStats stats = attemptsRepository.getQuizAttemptStats(getContext(), activity.getDigest());
 
-        TextView average = info.findViewById(R.id.highlight_average);
-        TextView best = info.findViewById(R.id.highlight_best);
-        TextView numAttempts = info.findViewById(R.id.highlight_attempted);
-        Button takeQuizBtn = info.findViewById(R.id.take_quiz_btn);
-        ProgressBar thresholdBar = info.findViewById(R.id.threshold_bar);
-        TextView threshold = info.findViewById(R.id.info_threshold);
-        TextView infoAttempts = info.findViewById(R.id.info_num_attempts);
-        TextView numQuestions = info.findViewById(R.id.info_num_questions);
+        TextView average = infoContainer.findViewById(R.id.highlight_average);
+        TextView best = infoContainer.findViewById(R.id.highlight_best);
+        TextView numAttempts = infoContainer.findViewById(R.id.highlight_attempted);
+        TextView infoAttempts = infoContainer.findViewById(R.id.info_num_attempts);
+        TextView threshold = infoContainer.findViewById(R.id.info_threshold);
 
-        numQuestions.setText(quiz.getTotalNoQuestions() + " questions");
-        thresholdBar.setProgress(quiz.getPassThreshold());
-        threshold.setText(getString(R.string.widget_quiz_pass_threshold, quiz.getPassThreshold()));
         numAttempts.setText(String.valueOf(stats.getNumAttempts()));
+        threshold.setText(getString(R.string.widget_quiz_pass_threshold, quiz.getPassThreshold()));
 
         if (quiz.limitAttempts()){
             int attemptsLeft = quiz.getMaxAttempts() - stats.getNumAttempts();
@@ -172,10 +169,20 @@ public class QuizWidget extends AnswerWidget {
             average.setText(stats.getAveragePercent() + "%");
             best.setText(stats.getPercent() + "%");
         }
+    }
 
-        takeQuizBtn.setOnClickListener(view -> {
-            showQuestion();
-        });
+    @Override
+    void loadInitialInfo(ViewGroup infoContainer) {
+        infoContainer.removeAllViews();
+        ViewGroup info = (ViewGroup) View.inflate(infoContainer.getContext(), R.layout.view_quiz_info, infoContainer);
+        ProgressBar thresholdBar = info.findViewById(R.id.threshold_bar);
+        TextView numQuestions = info.findViewById(R.id.info_num_questions);
+
+        numQuestions.setText(getString(R.string.widget_quiz_num_questions, quiz.getTotalNoQuestions()));
+        thresholdBar.setProgress(quiz.getPassThreshold());
+
+        info.findViewById(R.id.take_quiz_btn).setOnClickListener(view -> showQuestion());
+        loadAndShowStats(info);
     }
 
     @Override
