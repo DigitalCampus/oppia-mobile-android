@@ -19,8 +19,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:textSize="24sp"
             android:textAppearance="@style/SectionHeader"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+
+            tools:text="You scored: 28% "/>
 
         <TextView
             android:id="@+id/quiz_results_baseline"
@@ -49,16 +52,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-        >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:id="@+id/quiz_stats"
-                android:visibility="gone"
-     >
+                android:visibility="visible">
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="95dp"
@@ -94,87 +95,7 @@
                             android:gravity="center"
                             tools:text="Unlimited attempts" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-
-                            android:layout_marginBottom="@dimen/activity_vertical_margin"
-                            android:orientation="horizontal">
-
-                            <RelativeLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:visibility="visible">
-
-                                <TextView
-                                    android:id="@+id/highlight_attempted"
-                                    style="@style/Highlight.Text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-
-                                <TextView
-                                    android:id="@+id/textView5"
-                                    style="@style/Highlight.Label"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@+id/highlight_attempted"
-                                    android:text="@string/quiz_attempts.number" />
-
-                            </RelativeLayout>
-
-                            <View
-                                style="@style/Highlight.Separator"
-                                android:layout_width="1dp"
-                                android:layout_height="match_parent" />
-
-                            <RelativeLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1">
-
-                                <TextView
-                                    android:id="@+id/highlight_best"
-                                    style="@style/Highlight.Text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-
-                                <TextView
-                                    android:id="@+id/textView6"
-                                    style="@style/Highlight.Label"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@+id/highlight_best"
-                                    android:text="@string/quiz_attempts.best" />
-
-                            </RelativeLayout>
-
-                            <View
-                                style="@style/Highlight.Separator"
-                                android:layout_width="1dp"
-                                android:layout_height="match_parent" />
-
-                            <RelativeLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1">
-
-                                <TextView
-                                    android:id="@+id/highlight_average"
-                                    style="@style/Highlight.Text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-
-                                <TextView
-                                    android:id="@+id/textView7"
-                                    style="@style/Highlight.Label"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@+id/highlight_average"
-                                    android:text="@string/quiz_attempts.average" />
-
-                            </RelativeLayout>
-                        </LinearLayout>
+                        <include layout="@layout/view_quiz_stats" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -188,7 +109,8 @@
                 android:orientation="vertical"
                 android:cacheColorHint="#00000000"
                 android:divider="@color/background_light"
-                android:dividerHeight="1dp" />
+                android:dividerHeight="1dp"
+                tools:listitem="@layout/row_widget_quiz_feedback"/>
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

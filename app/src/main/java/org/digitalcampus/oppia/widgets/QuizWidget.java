@@ -130,17 +130,20 @@ public class QuizWidget extends AnswerWidget {
         TextView title = getView().findViewById(R.id.quiz_results_score);
         title.setText(getString(R.string.widget_quiz_results_score, this.getPercentScore()));
 
-        ViewGroup info = getView().findViewById(R.id.quiz_stats);
-        info.setVisibility(View.VISIBLE);
+        if (!isBaseline){
+            ViewGroup info = getView().findViewById(R.id.quiz_stats);
+            info.setVisibility(View.VISIBLE);
 
-        QuizStats stats = attemptsRepository.getQuizAttemptStats(getContext(), activity.getDigest());
-        // We take into account the current quiz (not saved yet)
-        int numAttempts = stats.getNumAttempts();
-        float average = (stats.getAverageScore() * numAttempts + quiz.getUserscore()) / (numAttempts + 1);
-        stats.setNumAttempts(numAttempts + 1);
-        stats.setUserScore(Math.max(quiz.getUserscore(), stats.getUserScore()));
-        stats.setAverageScore(average);
-        showStats(info, stats);
+            QuizStats stats = attemptsRepository.getQuizAttemptStats(getContext(), activity.getDigest());
+            // We take into account the current quiz (not saved yet)
+            int numAttempts = stats.getNumAttempts();
+            float average = ((stats.getAverageScore() * numAttempts) + quiz.getUserscore()) / (numAttempts + 1);
+            stats.setMaxScore(Math.max(quiz.getMaxscore(), stats.getMaxScore()));
+            stats.setNumAttempts(numAttempts + 1);
+            stats.setUserScore(Math.max(quiz.getUserscore(), stats.getUserScore()));
+            stats.setAverageScore(average);
+            showStats(info, stats);
+        }
     }
 
     @Override
