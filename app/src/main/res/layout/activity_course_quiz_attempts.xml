@@ -46,90 +46,14 @@
         android:layout_below="@id/action_bar_subtitle"
         android:orientation="vertical">
 
-        <LinearLayout
+        <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/padding_medium"
-            android:layout_marginLeft="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/padding_medium"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:orientation="horizontal">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="visible">
-
-                <TextView
-                    android:id="@+id/highlight_attempted"
-                    style="@style/Highlight.Text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/textView5"
-                    style="@style/Highlight.Label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/highlight_attempted"
-                    android:text="@string/quiz_attempts.number" />
-
-            </RelativeLayout>
-
-            <View
-                style="@style/Highlight.Separator"
-                android:layout_width="1dp"
-                android:layout_height="match_parent" />
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/highlight_best"
-                    style="@style/Highlight.Text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/textView6"
-                    style="@style/Highlight.Label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/highlight_best"
-                    android:text="@string/quiz_attempts.best" />
-
-            </RelativeLayout>
-
-            <View
-                style="@style/Highlight.Separator"
-                android:layout_width="1dp"
-                android:layout_height="match_parent" />
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/highlight_average"
-                    style="@style/Highlight.Text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/textView7"
-                    style="@style/Highlight.Label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/highlight_average"
-                    android:text="@string/quiz_attempts.average" />
-
-            </RelativeLayout>
-
-        </LinearLayout>
+            layout="@layout/view_quiz_stats" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/attempts_list"
