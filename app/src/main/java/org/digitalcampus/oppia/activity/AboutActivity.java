@@ -92,7 +92,7 @@ public class AboutActivity extends AppActivity {
         tabs.setupWithViewPager(viewPager);
 		adapter.updateTabViews(tabs);
 		viewPager.setCurrentItem(currentTab);
-        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
 	}
 	
 	@Override
