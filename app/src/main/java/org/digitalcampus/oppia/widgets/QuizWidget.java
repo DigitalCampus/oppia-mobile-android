@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -131,9 +130,17 @@ public class QuizWidget extends AnswerWidget {
         TextView title = getView().findViewById(R.id.quiz_results_score);
         title.setText(getString(R.string.widget_quiz_results_score, this.getPercentScore()));
 
-        ViewGroup stats = getView().findViewById(R.id.quiz_stats);
-        stats.setVisibility(View.VISIBLE);
-        loadAndShowStats(stats);
+        ViewGroup info = getView().findViewById(R.id.quiz_stats);
+        info.setVisibility(View.VISIBLE);
+
+        QuizStats stats = attemptsRepository.getQuizAttemptStats(getContext(), activity.getDigest());
+        // We take into account the current quiz (not saved yet)
+        int numAttempts = stats.getNumAttempts();
+        float average = (stats.getAverageScore() * numAttempts + quiz.getUserscore()) / (numAttempts + 1);
+        stats.setNumAttempts(numAttempts + 1);
+        stats.setUserScore(Math.max(quiz.getUserscore(), stats.getUserScore()));
+        stats.setAverageScore(average);
+        showStats(info, stats);
     }
 
     @Override
@@ -141,9 +148,7 @@ public class QuizWidget extends AnswerWidget {
         return !this.isBaseline;
     }
 
-    private void loadAndShowStats(ViewGroup infoContainer){
-        QuizStats stats = attemptsRepository.getQuizAttemptStats(getContext(), activity.getDigest());
-
+    private void showStats(ViewGroup infoContainer, QuizStats stats){
         TextView average = infoContainer.findViewById(R.id.highlight_average);
         TextView best = infoContainer.findViewById(R.id.highlight_best);
         TextView numAttempts = infoContainer.findViewById(R.id.highlight_attempted);
@@ -182,7 +187,8 @@ public class QuizWidget extends AnswerWidget {
         thresholdBar.setProgress(quiz.getPassThreshold());
 
         info.findViewById(R.id.take_quiz_btn).setOnClickListener(view -> showQuestion());
-        loadAndShowStats(info);
+        QuizStats stats = attemptsRepository.getQuizAttemptStats(getContext(), activity.getDigest());
+        showStats(info, stats);
     }
 
     @Override

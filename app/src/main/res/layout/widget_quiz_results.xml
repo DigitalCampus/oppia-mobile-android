@@ -61,7 +61,7 @@
      >
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="105dp"
+                    android:layout_height="95dp"
                     android:background="@color/subtitle_bar" />
 
                 <androidx.cardview.widget.CardView
@@ -69,7 +69,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="32dp"
                     android:layout_marginRight="32dp"
-                    android:layout_marginTop="-92dp"
+                    android:layout_marginTop="-95dp"
+                    android:layout_marginBottom="@dimen/list_card_vertical_padding"
                     android:foreground="@drawable/bg_selectable"
                     app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
                     app:contentPaddingRight="@dimen/list_card_horizontal_padding"
