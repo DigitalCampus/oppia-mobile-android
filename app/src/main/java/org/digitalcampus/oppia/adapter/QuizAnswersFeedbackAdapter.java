@@ -2,6 +2,7 @@ package org.digitalcampus.oppia.adapter;
 
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,17 @@ public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswers
         }
 
         viewHolder.quizQuestion.setText(HtmlCompat.fromHtml(qf.getQuestionText(), HtmlCompat.FROM_HTML_MODE_LEGACY));
-        viewHolder.quizUserResponse.setText(HtmlCompat.fromHtml(userResponseText.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+        if (qf.isSurvey() && TextUtils.isEmpty(userResponseText)){
+            viewHolder.quizUserResponseTitle.setText(R.string.widget_quiz_feedback_response_skipped);
+            viewHolder.quizUserResponse.setVisibility(View.GONE);
+        }
+        else{
+            viewHolder.quizUserResponseTitle.setText(R.string.widget_quiz_feedback_response_title);
+            viewHolder.quizUserResponse.setVisibility(View.VISIBLE);
+            viewHolder.quizUserResponse.setText(HtmlCompat.fromHtml(userResponseText.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+        }
+
+
 
         if (qf.getFeedbackText() != null && !qf.getFeedbackText().equals("")){
             viewHolder.quizFeedbackTitle.setVisibility(View.VISIBLE);
@@ -97,6 +108,7 @@ public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswers
         private TextView quizUserResponse;
         private TextView quizFeedbackTitle;
         private TextView quizFeedbackText;
+        private TextView quizUserResponseTitle;
         private ImageView quizFeedbackIcon;
 
         public QuizFeedbackViewHolder(View itemView) {
@@ -105,6 +117,7 @@ public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswers
 
             quizQuestion = itemView.findViewById(R.id.quiz_question_text);
             quizUserResponse = itemView.findViewById(R.id.quiz_question_user_response_text);
+            quizUserResponseTitle = itemView.findViewById(R.id.quiz_question_user_response_title);
             quizFeedbackText = itemView.findViewById(R.id.quiz_question_user_feedback_text);
             quizFeedbackTitle = itemView.findViewById(R.id.quiz_question_user_feedback_title);
             quizFeedbackIcon = itemView.findViewById(R.id.quiz_question_feedback_image);
