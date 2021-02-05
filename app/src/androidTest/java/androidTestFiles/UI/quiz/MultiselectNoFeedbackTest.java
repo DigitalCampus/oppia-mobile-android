@@ -64,6 +64,8 @@ public class MultiselectNoFeedbackTest {
     @Test
     public void correctAnswer() {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        onView(withId(R.id.take_quiz_btn)).perform(click());
+
         onView(withId(R.id.question_text))
                 .check(matches(withText(FIRST_QUESTION_TITLE)));
 
@@ -95,6 +97,8 @@ public class MultiselectNoFeedbackTest {
     @Test
     public void incorrectAnswer() {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        onView(withId(R.id.take_quiz_btn)).perform(click());
+
         onView(withId(R.id.question_text))
                 .check(matches(withText(FIRST_QUESTION_TITLE)));
 
@@ -120,6 +124,8 @@ public class MultiselectNoFeedbackTest {
     @Test
     public void oneCorrectAnswer() {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        onView(withId(R.id.take_quiz_btn)).perform(click());
+
         onView(withId(R.id.question_text))
                 .check(matches(withText(FIRST_QUESTION_TITLE)));
 
@@ -145,6 +151,8 @@ public class MultiselectNoFeedbackTest {
     @Test
     public void oneCorrectOneIncorrectAnswer() {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        onView(withId(R.id.take_quiz_btn)).perform(click());
+
         onView(withId(R.id.question_text))
                 .check(matches(withText(FIRST_QUESTION_TITLE)));
 

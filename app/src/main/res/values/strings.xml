@@ -70,6 +70,8 @@
     <string name="widget_quiz_media_caption">Press the image to start the video</string>
     <string name="widget_quiz_feedback_response_title">You answered: </string>
     <string name="widget_quiz_feedback_feedback_title">Feedback: </string>
+    <string name="widget_quiz_num_questions">%1$d questions</string>
+    <string name="widget_quiz_pass_threshold">%1$d%% pass threshold </string>
     <string name="widget_quiz_unavailable_section">You must complete all the previous activities in this section before this quiz becomes available to you.</string>
     <string name="widget_quiz_unavailable_course">You must complete all the previous activities in this course before this quiz becomes available to you.</string>
     <string name="widget_quiz_unavailable_attempts">You have already attempted this quiz the max number of times allowed</string>
@@ -419,6 +421,9 @@
     <string name="quiz_attempts.unknown_quiz">Unknown/removed quiz</string>
     <string name="quiz_attempts.global_empty_state">You have not attempted\nany quiz yet.</string>
     <string name="quiz_attempt.title">Quiz attempt</string>
+    <string name="quiz_attempts.previous">Previous attempts</string>
+    <string name="quiz_attempts.unlimited">Unlimited attempts</string>
+    <string name="quiz_attempts.left">%1$d attempts (%2$d left)</string>
 
     <!-- Strings for point events -->
     <string name="points_event_default">Points granted!</string>
