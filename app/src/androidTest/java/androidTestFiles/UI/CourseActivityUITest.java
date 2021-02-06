@@ -187,7 +187,7 @@ public class CourseActivityUITest extends DaggerInjectMockUITest {
         Intent i = getIntentParams(c, section, 2, false);
         courseActivityTestRule.launchActivity(i);
 
-        onView(AllOf.allOf(withText("Test0"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+        onView(AllOf.allOf(withText("Test1"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 isDescendantOfA(withId(R.id.tabs_toolbar))))
                 .perform(click());
 

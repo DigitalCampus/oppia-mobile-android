@@ -133,6 +133,23 @@ public class EditProfileUITest extends MockedApiEndpointTest {
     }
 
     @Test
+    public void checkShowsSubmitErrorMessageWhenServerError400Response() throws Exception {
+
+        startServer(400, ERROR_MESSAGE_BODY, 0);
+
+        editProfileActivityTestRule.launchActivity(null);
+
+        enterValidData();
+
+        onView(withId(R.id.btn_save_profile)).perform(click());
+
+        onView(withText("Error message"))
+                .inRoot(withDecorView(not(editProfileActivityTestRule.getActivity().getWindow().getDecorView())))
+                .check(matches(isDisplayed()));
+
+    }
+
+    @Test
     public void checkDataSavedWhenServerSuccessResponse() throws Exception {
 
         startServer(200, null, 0);
@@ -158,23 +175,6 @@ public class EditProfileUITest extends MockedApiEndpointTest {
 
     }
 
-    @Test
-    public void checkShowsSubmitErrorMessageWhenServerError400Response() throws Exception {
-
-        startServer(400, ERROR_MESSAGE_BODY, 0);
-
-        editProfileActivityTestRule.launchActivity(null);
-
-        enterValidData();
-
-        onView(withId(R.id.btn_save_profile)).perform(click());
-
-
-        onView(withText("Error message"))
-                .inRoot(withDecorView(not(editProfileActivityTestRule.getActivity().getWindow().getDecorView())))
-                .check(matches(isDisplayed()));
-
-    }
 
 
     @Test
