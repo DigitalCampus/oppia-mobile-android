@@ -18,19 +18,41 @@
 package org.digitalcampus.oppia.fragments;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.ScorecardsGridAdapter;
+import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
+import org.digitalcampus.oppia.listener.APIRequestListener;
+import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.task.APIRequestTask;
+import org.digitalcampus.oppia.task.APIUserRequestTask;
+import org.digitalcampus.oppia.task.FetchServerInfoTask;
+import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.UIUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +67,17 @@ public class GlobalScorecardFragment extends AppFragment implements ScorecardsGr
 
     @Inject
     CoursesRepository coursesRepository;
+
+    @Inject
+    ApiEndpoint apiEndpoint;
+
     private RecyclerView recyclerScorecards;
     private View emptyState;
-    private List<Course> courses = new ArrayList<>();
+    private View badgesAwardingInfo;
+    private TextView badgeCriteria;
+    private ImageButton dismissBadgeInfoBtn;
+
+    private final List<Course> courses = new ArrayList<>();
 
     public static GlobalScorecardFragment newInstance() {
         return new GlobalScorecardFragment();
@@ -60,13 +90,18 @@ public class GlobalScorecardFragment extends AppFragment implements ScorecardsGr
     private void findViews(View layout) {
         recyclerScorecards = layout.findViewById(R.id.recycler_scorecards);
         emptyState = layout.findViewById(R.id.empty_state);
+        badgesAwardingInfo = layout.findViewById(R.id.badge_award);
+        badgeCriteria = layout.findViewById(R.id.badge_award_criteria);
+        dismissBadgeInfoBtn = layout.findViewById(R.id.dismiss_badge);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_global_scorecard, container, false);
         findViews(layout);
+
         getAppComponent().inject(this);
+        showBadgeAwardingInfo();
 
         adapterScorecards = new ScorecardsGridAdapter(getActivity(), courses);
         adapterScorecards.setOnItemClickListener(this);
@@ -81,11 +116,30 @@ public class GlobalScorecardFragment extends AppFragment implements ScorecardsGr
 
         courses.clear();
         courses.addAll(coursesRepository.getCourses(getActivity()));
-
         showEmptyStateView(courses.isEmpty());
-
         adapterScorecards.notifyDataSetChanged();
+    }
 
+    private void showBadgeAwardingInfo(){
+        String criteria = prefs.getString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, null);
+        String criteriaDescription = null;
+        if (TextUtils.equals(criteria, Badge.BADGE_CRITERIA_ALL_QUIZZES_PERCENT)){
+            int percent = prefs.getInt(PrefsActivity.PREF_BADGE_AWARD_CRITERIA_PERCENT, 100);
+            criteriaDescription = getString(R.string.badges_award_method_all_quizzes_plus_percent, percent);
+        }
+        else if (criteria!=null && !TextUtils.isEmpty(criteria) && !TextUtils.equals(criteria, "undefined")) {
+            int resId = getResources().getIdentifier("badges.award_method." + criteria, "string", getContext().getPackageName());
+            criteriaDescription = getString(resId);
+        }
+
+        if (criteriaDescription != null){
+            badgesAwardingInfo.setVisibility(View.VISIBLE);
+            dismissBadgeInfoBtn.setOnClickListener(view -> badgesAwardingInfo.setVisibility(View.GONE));
+            String badgeCriteriaTitle = getString(R.string.badges_award_method_criteria);
+            SpannableString badgeText = new SpannableString(badgeCriteriaTitle + " " + criteriaDescription);
+            badgeText.setSpan(new StyleSpan(Typeface.BOLD), 0, badgeCriteriaTitle.length(),  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            badgeCriteria.setText(badgeText, TextView.BufferType.SPANNABLE);
+        }
     }
 
     private void showEmptyStateView(boolean show) {

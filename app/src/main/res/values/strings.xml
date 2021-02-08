@@ -232,9 +232,14 @@
 
     <string name="loading_courses">Loading courses</string>
     <string name="loading_points">Loading points &#8230;</string>
-    <string name="loading_badges">Loading badges &#8230;</string>
 
-    <string name="info_no_badges">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
+    <string name="badges.loading">Loading badges &#8230;</string>
+    <string name="badges.empty_state">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
+    <string name="badges.award_method.criteria">Badge award criteria: </string>
+    <string name="badges.award_method.final_quiz">Only the final quiz needs to be completed and passed</string>
+    <string name="badges.award_method.all_quizzes_plus_percent">All quizzes need to be completed and passed, and %1$d%% of all other activities completed.</string>
+    <string name="badges.award_method.all_quizzes">All quizzes need to be completed and passed</string>
+    <string name="badges.award_method.all_activities">All activities must be completed, including all quizzes passed and all media viewed</string>
 
     <string name="scan_media_download_button">Download</string>
     <string name="success_media_download">Media file: \'%1$s\' successfully downloaded.</string>

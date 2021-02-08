@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
             android:gravity="center"
-            android:text="@string/loading_badges"
+            android:text="@string/badges.loading"
             android:textColor="@color/text_dark"
             android:textSize="18sp" />
     </LinearLayout>
@@ -55,7 +55,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/info_no_badges"
+            android:text="@string/badges.empty_state"
             android:id="@+id/textView11"
             android:layout_gravity="center"
             android:gravity="center"
