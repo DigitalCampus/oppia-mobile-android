@@ -22,6 +22,7 @@ import androidTestFiles.Utils.FileUtils;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -61,6 +62,8 @@ public class MatchingDefaultFeedbackTest {
     @Test
     public void correctAnswer() {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        onView(withId(R.id.take_quiz_btn)).perform(click());
+
         onView(withId(R.id.question_text))
                 .check(matches(withText(FIRST_QUESTION_TITLE)));
         /* TODO

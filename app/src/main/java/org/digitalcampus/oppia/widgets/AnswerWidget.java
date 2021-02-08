@@ -31,6 +31,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -73,6 +74,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -93,8 +95,10 @@ public abstract class AnswerWidget extends BaseWidget {
     private LinearLayout questionImage;
     private ViewGroup container;
     private MediaPlayer mp;
+    private FrameLayout initialInfoContainer;
 
     boolean isOnResultsPage = false;
+    private boolean initialInfoShown = false;
     private boolean quizAttemptSaved = false;
     private boolean loadingQuizErrorDisplayed = false;
 
@@ -110,10 +114,12 @@ public abstract class AnswerWidget extends BaseWidget {
     abstract int getContentAvailability();
     abstract void showContentUnavailableRationale(int unavailabilityReasonStringResId);
     abstract String getFinishButtonLabel();
-    abstract String getResultsTitle();
     abstract void showBaselineResultMessage();
     abstract void saveAttemptTracker();
     abstract void showAnswersFeedback();
+    abstract boolean shouldShowInitialInfo();
+    abstract void loadInitialInfo(ViewGroup infoContainer);
+    abstract void showResultsInfo();
 
     @SuppressWarnings("unchecked")
     @Override
@@ -137,10 +143,9 @@ public abstract class AnswerWidget extends BaseWidget {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(BaseWidget.WIDGET_CONFIG, getWidgetConfig());
-
     }
 
     @Override
@@ -157,10 +162,12 @@ public abstract class AnswerWidget extends BaseWidget {
         this.questionImage = getView().findViewById(R.id.question_image);
         this.playAudioBtn = getView().findViewById(R.id.playAudioBtn);
         this.progressBar =  getView().findViewById(R.id.progress_quiz);
+        this.initialInfoContainer = getView().findViewById(R.id.initial_info_container);
         this.barAnim = new ProgressBarAnimator(progressBar);
         this.barAnim.setAnimDuration(PROGRESS_ANIM_DURATION);
         this.questionImage.setVisibility(View.GONE);
         this.playAudioBtn.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -184,17 +191,23 @@ public abstract class AnswerWidget extends BaseWidget {
 
         if (this.isOnResultsPage) {
             showResults();
-        }
-        else{
-            int contentAvailability = getContentAvailability();
-            if (contentAvailability  == QUIZ_AVAILABLE){
-                this.showQuestion();
-            }
-            else{
-                showContentUnavailableRationale(contentAvailability);
-            }
+            return;
         }
 
+        int contentAvailability = getContentAvailability();
+        if (contentAvailability != QUIZ_AVAILABLE){
+            showContentUnavailableRationale(contentAvailability);
+            return;
+        }
+
+        if (!initialInfoShown && shouldShowInitialInfo()){
+            loadInitialInfo(initialInfoContainer);
+            initialInfoContainer.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        initialInfoContainer.setVisibility(View.GONE);
+        this.showQuestion();
     }
 
     private void showLoadingError() {
@@ -212,7 +225,11 @@ public abstract class AnswerWidget extends BaseWidget {
         }
     }
 
-    private void showQuestion() {
+    protected void showQuestion() {
+
+        initialInfoContainer.setVisibility(View.GONE);
+        initialInfoShown = true;
+
         clearMediaPlayer();
         QuizQuestion q;
         try {
@@ -460,10 +477,10 @@ public abstract class AnswerWidget extends BaseWidget {
             parent.addView(progressContainer, index);
         }
 
-        TextView title = getView().findViewById(R.id.quiz_results_score);
+
         Button actionBtn = getView().findViewById(R.id.quiz_results_button);
         Button exitBtn = getView().findViewById(R.id.quiz_exit_button);
-        title.setText(getResultsTitle());
+        showResultsInfo();
 
         if (this.isBaseline) {
             showBaselineResultMessage();
@@ -576,7 +593,7 @@ public abstract class AnswerWidget extends BaseWidget {
 
     private class OnImageClickListener implements OnClickListener{
 
-        private Context ctx;
+        private final Context ctx;
 
         public OnImageClickListener(Context ctx){
             this.ctx = ctx;
@@ -601,12 +618,11 @@ public abstract class AnswerWidget extends BaseWidget {
     }
 
     private class OnMediaClickListener implements OnClickListener{
-        private String mediaFileName;
+        private final String mediaFileName;
 
         public OnMediaClickListener(String mediaFileName){
             this.mediaFileName = mediaFileName;
         }
-
         public void onClick(View v) {
             startMediaPlayerWithFile(mediaFileName);
         }

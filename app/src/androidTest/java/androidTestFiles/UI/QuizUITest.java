@@ -46,6 +46,7 @@ public class QuizUITest extends DaggerInjectMockUITest {
     private static final String WITH_MAX_ATTEMPTS_JSON = "quizzes/with_max_attempts_quiz.json";
     private Activity act;
     private Bundle args;
+    private QuizStats stats;
 
     @Mock
     QuizAttemptRepository attemptsRepository;
@@ -54,6 +55,8 @@ public class QuizUITest extends DaggerInjectMockUITest {
     public void setup() throws Exception {
         // Setting up before every test
         loadQuizAndSetArgs(SIMPLE_QUIZ_JSON);
+        stats = new QuizStats();
+        Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), any());
     }
 
     public void initMocks(){
@@ -78,7 +81,7 @@ public class QuizUITest extends DaggerInjectMockUITest {
     @Test
     public void showContinueIfQuizPassed() {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
-
+        onView(withId(R.id.take_quiz_btn)).perform(click());
         onView(withText("correctanswer")).perform(click());
         onView(withId(R.id.mquiz_next_btn)).perform(click());
         onView(withText("correctanswer")).perform(click());
@@ -94,7 +97,7 @@ public class QuizUITest extends DaggerInjectMockUITest {
     @Test
     public void showRetakeIfQuizNotPassed() {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
-
+        onView(withId(R.id.take_quiz_btn)).perform(click());
         onView(withText("correctanswer")).perform(click());
         onView(withId(R.id.mquiz_next_btn)).perform(click());
         onView(withText("wronganswer")).perform(click());
@@ -111,7 +114,7 @@ public class QuizUITest extends DaggerInjectMockUITest {
     @Test
     public void showMessageIfAlreadyMaxAttempts() throws Exception {
         loadQuizAndSetArgs(WITH_MAX_ATTEMPTS_JSON);
-        QuizStats stats = new QuizStats();
+
         stats.setNumAttempts(5);
         Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), any());
 
@@ -124,12 +127,9 @@ public class QuizUITest extends DaggerInjectMockUITest {
     @Test
     public void hideRetakeButtonAfterLastAttempt() throws Exception {
         loadQuizAndSetArgs(WITH_MAX_ATTEMPTS_JSON);
-        QuizStats stats = new QuizStats();
-        stats.setNumAttempts(0);
-        Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), any());
 
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
-
+        onView(withId(R.id.take_quiz_btn)).perform(click());
         onView(withText("correctanswer")).perform(click());
         onView(withId(R.id.mquiz_next_btn)).perform(click());
 

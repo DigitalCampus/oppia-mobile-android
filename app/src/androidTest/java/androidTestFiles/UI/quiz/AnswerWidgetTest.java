@@ -1,8 +1,10 @@
 package androidTestFiles.UI.quiz;
 
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidx.fragment.app.Fragment;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -11,12 +13,17 @@ import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.QuizAttemptRepository;
+import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.widgets.FeedbackWidget;
 import org.digitalcampus.oppia.widgets.QuizWidget;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
@@ -30,10 +37,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.StringStartsWith.startsWith;
+import static org.mockito.Matchers.any;
 
 
 @RunWith(Parameterized.class)
-public class AnswerWidgetTest {
+public class AnswerWidgetTest extends DaggerInjectMockUITest {
 
     private static final String SIMPLE_QUIZ_JSON = "quizzes/simple_quiz.json";
     private static final String FIRST_QUESTION_TITLE = "First question";
@@ -41,6 +49,9 @@ public class AnswerWidgetTest {
     private Activity act;
     private Bundle args;
     private Class widgetClass;
+
+    @Mock
+    QuizAttemptRepository attemptsRepository;
 
     @Parameterized.Parameters
     public static Class<? extends Fragment>[] widgetClasses() {
@@ -66,6 +77,9 @@ public class AnswerWidgetTest {
         args.putSerializable(Activity.TAG, act);
         args.putSerializable(Course.TAG, new Course(""));
         args.putBoolean(CourseActivity.BASELINE_TAG, false);
+
+        QuizStats stats = new QuizStats();
+        Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), any());
     }
 
 
@@ -89,6 +103,9 @@ public class AnswerWidgetTest {
     @Test
     public void dontContinueIfQuestionUnaswered() {
         launchInContainer(this.widgetClass, args, R.style.Oppia_ToolbarTheme, null);
+        if (widgetClass == QuizWidget.class){
+            onView(withId(R.id.take_quiz_btn)).perform(click());
+        }
 
         onView(withId(R.id.question_text))
                 .check(matches(withText(startsWith(FIRST_QUESTION_TITLE))));
@@ -103,6 +120,9 @@ public class AnswerWidgetTest {
     @Test
     public void continueIfQuestionAnswered() {
         launchInContainer(this.widgetClass, args, R.style.Oppia_ToolbarTheme, null);
+        if (widgetClass == QuizWidget.class){
+            onView(withId(R.id.take_quiz_btn)).perform(click());
+        }
         onView(withId(R.id.question_text))
                 .check(matches(withText(startsWith(FIRST_QUESTION_TITLE))));
 
