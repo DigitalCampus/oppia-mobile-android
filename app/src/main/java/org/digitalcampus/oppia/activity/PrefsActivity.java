@@ -104,6 +104,10 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_GAMIFICATION_POINTS_ANIMATION = "prefGamificationPointsAnimation";
     public static final String PREF_DURATION_GAMIFICATION_POINTS_VIEW = "prefDurationGamificationPointsView";
 
+    public static final String PREF_BADGE_AWARD_CRITERIA = "prefBadgeAwardCriteria";
+    public static final String PREF_BADGE_AWARD_CRITERIA_PERCENT = "prefBadgeAwardCriteriaPercent";
+
+
     /*
      * End personal prefs
      */

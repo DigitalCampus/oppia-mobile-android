@@ -61,7 +61,7 @@
  	<string name="widget_quiz_baseline_goto_course"><![CDATA[Ir al curso >>]]></string>
  	<string name="widget_quiz_image_caption">Pulse en la imagen para verla ampliada</string>
  	<string name="widget_quiz_feedback_response_title">Su respuesta:</string>
- 	<string name="widget_quiz_feedback_feedback_title">Feedback: </string>
+ 	<string name="widget_quiz_feedback_feedback_title">Comentario: </string>
  	
  	<string name="widget_resource_open_file">Abrir \'%1$s\'</string>
  	
@@ -182,9 +182,9 @@
 	
 	<string name="loading_courses">Cargando cursos</string>
 	<string name="loading_points">Cargando puntos&#8230;</string>
-	<string name="loading_badges">Cargando insignias&#8230;</string>
+	<string name="badges.loading">Cargando insignias&#8230;</string>
 	
-	<string name="info_no_badges">Todavía no tiene ninguna insignia. Termine un curso completo para ganarse tu primera insignia.</string>
+	<string name="badges.empty_state">Todavía no tiene ninguna insignia. Termine un curso completo para ganarse tu primera insignia.</string>
 	
 	<string name="scan_media_download_button">Descarga</string>
 	<string name="success_media_download">Media: \'%1$s\' descargado correctamente.</string>
@@ -315,14 +315,14 @@
     <string name="tab_title_activity">Actividad</string>
     <string name="widget_quiz_continue"><![CDATA[Continuar >>]]></string>
     <string name="widget_quiz_media_caption">Pulse en la imagen para ver el vídeo</string>
-    <string name="widget_quiz_unavailable_attempts">Ya ha intentado este quiz el número máximo de veces permitido</string>
-    <string name="widget_quiz_unavailable_course">Debe completar todas las actividades anteriores en este curso para que este quiz esté disponible.</string>
-    <string name="widget_quiz_unavailable_section">Debe completar todas las actividades anteriores en esta sección para que este quiz esté disponible.</string>
+    <string name="widget_quiz_unavailable_attempts">Ya ha intentado este cuestionario el número máximo de veces permitido</string>
+    <string name="widget_quiz_unavailable_course">Debe completar todas las actividades anteriores en este curso para que este cuestionario esté disponible.</string>
+    <string name="widget_quiz_unavailable_section">Debe completar todas las actividades anteriores en esta sección para que este cuestionario esté disponible.</string>
     <string name="warning_download_via_cellular_enabled">¡Cuidado! Permitir que los ficheros multimedia se descarguen mediante tu conexión de datos puede gastar una gran cantidad de datos de su tarifa.\n\nNo se recomienda habilitar esta opción si tiene una conexión lenta.</string>
     <string name="warning_delete_disabled">El borrado de cursos está deshabilitado - actualiza los ajustes para permitir el borrado de cursos.</string>
     <string name="empty_state_courses">Actualmente no hay ningún curso disponible para ti en este servidor.</string>
     <string name="empty_state_scorecard">Todavía no tienes ningún curso instalado. \nCuando instales algún curso, podras ver aquí tu progreso general.</string>
-    <string name="error_quiz_no_questions">No hay preguntas en este quiz.</string>
+    <string name="error_quiz_no_questions">No hay preguntas en este cuestionario.</string>
     <string name="prefRemoteAdminEnabled">Habilitar administración remota del dispositivo</string>
     <string name="scorecard_quizzes_title">Cuestionarios</string>
     <string name="upgradev49_1">Copiando archivos al nuevo destino - esta tarea podría llevar varios minutos</string>
