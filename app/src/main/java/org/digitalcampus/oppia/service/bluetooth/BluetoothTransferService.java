@@ -5,6 +5,7 @@ import android.app.Service;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -110,7 +111,8 @@ public class BluetoothTransferService extends Service {
 
             @Override
             public void onFail(CourseTransferableFile file, String error) {
-                // do nothing for now
+                OppiaNotificationUtils.sendSimpleMessage(BluetoothTransferService.this, true,
+                        getString(R.string.bluetooth_transfer_failure));
             }
 
             @Override
@@ -153,7 +155,13 @@ public class BluetoothTransferService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new LocalBinder();
+    }
+
+    public class LocalBinder extends Binder {
+        BluetoothTransferService getService() {
+            return BluetoothTransferService.this;
+        }
     }
 
     @Override
