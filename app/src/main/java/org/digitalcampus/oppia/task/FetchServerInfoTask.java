@@ -85,25 +85,32 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
                 JSONObject json = new JSONObject(serverInfo);
                 String serverVersion = json.getString(SERVER_VERSION);
                 String serverName = json.getString(SERVER_NAME);
-                String badgeCriteria = json.getString(BADGE_CRITERIA);
-                int badgePercent = 100;
-                if (json.has(BADGE_PERCENT_CRITERIA)){
-                    badgePercent = json.getInt(BADGE_PERCENT_CRITERIA);
-                }
-
-                result.put(RESULT_TAG, RESULT_SUCCESS);
-                result.put(SERVER_VERSION, serverVersion);
-                result.put(SERVER_NAME, serverName);
 
                 prefs.edit()
                     .putBoolean(PrefsActivity.PREF_SERVER_CHECKED, true)
                     .putBoolean(PrefsActivity.PREF_SERVER_VALID, true)
                     .putString(PrefsActivity.PREF_SERVER_NAME, serverName)
                     .putString(PrefsActivity.PREF_SERVER_VERSION, serverVersion)
-                    .putString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, badgeCriteria)
-                    .putInt(PrefsActivity.PREF_BADGE_AWARD_CRITERIA_PERCENT, badgePercent)
                     .apply();
+
+                result.put(RESULT_TAG, RESULT_SUCCESS);
+                result.put(SERVER_VERSION, serverVersion);
+                result.put(SERVER_NAME, serverName);
                 validServer = true;
+
+                if (json.has(BADGE_CRITERIA)){
+                    String badgeCriteria = json.getString(BADGE_CRITERIA);
+                    int badgePercent = 100;
+                    if (json.has(BADGE_PERCENT_CRITERIA)){
+                        badgePercent = json.getInt(BADGE_PERCENT_CRITERIA);
+                    }
+
+                    prefs.edit()
+                        .putString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, badgeCriteria)
+                        .putInt(PrefsActivity.PREF_BADGE_AWARD_CRITERIA_PERCENT, badgePercent)
+                        .apply();
+                }
+
             }
             else{
                 result.put(RESULT_TAG, RESULT_ERROR);
