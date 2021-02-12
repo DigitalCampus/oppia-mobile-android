@@ -331,7 +331,7 @@ public class PointsFragment extends AppFragment implements TabLayout.OnTabSelect
     private void loadPoints() {
         DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
-        pointsFull = db.getUserPoints(userId, course, false);
+        pointsFull = db.getUserPoints(userId, course, false, false, true);
     }
 
     @Override

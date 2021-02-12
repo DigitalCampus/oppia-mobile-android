@@ -360,7 +360,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
     private void loadPoints() {
         DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
-        pointsFull = db.getUserPoints(userId, course, true);
+        pointsFull = db.getUserPoints(userId, course, true, true, false);
     }
 
     // Useful for testing
