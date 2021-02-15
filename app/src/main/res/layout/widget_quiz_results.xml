@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget_quiz_results">
 
     <LinearLayout
@@ -18,8 +19,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:textSize="24sp"
             android:textAppearance="@style/SectionHeader"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+
+            tools:text="You scored: 28% "/>
 
         <TextView
             android:id="@+id/quiz_results_baseline"
@@ -36,7 +40,80 @@
             android:gravity="center"
             android:textSize="20sp"
             android:visibility="gone" />
+
     </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/quiz_results_bottom_control_bar"
+        android:layout_below="@id/quiz_results_top_control_bar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/quiz_stats"
+                android:visibility="gone">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="95dp"
+                    android:background="@color/subtitle_bar" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginRight="32dp"
+                    android:layout_marginTop="-95dp"
+                    android:layout_marginBottom="@dimen/list_card_vertical_padding"
+                    android:foreground="@drawable/bg_selectable"
+                    app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
+                    app:contentPaddingRight="@dimen/list_card_horizontal_padding"
+                    app:contentPaddingTop="@dimen/list_card_vertical_padding">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/info_threshold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            tools:text="70% pass threshold" />
+
+                        <TextView
+                            android:id="@+id/info_num_attempts"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            tools:text="Unlimited attempts" />
+
+                        <include layout="@layout/view_quiz_stats" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_quiz_results_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
+                android:cacheColorHint="#00000000"
+                android:divider="@color/background_light"
+                android:dividerHeight="1dp"
+                tools:listitem="@layout/row_widget_quiz_feedback"/>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:id="@+id/quiz_results_bottom_control_bar"
@@ -68,7 +145,7 @@
                 />
         </LinearLayout>
 
-        
+
         <TextView
             android:drawableLeft="@android:drawable/ic_dialog_info"
             android:background="@color/theme_primary"
@@ -84,18 +161,6 @@
             android:paddingRight="10dp"
             android:visibility="gone" />
     </LinearLayout>
-    
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_quiz_results_feedback"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/quiz_results_top_control_bar"
-        android:layout_above="@id/quiz_results_bottom_control_bar"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:orientation="vertical"
-        android:cacheColorHint="#00000000"
-        android:divider="@color/background_light"
-        android:dividerHeight="1dp" />
 
     
 

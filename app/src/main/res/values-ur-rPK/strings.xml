@@ -162,9 +162,9 @@
 	
 	<string name="loading_courses">کورس لوڈ ہو رہے ہیں</string>
 	<string name="loading_points"> پؤائنٹس لوڈ ہو رہے ہی8230;</string>
-	<string name="loading_badges">لوڈ ہو رہے ہیں بیج &#8230;</string>
+	<string name="badges.loading">لوڈ ہو رہے ہیں بیج &#8230;</string>
 	
-	<string name="info_no_badges">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
+	<string name="badges.empty_state">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
 	
 	<string name="scan_media_download_button">ڈاؤن لوڈ</string>
 	<string name="success_media_download">Media file: \'%1$s\' ڈاؤن لوڈ کامیاب.</string>

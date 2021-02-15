@@ -227,17 +227,23 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     @Override
     public void apiKeyInvalidated() {
-        UIUtils.showAlert(this, R.string.error, R.string.error_apikey_expired, () -> {
+        if (SessionManager.isLoggedIn(this)){
+            UIUtils.showAlert(this, R.string.error, R.string.error_apikey_expired, () -> {
+                logoutAndRestartApp();
+                return true;
+            });
+        }
+        else{
             logoutAndRestartApp();
-            return true;
-        });
+        }
+
     }
 
     @Override
     public void onGamificationEvent(String message, int points) {
-        SharedPreferences prefsGame = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean notifEnabled = prefsGame.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
-        if (notifEnabled) {
+        boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
+        boolean scoringEnabled = prefs.getBoolean(PrefsActivity.PREF_SCORING_ENABLED, true);
+        if (notifEnabled && scoringEnabled && points > 0) {
 
             final View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
 
@@ -262,7 +268,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             layout.addView(snackView, 0);
             layout.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
 
-            final int gamifPointsViewType = Integer.parseInt(prefsGame.getString(PrefsActivity.PREF_GAMIFICATION_POINTS_ANIMATION, Gamification.GAMIFICATION_POINTS_ANIMATION));
+            final int gamifPointsViewType = Integer.parseInt(prefs.getString(PrefsActivity.PREF_GAMIFICATION_POINTS_ANIMATION, Gamification.GAMIFICATION_POINTS_ANIMATION));
 
             final boolean fullAnimation = gamifPointsViewType == 2 || gamifPointsViewType == 3;
             final boolean withSound = gamifPointsViewType == 3;

@@ -73,13 +73,13 @@ public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadPr
 
             Response response = client.newCall(request).execute();
             if (!response.isSuccessful()){
+                payload.setResultResponse(ctx.getString(R.string.error_connection));
                 payload.setResult(false);
+
                 if (response.code() == 401){
-                    SessionManager.setUserApiKeyValid(u, false);
+                    invalidateApiKey(payload);
                     apiKeyInvalidated = true;
                 }
-                payload.setResultResponse(ctx.getString(
-                        (response.code()==401) ? R.string.error_apikey_expired : R.string.error_connection));
             }
             else{
                 CourseTrackerXMLReader ctxr;

@@ -24,7 +24,11 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.APIRequestListener;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 
 import java.io.IOException;
@@ -36,6 +40,7 @@ import okhttp3.Response;
 public class APIUserRequestTask extends APIRequestTask<Payload, Object, Payload>{
 
 	private APIRequestListener requestListener;
+	private boolean apiKeyInvalidated = false;
 
     public APIUserRequestTask(Context ctx) { super(ctx); }
     public APIUserRequestTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
@@ -58,6 +63,10 @@ public class APIUserRequestTask extends APIRequestTask<Payload, Object, Payload>
             else{
                 switch (response.code()) {
                     case 401:
+                        invalidateApiKey(payload);
+                        apiKeyInvalidated = true;
+                        break;
+
                     case 403: // unauthorised
                         payload.setResult(false);
                         payload.setResultResponse(ctx.getString(R.string.error_login));
@@ -85,7 +94,12 @@ public class APIUserRequestTask extends APIRequestTask<Payload, Object, Payload>
 	protected void onPostExecute(Payload response) {
 		synchronized (this) {
             if (requestListener != null) {
-               requestListener.apiRequestComplete(response);
+                if (apiKeyInvalidated){
+                    requestListener.apiKeyInvalidated();
+                }
+                else{
+                    requestListener.apiRequestComplete(response);
+                }
             }
         }
 	}

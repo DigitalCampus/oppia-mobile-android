@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import androidx.preference.PreferenceManager;
+
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
+import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
@@ -28,6 +31,8 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
     private static final String SERVER_NAME = "name";
     private static final String SERVER_VERSION = "version";
     private static final String ERROR_MESSAGE = "errorMessage";
+    private static final String BADGE_CRITERIA = "course_complete_badge_criteria";
+    private static final String BADGE_PERCENT_CRITERIA = "course_complete_badge_criteria_percent";
 
     private static final String RESULT_TAG = "result";
     private static final String RESULT_NOINTERNET = "noInternet";
@@ -81,17 +86,31 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
                 String serverVersion = json.getString(SERVER_VERSION);
                 String serverName = json.getString(SERVER_NAME);
 
-                result.put(RESULT_TAG, RESULT_SUCCESS);
-                result.put(SERVER_VERSION, serverVersion);
-                result.put(SERVER_NAME, serverName);
-
                 prefs.edit()
                     .putBoolean(PrefsActivity.PREF_SERVER_CHECKED, true)
                     .putBoolean(PrefsActivity.PREF_SERVER_VALID, true)
                     .putString(PrefsActivity.PREF_SERVER_NAME, serverName)
                     .putString(PrefsActivity.PREF_SERVER_VERSION, serverVersion)
                     .apply();
+
+                result.put(RESULT_TAG, RESULT_SUCCESS);
+                result.put(SERVER_VERSION, serverVersion);
+                result.put(SERVER_NAME, serverName);
                 validServer = true;
+
+                if (json.has(BADGE_CRITERIA)){
+                    String badgeCriteria = json.getString(BADGE_CRITERIA);
+                    int badgePercent = 100;
+                    if (json.has(BADGE_PERCENT_CRITERIA)){
+                        badgePercent = json.getInt(BADGE_PERCENT_CRITERIA);
+                    }
+
+                    prefs.edit()
+                        .putString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, badgeCriteria)
+                        .putInt(PrefsActivity.PREF_BADGE_AWARD_CRITERIA_PERCENT, badgePercent)
+                        .apply();
+                }
+
             }
             else{
                 result.put(RESULT_TAG, RESULT_ERROR);

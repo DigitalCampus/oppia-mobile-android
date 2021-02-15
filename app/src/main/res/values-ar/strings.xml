@@ -203,9 +203,9 @@
 
 <string name="loading_courses">تنزيل الدرس</string>
 <string name="loading_points">تنزيل النقاط &#8230;</string>
-<string name="loading_badges">تنزيل الشارات &#8230;</string>
+<string name="badges.loading">تنزيل الشارات &#8230;</string>
 
-<string name="info_no_badges">ليس لديك شارة أنهي الدرس الأول للحصول على الشارة الأولى</string>
+<string name="badges.empty_state">ليس لديك شارة أنهي الدرس الأول للحصول على الشارة الأولى</string>
 
 <string name="scan_media_download_button">تحميل</string>
 <string name="success_media_download">تحميل ملف الوسائط : \'%1$s\' بنجاح</string>

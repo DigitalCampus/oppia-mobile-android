@@ -8,132 +8,148 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/quiz_widget">
-    <LinearLayout
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <FrameLayout
-            android:id="@+id/progress_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ProgressBar
-                android:id="@+id/progress_quiz"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="5dp"
-                android:progressDrawable="@drawable/progress_bar_light"/>
-
-            <TextView
-                android:id="@+id/quiz_progress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="3dp"
-                android:textSize="15sp"
-                fontPath="fonts/gilroy-bold.otf"
-                android:textStyle="bold"/>
-
-        </FrameLayout>
-
-        <ScrollView
-        android:id="@+id/quiz_scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1" >
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/quiz_question"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:orientation="horizontal"
+            <FrameLayout
+                android:id="@+id/progress_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:layout_margin="@dimen/activity_horizontal_margin"
-                    android:clickable="true"
-                    app:fabSize="normal"
-                    app:srcCompat="@drawable/ic_media_play"
-                    android:id="@+id/playAudioBtn"
-                    android:scaleType="fitCenter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:id="@+id/question_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="5dp"
-                    android:gravity="left"
-                    android:textSize="20sp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/question_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
-
-                <ImageView
-                    android:id="@+id/question_image_image"
+                <ProgressBar
+                    android:id="@+id/progress_quiz"
+                    style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="4dp" />
+                    android:layout_height="5dp"
+                    android:progressDrawable="@drawable/progress_bar_light"/>
 
                 <TextView
-                    android:id="@+id/question_image_caption"
+                    android:id="@+id/quiz_progress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    style="@style/SmallTextDark" />
-            </LinearLayout>
+                    android:padding="3dp"
+                    android:textSize="15sp"
+                    fontPath="fonts/montserrat.ttf"
+                    android:textStyle="bold"/>
+
+            </FrameLayout>
+
+            <ScrollView
+                android:id="@+id/quiz_scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="1" >
+
+                <LinearLayout
+                    android:id="@+id/quiz_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:layout_margin="@dimen/activity_horizontal_margin"
+                            android:clickable="true"
+                            app:fabSize="normal"
+                            app:srcCompat="@drawable/ic_media_play"
+                            android:id="@+id/playAudioBtn"
+                            android:scaleType="fitCenter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:id="@+id/question_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="5dp"
+                            android:gravity="left"
+                            android:textSize="20sp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/question_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical" >
+
+                        <ImageView
+                            android:id="@+id/question_image_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="4dp" />
+
+                        <TextView
+                            android:id="@+id/question_image_caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            style="@style/SmallTextDark" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/quiz_response_widget"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
 
             <LinearLayout
-                android:id="@+id/quiz_response_widget"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/quiz_navigation_bar"
+                style="?android:buttonBarStyle">
+
+                <Button
+                    android:id="@+id/mquiz_prev_btn"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight=".5"
+                    android:text="@string/widget_quiz_prev"
+                    android:drawableLeft="@drawable/ic_arrow_left"
+                    android:drawableTint="@color/quiz_navigation_button"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/mquiz_next_btn"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight=".5"
+                    android:text="@string/widget_quiz_next"
+                    android:drawableRight="@drawable/ic_arrow_right"
+                    android:drawableTint="@color/quiz_navigation_button"
+                    android:textSize="15sp" />
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/quiz_navigation_bar"
-        style="?android:buttonBarStyle">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/initial_info_container"
+            android:visibility="gone"
+            ></FrameLayout>
 
-        <Button
-            android:id="@+id/mquiz_prev_btn"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_weight=".5"
-            android:text="@string/widget_quiz_prev"
-            android:drawableLeft="@drawable/ic_arrow_left"
-            android:drawableTint="@color/quiz_navigation_button"
-            android:textSize="15sp" />
+    </FrameLayout>
 
-        <Button
-            android:id="@+id/mquiz_next_btn"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_weight=".5"
-            android:text="@string/widget_quiz_next"
-            android:drawableRight="@drawable/ic_arrow_right"
-            android:drawableTint="@color/quiz_navigation_button"
-            android:textSize="15sp" />
-    </LinearLayout>
-    </LinearLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

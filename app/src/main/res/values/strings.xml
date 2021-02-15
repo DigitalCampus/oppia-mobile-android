@@ -69,7 +69,10 @@
     <string name="widget_quiz_image_caption">Press the image to view larger version</string>
     <string name="widget_quiz_media_caption">Press the image to start the video</string>
     <string name="widget_quiz_feedback_response_title">You answered: </string>
+    <string name="widget_quiz_feedback_response_skipped">You skipped this question.</string>
     <string name="widget_quiz_feedback_feedback_title">Feedback: </string>
+    <string name="widget_quiz_num_questions">%1$d questions</string>
+    <string name="widget_quiz_pass_threshold">%1$d%% pass threshold </string>
     <string name="widget_quiz_unavailable_section">You must complete all the previous activities in this section before this quiz becomes available to you.</string>
     <string name="widget_quiz_unavailable_course">You must complete all the previous activities in this course before this quiz becomes available to you.</string>
     <string name="widget_quiz_unavailable_attempts">You have already attempted this quiz the max number of times allowed</string>
@@ -231,9 +234,14 @@
 
     <string name="loading_courses">Loading courses</string>
     <string name="loading_points">Loading points &#8230;</string>
-    <string name="loading_badges">Loading badges &#8230;</string>
 
-    <string name="info_no_badges">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
+    <string name="badges.loading">Loading badges &#8230;</string>
+    <string name="badges.empty_state">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
+    <string name="badges.award_method.criteria">Badge award criteria: </string>
+    <string name="badges.award_method.final_quiz">Only the final quiz needs to be completed and passed</string>
+    <string name="badges.award_method.all_quizzes_plus_percent">All quizzes need to be completed and passed, and %1$d%% of all other activities completed.</string>
+    <string name="badges.award_method.all_quizzes">All quizzes need to be completed and passed</string>
+    <string name="badges.award_method.all_activities">All activities must be completed, including all quizzes passed and all media viewed</string>
 
     <string name="scan_media_download_button">Download</string>
     <string name="success_media_download">Media file: \'%1$s\' successfully downloaded.</string>
@@ -287,7 +295,7 @@
     <string name="login_process">Logging in</string>
     <string name="login_complete">Logged in</string>
 
-    <string name="logout_confirm">Are you sure you want to logout?\n\nYou will need an active internet connection to log in again.</string>
+    <string name="logout_confirm">Are you sure you want to logout?</string>
 
     <string name="register_alert_title">Register</string>
     <string name="register_process">Registering …</string>
@@ -391,6 +399,7 @@
     <string name="bluetooth.transferable_type">Transferable type</string>
     <string name="bluetooth_device_scanning">Scanning for new devices…</string>
     <string name="bluetooth_communication_closed">Bluetooth communication was closed.</string>
+    <string name="bluetooth_transfer_failure">Bluetooth transfer failure.</string>
     <string name="bluetooth.files_pending">%1$d files pending</string>
     <string name="bluetooth_all_transfers_complete">All Bluetooth pending transfers were completed</string>
     <string name="bluetooth.transfer_complete">%1$s: Transfer completed</string>
@@ -419,6 +428,9 @@
     <string name="quiz_attempts.unknown_quiz">Unknown/removed quiz</string>
     <string name="quiz_attempts.global_empty_state">You have not attempted\nany quiz yet.</string>
     <string name="quiz_attempt.title">Quiz attempt</string>
+    <string name="quiz_attempts.previous">Previous attempts</string>
+    <string name="quiz_attempts.unlimited">Unlimited attempts</string>
+    <string name="quiz_attempts.left">%1$d attempts (%2$d left)</string>
 
     <!-- Strings for point events -->
     <string name="points_event_default">Points granted!</string>

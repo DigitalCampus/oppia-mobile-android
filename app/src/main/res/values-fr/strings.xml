@@ -194,9 +194,9 @@
 
     <string name="loading_courses">Chargement des cours</string>
     <string name="loading_points">Chargement des points &#8230;</string>
-    <string name="loading_badges">Chargement des badges &#8230;</string>
+    <string name="badges.loading">Chargement des badges &#8230;</string>
 
-    <string name="info_no_badges">Vous n\'avez pas encore de badges. Terminez votre premier cours pour obtenir votre premier badge.</string>
+    <string name="badges.empty_state">Vous n\'avez pas encore de badges. Terminez votre premier cours pour obtenir votre premier badge.</string>
 
     <string name="scan_media_download_button">Télécharger</string>
     <string name="success_media_download">Fichier média : \'%1$s\' téléchargé avec succès.</string>

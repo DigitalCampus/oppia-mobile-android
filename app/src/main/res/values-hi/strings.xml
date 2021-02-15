@@ -152,9 +152,9 @@
 	
 	<string name="loading_courses">कोर्स लोड हो रहे हैंs</string>
 	<string name="loading_points">पॉइंट्स लोड हो रहे हैं &#8230;</string>
-	<string name="loading_badges">बिल्ले लोड हो रहे हैं &#8230;</string>
+	<string name="badges.loading">बिल्ले लोड हो रहे हैं &#8230;</string>
 	
-	<string name="info_no_badges">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
+	<string name="badges.empty_state">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
 	
 	<string name="scan_media_download_button">डाउनलोड</string>
 	<string name="success_media_download">Media file: \'%1$s\' डाउनलोड सफल</string>
