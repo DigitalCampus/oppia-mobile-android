@@ -18,6 +18,8 @@
 package org.digitalcampus.oppia.widgets;
 
 import android.os.Bundle;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
@@ -67,13 +69,24 @@ public class FeedbackWidget extends AnswerWidget {
 	}
 
 	@Override
-	String getFinishButtonLabel() {
-		return getString(R.string.widget_feedback_submit);
+	boolean shouldShowInitialInfo() {
+		return false;
 	}
 
 	@Override
-	String getResultsTitle() {
-		return getString(R.string.widget_feedback_submit_title);
+	void loadInitialInfo(ViewGroup infoContainer) {
+		// Don't need to show anything specific
+	}
+
+	@Override
+	void showResultsInfo() {
+		TextView title = getView().findViewById(R.id.quiz_results_score);
+		title.setText(R.string.widget_feedback_submit_title);
+	}
+
+	@Override
+	String getFinishButtonLabel() {
+		return getString(R.string.widget_feedback_submit);
 	}
 
 	@Override

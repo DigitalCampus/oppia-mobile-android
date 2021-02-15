@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
@@ -125,8 +126,72 @@ public class QuizWidget extends AnswerWidget {
     }
 
     @Override
-    String getResultsTitle() {
-        return getString(R.string.widget_quiz_results_score, this.getPercentScore());
+    void showResultsInfo() {
+        TextView title = getView().findViewById(R.id.quiz_results_score);
+        title.setText(getString(R.string.widget_quiz_results_score, this.getPercentScore()));
+
+        if (!isBaseline){
+            ViewGroup info = getView().findViewById(R.id.quiz_stats);
+            info.setVisibility(View.VISIBLE);
+
+            QuizStats stats = attemptsRepository.getQuizAttemptStats(getContext(), activity.getDigest());
+            // We take into account the current quiz (not saved yet)
+            int numAttempts = stats.getNumAttempts();
+            float average = ((stats.getAverageScore() * numAttempts) + quiz.getUserscore()) / (numAttempts + 1);
+            stats.setMaxScore(Math.max(quiz.getMaxscore(), stats.getMaxScore()));
+            stats.setNumAttempts(numAttempts + 1);
+            stats.setUserScore(Math.max(quiz.getUserscore(), stats.getUserScore()));
+            stats.setAverageScore(average);
+            showStats(info, stats);
+        }
+    }
+
+    @Override
+    boolean shouldShowInitialInfo() {
+        return !this.isBaseline;
+    }
+
+    private void showStats(ViewGroup infoContainer, QuizStats stats){
+        TextView average = infoContainer.findViewById(R.id.highlight_average);
+        TextView best = infoContainer.findViewById(R.id.highlight_best);
+        TextView numAttempts = infoContainer.findViewById(R.id.highlight_attempted);
+        TextView infoAttempts = infoContainer.findViewById(R.id.info_num_attempts);
+        TextView threshold = infoContainer.findViewById(R.id.info_threshold);
+
+        numAttempts.setText(String.valueOf(stats.getNumAttempts()));
+        threshold.setText(getString(R.string.widget_quiz_pass_threshold, quiz.getPassThreshold()));
+
+        if (quiz.limitAttempts()){
+            int attemptsLeft = quiz.getMaxAttempts() - stats.getNumAttempts();
+            infoAttempts.setText(getString(R.string.quiz_attempts_left, quiz.getMaxAttempts(), attemptsLeft));
+        }
+        else{
+            infoAttempts.setText(R.string.quiz_attempts_unlimited);
+        }
+
+        if (stats.getNumAttempts() == 0){
+            average.setText("-");
+            best.setText("-");
+        }
+        else{
+            average.setText(stats.getAveragePercent() + "%");
+            best.setText(stats.getPercent() + "%");
+        }
+    }
+
+    @Override
+    void loadInitialInfo(ViewGroup infoContainer) {
+        infoContainer.removeAllViews();
+        ViewGroup info = (ViewGroup) View.inflate(infoContainer.getContext(), R.layout.view_quiz_info, infoContainer);
+        ProgressBar thresholdBar = info.findViewById(R.id.threshold_bar);
+        TextView numQuestions = info.findViewById(R.id.info_num_questions);
+
+        numQuestions.setText(getString(R.string.widget_quiz_num_questions, quiz.getTotalNoQuestions()));
+        thresholdBar.setProgress(quiz.getPassThreshold());
+
+        info.findViewById(R.id.take_quiz_btn).setOnClickListener(view -> showQuestion());
+        QuizStats stats = attemptsRepository.getQuizAttemptStats(getContext(), activity.getDigest());
+        showStats(info, stats);
     }
 
     @Override

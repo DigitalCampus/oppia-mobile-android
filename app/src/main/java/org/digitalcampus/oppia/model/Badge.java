@@ -26,6 +26,11 @@ public class Badge {
 	private String description;
 	private String icon;
 
+	public static final String BADGE_CRITERIA_ALL_ACTIVITIES = "all_activities";
+	public static final String BADGE_CRITERIA_ALL_QUIZZES = "all_quizzes";
+	public static final String BADGE_CRITERIA_FINAL_QUIZ = "final_quiz";
+	public static final String BADGE_CRITERIA_ALL_QUIZZES_PERCENT = "all_quizzes_plus_percent";
+
 	public Badge(){
 
 	}

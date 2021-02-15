@@ -1456,11 +1456,12 @@ public class DbHelper extends SQLiteOpenHelper {
         this.insertOrUpdateUserLeaderboard(username, fullname, currentPoints, lastUpdate);
     }
 
-    public List<Points> getUserPoints(long userId, Course courseFilter, boolean onlyTrackerlogs) {
+    public List<Points> getUserPoints(long userId, Course courseFilter, boolean onlyTrackerlogs,
+                                      boolean skipPretests, boolean onlyNonZeroPoints) {
         ArrayList<Points> points = new ArrayList<>();
 
         // Points from Tracker
-        String s = TRACKER_LOG_C_USERID + STR_EQUALS_AND + TRACKER_LOG_C_POINTS + "!=0";
+        String s = TRACKER_LOG_C_USERID + (onlyNonZeroPoints ? STR_EQUALS_AND + TRACKER_LOG_C_POINTS + "!=0" : "=?");
         String[] args = new String[]{String.valueOf(userId)};
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
@@ -1517,6 +1518,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
                 case Gamification.EVENT_NAME_QUIZ_ATTEMPT:
                     Log.d(TAG, "quizid " + c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
+
+                    if (skipPretests && activity == null) {
+                        c.moveToNext();
+                        continue;
+                    }
+
                     if ((course != null) && (activity != null)) {
                         description = this.ctx.getString(R.string.points_event_quiz_attempt,
                                 activity.getTitle(prefLang),

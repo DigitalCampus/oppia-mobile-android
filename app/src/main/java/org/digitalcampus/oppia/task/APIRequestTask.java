@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -71,6 +72,18 @@ public abstract class APIRequestTask<P, G, R> extends AsyncTask<P, G, R> {
         if (listener != null) {
             listener.onRequestFinish(nameRequest);
         }
+    }
+
+    protected void invalidateApiKey(Payload payload){
+        // If the server returns a 401 error it means an invalid APIkey
+        try {
+            User u = DbHelper.getInstance(ctx).getUser(SessionManager.getUsername(ctx));
+            SessionManager.setUserApiKeyValid(u, false);
+        } catch (UserNotFoundException e) {
+            Mint.logException(e);
+        }
+        payload.setResult(false);
+        payload.setResultResponse(ctx.getString(org.digitalcampus.mobile.learning.R.string.error_apikey_expired ));
     }
 
     public void setAPIRequestFinishListener(APIRequestFinishListener listener, String nameRequest) {

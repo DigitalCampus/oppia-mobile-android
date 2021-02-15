@@ -1,13 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/badge_award"
+        android:orientation="horizontal"
+        android:background="@color/subtitle_bar"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/badge_award_criteria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="@dimen/text_size_large"
+            android:layout_toLeftOf="@id/dismiss_badge"
+            android:padding="@dimen/padding_medium_2"
+            android:text="@string/badges.award_method.all_activities" />
+
+        <ImageButton
+            android:id="@+id/dismiss_badge"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/list_card_icon_margin"
+            android:adjustViewBounds="false"
+            android:background="@color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_action_cancel"
+            android:tint="@color/white" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/empty_state"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_gravity="center"
         android:layout_marginLeft="@dimen/padding_large"
         android:layout_marginRight="@dimen/padding_large"
@@ -43,8 +77,11 @@
         android:id="@+id/recycler_scorecards"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/badge_award"
+        android:layout_alignParentBottom="true"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
-        android:visibility="gone" />
+        tools:listitem="@layout/row_scorecard"
+        android:visibility="visible" />
 
-</FrameLayout>
+</RelativeLayout>

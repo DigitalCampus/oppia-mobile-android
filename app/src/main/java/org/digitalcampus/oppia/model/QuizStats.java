@@ -52,6 +52,7 @@ public class QuizStats implements Serializable {
     public void setAverageScore(float averageScore) {
         this.averageScore = averageScore;
     }
+    public float getAverageScore(){ return averageScore; }
 
     public boolean isAttempted(){ return attempted; }
     public void setAttempted(boolean a){
