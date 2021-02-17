@@ -17,8 +17,10 @@
 
 package org.digitalcampus.oppia.widgets;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -47,7 +49,6 @@ public abstract class BaseWidget extends Fragment {
 	protected static final String QUIZ_EXCEPTION_MESSAGE = "Invalid Quiz Error: ";
 
     protected static final String WIDGET_CONFIG = "widget_config";
-    protected static final String PROPERTY_FEEDBACK = "feedback";
     protected static final String PROPERTY_QUIZ = "quiz";
     protected static final String PROPERTY_ACTIVITY_STARTTIME = "Activity_StartTime";
     protected static final String PROPERTY_ON_RESULTS_PAGE = "OnResultsPage";
@@ -141,29 +142,34 @@ public abstract class BaseWidget extends Fragment {
     }
 
     protected void startMediaPlayerWithFile(String mediaFileName){
+
+        Context ctx = getActivity();
         // check media file exists
-        boolean exists = Storage.mediaFileExists(getActivity(), mediaFileName);
-        if (!exists) {
-            Toast.makeText(getActivity(),
-                    getActivity().getString(R.string.error_media_not_found, mediaFileName),
+        if (!Storage.mediaFileExists(ctx, mediaFileName)) {
+            //Try if the filename is URL encoded
+            mediaFileName = Uri.decode(mediaFileName);
+            if (!Storage.mediaFileExists(ctx, mediaFileName)){
+                Toast.makeText(ctx,
+                    getString(R.string.error_media_not_found, mediaFileName),
                     Toast.LENGTH_LONG).show();
-            return;
+                return;
+            }
         }
 
-        String mimeType = FileUtils.getMimeType(Storage.getMediaPath(getActivity()) + mediaFileName);
+        String mimeType = FileUtils.getMimeType(Storage.getMediaPath(ctx) + mediaFileName);
         if (!FileUtils.isSupportedMediafileType(mimeType)) {
-            Toast.makeText(getActivity(),
-                    getActivity().getString(R.string.error_media_unsupported, mediaFileName),
+            Toast.makeText(ctx,
+                    getString(R.string.error_media_unsupported, mediaFileName),
                     Toast.LENGTH_LONG).show();
             return;
         }
 
-        Intent intent = new Intent(getActivity(), VideoPlayerActivity.class);
+        Intent intent = new Intent(ctx, VideoPlayerActivity.class);
         Bundle tb = new Bundle();
         tb.putSerializable(VideoPlayerActivity.MEDIA_TAG, mediaFileName);
         tb.putSerializable(Activity.TAG, activity);
         tb.putSerializable(Course.TAG, course);
         intent.putExtras(tb);
-        getActivity().startActivity(intent);
+        startActivity(intent);
     }
 }
