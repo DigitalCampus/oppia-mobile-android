@@ -102,7 +102,7 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
             json.put("username", u.getUsername());
             json.put("password", u.getPassword());
             json.put("passwordagain", u.getPasswordAgain());
-
+            json.put("email", u.getEmail());
             json.put("first_name", u.getFirstname());
             json.put("last_name", u.getLastname());
             json.put("jobtitle", u.getJobTitle());
