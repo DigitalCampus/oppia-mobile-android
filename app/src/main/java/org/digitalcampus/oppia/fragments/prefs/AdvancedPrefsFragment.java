@@ -1,6 +1,8 @@
 package org.digitalcampus.oppia.fragments.prefs;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.StorageLocationInfo;
 import org.digitalcampus.oppia.utils.storage.StorageUtils;
@@ -58,9 +61,11 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
     private void loadPrefs() {
         storagePref = findPreference(PrefsActivity.PREF_STORAGE_OPTION);
         serverPref = findPreference(PrefsActivity.PREF_SERVER);
+
         if (serverPref == null || storagePref == null) {
             return;
         }
+
         serverPref.setOnPreferenceChangeListener((preference, newValue) -> {
             String url = ((String) newValue).trim();
             if (!URLUtil.isNetworkUrl(url) || !Patterns.WEB_URL.matcher(url).matches()) {
@@ -70,9 +75,15 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                 return false;
             }
 
+            if (SessionManager.isLoggedIn(getActivity())) {
+                showWarningLogout(url);
+                return false;
+            }
+
             // If it is correct, we allow the change
             return true;
         });
+
         protectAdminEditTextPreferences();
 
         MaxIntOnStringPreferenceListener maxIntListener = new MaxIntOnStringPreferenceListener();
@@ -88,6 +99,18 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         username.setSummary("".equals(username.getText()) ?
                 getString(R.string.about_not_logged_in) :
                 getString(R.string.about_logged_in, username.getText()));
+    }
+
+    private void showWarningLogout(String url) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.warning)
+                .setMessage(R.string.change_server_logout_warning)
+                .setPositiveButton(R.string.accept, (dialog, which) -> {
+                    SessionManager.logoutCurrentUser(getActivity());
+                    App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, url).apply();
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     public void updateServerPref() {
