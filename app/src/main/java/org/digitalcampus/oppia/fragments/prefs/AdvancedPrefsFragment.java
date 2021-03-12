@@ -66,7 +66,24 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
             return;
         }
 
-        serverPref.setOnPreferenceChangeListener((preference, newValue) -> {
+        protectAdminEditTextPreferences();
+
+        updateServerPref();
+        updateStorageList(this.getActivity());
+        liveUpdateSummary(PrefsActivity.PREF_STORAGE_OPTION);
+        liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_CONN, " ms");
+        liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_RESP, " ms");
+        EditTextPreference username = findPreference(PrefsActivity.PREF_USER_NAME);
+        username.setSummary("".equals(username.getText()) ?
+                getString(R.string.about_not_logged_in) :
+                getString(R.string.about_logged_in, username.getText()));
+
+    }
+
+    @Override
+    protected boolean onPreferenceChangedDelegate(Preference preference, Object newValue) {
+        if (preference == serverPref) {
+
             String url = ((String) newValue).trim();
             if (!URLUtil.isNetworkUrl(url) || !Patterns.WEB_URL.matcher(url).matches()) {
                 UIUtils.showAlert(getActivity(),
@@ -82,23 +99,14 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
 
             // If it is correct, we allow the change
             return true;
-        });
+        }
 
-        protectAdminEditTextPreferences();
+        if (preference == findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_CONN) ||
+                preference == findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_RESP)) {
+            return checkMaxIntOnString(newValue);
+        }
 
-        MaxIntOnStringPreferenceListener maxIntListener = new MaxIntOnStringPreferenceListener();
-        findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_CONN).setOnPreferenceChangeListener(maxIntListener);
-        findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_RESP).setOnPreferenceChangeListener(maxIntListener);
-
-        updateServerPref();
-        updateStorageList(this.getActivity());
-        liveUpdateSummary(PrefsActivity.PREF_STORAGE_OPTION);
-        liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_CONN, " ms");
-        liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_RESP, " ms");
-        EditTextPreference username = findPreference(PrefsActivity.PREF_USER_NAME);
-        username.setSummary("".equals(username.getText()) ?
-                getString(R.string.about_not_logged_in) :
-                getString(R.string.about_logged_in, username.getText()));
+        return super.onPreferenceChangedDelegate(preference, newValue);
     }
 
     private void showWarningLogout(String url) {
@@ -107,10 +115,29 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                 .setMessage(R.string.change_server_logout_warning)
                 .setPositiveButton(R.string.accept, (dialog, which) -> {
                     SessionManager.logoutCurrentUser(getActivity());
+                    serverPref.setText(url);
                     App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, url).apply();
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
+    }
+
+    private boolean checkMaxIntOnString(Object newValue) {
+
+        boolean valid;
+        try {
+            String intValue = (String) newValue;
+            valid = (intValue.length() <= 9); //it'll be bigger than int's max value
+        } catch (NumberFormatException e) {
+            valid = false;
+        }
+
+        if (!valid) {
+            UIUtils.showAlert(getActivity(),
+                    R.string.prefInt_errorTitle,
+                    R.string.prefInt_errorDescription);
+        }
+        return valid;
     }
 
     public void updateServerPref() {
@@ -198,27 +225,5 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
             updateStoragePref(newValue);
         }
     }
-
-    public class MaxIntOnStringPreferenceListener implements Preference.OnPreferenceChangeListener {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-
-            boolean valid;
-            try {
-                String intValue = (String) newValue;
-                valid = (intValue.length() <= 9); //it'll be bigger than int's max value
-            } catch (NumberFormatException e) {
-                valid = false;
-            }
-
-            if (!valid) {
-                UIUtils.showAlert(getActivity(),
-                        R.string.prefInt_errorTitle,
-                        R.string.prefInt_errorDescription);
-            }
-            return valid;
-        }
-    }
-
 
 }
