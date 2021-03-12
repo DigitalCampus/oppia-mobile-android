@@ -35,6 +35,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
     public static final String TAG = PrefsActivity.class.getSimpleName();
     private ListPreference storagePref;
     private EditTextPreference serverPref;
+    private EditTextPreference usernamePref;
 
     public static AdvancedPrefsFragment newInstance() {
         return new AdvancedPrefsFragment();
@@ -61,6 +62,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
     private void loadPrefs() {
         storagePref = findPreference(PrefsActivity.PREF_STORAGE_OPTION);
         serverPref = findPreference(PrefsActivity.PREF_SERVER);
+        usernamePref = findPreference(PrefsActivity.PREF_USER_NAME);
 
         if (serverPref == null || storagePref == null) {
             return;
@@ -73,10 +75,9 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         liveUpdateSummary(PrefsActivity.PREF_STORAGE_OPTION);
         liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_CONN, " ms");
         liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_RESP, " ms");
-        EditTextPreference username = findPreference(PrefsActivity.PREF_USER_NAME);
-        username.setSummary("".equals(username.getText()) ?
+        usernamePref.setSummary("".equals(usernamePref.getText()) ?
                 getString(R.string.about_not_logged_in) :
-                getString(R.string.about_logged_in, username.getText()));
+                getString(R.string.about_logged_in, usernamePref.getText()));
 
     }
 
@@ -115,7 +116,8 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                 .setMessage(R.string.change_server_logout_warning)
                 .setPositiveButton(R.string.accept, (dialog, which) -> {
                     SessionManager.logoutCurrentUser(getActivity());
-                    serverPref.setText(url);
+                    usernamePref.setSummary(R.string.about_not_logged_in);
+                    ((PrefsActivity)getActivity()).forzeGoToLoginScreen();
                     App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, url).apply();
                 })
                 .setNegativeButton(R.string.cancel, null)
