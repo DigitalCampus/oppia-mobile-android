@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Patterns;
@@ -30,12 +31,17 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 
+import javax.inject.Inject;
+
 public class AdvancedPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback {
 
     public static final String TAG = PrefsActivity.class.getSimpleName();
     private ListPreference storagePref;
     private EditTextPreference serverPref;
     private EditTextPreference usernamePref;
+
+    @Inject
+    SharedPreferences prefs;
 
     public static AdvancedPrefsFragment newInstance() {
         return new AdvancedPrefsFragment();
@@ -56,7 +62,13 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
     @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
+        initializeDagger();
         loadPrefs();
+    }
+
+    private void initializeDagger() {
+        App app = (App) getActivity().getApplication();
+        app.getComponent().inject(this);
     }
 
     private void loadPrefs() {
@@ -93,7 +105,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                 return false;
             }
 
-            if (SessionManager.isLoggedIn(getActivity())) {
+            if (isLoggedIn()) {
                 showWarningLogout(url);
                 return false;
             }
@@ -108,6 +120,10 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         }
 
         return super.onPreferenceChangedDelegate(preference, newValue);
+    }
+
+    private boolean isLoggedIn() {
+        return !TextUtils.isEmpty(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
     }
 
     private void showWarningLogout(String url) {
