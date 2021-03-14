@@ -17,6 +17,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
@@ -59,6 +60,7 @@ import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -144,7 +146,7 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
     @Test
     public void goToMainActivityIfUserDontModifyServerUrl() throws InterruptedException {
 
-        when(prefs.getString(PrefsActivity.PREF_USER_NAME, null)).thenReturn("test_user");
+        when(prefs.getString(eq(PrefsActivity.PREF_USER_NAME), anyString())).thenReturn("test_user");
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             onView(withId(R.id.drawer))
@@ -163,17 +165,63 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
 
             closeSoftKeyboard();
 
-            onView(withId(android.R.id.button1))
+            onView(withText("OK"))
+                    .inRoot(isDialog())
+                    .check(matches(isDisplayed()))
                     .perform(click());
 
-            onView(withId(android.R.id.button1))
+            onView(withText(R.string.cancel))
+                    .inRoot(isDialog())
+                    .check(matches(isDisplayed()))
                     .perform(click());
-
 
             pressBack();
             pressBack();
 
             assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
+
+        }
+
+    }
+
+
+
+    @Test
+    public void goToWelcomeActivityIfUserModifyServerUrl() throws InterruptedException {
+
+        when(prefs.getString(eq(PrefsActivity.PREF_USER_NAME), anyString())).thenReturn("test_user");
+
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            onView(withId(R.id.drawer))
+                    .check(matches(isClosed(Gravity.LEFT)))
+                    .perform(DrawerActions.open());
+
+            onView(withText(R.string.menu_settings)).perform(click());
+
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(
+                            hasDescendant(withText(R.string.prefAdvanced_title)), click()));
+
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(
+                            hasDescendant(withText(R.string.prefServer)), click()));
+
+            closeSoftKeyboard();
+
+            onView(withText("OK"))
+                    .inRoot(isDialog())
+                    .check(matches(isDisplayed()))
+                    .perform(click());
+
+            onView(withText(R.string.accept))
+                    .inRoot(isDialog())
+                    .check(matches(isDisplayed()))
+                    .perform(click());
+
+            pressBack();
+            pressBack();
+
+            assertEquals(WelcomeActivity.class, TestUtils.getCurrentActivity().getClass());
 
         }
 
