@@ -1,11 +1,14 @@
 package org.digitalcampus.oppia.fragments.prefs;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Patterns;
@@ -15,6 +18,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.StorageLocationInfo;
 import org.digitalcampus.oppia.utils.storage.StorageUtils;
@@ -27,11 +31,17 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 
+import javax.inject.Inject;
+
 public class AdvancedPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback {
 
     public static final String TAG = PrefsActivity.class.getSimpleName();
     private ListPreference storagePref;
     private EditTextPreference serverPref;
+    private EditTextPreference usernamePref;
+
+    @Inject
+    SharedPreferences prefs;
 
     public static AdvancedPrefsFragment newInstance() {
         return new AdvancedPrefsFragment();
@@ -52,16 +62,41 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
     @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
+        initializeDagger();
         loadPrefs();
+    }
+
+    private void initializeDagger() {
+        App app = (App) getActivity().getApplication();
+        app.getComponent().inject(this);
     }
 
     private void loadPrefs() {
         storagePref = findPreference(PrefsActivity.PREF_STORAGE_OPTION);
         serverPref = findPreference(PrefsActivity.PREF_SERVER);
+        usernamePref = findPreference(PrefsActivity.PREF_USER_NAME);
+
         if (serverPref == null || storagePref == null) {
             return;
         }
-        serverPref.setOnPreferenceChangeListener((preference, newValue) -> {
+
+        protectAdminEditTextPreferences();
+
+        updateServerPref();
+        updateStorageList(this.getActivity());
+        liveUpdateSummary(PrefsActivity.PREF_STORAGE_OPTION);
+        liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_CONN, " ms");
+        liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_RESP, " ms");
+        usernamePref.setSummary("".equals(usernamePref.getText()) ?
+                getString(R.string.about_not_logged_in) :
+                getString(R.string.about_logged_in, usernamePref.getText()));
+
+    }
+
+    @Override
+    protected boolean onPreferenceChangedDelegate(Preference preference, Object newValue) {
+        if (preference == serverPref) {
+
             String url = ((String) newValue).trim();
             if (!URLUtil.isNetworkUrl(url) || !Patterns.WEB_URL.matcher(url).matches()) {
                 UIUtils.showAlert(getActivity(),
@@ -70,24 +105,57 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                 return false;
             }
 
+            if (isLoggedIn()) {
+                showWarningLogout(url);
+                return false;
+            }
+
             // If it is correct, we allow the change
             return true;
-        });
-        protectAdminEditTextPreferences();
+        }
 
-        MaxIntOnStringPreferenceListener maxIntListener = new MaxIntOnStringPreferenceListener();
-        findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_CONN).setOnPreferenceChangeListener(maxIntListener);
-        findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_RESP).setOnPreferenceChangeListener(maxIntListener);
+        if (preference == findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_CONN) ||
+                preference == findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_RESP)) {
+            return checkMaxIntOnString(newValue);
+        }
 
-        updateServerPref();
-        updateStorageList(this.getActivity());
-        liveUpdateSummary(PrefsActivity.PREF_STORAGE_OPTION);
-        liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_CONN, " ms");
-        liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_RESP, " ms");
-        EditTextPreference username = findPreference(PrefsActivity.PREF_USER_NAME);
-        username.setSummary("".equals(username.getText()) ?
-                getString(R.string.about_not_logged_in) :
-                getString(R.string.about_logged_in, username.getText()));
+        return super.onPreferenceChangedDelegate(preference, newValue);
+    }
+
+    private boolean isLoggedIn() {
+        return !TextUtils.isEmpty(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+    }
+
+    private void showWarningLogout(String url) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.warning)
+                .setMessage(R.string.change_server_logout_warning)
+                .setPositiveButton(R.string.accept, (dialog, which) -> {
+                    SessionManager.logoutCurrentUser(getActivity());
+                    usernamePref.setSummary(R.string.about_not_logged_in);
+                    ((PrefsActivity)getActivity()).forzeGoToLoginScreen();
+                    App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, url).apply();
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private boolean checkMaxIntOnString(Object newValue) {
+
+        boolean valid;
+        try {
+            String intValue = (String) newValue;
+            valid = (intValue.length() <= 9); //it'll be bigger than int's max value
+        } catch (NumberFormatException e) {
+            valid = false;
+        }
+
+        if (!valid) {
+            UIUtils.showAlert(getActivity(),
+                    R.string.prefInt_errorTitle,
+                    R.string.prefInt_errorDescription);
+        }
+        return valid;
     }
 
     public void updateServerPref() {
@@ -175,27 +243,5 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
             updateStoragePref(newValue);
         }
     }
-
-    public class MaxIntOnStringPreferenceListener implements Preference.OnPreferenceChangeListener {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-
-            boolean valid;
-            try {
-                String intValue = (String) newValue;
-                valid = (intValue.length() <= 9); //it'll be bigger than int's max value
-            } catch (NumberFormatException e) {
-                valid = false;
-            }
-
-            if (!valid) {
-                UIUtils.showAlert(getActivity(),
-                        R.string.prefInt_errorTitle,
-                        R.string.prefInt_errorDescription);
-            }
-            return valid;
-        }
-    }
-
 
 }
