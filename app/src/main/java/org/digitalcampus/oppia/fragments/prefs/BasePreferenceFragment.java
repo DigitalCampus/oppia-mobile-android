@@ -36,6 +36,11 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
             }
             editTextPreference.setOnPreferenceChangeListener((preference, newValue) -> {
 
+                boolean mustUpdate = onPreferenceChangedDelegate(preference, newValue);
+                if (!mustUpdate) {
+                    return false;
+                }
+
                 if (!App.getPrefs(getActivity()).getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false)) {
                     return true;
                 }
@@ -47,6 +52,10 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
                 return false;
             });
         }
+    }
+
+    protected boolean onPreferenceChangedDelegate(Preference preference, Object newValue) {
+        return true;
     }
 
     void liveUpdateSummary(String prefKey){
@@ -74,7 +83,13 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
             final EditTextPreference editPref = (EditTextPreference) pref;
             editPref.setSummary(editPref.getText() + append) ;
             editPref.setOnPreferenceChangeListener((preference, newValue) -> {
-                editPref.setText(newValue + append);
+
+                boolean mustUpdate = onPreferenceChangedDelegate(preference, newValue);
+                if (!mustUpdate) {
+                    return false;
+                }
+
+                editPref.setSummary(newValue + append);
                 return true;
             });
         }
