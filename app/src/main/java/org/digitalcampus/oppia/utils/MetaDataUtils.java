@@ -24,7 +24,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.BatteryManager;
 import android.os.Build;
 import androidx.preference.PreferenceManager;
-import android.provider.Settings;
+
 import android.telephony.TelephonyManager;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
@@ -57,11 +57,11 @@ public class MetaDataUtils {
         return networkProvider;
     }
 
-    private String getDeviceId() {
-        return Settings.Secure.ANDROID_ID;
+    private String getAppInstanceId() {
+        return App.getPrefs(ctx).getString(PrefsActivity.PREF_APP_INSTANCE_ID, "no-id");
     }
 
-    private String getSimSerial() {
+    private String getManufacturerModel() {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
         if (model.startsWith(manufacturer)) {
@@ -112,11 +112,11 @@ public class MetaDataUtils {
         if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK), App.METADATA_INCLUDE_NETWORK)) {
             json.put("network", this.getNetworkProvider());
         }
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_DEVICE_ID), App.METADATA_INCLUDE_DEVICE_ID)) {
-            json.put("deviceid", this.getDeviceId());
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_APP_INSTANCE_ID), App.METADATA_INCLUDE_APP_INSTANCE_ID)) {
+            json.put("appInstanceId", this.getAppInstanceId());
         }
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_SIM_SERIAL), App.METADATA_INCLUDE_SIM_SERIAL)) {
-            json.put("simserial", this.getSimSerial());
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_MANUFACTURER_MODEL), App.METADATA_INCLUDE_MANUFACTURER_MODEL)) {
+            json.put("manufacturermodel", this.getManufacturerModel());
         }
         if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_WIFI_ON), App.METADATA_INCLUDE_WIFI_ON)) {
             json.put("wifion", ConnectionUtils.isOnWifi(ctx));

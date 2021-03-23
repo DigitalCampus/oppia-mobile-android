@@ -86,8 +86,8 @@ android {
             buildConfigField "boolean", "SHOW_COURSE_DESCRIPTION", runtimeProps['SHOW_COURSE_DESCRIPTION']
 
             buildConfigField "boolean", "METADATA_INCLUDE_NETWORK", runtimeProps['METADATA_INCLUDE_NETWORK']
-            buildConfigField "boolean", "METADATA_INCLUDE_DEVICE_ID", runtimeProps['METADATA_INCLUDE_DEVICE_ID']
-            buildConfigField "boolean", "METADATA_INCLUDE_SIM_SERIAL", runtimeProps['METADATA_INCLUDE_SIM_SERIAL']
+            buildConfigField "boolean", "METADATA_INCLUDE_APP_INSTANCE_ID", runtimeProps['METADATA_INCLUDE_APP_INSTANCE_ID']
+            buildConfigField "boolean", "METADATA_INCLUDE_MANUFACTURER_MODEL", runtimeProps['METADATA_INCLUDE_MANUFACTURER_MODEL']
             buildConfigField "boolean", "METADATA_INCLUDE_WIFI_ON", runtimeProps['METADATA_INCLUDE_WIFI_ON']
             buildConfigField "boolean", "METADATA_INCLUDE_NETWORK_CONNECTED", runtimeProps['METADATA_INCLUDE_NETWORK_CONNECTED']
             buildConfigField "boolean", "METADATA_INCLUDE_BATTERY_LEVEL", runtimeProps['METADATA_INCLUDE_BATTERY_LEVEL']
