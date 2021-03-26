@@ -21,7 +21,7 @@ android {
         versionCode version_code
         versionName version_name
 
-        applicationId "et.gov.moh.oppia.training"
+        applicationId "et.gov.moh.training"
 
         minSdkVersion 21
         targetSdkVersion 29

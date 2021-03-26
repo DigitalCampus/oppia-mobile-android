@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE resources [<!ENTITY appName "Ethiopia HEW Training"><!ENTITY companyName "Ethiopia FMoH"> ]>
+<!DOCTYPE resources [<!ENTITY appName "FMoH Health Worker Training"><!ENTITY companyName "Ethiopia FMoH"> ]>
 <resources>
     <string name="app_name">&appName;</string>
     <string name="app_logo_alt">Logo &companyName;</string>

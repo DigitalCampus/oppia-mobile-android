@@ -1,35 +1,267 @@
 {
-  "fields": [],
-  "collections": [],
-  "register_steps": [
+  "fields": [
     {
-      "order": 1,
-      "title":"First step",
-      "helper_text":"Please enter a username and your name",
-      "fields":[
-        "username",
-        "first_name",
-        "last_name"
+      "name":"region",
+      "label":"Region",
+      "order":1,
+      "required":true,
+      "helper_text":"",
+      "collection":"regions",
+      "type":"choices"
+    },
+    {
+      "name":"region_other",
+      "label":"Other region (please specify)",
+      "order":1,
+      "required":true,
+      "helper_text":"",
+      "visible_byfield":"region",
+      "visible_byvalue":"other",
+      "type":"str"
+    },
+    {
+      "name":"sub_city",
+      "label":"Addis Ababa Sub-City",
+      "order":2,
+      "required":true,
+      "helper_text":"",
+      "visible_byfield":"region",
+      "visible_byvalue":"addis_ababa",
+      "collection":"sub_cities",
+      "type":"choices"
+    },
+    {
+      "name":"woreda",
+      "label":"Woreda",
+      "order":3,
+      "required":false,
+      "helper_text":"",
+      "type":"str"
+    },
+    {
+      "name":"profession",
+      "label":"Profession",
+      "order":4,
+      "required":true,
+      "helper_text":"",
+      "collection":"professions",
+      "type":"choices"
+    },
+    {
+      "name":"profession_other",
+      "label":"Profession - Other (please specify)",
+      "order":5,
+      "required":true,
+      "helper_text":"",
+      "visible_byfield":"profession",
+      "visible_byvalue":"other",
+      "type":"str"
+    },
+    {
+      "name":"place_of_work",
+      "label":"Primary place of work",
+      "order":6,
+      "required":true,
+      "helper_text":"",
+      "collection":"places_of_work",
+      "visible_byfield":"profession",
+      "visible_byvalue":"!n_a",
+      "type":"choices"
+    },
+    {
+      "name":"org_facility_name",
+      "label":"Name of health facility, organization, or institution where you work",
+      "order":7,
+      "required":true,
+      "helper_text":"",
+      "visible_byfield":"profession",
+      "visible_byvalue":"!n_a",
+      "type":"str"
+    },
+    {
+      "name":"gender",
+      "label":"Gender",
+      "order":8,
+      "required":false,
+      "helper_text":"",
+      "collection":"genders",
+      "type":"choices"
+    },
+    {
+      "name":"work_area",
+      "label":"Which best describes the area where you work",
+      "order":8,
+      "required":true,
+      "helper_text":"",
+      "visible_byfield":"profession",
+      "visible_byvalue":"!n_a",
+      "collection":"work_areas",
+      "type":"choices"
+    }
+  ,
+    {
+      "name":"referral",
+      "label":"How did you hear about this app?",
+      "order":8,
+      "required":false,
+      "helper_text":"",
+      "collection":"referrals",
+      "type":"choices"
+    }
+  ],
+  "collections": [
+    {
+      "collection_name": "regions",
+      "items":[
+        {"id": "addis_ababa", "value":"Addis Abeba"},
+        {"id": "afar", "value":"Afar Region"},
+        {"id": "amhara", "value":"Amhara Region"},
+        {"id": "benishangul_gumuz", "value":"Benishangul-Gumuz Region"},
+        {"id": "dire_dawa", "value":"Dire Dawa"},
+        {"id": "gambela", "value":"Gambela Region"},
+        {"id": "harari", "value":"Harari Region"},
+        {"id": "oromia", "value":"Oromia Region"},
+        {"id": "sidama", "value":"Sidama Region"},
+        {"id": "somali", "value":"Somali Region"},
+        {"id": "snnpr", "value":"Southern Nations, Nationalities, and Peoples Region"},
+        {"id": "tigray", "value":"Tigray Region"},
+        {"id": "other", "value":"Other"}
       ]
     },
     {
-      "order": 2,
-      "title":"Second step",
-      "helper_text":"Please enter a password",
-      "fields":[
+      "collection_name": "sub_cities",
+      "items":[
+        {"id": "addis_ketema", "value":"Addis Ketema"},
+        {"id": "akaky_kality", "value":"Akaky Kaliti"},
+        {"id": "arada", "value":"Arada"},
+        {"id": "bole", "value":"Bole"},
+        {"id": "gullele", "value":"Gullele"},
+        {"id": "kirkos", "value":"Kirkos"},
+        {"id": "kolfe_keranio", "value":"Kolfe Keranio"},
+        {"id": "lideta", "value":"Lideta"},
+        {"id": "nifas_silk-lafto", "value":"Nifas Silk-Lafto"},
+        {"id": "yeka", "value":"Yeka"}
+      ]
+    },
+    {
+      "collection_name": "professions",
+      "items":[
+        {"id": "environment_health_officer", "value":"Environment health officer"},
+        {"id": "health_extension_worker", "value":"Health Extension Worker"},
+        {"id": "health_officer", "value":"Health officer"},
+        {"id": "laboratory_officer", "value":"Laboratory officer"},
+        {"id": "midwife", "value":"Midwife"},
+        {"id": "nurse", "value":"Nurse"},
+        {"id": "pharmacist", "value":"Pharmacist"},
+        {"id": "physician", "value":"Physician"},
+        {"id": "program_manager_or_implementer", "value":"Program manager or implementer"},
+        {"id": "public_health_officer", "value":"Public health officer"},
+        {"id": "researcher", "value":"Researcher"},
+        {"id": "student_health", "value":"Student - studying in medical or health field"},
+        {"id": "student_non_health", "value":"Student - other non-health field"},
+        {"id": "teacher", "value":"Teacher/professor"},
+        {"id": "other_health_provider", "value":"Other health care provider"},
+        {"id": "other_public_health", "value":"Other public health professional"},
+        {"id": "other", "value":"Other"},
+        {"id": "n_a", "value":"N/A - Not currently working"}
+      ]
+    },
+    {
+      "collection_name": "places_of_work",
+      "items":[
+        {"id": "academic_institution", "value":"Academic institution (e.g. university, college)"},
+        {"id": "civil_society_organization", "value":"Civil society organization"},
+        {"id": "government_office", "value":"Government office"},
+        {"id": "health_center", "value":"Health center"},
+        {"id": "health_post", "value":"Health post"},
+        {"id": "hospital", "value":"Hospital"},
+        {"id": "intergovernmental_organization", "value":"Intergovernmental organization"},
+        {"id": "laboratory", "value":"Laboratory"},
+        {"id": "ngo_nonprofit", "value":"NGO / nonprofit"},
+        {"id": "pharmacy", "value":"Pharmacy"},
+        {"id": "private_clinic", "value":"Private clinic"},
+        {"id": "research_institution", "value":"Research institution"},
+        {"id": "self_employed", "value":"Self-employed"},
+        {"id": "school", "value":"School (KG, Primary, Secondary)"},
+        {"id": "other_public", "value":"Other public/government institution"},
+        {"id": "other_private", "value":"Other private sector institution/company"}
+      ]
+    },
+    {
+      "collection_name": "genders",
+      "items": [
+        {"id": "female", "value":"Female"},
+        {"id": "male", "value":"Male"},
+        {"id": "prefer_not_to_say", "value":"Prefer not to say"}
+      ]
+    },
+    {
+      "collection_name": "work_areas",
+      "items": [
+        {"id": "urban", "value":"Urban"},
+        {"id": "peri_urban", "value":"Peri-urban"},
+        {"id": "rural", "value":"Rural"},
+        {"id": "pastoralist", "value":"Pastoralist"}
+      ]
+    },
+    {
+      "collection_name": "referrals",
+      "items": [
+        {"id": "ephi", "value":"Ethiopia Public Health Institute (EPHI)"},
+        {"id": "lmh_cha", "value":"Last Mile Health / Community Health Academy"},
+        {"id": "moh", "value":"Ministry of Health"},
+        {"id": "media", "value":"Media (e.g. news article, blog)"},
+        {"id": "social_media", "value":"Social media (e.g. Facebook, Twitter)"},
+        {"id": "rec_employer", "value":"Recommended by my employer or instructor"},
+        {"id": "rec_friend", "value":"Recommended by a friend or colleague"}
+      ]
+    }
+  ],
+  "register_steps": [
+    {
+      "order": 1,
+      "title": "User account information",
+      "helper_text": "User account information",
+      "fields": [
+        "username",
         "password",
         "passwordagain"
       ]
     },
     {
-      "order": 3,
-      "title":"Third step",
-      "helper_text":"Please provide some extra contact information",
-      "fields":[
-        "email",
+      "order": 2,
+      "title": "Personal info",
+      "helper_text": "Personal details",
+      "fields": [
+        "first_name",
+        "last_name",
         "phoneno",
-        "organisation",
-        "jobtitle"
+        "email",
+        "gender"
+      ]
+    },
+    {
+      "order": 3,
+      "title": "Region",
+      "helper_text": "Region",
+      "fields": [
+        "region",
+        "sub_city",
+        "region_other",
+        "woreda"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "Profession and place of work",
+      "helper_text": "Profession",
+      "fields": [
+        "profession",
+        "profession_other",
+        "place_of_work",
+        "org_facility_name",
+        "work_area",
+        "referral"
       ]
     }
   ]
