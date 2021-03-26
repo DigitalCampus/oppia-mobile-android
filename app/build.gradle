@@ -11,7 +11,7 @@ repositories {
 }
 
 def version_code = 84
-def version_name = "7.1.8"
+def version_name = "7.1.8.et-irt.1.int"
 
 android {
     compileSdkVersion 29
@@ -21,7 +21,7 @@ android {
         versionCode version_code
         versionName version_name
 
-        applicationId "org.digitalcampus.mobile.learning"
+        applicationId "et.gov.moh.oppia.training"
 
         minSdkVersion 21
         targetSdkVersion 29
