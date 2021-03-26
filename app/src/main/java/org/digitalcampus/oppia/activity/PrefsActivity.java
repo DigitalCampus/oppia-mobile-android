@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.activity;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -73,8 +74,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
     public static final String PREF_METADATA = "prefMetadata";
     public static final String PREF_METADATA_NETWORK = "NETWORK";
-    public static final String PREF_METADATA_DEVICE_ID = "DEVICE_ID";
-    public static final String PREF_METADATA_SIM_SERIAL = "SIM_SERIAL";
+    public static final String PREF_METADATA_APP_INSTANCE_ID = "APP_INSTANCE_ID";
+    public static final String PREF_METADATA_MANUFACTURER_MODEL = "MANUFACTURER_MODEL";
     public static final String PREF_METADATA_WIFI_ON = "WIFI_ON";
     public static final String PREF_METADATA_NETWORK_CONNECTED = "NETWORK_CONNECTED";
     public static final String PREF_METADATA_BATTERY_LEVEL = "BATTERY_LEVEL";
@@ -136,6 +137,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_SECURITY_SCREEN = "prefSecurity";
     public static final String PREF_NOTIFICATIONS_SCREEN = "prefNotifications";
     public static final String PREF_ADVANCED_SCREEN = "prefsAdvanced";
+    public static final String PREF_APP_INSTANCE_ID = "prefAppInstanceId";
 
     private ProgressDialog pDialog;
     private PreferenceChangedCallback currentPrefScreen;
@@ -143,6 +145,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     @Inject
     CoursesRepository coursesRepository;
     private FetchServerInfoTask fetchServerInfoTask;
+    private boolean forzeGoToLoginScreen;
 
     @Override
     public void onStart() {
@@ -197,11 +200,33 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         if (item.getItemId() == android.R.id.home) {
-            this.onBackPressed();
+            onBackPressed();
             return true;
         } else {
             return false;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+            return;
+        }
+
+        if (forzeGoToLoginScreen) {
+            Intent intent = new Intent(this, WelcomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            return;
+        }
+
+        super.onBackPressed();
+    }
+
+    public void forzeGoToLoginScreen() {
+        forzeGoToLoginScreen = true;
     }
 
     @Override

@@ -20,7 +20,6 @@
     <!-- Dangerous-level permissions (need user confirmation) -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name="org.digitalcampus.oppia.application.App"
