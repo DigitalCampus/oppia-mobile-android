@@ -61,8 +61,8 @@ public class BuildChecksOppiaCore {
         assertEquals(false, BuildConfig.START_COURSEINDEX_COLLAPSED);
 
         assertEquals(true, BuildConfig.METADATA_INCLUDE_NETWORK);
-        assertEquals(true, BuildConfig.METADATA_INCLUDE_DEVICE_ID);
-        assertEquals(true, BuildConfig.METADATA_INCLUDE_SIM_SERIAL);
+        assertEquals(true, BuildConfig.METADATA_INCLUDE_APP_INSTANCE_ID);
+        assertEquals(true, BuildConfig.METADATA_INCLUDE_MANUFACTURER_MODEL);
         assertEquals(true, BuildConfig.METADATA_INCLUDE_WIFI_ON);
         assertEquals(true, BuildConfig.METADATA_INCLUDE_NETWORK_CONNECTED);
         assertEquals(true, BuildConfig.METADATA_INCLUDE_BATTERY_LEVEL);

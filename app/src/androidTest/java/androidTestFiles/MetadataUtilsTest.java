@@ -49,10 +49,10 @@ public class MetadataUtilsTest {
         Map<String, Boolean> expectedValues = new HashMap<String, Boolean>() {{
             put("network", BuildConfig.METADATA_INCLUDE_NETWORK);
             put("battery", BuildConfig.METADATA_INCLUDE_BATTERY_LEVEL);
-            put("deviceid", BuildConfig.METADATA_INCLUDE_DEVICE_ID);
+            put("appInstanceId", BuildConfig.METADATA_INCLUDE_APP_INSTANCE_ID);
             put("gps", BuildConfig.METADATA_INCLUDE_GPS);
             put("netconnected", BuildConfig.METADATA_INCLUDE_NETWORK_CONNECTED);
-            put("simserial", BuildConfig.METADATA_INCLUDE_SIM_SERIAL);
+            put("manufacturermodel", BuildConfig.METADATA_INCLUDE_MANUFACTURER_MODEL);
             put("wifion", BuildConfig.METADATA_INCLUDE_WIFI_ON);
         }};
 
@@ -66,10 +66,10 @@ public class MetadataUtilsTest {
         Map<String, Boolean> expectedValues = new HashMap<String, Boolean>() {{
             put("network", BuildConfig.METADATA_INCLUDE_NETWORK);
             put("battery", BuildConfig.METADATA_INCLUDE_BATTERY_LEVEL);
-            put("deviceid", BuildConfig.METADATA_INCLUDE_DEVICE_ID);
+            put("appInstanceId", BuildConfig.METADATA_INCLUDE_APP_INSTANCE_ID);
             put("gps", BuildConfig.METADATA_INCLUDE_GPS);
             put("netconnected", BuildConfig.METADATA_INCLUDE_NETWORK_CONNECTED);
-            put("simserial", BuildConfig.METADATA_INCLUDE_SIM_SERIAL);
+            put("manufacturermodel", BuildConfig.METADATA_INCLUDE_MANUFACTURER_MODEL);
             put("wifion", BuildConfig.METADATA_INCLUDE_WIFI_ON);
         }};
 
@@ -100,7 +100,7 @@ public class MetadataUtilsTest {
         MetaDataUtils mdu = new MetaDataUtils(context);
         prefs.edit()
                 .putBoolean(mdu.getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK), true)
-                .putBoolean(mdu.getMetadataPref(PrefsActivity.PREF_METADATA_DEVICE_ID), true)
+                .putBoolean(mdu.getMetadataPref(PrefsActivity.PREF_METADATA_APP_INSTANCE_ID), true)
                 .putBoolean(mdu.getMetadataPref(PrefsActivity.PREF_METADATA_WIFI_ON), false)
                 .putBoolean(mdu.getMetadataPref(PrefsActivity.PREF_METADATA_GPS), false)
                 .commit();
@@ -109,7 +109,7 @@ public class MetadataUtilsTest {
 
         Map<String, Boolean> expectedValues = new HashMap<String, Boolean>() {{
             put("network", true);
-            put("deviceid", true);
+            put("appInstanceId", true);
             put("gps", false);
             put("wifion", false);
         }};

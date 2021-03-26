@@ -25,6 +25,7 @@ import org.digitalcampus.oppia.fragments.LoginFragment;
 import org.digitalcampus.oppia.fragments.PointsFragment;
 import org.digitalcampus.oppia.fragments.RegisterFragment;
 import org.digitalcampus.oppia.fragments.ResetFragment;
+import org.digitalcampus.oppia.fragments.prefs.AdvancedPrefsFragment;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.NoCourseDownloadedManager;
 import org.digitalcampus.oppia.widgets.AnswerWidget;
@@ -58,6 +59,8 @@ public interface AppComponent {
     void inject(GlobalQuizAttemptsFragment fragment);
     void inject(RegisterFragment fragment);
     void inject(App app);
+
+    void inject(AdvancedPrefsFragment advancedPrefsFragment);
 
     void inject(AnswerWidget fragment);
     void inject(EditProfileActivity activity);
