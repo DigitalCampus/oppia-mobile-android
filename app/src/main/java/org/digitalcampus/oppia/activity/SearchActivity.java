@@ -1,16 +1,16 @@
-/* 
+/*
  * This file is part of OppiaMobile - https://digital-campus.org/
- * 
+ *
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * OppiaMobile is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -35,8 +36,10 @@ import org.digitalcampus.oppia.adapter.SearchResultsAdapter;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
+import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 
 import java.util.ArrayList;
@@ -49,21 +52,21 @@ public class SearchActivity extends AppActivity {
 
     private long userId = 0;
 
-	private EditText searchText;
+    private EditText searchText;
     private TextView summary;
     private ProgressBar loadingSpinner;
     private RecyclerView recyclerResults;
     private ImageView searchButton;
 
-	private String currentSearch;
+    private String currentSearch;
     protected ArrayList<SearchResult> results = new ArrayList<>();
     private SearchResultsAdapter adapterResults;
 
 
     @Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_search);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
         adapterResults = new SearchResultsAdapter(this, results);
         recyclerResults = findViewById(R.id.recycler_results_search);
         recyclerResults.setAdapter(adapterResults);
@@ -78,24 +81,41 @@ public class SearchActivity extends AppActivity {
             i.putExtras(tb);
             SearchActivity.this.startActivity(i);
         });
-	}
-	
-	@Override
-	public void onStart(){
-		super.onStart();
+
+//        new Handler().postDelayed(() -> {
+//
+//            new Thread(() -> {
+//
+//                for (int i = 0; i < 500000; i++) {
+//                    SearchResult searchResult = new SearchResult();
+//                    searchResult.setCourse(new Course());
+//                    searchResult.setActivity(new Activity());
+//                    searchResult.setSection(new Section());
+//                    results.add(searchResult);
+//
+//                    Log.i(TAG, "onCreate: index: " + i);
+//
+//                }
+//            }).start();
+//        }, 2000);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         initialize();
 
-		DbHelper db = DbHelper.getInstance(this);
-		userId = db.getUserId(SessionManager.getUsername(this));
-		
-		searchText = findViewById(R.id.search_string);
+        DbHelper db = DbHelper.getInstance(this);
+        userId = db.getUserId(SessionManager.getUsername(this));
+
+        searchText = findViewById(R.id.search_string);
         //@Override
         searchText.setOnEditorActionListener((v, actionId, event) -> {
             hideKeyboard(v);
             performSearch();
             return false;
         });
-		summary = findViewById(R.id.search_results_summary);
+        summary = findViewById(R.id.search_results_summary);
         loadingSpinner = findViewById(R.id.progressBar);
         searchButton = findViewById(R.id.searchbutton);
         if (searchButton != null) {
@@ -106,12 +126,12 @@ public class SearchActivity extends AppActivity {
             });
         }
 
-	}
+    }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(!summary.getText().toString().equals("")){
+        if (!summary.getText().toString().equals("")) {
             summary.setVisibility(View.VISIBLE);
         }
     }
@@ -120,37 +140,26 @@ public class SearchActivity extends AppActivity {
     protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putString("currentSearch", currentSearch);
-        if (summary.getVisibility() == View.VISIBLE){
-            savedInstanceState.putString("summaryMsg", summary.getText().toString());
-        }
-        if (!results.isEmpty()){
-            savedInstanceState.putSerializable("searchResults", results);
-        }
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         currentSearch = savedInstanceState.getString("currentSearch");
-        String summaryMsg = savedInstanceState.getString("summaryMsg");
-        if (summaryMsg != null){
-            summary.setText(summaryMsg);
-        }
-        ArrayList<SearchResult> searchResults = (ArrayList<SearchResult>) savedInstanceState.getSerializable("searchResults");
-        if ((searchResults != null) && !searchResults.isEmpty()){
-            results.clear();
-            results.addAll(searchResults);
-            adapterResults.notifyDataSetChanged();
+        if (!TextUtils.isEmpty(currentSearch)) {
+            searchText.setText(currentSearch);
+            currentSearch = "";
+            performSearch();
         }
     }
 
-    private void hideKeyboard(View v){
+    private void hideKeyboard(View v) {
         //We hide the keyboard
-        InputMethodManager imm =  (InputMethodManager) SearchActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) SearchActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
-    private void performSearch(){
+    private void performSearch() {
         String newSearch = searchText.getText().toString().trim();
 
         if (TextUtils.isEmpty(newSearch)) {
@@ -158,7 +167,7 @@ public class SearchActivity extends AppActivity {
             return;
         }
 
-        if (!newSearch.equals(currentSearch)){
+        if (!newSearch.equals(currentSearch)) {
             currentSearch = newSearch;
 
             searchButton.setEnabled(false);

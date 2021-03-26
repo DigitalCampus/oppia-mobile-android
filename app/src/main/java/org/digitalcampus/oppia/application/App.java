@@ -51,6 +51,7 @@ import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 import org.digitalcampus.oppia.utils.storage.StorageUtils;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -79,8 +80,8 @@ public class App extends Application {
 
     // tracker metadata settings
     public static final boolean METADATA_INCLUDE_NETWORK = BuildConfig.METADATA_INCLUDE_NETWORK;
-    public static final boolean METADATA_INCLUDE_DEVICE_ID = BuildConfig.METADATA_INCLUDE_DEVICE_ID;
-    public static final boolean METADATA_INCLUDE_SIM_SERIAL = BuildConfig.METADATA_INCLUDE_SIM_SERIAL;
+    public static final boolean METADATA_INCLUDE_APP_INSTANCE_ID = BuildConfig.METADATA_INCLUDE_APP_INSTANCE_ID;
+    public static final boolean METADATA_INCLUDE_MANUFACTURER_MODEL = BuildConfig.METADATA_INCLUDE_MANUFACTURER_MODEL;
     public static final boolean METADATA_INCLUDE_WIFI_ON = BuildConfig.METADATA_INCLUDE_WIFI_ON;
     public static final boolean METADATA_INCLUDE_NETWORK_CONNECTED = BuildConfig.METADATA_INCLUDE_NETWORK_CONNECTED;
     public static final boolean METADATA_INCLUDE_BATTERY_LEVEL = BuildConfig.METADATA_INCLUDE_BATTERY_LEVEL;
@@ -158,6 +159,7 @@ public class App extends Application {
 
         // First run or Updates configurations
         checkAdminProtectionOnFirstRun(prefs);
+        checkAppInstanceIdCreated(prefs);
         checkShowDescriptionOverrideUpdate();
 
         configureStorageType();
@@ -166,6 +168,13 @@ public class App extends Application {
 
         OppiaNotificationUtils.initializeOreoNotificationChannels(this);
 
+    }
+
+    private void checkAppInstanceIdCreated(SharedPreferences prefs) {
+        if (prefs.getString(PrefsActivity.PREF_APP_INSTANCE_ID, null) == null) {
+            String appInstanceId = UUID.randomUUID().toString();
+            prefs.edit().putString(PrefsActivity.PREF_APP_INSTANCE_ID, appInstanceId).apply();
+        }
     }
 
     private void configureStorageType() {
