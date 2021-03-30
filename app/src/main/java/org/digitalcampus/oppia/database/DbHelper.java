@@ -1485,9 +1485,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
             // get course and activity title
             String event = c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT));
+            if (TextUtils.isEmpty(event)){
+                c.moveToNext();
+                continue;
+            }
             String description = event;
             Log.d(TAG, event);
-
 
             switch (event) {
                 case Gamification.EVENT_NAME_ACTIVITY_COMPLETED:
