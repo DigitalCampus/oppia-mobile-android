@@ -7,10 +7,11 @@ import androidx.test.filters.SmallTest;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.listener.SubmitListener;
+import org.digitalcampus.oppia.listener.SubmitEntityListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ResetTask;
+import org.digitalcampus.oppia.task.result.EntityResult;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class ResetTest {
     private CountDownLatch signal;
     private MockWebServer mockServer;
     private Context context;
-    private Payload response;
+    private EntityResult<User> resultUser;
 
     @Before
     public void setUp() throws Exception {
@@ -71,31 +72,28 @@ public class ResetTest {
             e.printStackTrace();
         }
 
-        ArrayList<Object> users = new ArrayList<>();
-        User u = new User();
-        u.setUsername("");
-        u.setPassword("");
-        users.add(u);
-
-        Payload p = new Payload(users);
+        User user = new User();
+        user.setUsername("");
+        user.setPassword("");
+        
         try {
             ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
-            task.setResetListener(new SubmitListener() {
+            task.setResetListener(new SubmitEntityListener<User>() {
                 @Override
                 public void apiKeyInvalidated() { }
 
                 @Override
-                public void submitComplete(Payload r) {
-                    response = r;
+                public void submitComplete(EntityResult<User> result) {
+                    resultUser = result;;
                     signal.countDown();
                 }
             });
-            task.execute(p);
+            task.execute(user);
 
             signal.await();
-            System.out.println(response.getResultResponse());
-            assertTrue(response.isResult());
-            assertEquals(context.getString(R.string.reset_complete), response.getResultResponse());
+            System.out.println(resultUser.getResultMessage());
+            assertTrue(resultUser.isSuccess());
+            assertEquals(context.getString(R.string.reset_complete), resultUser.getResultMessage());
 
         }catch (InterruptedException ie) {
             ie.printStackTrace();
@@ -124,31 +122,28 @@ public class ResetTest {
             e.printStackTrace();
         }
 
-        ArrayList<Object> users = new ArrayList<>();
-        User u = new User();
-        u.setUsername("");
-        u.setPassword("");
-        users.add(u);
+        User user = new User();
+        user.setUsername("");
+        user.setPassword("");
 
-        Payload p = new Payload(users);
         try {
             ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
-            task.setResetListener(new SubmitListener() {
+            task.setResetListener(new SubmitEntityListener<User>() {
                 @Override
                 public void apiKeyInvalidated() { }
 
                 @Override
-                public void submitComplete(Payload r) {
-                    response = r;
+                public void submitComplete(EntityResult<User> result) {
+                    resultUser = result;;
                     signal.countDown();
                 }
             });
-            task.execute(p);
+            task.execute(user);
 
             signal.await();
-            System.out.println(response.getResultResponse());
-            assertFalse(response.isResult());
-            assertEquals(context.getString(R.string.error_reset), response.getResultResponse());
+            System.out.println(resultUser.getResultMessage());
+            assertFalse(resultUser.isSuccess());
+            assertEquals(context.getString(R.string.error_reset), resultUser.getResultMessage());
 
         }catch (InterruptedException ie) {
             ie.printStackTrace();
@@ -174,31 +169,28 @@ public class ResetTest {
             e.printStackTrace();
         }
 
-        ArrayList<Object> users = new ArrayList<>();
-        User u = new User();
-        u.setUsername("");
-        u.setPassword("");
-        users.add(u);
+        User user = new User();
+        user.setUsername("");
+        user.setPassword("");
 
-        Payload p = new Payload(users);
         try {
             ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
-            task.setResetListener(new SubmitListener() {
+            task.setResetListener(new SubmitEntityListener<User>() {
                 @Override
                 public void apiKeyInvalidated() {  }
 
                 @Override
-                public void submitComplete(Payload r) {
-                    response = r;
+                public void submitComplete(EntityResult<User> result) {
+                    resultUser = result;;
                     signal.countDown();
                 }
             });
-            task.execute(p);
+            task.execute(user);
 
             signal.await();
-            System.out.println(response.getResultResponse());
-            assertFalse(response.isResult());
-            assertEquals(context.getString(R.string.error_processing_response), response.getResultResponse());
+            System.out.println(resultUser.getResultMessage());
+            assertFalse(resultUser.isSuccess());
+            assertEquals(context.getString(R.string.error_processing_response), resultUser.getResultMessage());
 
         }catch (InterruptedException ie) {
             ie.printStackTrace();
@@ -224,31 +216,28 @@ public class ResetTest {
             e.printStackTrace();
         }
 
-        ArrayList<Object> users = new ArrayList<>();
-        User u = new User();
-        u.setUsername("");
-        u.setPassword("");
-        users.add(u);
+        User user = new User();
+        user.setUsername("");
+        user.setPassword("");
 
-        Payload p = new Payload(users);
         try {
             ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
-            task.setResetListener(new SubmitListener() {
+            task.setResetListener(new SubmitEntityListener<User>() {
                 @Override
                 public void apiKeyInvalidated() {  }
 
                 @Override
-                public void submitComplete(Payload r) {
-                    response = r;
+                public void submitComplete(EntityResult<User> result) {
+                    resultUser = result;;
                     signal.countDown();
                 }
             });
-            task.execute(p);
+            task.execute(user);
 
             signal.await();
-            System.out.println(response.getResultResponse());
-            assertFalse(response.isResult());
-            assertEquals(context.getString(R.string.error_processing_response), response.getResultResponse());
+            System.out.println(resultUser.getResultMessage());
+            assertFalse(resultUser.isSuccess());
+            assertEquals(context.getString(R.string.error_processing_response), resultUser.getResultMessage());
 
         }catch (InterruptedException ie) {
             ie.printStackTrace();
