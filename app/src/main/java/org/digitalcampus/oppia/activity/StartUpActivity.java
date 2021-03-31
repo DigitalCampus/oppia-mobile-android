@@ -125,9 +125,9 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
     }
 
     private void preloadAccounts() {
-        SessionManager.preloadUserAccounts(this, payload -> {
-            if ((payload != null) && payload.isResult()) {
-                Toast.makeText(StartUpActivity.this, payload.getResultResponse(), Toast.LENGTH_LONG).show();
+        SessionManager.preloadUserAccounts(this, result -> {
+            if (result != null && result.isSuccess()) {
+                Toast.makeText(StartUpActivity.this, result.getResultMessage(), Toast.LENGTH_LONG).show();
             }
             importLeaderboard();
         });
@@ -152,10 +152,9 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
         }
 
         if (p.isResult()) {
-            Payload payload = new Payload();
             PostInstallTask piTask = new PostInstallTask(this);
             piTask.setPostInstallListener(this::installCourses);
-            piTask.execute(payload);
+            piTask.execute();
         } else {
             // now install any new courses
             this.installCourses();

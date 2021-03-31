@@ -34,6 +34,7 @@ import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -78,9 +79,9 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                 //We try to send the new user to register
                 if (offlineUser){
                     Log.d(TAG, "Trying to send user " + u.getUsername() + " to registration...");
-                    Payload p = new Payload();
+                    EntityResult<User> result = new EntityResult<>();
                     RegisterTask rt = new RegisterTask(ctx);
-                    boolean success = rt.submitUserToServer(u, p, false);
+                    boolean success = rt.submitUserToServer(u, result, false);
                     Log.d(TAG, "User " + u.getUsername() + " " + (success?"succeeded":"failed"));
 
                     if (success){

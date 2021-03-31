@@ -228,9 +228,8 @@ public class LoginTest extends BaseTestDB {
 
     }
 
-    private void performRegister(User u) {
+    private void performRegister(User user) {
 
-        Payload p = new Payload(Arrays.asList(u));
         RegisterTask rt = new RegisterTask(context);
         rt.setRegisterListener(new RegisterTask.RegisterListener() {
             @Override
@@ -253,6 +252,6 @@ public class LoginTest extends BaseTestDB {
 
             }
         });
-        rt.execute(p);
+        rt.execute(user);
     }
 }
