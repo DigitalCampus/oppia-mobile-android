@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean, Void> {
+public class FetchCourseTransferableFilesTask extends AsyncTask<Void, Boolean, Void> {
 
     public interface FetchBackupsListener{
         void coursesPendingToInstall(boolean pending);
@@ -40,7 +40,7 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
 
 
     @Override
-    protected Void doInBackground(Payload... payloads) {
+    protected Void doInBackground(Void... payloads) {
 
         File dir = new File(Storage.getDownloadPath(ctx));
         String[] children = dir.list();

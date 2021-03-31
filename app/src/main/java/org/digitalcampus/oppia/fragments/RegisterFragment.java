@@ -340,7 +340,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		}
 	}
 
-	private void executeRegisterTask(User u){
+	private void executeRegisterTask(User user){
 
 		pDialog = new ProgressDialog(super.getActivity());
 		pDialog.setTitle(R.string.register_alert_title);
@@ -348,9 +348,8 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		pDialog.setCancelable(true);
 		pDialog.show();
 
-		Payload p = new Payload(Arrays.asList(u));
 		RegisterTask rt = new RegisterTask(super.getActivity(), apiEndpoint);
 		rt.setRegisterListener(this);
-		rt.execute(p);
+		rt.execute(user);
 	}
 }

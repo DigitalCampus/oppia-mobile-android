@@ -91,10 +91,10 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
         long now = System.currentTimeMillis() / 1000;
         if ((lastRun + (TimeUnit.HOURS.toSeconds(12))) < now) {
             APIUserRequestTask task = new APIUserRequestTask(getApplicationContext());
-            Payload p = new Payload(Paths.SERVER_COURSES_PATH);
+            String url = Paths.SERVER_COURSES_PATH;
             task.setAPIRequestListener(this);
             task.setAPIRequestFinishListener(this, "APIUserRequestTask");
-            task.execute(p);
+            task.execute(url);
 
             prefs.edit().putLong("lastCourseUpdateCheck", now).apply();
         } else {
@@ -116,10 +116,9 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
         if (unsent.isEmpty()) {
             onRequestFinish(null);
         } else {
-            Payload p2 = new Payload(unsent);
             SubmitQuizAttemptsTask omSubmitQuizAttemptsTask = new SubmitQuizAttemptsTask(getApplicationContext());
             omSubmitQuizAttemptsTask.setAPIRequestFinishListener(this, "SubmitQuizAttemptsTask");
-            omSubmitQuizAttemptsTask.execute(p2);
+            omSubmitQuizAttemptsTask.execute(unsent);
         } 
 
 

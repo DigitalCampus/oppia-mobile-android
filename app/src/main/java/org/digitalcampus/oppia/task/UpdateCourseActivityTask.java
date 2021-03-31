@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.task;
 
 import android.content.Context;
+import android.content.Entity;
 import android.util.Log;
 
 import com.splunk.mint.Mint;
@@ -32,6 +33,7 @@ import org.digitalcampus.oppia.listener.UpdateActivityListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 
@@ -42,7 +44,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadProgress, Payload> {
+public class UpdateCourseActivityTask extends APIRequestTask<Course, DownloadProgress, EntityResult<Course>> {
 
 	private UpdateActivityListener mStateListener;
     private boolean apiKeyInvalidated = false;
@@ -54,11 +56,13 @@ public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadPr
 	}
 
     @Override
-	protected Payload doInBackground(Payload... params) {
-		Payload payload = params[0];
+	protected EntityResult<Course> doInBackground(Course... params) {
 		
-		Course course = (Course) payload.getData().get(0);
+		Course course = params[0];
 		DownloadProgress dp = new DownloadProgress();
+
+        EntityResult<Course> result = new EntityResult<>();
+        result.setEntity(course);
 
 		try {
 			DbHelper db = DbHelper.getInstance(this.ctx);
@@ -73,11 +77,11 @@ public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadPr
 
             Response response = client.newCall(request).execute();
             if (!response.isSuccessful()){
-                payload.setResultResponse(ctx.getString(R.string.error_connection));
-                payload.setResult(false);
+                result.setResultMessage(ctx.getString(R.string.error_connection));
+                result.setSuccess(false);
 
                 if (response.code() == 401){
-                    invalidateApiKey(payload);
+                    invalidateApiKey(result);
                     apiKeyInvalidated = true;
                 }
             }
@@ -91,7 +95,7 @@ public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadPr
                     dp.setProgress(100);
                     dp.setMessage(ctx.getString(R.string.download_complete));
                     publishProgress(dp);
-                    payload.setResult(true);
+                    result.setSuccess(true);
 
                 } catch (InvalidXMLException e) {
                     Mint.logException(e);
@@ -102,26 +106,26 @@ public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadPr
         } catch(javax.net.ssl.SSLHandshakeException e) {
             Mint.logException(e);
             Log.d(TAG, "InvalidXMLException:", e);
-            payload.setResult(false);
-            payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
+            result.setSuccess(false);
+            result.setResultMessage(ctx.getString(R.string.error_connection_ssl));
 		} catch (SocketTimeoutException cpe) {
 			Mint.logException(cpe);
             Log.d(TAG, "SocketTimeoutException:", cpe);
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
+			result.setSuccess(false);
+			result.setResultMessage(ctx.getString(R.string.error_connection));
 		} catch (IOException ioe) {
 			Mint.logException(ioe);
             Log.d(TAG, "IOException:", ioe);
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
+			result.setSuccess(false);
+			result.setResultMessage(ctx.getString(R.string.error_connection));
 		} catch (UserNotFoundException unfe) {
             Mint.logException(unfe);
             Log.d(TAG, "UserNotFoundException:", unfe);
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
+			result.setSuccess(false);
+			result.setResultMessage(ctx.getString(R.string.error_connection));
 		}
 		
-		return payload;
+		return result;
 	}
 	
 	@Override
@@ -134,13 +138,13 @@ public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadPr
 	}
 
 	@Override
-	protected void onPostExecute(Payload results) {
+	protected void onPostExecute(EntityResult<Course> result) {
 		synchronized (this) {
             if (mStateListener != null) {
                 if (apiKeyInvalidated)
                     mStateListener.apiKeyInvalidated();
                 else
-                    mStateListener.updateActivityComplete(results);
+                    mStateListener.updateActivityComplete(result);
             }
         }
 	}
