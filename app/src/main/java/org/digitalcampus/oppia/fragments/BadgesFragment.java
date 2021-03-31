@@ -84,9 +84,9 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 
 	private void getBadges(){		
 		APIUserRequestTask task = new APIUserRequestTask(super.getActivity(), apiEndpoint);
-		Payload p = new Payload(Paths.SERVER_AWARDS_PATH);
+		String url = Paths.SERVER_AWARDS_PATH;
 		task.setAPIRequestListener(this);
-		task.execute(p);
+		task.execute(url);
 	}
 
 	private void refreshBadgesList() {

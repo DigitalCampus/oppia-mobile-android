@@ -30,60 +30,65 @@ import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.QuizAttempt;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payload> {
+public class SubmitQuizAttemptsTask extends APIRequestTask<List<QuizAttempt>, Object, BasicResult> {
 
 	public SubmitQuizAttemptsTask(Context ctx) { super(ctx); }
 	public SubmitQuizAttemptsTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
 
 	@Override
-	protected Payload doInBackground(Payload... params) {
-		Payload payload = params[0];
+	protected BasicResult doInBackground(List<QuizAttempt>... params) {
+		
         DbHelper db = DbHelper.getInstance(ctx);
-
-		for (Object l : payload.getData()) {
-			QuizAttempt qa = (QuizAttempt) l;
+        
+		List<QuizAttempt> quizAttempts = params[0];
+		BasicResult result = new BasicResult();
+		
+		for (QuizAttempt quizAttempt : quizAttempts) {
+			
 			try {
-				Log.d(TAG, qa.getData());
+				Log.d(TAG, quizAttempt.getData());
                 OkHttpClient client = HTTPClientUtils.getClient(ctx);
                 Request request = new Request.Builder()
                         .url(apiEndpoint.getFullURL(ctx, Paths.QUIZ_SUBMIT_PATH))
                         .addHeader(HTTPClientUtils.HEADER_AUTH,
-                                HTTPClientUtils.getAuthHeaderValue(qa.getUser().getUsername(), qa.getUser().getApiKey()))
-                        .post(RequestBody.create(qa.getData(), HTTPClientUtils.MEDIA_TYPE_JSON))
+                                HTTPClientUtils.getAuthHeaderValue(quizAttempt.getUser().getUsername(), quizAttempt.getUser().getApiKey()))
+                        .post(RequestBody.create(quizAttempt.getData(), HTTPClientUtils.MEDIA_TYPE_JSON))
                         .build();
 
                 Response response = client.newCall(request).execute();
                 if (response.isSuccessful()){
                     JSONObject jsonResp = new JSONObject(response.body().string());
 
-                    db.markQuizSubmitted(qa.getId());
-                    db.updateUserBadges(qa.getUser().getUsername(), jsonResp.getInt("badges"));
-                    payload.setResult(true);
+                    db.markQuizSubmitted(quizAttempt.getId());
+                    db.updateUserBadges(quizAttempt.getUser().getUsername(), jsonResp.getInt("badges"));
+                    result.setSuccess(true);
                 }
                 else {
-                    payload.setResult(false);
+                    result.setSuccess(false);
                     switch (response.code()) {
                         case 400: // bad request - so to prevent re-submitting over and
                             // over just mark as submitted
-                            db.markQuizSubmitted(qa.getId());
+                            db.markQuizSubmitted(quizAttempt.getId());
                             break;
                         case 401:
-                            SessionManager.setUserApiKeyValid(qa.getUser(), false);
+                            SessionManager.setUserApiKeyValid(quizAttempt.getUser(), false);
                             break;
                         case 500: // server error - so to prevent re-submitting over and
                             // over just mark as submitted
-                            db.markQuizSubmitted(qa.getId());
+                            db.markQuizSubmitted(quizAttempt.getId());
                             break;
 						default:
 							// do nothing
@@ -91,10 +96,10 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payl
                 }
 
 			} catch (IOException e) {
-				payload.setResult(false);
+				result.setSuccess(false);
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (JSONException e) {
-				payload.setResult(false);
+				result.setSuccess(false);
 				Mint.logException(e);
 				Log.d(TAG, "JSONException:", e);
 			} 
@@ -103,7 +108,7 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payl
 		long now = System.currentTimeMillis()/1000;
 		editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
 
-		return payload;
+		return result;
 	}
 
 	protected void onProgressUpdate(String... obj) {
