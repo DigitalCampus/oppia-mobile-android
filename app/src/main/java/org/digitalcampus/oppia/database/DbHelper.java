@@ -1640,18 +1640,18 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public Payload getUnsentTrackers(long userId) {
+    public List<TrackerLog> getUnsentTrackers(long userId) {
         String s = TRACKER_LOG_C_SUBMITTED + STR_EQUALS_AND + TRACKER_LOG_C_USERID + "=? ";
         String[] args = new String[]{"0", String.valueOf(userId)};
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
 
-        ArrayList<Object> sl = new ArrayList<>();
+        List<TrackerLog> trackerLogList = new ArrayList<>();
         while (!c.isAfterLast()) {
-            TrackerLog so = new TrackerLog();
+            TrackerLog trackerLog = new TrackerLog();
             String digest = c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST));
-            so.setId(c.getLong(c.getColumnIndex(TRACKER_LOG_C_ID)));
-            so.setDigest(digest);
+            trackerLog.setId(c.getLong(c.getColumnIndex(TRACKER_LOG_C_ID)));
+            trackerLog.setDigest(digest);
             String content = "";
             try {
                 JSONObject json = new JSONObject();
@@ -1675,14 +1675,14 @@ public class DbHelper extends SQLiteOpenHelper {
                 Log.d(TAG, "error creating unsent trackers", jsone);
             }
 
-            so.setContent(content);
-            sl.add(so);
+            trackerLog.setContent(content);
+            trackerLogList.add(trackerLog);
             c.moveToNext();
         }
-        Payload p = new Payload(sl);
+
         c.close();
 
-        return p;
+        return trackerLogList;
     }
 
     public List<TrackerLog> getUnexportedTrackers(long userId) {
