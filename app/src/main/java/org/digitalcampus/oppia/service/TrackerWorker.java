@@ -116,10 +116,9 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
         if (unsent.isEmpty()) {
             onRequestFinish(null);
         } else {
-            Payload p2 = new Payload(unsent);
             SubmitQuizAttemptsTask omSubmitQuizAttemptsTask = new SubmitQuizAttemptsTask(getApplicationContext());
             omSubmitQuizAttemptsTask.setAPIRequestFinishListener(this, "SubmitQuizAttemptsTask");
-            omSubmitQuizAttemptsTask.execute(p2);
+            omSubmitQuizAttemptsTask.execute(unsent);
         } 
 
 
