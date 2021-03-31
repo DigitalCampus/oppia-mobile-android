@@ -1,16 +1,16 @@
-/* 
+/*
  * This file is part of OppiaMobile - https://digital-campus.org/
- * 
+ *
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * OppiaMobile is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -40,22 +40,22 @@ import okhttp3.Response;
 
 public class ResetTask extends APIRequestTask<Payload, Object, Payload> {
 
-	private SubmitListener mStateListener;
+    private SubmitListener mStateListener;
 
-	public ResetTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
+    public ResetTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
 
     @Override
-	protected Payload doInBackground(Payload... params) {
+    protected Payload doInBackground(Payload... params) {
 
-		Payload payload = params[0];
-		User u = (User) payload.getData().get(0);
+        Payload payload = params[0];
+        User u = (User) payload.getData().get(0);
 
-		try {
-			// update progress dialog
-			publishProgress(ctx.getString(R.string.reset_process));
+        try {
+            // update progress dialog
+            publishProgress(ctx.getString(R.string.reset_process));
 
-			JSONObject json = new JSONObject();
-			json.put("username", u.getUsername());
+            JSONObject json = new JSONObject();
+            json.put("username", u.getUsername());
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
@@ -65,45 +65,43 @@ public class ResetTask extends APIRequestTask<Payload, Object, Payload> {
 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
-                new JSONObject(response.body().string()); //Added to check that the response is well formed
+                JSONObject jsonResp = new JSONObject(response.body().string()); //Added to check that the response is well formed
                 payload.setResult(true);
-                payload.setResultResponse(ctx.getString(R.string.reset_complete));
-            }
-            else{
+                payload.setResultResponse(jsonResp.getString("message"));
+            } else {
                 payload.setResult(false);
                 if (response.code() == 400){
                     payload.setResultResponse(ctx.getString(R.string.error_reset));
-                }
-                else{
+                } else {
                     payload.setResultResponse(ctx.getString(R.string.error_connection));
                 }
             }
 
-		} catch (IOException  e) {
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
-		} catch (JSONException e) {
-			Mint.logException(e);
-			Log.d(TAG, "JSONException:", e);
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
-		}
-		return payload;
-	}
+        } catch (IOException  e) {
+            payload.setResult(false);
+            payload.setResultResponse(ctx.getString(R.string.error_connection));
+        } catch (JSONException e) {
+            Mint.logException(e);
+            Log.d(TAG, "JSONException:", e);
+            payload.setResult(false);
+            payload.setResultResponse(ctx.getString(R.string.error_processing_response));
+        }
+        return payload;
+    }
 
-	@Override
-	protected void onPostExecute(Payload response) {
-		synchronized (this) {
-			if (mStateListener != null) {
-				mStateListener.submitComplete(response);
-			}
-		}
-	}
+    @Override
+    protected void onPostExecute(Payload response) {
+        synchronized (this) {
+            if (mStateListener != null) {
+                mStateListener.submitComplete(response);
+            }
+        }
+    }
 
-	public void setResetListener(SubmitListener srl) {
-		synchronized (this) {
-			mStateListener = srl;
-		}
-	}
+    public void setResetListener(SubmitListener srl) {
+        synchronized (this) {
+            mStateListener = srl;
+        }
+    }
 
 }
