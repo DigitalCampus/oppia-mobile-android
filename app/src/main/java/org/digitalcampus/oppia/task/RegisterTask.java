@@ -199,7 +199,6 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
             mu.saveMetaData(metadata, prefs);
         } catch (JSONException e) {
             Log.d(TAG, "JSONException:", e);
-            Mint.logException(e);
         }
     }
 
