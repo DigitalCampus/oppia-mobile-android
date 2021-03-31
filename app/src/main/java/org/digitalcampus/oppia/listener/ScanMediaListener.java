@@ -17,12 +17,14 @@
 
 package org.digitalcampus.oppia.listener;
 
+import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.EntityListResult;
 
 public interface ScanMediaListener {
 	
 	void scanStart();
     void scanProgressUpdate(String msg);
-    void scanComplete(Payload response);
+    void scanComplete(EntityListResult<Media> result);
 
 }
