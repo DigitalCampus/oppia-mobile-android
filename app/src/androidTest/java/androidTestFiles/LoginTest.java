@@ -6,19 +6,17 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.listener.SubmitListener;
+import org.digitalcampus.oppia.listener.SubmitEntityListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.LoginTask;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.RegisterTask;
+import org.digitalcampus.oppia.task.result.EntityResult;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
 import androidTestFiles.Utils.FileUtils;
@@ -43,7 +41,7 @@ public class LoginTest extends BaseTestDB {
     private CountDownLatch signal;
     private MockWebServer mockServer;
     private Context context;
-    private Payload response;
+    private EntityResult<User> resultUser;
     private boolean registerOK;
 
    /* @Rule
@@ -81,31 +79,28 @@ public class LoginTest extends BaseTestDB {
             e.printStackTrace();
         }
 
-        ArrayList<Object> users = new ArrayList<>();
-        User u = new User();
-        u.setUsername("");
-        u.setPassword("");
-        users.add(u);
+        User user = new User();
+        user.setUsername("");
+        user.setPassword("");
 
-        Payload p = new Payload(users);
         try {
             LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
-            task.setLoginListener(new SubmitListener() {
+            task.setLoginListener(new SubmitEntityListener<User>() {
                 @Override
                 public void apiKeyInvalidated() {  }
 
                 @Override
-                public void submitComplete(Payload r) {
-                    response = r;
+                public void submitComplete(EntityResult<User> result) {
+                    resultUser = result;
                     signal.countDown();
                 }
             });
-            task.execute(p);
+            task.execute(user);
 
             signal.await();
 
-            assertFalse(response.isResult());
-            assertEquals(context.getString(R.string.error_processing_response), response.getResultResponse());
+            assertFalse(resultUser.isSuccess());
+            assertEquals(context.getString(R.string.error_processing_response), resultUser.getResultMessage());
 
         }catch (InterruptedException ie) {
             ie.printStackTrace();
@@ -132,31 +127,28 @@ public class LoginTest extends BaseTestDB {
             e.printStackTrace();
         }
 
-        ArrayList<Object> users = new ArrayList<>();
-        User u = new User();
-        u.setUsername("");
-        u.setPassword("");
-        users.add(u);
+        User user = new User();
+        user.setUsername("");
+        user.setPassword("");
 
-        Payload p = new Payload(users);
         try {
             LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
-            task.setLoginListener(new SubmitListener() {
+            task.setLoginListener(new SubmitEntityListener<User>() {
                 @Override
                 public void apiKeyInvalidated() { }
 
                 @Override
-                public void submitComplete(Payload r) {
-                    response = r;
+                public void submitComplete(EntityResult<User> result) {
+                    resultUser = result;
                     signal.countDown();
                 }
             });
-            task.execute(p);
+            task.execute(user);
 
             signal.await();
 
-            assertTrue(response.isResult());
-            assertEquals(context.getString(R.string.login_complete), response.getResultResponse());
+            assertTrue(resultUser.isSuccess());
+            assertEquals(context.getString(R.string.login_complete), resultUser.getResultMessage());
 
         }catch (InterruptedException ie) {
             ie.printStackTrace();
@@ -182,31 +174,28 @@ public class LoginTest extends BaseTestDB {
             e.printStackTrace();
         }
 
-        ArrayList<Object> users = new ArrayList<>();
-        User u = new User();
-        u.setUsername("");
-        u.setPassword("");
-        users.add(u);
+        User user = new User();
+        user.setUsername("");
+        user.setPassword("");
 
-        Payload p = new Payload(users);
         try {
             LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
-            task.setLoginListener(new SubmitListener() {
+            task.setLoginListener(new SubmitEntityListener<User>() {
                 @Override
                 public void apiKeyInvalidated() { }
 
                 @Override
-                public void submitComplete(Payload r) {
-                    response = r;
+                public void submitComplete(EntityResult<User> result) {
+                    resultUser = result;
                     signal.countDown();
                 }
             });
-            task.execute(p);
+            task.execute(user);
 
             signal.await();
 
-            assertFalse(response.isResult());
-            assertEquals(context.getString(R.string.error_login), response.getResultResponse());
+            assertFalse(resultUser.isSuccess());
+            assertEquals(context.getString(R.string.error_login), resultUser.getResultMessage());
 
         }catch (InterruptedException ie) {
             ie.printStackTrace();
@@ -236,9 +225,8 @@ public class LoginTest extends BaseTestDB {
 
     }
 
-    private void performRegister(User u) {
+    private void performRegister(User user) {
 
-        Payload p = new Payload(Arrays.asList(u));
         RegisterTask rt = new RegisterTask(context);
         rt.setRegisterListener(new RegisterTask.RegisterListener() {
             @Override
@@ -261,6 +249,6 @@ public class LoginTest extends BaseTestDB {
 
             }
         });
-        rt.execute(p);
+        rt.execute(user);
     }
 }

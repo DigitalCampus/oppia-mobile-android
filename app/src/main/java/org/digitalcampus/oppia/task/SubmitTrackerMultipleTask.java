@@ -34,6 +34,9 @@ import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.task.result.EntityListResult;
+import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -53,7 +56,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, Payload> {
+public class SubmitTrackerMultipleTask extends APIRequestTask<Void, Integer, EntityListResult<String>> {
 
 
     private static final String JSON_EXCEPTION_MESSAGE = "JSON Exception: ";
@@ -64,8 +67,10 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
     public SubmitTrackerMultipleTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
 
     @Override
-    protected Payload doInBackground(Payload... params) {
-        Payload payload = new Payload();
+    protected EntityListResult<String> doInBackground(Void... params) {
+
+        EntityListResult<String> result = new EntityListResult<>();
+
         boolean submitAttempted = false;
 
         try {
@@ -78,9 +83,9 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                 //We try to send the new user to register
                 if (offlineUser){
                     Log.d(TAG, "Trying to send user " + u.getUsername() + " to registration...");
-                    Payload p = new Payload();
+                    EntityResult<User> resultRegisterUser = new EntityResult<>();
                     RegisterTask rt = new RegisterTask(ctx);
-                    boolean success = rt.submitUserToServer(u, p, false);
+                    boolean success = rt.submitUserToServer(u, resultRegisterUser, false);
                     Log.d(TAG, "User " + u.getUsername() + " " + (success?"succeeded":"failed"));
 
                     if (success){
@@ -91,25 +96,25 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 
                 if (!offlineUser){
                     // If we don't get the user registered, then avoid sending the trackers as he would not have an apiKey
-                    payload = db.getUnsentTrackers(u.getUserId());
+                    List<TrackerLog> trackerLogList = db.getUnsentTrackers(u.getUserId());
                     submitAttempted = true;
 
                     @SuppressWarnings("unchecked")
-                    Collection<Collection<TrackerLog>> userTrackers = split((Collection<Object>) payload.getData(), App.MAX_TRACKER_SUBMIT);
-                    sendTrackerBatch(userTrackers, u, payload);
+                    Collection<Collection<TrackerLog>> userTrackers = split(trackerLogList, App.MAX_TRACKER_SUBMIT);
+                    sendTrackerBatch(userTrackers, u, result);
                 }
             }
 
             List<File> unsentLogs = getActivityLogsToSend();
             if (!unsentLogs.isEmpty()){
                 for (File activityLog : unsentLogs){
-                    sendTrackerLog(activityLog, payload);
+                    sendTrackerLog(activityLog, result);
                 }
             }
 
         } catch (IllegalStateException ise) {
             Log.d(TAG, "IllegalStateException:", ise);
-            payload.setResult(false);
+            result.setSuccess(false);
         }
 
         Editor editor = prefs.edit();
@@ -117,14 +122,14 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
         editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
 
         if (!submitAttempted){
-            payload.setResultResponse("Trackers from offline registered users could not be sent");
+            result.setResultMessage("Trackers from offline registered users could not be sent");
         }
-        return payload;
+        return result;
     }
 
 
 
-    private void sendTrackerLog(File activityLog, Payload payload){
+    private void sendTrackerLog(File activityLog, EntityListResult<String> result){
         try {
             DbHelper db = DbHelper.getInstance(ctx);
             String dataToSend = org.apache.commons.io.FileUtils.readFileToString(activityLog);
@@ -133,10 +138,10 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
             User user = db.getOneRegisteredUser();
 
             if (!user.isOfflineRegister()){
-                boolean success = sendTrackers(user, dataToSend, true, payload);
-                payload.setResult(success);
+                boolean success = sendTrackers(user, dataToSend, true, result);
+                result.setSuccess(success);
                 if (!success){
-                    payload.addResponseData(activityLog.getName());
+                    result.getEntityList().add(activityLog.getName());
                 }
                 if (success){
                     Log.d(TAG, "Success sending " + activityLog.getName());
@@ -147,12 +152,12 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 
         } catch (IOException | UserNotFoundException e) {
             Mint.logException(e);
-            payload.setResult(false);
+            result.setSuccess(false);
         }
 
     }
 
-    private boolean sendTrackers(User user, String dataToSend, boolean isRaw, Payload p){
+    private boolean sendTrackers(User user, String dataToSend, boolean isRaw, BasicResult result){
         Log.d(TAG, dataToSend);
         DbHelper db = DbHelper.getInstance(ctx);
 
@@ -207,7 +212,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
             return false;
         } catch (IOException e) {
             Mint.logException(e);
-            p.setResultResponse(ctx.getString(R.string.error_connection));
+            result.setResultMessage(ctx.getString(R.string.error_connection));
             return false;
         } catch (JSONException e) {
             Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
@@ -240,14 +245,14 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
         return files;
     }
 
-    private void sendTrackerBatch(Collection<Collection<TrackerLog>> trackers, User user, Payload p) {
+    private void sendTrackerBatch(Collection<Collection<TrackerLog>> trackers, User user, BasicResult result) {
 
         DbHelper db = DbHelper.getInstance(ctx);
-        p.setResult(true);
+        result.setSuccess(true);
         for (Collection<TrackerLog> trackerBatch : trackers) {
             String dataToSend = createDataString(trackerBatch);
-            boolean success = sendTrackers(user, dataToSend, false, p);
-            p.setResult(success);
+            boolean success = sendTrackers(user, dataToSend, false, result);
+            result.setSuccess(success);
 
             if (success){
                 for (TrackerLog tl : trackerBatch) {
@@ -268,16 +273,12 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
     }
 
     @Override
-    protected void onPostExecute(Payload p) {
-        super.onPostExecute(p);
+    protected void onPostExecute(EntityListResult<String> result) {
+        super.onPostExecute(result);
         synchronized (this) {
             if (trackerServiceListener != null) {
-                List<Object> response = p.getResponseData();
-                List<String> failures = new ArrayList<>();
-                for (Object r : response){
-                    failures.add((String)r);
-                }
-                trackerServiceListener.trackerComplete(p.isResult(), p.getResultResponse(), failures);
+                List<String> failures = result.getEntityList();
+                trackerServiceListener.trackerComplete(result.isSuccess(), result.getResultMessage(), failures);
             }
         }
     }
@@ -286,7 +287,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
         trackerServiceListener = tsl;
     }
 
-    private static Collection<Collection<TrackerLog>> split(Collection<Object> bigCollection, int maxBatchSize) {
+    private static Collection<Collection<TrackerLog>> split(Collection<TrackerLog> bigCollection, int maxBatchSize) {
         Collection<Collection<TrackerLog>> result = new ArrayList<>();
 
         ArrayList<TrackerLog> currentBatch = null;
