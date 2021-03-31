@@ -139,10 +139,9 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
     }
 
     private void executeUpdateProfileTask(final User user) {
-        Payload p = new Payload(Arrays.asList(user));
         UpdateProfileTask task = new UpdateProfileTask(this, apiEndpoint);
         task.setResponseListener(this);
-        task.execute(p);
+        task.execute(user);
     }
 
 

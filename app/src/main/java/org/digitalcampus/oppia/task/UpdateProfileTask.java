@@ -30,6 +30,7 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,9 +46,9 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> {
+public class UpdateProfileTask extends APIRequestTask<User, String, EntityResult<User>> {
 
-    private static final String SUBMIT_ERROR = "submit_error";
+    private class UserSubmitError extends User {}
 
     private ResponseListener responseListener;
     private ProgressDialog progressDialog;
@@ -65,15 +66,14 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
     }
 
     @Override
-    protected Payload doInBackground(Payload... params) {
+    protected EntityResult<User> doInBackground(User... params) {
 
-        Payload payload = params[0];
-        User user = (User) payload.getData().get(0);
-        payload.getResponseData().clear();
+        User user = params[0];
+        EntityResult<User> result = new EntityResult<>();
 
         boolean saveUser = true;
         if (!user.isOfflineRegister()) {
-            saveUser = submitUserToServer(user, payload, true);
+            saveUser = submitUserToServer(user, result, true);
         }
 
         if (saveUser) {
@@ -81,16 +81,16 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
             DbHelper db = DbHelper.getInstance(ctx);
 
             db.addOrUpdateUser(user);
-            payload.setResult(true);
-            payload.setResultResponse(ctx.getString(R.string.profile_updated_successfuly));
+            result.setSuccess(true);
+            result.setResultMessage(ctx.getString(R.string.profile_updated_successfuly));
 
         }
 
-        return payload;
+        return result;
     }
 
 
-    private boolean submitUserToServer(User u, Payload payload, boolean updateProgress) {
+    private boolean submitUserToServer(User u, EntityResult<User> result, boolean updateProgress) {
         try {
             if (updateProgress) {
                 // update progress dialog
@@ -124,38 +124,38 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
                 return true;
             } else if (response.code() == 400) {
                 String bodyResponse = response.body().string();
-                payload.setResult(false);
-                payload.setResponseData(new ArrayList<>(Arrays.asList(SUBMIT_ERROR)));
-                payload.setResultResponse(bodyResponse);
+                result.setSuccess(false);
+                result.setEntity(new UserSubmitError());
+                result.setResultMessage(bodyResponse);
                 Log.d(TAG, bodyResponse);
             } else {
-                payload.setResult(false);
-                payload.setResultResponse(ctx.getString(R.string.error_connection));
+                result.setSuccess(false);
+                result.setResultMessage(ctx.getString(R.string.error_connection));
             }
 
         } catch (javax.net.ssl.SSLHandshakeException e) {
             Log.d(TAG, "SSLHandshakeException:", e);
             Mint.logException(e);
-            payload.setResult(false);
-            payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
+            result.setSuccess(false);
+            result.setResultMessage(ctx.getString(R.string.error_connection_ssl));
         } catch (UnsupportedEncodingException e) {
-            payload.setResult(false);
+            result.setSuccess(false);
 
-            payload.setResultResponse(ctx.getString(R.string.error_connection));
+            result.setResultMessage(ctx.getString(R.string.error_connection));
         } catch (IOException e) {
-            payload.setResult(false);
-            payload.setResultResponse(ctx.getString(R.string.error_connection_required));
+            result.setSuccess(false);
+            result.setResultMessage(ctx.getString(R.string.error_connection_required));
         } catch (JSONException e) {
             Mint.logException(e);
             Log.d(TAG, "JSONException:", e);
-            payload.setResult(false);
-            payload.setResultResponse(ctx.getString(R.string.error_processing_response));
+            result.setSuccess(false);
+            result.setResultMessage(ctx.getString(R.string.error_processing_response));
         }
         return false;
     }
 
     @Override
-    protected void onPostExecute(Payload response) {
+    protected void onPostExecute(EntityResult<User> result) {
 
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
@@ -163,28 +163,29 @@ public class UpdateProfileTask extends APIRequestTask<Payload, String, Payload> 
 
         synchronized (this) {
             if (responseListener != null) {
-                User user = (User) response.getData().get(0);
-                if (response.isResult()) {
-                    responseListener.onSubmitComplete(user);
-                    return;
-                }
 
-                String errorMessage = response.getResultResponse();
-                if (response.getResponseData() != null && !response.getResponseData().isEmpty()) {
-                    String data = (String) response.getResponseData().get(0);
-                    if (data.equals(SUBMIT_ERROR)) {
-                        try {
-                            JSONObject jo = new JSONObject(errorMessage);
-                            errorMessage = jo.getString("error");
-                        } catch (JSONException je) {
-                            Log.d(TAG, je.getMessage());
-                        }
-                        responseListener.onSubmitError(errorMessage);
-                        return;
+
+                User user = result.getEntity();
+                String errorMessage = result.getResultMessage();
+
+                if (user instanceof UserSubmitError) {
+                    try {
+                        JSONObject jo = new JSONObject(errorMessage);
+                        errorMessage = jo.getString("error");
+                    } catch (JSONException je) {
+                        Log.d(TAG, je.getMessage());
                     }
+                    responseListener.onSubmitError(errorMessage);
+                    return;
+
                 }
 
-                responseListener.onConnectionError(errorMessage, user);
+                if (result.isSuccess()) {
+                    responseListener.onSubmitComplete(user);
+                } else {
+                    responseListener.onConnectionError(errorMessage, user);
+                }
+
             }
         }
     }
