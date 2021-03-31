@@ -47,6 +47,7 @@ import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -61,7 +62,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
+public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
 
 	public static final String TAG = UpgradeManagerTask.class.getSimpleName();
 
@@ -85,17 +86,17 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	}
 
 	@Override
-	protected Payload doInBackground(Payload... params) {
-		Payload payload = params[0];
+	protected BasicResult doInBackground(Void... params) {
+		BasicResult result = new BasicResult();
 
-		payload.setResult(false);
+		result.setSuccess(false);
 		if (!prefs.getBoolean("upgradeV17", false)) {
 			upgradeV17();
 			Editor editor = prefs.edit();
 			editor.putBoolean("upgradeV17", true);
 			editor.apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading, "v17"));
-			payload.setResult(true);
+			result.setSuccess(true);
 		}
 
 		if (!prefs.getBoolean("upgradeV20", false)) {
@@ -104,7 +105,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			editor.putBoolean("upgradeV20", true);
 			editor.apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading, "v20"));
-			payload.setResult(true);
+			result.setSuccess(true);
 		}
 
 		if (!prefs.getBoolean("upgradeV29", false)) {
@@ -112,7 +113,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			editor.putBoolean("upgradeV29", true);
 			editor.apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading, "v29"));
-			payload.setResult(true);
+			result.setSuccess(true);
 		}
 
 		if (!prefs.getBoolean("upgradeV43", false)) {
@@ -120,7 +121,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			Editor editor = prefs.edit();
 			editor.putBoolean("upgradeV43", true).apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading, "v43"));
-			payload.setResult(true);
+			result.setSuccess(true);
 		}
 
 		if (!prefs.getBoolean("upgradeV46", false)) {
@@ -129,35 +130,35 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			editor.putString(PrefsActivity.PREF_SERVER, ctx.getString(R.string.prefServerDefault));
 			editor.apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading, "v46"));
-			payload.setResult(true);
+			result.setSuccess(true);
 		}
 
 		if (!prefs.getBoolean("upgradeV49b", false)) {
 			upgradeV49();
 			prefs.edit().putBoolean("upgradeV49b", true).apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading, "v49"));
-			payload.setResult(true);
+			result.setSuccess(true);
 		}
 
 		if (!prefs.getBoolean("upgradeV54", false)) {
 			upgradeV54();
 			prefs.edit().putBoolean("upgradeV54", true).apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading, "v54"));
-			payload.setResult(true);
+			result.setSuccess(true);
 		}
 
 		if (!prefs.getBoolean("upgradeV54a", false)) {
 			upgradeV54a();
 			prefs.edit().putBoolean("upgradeV54a", true).apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading, "v54a"));
-			payload.setResult(true);
+			result.setSuccess(true);
 		}
 
 		if (!prefs.getBoolean("upgradeV55", false)) {
 			upgradeV55();
 			prefs.edit().putBoolean("upgradeV55", true).apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading, "v55"));
-			payload.setResult(true);
+			result.setSuccess(true);
 		}
 
 		if (!prefs.getBoolean("upgradeV82", false)) {
@@ -173,7 +174,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		overrideAdminPasswordTask();
 		reloadCustomFieldsIfNeeded();
 
-		return payload;
+		return result;
 
 	}
 
@@ -575,10 +576,10 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	}
 
 	@Override
-	protected void onPostExecute(Payload p) {
+	protected void onPostExecute(BasicResult result) {
 		synchronized (this) {
             if (mUpgradeListener != null) {
-            	mUpgradeListener.upgradeComplete(p);
+            	mUpgradeListener.upgradeComplete(result);
             }
         }
 	}

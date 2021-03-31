@@ -17,14 +17,10 @@
 
 package org.digitalcampus.oppia.listener;
 
-import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.result.EntityListResult;
+import org.digitalcampus.oppia.task.result.EntityResult;
 
-public interface ScanMediaListener {
-	
-	void scanStart();
-    void scanProgressUpdate(String msg);
-    void scanComplete(EntityListResult<Media> result);
-
+public interface SubmitEntityListener<T> extends APIKeyRequestListener {
+	void submitComplete(EntityResult<T> response);
 }

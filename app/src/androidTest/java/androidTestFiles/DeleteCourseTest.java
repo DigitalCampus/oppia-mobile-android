@@ -55,8 +55,6 @@ public class DeleteCourseTest extends BaseTestDB {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
 //            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.READ_PHONE_STATE
     );
 
 
@@ -218,11 +216,8 @@ public class DeleteCourseTest extends BaseTestDB {
         final CountDownLatch signal = new CountDownLatch(1);  //Control AsyncTask sincronization for testing
 
         DeleteCourseTask task = new DeleteCourseTask(context);
-        ArrayList<Object> payloadData = new ArrayList<>();
-        payloadData.add(course);
-        Payload p = new Payload(payloadData);
         task.setOnDeleteCourseListener(r -> signal.countDown());
-        task.execute(p);
+        task.execute(course);
 
         try {
             signal.await();

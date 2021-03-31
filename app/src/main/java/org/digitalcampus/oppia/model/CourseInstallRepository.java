@@ -16,9 +16,8 @@ public class CourseInstallRepository {
 
     public void getCourseList(Context ctx, String url) {
         APIUserRequestTask task = new APIUserRequestTask(ctx);
-        Payload p = new Payload(url);
         task.setAPIRequestListener((APIRequestListener) ctx);
-        task.execute(p);
+        task.execute(url);
     }
 
     public void refreshCourseList(Context ctx, List<CourseInstallViewAdapter> courses,

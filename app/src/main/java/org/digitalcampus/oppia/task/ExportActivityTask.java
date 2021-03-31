@@ -31,7 +31,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
+public class ExportActivityTask extends AsyncTask<Void, Integer, String> {
 
     private static final String TAG = ExportActivityTask.class.getSimpleName();
     protected Context ctx;
@@ -49,7 +49,7 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
 
 
     @Override
-    protected String doInBackground(Payload... payloads) {
+    protected String doInBackground(Void... params) {
 
         DbHelper db = DbHelper.getInstance(ctx);
         List<User> users = db.getAllUsers();

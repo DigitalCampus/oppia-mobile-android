@@ -25,8 +25,9 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.listener.SubmitListener;
+import org.digitalcampus.oppia.listener.SubmitEntityListener;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,24 +39,26 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class ResetTask extends APIRequestTask<Payload, Object, Payload> {
+public class ResetTask extends APIRequestTask<User, Object, EntityResult<User>> {
 
-	private SubmitListener mStateListener;
+	private SubmitEntityListener mStateListener;
 
 	public ResetTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
 
     @Override
-	protected Payload doInBackground(Payload... params) {
+	protected EntityResult<User> doInBackground(User... params) {
 
-		Payload payload = params[0];
-		User u = (User) payload.getData().get(0);
+		User user = params[0];
+
+		EntityResult<User> result = new EntityResult<>();
+		result.setEntity(user);
 
 		try {
 			// update progress dialog
 			publishProgress(ctx.getString(R.string.reset_process));
 
 			JSONObject json = new JSONObject();
-			json.put("username", u.getUsername());
+			json.put("username", user.getUsername());
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
@@ -66,41 +69,41 @@ public class ResetTask extends APIRequestTask<Payload, Object, Payload> {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
                 new JSONObject(response.body().string()); //Added to check that the response is well formed
-                payload.setResult(true);
-                payload.setResultResponse(ctx.getString(R.string.reset_complete));
+				result.setSuccess(true);
+				result.setResultMessage(ctx.getString(R.string.reset_complete));
             }
             else{
-                payload.setResult(false);
+                result.setSuccess(false);
                 if (response.code() == 400){
-                    payload.setResultResponse(ctx.getString(R.string.error_reset));
+					result.setResultMessage(ctx.getString(R.string.error_reset));
                 }
                 else{
-                    payload.setResultResponse(ctx.getString(R.string.error_connection));
+					result.setResultMessage(ctx.getString(R.string.error_connection));
                 }
             }
 
 		} catch (IOException  e) {
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
+			result.setSuccess(false);
+			result.setResultMessage(ctx.getString(R.string.error_connection));
 		} catch (JSONException e) {
 			Mint.logException(e);
 			Log.d(TAG, "JSONException:", e);
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
+			result.setSuccess(false);
+			result.setResultMessage(ctx.getString(R.string.error_processing_response));
 		}
-		return payload;
+		return result;
 	}
 
 	@Override
-	protected void onPostExecute(Payload response) {
+	protected void onPostExecute(EntityResult<User> result) {
 		synchronized (this) {
 			if (mStateListener != null) {
-				mStateListener.submitComplete(response);
+				mStateListener.submitComplete(result);
 			}
 		}
 	}
 
-	public void setResetListener(SubmitListener srl) {
+	public void setResetListener(SubmitEntityListener srl) {
 		synchronized (this) {
 			mStateListener = srl;
 		}

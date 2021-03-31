@@ -41,6 +41,8 @@ import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
+import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.ui.MediaScanView;
 
 import java.util.ArrayList;
@@ -209,11 +211,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         builder.setMessage(R.string.course_context_delete_confirm);
         builder.setPositiveButton(R.string.yes, (dialog, which) -> {
             DeleteCourseTask task = new DeleteCourseTask(getActivity());
-            ArrayList<Object> payloadData = new ArrayList<>();
-            payloadData.add(tempCourse);
-            Payload p = new Payload(payloadData);
             task.setOnDeleteCourseListener(CoursesListFragment.this);
-            task.execute(p);
+            task.execute(tempCourse);
 
             progressDialog = new ProgressDialog(getActivity(), R.style.Oppia_AlertDialogStyle);
             progressDialog.setMessage(getString(R.string.course_deleting));
@@ -248,11 +247,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         UpdateCourseActivityTask task = new UpdateCourseActivityTask(getActivity(),
                 SessionManager.getUserId(getActivity()), apiEndpoint);
-        ArrayList<Object> payloadData = new ArrayList<>();
-        payloadData.add(tempCourse);
-        Payload p = new Payload(payloadData);
         task.setUpdateActivityListener(CoursesListFragment.this);
-        task.execute(p);
+        task.execute(tempCourse);
 
     }
 
@@ -265,15 +261,15 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     }
 
     @Override
-    public void onCourseDeletionComplete(Payload response) {
-        if (response.isResult()){
+    public void onCourseDeletionComplete(BasicResult result) {
+        if (result.isSuccess()){
             Media.resetMediaScan(prefs);
         }
         if (progressDialog != null){
             progressDialog.dismiss();
         }
 
-        toast(response.isResult()? R.string.course_deleting_success : R.string.course_deleting_error);
+        toast(result.isSuccess() ? R.string.course_deleting_success : R.string.course_deleting_error);
         displayCourses();
         getActivity().invalidateOptionsMenu();
     }
@@ -302,13 +298,13 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         // no need to show download progress in this activity
     }
 
-    public void updateActivityComplete(Payload response) {
-        Course course = (Course) response.getData().get(0);
+    public void updateActivityComplete(EntityResult<Course> result) {
+        Course course = result.getEntity();
         if (progressDialog != null){
             progressDialog.dismiss();
         }
 
-        toast(getString(response.isResult() ? R.string.course_updating_success :
+        toast(getString(result.isSuccess() ? R.string.course_updating_success :
                         R.string.course_updating_error, (course!=null) ? course.getShortname() : ""));
 
         displayCourses();
