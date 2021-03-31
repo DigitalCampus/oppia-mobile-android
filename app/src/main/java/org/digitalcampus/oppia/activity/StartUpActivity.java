@@ -46,6 +46,7 @@ import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.UpgradeManagerTask;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
@@ -80,9 +81,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
 
         UpgradeManagerTask umt = new UpgradeManagerTask(this);
         umt.setUpgradeListener(this);
-        ArrayList<Object> data = new ArrayList<>();
-        Payload p = new Payload(data);
-        umt.execute(p);
+        umt.execute();
 
     }
 
@@ -133,13 +132,13 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
         });
     }
 
-    public void upgradeComplete(final Payload p) {
+    public void upgradeComplete(BasicResult result) {
 
-        afterUpgrade(p);
+        afterUpgrade(result);
 
     }
 
-    private void afterUpgrade(Payload p) {
+    private void afterUpgrade(BasicResult result) {
         // set up local dirs
         if (!Storage.createFolderStructure(this)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle);
@@ -151,7 +150,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
             return;
         }
 
-        if (p.isResult()) {
+        if (result.isSuccess()) {
             PostInstallTask piTask = new PostInstallTask(this);
             piTask.setPostInstallListener(this::installCourses);
             piTask.execute();
