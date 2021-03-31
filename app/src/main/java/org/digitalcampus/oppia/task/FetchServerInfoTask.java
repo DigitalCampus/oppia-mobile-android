@@ -25,7 +25,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<String, String>> {
+public class FetchServerInfoTask extends APIRequestTask<Void, Void, HashMap<String, String>> {
 
 
     private static final String SERVER_NAME = "name";

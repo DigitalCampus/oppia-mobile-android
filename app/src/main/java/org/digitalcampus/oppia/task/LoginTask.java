@@ -28,10 +28,11 @@ import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
-import org.digitalcampus.oppia.listener.SubmitListener;
+import org.digitalcampus.oppia.listener.SubmitEntityListener;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
@@ -46,29 +47,32 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
+public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> {
 
-	private SubmitListener mStateListener;
+	private SubmitEntityListener mStateListener;
 
     public LoginTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
 
     @Override
-	protected Payload doInBackground(Payload... params) {
-        Payload payload = params[0];
-		User u = (User) payload.getData().get(0);
+	protected EntityResult<User> doInBackground(User... params) {
+
+		User user = params[0];
+
+        EntityResult<User> result = new EntityResult<>();
+        result.setEntity(user);
 		
 		// firstly try to login locally
 		try {
-			User localUser = DbHelper.getInstance(ctx).getUser(u.getUsername());
+			User localUser = DbHelper.getInstance(ctx).getUser(user.getUsername());
 
 			Log.d(TAG,"logged pw: " + localUser.getPasswordEncrypted());
-			Log.d(TAG,"entered pw: " + u.getPasswordEncrypted());
+			Log.d(TAG,"entered pw: " + user.getPasswordEncrypted());
 			
-			if (SessionManager.isUserApiKeyValid(u.getUsername()) &&
-                    localUser.getPasswordEncrypted().equals(u.getPasswordEncrypted())){
-				payload.setResult(true);
-				payload.setResultResponse(ctx.getString(R.string.login_complete));
-				return payload;
+			if (SessionManager.isUserApiKeyValid(user.getUsername()) &&
+                    localUser.getPasswordEncrypted().equals(user.getPasswordEncrypted())){
+				result.setSuccess(true);
+				result.setResultMessage(ctx.getString(R.string.login_complete));
+				return result;
 			}
 		} catch (UserNotFoundException unfe) {
 			// Just ignore - means that user isn't already registered on the device
@@ -78,8 +82,8 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
 			// update progress dialog
 			publishProgress(ctx.getString(R.string.login_process));
             JSONObject json = new JSONObject();
-            json.put("username", u.getUsername());
-            json.put("password", u.getPassword());
+            json.put("username", user.getUsername());
+            json.put("password", user.getPassword());
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
@@ -90,44 +94,45 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
                 JSONObject jsonResp = new JSONObject(response.body().string());
-                setUserFields(jsonResp, u);
-                setCustomFields(jsonResp, u);
-                setPointsAndBadges(jsonResp, u);
-                setPointsAndBadgesEnabled(jsonResp, u);
+                setUserFields(jsonResp, user);
+                setCustomFields(jsonResp, user);
+                setPointsAndBadges(jsonResp, user);
+                setPointsAndBadgesEnabled(jsonResp, user);
                 setMetaData(jsonResp);
-                DbHelper.getInstance(ctx).addOrUpdateUser(u);
-                payload.setResult(true);
-                payload.setResultResponse(ctx.getString(R.string.login_complete));
+                DbHelper.getInstance(ctx).addOrUpdateUser(user);
+                result.setSuccess(true);
+                result.setResultMessage(ctx.getString(R.string.login_complete));
             }
             else{
                 if (response.code() == 400 || response.code() == 401){
-                    payload.setResult(false);
-                    payload.setResultResponse(ctx.getString(R.string.error_login));
+                    result.setSuccess(false);
+                    result.setResultMessage(ctx.getString(R.string.error_login));
                 }
                 else{
-                    payload.setResult(false);
-                    payload.setResultResponse(ctx.getString(R.string.error_connection));
+                    result.setSuccess(false);
+                    result.setResultMessage(ctx.getString(R.string.error_connection));
                 }
             }
 
 		} catch(javax.net.ssl.SSLHandshakeException e) {
             Mint.logException(e);
             Log.d(TAG, "SSLHandshakeException: ", e);
-            payload.setResult(false);
-            payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
+            result.setSuccess(false);
+            result.setResultMessage(ctx.getString(R.string.error_connection_ssl));
         }catch (UnsupportedEncodingException e) {
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
+            result.setSuccess(false);
+            result.setResultMessage(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection_required));
+            result.setSuccess(false);
+            result.setResultMessage(ctx.getString(R.string.error_connection_required));
 		} catch (JSONException e) {
 			Mint.logException(e);
             Log.d(TAG, "JSONException: ", e);
-			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
+            result.setSuccess(false);
+            result.setResultMessage(ctx.getString(R.string.error_processing_response));
 		} 
 		
-		return payload;
+		return result;
 	}
 
 	private void setUserFields(JSONObject json, User u) throws JSONException {
@@ -202,15 +207,15 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
     }
 
 	@Override
-	protected void onPostExecute(Payload response) {
+	protected void onPostExecute(EntityResult<User> result) {
 		synchronized (this) {
             if (mStateListener != null) {
-               mStateListener.submitComplete(response);
+               mStateListener.submitComplete(result);
             }
         }
 	}
 	
-	public void setLoginListener(SubmitListener srl) {
+	public void setLoginListener(SubmitEntityListener srl) {
         synchronized (this) {
             mStateListener = srl;
         }

@@ -12,12 +12,10 @@ import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.UpdateProfileTask;
 import org.digitalcampus.oppia.utils.ui.fields.CustomFieldsUIManager;
 import org.digitalcampus.oppia.utils.ui.fields.ValidableField;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -139,10 +137,9 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
     }
 
     private void executeUpdateProfileTask(final User user) {
-        Payload p = new Payload(Arrays.asList(user));
         UpdateProfileTask task = new UpdateProfileTask(this, apiEndpoint);
         task.setResponseListener(this);
-        task.execute(p);
+        task.execute(user);
     }
 
 

@@ -29,6 +29,7 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.BufferedReader;
@@ -36,7 +37,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Payload>{
+public class PreloadAccountsTask extends AsyncTask<Void, DownloadProgress, BasicResult>{
 
     public static final String TAG = PreloadAccountsTask.class.getSimpleName();
     private Context ctx;
@@ -55,9 +56,10 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
     }
 
     @Override
-    protected Payload doInBackground(Payload... params) {
-        Payload payload = new Payload();
-        payload.setResult(false);
+    protected BasicResult doInBackground(Void... params) {
+
+        BasicResult result = new BasicResult();
+        
         String csvPath = Storage.getStorageLocationRoot(ctx) + File.separator + SessionManager.ACCOUNTS_CSV_FILENAME;
         File csvAccounts = new File(csvPath);
 
@@ -94,8 +96,8 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                 }
 
                 if (usernameColumn == -1 || apikeyColumn == -1 || passwordColumn == -1){
-                    payload.setResult(true);
-                    payload.setResultResponse(ctx.getString(R.string.error_preloading_accounts));
+                    result.setSuccess(true);
+                    result.setResultMessage(ctx.getString(R.string.error_preloading_accounts));
                 }
 
                 //Each line has to be at least the max column of any of the mandatory fields
@@ -126,16 +128,16 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                 }
 
                 if (usersAdded>0){
-                    payload.setResult(true);
-                    payload.setResultResponse(ctx.getString(R.string.info_startup_preloaded_accounts, usersAdded));
+                    result.setSuccess(true);
+                    result.setResultMessage(ctx.getString(R.string.info_startup_preloaded_accounts, usersAdded));
                 }
                 Log.d(TAG, usersAdded + " users added");
             }
             catch (IOException e) {
                 Mint.logException(e);
                 Log.d(TAG, "IOException: ", e);
-                payload.setResult(true);
-                payload.setResultResponse(ctx.getString(R.string.error_preloading_accounts));
+                result.setSuccess(true);
+                result.setResultMessage(ctx.getString(R.string.error_preloading_accounts));
             }
             finally {
                 boolean deleted = csvAccounts.delete();
@@ -143,14 +145,14 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
             }
         }
 
-        return payload;
+        return result;
     }
 
     @Override
-    protected void onPostExecute(Payload p) {
+    protected void onPostExecute(BasicResult result) {
         synchronized (this) {
             if (mListener != null) {
-                mListener.onPreloadAccountsComplete(p);
+                mListener.onPreloadAccountsComplete(result);
             }
         }
     }

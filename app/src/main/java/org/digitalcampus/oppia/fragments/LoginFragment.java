@@ -34,18 +34,15 @@ import org.digitalcampus.oppia.activity.ViewDigestActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.listener.SubmitListener;
+import org.digitalcampus.oppia.listener.SubmitEntityListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.LoginTask;
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.UIUtils;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.inject.Inject;
 
-public class LoginFragment extends AppFragment implements SubmitListener {
+public class LoginFragment extends AppFragment implements SubmitEntityListener<User> {
 
     private EditText usernameField;
     private EditText passwordField;
@@ -120,20 +117,17 @@ public class LoginFragment extends AppFragment implements SubmitListener {
         pDialog.setCancelable(true);
         pDialog.show();
 
-        ArrayList<Object> users = new ArrayList<>();
-        User u = new User();
-        u.setUsername(username);
-        u.setPassword(password);
-        users.add(u);
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
 
-        Payload p = new Payload(users);
         LoginTask lt = new LoginTask(super.getActivity(), apiEndpoint);
         lt.setLoginListener(this);
-        lt.execute(p);
+        lt.execute(user);
     }
 
 
-    public void submitComplete(Payload response) {
+    public void submitComplete(EntityResult<User> response) {
         try {
             pDialog.dismiss();
         } catch (IllegalArgumentException iae) {
@@ -142,8 +136,8 @@ public class LoginFragment extends AppFragment implements SubmitListener {
 
         boolean fromViewDigest = getActivity().getIntent().getBooleanExtra(ViewDigestActivity.EXTRA_FROM_VIEW_DIGEST, false);
 
-        if (response.isResult()) {
-            User user = (User) response.getData().get(0);
+        if (response.isSuccess()) {
+            User user = response.getEntity();
             SessionManager.loginUser(appContext, user);
 
             if (fromViewDigest) {
@@ -157,7 +151,7 @@ public class LoginFragment extends AppFragment implements SubmitListener {
         } else {
             Context ctx = super.getActivity();
             if (ctx != null) {
-                UIUtils.showAlert(ctx, R.string.title_login, response.getResultResponse());
+                UIUtils.showAlert(ctx, R.string.title_login, response.getResultMessage());
             }
         }
     }

@@ -24,6 +24,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
+import org.digitalcampus.oppia.task.result.EntityListResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,9 +86,8 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
 
         if (Media.shouldScanMedia(prefs)) {
             ScanMediaTask task = new ScanMediaTask(getContext());
-            Payload p = new Payload(courses);
             task.setScanMediaListener(this);
-            task.execute(p);
+            task.execute(courses);
         } else {
             hideView();
         }
@@ -127,15 +127,15 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
 //        binding.tvMediaMessage.setText(getContext().getString(R.string.info_scan_media_checking, msg));
     }
 
-    public void scanComplete(Payload response) {
+    public void scanComplete(EntityListResult<Media> result) {
 
-        if (response.getResponseData() != null && !response.getResponseData().isEmpty()) {
+        if (result.hasItems()) {
 
-            binding.btnMediaDownload.setTag(response.getResponseData());
+            binding.btnMediaDownload.setTag(result.getEntityList());
 
             binding.btnMediaDownload.setOnClickListener(view -> {
                 @SuppressWarnings("unchecked")
-                ArrayList<Object> m = (ArrayList<Object>) view.getTag();
+                ArrayList<Media> m = (ArrayList<Media>) view.getTag();
                 Intent i = new Intent(getContext(), DownloadMediaActivity.class);
                 Bundle tb = new Bundle();
                 tb.putSerializable(DownloadMediaActivity.MISSING_MEDIA, m);

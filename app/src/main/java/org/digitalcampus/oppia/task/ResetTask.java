@@ -1,16 +1,16 @@
-/*
+/* 
  * This file is part of OppiaMobile - https://digital-campus.org/
- *
+ * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * OppiaMobile is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -25,8 +25,9 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.listener.SubmitListener;
+import org.digitalcampus.oppia.listener.SubmitEntityListener;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,24 +39,26 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class ResetTask extends APIRequestTask<Payload, Object, Payload> {
+public class ResetTask extends APIRequestTask<User, Object, EntityResult<User>> {
 
-    private SubmitListener mStateListener;
+	private SubmitEntityListener mStateListener;
 
-    public ResetTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
+	public ResetTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
 
     @Override
-    protected Payload doInBackground(Payload... params) {
+	protected EntityResult<User> doInBackground(User... params) {
 
-        Payload payload = params[0];
-        User u = (User) payload.getData().get(0);
+		User user = params[0];
 
-        try {
-            // update progress dialog
-            publishProgress(ctx.getString(R.string.reset_process));
+		EntityResult<User> result = new EntityResult<>();
+		result.setEntity(user);
 
-            JSONObject json = new JSONObject();
-            json.put("username", u.getUsername());
+		try {
+			// update progress dialog
+			publishProgress(ctx.getString(R.string.reset_process));
+
+			JSONObject json = new JSONObject();
+			json.put("username", user.getUsername());
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
@@ -65,43 +68,45 @@ public class ResetTask extends APIRequestTask<Payload, Object, Payload> {
 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
-                JSONObject jsonResp = new JSONObject(response.body().string()); //Added to check that the response is well formed
-                payload.setResult(true);
-                payload.setResultResponse(jsonResp.getString("message"));
-            } else {
-                payload.setResult(false);
+                new JSONObject(response.body().string()); //Added to check that the response is well formed
+				result.setSuccess(true);
+				result.setResultMessage(ctx.getString(R.string.reset_complete));
+            }
+            else{
+                result.setSuccess(false);
                 if (response.code() == 400){
-                    payload.setResultResponse(ctx.getString(R.string.error_reset));
-                } else {
-                    payload.setResultResponse(ctx.getString(R.string.error_connection));
+					result.setResultMessage(ctx.getString(R.string.error_reset));
+                }
+                else{
+					result.setResultMessage(ctx.getString(R.string.error_connection));
                 }
             }
 
-        } catch (IOException  e) {
-            payload.setResult(false);
-            payload.setResultResponse(ctx.getString(R.string.error_connection));
-        } catch (JSONException e) {
-            Mint.logException(e);
-            Log.d(TAG, "JSONException:", e);
-            payload.setResult(false);
-            payload.setResultResponse(ctx.getString(R.string.error_processing_response));
-        }
-        return payload;
-    }
+		} catch (IOException  e) {
+			result.setSuccess(false);
+			result.setResultMessage(ctx.getString(R.string.error_connection));
+		} catch (JSONException e) {
+			Mint.logException(e);
+			Log.d(TAG, "JSONException:", e);
+			result.setSuccess(false);
+			result.setResultMessage(ctx.getString(R.string.error_processing_response));
+		}
+		return result;
+	}
 
-    @Override
-    protected void onPostExecute(Payload response) {
-        synchronized (this) {
-            if (mStateListener != null) {
-                mStateListener.submitComplete(response);
-            }
-        }
-    }
+	@Override
+	protected void onPostExecute(EntityResult<User> result) {
+		synchronized (this) {
+			if (mStateListener != null) {
+				mStateListener.submitComplete(result);
+			}
+		}
+	}
 
-    public void setResetListener(SubmitListener srl) {
-        synchronized (this) {
-            mStateListener = srl;
-        }
-    }
+	public void setResetListener(SubmitEntityListener srl) {
+		synchronized (this) {
+			mStateListener = srl;
+		}
+	}
 
 }

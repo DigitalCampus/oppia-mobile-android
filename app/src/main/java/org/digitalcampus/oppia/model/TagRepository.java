@@ -44,9 +44,9 @@ public class TagRepository {
 
     public void getTagList(Context ctx){
         APIUserRequestTask task = new APIUserRequestTask(ctx);
-        Payload p = new Payload(Paths.SERVER_TAG_PATH);
+        String url = Paths.SERVER_TAG_PATH;
         task.setAPIRequestListener((APIRequestListener) ctx);
-        task.execute(p);
+        task.execute(url);
     }
 
     public void refreshTagList(List<Tag> tags, JSONObject json) throws JSONException{
