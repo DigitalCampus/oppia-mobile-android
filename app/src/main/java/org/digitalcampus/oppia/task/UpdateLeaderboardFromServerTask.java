@@ -10,7 +10,10 @@ import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.exception.WrongServerException;
 import org.digitalcampus.oppia.gamification.LeaderboardUtils;
+import org.digitalcampus.oppia.listener.SubmitEntityListener;
 import org.digitalcampus.oppia.listener.SubmitListener;
+import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
 
@@ -21,7 +24,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class UpdateLeaderboardFromServerTask extends APIRequestTask<Payload, Object, Payload> {
+public class UpdateLeaderboardFromServerTask extends APIRequestTask<Void, Object, BasicResult> {
 
     private SubmitListener listener;
 
@@ -30,10 +33,10 @@ public class UpdateLeaderboardFromServerTask extends APIRequestTask<Payload, Obj
     }
 
     @Override
-    protected Payload doInBackground(Payload... params) {
+    protected BasicResult doInBackground(Void... params) {
 
-        Payload payload = params[0];
-
+        BasicResult result = new BasicResult();
+        
         try {
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = createRequestBuilderWithUserAuth(apiEndpoint.getFullURL(ctx, Paths.LEADERBOARD_PATH)).build();
@@ -43,54 +46,54 @@ public class UpdateLeaderboardFromServerTask extends APIRequestTask<Payload, Obj
                 int updatedPositions = 0;
                 try {
                     updatedPositions += LeaderboardUtils.importLeaderboardJSON(ctx, json);
-                    payload.setResult(true);
-                    payload.setResultResponse(updatedPositions + " updated.");
+                    result.setSuccess(true);
+                    result.setResultMessage(updatedPositions + " updated.");
                 } catch (ParseException e) {
                     Mint.logException(e);
                     Log.d(TAG, "ParseException:", e);
-                    payload.setResult(false);
+                    result.setSuccess(false);
                 } catch (JSONException e) {
                     Mint.logException(e);
                     Log.d(TAG, "JSONException:", e);
-                    payload.setResult(false);
+                    result.setSuccess(false);
                 } catch (WrongServerException e) {
                     Mint.logException(e);
                     Log.d(TAG, "WrongServerException:", e);
-                    payload.setResult(false);
+                    result.setSuccess(false);
                 }
             }
             else{
                 if (response.code() == 401){
-                    invalidateApiKey(payload);
+                    invalidateApiKey(result);
                 }
                 if (response.code() == 404){
-                    payload.setResultResponse("Your server version is old and does not support leaderboard export.");
+                    result.setResultMessage("Your server version is old and does not support leaderboard export.");
                 }
                 else{
 
                 }
-                payload.setResult(false);
+                result.setSuccess(false);
                 response.body().close();
             }
 
         } catch (IOException e) {
             Mint.logException(e);
             Log.d(TAG, "IOException:", e);
-            payload.setResult(false);
-            payload.setResultResponse(ctx.getString(R.string.error_connection_required));
+            result.setSuccess(false);
+            result.setResultMessage(ctx.getString(R.string.error_connection_required));
         }
 
-        return payload;
+        return result;
 
     }
 
     @Override
-    protected void onPostExecute(Payload response) {
+    protected void onPostExecute(BasicResult result) {
 
         LeaderboardUtils.updateLeaderboardFetchTime(prefs);
         synchronized (this) {
             if (listener != null) {
-                listener.submitComplete(response);
+                listener.submitComplete(result);
             }
         }
     }

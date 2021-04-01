@@ -19,10 +19,12 @@ import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.gamification.LeaderboardUtils;
+import org.digitalcampus.oppia.listener.SubmitEntityListener;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.db_model.Leaderboard;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.UpdateLeaderboardFromServerTask;
+import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.task.result.EntityResult;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,10 +77,9 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         if (LeaderboardUtils.shouldFetchLeaderboard(prefs)){
-            Payload p = new Payload();
             UpdateLeaderboardFromServerTask task = new UpdateLeaderboardFromServerTask(super.getActivity(), apiEndpoint);
             task.seListener(this);
-            task.execute(p);
+            task.execute();
         }
         else {
             updateLeaderboard();
@@ -117,9 +118,10 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
     }
 
     @Override
-    public void submitComplete(Payload response) {
+    public void submitComplete(BasicResult result) {
         updateLeaderboard();
     }
+
 
     @Override
     public void apiKeyInvalidated() {

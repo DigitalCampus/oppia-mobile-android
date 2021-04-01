@@ -218,10 +218,9 @@ public class SessionManager {
     public static void preloadUserAccounts(Context ctx, PreloadAccountsListener listener) {
         File csvAccounts = new File(Storage.getStorageLocationRoot(ctx) + File.separator + ACCOUNTS_CSV_FILENAME);
         if (csvAccounts.exists()) {
-            Payload payload = new Payload();
             PreloadAccountsTask task = new PreloadAccountsTask(ctx);
             task.setPreloadAccountsListener(listener);
-            task.execute(payload);
+            task.execute();
         } else {
             listener.onPreloadAccountsComplete(null);
         }

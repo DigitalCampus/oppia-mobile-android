@@ -31,7 +31,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payload>{
+public class PostInstallTask extends AsyncTask<Void, DownloadProgress, Void>{
 
 	public static final String TAG = PostInstallTask.class.getSimpleName();
 	private Context ctx;
@@ -42,12 +42,12 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
 	}
 	
 	@Override
-	protected Payload doInBackground(Payload... params) {
-		Payload payload = params[0];
+	protected Void doInBackground(Void... params) {
+
 		copyCourses();
         copyMedia();
-		
-		return payload;
+
+        return null;
 	}
 
 	private void copyCourses(){
@@ -93,7 +93,7 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
     }
 	
 	@Override
-	protected void onPostExecute(Payload p) {
+	protected void onPostExecute(Void nothing) {
 		synchronized (this) {
             if (mStateListener != null) {
                mStateListener.postInstallComplete();

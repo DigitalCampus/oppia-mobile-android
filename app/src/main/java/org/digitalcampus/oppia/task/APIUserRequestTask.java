@@ -29,6 +29,7 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 
 import java.io.IOException;
@@ -37,7 +38,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class APIUserRequestTask extends APIRequestTask<Payload, Object, Payload>{
+public class APIUserRequestTask extends APIRequestTask<String, Object, BasicResult>{
 
 	private APIRequestListener requestListener;
 	private boolean apiKeyInvalidated = false;
@@ -46,59 +47,65 @@ public class APIUserRequestTask extends APIRequestTask<Payload, Object, Payload>
     public APIUserRequestTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
 
     @Override
-	protected Payload doInBackground(Payload... params){
+	protected BasicResult doInBackground(String... params){
 
         long now = System.currentTimeMillis();
-		Payload payload = params[0];
+        String url = params[0];
+        
+        BasicResult result = new BasicResult();
+        
 		try {
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
-            Request request = createRequestBuilderWithUserAuth(apiEndpoint.getFullURL(ctx, payload.getUrl())).build();
+            Request request = createRequestBuilderWithUserAuth(apiEndpoint.getFullURL(ctx, url)).build();
 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
-                payload.setResult(true);
-                payload.setResultResponse(response.body().string());
+                result.setSuccess(true);
+                result.setResultMessage(response.body().string());
             }
             else{
                 switch (response.code()) {
                     case 401:
-                        invalidateApiKey(payload);
+                        invalidateApiKey(result);
                         apiKeyInvalidated = true;
                         break;
 
                     case 403: // unauthorised
-                        payload.setResult(false);
-                        payload.setResultResponse(ctx.getString(R.string.error_login));
+                        result.setSuccess(false);
+                        result.setResultMessage(ctx.getString(R.string.error_login));
                         break;
 
                     default:
-                        payload.setResult(false);
-                        payload.setResultResponse(ctx.getString(R.string.error_connection));
+                        result.setSuccess(false);
+                        result.setResultMessage(ctx.getString(R.string.error_connection));
                 }
             }
 
 		}  catch (IOException e) {
             Mint.logException(e);
             Log.d(TAG, "IO exception", e);
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
+			result.setSuccess(false);
+            result.setResultMessage(ctx.getString(R.string.error_connection));
 		}
 
         long spent = System.currentTimeMillis() - now;
         Log.d(TAG, "Spent " + spent + " ms");
-        return payload;
+        return result;
 	}
 	
 	@Override
-	protected void onPostExecute(Payload response) {
+	protected void onPostExecute(BasicResult result) {
 		synchronized (this) {
             if (requestListener != null) {
                 if (apiKeyInvalidated){
                     requestListener.apiKeyInvalidated();
                 }
                 else{
-                    requestListener.apiRequestComplete(response);
+                    Payload payload = new Payload(); // TODO PAYLOAD REFACTOR
+                    payload.setResult(result.isSuccess());
+                    payload.setResultResponse(result.getResultMessage());
+                    requestListener.apiRequestComplete(payload);
                 }
             }
         }
