@@ -21,8 +21,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
@@ -66,7 +65,7 @@ public class SearchUtils {
                         fileContent.append(" ");
                         fileContent.append(FileUtils.readFile(url));
                     } catch (IOException e) {
-                        Mint.logException(e);
+                        Analytics.logException(e);
                         Log.d(TAG, "IOException:", e);
                     }
                 }
@@ -91,7 +90,7 @@ public class SearchUtils {
             indexAddCourse(ctx, course, cxr.getParsedCourse());
         } catch (InvalidXMLException e) {
             // Ignore course
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, "InvalidXMLException:", e);
         }
 	}

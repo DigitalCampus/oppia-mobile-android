@@ -97,7 +97,7 @@ public class FileUtils {
         try {
             org.apache.commons.io.FileUtils.copyFileToDirectory(file, mediaDir, true);
         }catch (IOException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             if (deleteOnError){
                 org.digitalcampus.oppia.utils.storage.FileUtils.deleteFile(file);
             }

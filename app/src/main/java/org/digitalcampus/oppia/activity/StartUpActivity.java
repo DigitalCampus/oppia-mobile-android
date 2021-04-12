@@ -25,16 +25,14 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.analytics.BaseAnalytics;
 import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
@@ -61,14 +59,12 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Mint.disableNetworkMonitoring();
-        Mint.initAndStartSession(this, App.MINT_API_KEY);
         setContentView(R.layout.activity_start_up);
 
         tvProgress = this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String username = SessionManager.getUsername(this);
-        Mint.setUserIdentifier(username.equals("") ? "anon" : username);
+
+        Analytics.startTrackingIfEnabled(this);
     }
 
     @Override

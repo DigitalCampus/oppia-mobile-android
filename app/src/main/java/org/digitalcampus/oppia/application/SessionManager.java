@@ -31,7 +31,6 @@ import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PreloadAccountsTask;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
@@ -97,7 +96,6 @@ public class SessionManager {
             Log.d(TAG, "User not found: ", e);
             return null;
         }
-
     }
 
     public static String getUsername(Context ctx) {

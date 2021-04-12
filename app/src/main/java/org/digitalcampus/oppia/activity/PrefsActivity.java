@@ -139,6 +139,10 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_ADVANCED_SCREEN = "prefsAdvanced";
     public static final String PREF_APP_INSTANCE_ID = "prefAppInstanceId";
 
+    //Privacy tracking preferences
+    public static final String PREF_ANALYTICS_INITIAL_PROMPT = "prefAnalyticsInitialPrompt";
+    public static final String PREF_ANALYTICS_ENABLED = "prefAnalyticsEnabled";
+
     private ProgressDialog pDialog;
     private PreferenceChangedCallback currentPrefScreen;
 
