@@ -47,6 +47,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -209,6 +210,9 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Void, Integer, Ent
             }
         } catch (UnsupportedEncodingException e) {
             Mint.logException(e);
+            return false;
+        } catch (ConnectException e) {
+            result.setResultMessage(ctx.getString(R.string.error_connection_timeout));
             return false;
         } catch (IOException e) {
             Mint.logException(e);

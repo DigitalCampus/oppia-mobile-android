@@ -256,6 +256,7 @@
     <string name="error_connection_required">You need an active internet connection to access this page. Please turn on wifi or mobile internet connection and try again.</string>
     <string name="error_connection_ssl">Error connecting to server due to SSL problems. Please, ensure that the host in your &appName;
         server setting is correct, and that your device has the right time/date</string>
+    <string name="error_connection_timeout">Timeout error connecting to server. Please check you have a stable internet connection and try again.</string>
     <string name="error_installing_course">%1$s: failed to install</string>
     <string name="error_latest_already_installed">%1$s: latest version already installed</string>
     <string name="error_login">Invalid username/password\nPlease try again</string>
