@@ -23,7 +23,7 @@ public class Analytics {
     }
 
     public static boolean shouldShowOptOutRationale(Context ctx){
-        return getPrefs(ctx).getBoolean(PrefsActivity.PREF_ANALYTICS_INITIAL_PROMPT, false);
+        return !getPrefs(ctx).getBoolean(PrefsActivity.PREF_ANALYTICS_INITIAL_PROMPT, false);
     }
 
     public static void optOutRationaleShown(Context ctx){

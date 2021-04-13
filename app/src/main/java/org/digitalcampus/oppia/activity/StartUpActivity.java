@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,6 +26,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -105,6 +111,29 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
         finish();
     }
 
+    private void showAnalyticsRationaleIfNeeded(){
+        if (!Analytics.shouldShowOptOutRationale(this)){
+            endStartUpScreen();
+            return;
+        }
+
+        ViewGroup container = findViewById(R.id.permissions_explanation);
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        container.removeAllViews();
+        View explanation = layoutInflater.inflate(R.layout.view_analytics_optin, container);
+        container.setVisibility(View.VISIBLE);
+
+        Button continueBtn = explanation.findViewById(R.id.continue_button);
+        continueBtn.setOnClickListener(view -> {
+            Analytics.optOutRationaleShown(StartUpActivity.this);
+            CheckBox analyticsCheck = explanation.findViewById(R.id.analytics_checkbox);
+            if (analyticsCheck.isChecked()){
+                Analytics.enableTracking(StartUpActivity.this);
+            }
+            endStartUpScreen();
+        });
+    }
+
     private void installCourses() {
         File dir = new File(Storage.getDownloadPath(this));
         String[] children = dir.list();
@@ -174,7 +203,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
 
     private void importLeaderboard() {
         ImportLeaderboardsTask imTask = new ImportLeaderboardsTask(StartUpActivity.this);
-        imTask.setListener((success, message) -> endStartUpScreen());
+        imTask.setListener((success, message) -> showAnalyticsRationaleIfNeeded());
         imTask.execute(new Payload());
     }
 }

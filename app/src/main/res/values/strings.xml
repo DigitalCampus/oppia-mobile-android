@@ -357,6 +357,10 @@
     <string name="permissions.bluetooth.message">The app needs some additional permissions to scan for Bluetooth devices.</string>
     <string name="error_apikey_expired">Your API key expired. Please, log in again.</string>
 
+    <string name="analytics.optin.title">Data privacy</string>
+    <string name="analytics.optin.description">To help improve &appName;, you can opt-in to sending automated bug reports and additional analytics. You can change these settings at any time in the app.</string>
+    <string name="analytics.optin.switch">Allow sending crash reports and usage info</string>
+
     <string name="open_digest.errors.invalid_param">The \"digest\" parameter is either misconfigured or missing. Please, check that the link is valid.</string>
     <string name="open_digest.errors.not_logged_in">You are not logged in. Please, login and try to open the link again.</string>
     <string name="open_digest.errors.activity_not_found">Activity not found. Are you sure you have installed the course that contains this activity?</string>
@@ -503,6 +507,7 @@
     <string name="error_register_username_lenght">Username must have at least %d characters</string>
     <string name="change_server_logout_warning">You are already logged in. If you change the server your current session will finish. Do you confirm?</string>
     <string name="accept">Accept</string>
+    <string name="btn_continue">Continue</string>
 
 
 </resources>
