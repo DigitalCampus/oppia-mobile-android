@@ -41,7 +41,6 @@ public class AboutActivity extends AppActivity {
 	
 	public static final String TAB_ACTIVE = "TAB_ACTIVE";
 	public static final int TAB_HELP = 1;
-	public static final int TAB_PRIVACY = 2;
 
 	private ViewPager viewPager;
     private TabLayout tabs;
@@ -81,11 +80,6 @@ public class AboutActivity extends AppActivity {
 		Fragment fHelp = OppiaWebViewFragment.newInstance(TAB_HELP, urlHelp);
 		fragments.add(fHelp);
         titles.add(this.getString(R.string.tab_title_help));
-		
-		String url = Storage.getLocalizedFilePath(this,lang, "privacy.html");
-		Fragment fPrivacy = OppiaWebViewFragment.newInstance(TAB_PRIVACY, url);
-		fragments.add(fPrivacy);
-        titles.add(this.getString(R.string.tab_title_privacy));
 
 		ActivityPagerAdapter adapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles);
 		viewPager.setAdapter(adapter);
