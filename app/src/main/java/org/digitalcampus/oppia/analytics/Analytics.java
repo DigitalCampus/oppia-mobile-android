@@ -34,8 +34,12 @@ public class Analytics {
         if (analytics.isEnabled()){
             analytics.startTrackingSession();
             String username = SessionManager.getUsername(ctx);
-            analytics.setUserIdentifier(username.equals("") ? "anon" : username);
+            Analytics.setUserId(username);
         }
+    }
+
+    public static void setUserId(String username){
+        analytics.setUserIdentifier(username.equals("") ? "anon" : username);
     }
 
     public static void enableTracking(Context ctx){
