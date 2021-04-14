@@ -21,8 +21,8 @@ import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.service.CoursesCheckingsWorkerManager;
-import org.digitalcampus.oppia.service.CoursesCheckingsWorker;
+import org.digitalcampus.oppia.service.CoursesChecksWorkerManager;
+import org.digitalcampus.oppia.service.CoursesChecksWorker;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -66,12 +66,12 @@ public class NoCourseDownloadedWorkerTest {
     User user;
 
     private Context context;
-    private CoursesCheckingsWorkerManager coursesCheckingsWorkerManager;
+    private CoursesChecksWorkerManager coursesChecksWorkerManager;
 
     @Before
     public void setUp() throws Exception {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        coursesCheckingsWorkerManager = new CoursesCheckingsWorkerManager(context);
+        coursesChecksWorkerManager = new CoursesChecksWorkerManager(context);
         Configuration config = new Configuration.Builder()
                 // Set log level to Log.DEBUG to
                 // make it easier to see why tests failed
@@ -91,7 +91,7 @@ public class NoCourseDownloadedWorkerTest {
 
 
         // FOR LISTENABLE WORKERS: (https://stackoverflow.com/a/56200464/1365440)
-        ListenableWorker testNoCourseDownloadedWorker = TestListenableWorkerBuilder.from(context, CoursesCheckingsWorker.class).build();
+        ListenableWorker testNoCourseDownloadedWorker = TestListenableWorkerBuilder.from(context, CoursesChecksWorker.class).build();
         ListenableWorker.Result result = testNoCourseDownloadedWorker.startWork().get();
         assertThat(result, is(ListenableWorker.Result.success()));
 
@@ -117,7 +117,7 @@ public class NoCourseDownloadedWorkerTest {
 
         givenThereAreSomeCourses(App.DOWNLOAD_COURSES_DISPLAY - 1);
 
-        coursesCheckingsWorkerManager.checkNoCoursesInstalled();
+        coursesChecksWorkerManager.checkNoCoursesInstalled();
 
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         device.openNotification();
@@ -135,7 +135,7 @@ public class NoCourseDownloadedWorkerTest {
 
         givenThereAreSomeCourses(App.DOWNLOAD_COURSES_DISPLAY - 1);
 
-        coursesCheckingsWorkerManager.checkNoCoursesInstalled();
+        coursesChecksWorkerManager.checkNoCoursesInstalled();
 
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         device.openNotification();
@@ -154,7 +154,7 @@ public class NoCourseDownloadedWorkerTest {
 
         givenThereAreSomeCourses(App.DOWNLOAD_COURSES_DISPLAY);
 
-        coursesCheckingsWorkerManager.checkNoCoursesInstalled();
+        coursesChecksWorkerManager.checkNoCoursesInstalled();
 
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         device.openNotification();

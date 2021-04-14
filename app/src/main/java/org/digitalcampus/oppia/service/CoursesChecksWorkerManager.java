@@ -37,12 +37,12 @@ import javax.inject.Inject;
 /**
  * Class isolated for unit testing purposes
  */
-public class CoursesCheckingsWorkerManager implements APIRequestFinishListener, APIRequestListener {
+public class CoursesChecksWorkerManager implements APIRequestFinishListener, APIRequestListener {
 
-    public static final String TAG = CoursesCheckingsWorkerManager.class.getSimpleName();
+    public static final String TAG = CoursesChecksWorkerManager.class.getSimpleName();
     
     private Context context;
-    private int pendingCheckings;
+    private int pendingChecks;
     private OnFinishListener onFinishListener;
     
     @Inject
@@ -54,7 +54,7 @@ public class CoursesCheckingsWorkerManager implements APIRequestFinishListener, 
     @Inject
     SharedPreferences prefs;
 
-    public CoursesCheckingsWorkerManager(Context context) {
+    public CoursesChecksWorkerManager(Context context) {
         this.context = context;
         initializeDaggerBase();
     }
@@ -76,12 +76,12 @@ public class CoursesCheckingsWorkerManager implements APIRequestFinishListener, 
         return user != null && !TextUtils.isEmpty(user.getUsername());
     }
 
-    public void startCheckings() {
+    public void startChecks() {
 
 
         if (isUserLoggedIn()) {
 
-            pendingCheckings = 2;
+            pendingChecks = 2;
 
             checkNoCoursesInstalled();
             checkCoursesUpdates();
@@ -202,11 +202,11 @@ public class CoursesCheckingsWorkerManager implements APIRequestFinishListener, 
     @Override
     public void onRequestFinish(String idRequest) {
 
-        pendingCheckings--;
+        pendingChecks--;
 
-        Log.i(TAG, "onRequestFinish: pendingCheckings: " + pendingCheckings);
+        Log.i(TAG, "onRequestFinish: pendingChecks: " + pendingChecks);
 
-        if (pendingCheckings == 0) {
+        if (pendingChecks == 0) {
             if (onFinishListener != null) {
                 onFinishListener.onFinish(null);
             }

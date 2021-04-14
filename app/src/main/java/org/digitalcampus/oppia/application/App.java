@@ -45,7 +45,7 @@ import org.digitalcampus.oppia.database.MyDatabase;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
-import org.digitalcampus.oppia.service.CoursesCheckingsWorker;
+import org.digitalcampus.oppia.service.CoursesChecksWorker;
 import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
@@ -119,7 +119,7 @@ public class App extends Application {
     // only used in case a course doesn't have any lang specified
     public static final String DEFAULT_LANG = "en";
     private static final String WORK_TRACKER_SEND = "tracker_send_work";
-    private static final String WORK_COURSES_CHECKINGS = "no_course_worker";
+    private static final String WORK_COURSES_CHECKS = "no_course_worker";
 
     private AppComponent appComponent;
     private static MyDatabase db;
@@ -210,17 +210,17 @@ public class App extends Application {
 
         if (backgroundData) {
             scheduleTrackerWork();
-            scheduleCoursesCheckingsWork();
+            scheduleCoursesChecksWork();
         } else {
             cancelTrackerWork();
-            cancelCoursesCheckingsWork();
+            cancelCoursesChecksWork();
         }
     }
 
     private void launchTrackerWorker() {
 
-        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(CoursesCheckingsWorker.class).build();
-        WorkManager.getInstance(this).enqueueUniqueWork(WORK_COURSES_CHECKINGS,
+        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(CoursesChecksWorker.class).build();
+        WorkManager.getInstance(this).enqueueUniqueWork(WORK_COURSES_CHECKS,
                 ExistingWorkPolicy.REPLACE, oneTimeWorkRequest);
 
     }
@@ -246,22 +246,22 @@ public class App extends Application {
         WorkManager.getInstance(this).cancelUniqueWork(WORK_TRACKER_SEND);
     }
 
-    private void scheduleCoursesCheckingsWork() {
+    private void scheduleCoursesChecksWork() {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
-        PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(CoursesCheckingsWorker.class, 12, TimeUnit.HOURS)
+        PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(CoursesChecksWorker.class, 12, TimeUnit.HOURS)
                 .setConstraints(constraints)
                 .setInitialDelay(5, TimeUnit.MINUTES)
                 .build();
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_COURSES_CHECKINGS,
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_COURSES_CHECKS,
                 ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
 
     }
 
-    public void cancelCoursesCheckingsWork() {
-        WorkManager.getInstance(this).cancelUniqueWork(WORK_COURSES_CHECKINGS);
+    public void cancelCoursesChecksWork() {
+        WorkManager.getInstance(this).cancelUniqueWork(WORK_COURSES_CHECKS);
     }
 
     public static SharedPreferences getPrefs(Context context) {
