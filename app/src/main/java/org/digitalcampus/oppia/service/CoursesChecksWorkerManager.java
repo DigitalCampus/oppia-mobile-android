@@ -189,8 +189,12 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
             }
 
             long mostRecentVersionTimestampLong = Double.doubleToRawLongBits(mostRecentVersionTimestamp);
-            prefs.edit().putLong(
-                    PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, mostRecentVersionTimestampLong).apply();
+            prefs.edit()
+                    .putLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, mostRecentVersionTimestampLong)
+                    .putLong(PrefsActivity.PREF_LAST_COURSES_CHECKS_SUCCESSFUL, System.currentTimeMillis())
+                    .putString(PrefsActivity.PREF_SERVER_COURSES_CACHE, response.getResultResponse())
+                    .apply();
+
 
         }
     }
