@@ -38,10 +38,18 @@ import java.util.List;
 import java.util.Locale;
 
 public class AboutActivity extends AppActivity {
-	
+
+	public static final String ABOUT_CONTENTS = "CONTENTS";
+	public static final String ABOUT_MAIN = "MAIN";
+	public static final String ABOUT_PRIVACY = "PRIVACY";
+
 	public static final String TAB_ACTIVE = "TAB_ACTIVE";
 	public static final int TAB_HELP = 1;
+	public static final int TAB_PRIVACY_POLICY = 0;
+	public static final int TAB_PRIVACY_WHAT = 1;
+	public static final int TAB_PRIVACY_WHY = 2;
 
+	private String contents = ABOUT_MAIN;
 	private ViewPager viewPager;
     private TabLayout tabs;
 	private int currentTab = 0;
@@ -59,7 +67,8 @@ public class AboutActivity extends AppActivity {
 
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
-			currentTab = bundle.getInt(AboutActivity.TAB_ACTIVE);
+			contents = bundle.getString(ABOUT_CONTENTS, ABOUT_MAIN);
+			currentTab = bundle.getInt(AboutActivity.TAB_ACTIVE, 0);
 		}
 	}
 	
@@ -71,22 +80,47 @@ public class AboutActivity extends AppActivity {
 		String lang = sharedPreferences.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		List<Fragment> fragments = new ArrayList<>();
         List<String> titles = new ArrayList<>();
-		
-		Fragment fAbout = AboutFragment.newInstance();
-		fragments.add(fAbout);
-        titles.add(this.getString(R.string.tab_title_about));
-		
-		String urlHelp = Storage.getLocalizedFilePath(this, lang, "help.html");
-		Fragment fHelp = OppiaWebViewFragment.newInstance(TAB_HELP, urlHelp);
-		fragments.add(fHelp);
-        titles.add(this.getString(R.string.tab_title_help));
+
+        if (contents.equals(ABOUT_MAIN)){
+			Fragment fAbout = AboutFragment.newInstance();
+			fragments.add(fAbout);
+			titles.add(this.getString(R.string.tab_title_about));
+
+			String urlHelp = Storage.getLocalizedFilePath(this, lang, "help.html");
+			Fragment fHelp = OppiaWebViewFragment.newInstance(TAB_HELP, urlHelp);
+			fragments.add(fHelp);
+			titles.add(this.getString(R.string.tab_title_help));
+		}
+        else if (contents.equals(ABOUT_PRIVACY)){
+			String urlPolicy = Storage.getLocalizedFilePath(this, lang, "privacy.html");
+			Fragment fPolicy = OppiaWebViewFragment.newInstance(TAB_PRIVACY_POLICY, urlPolicy);
+			fragments.add(fPolicy);
+			titles.add(this.getString(R.string.tab_title_privacy));
+
+			String urlWhat = Storage.getLocalizedFilePath(this, lang, "privacy_data_what.html");
+			Fragment fWhat = OppiaWebViewFragment.newInstance(TAB_PRIVACY_WHY, urlWhat);
+			fragments.add(fWhat);
+			titles.add(this.getString(R.string.privacy_data_what));
+
+			String urlWhy = Storage.getLocalizedFilePath(this, lang, "privacy_data_why.html");
+			Fragment fWhy = OppiaWebViewFragment.newInstance(TAB_HELP, urlWhy);
+			fragments.add(fWhy);
+			titles.add(this.getString(R.string.privacy_data_why));
+		}
+
 
 		ActivityPagerAdapter adapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles);
 		viewPager.setAdapter(adapter);
         tabs.setupWithViewPager(viewPager);
 		adapter.updateTabViews(tabs);
-		viewPager.setCurrentItem(currentTab);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+
+	}
+
+	@Override
+	public void onResume(){
+		super.onResume();
+		viewPager.setCurrentItem(currentTab);
 	}
 	
 	@Override
