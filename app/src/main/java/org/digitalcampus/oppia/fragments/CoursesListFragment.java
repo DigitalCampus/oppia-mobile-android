@@ -305,13 +305,19 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         if (result.isSuccess()){
             Media.resetMediaScan(prefs);
         }
-        if (progressDialog != null){
-            progressDialog.dismiss();
-        }
+
+        hideProgressDialog();
 
         toast(result.isSuccess() ? R.string.course_deleting_success : R.string.course_deleting_error);
         displayCourses();
         getActivity().invalidateOptionsMenu();
+    }
+
+    private void hideProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()){
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
     }
 
     /* CourseInstallerListener implementation */
@@ -340,9 +346,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     public void updateActivityComplete(EntityResult<Course> result) {
         Course course = result.getEntity();
-        if (progressDialog != null){
-            progressDialog.dismiss();
-        }
+
+        hideProgressDialog();
 
         toast(getString(result.isSuccess() ? R.string.course_updating_success :
                         R.string.course_updating_error, (course!=null) ? course.getShortname() : ""));
