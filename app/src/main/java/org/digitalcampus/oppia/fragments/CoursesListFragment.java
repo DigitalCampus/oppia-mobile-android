@@ -1,6 +1,7 @@
 package org.digitalcampus.oppia.fragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -58,7 +59,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         UpdateActivityListener, CoursesListAdapter.OnItemClickListener {
 
     private List<Course> courses;
-    private Course tempCourse;
 
     private View noCoursesView;
 
@@ -183,6 +183,32 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     @Override
     public void onItemClick(int position) {
         Course selectedCourse = courses.get(position);
+
+        boolean toUpdateOrDelete = checkToUpdateOrDeleteStatusWarning(selectedCourse);
+        if (!toUpdateOrDelete) {
+            openCourse(selectedCourse);
+        }
+    }
+
+    private boolean checkToUpdateOrDeleteStatusWarning(Course selectedCourse) {
+        if (selectedCourse.isToDelete()) {
+            showCourseToDeleteDialog(selectedCourse);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void showCourseToDeleteDialog(Course selectedCourse) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.course_removed)
+                .setMessage(R.string.course_removed_dialog_message)
+                .setPositiveButton(R.string.course_context_delete, (dialog, which) -> deleteCourse(selectedCourse))
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void openCourse(Course selectedCourse) {
         Intent i = new Intent(getActivity(), CourseIndexActivity.class);
         Bundle tb = new Bundle();
         tb.putSerializable(Course.TAG, selectedCourse);
@@ -193,66 +219,77 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     @Override
     public void onContextMenuItemSelected(final int position, final int itemId) {
         AdminSecurityManager.with(getActivity()).checkAdminPermission(itemId, () -> {
-            tempCourse = courses.get(position);
+            Course course = courses.get(position);
             if (itemId == R.id.course_context_delete) {
                 if (sharedPrefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
-                    confirmCourseDelete();
+                    confirmCourseDelete(course);
                 } else {
                     Toast.makeText(getActivity(), getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
                 }
             } else if (itemId == R.id.course_context_reset) {
-                confirmCourseReset();
+                confirmCourseReset(course);
             } else if (itemId == R.id.course_context_update_activity){
-                confirmCourseUpdateActivity();
+                confirmCourseUpdateActivity(course);
             }
         });
     }
 
-    private void confirmCourseDelete() {
+    private void confirmCourseDelete(Course course) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
         builder.setTitle(R.string.course_context_delete);
         builder.setMessage(R.string.course_context_delete_confirm);
         builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-            DeleteCourseTask task = new DeleteCourseTask(getActivity());
-            task.setOnDeleteCourseListener(CoursesListFragment.this);
-            task.execute(tempCourse);
-
-            progressDialog = new ProgressDialog(getActivity(), R.style.Oppia_AlertDialogStyle);
-            progressDialog.setMessage(getString(R.string.course_deleting));
-            progressDialog.setCancelable(false);
-            progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.show();
+            deleteCourse(course);
         });
-        builder.setNegativeButton(R.string.no, (dialog, which) -> tempCourse = null);
+        builder.setNegativeButton(R.string.no, null);
         builder.show();
     }
 
-    private void confirmCourseReset() {
+    private void deleteCourse(Course course) {
+
+        showProgressDialog(getString(R.string.course_deleting));
+
+        DeleteCourseTask task = new DeleteCourseTask(getActivity());
+        task.setOnDeleteCourseListener(CoursesListFragment.this);
+        task.execute(course);
+    }
+
+    private void confirmCourseReset(Course course) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
         builder.setTitle(R.string.course_context_reset);
         builder.setMessage(R.string.course_context_reset_confirm);
         builder.setPositiveButton(R.string.yes, (dialog, which) -> {
             DbHelper db = DbHelper.getInstance(getActivity());
-            db.resetCourse(tempCourse.getCourseId(), SessionManager.getUserId(getActivity()));
+            db.resetCourse(course.getCourseId(), SessionManager.getUserId(getActivity()));
             displayCourses();
         });
-        builder.setNegativeButton(R.string.no, (dialog, which) -> tempCourse = null);
+        builder.setNegativeButton(R.string.no, null);
         builder.show();
     }
 
-    private void confirmCourseUpdateActivity(){
+    private void confirmCourseUpdateActivity(Course course){
 
-        progressDialog = new ProgressDialog(getActivity(), R.style.Oppia_AlertDialogStyle);
-        progressDialog.setMessage(getString(R.string.course_updating));
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
+        showProgressDialog(getString(R.string.course_updating));
 
         UpdateCourseActivityTask task = new UpdateCourseActivityTask(getActivity(),
                 SessionManager.getUserId(getActivity()), apiEndpoint);
         task.setUpdateActivityListener(CoursesListFragment.this);
-        task.execute(tempCourse);
+        task.execute(course);
 
+    }
+
+    private void showProgressDialog(String message) {
+
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+
+        progressDialog = new ProgressDialog(getActivity(), R.style.Oppia_AlertDialogStyle);
+        progressDialog.setMessage(message);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
     }
 
     @Override
