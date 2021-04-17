@@ -100,6 +100,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
             viewHolder.imgSyncStatus.setVisibility(View.VISIBLE);
             viewHolder.imgSyncStatus.setImageResource(R.drawable.dialog_ic_action_delete);
         } else if (course.isToUpdate()) {
+            viewHolder.imgSyncStatus.setVisibility(View.VISIBLE);
             viewHolder.imgSyncStatus.setImageResource(R.drawable.ic_action_refresh);
         } else {
             viewHolder.imgSyncStatus.setVisibility(View.GONE);
