@@ -12,12 +12,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:drawablePadding="@dimen/padding_medium_2"
         android:gravity="center"
-        android:paddingStart="@dimen/padding_medium_2"
-        android:text="@string/analytics.optin.title"
-        android:textAppearance="@style/HeaderText" />
+        android:paddingStart="@dimen/padding_medium"
+        android:text="@string/privacy.section.data_collection"
+        android:textAppearance="@style/HeaderText"
+        app:drawableStartCompat="@drawable/ic_settings_security" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -43,14 +44,22 @@
                 android:id="@+id/analytics_checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:text="@string/analytics.optin.switch" />
 
             <TextView
                 android:id="@+id/textView13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_medium"
+                android:layout_marginBottom="@dimen/margin_medium"
                 android:text="@string/analytics.optin.description" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:textAppearance="@style/SubheaderText"
+                android:text="More information" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -60,6 +69,10 @@
                 android:showDividers="middle">
 
                 <RelativeLayout
+                    android:id="@+id/about_privacy_policy"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:focusable="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -78,8 +91,12 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/about_privacy_what"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:focusable="true">
 
                     <ImageView
                         style="@style/Widget.AppCompat.Button.Borderless"
@@ -96,8 +113,12 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/about_privacy_why"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:focusable="true">
 
                     <ImageView
                         style="@style/Widget.AppCompat.Button.Borderless"
@@ -123,12 +144,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:drawablePadding="@dimen/padding_medium_2"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:gravity="center"
-        android:paddingStart="@dimen/padding_medium_2"
-        android:text="Manage your data"
-        android:textAppearance="@style/HeaderText" />
+        android:paddingStart="@dimen/padding_medium"
+        android:text="@string/privacy.section.manage_data"
+        android:textAppearance="@style/HeaderText"
+        app:drawableStartCompat="@drawable/ic_settings_user" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

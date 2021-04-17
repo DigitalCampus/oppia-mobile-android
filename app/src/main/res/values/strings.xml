@@ -363,6 +363,9 @@
     <string name="privacy.data_why">Why is data collected?</string>
     <string name="privacy.data_what">What data is collected?</string>
 
+    <string name="privacy.section.data_collection">Data collection</string>
+    <string name="privacy.section.manage_data">Manage your data</string>
+
     <string name="privacy.download_data.info">Export a copy of the contents in your &appName; account to back it up or explore it.</string>
     <string name="privacy.download_data.label">Download data</string>
     <string name="privacy.delete_account.info">Completely remove your account and all associated data from the &appName; server.</string>

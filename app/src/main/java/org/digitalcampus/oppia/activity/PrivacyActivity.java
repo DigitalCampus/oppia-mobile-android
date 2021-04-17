@@ -60,7 +60,23 @@ public class PrivacyActivity extends AppActivity {
         super.onStart();
         initialize();
 
+        View aboutPrivacyInfo = findViewById(R.id.about_privacy_policy);
+        View aboutWhatDataInfo = findViewById(R.id.about_privacy_what);
+        View aboutWhyDataInfo = findViewById(R.id.about_privacy_why);
 
+        aboutPrivacyInfo.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_POLICY));
+        aboutWhatDataInfo.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_WHAT));
+        aboutWhyDataInfo.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_WHY));
+
+    }
+
+    private void launchAboutPage(int tab){
+        Intent i = new Intent(this, AboutActivity.class);
+        Bundle tb = new Bundle();
+        tb.putSerializable(AboutActivity.ABOUT_CONTENTS, AboutActivity.ABOUT_PRIVACY);
+        tb.putSerializable(AboutActivity.TAB_ACTIVE, tab);
+        i.putExtras(tb);
+        startActivity(i);
     }
 
 }
