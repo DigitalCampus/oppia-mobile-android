@@ -39,13 +39,14 @@ import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.task.result.EntityResult;
+import org.digitalcampus.oppia.utils.CourseUtils;
 import org.digitalcampus.oppia.utils.ui.MediaScanView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -56,7 +57,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         CourseInstallerListener,
         UpdateActivityListener, CoursesListAdapter.OnItemClickListener {
 
-    private ArrayList<Course> courses;
+    private List<Course> courses;
     private Course tempCourse;
 
     private View noCoursesView;
@@ -150,6 +151,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     private void displayCourses() {
         courses.clear();
         courses.addAll(coursesRepository.getCourses(getActivity()));
+        CourseUtils.setSyncStatus(prefs, courses, null);
 
         if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY){
             displayDownloadSection();
@@ -162,6 +164,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         mediaScanView.scanMedia(courses);
     }
+
 
     private void displayDownloadSection(){
         noCoursesView.setVisibility(View.VISIBLE);

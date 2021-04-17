@@ -168,7 +168,7 @@ public class App extends Application {
 
         OppiaNotificationUtils.initializeOreoNotificationChannels(this);
 
-        // For testing purposes todo remove this
+        // TODO oppia-577 remove
         launchTrackerWorker();
 
     }

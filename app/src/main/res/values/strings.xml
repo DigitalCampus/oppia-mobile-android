@@ -505,6 +505,22 @@
     <string name="accept">Accept</string>
     <string name="user_not_logged_in">User not logged in</string>
 
+    <string name="notification_courses_to_update_title">New course updates</string>
+
+    <plurals name="notification_courses_to_update_text">
+        <item quantity="one">There is %d course ready to update</item>
+        <item quantity="few">There are %d courses ready to update</item>
+        <item quantity="other">There are %d courses ready to update</item>
+    </plurals>
+
+    <string name="notification_courses_to_delete_title">Removed courses</string>
+
+    <plurals name="notification_courses_to_delete_text">
+        <item quantity="one">There is %d course no longer available</item>
+        <item quantity="few">There are %d courses no longer available</item>
+        <item quantity="other">There are %d courses no longer available</item>
+    </plurals>
+
 
 </resources>
 
