@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
+import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.CoursesListAdapter;
@@ -37,6 +38,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
@@ -62,7 +64,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private View noCoursesView;
 
-    private ProgressDialog progressDialog;
     private InstallerBroadcastReceiver receiver;
 
     @Inject CoursesRepository coursesRepository;
@@ -194,9 +195,27 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         if (selectedCourse.isToDelete()) {
             showCourseToDeleteDialog(selectedCourse);
             return true;
+        } else if (selectedCourse.isToUpdate()) {
+            showCourseToUpdateDialog(selectedCourse);
         }
 
         return false;
+    }
+
+    private void showCourseToUpdateDialog(Course selectedCourse) {
+
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.course_update)
+                .setMessage(R.string.course_update_dialog_message)
+                .setPositiveButton(R.string.update, (dialog, which) -> {
+                    Intent i = new Intent(getActivity(), DownloadActivity.class);
+                    Bundle tb = new Bundle();
+                    tb.putSerializable(DownloadActivity.EXTRA_COURSE, selectedCourse);
+                    i.putExtras(tb);
+                    startActivity(i);
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     private void showCourseToDeleteDialog(Course selectedCourse) {
@@ -278,20 +297,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     }
 
-    private void showProgressDialog(String message) {
-
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-            progressDialog = null;
-        }
-
-        progressDialog = new ProgressDialog(getActivity(), R.style.Oppia_AlertDialogStyle);
-        progressDialog.setMessage(message);
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
-    }
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.equalsIgnoreCase(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS) || key.equalsIgnoreCase(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS)){
@@ -313,12 +318,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         getActivity().invalidateOptionsMenu();
     }
 
-    private void hideProgressDialog() {
-        if (progressDialog != null && progressDialog.isShowing()){
-            progressDialog.dismiss();
-            progressDialog = null;
-        }
-    }
 
     /* CourseInstallerListener implementation */
     public void onInstallComplete(String fileUrl) {

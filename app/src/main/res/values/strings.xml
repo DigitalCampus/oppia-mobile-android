@@ -516,6 +516,8 @@
     <string name="notification_courses_to_delete_title">Removed courses</string>
     <string name="course_removed">Course removed</string>
     <string name="course_removed_dialog_message">This course was removed from the server and it is no longer available in the app.\nDo you want to remove now from the app?</string>
+    <string name="course_update">Course update</string>
+    <string name="course_update_dialog_message">There is an available update for this course.\nDo you want to update it now?</string>
 
     <plurals name="notification_courses_to_delete_text">
         <item quantity="one">There is %d course no longer available</item>

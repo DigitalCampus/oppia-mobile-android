@@ -41,6 +41,7 @@ import org.digitalcampus.oppia.adapter.DownloadCoursesAdapter;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
@@ -60,9 +61,9 @@ import java.util.concurrent.Callable;
 import javax.inject.Inject;
 
 public class DownloadActivity extends AppActivity implements APIRequestListener, CourseInstallerListener {
-	
-	private SharedPreferences sharedPreferences;
-	private ProgressDialog progressDialog;
+
+    public static final String EXTRA_COURSE = "extra_course";
+
 	private JSONObject json;
 	private String url;
 	private ArrayList<CourseInstallViewAdapter> courses;
@@ -77,6 +78,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     @Inject CourseInstallerServiceDelegate courseInstallerServiceDelegate;
     private DownloadCoursesAdapter coursesAdapter;
     private MultiChoiceHelper multiChoiceHelper;
+    private Course courseToUpdate;
 
     @Override
     public void onStart(){
@@ -90,19 +92,18 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         setContentView(R.layout.activity_download);
         getAppComponent().inject(this);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
-            Tag t = (Tag) bundle.getSerializable(Tag.TAG_CLASS);
-            if (t != null){
-                this.url = Paths.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
+            Tag tag = (Tag) bundle.getSerializable(Tag.TAG_CLASS);
+            if (tag != null){
+                this.url = Paths.SERVER_TAG_PATH + tag.getId() + File.separator;
                 TextView tagTitle = findViewById(R.id.category_title);
                 tagTitle.setVisibility(View.VISIBLE);
-                tagTitle.setText(t.getName());
+                tagTitle.setText(tag.getName());
             }
 
         } else {
+            courseToUpdate = (Course) bundle.getSerializable(EXTRA_COURSE);
             this.url = Paths.SERVER_COURSES_PATH;
             this.showUpdatesOnly = true;
         }
@@ -226,11 +227,8 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
 	@Override
 	public void onPause(){
-		// Kill any open dialogs
-		if (progressDialog != null){
-            progressDialog.dismiss();
-        }
 		super.onPause();
+		hideProgressDialog();
         unregisterReceiver(receiver);
 	}
 	
@@ -259,13 +257,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	}
 	
 	private void getCourseList() {
-		// show progress dialog
-		progressDialog = new ProgressDialog(this, R.style.Oppia_AlertDialogStyle);
-		progressDialog.setTitle(R.string.loading);
-		progressDialog.setMessage(getString(R.string.loading));
-		progressDialog.setCancelable(false);
-		progressDialog.show();
-
+        showProgressDialog(getString(R.string.loading));
         courseInstallRepository.getCourseList(this, url);
 	}
 
@@ -340,7 +332,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     }
 	
 	public void apiRequestComplete(Payload response) {
-		progressDialog.dismiss();
+        hideProgressDialog();
 
         Callable<Boolean> finishActivity = new Callable<Boolean>() {
             @Override
