@@ -15,7 +15,9 @@ public class MintAnalytics extends BaseAnalytics {
     @Override
     protected void startTrackingSession() {
         Mint.disableNetworkMonitoring();
-        Mint.initAndStartSession(ctx, App.MINT_API_KEY);
+        if (!com.splunk.mint.Properties.isPluginInitialized()){
+            Mint.initAndStartSession(ctx, App.MINT_API_KEY);
+        }
     }
 
     @Override

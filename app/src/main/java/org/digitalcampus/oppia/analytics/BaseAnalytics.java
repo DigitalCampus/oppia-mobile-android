@@ -20,7 +20,12 @@ public abstract class BaseAnalytics {
         this.ctx = ctx;
     }
 
-    public boolean isEnabled(){
+    public boolean isBugReportEnabled(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        return prefs.getBoolean(PrefsActivity.PREF_BUG_REPORT_ENABLED, false);
+    }
+
+    public boolean isAnalyticsEnabled(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         return prefs.getBoolean(PrefsActivity.PREF_ANALYTICS_ENABLED, false);
     }

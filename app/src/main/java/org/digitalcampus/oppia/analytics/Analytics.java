@@ -31,7 +31,7 @@ public class Analytics {
     }
 
     public static void startTrackingIfEnabled(Context ctx){
-        if (analytics.isEnabled()){
+        if (analytics.isBugReportEnabled() || analytics.isAnalyticsEnabled()){
             analytics.startTrackingSession();
             String username = SessionManager.getUsername(ctx);
             Analytics.setUserId(username);
@@ -47,13 +47,18 @@ public class Analytics {
         analytics.startTrackingSession();
     }
 
+    public static void enableBugReport(Context ctx){
+        getPrefs(ctx).edit().putBoolean(PrefsActivity.PREF_BUG_REPORT_ENABLED, true).apply();
+        analytics.startTrackingSession();
+    }
+
     public static void disableTracking(Context ctx){
         getPrefs(ctx).edit().putBoolean(PrefsActivity.PREF_ANALYTICS_ENABLED, false).apply();
         analytics.stopTrackingSession();
     }
 
     public static void logException(Exception e){
-        if (analytics.isEnabled()){
+        if (analytics.isBugReportEnabled()){
             analytics.logHandledException(e);
         }
     }

@@ -373,7 +373,8 @@
 
     <string name="analytics.optin.title">Data privacy</string>
     <string name="analytics.optin.description">To help improve &appName;, you can opt-in to sending automated bug reports and additional analytics. You can change these settings at any time in the app.</string>
-    <string name="analytics.optin.switch">Allow sending crash reports and usage info</string>
+    <string name="privacy.optin.bugreport.switch">Allow sending crash reports</string>
+    <string name="privacy.optin.analytics.switch">Allow sending usage info</string>
 
     <string name="open_digest.errors.invalid_param">The \"digest\" parameter is either misconfigured or missing. Please, check that the link is valid.</string>
     <string name="open_digest.errors.not_logged_in">You are not logged in. Please, login and try to open the link again.</string>

@@ -125,10 +125,14 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
 
         Button continueBtn = explanation.findViewById(R.id.continue_button);
         continueBtn.setOnClickListener(view -> {
-            Analytics.optOutRationaleShown(StartUpActivity.this);
+            Analytics.optOutRationaleShown(this);
             CheckBox analyticsCheck = explanation.findViewById(R.id.analytics_checkbox);
+            CheckBox bugreportCheck = explanation.findViewById(R.id.bugreport_checkbox);
             if (analyticsCheck.isChecked()){
-                Analytics.enableTracking(StartUpActivity.this);
+                Analytics.enableTracking(this);
+            }
+            if (bugreportCheck.isChecked()){
+                Analytics.enableBugReport(this);
             }
             endStartUpScreen();
         });

@@ -12,6 +12,7 @@ import android.widget.Toast;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
@@ -35,22 +36,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class PrivacyActivity extends AppActivity {
 
-    // Intent request codes
-    private Button exportBtn;
-    private Button submitBtn;
-    private View progressContainer;
-    private View actionsContainer;
-
-    private TextView unsentTrackers;
-    private TextView submittedTrackers;
-    private TextView unexportedTrackers;
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_privacy);
-        // Prevent activity from going to sleep
         getAppComponent().inject(this);
 
     }
@@ -67,6 +56,11 @@ public class PrivacyActivity extends AppActivity {
         aboutPrivacyInfo.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_POLICY));
         aboutWhatDataInfo.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_WHAT));
         aboutWhyDataInfo.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_WHY));
+
+        if (!SessionManager.isLoggedIn(this)){
+            findViewById(R.id.privacy_user_section).setVisibility(View.GONE);
+            return;
+        }
 
     }
 
