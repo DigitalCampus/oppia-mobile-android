@@ -23,6 +23,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.preference.PreferenceManager;
+
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +45,7 @@ import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
+import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
@@ -56,19 +59,24 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
 public class DownloadActivity extends AppActivity implements APIRequestListener, CourseInstallerListener {
 
+    public static final String EXTRA_TAG = "extra_tag";
     public static final String EXTRA_COURSE = "extra_course";
+    public static final String EXTRA_MODE = "extra_mode";
 
-	private JSONObject json;
+    public static final int MODE_TAG_COURSES = 0;
+    public static final int MODE_COURSE_TO_UPDATE = 1;
+
+    private JSONObject json;
 	private String url;
 	private ArrayList<CourseInstallViewAdapter> courses;
 	private ArrayList<CourseInstallViewAdapter> selected;
-	private boolean showUpdatesOnly = false;
 
 	private Button downloadButton;
 
@@ -76,9 +84,11 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
     @Inject CourseInstallRepository courseInstallRepository;
     @Inject CourseInstallerServiceDelegate courseInstallerServiceDelegate;
+    @Inject CoursesRepository coursesRepository;
     private DownloadCoursesAdapter coursesAdapter;
     private MultiChoiceHelper multiChoiceHelper;
     private Course courseToUpdate;
+    private int mode;
 
     @Override
     public void onStart(){
@@ -93,19 +103,43 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         getAppComponent().inject(this);
 
         Bundle bundle = this.getIntent().getExtras();
+        if (!bundle.containsKey(EXTRA_MODE)) {
+            throw new IllegalArgumentException("Mode parameter not found" + EXTRA_MODE);
+        }
+
+        mode = bundle.getInt(EXTRA_MODE);
+
+        switch (mode) {
+            case MODE_TAG_COURSES:
+                if (!bundle.containsKey(EXTRA_TAG)) {
+                    throw new IllegalArgumentException("Tag parameter not found");
+                }
+
+                Tag tag = (Tag) bundle.getSerializable(EXTRA_TAG);
+                if (tag != null){
+                    this.url = Paths.SERVER_TAG_PATH + tag.getId() + File.separator;
+                    TextView tagTitle = findViewById(R.id.category_title);
+                    tagTitle.setVisibility(View.VISIBLE);
+                    tagTitle.setText(tag.getName());
+                }
+                break;
+
+            case MODE_COURSE_TO_UPDATE:
+
+                if (!bundle.containsKey(EXTRA_COURSE)) {
+                    throw new IllegalArgumentException("Course parameter not found");
+                }
+
+                setTitle(R.string.course_updates);
+                findViewById(R.id.action_bar_subtitle).setVisibility(View.GONE);
+
+                courseToUpdate = (Course) bundle.getSerializable(EXTRA_COURSE);
+                this.url = Paths.SERVER_COURSES_PATH;
+                break;
+        }
         if (bundle != null) {
-            Tag tag = (Tag) bundle.getSerializable(Tag.TAG_CLASS);
-            if (tag != null){
-                this.url = Paths.SERVER_TAG_PATH + tag.getId() + File.separator;
-                TextView tagTitle = findViewById(R.id.category_title);
-                tagTitle.setVisibility(View.VISIBLE);
-                tagTitle.setText(tag.getName());
-            }
 
         } else {
-            courseToUpdate = (Course) bundle.getSerializable(EXTRA_COURSE);
-            this.url = Paths.SERVER_COURSES_PATH;
-            this.showUpdatesOnly = true;
         }
 
         downloadButton = findViewById(R.id.btn_download_courses);
@@ -285,7 +319,12 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		try {
             String storage = Storage.getStorageLocationRoot(this);
             courses.clear();
-            courseInstallRepository.refreshCourseList(this, courses, json, storage, showUpdatesOnly);
+
+            // TODO 'refreshCourseList' method should be refactorized
+            courseInstallRepository.refreshCourseList(this, courses, json, storage, mode == MODE_COURSE_TO_UPDATE);
+            if (mode == MODE_COURSE_TO_UPDATE) {
+                filterOnlyInstalledCourses();
+            }
             coursesAdapter.notifyDataSetChanged();
             findViewById(R.id.empty_state).setVisibility((courses.isEmpty()) ? View.VISIBLE : View.GONE);
 
@@ -295,6 +334,24 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
 		}
 	}
+
+    private void filterOnlyInstalledCourses() {
+        List<Course> installedCourses = coursesRepository.getCourses(this);
+        for (CourseInstallViewAdapter courseAdapter : courses) {
+            if (!isInstalled(courseAdapter, installedCourses)) {
+                courses.remove(courseAdapter);
+            }
+        }
+    }
+
+    private boolean isInstalled(CourseInstallViewAdapter courseAdapter, List<Course> installedCourses) {
+        for (Course course : installedCourses) {
+            if (TextUtils.equals(course.getShortname(), courseAdapter.getShortname())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
@@ -334,18 +391,19 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	public void apiRequestComplete(Payload response) {
         hideProgressDialog();
 
-        Callable<Boolean> finishActivity = new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                DownloadActivity.this.finish();
-                return true;
-            }
+        Callable<Boolean> finishActivity = () -> {
+            DownloadActivity.this.finish();
+            return true;
         };
 
 		if(response.isResult()){
 			try {
 				json = new JSONObject(response.getResultResponse());
 				refreshCourseList();
+
+                if (courseToUpdate != null) {
+                    findCourseAndDownload(courseToUpdate);
+                }
 
 			} catch (JSONException e) {
 				Mint.logException(e);
@@ -357,6 +415,14 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             UIUtils.showAlert(this, R.string.error, errorMsg, finishActivity);
 		}
 	}
+
+    private void findCourseAndDownload(Course courseToUpdate) {
+        for (CourseInstallViewAdapter course : courses) {
+            if (TextUtils.equals(course.getShortname(), courseToUpdate.getShortname())) {
+                downloadCourse(course);
+            }
+        }
+    }
 
     //@Override
     public void onDownloadProgress(String fileUrl, int progress) {

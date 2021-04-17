@@ -75,7 +75,8 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 			Tag selectedTag = tags.get(position);
 			Intent i = new Intent(TagSelectActivity.this, DownloadActivity.class);
 			Bundle tb = new Bundle();
-			tb.putSerializable(Tag.TAG_CLASS, selectedTag);
+			tb.putInt(DownloadActivity.EXTRA_MODE, DownloadActivity.MODE_TAG_COURSES);
+			tb.putSerializable(DownloadActivity.EXTRA_TAG, selectedTag);
 			i.putExtras(tb);
 			startActivity(i);
 		});

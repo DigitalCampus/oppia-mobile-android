@@ -156,6 +156,7 @@ public class CourseInstall {
 
         }  else {
             listener.onFail(ctx.getString(R.string.error_latest_already_installed, title) );
+            return;
         }
 
         listener.onInstallProgress(70);

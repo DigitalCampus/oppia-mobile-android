@@ -197,6 +197,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
             return true;
         } else if (selectedCourse.isToUpdate()) {
             showCourseToUpdateDialog(selectedCourse);
+            return true;
         }
 
         return false;
@@ -210,6 +211,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
                 .setPositiveButton(R.string.update, (dialog, which) -> {
                     Intent i = new Intent(getActivity(), DownloadActivity.class);
                     Bundle tb = new Bundle();
+                    tb.putInt(DownloadActivity.EXTRA_MODE, DownloadActivity.MODE_COURSE_TO_UPDATE);
                     tb.putSerializable(DownloadActivity.EXTRA_COURSE, selectedCourse);
                     i.putExtras(tb);
                     startActivity(i);
