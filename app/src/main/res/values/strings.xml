@@ -506,26 +506,27 @@
     <string name="user_not_logged_in">User not logged in</string>
 
     <string name="notification_courses_to_update_title">New course updates</string>
-
     <plurals name="notification_courses_to_update_text">
         <item quantity="one">There is %d course ready to update</item>
         <item quantity="few">There are %d courses ready to update</item>
         <item quantity="other">There are %d courses ready to update</item>
     </plurals>
 
-    <string name="notification_courses_to_delete_title">Deleted courses</string>
-    <string name="course_removed">Course removed</string>
-    <string name="course_removed_dialog_message">This course was removed from the server and it is no longer available in the app.\nDo you want to remove now from the app?</string>
-    <string name="course_update">Course update</string>
-    <string name="course_update_dialog_message">There is an available update for this course.\nDo you want to update it now?</string>
-    <string name="course_updates">Course updates</string>
 
-    <plurals name="notification_courses_to_delete_text">
-        <item quantity="one">There is %d course no longer available</item>
-        <item quantity="few">There are %d courses no longer available</item>
-        <item quantity="other">There are %d courses no longer available</item>
+    <string name="notification_new_courses_title">New courses available</string>
+    <plurals name="notification_new_courses_text">
+        <item quantity="one">There is %d new course available</item>
+        <item quantity="few">There are %d new courses available</item>
+        <item quantity="other">There are %d new courses available</item>
     </plurals>
 
+    <string name="course_deleted">Course deleted</string>
+    <string name="course_deleted_dialog_message">This course was deleted from the server and it is no longer available in the app.\nDo you want to remove now from the app?</string>
+    <string name="course_update">Course update</string>
+    <string name="course_update_dialog_message">There is an available update for this course.\nDo you want to update it now?</string>
+
+    <string name="course_updates">Course updates</string>
+    <string name="new_courses">New courses</string>
 
 </resources>
 

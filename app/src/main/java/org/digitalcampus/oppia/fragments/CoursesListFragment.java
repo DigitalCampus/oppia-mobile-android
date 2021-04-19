@@ -1,7 +1,5 @@
 package org.digitalcampus.oppia.fragments;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -38,7 +36,6 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
@@ -222,8 +219,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void showCourseToDeleteDialog(Course selectedCourse) {
         new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.course_removed)
-                .setMessage(R.string.course_removed_dialog_message)
+                .setTitle(R.string.course_deleted)
+                .setMessage(R.string.course_deleted_dialog_message)
                 .setPositiveButton(R.string.course_context_delete, (dialog, which) -> deleteCourse(selectedCourse))
                 .setNegativeButton(R.string.cancel, null)
                 .show();

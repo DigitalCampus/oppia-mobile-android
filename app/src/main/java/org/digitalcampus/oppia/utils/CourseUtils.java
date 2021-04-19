@@ -45,17 +45,16 @@ public class CourseUtils {
             }
 
             if (TextUtils.equals(course.getShortname(), courseServer.getShortname())) {
-                if (course.getVersionId() < courseServer.getVersion()) {
-                    course.setToUpdate(true);
-                }
-
+                boolean toUpdate = course.getVersionId() < courseServer.getVersion();
+                course.setToUpdate(toUpdate);
+                course.setToDelete(false);
                 return;
             }
 
-            // If this line is reached is  because this course is not in the server list yet.
-            course.setToDelete(true);
         }
 
+        // If this line is reached is  because this course is not in the server list yet.
+        course.setToDelete(true);
 
     }
 
@@ -70,9 +69,10 @@ public class CourseUtils {
                     coursesCachedStr, CoursesServerResponse.class);
 
             coursesServer = coursesServerResponse.getCourses();
+            List<CourseServer> notInstalledCourses = new ArrayList<>();
             for (CourseServer courseServer : coursesServer) {
-                if (isCourseInstalled(courseServer, coursesInstalled)) {
-                    coursesServer.remove(courseServer);
+                if (!isCourseInstalled(courseServer, coursesInstalled)) {
+                    notInstalledCourses.add(courseServer);
                 }
             }
         }
