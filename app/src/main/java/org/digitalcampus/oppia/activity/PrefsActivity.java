@@ -141,7 +141,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
     //Privacy tracking preferences
     public static final String PREF_ANALYTICS_INITIAL_PROMPT = "prefAnalyticsInitialPrompt";
-    public static final String PREF_BUG_REPORT_ENABLED = "prefAnalyticsEnabled";
+    public static final String PREF_BUG_REPORT_ENABLED = "prefBugReportEnabled";
     public static final String PREF_ANALYTICS_ENABLED = "prefAnalyticsEnabled";
 
     private ProgressDialog pDialog;

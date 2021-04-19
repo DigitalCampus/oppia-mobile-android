@@ -6,11 +6,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -35,6 +38,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class PrivacyActivity extends AppActivity {
+
+    private CheckBox analyticsCheck;
+    private CheckBox bugreportCheck;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,28 @@ public class PrivacyActivity extends AppActivity {
             findViewById(R.id.privacy_user_section).setVisibility(View.GONE);
             return;
         }
+
+        analyticsCheck = findViewById(R.id.analytics_checkbox);
+        analyticsCheck.setChecked(Analytics.isTrackingEnabled(this));
+        analyticsCheck.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (compoundButton.isChecked()){
+                Analytics.enableTracking(this);
+            }
+            else{
+                Analytics.disableTracking(this);
+            }
+        });
+
+        bugreportCheck = findViewById(R.id.bugreport_checkbox);
+        bugreportCheck.setChecked(Analytics.isBugReportEnabled(this));
+        bugreportCheck.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (compoundButton.isChecked()){
+                Analytics.enableBugReport(this);
+            }
+            else{
+                Analytics.disableBugReport(this);
+            }
+        });
 
     }
 
