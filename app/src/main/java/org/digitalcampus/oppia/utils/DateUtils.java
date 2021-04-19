@@ -14,6 +14,8 @@ public class DateUtils {
     public static final DateTimeFormatter TIME_FORMAT_HOURS_MINUTES = DateTimeFormat.forPattern("HH:mm");
     public static final DateTimeFormatter DISPLAY_DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm");
 
+    public static final DateTimeFormatter COURSE_VERSION_TIMESTAMP_FORMAT = DateTimeFormat.forPattern("yyyyMMddHHmmss");
+
     private DateUtils() {
         throw new IllegalStateException("Utility class");
     }

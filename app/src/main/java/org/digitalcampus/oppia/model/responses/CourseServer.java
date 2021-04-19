@@ -2,6 +2,8 @@ package org.digitalcampus.oppia.model.responses;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.digitalcampus.oppia.model.Course;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -95,4 +97,5 @@ public class CourseServer {
     public void setPriority(int priority) {
         this.priority = priority;
     }
+
 }

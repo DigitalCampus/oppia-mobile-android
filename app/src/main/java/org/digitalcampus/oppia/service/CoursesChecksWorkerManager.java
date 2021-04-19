@@ -163,9 +163,6 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
                 CoursesServerResponse coursesServerResponse = new Gson().fromJson(
                         response.getResultResponse(), CoursesServerResponse.class);
 
-                double mostRecentVersionTimestamp = getMostRecentVersionTimestamp(coursesServerResponse.getCourses());
-                long mostRecentVersionTimestampLong = Double.doubleToRawLongBits(mostRecentVersionTimestamp);
-
                 prefs.edit()
                         .putLong(PrefsActivity.PREF_LAST_COURSES_CHECKS_SUCCESSFUL, System.currentTimeMillis())
                         .putString(PrefsActivity.PREF_SERVER_COURSES_CACHE, response.getResultResponse())
@@ -174,6 +171,8 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
                 checkUpdatedOrDeletedCoursesAndNotify();
                 checkNewCoursesAndNotify(coursesServerResponse.getCourses());
 
+                double mostRecentVersionTimestamp = getMostRecentVersionTimestamp(coursesServerResponse.getCourses());
+                long mostRecentVersionTimestampLong = Double.doubleToRawLongBits(mostRecentVersionTimestamp);
                 prefs.edit()
                         .putLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, mostRecentVersionTimestampLong)
                         .commit();

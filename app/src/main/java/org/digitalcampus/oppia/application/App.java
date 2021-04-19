@@ -47,6 +47,7 @@ import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
 import org.digitalcampus.oppia.service.CoursesChecksWorker;
 import org.digitalcampus.oppia.service.TrackerWorker;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
@@ -250,8 +251,11 @@ public class App extends Application {
 
         if (getPrefs(this).getLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, -1) == -1) {
             // Initialize check_courses_timestamp the first time app starts to avoid notify current courses
+
+            long timestamp = Long.parseLong(DateUtils.COURSE_VERSION_TIMESTAMP_FORMAT.print(System.currentTimeMillis()));
             getPrefs(this).edit()
-                    .putLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, System.currentTimeMillis())
+                    .putLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, timestamp)
+                    .putLong(PrefsActivity.PREF_LAST_NEW_COURSE_TIMESTAMP, timestamp)
                     .commit();
         }
 

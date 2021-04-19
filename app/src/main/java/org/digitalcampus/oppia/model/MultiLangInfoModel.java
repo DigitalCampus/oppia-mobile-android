@@ -46,7 +46,7 @@ public class MultiLangInfoModel implements Serializable {
     public static final String DEFAULT_NOTITLE = "No title set";
 
     public String getTitle(String lang) {
-        String title = getInfo(lang, (ArrayList<Lang>) titles);
+        String title = getInfo(lang, titles);
         return title == null ? DEFAULT_NOTITLE : title.trim();
     }
 
@@ -59,15 +59,15 @@ public class MultiLangInfoModel implements Serializable {
     }
 
     public void setTitlesFromJSONString(String jsonStr) {
-        setInfoFromJSONString(jsonStr, (ArrayList<Lang>) this.titles, false);
+        setInfoFromJSONString(jsonStr, this.titles, false);
     }
 
     public String getTitleJSONString(){
-        return getInfoJSONString((ArrayList<Lang>) this.titles);
+        return getInfoJSONString(this.titles);
     }
 
     public String getDescription(String lang) {
-        return getInfo(lang, (ArrayList<Lang>) descriptions);
+        return getInfo(lang, descriptions);
     }
 
     public String getDescription(SharedPreferences prefs){
@@ -79,11 +79,11 @@ public class MultiLangInfoModel implements Serializable {
     }
 
     public void setDescriptionsFromJSONString(String jsonStr) {
-        setInfoFromJSONString(jsonStr, (ArrayList<Lang>) this.descriptions, false);
+        setInfoFromJSONString(jsonStr, this.descriptions, false);
     }
 
     public String getDescriptionJSONString(){
-        return getInfoJSONString((ArrayList<Lang>) this.descriptions);
+        return getInfoJSONString(this.descriptions);
     }
 
     public List<Lang> getLangs() {
@@ -94,14 +94,14 @@ public class MultiLangInfoModel implements Serializable {
     }
 
     public String getLangsJSONString(){
-        return getInfoJSONString((ArrayList<Lang>) this.langs);
+        return getInfoJSONString(this.langs);
     }
 
     public void setLangsFromJSONString(String jsonStr) {
-        setInfoFromJSONString(jsonStr, (ArrayList<Lang>) this.langs, true);
+        setInfoFromJSONString(jsonStr, this.langs, true);
     }
 
-    private String getInfo(String lang, ArrayList<Lang> values){
+    private String getInfo(String lang, List<Lang> values){
         for(Lang l: values){
             if(l.getLanguage().equals(lang)){
                 return l.getContent().trim();
@@ -114,7 +114,7 @@ public class MultiLangInfoModel implements Serializable {
         return null;
     }
 
-    private String getInfoJSONString(ArrayList<Lang> values){
+    private String getInfoJSONString(List<Lang> values){
         JSONArray array = new JSONArray();
         for(Lang l: values){
             JSONObject obj = new JSONObject();
@@ -129,7 +129,7 @@ public class MultiLangInfoModel implements Serializable {
         return array.toString();
     }
 
-    private void setInfoFromJSONString(String jsonStr, ArrayList<Lang> values, boolean isLangs){
+    private void setInfoFromJSONString(String jsonStr, List<Lang> values, boolean isLangs){
         try {
             JSONArray infoArray = new JSONArray(jsonStr);
             for(int i=0; i< infoArray.length(); i++){
