@@ -14,13 +14,13 @@ import com.google.gson.JsonSyntaxException;
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.APIRequestFinishListener;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Course;
@@ -33,7 +33,10 @@ import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.CourseUtils;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -44,9 +47,9 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
     public static final String TAG = CoursesChecksWorkerManager.class.getSimpleName();
 
+    private static final int ID_NOTIF_COURSES_NOT_INSTALLED = 0;
     private static final int ID_NOTIF_TO_UPDATE = 1;
-    private static final int ID_NOTIF_TO_DELETE = 2;
-    private static final int ID_NOTIF_NEW_COURSES = 3;
+    private static final int ID_NOTIF_NEW_COURSES = 2;
 
     private Context context;
     private int pendingChecks;
@@ -60,6 +63,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
     @Inject
     SharedPreferences prefs;
+    private List<Course> coursesInstalled;
 
     public CoursesChecksWorkerManager(Context context) {
         this.context = context;
@@ -90,6 +94,8 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
             pendingChecks = 2;
 
+            coursesInstalled = coursesRepository.getCourses(context);
+
             checkNoCoursesInstalled();
             checkCoursesUpdates();
 
@@ -102,6 +108,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
     }
 
+
     public void checkNoCoursesInstalled() {
 
         if (!isUserLoggedIn()) {
@@ -110,7 +117,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
         }
 
         List<Course> courses = coursesRepository.getCourses(context);
-        if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY){
+        if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY) {
             Intent resultIntent = new Intent(context, TagSelectActivity.class);
             PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -119,9 +126,8 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
                     .setContentTitle(context.getString(R.string.notification_course_download_title))
                     .setContentText(context.getString(R.string.notification_course_download_text))
                     .setContentIntent(resultPendingIntent);
-            int mId = 002;
 
-            OppiaNotificationUtils.sendNotification(context, mId, mBuilder.build());
+            OppiaNotificationUtils.sendNotification(context, ID_NOTIF_COURSES_NOT_INSTALLED, mBuilder.build());
         }
 
         onRequestFinish(null);
@@ -158,17 +164,20 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
                 CoursesServerResponse coursesServerResponse = new Gson().fromJson(
                         response.getResultResponse(), CoursesServerResponse.class);
 
-                double mostRecentVersionTimestamp = getMostRecentVersionTimestamp(coursesServerResponse);
+                double mostRecentVersionTimestamp = getMostRecentVersionTimestamp(coursesServerResponse.getCourses());
                 long mostRecentVersionTimestampLong = Double.doubleToRawLongBits(mostRecentVersionTimestamp);
 
                 prefs.edit()
-                        .putLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, mostRecentVersionTimestampLong)
                         .putLong(PrefsActivity.PREF_LAST_COURSES_CHECKS_SUCCESSFUL, System.currentTimeMillis())
                         .putString(PrefsActivity.PREF_SERVER_COURSES_CACHE, response.getResultResponse())
                         .commit();
 
-                groupCoursesBySyncStatusAndNotify();
+                checkUpdatedOrDeletedCoursesAndNotify();
+                checkNewCoursesAndNotify(coursesServerResponse.getCourses());
 
+                prefs.edit()
+                        .putLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, mostRecentVersionTimestampLong)
+                        .commit();
 
             } catch (JsonSyntaxException e) {
                 Mint.logException(e);
@@ -178,7 +187,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
         }
     }
 
-    private void groupCoursesBySyncStatusAndNotify() {
+    private void checkUpdatedOrDeletedCoursesAndNotify() {
 
         double lastVersionTimestampChecked = Double.longBitsToDouble(
                 prefs.getLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, 0));
@@ -186,16 +195,12 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
         // TODO oppia-577 remove
         lastVersionTimestampChecked = 0;
 
-        List<Course> courses = coursesRepository.getCourses(context);
-        CourseUtils.setSyncStatus(prefs, courses, lastVersionTimestampChecked);
+        CourseUtils.setSyncStatus(prefs, coursesInstalled, lastVersionTimestampChecked);
 
         int toUpdateCount = 0;
-        int toDeleteCount = 0;
 
-        for (Course course : courses) {
-            if (course.isToDelete()) {
-                toDeleteCount++;
-            } else if (course.isToUpdate()) {
+        for (Course course : coursesInstalled) {
+            if (course.isToUpdate()) {
                 toUpdateCount++;
             }
         }
@@ -204,11 +209,59 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
             showToUpdateNotification(toUpdateCount);
         }
 
-        if (toDeleteCount > 0) {
-            showToDeleteNotification(toDeleteCount);
+
+    }
+
+    private void checkNewCoursesAndNotify(List<CourseServer> coursesServer) {
+
+        Set<String> newCoursesNotified = prefs.getStringSet(PrefsActivity.PREF_NEW_COURSES_NOTIFIED, null);
+        if (newCoursesNotified == null) {
+
+            // First time. No need to notify courses, just save them all
+            Set<String> notInstalledCoursesShortnames = new HashSet<>();
+            for (CourseServer courseServer : coursesServer) {
+                notInstalledCoursesShortnames.add(courseServer.getShortname());
+            }
+
+            prefs.edit().putStringSet(PrefsActivity.PREF_NEW_COURSES_NOTIFIED, notInstalledCoursesShortnames).commit();
+
+        } else {
+
+            List<CourseServer> notInstalledCourses = CourseUtils.getNotInstalledCourses(prefs, coursesInstalled);
+
+            Set<String> notInstalledAndNotNotifiedCourses = new HashSet<>();
+            for (CourseServer courseServer : notInstalledCourses) {
+                if (!newCoursesNotified.contains(courseServer.getShortname())) {
+                    notInstalledAndNotNotifiedCourses.add(courseServer.getShortname());
+                }
+            }
+
+//            if (notInstalledAndNotNotifiedCourses.size() > 0) {
+//                showNewCoursesNotification(notInstalledAndNotNotifiedCourses.size());
+//            }
+
+            newCoursesNotified.addAll(notInstalledAndNotNotifiedCourses);
+            prefs.edit().putStringSet(PrefsActivity.PREF_NEW_COURSES_NOTIFIED, newCoursesNotified).commit();
         }
 
     }
+
+//    private void showNewCoursesNotification(int newCoursesCount) {
+//
+//        Intent resultIntent = new Intent(context, DownloadActivity.class);
+//        PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//        String contentText = context.getResources().getQuantityString(
+//                R.plurals.notification_courses_to_update_text, toUpdateCount, toUpdateCount);
+//
+//        NotificationCompat.Builder mBuilder = OppiaNotificationUtils.getBaseBuilder(context, true);
+//        mBuilder
+//                .setContentTitle(getString(R.string.))
+//                .setContentText(contentText)
+//                .setContentIntent(resultPendingIntent);
+//
+//        OppiaNotificationUtils.sendNotification(context, ID_NOTIF_NEW_COURSES, mBuilder.build());
+//    }
 
     private void showToUpdateNotification(int toUpdateCount) {
 
@@ -227,26 +280,9 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
         OppiaNotificationUtils.sendNotification(context, ID_NOTIF_TO_UPDATE, mBuilder.build());
     }
 
-    private void showToDeleteNotification(int toDeleteCount) {
-
-        Intent resultIntent = new Intent(context, MainActivity.class);
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        String contentText = context.getResources().getQuantityString(
-                R.plurals.notification_courses_to_delete_text, toDeleteCount, toDeleteCount);
-
-        NotificationCompat.Builder mBuilder = OppiaNotificationUtils.getBaseBuilder(context, true);
-        mBuilder
-                .setContentTitle(getString(R.string.notification_courses_to_delete_title))
-                .setContentText(contentText)
-                .setContentIntent(resultPendingIntent);
-
-        OppiaNotificationUtils.sendNotification(context, ID_NOTIF_TO_DELETE, mBuilder.build());
-    }
-
-    private double getMostRecentVersionTimestamp(CoursesServerResponse coursesServerResponse) {
+    private double getMostRecentVersionTimestamp(List<CourseServer> coursesServer) {
         double mostRecentVersionTimestamp = 0;
-        for(CourseServer course : coursesServerResponse.getCourses()) {
+        for (CourseServer course : coursesServer) {
             mostRecentVersionTimestamp = Math.max(mostRecentVersionTimestamp, course.getVersion());
         }
         return mostRecentVersionTimestamp;

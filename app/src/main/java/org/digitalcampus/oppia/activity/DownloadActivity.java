@@ -1,16 +1,16 @@
-/* 
+/*
  * This file is part of OppiaMobile - https://digital-campus.org/
- * 
+ *
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * OppiaMobile is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import androidx.preference.PreferenceManager;
 
 import android.text.TextUtils;
@@ -72,35 +73,41 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
     public static final int MODE_TAG_COURSES = 0;
     public static final int MODE_COURSE_TO_UPDATE = 1;
+    public static final int MODE_NOT_INSTALLED_COURSES = 2;
 
     private JSONObject json;
-	private String url;
-	private ArrayList<CourseInstallViewAdapter> courses;
-	private ArrayList<CourseInstallViewAdapter> selected;
+    private String url;
+    private ArrayList<CourseInstallViewAdapter> courses;
+    private ArrayList<CourseInstallViewAdapter> selected;
 
-	private Button downloadButton;
+    private Button downloadButton;
 
     private InstallerBroadcastReceiver receiver;
 
-    @Inject CourseInstallRepository courseInstallRepository;
-    @Inject CourseInstallerServiceDelegate courseInstallerServiceDelegate;
-    @Inject CoursesRepository coursesRepository;
+    @Inject
+    CourseInstallRepository courseInstallRepository;
+    @Inject
+    CourseInstallerServiceDelegate courseInstallerServiceDelegate;
+    @Inject
+    CoursesRepository coursesRepository;
     private DownloadCoursesAdapter coursesAdapter;
     private MultiChoiceHelper multiChoiceHelper;
     private Course courseToUpdate;
     private int mode;
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         initialize();
     }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download);
         getAppComponent().inject(this);
+
+        downloadButton = findViewById(R.id.btn_download_courses);
 
         Bundle bundle = this.getIntent().getExtras();
         if (!bundle.containsKey(EXTRA_MODE)) {
@@ -109,6 +116,13 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
         mode = bundle.getInt(EXTRA_MODE);
 
+        setUpRecyclerView();
+
+        setUpScreen(mode, bundle);
+    }
+
+    private void setUpScreen(int mode, Bundle bundle) {
+
         switch (mode) {
             case MODE_TAG_COURSES:
                 if (!bundle.containsKey(EXTRA_TAG)) {
@@ -116,12 +130,10 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                 }
 
                 Tag tag = (Tag) bundle.getSerializable(EXTRA_TAG);
-                if (tag != null){
-                    this.url = Paths.SERVER_TAG_PATH + tag.getId() + File.separator;
-                    TextView tagTitle = findViewById(R.id.category_title);
-                    tagTitle.setVisibility(View.VISIBLE);
-                    tagTitle.setText(tag.getName());
-                }
+                this.url = Paths.SERVER_TAG_PATH + tag.getId() + File.separator;
+                TextView tagTitle = findViewById(R.id.category_title);
+                tagTitle.setVisibility(View.VISIBLE);
+                tagTitle.setText(tag.getName());
                 break;
 
             case MODE_COURSE_TO_UPDATE:
@@ -137,12 +149,10 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                 this.url = Paths.SERVER_COURSES_PATH;
                 break;
         }
-        if (bundle != null) {
+    }
 
-        } else {
-        }
+    private void setUpRecyclerView() {
 
-        downloadButton = findViewById(R.id.btn_download_courses);
         courses = new ArrayList<>();
         selected = new ArrayList<>();
         coursesAdapter = new DownloadCoursesAdapter(this, courses);
@@ -153,7 +163,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                 Log.v(TAG, "Count: " + multiChoiceHelper.getCheckedItemCount());
                 CourseInstallViewAdapter course = courses.get(position);
                 if (checked) {
-                    if (!course.isToInstall()){
+                    if (!course.isToInstall()) {
                         multiChoiceHelper.setItemChecked(position, false, true);
                         return;
                     }
@@ -171,7 +181,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
                 onPrepareOptionsMenu(menu);
                 downloadButton.setOnClickListener(view -> {
-                    for (CourseInstallViewAdapter course : selected){
+                    for (CourseInstallViewAdapter course : selected) {
                         downloadCourse(course);
                     }
                     mode.finish();
@@ -219,10 +229,9 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             CourseInstallViewAdapter course = courses.get(position);
             // When installing, don't do anything on click
             if (course.isInstalling()) return;
-            if (course.isDownloading()){
+            if (course.isDownloading()) {
                 cancelCourseTask(course);
-            }
-            else if (course.isToInstall()){
+            } else if (course.isToInstall()) {
                 downloadCourse(course);
             }
 
@@ -236,87 +245,86 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
     }
 
-	
-	@Override
-	public void onResume(){
-		super.onResume();
-		if(json == null){
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (json == null) {
             // The JSON download task has not started or been completed yet
-			getCourseList();
-		} else if ((courses != null) && !courses.isEmpty()) {
+            getCourseList();
+        } else if ((courses != null) && !courses.isEmpty()) {
             // We already have loaded JSON and courses (coming from orientationchange)
             coursesAdapter.notifyDataSetChanged();
-        }
-        else{
+        } else {
             // The JSON is downloaded but course list is not
-	        refreshCourseList();
-		}
+            refreshCourseList();
+        }
         receiver = new InstallerBroadcastReceiver();
         receiver.setCourseInstallerListener(this);
         IntentFilter broadcastFilter = new IntentFilter(CourseInstallerService.BROADCAST_ACTION);
         broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
         registerReceiver(receiver, broadcastFilter);
 
-	}
+    }
 
-	@Override
-	public void onPause(){
-		super.onPause();
-		hideProgressDialog();
+    @Override
+    public void onPause() {
+        super.onPause();
+        hideProgressDialog();
         unregisterReceiver(receiver);
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
+    }
 
-	    try {
-			this.json = new JSONObject(savedInstanceState.getString("json"));
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        try {
+            this.json = new JSONObject(savedInstanceState.getString("json"));
             ArrayList<CourseInstallViewAdapter> savedCourses = (ArrayList<CourseInstallViewAdapter>) savedInstanceState.getSerializable("courses");
-            if (savedCourses!=null) this.courses.addAll(savedCourses);
-		} catch (Exception e) {
+            if (savedCourses != null) this.courses.addAll(savedCourses);
+        } catch (Exception e) {
             // error in the json so just get the list again
         }
-	}
+    }
 
-	@Override
-	protected void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
-            if (json != null){
-                // Only save the instance if the request has been proccessed already
-                savedInstanceState.putString("json", json.toString());
-                savedInstanceState.putSerializable("courses", courses);
-            }
-	}
-	
-	private void getCourseList() {
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        if (json != null) {
+            // Only save the instance if the request has been proccessed already
+            savedInstanceState.putString("json", json.toString());
+            savedInstanceState.putSerializable("courses", courses);
+        }
+    }
+
+    private void getCourseList() {
         showProgressDialog(getString(R.string.loading));
         courseInstallRepository.getCourseList(this, url);
-	}
+    }
 
-	private void showDownloadButton(boolean show){
+    private void showDownloadButton(boolean show) {
         downloadButton.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
-    private void downloadCourse(CourseInstallViewAdapter course){
-        if (course.isToInstall() && !course.isInProgress()){
+    private void downloadCourse(CourseInstallViewAdapter course) {
+        if (course.isToInstall() && !course.isInProgress()) {
             Intent serviceIntent = new Intent(DownloadActivity.this, CourseInstallerService.class);
             courseInstallerServiceDelegate.installCourse(DownloadActivity.this, serviceIntent, course);
             resetCourseProgress(course, true, false);
         }
     }
 
-    private void cancelCourseTask(CourseInstallViewAdapter course){
+    private void cancelCourseTask(CourseInstallViewAdapter course) {
         Intent serviceIntent = new Intent(DownloadActivity.this, CourseInstallerService.class);
         courseInstallerServiceDelegate.cancelCourseInstall(DownloadActivity.this, serviceIntent, course);
         resetCourseProgress(course, false, false);
     }
 
-	public void refreshCourseList() {
-		// process the response and display on screen in listview
-		// Create an array of courses, that will be put to our ListActivity
-		try {
+    public void refreshCourseList() {
+        // process the response and display on screen in listview
+        // Create an array of courses, that will be put to our ListActivity
+        try {
             String storage = Storage.getStorageLocationRoot(this);
             courses.clear();
 
@@ -328,12 +336,12 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             coursesAdapter.notifyDataSetChanged();
             findViewById(R.id.empty_state).setVisibility((courses.isEmpty()) ? View.VISIBLE : View.GONE);
 
-		} catch (Exception e) {
-			Mint.logException(e);
+        } catch (Exception e) {
+            Mint.logException(e);
             Log.d(TAG, "Error processing response: ", e);
-			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
-		}
-	}
+            UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
+        }
+    }
 
     private void filterOnlyInstalledCourses() {
         List<Course> installedCourses = coursesRepository.getCourses(this);
@@ -379,7 +387,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         }
     }
 
-    private void selectAllInstallableCourses(){
+    private void selectAllInstallableCourses() {
         for (int i = 0; i < coursesAdapter.getItemCount(); i++) {
             CourseInstallViewAdapter course = courses.get(i);
             if (course.isToInstall() && !multiChoiceHelper.isItemChecked(i)) {
@@ -387,8 +395,8 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             }
         }
     }
-	
-	public void apiRequestComplete(Payload response) {
+
+    public void apiRequestComplete(Payload response) {
         hideProgressDialog();
 
         Callable<Boolean> finishActivity = () -> {
@@ -396,30 +404,31 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             return true;
         };
 
-		if(response.isResult()){
-			try {
+        if (response.isResult()) {
+            try {
 
                 // TODO oppia-577 remove
-                response.setResultResponse("{\"courses\":[{\"resource_uri\":\"/api/v2/course/73/\",\"id\":73,\"version\":20160220235615,\"title\":{\"en\":\"Antenatal Care Part 2\"},\"description\":{\"en\":\"ANC HEAT Module Part 2, full content, designed for use in all countries\"},\"shortname\":\"anc2-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/73/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/76/\",\"id\":76,\"version\":20150221000028,\"title\":{\"en\":\"Communicable Diseases Part 1\"},\"description\":{\"en\":\"CD HEAT Module Part 1, full content, designed for use in all countries\"},\"shortname\":\"cd1-all\",\"priority\":0,\"is_draft\":true,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/76/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/59/\",\"id\":59,\"version\":20150218143333,\"title\":{\"en\":\"Communicable Diseases Part 2 - Ethiopia (Full)\"},\"description\":{\"en\":\"CD HEAT Module Part 2, full content, designed for use in Ethiopia\"},\"shortname\":\"cd2-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/59/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/60/\",\"id\":60,\"version\":20150218154124,\"title\":{\"en\":\"Communicable Diseases Part 3 - Ethiopia (Full)\"},\"description\":{\"en\":\"CD HEAT Module Part 3, full content, designed for use in Ethiopia\"},\"shortname\":\"cd3-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/60/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/78/\",\"id\":78,\"version\":20150221000542,\"title\":{\"en\":\"Communicable Diseases Part 3\"},\"description\":{\"en\":\"CD HEAT Module Part 3, full content, designed for use in all countries\"},\"shortname\":\"cd3-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/78/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/61/\",\"id\":61,\"version\":20150218161834,\"title\":{\"en\":\"Communicable Diseases Part 4 - Ethiopia (Full)\"},\"description\":{\"en\":\"CD HEAT Module Part 4, full content, designed for use in Ethiopia\"},\"shortname\":\"cd4-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/61/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/79/\",\"id\":79,\"version\":20190221001243,\"title\":{\"en\":\"Communicable Diseases Part 4\"},\"description\":{\"en\":\"CD HEAT Module Part 4, full content, designed for use in all countries\"},\"shortname\":\"cd4-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/79/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/57/\",\"id\":57,\"version\":20150218162046,\"title\":{\"en\":\"Family Planning - Ethiopia (Full)\"},\"description\":{\"en\":\"FP HEAT Module, full content, designed for use in Ethiopia\"},\"shortname\":\"fp-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/57/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/74/\",\"id\":74,\"version\":20150221001535,\"title\":{\"en\":\"Family Planning\"},\"description\":{\"en\":\"FP HEAT Module, full content, designed for use in all countries\"},\"shortname\":\"fp-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/74/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/65/\",\"id\":65,\"version\":20150218163637,\"title\":{\"en\":\"Health Education, Advocacy and Community Mobilisation Part 1 - Ethiopia (Full)\"},\"description\":{\"en\":\"HEACM HEAT Module Part 1, full content, designed for use in Ethiopia\"},\"shortname\":\"heacm1-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/65/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/80/\",\"id\":80,\"version\":20150221124051,\"title\":{\"en\":\"Health Education, Advocacy and Community Mobilisation Part 1\"},\"description\":{\"en\":\"HEACM HEAT Module Part 1, full content, designed for use in all countries\"},\"shortname\":\"heacm1-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/80/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/66/\",\"id\":66,\"version\":20150218163819,\"title\":{\"en\":\"Health Education, Advocacy and Community Mobilisation Part 2 - Ethiopia (Full)\"},\"description\":{\"en\":\"HEACM HEAT Module Part 2, full content, designed for use in Ethiopia\"},\"shortname\":\"heacm2-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/66/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/81/\",\"id\":81,\"version\":20150221124256,\"title\":{\"en\":\"Health Education, Advocacy and Community Mobilisation Part 2\"},\"description\":{\"en\":\"HEACM HEAT Module Part 2, full content, designed for use in all countries\"},\"shortname\":\"heacm2-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/81/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/69/\",\"id\":69,\"version\":20150218164216,\"title\":{\"en\":\"Health Management, Ethics and Research - Ethiopia (Full)\"},\"description\":{\"en\":\"HMER HEAT Module, full content, designed for use in Ethiopia\"},\"shortname\":\"hmer-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/69/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/86/\",\"id\":86,\"version\":20150221124624,\"title\":{\"en\":\"Health Management, Ethics and Research\"},\"description\":{\"en\":\"HMER HEAT Module, full content, designed for use in all countries\"},\"shortname\":\"hmer-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/86/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/62/\",\"id\":62,\"version\":20150219124016,\"title\":{\"en\":\"Hygiene and Environmental Health Part 1 - Ethiopia (Full)\"},\"description\":{\"en\":\"HEH HEAT Module Part 1, full content, designed for use in Ethiopia\"},\"shortname\":\"heh1-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/62/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/82/\",\"id\":82,\"version\":20150221124854,\"title\":{\"en\":\"Hygiene and Environmental Health Part 1\"},\"description\":{\"en\":\"HEH HEAT Module Part 1, full content, designed for use in all countries\"},\"shortname\":\"heh1-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/82/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/63/\",\"id\":63,\"version\":20150219125505,\"title\":{\"en\":\"Hygiene and Environmental Health Part 2 - Ethiopia (Full)\"},\"description\":{\"en\":\"HEH HEAT Module Part 2, full content, designed for use in Ethiopia\"},\"shortname\":\"heh2-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/63/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"author\":\"Alex Little\",\"description\":{\"en\":\"HEH HEAT Module Part 2, full content, designed for use in all countries\"},\"id\":83,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/83/\",\"shortname\":\"heh2-all\",\"title\":{\"en\":\"Hygiene and Environmental Health Part 2\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/83/download/\",\"username\":\"alex\",\"version\":20150221125250},{\"author\":\"Alex Little\",\"description\":{\"en\":\"IM HEAT Module, full content, designed for use in Ethiopia\"},\"id\":42,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/42/\",\"shortname\":\"im-et\",\"title\":{\"en\":\"Immunization - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/42/download/\",\"username\":\"alex\",\"version\":20150219125724},{\"author\":\"Alex Little\",\"description\":{\"en\":\"IM HEAT Module, full content, designed for use in all countries (may require localisation)\"},\"id\":50,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/50/\",\"shortname\":\"im-all\",\"title\":{\"en\":\"Immunization\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/50/download/\",\"username\":\"alex\",\"version\":20150221141604},{\"author\":\"Alex Little\",\"description\":{\"en\":\"IMNCI HEAT Module Part 1, full content, designed for use in Ethiopia\"},\"id\":45,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/45/\",\"shortname\":\"imnci1-et\",\"title\":{\"en\":\"Integrated Management of Newborn and Childhood Illness Part 1 - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/45/download/\",\"username\":\"alex\",\"version\":20150219125811},{\"author\":\"Alex Little\",\"description\":{\"en\":\"IMNCI HEAT Module Part 1, full content, designed for use in all countries\"},\"id\":47,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/47/\",\"shortname\":\"imnci1-all\",\"title\":{\"en\":\"Integrated Management of Newborn and Childhood Illness Part 1\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/47/download/\",\"username\":\"alex\",\"version\":20150221141640},{\"author\":\"Alex Little\",\"description\":{\"en\":\"IMNCI HEAT Module Part 2, full content, designed for use in Ethiopia\"},\"id\":44,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/44/\",\"shortname\":\"imnci2-et\",\"title\":{\"en\":\"Integrated Management of Newborn and Childhood Illness Part 2 - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/44/download/\",\"username\":\"alex\",\"version\":20150219130627},{\"author\":\"Alex Little\",\"description\":{\"en\":\"IMNCI HEAT Module Part 2, full content, designed for use in all countries\"},\"id\":49,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/49/\",\"shortname\":\"imnci2-all\",\"title\":{\"en\":\"Integrated Management of Newborn and Childhood Illness Part 2\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/49/download/\",\"username\":\"alex\",\"version\":20150221142445},{\"author\":\"Alex Little\",\"description\":{\"en\":\"LDC HEAT Module, full content, designed for use in Ethiopia\"},\"id\":38,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/38/\",\"shortname\":\"ldc-et\",\"title\":{\"en\":\"Labour and Delivery Care - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/38/download/\",\"username\":\"alex\",\"version\":20150219133612},{\"author\":\"Alex Little\",\"description\":{\"en\":\"LDC HEAT Module, full content, designed for use in all countries\"},\"id\":37,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/37/\",\"shortname\":\"ldc-all\",\"title\":{\"en\":\"Labour and Delivery Care\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/37/download/\",\"username\":\"alex\",\"version\":20150221151347},{\"author\":\"Alex Little\",\"description\":{\"en\":\"NCD HEAT Module Part 1, full content, designed for use in Ethiopia\"},\"id\":67,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/67/\",\"shortname\":\"ncd1-et\",\"title\":{\"en\":\"Non-Communicable Diseases, Emergency Care and Mental Health Part 1 - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/67/download/\",\"username\":\"alex\",\"version\":20150219134008},{\"author\":\"Alex Little\",\"description\":{\"en\":\"NCD HEAT Module Part 1, full content, designed for use in all countries\"},\"id\":84,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/84/\",\"shortname\":\"ncd1-all\",\"title\":{\"en\":\"Non-Communicable Diseases, Emergency Care and Mental Health Part 1\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/84/download/\",\"username\":\"alex\",\"version\":20150221151807},{\"author\":\"Alex Little\",\"description\":{\"en\":\"NCD HEAT Module Part 2, full content, designed for use in Ethiopia\"},\"id\":68,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/68/\",\"shortname\":\"ncd2-et\",\"title\":{\"en\":\"Non-Communicable Diseases, Emergency Care and Mental Health Part 2 - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/68/download/\",\"username\":\"alex\",\"version\":20150219134457},{\"author\":\"Alex Little\",\"description\":{\"en\":\"NCD HEAT Module Part 2, full content, designed for use in all countries\"},\"id\":85,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/85/\",\"shortname\":\"ncd2-all\",\"title\":{\"en\":\"Non-Communicable Diseases, Emergency Care and Mental Health Part 2\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/85/download/\",\"username\":\"alex\",\"version\":20150221152035},{\"author\":\"Alex Little\",\"description\":{\"en\":\"NUT HEAT Module, full content, designed for use in Ethiopia\"},\"id\":43,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/43/\",\"shortname\":\"nut-et\",\"title\":{\"en\":\"Nutrition - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/43/download/\",\"username\":\"alex\",\"version\":20150219140806},{\"author\":\"Alex Little\",\"description\":{\"en\":\"NUT HEAT Module, full content, designed for use in all countries (may require localisation)\"},\"id\":48,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/48/\",\"shortname\":\"nut-all\",\"title\":{\"en\":\"Nutrition\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/48/download/\",\"username\":\"alex\",\"version\":20150221152458},{\"author\":\"Alex Little\",\"description\":{\"en\":\"PNC HEAT Module, full content, designed for use in Ethiopia\"},\"id\":41,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/41/\",\"shortname\":\"pnc-et\",\"title\":{\"en\":\"Postnatal Care - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/41/download/\",\"username\":\"alex\",\"version\":20150219143153},{\"author\":\"Alex Little\",\"description\":{\"en\":\"PNC HEAT Module, full content, designed for use in all countries\"},\"id\":46,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/46/\",\"shortname\":\"pnc-all\",\"title\":{\"en\":\"Postnatal Care\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/46/download/\",\"username\":\"alex\",\"version\":20150221152551},{\"author\":\"Alex Little\",\"description\":{\"en\":null},\"id\":122,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/122/\",\"shortname\":\"draft-test\",\"title\":{\"en\":\"Reference course 1 - reference\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/122/download/\",\"username\":\"alex\",\"version\":20210413132552}],\"meta\":{\"limit\":1000,\"next\":null,\"offset\":0,\"previous\":null,\"total_count\":37}}");
-
+                if (mode == MODE_COURSE_TO_UPDATE) {
+                    response.setResultResponse("{\"courses\":[{\"resource_uri\":\"/api/v2/course/73/\",\"id\":73,\"version\":20160220235615,\"title\":{\"en\":\"Antenatal Care Part 2\"},\"description\":{\"en\":\"ANC HEAT Module Part 2, full content, designed for use in all countries\"},\"shortname\":\"anc2-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/73/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/76/\",\"id\":76,\"version\":20150221000028,\"title\":{\"en\":\"Communicable Diseases Part 1\"},\"description\":{\"en\":\"CD HEAT Module Part 1, full content, designed for use in all countries\"},\"shortname\":\"cd1-all\",\"priority\":0,\"is_draft\":true,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/76/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/59/\",\"id\":59,\"version\":20150218143333,\"title\":{\"en\":\"Communicable Diseases Part 2 - Ethiopia (Full)\"},\"description\":{\"en\":\"CD HEAT Module Part 2, full content, designed for use in Ethiopia\"},\"shortname\":\"cd2-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/59/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/60/\",\"id\":60,\"version\":20150218154124,\"title\":{\"en\":\"Communicable Diseases Part 3 - Ethiopia (Full)\"},\"description\":{\"en\":\"CD HEAT Module Part 3, full content, designed for use in Ethiopia\"},\"shortname\":\"cd3-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/60/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/78/\",\"id\":78,\"version\":20150221000542,\"title\":{\"en\":\"Communicable Diseases Part 3\"},\"description\":{\"en\":\"CD HEAT Module Part 3, full content, designed for use in all countries\"},\"shortname\":\"cd3-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/78/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/61/\",\"id\":61,\"version\":20150218161834,\"title\":{\"en\":\"Communicable Diseases Part 4 - Ethiopia (Full)\"},\"description\":{\"en\":\"CD HEAT Module Part 4, full content, designed for use in Ethiopia\"},\"shortname\":\"cd4-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/61/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/79/\",\"id\":79,\"version\":20190221001243,\"title\":{\"en\":\"Communicable Diseases Part 4\"},\"description\":{\"en\":\"CD HEAT Module Part 4, full content, designed for use in all countries\"},\"shortname\":\"cd4-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/79/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/57/\",\"id\":57,\"version\":20150218162046,\"title\":{\"en\":\"Family Planning - Ethiopia (Full)\"},\"description\":{\"en\":\"FP HEAT Module, full content, designed for use in Ethiopia\"},\"shortname\":\"fp-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/57/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/74/\",\"id\":74,\"version\":20150221001535,\"title\":{\"en\":\"Family Planning\"},\"description\":{\"en\":\"FP HEAT Module, full content, designed for use in all countries\"},\"shortname\":\"fp-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/74/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/65/\",\"id\":65,\"version\":20150218163637,\"title\":{\"en\":\"Health Education, Advocacy and Community Mobilisation Part 1 - Ethiopia (Full)\"},\"description\":{\"en\":\"HEACM HEAT Module Part 1, full content, designed for use in Ethiopia\"},\"shortname\":\"heacm1-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/65/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/80/\",\"id\":80,\"version\":20150221124051,\"title\":{\"en\":\"Health Education, Advocacy and Community Mobilisation Part 1\"},\"description\":{\"en\":\"HEACM HEAT Module Part 1, full content, designed for use in all countries\"},\"shortname\":\"heacm1-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/80/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/66/\",\"id\":66,\"version\":20150218163819,\"title\":{\"en\":\"Health Education, Advocacy and Community Mobilisation Part 2 - Ethiopia (Full)\"},\"description\":{\"en\":\"HEACM HEAT Module Part 2, full content, designed for use in Ethiopia\"},\"shortname\":\"heacm2-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/66/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/81/\",\"id\":81,\"version\":20150221124256,\"title\":{\"en\":\"Health Education, Advocacy and Community Mobilisation Part 2\"},\"description\":{\"en\":\"HEACM HEAT Module Part 2, full content, designed for use in all countries\"},\"shortname\":\"heacm2-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/81/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/69/\",\"id\":69,\"version\":20150218164216,\"title\":{\"en\":\"Health Management, Ethics and Research - Ethiopia (Full)\"},\"description\":{\"en\":\"HMER HEAT Module, full content, designed for use in Ethiopia\"},\"shortname\":\"hmer-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/69/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/86/\",\"id\":86,\"version\":20150221124624,\"title\":{\"en\":\"Health Management, Ethics and Research\"},\"description\":{\"en\":\"HMER HEAT Module, full content, designed for use in all countries\"},\"shortname\":\"hmer-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/86/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/62/\",\"id\":62,\"version\":20150219124016,\"title\":{\"en\":\"Hygiene and Environmental Health Part 1 - Ethiopia (Full)\"},\"description\":{\"en\":\"HEH HEAT Module Part 1, full content, designed for use in Ethiopia\"},\"shortname\":\"heh1-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/62/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/82/\",\"id\":82,\"version\":20150221124854,\"title\":{\"en\":\"Hygiene and Environmental Health Part 1\"},\"description\":{\"en\":\"HEH HEAT Module Part 1, full content, designed for use in all countries\"},\"shortname\":\"heh1-all\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/82/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"resource_uri\":\"/api/v2/course/63/\",\"id\":63,\"version\":20150219125505,\"title\":{\"en\":\"Hygiene and Environmental Health Part 2 - Ethiopia (Full)\"},\"description\":{\"en\":\"HEH HEAT Module Part 2, full content, designed for use in Ethiopia\"},\"shortname\":\"heh2-et\",\"priority\":0,\"is_draft\":false,\"url\":\"https://staging.oppia-mobile.org/api/v2/course/63/download/\",\"author\":\"Alex Little\",\"username\":\"alex\",\"organisation\":\"Digital Campus\"},{\"author\":\"Alex Little\",\"description\":{\"en\":\"HEH HEAT Module Part 2, full content, designed for use in all countries\"},\"id\":83,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/83/\",\"shortname\":\"heh2-all\",\"title\":{\"en\":\"Hygiene and Environmental Health Part 2\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/83/download/\",\"username\":\"alex\",\"version\":20150221125250},{\"author\":\"Alex Little\",\"description\":{\"en\":\"IM HEAT Module, full content, designed for use in Ethiopia\"},\"id\":42,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/42/\",\"shortname\":\"im-et\",\"title\":{\"en\":\"Immunization - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/42/download/\",\"username\":\"alex\",\"version\":20150219125724},{\"author\":\"Alex Little\",\"description\":{\"en\":\"IM HEAT Module, full content, designed for use in all countries (may require localisation)\"},\"id\":50,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/50/\",\"shortname\":\"im-all\",\"title\":{\"en\":\"Immunization\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/50/download/\",\"username\":\"alex\",\"version\":20150221141604},{\"author\":\"Alex Little\",\"description\":{\"en\":\"IMNCI HEAT Module Part 1, full content, designed for use in Ethiopia\"},\"id\":45,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/45/\",\"shortname\":\"imnci1-et\",\"title\":{\"en\":\"Integrated Management of Newborn and Childhood Illness Part 1 - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/45/download/\",\"username\":\"alex\",\"version\":20150219125811},{\"author\":\"Alex Little\",\"description\":{\"en\":\"IMNCI HEAT Module Part 1, full content, designed for use in all countries\"},\"id\":47,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/47/\",\"shortname\":\"imnci1-all\",\"title\":{\"en\":\"Integrated Management of Newborn and Childhood Illness Part 1\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/47/download/\",\"username\":\"alex\",\"version\":20150221141640},{\"author\":\"Alex Little\",\"description\":{\"en\":\"IMNCI HEAT Module Part 2, full content, designed for use in Ethiopia\"},\"id\":44,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/44/\",\"shortname\":\"imnci2-et\",\"title\":{\"en\":\"Integrated Management of Newborn and Childhood Illness Part 2 - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/44/download/\",\"username\":\"alex\",\"version\":20150219130627},{\"author\":\"Alex Little\",\"description\":{\"en\":\"IMNCI HEAT Module Part 2, full content, designed for use in all countries\"},\"id\":49,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/49/\",\"shortname\":\"imnci2-all\",\"title\":{\"en\":\"Integrated Management of Newborn and Childhood Illness Part 2\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/49/download/\",\"username\":\"alex\",\"version\":20150221142445},{\"author\":\"Alex Little\",\"description\":{\"en\":\"LDC HEAT Module, full content, designed for use in Ethiopia\"},\"id\":38,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/38/\",\"shortname\":\"ldc-et\",\"title\":{\"en\":\"Labour and Delivery Care - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/38/download/\",\"username\":\"alex\",\"version\":20150219133612},{\"author\":\"Alex Little\",\"description\":{\"en\":\"LDC HEAT Module, full content, designed for use in all countries\"},\"id\":37,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/37/\",\"shortname\":\"ldc-all\",\"title\":{\"en\":\"Labour and Delivery Care\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/37/download/\",\"username\":\"alex\",\"version\":20150221151347},{\"author\":\"Alex Little\",\"description\":{\"en\":\"NCD HEAT Module Part 1, full content, designed for use in Ethiopia\"},\"id\":67,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/67/\",\"shortname\":\"ncd1-et\",\"title\":{\"en\":\"Non-Communicable Diseases, Emergency Care and Mental Health Part 1 - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/67/download/\",\"username\":\"alex\",\"version\":20150219134008},{\"author\":\"Alex Little\",\"description\":{\"en\":\"NCD HEAT Module Part 1, full content, designed for use in all countries\"},\"id\":84,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/84/\",\"shortname\":\"ncd1-all\",\"title\":{\"en\":\"Non-Communicable Diseases, Emergency Care and Mental Health Part 1\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/84/download/\",\"username\":\"alex\",\"version\":20150221151807},{\"author\":\"Alex Little\",\"description\":{\"en\":\"NCD HEAT Module Part 2, full content, designed for use in Ethiopia\"},\"id\":68,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/68/\",\"shortname\":\"ncd2-et\",\"title\":{\"en\":\"Non-Communicable Diseases, Emergency Care and Mental Health Part 2 - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/68/download/\",\"username\":\"alex\",\"version\":20150219134457},{\"author\":\"Alex Little\",\"description\":{\"en\":\"NCD HEAT Module Part 2, full content, designed for use in all countries\"},\"id\":85,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/85/\",\"shortname\":\"ncd2-all\",\"title\":{\"en\":\"Non-Communicable Diseases, Emergency Care and Mental Health Part 2\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/85/download/\",\"username\":\"alex\",\"version\":20150221152035},{\"author\":\"Alex Little\",\"description\":{\"en\":\"NUT HEAT Module, full content, designed for use in Ethiopia\"},\"id\":43,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/43/\",\"shortname\":\"nut-et\",\"title\":{\"en\":\"Nutrition - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/43/download/\",\"username\":\"alex\",\"version\":20150219140806},{\"author\":\"Alex Little\",\"description\":{\"en\":\"NUT HEAT Module, full content, designed for use in all countries (may require localisation)\"},\"id\":48,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/48/\",\"shortname\":\"nut-all\",\"title\":{\"en\":\"Nutrition\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/48/download/\",\"username\":\"alex\",\"version\":20150221152458},{\"author\":\"Alex Little\",\"description\":{\"en\":\"PNC HEAT Module, full content, designed for use in Ethiopia\"},\"id\":41,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/41/\",\"shortname\":\"pnc-et\",\"title\":{\"en\":\"Postnatal Care - Ethiopia (Full)\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/41/download/\",\"username\":\"alex\",\"version\":20150219143153},{\"author\":\"Alex Little\",\"description\":{\"en\":\"PNC HEAT Module, full content, designed for use in all countries\"},\"id\":46,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/46/\",\"shortname\":\"pnc-all\",\"title\":{\"en\":\"Postnatal Care\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/46/download/\",\"username\":\"alex\",\"version\":20150221152551},{\"author\":\"Alex Little\",\"description\":{\"en\":null},\"id\":122,\"is_draft\":false,\"organisation\":\"Digital Campus\",\"priority\":0,\"resource_uri\":\"/api/v2/course/122/\",\"shortname\":\"draft-test\",\"title\":{\"en\":\"Reference course 1 - reference\"},\"url\":\"https://staging.oppia-mobile.org/api/v2/course/122/download/\",\"username\":\"alex\",\"version\":20210413132552}],\"meta\":{\"limit\":1000,\"next\":null,\"offset\":0,\"previous\":null,\"total_count\":37}}");
+                }
 
                 json = new JSONObject(response.getResultResponse());
-				refreshCourseList();
+                refreshCourseList();
 
                 if (courseToUpdate != null) {
                     findCourseAndDownload(courseToUpdate);
                 }
 
-			} catch (JSONException e) {
-				Mint.logException(e);
+            } catch (JSONException e) {
+                Mint.logException(e);
                 Log.d(TAG, "Error connecting to server: ", e);
-				UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
-			}
-		} else {
+                UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
+            }
+        } else {
             String errorMsg = response.getResultResponse();
             UIUtils.showAlert(this, R.string.error, errorMsg, finishActivity);
-		}
-	}
+        }
+    }
 
     private void findCourseAndDownload(Course courseToUpdate) {
         for (CourseInstallViewAdapter course : courses) {
@@ -432,7 +441,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     //@Override
     public void onDownloadProgress(String fileUrl, int progress) {
         CourseInstallViewAdapter course = findCourse(fileUrl);
-        if (course != null){
+        if (course != null) {
             course.setDownloading(true);
             course.setInstalling(false);
             course.setProgress(progress);
@@ -443,7 +452,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     //@Override
     public void onInstallProgress(String fileUrl, int progress) {
         CourseInstallViewAdapter course = findCourse(fileUrl);
-        if (course != null){
+        if (course != null) {
             course.setDownloading(false);
             course.setInstalling(true);
             course.setProgress(progress);
@@ -454,7 +463,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     //@Override
     public void onInstallFailed(String fileUrl, String message) {
         CourseInstallViewAdapter course = findCourse(fileUrl);
-        if (course != null){
+        if (course != null) {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             resetCourseProgress(course, false, false);
         }
@@ -463,7 +472,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     //@Override
     public void onInstallComplete(String fileUrl) {
         CourseInstallViewAdapter course = findCourse(fileUrl);
-        if (course != null){
+        if (course != null) {
             Toast.makeText(this, this.getString(R.string.install_course_complete, course.getShortname()), Toast.LENGTH_LONG).show();
             course.setInstalled(true);
             course.setToUpdate(false);
@@ -471,10 +480,10 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         }
     }
 
-    private CourseInstallViewAdapter findCourse(String fileUrl){
-        if (!courses.isEmpty()){
-            for (CourseInstallViewAdapter course : courses){
-                if (course.getDownloadUrl().equals(fileUrl)){
+    private CourseInstallViewAdapter findCourse(String fileUrl) {
+        if (!courses.isEmpty()) {
+            for (CourseInstallViewAdapter course : courses) {
+                if (course.getDownloadUrl().equals(fileUrl)) {
                     return course;
                 }
             }
@@ -483,7 +492,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     }
 
     protected void resetCourseProgress(CourseInstallViewAdapter courseSelected,
-                                       boolean downloading, boolean installing ){
+                                       boolean downloading, boolean installing) {
 
         courseSelected.setDownloading(downloading);
         courseSelected.setInstalling(installing);

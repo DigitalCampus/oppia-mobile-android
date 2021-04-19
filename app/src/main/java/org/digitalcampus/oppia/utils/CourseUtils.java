@@ -10,6 +10,8 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.responses.CourseServer;
 import org.digitalcampus.oppia.model.responses.CoursesServerResponse;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CourseUtils {
@@ -43,7 +45,6 @@ public class CourseUtils {
             }
 
             if (TextUtils.equals(course.getShortname(), courseServer.getShortname())) {
-                course.setToDelete(courseServer.isDraft());
                 if (course.getVersionId() < courseServer.getVersion()) {
                     course.setToUpdate(true);
                 }
@@ -56,5 +57,35 @@ public class CourseUtils {
         }
 
 
+    }
+
+    public static List<CourseServer> getNotInstalledCourses(SharedPreferences prefs, List<Course> coursesInstalled) {
+
+        List<CourseServer> coursesServer = null;
+
+        String coursesCachedStr = prefs.getString(PrefsActivity.PREF_SERVER_COURSES_CACHE, null);
+
+        if (coursesCachedStr != null) {
+            CoursesServerResponse coursesServerResponse = new Gson().fromJson(
+                    coursesCachedStr, CoursesServerResponse.class);
+
+            coursesServer = coursesServerResponse.getCourses();
+            for (CourseServer courseServer : coursesServer) {
+                if (isCourseInstalled(courseServer, coursesInstalled)) {
+                    coursesServer.remove(courseServer);
+                }
+            }
+        }
+
+        return coursesServer;
+    }
+
+    private static boolean isCourseInstalled(CourseServer courseServer, List<Course> coursesInstalled) {
+        for (Course course : coursesInstalled) {
+            if (TextUtils.equals(course.getShortname(), courseServer.getShortname())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

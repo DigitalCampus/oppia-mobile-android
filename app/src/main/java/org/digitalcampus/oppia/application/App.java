@@ -247,6 +247,15 @@ public class App extends Application {
     }
 
     private void scheduleCoursesChecksWork() {
+
+        if (getPrefs(this).getLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, -1) == -1) {
+            // Initialize check_courses_timestamp the first time app starts to avoid notify current courses
+            getPrefs(this).edit()
+                    .putLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, System.currentTimeMillis())
+                    .commit();
+        }
+
+
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
