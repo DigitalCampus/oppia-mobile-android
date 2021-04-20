@@ -1,5 +1,7 @@
 package org.digitalcampus.oppia.activity;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,6 +22,8 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.model.ActivityLogRepository;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.task.ExportActivityTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.digitalcampus.oppia.utils.UIUtils;
@@ -32,7 +36,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,6 +48,7 @@ public class PrivacyActivity extends AppActivity {
 
     private CheckBox analyticsCheck;
     private CheckBox bugreportCheck;
+    private AlertDialog aDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +98,8 @@ public class PrivacyActivity extends AppActivity {
             }
         });
 
+        Button deleteBtn = findViewById(R.id.btn_delete_account);
+        deleteBtn.setOnClickListener(v -> showDeleteAccountWarning());
     }
 
     private void launchAboutPage(int tab){
@@ -101,4 +111,30 @@ public class PrivacyActivity extends AppActivity {
         startActivity(i);
     }
 
+    private void showDeleteAccountWarning(){
+        aDialog = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle).create();
+        aDialog.setTitle(R.string.privacy_delete_account_label);
+        aDialog.setMessage(this.getString(R.string.privace_delete_account_explanation));
+
+        aDialog.setButton(DialogInterface.BUTTON_POSITIVE, this.getString(R.string.open),
+                (dialog, which) -> {
+
+                });
+        aDialog.setButton(DialogInterface.BUTTON_NEGATIVE, this.getString(R.string.cancel), null, null);
+        aDialog.show();
+    }
+
+
+    public class DeleteAccountDialog extends DialogFragment {
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+            return new AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.privacy_delete_account_label)
+                    .setMessage(getString(R.string.privacy_delete_account_label))
+                    .setNegativeButton(getString(R.string.cancel), (dialog, which) -> {} )
+                    .create();
+        }
+
+    }
 }

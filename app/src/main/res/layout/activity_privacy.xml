@@ -242,7 +242,7 @@
                     android:text="@string/privacy.delete_account.label"
                     android:theme="@style/PrimaryButton"
                     android:layout_marginTop="@dimen/margin_medium"
-                    android:backgroundTint="@color/red"></Button>
+                    android:backgroundTint="@color/red" />
             </RelativeLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
