@@ -45,7 +45,6 @@ import javax.inject.Inject;
 
 public class TagSelectActivity extends AppActivity implements APIRequestListener {
 
-	private ProgressDialog pDialog;
 	private JSONObject json;
     private ArrayList<Tag> tags;
 
@@ -75,7 +74,8 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 			Tag selectedTag = tags.get(position);
 			Intent i = new Intent(TagSelectActivity.this, DownloadActivity.class);
 			Bundle tb = new Bundle();
-			tb.putSerializable(Tag.TAG_CLASS, selectedTag);
+			tb.putInt(DownloadActivity.EXTRA_MODE, DownloadActivity.MODE_TAG_COURSES);
+			tb.putSerializable(DownloadActivity.EXTRA_TAG, selectedTag);
 			i.putExtras(tb);
 			startActivity(i);
 		});
@@ -101,10 +101,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 
 	@Override
 	public void onPause(){
-		// kill any open dialogs
-		if (pDialog != null){
-			pDialog.dismiss();
-		}
+		hideProgressDialog();
 		super.onPause();
 	}
 	
@@ -136,12 +133,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	}
 	
 	private void getTagList() {
-		// show progress dialog
-		pDialog = new ProgressDialog(this, R.style.Oppia_AlertDialogStyle);
-		pDialog.setTitle(R.string.loading);
-		pDialog.setMessage(getString(R.string.loading));
-		pDialog.setCancelable(true);
-		pDialog.show();
+		showProgressDialog(getString(R.string.loading));
 
 		tagRepository.getTagList(this);
 	}
@@ -162,9 +154,8 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	}
 	
 	public void apiRequestComplete(Payload response) {
-		// close dialog and process results
-		pDialog.dismiss();
-
+		hideProgressDialog();
+		
         Callable<Boolean> finishActivity = () -> {
 			TagSelectActivity.this.finish();
 			return true;
