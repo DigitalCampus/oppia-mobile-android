@@ -169,7 +169,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
                         .commit();
 
                 checkUpdatedOrDeletedCoursesAndNotify();
-                checkNewCoursesAndNotify(coursesServerResponse.getCourses());
+//                checkNewCoursesAndNotify(coursesServerResponse.getCourses());
 
                 double mostRecentVersionTimestamp = getMostRecentVersionTimestamp(coursesServerResponse.getCourses());
                 long mostRecentVersionTimestampLong = Double.doubleToRawLongBits(mostRecentVersionTimestamp);
