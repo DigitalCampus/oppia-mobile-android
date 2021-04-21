@@ -38,8 +38,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.InvalidQuizException;
 import org.digitalcampus.mobile.quiz.Quiz;
@@ -52,6 +50,7 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAttemptRepository;
@@ -236,7 +235,7 @@ public abstract class AnswerWidget extends BaseWidget {
             q = this.quiz.getCurrentQuestion();
         } catch (InvalidQuizException e) {
             Toast.makeText(super.getActivity(), super.getActivity().getString(R.string.error_quiz_no_questions), Toast.LENGTH_LONG).show();
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
             return;
         }
@@ -370,7 +369,7 @@ public abstract class AnswerWidget extends BaseWidget {
                         nextStep();
                     }
                 } catch (InvalidQuizException e) {
-                    Mint.logException(e);
+                    Analytics.logException(e);
                     Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
                 }
             } else {
@@ -413,7 +412,7 @@ public abstract class AnswerWidget extends BaseWidget {
                 progress.setText("");
             }
         } catch (InvalidQuizException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
         }
     }
@@ -429,7 +428,7 @@ public abstract class AnswerWidget extends BaseWidget {
                 return true;
             }
         } catch (InvalidQuizException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
         }
         return false;
@@ -446,7 +445,7 @@ public abstract class AnswerWidget extends BaseWidget {
                 builder.setIcon(R.drawable.quiz_cross);
             }
         } catch (InvalidQuizException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
         }
         builder.setPositiveButton(R.string.ok, (arg0, arg1) -> nextStep());
@@ -454,7 +453,7 @@ public abstract class AnswerWidget extends BaseWidget {
         try {
             quiz.getCurrentQuestion().setFeedbackDisplayed(true);
         } catch (InvalidQuizException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
         }
     }
@@ -575,7 +574,7 @@ public abstract class AnswerWidget extends BaseWidget {
         try {
             toRead = quiz.getCurrentQuestion().getTitle(prefLang);
         } catch (InvalidQuizException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
         }
         return toRead;

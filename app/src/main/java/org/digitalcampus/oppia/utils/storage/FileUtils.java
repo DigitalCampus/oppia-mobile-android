@@ -21,8 +21,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import com.splunk.mint.Mint;
-
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 
 import java.io.BufferedInputStream;
@@ -112,7 +111,7 @@ public class FileUtils {
             }
 
         } catch (Exception e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, "Exception:", e);
             return false;
         }
@@ -152,7 +151,7 @@ public class FileUtils {
                 }
             }
         } catch (Exception e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, "Exception:", e);
             return false;
         }
@@ -325,7 +324,7 @@ public class FileUtils {
         try {
             org.apache.commons.io.FileUtils.moveFileToDirectory(file, mediaDir, true);
         } catch (IOException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, "Moving file failed", e);
             if (deleteOnError) {
                 FileUtils.deleteFile(file);

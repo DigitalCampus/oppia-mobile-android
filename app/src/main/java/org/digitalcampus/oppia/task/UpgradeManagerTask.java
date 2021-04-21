@@ -22,18 +22,13 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Environment;
-import androidx.preference.PreferenceManager;
-
 import android.text.TextUtils;
 import android.util.Log;
-
-import androidx.core.content.ContextCompat;
-
-import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DBMigration;
@@ -61,6 +56,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.preference.PreferenceManager;
 
 public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
 
@@ -209,7 +206,7 @@ public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
 
 						ctxr = new CourseTrackerXMLReader(new File(courseTrackerXMLPath));
 					} catch (InvalidXMLException e) {
-						Mint.logException(e);
+						Analytics.logException(e);
 						Log.d(TAG, "InvalidXMLException:", e);
 						break;
 					}
@@ -545,7 +542,7 @@ public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
 
 			} catch (InvalidXMLException ixmle) {
 				Log.d(TAG,"Invalid course XML", ixmle);
-				Mint.logException(ixmle);
+				Analytics.logException(ixmle);
 			}
 		}
 

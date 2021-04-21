@@ -20,9 +20,8 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.listener.SubmitEntityListener;
@@ -86,7 +85,7 @@ public class ResetTask extends APIRequestTask<User, Object, EntityResult<User>> 
 			result.setSuccess(false);
 			result.setResultMessage(ctx.getString(R.string.error_connection));
 		} catch (JSONException e) {
-			Mint.logException(e);
+			Analytics.logException(e);
 			Log.d(TAG, "JSONException:", e);
 			result.setSuccess(false);
 			result.setResultMessage(ctx.getString(R.string.error_processing_response));
