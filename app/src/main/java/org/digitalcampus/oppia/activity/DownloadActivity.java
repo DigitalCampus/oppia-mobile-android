@@ -464,9 +464,9 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             try {
 
                 // TODO oppia-577 remove
-                if (mode != MODE_TAG_COURSES) {
-                    response.setResultResponse(MOCK_COURSES_RESPONSE);
-                }
+//                if (mode != MODE_TAG_COURSES) {
+//                    response.setResultResponse(MOCK_COURSES_RESPONSE);
+//                }
 
                 json = new JSONObject(response.getResultResponse());
                 refreshCourseList();

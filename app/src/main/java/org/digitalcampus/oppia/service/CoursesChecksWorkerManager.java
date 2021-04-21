@@ -157,7 +157,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
             try {
 
                 // TODO oppia-577 remove
-                response.setResultResponse(DownloadActivity.MOCK_COURSES_RESPONSE);
+//                response.setResultResponse(DownloadActivity.MOCK_COURSES_RESPONSE);
 
 
                 CoursesServerResponse coursesServerResponse = new Gson().fromJson(
@@ -192,7 +192,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
                 prefs.getLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, 0));
 
         // TODO oppia-577 remove
-        lastVersionTimestampChecked = 0;
+//        lastVersionTimestampChecked = 0;
 
         CourseUtils.setSyncStatus(prefs, coursesInstalled, lastVersionTimestampChecked);
 
