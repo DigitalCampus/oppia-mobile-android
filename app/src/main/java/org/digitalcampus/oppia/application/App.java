@@ -170,7 +170,7 @@ public class App extends Application {
         OppiaNotificationUtils.initializeOreoNotificationChannels(this);
 
         // TODO oppia-577 remove
-//        launchTrackerWorker();
+        launchTrackerWorker();
 
     }
 

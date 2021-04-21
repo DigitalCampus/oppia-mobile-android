@@ -527,6 +527,8 @@
 
     <string name="course_updates">Course updates</string>
     <string name="new_courses">New courses</string>
+    <string name="back">Back</string>
+    <string name="continue_str">Continue</string>
 
 </resources>
 

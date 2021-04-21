@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -213,7 +214,10 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
                     i.putExtras(tb);
                     startActivity(i);
                 })
-                .setNegativeButton(R.string.cancel, null)
+                .setNeutralButton(R.string.continue_str, (dialog, which) -> {
+                    openCourse(selectedCourse);
+                })
+                .setNegativeButton(R.string.back, null)
                 .show();
     }
 
