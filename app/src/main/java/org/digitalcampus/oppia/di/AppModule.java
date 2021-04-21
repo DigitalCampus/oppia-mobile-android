@@ -67,7 +67,6 @@ public class AppModule {
         try {
             return DbHelper.getInstance(app).getUser(SessionManager.getUsername(app));
         } catch (UserNotFoundException e) {
-            Analytics.logException(e);
             Log.d(TAG, "User not found: ", e);
         }
         return new User();
