@@ -29,10 +29,9 @@ import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -1194,7 +1193,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     qa.setSectionTitle(parsed.getSection(sectionOrderId).getTitle(prefLang));
                 } catch (InvalidXMLException ixmle) {
                     Log.d(TAG, "Invalid course xml file", ixmle);
-                    Mint.logException(ixmle);
+                    Analytics.logException(ixmle);
                 }
             } else {
                 qa.setSectionTitle(parsed.getSection(sectionOrderId).getTitle(prefLang));
@@ -1674,7 +1673,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 }
                 content = json.toString();
             } catch (JSONException jsone) {
-                Mint.logException(jsone);
+                Analytics.logException(jsone);
                 Log.d(TAG, "error creating unsent trackers", jsone);
             }
 
@@ -1719,7 +1718,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 }
                 content = json.toString();
             } catch (JSONException jsone) {
-                Mint.logException(jsone);
+                Analytics.logException(jsone);
                 Log.d(TAG, "error creating unexported trackers", jsone);
             }
 
@@ -2100,7 +2099,7 @@ public class DbHelper extends SQLiteOpenHelper {
                         results.add(result);
                     } catch (InvalidXMLException ixmle) {
                         Log.d(TAG, "Invalid course xml file", ixmle);
-                        Mint.logException(ixmle);
+                        Analytics.logException(ixmle);
                     }
                 } else {
                     result.setSection(parsed.getSection(sectionOrderId));

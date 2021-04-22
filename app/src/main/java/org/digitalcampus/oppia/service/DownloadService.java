@@ -24,9 +24,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -244,10 +243,10 @@ public class DownloadService extends FileIntentService {
             }
 
         } catch (MalformedURLException|NoSuchAlgorithmException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             logAndNotifyError(fileUrl, e);
         } catch (IOException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             this.deleteFile(downloadedFile);
             logAndNotifyError(fileUrl, e);
         } finally {

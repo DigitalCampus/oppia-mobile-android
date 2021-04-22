@@ -22,7 +22,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,20 +30,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.adapter.DownloadCoursesAdapter;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.Tag;
-import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
+import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.MultiChoiceHelper;
@@ -58,6 +54,9 @@ import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
+
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class DownloadActivity extends AppActivity implements APIRequestListener, CourseInstallerListener {
 	
@@ -298,7 +297,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             findViewById(R.id.empty_state).setVisibility((courses.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		} catch (Exception e) {
-			Mint.logException(e);
+			Analytics.logException(e);
             Log.d(TAG, "Error processing response: ", e);
 			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
 		}
@@ -356,7 +355,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 				refreshCourseList();
 
 			} catch (JSONException e) {
-				Mint.logException(e);
+				Analytics.logException(e);
                 Log.d(TAG, "Error connecting to server: ", e);
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
 			}
