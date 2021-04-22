@@ -102,7 +102,7 @@ public class AboutActivity extends AppActivity {
 			fragments.add(fWhat);
 			titles.add(this.getString(R.string.privacy_data_what));
 
-			String urlWhy = Storage.getLocalizedFilePath(this, lang, "privacy_data_why.html");
+			String urlWhy = Storage.getLocalizedFilePath(this, lang, "privacy_data_how.html");
 			Fragment fWhy = OppiaWebViewFragment.newInstance(TAB_HELP, urlWhy);
 			fragments.add(fWhy);
 			titles.add(this.getString(R.string.privacy_data_why));
