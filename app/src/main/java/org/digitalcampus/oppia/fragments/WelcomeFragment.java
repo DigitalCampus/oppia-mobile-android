@@ -17,13 +17,16 @@
 
 package org.digitalcampus.oppia.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrivacyActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 
 public class WelcomeFragment extends AppFragment {
@@ -34,6 +37,7 @@ public class WelcomeFragment extends AppFragment {
 
 	private Button loginButton;
     private Button registerButton;
+    private TextView privacyLink;
 
 	public WelcomeFragment() {
         // do nothing
@@ -44,6 +48,7 @@ public class WelcomeFragment extends AppFragment {
 		View v = inflater.inflate(R.layout.fragment_welcome, container, false);
         loginButton = v.findViewById(R.id.welcome_login);
         registerButton = v.findViewById(R.id.welcome_register);
+		privacyLink = v.findViewById(R.id.welcome_privacy_info);
 
 		return v;
 	}
@@ -61,5 +66,10 @@ public class WelcomeFragment extends AppFragment {
             WelcomeActivity wa = (WelcomeActivity) WelcomeFragment.super.getActivity();
             wa.switchTab(WelcomeActivity.TAB_REGISTER);
         });
+
+		privacyLink.setOnClickListener(v -> {
+			Intent iA = new Intent(WelcomeFragment.super.getActivity(), PrivacyActivity.class);
+			startActivity(iA);
+		});
 	}
 }

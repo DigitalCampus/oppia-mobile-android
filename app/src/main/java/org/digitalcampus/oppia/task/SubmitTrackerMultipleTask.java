@@ -21,15 +21,14 @@ import android.content.Context;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.model.TrackerLog;
@@ -47,6 +46,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -151,7 +151,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Void, Integer, Ent
             }
 
         } catch (IOException | UserNotFoundException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             result.setSuccess(false);
         }
 
@@ -208,15 +208,18 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Void, Integer, Ent
                 }
             }
         } catch (UnsupportedEncodingException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
+            return false;
+        } catch (ConnectException e) {
+            result.setResultMessage(ctx.getString(R.string.error_connection_timeout));
             return false;
         } catch (IOException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             result.setResultMessage(ctx.getString(R.string.error_connection));
             return false;
         } catch (JSONException e) {
             Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
-            Mint.logException(e);
+            Analytics.logException(e);
             return false;
         }
     }

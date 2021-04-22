@@ -18,15 +18,12 @@
 package org.digitalcampus.oppia.task;
 
 import android.content.Context;
-import android.content.Entity;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.UpdateActivityListener;
@@ -98,28 +95,28 @@ public class UpdateCourseActivityTask extends APIRequestTask<Course, DownloadPro
                     result.setSuccess(true);
 
                 } catch (InvalidXMLException e) {
-                    Mint.logException(e);
+                    Analytics.logException(e);
                     Log.d(TAG, "InvalidXMLException:", e);
                 }
             }
 
         } catch(javax.net.ssl.SSLHandshakeException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, "InvalidXMLException:", e);
             result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_connection_ssl));
 		} catch (SocketTimeoutException cpe) {
-			Mint.logException(cpe);
+			Analytics.logException(cpe);
             Log.d(TAG, "SocketTimeoutException:", cpe);
 			result.setSuccess(false);
 			result.setResultMessage(ctx.getString(R.string.error_connection));
 		} catch (IOException ioe) {
-			Mint.logException(ioe);
+			Analytics.logException(ioe);
             Log.d(TAG, "IOException:", ioe);
 			result.setSuccess(false);
 			result.setResultMessage(ctx.getString(R.string.error_connection));
 		} catch (UserNotFoundException unfe) {
-            Mint.logException(unfe);
+            Analytics.logException(unfe);
             Log.d(TAG, "UserNotFoundException:", unfe);
 			result.setSuccess(false);
 			result.setResultMessage(ctx.getString(R.string.error_connection));

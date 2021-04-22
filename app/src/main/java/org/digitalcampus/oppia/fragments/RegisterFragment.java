@@ -28,10 +28,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.badoualy.stepperindicator.StepperIndicator;
+import com.hbb20.CountryCodePicker;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -74,6 +76,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 	private ValidableTextInputLayout jobTitleField;
 	private ValidableTextInputLayout organisationField;
 	private ValidableTextInputLayout phoneNoField;
+	private CountryCodePicker phoneNoFieldPicker;
 	private HashMap<String, ValidableField> fields = new HashMap<>();
 
 	private LinearLayout customFieldsContainer;
@@ -142,14 +145,22 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 			return true;
 		});
 
+		phoneNoFieldPicker = (CountryCodePicker) layout.findViewById(R.id.ccp);
+		EditText phoneEditText = layout.findViewById(R.id.register_form_phoneno_edittext);
+		phoneNoFieldPicker.registerCarrierNumberEditText(phoneEditText);
+		View phoneInput = phoneNoField.getChildAt(0);
+		phoneNoField.removeView(phoneInput);
+		phoneInput.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+		((LinearLayout)layout.findViewById(R.id.field_phoneno_container)).addView(phoneInput);
 		phoneNoField.setCustomValidator(field -> {
 			String phoneNo = field.getCleanedValue();
-			if ((phoneNo.length() > 0) && (phoneNo.length() < App.PHONENO_MIN_LENGTH)) {
+			if ((phoneNo.length() > 0) && !phoneNoFieldPicker.isValidFullNumber()){
 				phoneNoField.setErrorEnabled(true);
 				phoneNoField.setError(getString(R.string.error_register_no_phoneno));
 				phoneNoField.requestFocus();
 				return false;
 			}
+
 			return true;
 		});
 
@@ -255,16 +266,16 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		}
 
 		if (valid){
-			User u = new User();
-			u.setUsername(usernameField.getCleanedValue());
-			u.setPassword(passwordField.getCleanedValue());
-			u.setPasswordAgain(passwordAgainField.getCleanedValue());
-			u.setFirstname(firstnameField.getCleanedValue());
-			u.setLastname(lastnameField.getCleanedValue());
-			u.setEmail(emailField.getCleanedValue());
-			u.setJobTitle(jobTitleField.getCleanedValue());
-			u.setOrganisation(organisationField.getCleanedValue());
-			u.setPhoneNo(phoneNoField.getCleanedValue());
+            User u = new User();
+            u.setUsername(usernameField.getCleanedValue());
+            u.setPassword(passwordField.getCleanedValue());
+            u.setPasswordAgain(passwordAgainField.getCleanedValue());
+            u.setFirstname(firstnameField.getCleanedValue());
+            u.setLastname(lastnameField.getCleanedValue());
+            u.setEmail(emailField.getCleanedValue());
+            u.setJobTitle(jobTitleField.getCleanedValue());
+            u.setOrganisation(organisationField.getCleanedValue());
+            u.setPhoneNo(phoneNoFieldPicker.getFormattedFullNumber());
 			u.setUserCustomFields(fieldsManager.getCustomFieldValues());
 			executeRegisterTask(u);
 		}

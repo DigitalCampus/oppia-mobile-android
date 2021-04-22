@@ -23,12 +23,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.BadgesAdapter;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.listener.APIRequestListener;
@@ -42,6 +39,8 @@ import org.json.JSONObject;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class BadgesFragment extends AppFragment implements APIRequestListener {
 
@@ -112,7 +111,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 
             adapterBadges.notifyDataSetChanged();
 		} catch (Exception e) {
-			Mint.logException(e);
+			Analytics.logException(e);
 			Log.d(TAG, "Error refreshing badges list: ", e);
 		}
 
@@ -131,7 +130,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 				return;
 
 			} catch (JSONException e) {
-				Mint.logException(e);
+				Analytics.logException(e);
 				UIUtils.showAlert(super.getActivity(), R.string.loading, R.string.error_connection);
 				Log.d(TAG, "Error connecting to server: ", e);
 			}

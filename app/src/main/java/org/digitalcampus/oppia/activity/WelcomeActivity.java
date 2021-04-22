@@ -111,7 +111,11 @@ public class WelcomeActivity extends AppActivity {
 			Intent iA = new Intent(this, AboutActivity.class);
 			startActivity(iA);
 			return true;
-		} else {
+		} else if (itemId == R.id.menu_privacy) {
+			Intent iA = new Intent(this, PrivacyActivity.class);
+			startActivity(iA);
+			return true;
+		}else {
 			return super.onOptionsItemSelected(item);
 		}
 	}

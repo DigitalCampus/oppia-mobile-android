@@ -95,6 +95,10 @@
             android:label="@string/search.activity_title"
             android:theme="@style/Oppia.ToolbarTheme" />
         <activity
+            android:name="org.digitalcampus.oppia.activity.PrivacyActivity"
+            android:label="@string/privacy.title"
+            android:theme="@style/Oppia.ToolbarTheme" />
+        <activity
             android:name="org.digitalcampus.oppia.activity.AppActivity"
             android:label="@string/app_name" />
         <activity

@@ -4,22 +4,20 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
-import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.APIRequestFinishListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 
+import androidx.preference.PreferenceManager;
 import okhttp3.Request;
 
 public abstract class APIRequestTask<P, G, R> extends AsyncTask<P, G, R> {
@@ -54,7 +52,7 @@ public abstract class APIRequestTask<P, G, R> extends AsyncTask<P, G, R> {
                             HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()));
 
         } catch (UserNotFoundException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, "User not found: ", e);
         }
 
@@ -81,7 +79,7 @@ public abstract class APIRequestTask<P, G, R> extends AsyncTask<P, G, R> {
             User u = DbHelper.getInstance(ctx).getUser(SessionManager.getUsername(ctx));
             SessionManager.setUserApiKeyValid(u, false);
         } catch (UserNotFoundException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
         }
         result.setSuccess(false);
         result.setResultMessage(ctx.getString(org.digitalcampus.mobile.learning.R.string.error_apikey_expired ));
