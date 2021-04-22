@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,16 +26,19 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
-import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.analytics.BaseAnalytics;
 import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
@@ -61,14 +65,12 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Mint.disableNetworkMonitoring();
-        Mint.initAndStartSession(this, App.MINT_API_KEY);
         setContentView(R.layout.activity_start_up);
 
         tvProgress = this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String username = SessionManager.getUsername(this);
-        Mint.setUserIdentifier(username.equals("") ? "anon" : username);
+
+        Analytics.startTrackingIfEnabled(this);
     }
 
     @Override
@@ -107,6 +109,33 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
                         : WelcomeActivity.class));
 
         finish();
+    }
+
+    private void showAnalyticsRationaleIfNeeded(){
+        if (!Analytics.shouldShowOptOutRationale(this)){
+            endStartUpScreen();
+            return;
+        }
+
+        ViewGroup container = findViewById(R.id.permissions_explanation);
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        container.removeAllViews();
+        View explanation = layoutInflater.inflate(R.layout.view_analytics_optin, container);
+        container.setVisibility(View.VISIBLE);
+
+        Button continueBtn = explanation.findViewById(R.id.continue_button);
+        continueBtn.setOnClickListener(view -> {
+            Analytics.optOutRationaleShown(this);
+            CheckBox analyticsCheck = explanation.findViewById(R.id.analytics_checkbox);
+            CheckBox bugreportCheck = explanation.findViewById(R.id.bugreport_checkbox);
+            if (analyticsCheck.isChecked()){
+                Analytics.enableTracking(this);
+            }
+            if (bugreportCheck.isChecked()){
+                Analytics.enableBugReport(this);
+            }
+            endStartUpScreen();
+        });
     }
 
     private void installCourses() {
@@ -178,7 +207,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
 
     private void importLeaderboard() {
         ImportLeaderboardsTask imTask = new ImportLeaderboardsTask(StartUpActivity.this);
-        imTask.setListener((success, message) -> endStartUpScreen());
+        imTask.setListener((success, message) -> showAnalyticsRationaleIfNeeded());
         imTask.execute(new Payload());
     }
 }

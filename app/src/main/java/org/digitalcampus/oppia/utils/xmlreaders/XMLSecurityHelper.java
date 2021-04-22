@@ -1,7 +1,6 @@
 package org.digitalcampus.oppia.utils.xmlreaders;
 
-import com.splunk.mint.Mint;
-
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -54,7 +53,7 @@ class XMLSecurityHelper {
         try {
             return parserFactory.newSAXParser().getXMLReader();
         } catch (ParserConfigurationException|SAXException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             return null;
         }
 
