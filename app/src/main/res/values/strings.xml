@@ -27,6 +27,7 @@
     <string name="fragment_welcome_title">Welcome to &appName;</string>
     <string name="fragment_welcome_desc">&appName; is a mobile learning platform for delivering learning content, video and quizzes.\n\n\'Oppia\' means \'to learn\' in Finnish</string>
     <string name="fragment_welcome_login_info">To get started with &appName;, you will need to register or login.</string>
+    <string name="fragment_welcome_privacy_info">By registering or logging in, you agree to our <a href="">Privacy Policy</a>.</string>
     <string name="fragment_welcome_powered_by">Powered by <a href="http://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
 
     <string name="tab_title_about">About</string>
@@ -364,7 +365,8 @@
     <string name="privacy.data_why">How is your data used?</string>
     <string name="privacy.data_what">What data is collected?</string>
 
-    <string name="privacy.section.data_collection">Data collection</string>
+    <string name="privacy.section.privacy">Privacy and Data Use</string>
+    <string name="privacy.section.analytics">Analytics Preferences</string>
     <string name="privacy.section.manage_data">Manage your data</string>
 
     <string name="privacy.download_data.info">Export a copy of the contents in your &appName; account to back it up or explore it.</string>
@@ -373,7 +375,7 @@
     <string name="privacy.delete_account.label">Delete account</string>
     <string name="privace.delete_account.explanation">Deleting your account is permanent, all your data will be removed. To use &appName; again you will need to create a new account. \n\nPlease enter your password below to confirm deletion of your account.</string>
 
-    <string name="analytics.optin.title">Data privacy</string>
+    <string name="analytics.optin.title">Analytics Preferences</string>
     <string name="analytics.optin.description">To help improve &appName;, you can opt-in to sending automated bug reports and additional analytics. You can change these settings at any time in the app.</string>
     <string name="privacy.optin.bugreport.switch">Allow sending crash reports</string>
     <string name="privacy.optin.analytics.switch">Allow sending usage info</string>

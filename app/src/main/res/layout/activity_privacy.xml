@@ -13,7 +13,7 @@
     <include android:id="@+id/toolbar" layout="@layout/toolbar" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/textView14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -21,7 +21,7 @@
         android:drawablePadding="@dimen/padding_medium_2"
         android:gravity="center"
         android:paddingStart="@dimen/padding_medium"
-        android:text="@string/privacy.section.data_collection"
+        android:text="@string/privacy.section.privacy"
         android:textAppearance="@style/HeaderText"
         app:drawableStartCompat="@drawable/ic_settings_security" />
 
@@ -44,33 +44,6 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView13"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding_medium"
-                android:text="@string/analytics.optin.description" />
-
-            <CheckBox
-                android:id="@+id/bugreport_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/privacy.optin.bugreport.switch" />
-
-            <CheckBox
-                android:id="@+id/analytics_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/privacy.optin.analytics.switch"
-                android:layout_marginBottom="@dimen/margin_medium" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:textAppearance="@style/SubheaderText"
-                android:text="More information" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -145,6 +118,62 @@
                         android:text="@string/privacy.data_why" />
                 </RelativeLayout>
             </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:drawablePadding="@dimen/padding_medium_2"
+        android:gravity="center"
+        android:paddingStart="@dimen/padding_medium"
+        android:text="@string/privacy.section.analytics"
+        android:textAppearance="@style/HeaderText"
+        app:drawableStartCompat="@drawable/ic_settings_security" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/list_card_horizontal_margin"
+        android:layout_marginTop="@dimen/list_card_vertical_padding"
+        android:layout_marginRight="@dimen/list_card_horizontal_margin"
+        android:layout_marginBottom="7dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:contentPaddingBottom="@dimen/padding_medium_2"
+        app:contentPaddingLeft="@dimen/padding_large"
+        app:contentPaddingRight="@dimen/padding_large"
+        app:contentPaddingTop="@dimen/padding_medium_2">
+
+        <LinearLayout
+            android:id="@+id/ll_card_layout_phone2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_medium"
+                android:text="@string/analytics.optin.description" />
+
+            <CheckBox
+                android:id="@+id/bugreport_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/privacy.optin.bugreport.switch" />
+
+            <CheckBox
+                android:id="@+id/analytics_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/privacy.optin.analytics.switch"
+                android:layout_marginBottom="@dimen/margin_medium" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
