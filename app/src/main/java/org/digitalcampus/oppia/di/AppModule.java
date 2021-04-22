@@ -2,15 +2,13 @@ package org.digitalcampus.oppia.di;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.ActivityLogRepository;
 import org.digitalcampus.oppia.model.Badge;
@@ -30,6 +28,7 @@ import java.util.List;
 
 import javax.inject.Singleton;
 
+import androidx.preference.PreferenceManager;
 import dagger.Module;
 import dagger.Provides;
 
@@ -68,7 +67,6 @@ public class AppModule {
         try {
             return DbHelper.getInstance(app).getUser(SessionManager.getUsername(app));
         } catch (UserNotFoundException e) {
-            Mint.logException(e);
             Log.d(TAG, "User not found: ", e);
         }
         return new User();

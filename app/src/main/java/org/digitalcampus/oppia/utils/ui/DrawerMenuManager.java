@@ -33,6 +33,7 @@ import org.digitalcampus.oppia.activity.AboutActivity;
 import org.digitalcampus.oppia.activity.ActivityLogActivity;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.activity.PrivacyActivity;
 import org.digitalcampus.oppia.activity.SyncActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
@@ -144,6 +145,8 @@ public class DrawerMenuManager {
                 customOptions.get(itemId).onOptionSelected();
             } else if (itemId == R.id.menu_download) {
                 launchIntentForActivity(TagSelectActivity.class);
+            } else if (itemId == R.id.menu_privacy) {
+                launchIntentForActivity(PrivacyActivity.class);
             } else if (itemId == R.id.menu_activitylog) {
                 launchIntentForActivity(ActivityLogActivity.class);
             } else if (itemId == R.id.menu_about) {

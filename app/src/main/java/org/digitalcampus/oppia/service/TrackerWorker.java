@@ -7,21 +7,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.work.ListenableWorker;
-import androidx.work.WorkerParameters;
-import androidx.work.impl.utils.futures.SettableFuture;
-
 import com.google.common.util.concurrent.ListenableFuture;
-import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.APIRequestFinishListener;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.QuizAttempt;
@@ -36,6 +30,12 @@ import org.json.JSONObject;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.work.ListenableWorker;
+import androidx.work.WorkerParameters;
+import androidx.work.impl.utils.futures.SettableFuture;
 
 @SuppressLint("RestrictedApi")
 public class TrackerWorker extends ListenableWorker implements APIRequestFinishListener, APIRequestListener {
@@ -144,7 +144,7 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
             }
 
         } catch (JSONException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, "JSON error: ", e);
         }
 

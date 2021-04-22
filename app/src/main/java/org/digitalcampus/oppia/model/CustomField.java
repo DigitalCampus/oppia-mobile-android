@@ -3,8 +3,7 @@ package org.digitalcampus.oppia.model;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.splunk.mint.Mint;
-
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -170,7 +169,7 @@ public class CustomField {
             }
 
         } catch (JSONException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
         }
     }
 
@@ -202,7 +201,7 @@ public class CustomField {
                 steps.add(step);
             }
         } catch (JSONException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
         }
         return steps;
     }
@@ -250,7 +249,7 @@ public class CustomField {
             db.insertOrUpdateCustomFieldCollection(collectionName, collectionItems);
 
         } catch (JSONException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
         }
 
     }

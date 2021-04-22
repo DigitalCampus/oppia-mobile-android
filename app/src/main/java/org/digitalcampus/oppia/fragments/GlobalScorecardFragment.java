@@ -24,7 +24,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,27 +31,16 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.ScorecardsGridAdapter;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
-import org.digitalcampus.oppia.task.APIRequestTask;
-import org.digitalcampus.oppia.task.APIUserRequestTask;
-import org.digitalcampus.oppia.task.FetchServerInfoTask;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.utils.UIUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;

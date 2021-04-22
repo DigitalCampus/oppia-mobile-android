@@ -3,16 +3,14 @@ package org.digitalcampus.oppia.gamification;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
-
-import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
@@ -23,6 +21,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Locale;
+
+import androidx.preference.PreferenceManager;
 
 public class GamificationService  extends IntentService {
 
@@ -197,7 +197,7 @@ public class GamificationService  extends IntentService {
                 }
             }
         } catch (JSONException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, "JSON error: ", e);
         }
     }

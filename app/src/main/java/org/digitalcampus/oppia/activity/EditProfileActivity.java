@@ -4,6 +4,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+
+import com.hbb20.CountryCodePicker;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityEditProfileBinding;
@@ -26,6 +30,8 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
     private ActivityEditProfileBinding binding;
     private CustomFieldsUIManager fieldsManager;
     private HashMap<String, ValidableField> fields = new HashMap<>();
+
+    private CountryCodePicker phoneNoFieldPicker;
 
     @Inject
     ApiEndpoint apiEndpoint;
@@ -56,6 +62,14 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         fields.put("organisation", binding.fieldOrganisation);
         fields.put("phoneno", binding.fieldPhoneno);
 
+        phoneNoFieldPicker = (CountryCodePicker) findViewById(R.id.ccp);
+        EditText phoneEditText = findViewById(R.id.register_form_phoneno_edittext);
+        phoneNoFieldPicker.registerCarrierNumberEditText(phoneEditText);
+        View phoneInput = binding.fieldPhoneno.getChildAt(0);
+        binding.fieldPhoneno.removeView(phoneInput);
+        phoneInput.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        ((LinearLayout) findViewById(R.id.field_phoneno_container)).addView(phoneInput);
+
         profileCustomFields = customFieldsRepo.getAll(this);
         fieldsManager = new CustomFieldsUIManager(this, fields, profileCustomFields);
         fieldsManager.populateAndInitializeFields(binding.customFieldsContainer);
@@ -76,17 +90,26 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         binding.fieldLastname.setText(user.getLastname());
         binding.fieldOrganisation.setText(user.getOrganisation());
         binding.fieldJobtitle.setText(user.getJobTitle());
-        binding.fieldPhoneno.setText(user.getPhoneNo());
+        if (user.getPhoneNo().startsWith("+")){
+            // Check if we already had a number saved with country code
+            phoneNoFieldPicker.setFullNumber(user.getPhoneNo());
+        }
+        else{
+            binding.fieldPhoneno.setText(user.getPhoneNo());
+        }
+
+
         fieldsManager.fillWithUserData(user);
 
         binding.fieldPhoneno.setCustomValidator(field -> {
             String phoneNo = field.getCleanedValue();
-            if ((phoneNo.length() > 0) && (phoneNo.length() < App.PHONENO_MIN_LENGTH)) {
+            if ((phoneNo.length() > 0) && !phoneNoFieldPicker.isValidFullNumber()){
                 binding.fieldPhoneno.setErrorEnabled(true);
                 binding.fieldPhoneno.setError(getString(R.string.error_register_no_phoneno));
                 binding.fieldPhoneno.requestFocus();
                 return false;
             }
+
             return true;
         });
 
@@ -116,7 +139,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         String lastname = binding.fieldLastname.getCleanedValue();
         String jobTitle = binding.fieldJobtitle.getCleanedValue();
         String organisation = binding.fieldOrganisation.getCleanedValue();
-        String phoneNo = binding.fieldPhoneno.getCleanedValue();
+        String phoneNo = phoneNoFieldPicker.getFormattedFullNumber();
 
         boolean valid = true;
         for (ValidableField field : fields.values()){

@@ -3,10 +3,7 @@ package androidTestFiles.Utils;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.test.platform.app.InstrumentationRegistry;
-
-import com.splunk.mint.Mint;
-
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.BufferedReader;
@@ -16,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+
+import androidx.test.platform.app.InstrumentationRegistry;
 
 public class FileUtils {
 
@@ -97,7 +96,7 @@ public class FileUtils {
         try {
             org.apache.commons.io.FileUtils.copyFileToDirectory(file, mediaDir, true);
         }catch (IOException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             if (deleteOnError){
                 org.digitalcampus.oppia.utils.storage.FileUtils.deleteFile(file);
             }

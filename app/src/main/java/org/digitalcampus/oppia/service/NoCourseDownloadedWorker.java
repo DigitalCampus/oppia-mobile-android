@@ -11,6 +11,8 @@ import androidx.work.impl.utils.futures.SettableFuture;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import org.digitalcampus.oppia.application.SessionManager;
+
 public class NoCourseDownloadedWorker extends ListenableWorker {
 
     public static final String TAG = NoCourseDownloadedWorker.class.getSimpleName() ;
@@ -27,8 +29,13 @@ public class NoCourseDownloadedWorker extends ListenableWorker {
         Log.i(TAG, "startWork: NoCourseDownloadWorker");
 
         future = SettableFuture.create();
-
-        new NoCourseDownloadedManager(getApplicationContext()).checkNoCoursesNotification();
+        boolean isLoggedIn = SessionManager.isLoggedIn(getApplicationContext());
+        if (isLoggedIn) {
+            new NoCourseDownloadedManager(getApplicationContext()).checkNoCoursesNotification();
+        } else {
+            Log.i(TAG, "startWork: user not logged in. exiting NoCourseDownloadWorker");
+            future.set(Result.success());
+        }
 
         future.set(Result.success());
 
