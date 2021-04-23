@@ -18,6 +18,7 @@ import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -185,7 +186,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
                 }
 
             } catch (JsonSyntaxException e) {
-                Mint.logException(e);
+                Analytics.logException(e);
                 Log.d(TAG, "JSON error: ", e);
             }
 
