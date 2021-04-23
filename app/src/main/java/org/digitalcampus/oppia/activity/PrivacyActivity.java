@@ -22,6 +22,7 @@ import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.fragments.DeleteAccountDialogFragment;
+import org.digitalcampus.oppia.fragments.DownloadUserDataDialogFragment;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.model.ActivityLogRepository;
@@ -105,6 +106,9 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
 
         Button deleteBtn = findViewById(R.id.btn_delete_account);
         deleteBtn.setOnClickListener(v -> showDeleteAccountWarning());
+        Button downloadBtn = findViewById(R.id.btn_download_data);
+        downloadBtn.setOnClickListener(v -> showDownloadDataDialog());
+
     }
 
     private void launchAboutPage(int tab){
@@ -120,20 +124,19 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
     private void showDeleteAccountWarning(){
 
         FragmentManager fm = getSupportFragmentManager();
-        DeleteAccountDialogFragment editNameDialogFragment = DeleteAccountDialogFragment.newInstance("Some Title");
-        editNameDialogFragment.show(fm, "fragment_edit_name");
+        DeleteAccountDialogFragment editNameDialogFragment = DeleteAccountDialogFragment.newInstance();
+        editNameDialogFragment.show(fm, "fragment_delete_account");
 
-        /*aDialog = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle).create();
-        aDialog.setTitle(R.string.privacy_delete_account_label);
-        aDialog.setMessage(this.getString(R.string.privace_delete_account_explanation));
-
-        aDialog.setButton(DialogInterface.BUTTON_POSITIVE, this.getString(R.string.open),
-                (dialog, which) -> {
-
-                });
-        aDialog.setButton(DialogInterface.BUTTON_NEGATIVE, this.getString(R.string.cancel), null, null);
-        aDialog.show();*/
     }
+
+    private void showDownloadDataDialog(){
+
+        FragmentManager fm = getSupportFragmentManager();
+        DownloadUserDataDialogFragment editNameDialogFragment = DownloadUserDataDialogFragment.newInstance();
+        editNameDialogFragment.show(fm, "fragment_download_data");
+
+    }
+
 
     @Override
     public void onDeleteAccountSuccess() {

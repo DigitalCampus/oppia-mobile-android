@@ -30,7 +30,7 @@ public class DeleteAccountDialogFragment extends DialogFragment implements APIRe
     private TextInputLayout passwordInput;
     private DeleteAccountListener listener;
 
-    public static DeleteAccountDialogFragment newInstance(String title) {
+    public static DeleteAccountDialogFragment newInstance() {
         return new DeleteAccountDialogFragment();
     }
 
