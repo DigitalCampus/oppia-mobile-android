@@ -98,14 +98,31 @@
             <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
                 android:id="@+id/field_phoneno"
                 style="@style/Oppia.CustomField.TextInputLayout"
+                android:gravity="center_vertical"
                 android:layout_marginTop="@dimen/margin_medium">
 
+                <LinearLayout
+                    android:id="@+id/field_phoneno_container"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+
+                    <com.hbb20.CountryCodePicker
+                        android:id="@+id/ccp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:ccp_autoDetectCountry="true"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
                 <EditText
+                    android:id="@+id/register_form_phoneno_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/register_form_phoneno_title"
                     android:inputType="phone"
-                    android:textSize="15sp"/>
+                    android:singleLine="true"
+                    android:textSize="15sp" />
 
             </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
 

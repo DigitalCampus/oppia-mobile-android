@@ -33,6 +33,7 @@ public class CoursesChecksWorker extends ListenableWorker {
         coursesChecksWorkerManager.setOnFinishListener(message -> future.set(Result.success()));
         coursesChecksWorkerManager.startChecks();
 
+        future.set(Result.success());
 
         return future;
     }
@@ -43,6 +44,5 @@ public class CoursesChecksWorker extends ListenableWorker {
         super.onStopped();
         Log.i(TAG, "onStopped");
     }
-
 
 }

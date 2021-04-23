@@ -18,9 +18,11 @@ import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.fragments.CoursesListFragment;
 import org.digitalcampus.oppia.listener.APIRequestFinishListener;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Course;
@@ -31,6 +33,7 @@ import org.digitalcampus.oppia.model.responses.CoursesServerResponse;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.CourseUtils;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.util.HashSet;
@@ -156,10 +159,6 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
             try {
 
-                // TODO oppia-577 remove
-//                response.setResultResponse(DownloadActivity.MOCK_COURSES_RESPONSE);
-
-
                 CoursesServerResponse coursesServerResponse = new Gson().fromJson(
                         response.getResultResponse(), CoursesServerResponse.class);
 
@@ -168,18 +167,27 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
                         .putString(PrefsActivity.PREF_SERVER_COURSES_CACHE, response.getResultResponse())
                         .commit();
 
+
                 checkUpdatedOrDeletedCoursesAndNotify();
-//                checkNewCoursesAndNotify(coursesServerResponse.getCourses());
+                checkNewCoursesAndNotify(coursesServerResponse.getCourses());
 
 
                 double mostRecentVersionTimestamp = getMostRecentVersionTimestamp(coursesServerResponse.getCourses());
-                long mostRecentVersionTimestampLong = Double.doubleToRawLongBits(mostRecentVersionTimestamp);
+                long mostRecentVersionTimestampLong = (long) mostRecentVersionTimestamp;
+
+                Log.i(TAG, "apiRequestComplete: mostRecentVersionTimestampLong: " + mostRecentVersionTimestampLong);
+
                 prefs.edit()
                         .putLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, mostRecentVersionTimestampLong)
                         .commit();
 
+                final long lastNewCourseSeenTimestamp = prefs.getLong(PrefsActivity.PREF_LAST_NEW_COURSE_SEEN_TIMESTAMP, 0);
+                if (lastNewCourseSeenTimestamp == 0) {
+                    prefs.edit().putLong(PrefsActivity.PREF_LAST_NEW_COURSE_SEEN_TIMESTAMP, mostRecentVersionTimestampLong).commit();
+                }
+
             } catch (JsonSyntaxException e) {
-                Mint.logException(e);
+                Analytics.logException(e);
                 Log.d(TAG, "JSON error: ", e);
             }
 
@@ -191,8 +199,12 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
         double lastVersionTimestampChecked = Double.longBitsToDouble(
                 prefs.getLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, 0));
 
-        // TODO oppia-577 remove
-//        lastVersionTimestampChecked = 0;
+        Log.i(TAG, "checkUpdatedOrDeletedCoursesAndNotify: lastVersionTimestampChecked: " + lastVersionTimestampChecked);
+
+        if (lastVersionTimestampChecked == 0) {
+            // First time app starts must not notify any "new courses"
+            return;
+        }
 
         CourseUtils.setSyncStatus(prefs, coursesInstalled, lastVersionTimestampChecked);
 
@@ -204,8 +216,11 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
             }
         }
 
+        Log.i(TAG, "checkUpdatedOrDeletedCoursesAndNotify: toUpdateCount: " + toUpdateCount);
+
         if (toUpdateCount > 0) {
             showToUpdateNotification(toUpdateCount);
+            context.sendBroadcast(new Intent(CoursesListFragment.ACTION_COURSES_UPDATES));
         }
 
 
@@ -213,7 +228,11 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
     private void checkNewCoursesAndNotify(List<CourseServer> coursesServer) {
 
-        Set<String> newCoursesNotified = prefs.getStringSet(PrefsActivity.PREF_NEW_COURSES_NOTIFIED, null);
+        Set<String> newCoursesNotified = prefs.getStringSet(PrefsActivity.PREF_NEW_COURSES_LIST_NOTIFIED, null);
+
+        Log.i(TAG, "checkNewCoursesAndNotify: newCoursesNotified count: " +
+                (newCoursesNotified != null ? newCoursesNotified.size()+"" : "null"));
+
         if (newCoursesNotified == null) {
 
             // First time. No need to notify courses, just save them all
@@ -222,7 +241,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
                 notInstalledCoursesShortnames.add(courseServer.getShortname());
             }
 
-            prefs.edit().putStringSet(PrefsActivity.PREF_NEW_COURSES_NOTIFIED, notInstalledCoursesShortnames).commit();
+            prefs.edit().putStringSet(PrefsActivity.PREF_NEW_COURSES_LIST_NOTIFIED, notInstalledCoursesShortnames).commit();
 
         } else {
 
@@ -235,12 +254,14 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
                 }
             }
 
+            Log.i(TAG, "checkNewCoursesAndNotify: notInstalledAndNotNotifiedCourses: " + notInstalledAndNotNotifiedCourses);
+
             if (notInstalledAndNotNotifiedCourses.size() > 0) {
                 showNewCoursesNotification(notInstalledAndNotNotifiedCourses.size());
             }
 
             newCoursesNotified.addAll(notInstalledAndNotNotifiedCourses);
-            prefs.edit().putStringSet(PrefsActivity.PREF_NEW_COURSES_NOTIFIED, newCoursesNotified).commit();
+            prefs.edit().putStringSet(PrefsActivity.PREF_NEW_COURSES_LIST_NOTIFIED, newCoursesNotified).commit();
         }
 
     }

@@ -40,6 +40,8 @@ import androidx.work.WorkManager;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.analytics.BaseAnalytics;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.database.MyDatabase;
 import org.digitalcampus.oppia.di.AppComponent;
@@ -124,6 +126,7 @@ public class App extends Application {
 
     private AppComponent appComponent;
     private static MyDatabase db;
+    private static volatile BaseAnalytics analytics;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -141,6 +144,7 @@ public class App extends Application {
                 .build();
 
         DbHelper.getInstance(this).getReadableDatabase();
+        Analytics.initializeAnalytics(getApplicationContext());
 
         // this method fires once at application start
         Log.d(TAG, "Application start");
@@ -168,9 +172,6 @@ public class App extends Application {
         setupPeriodicTrackerWorker();
 
         OppiaNotificationUtils.initializeOreoNotificationChannels(this);
-
-        // TODO oppia-577 remove
-//        launchTrackerWorker();
 
     }
 
@@ -238,7 +239,7 @@ public class App extends Application {
                 .build();
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_TRACKER_SEND,
-                ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
+                ExistingPeriodicWorkPolicy.KEEP, trackerSendWork);
 
     }
 
@@ -249,25 +250,14 @@ public class App extends Application {
 
     private void scheduleCoursesChecksWork() {
 
-        if (getPrefs(this).getLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, -1) == -1) {
-            // Initialize check_courses_timestamp the first time app starts to avoid notify current courses
-
-            long timestamp = Long.parseLong(DateUtils.COURSE_VERSION_TIMESTAMP_FORMAT.print(System.currentTimeMillis()));
-            getPrefs(this).edit()
-                    .putLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, timestamp)
-                    .putLong(PrefsActivity.PREF_LAST_NEW_COURSE_TIMESTAMP, timestamp)
-                    .commit();
-        }
-
-
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
         PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(CoursesChecksWorker.class, 12, TimeUnit.HOURS)
                 .setConstraints(constraints)
-                .setInitialDelay(5, TimeUnit.MINUTES)
                 .build();
+
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_COURSES_CHECKS,
                 ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
 
@@ -308,7 +298,6 @@ public class App extends Application {
             editor.apply();
         }
     }
-
 
     public AppComponent getComponent() {
         if (appComponent == null) {

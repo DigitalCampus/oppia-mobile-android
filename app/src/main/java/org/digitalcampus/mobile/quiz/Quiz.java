@@ -19,8 +19,6 @@ package org.digitalcampus.mobile.quiz;
 
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
@@ -30,6 +28,7 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
@@ -149,7 +148,7 @@ public class Quiz implements Serializable {
             }
         } catch (JSONException jsone) {
             Log.d(TAG,"Error loading quiz",jsone);
-            Mint.logException(jsone);
+            Analytics.logException(jsone);
             return false;
         }
         return true;
@@ -362,7 +361,7 @@ public class Quiz implements Serializable {
         try {
             return questions.get(this.currentq);
         } catch (IndexOutOfBoundsException e ){
-            Mint.logException(e);
+            Analytics.logException(e);
             throw new InvalidQuizException(e);
         }
     }
@@ -410,7 +409,7 @@ public class Quiz implements Serializable {
             json.put(JSON_PROPERTY_RESPONSES, responses);
         } catch (JSONException jsone) {
             Log.d(TAG,"Error creating json result object",jsone);
-            Mint.logException(jsone);
+            Analytics.logException(jsone);
         }
         return json;
     }

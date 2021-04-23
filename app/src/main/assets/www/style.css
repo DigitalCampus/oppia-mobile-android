@@ -45,12 +45,13 @@ ul {
 	margin: 10px 0;
 }
 
-li{
+ul li{
 	margin-left:25px;
 	margin-bottom:0.5em;
 	list-style: none;	
 }
-li:before {
+
+ul li:before {
       content:'\2022';
       /*content:'\25A0';*/
       display: block;
@@ -62,6 +63,16 @@ li:before {
       color: #74B042;
       font-size: 30px;
  }
+
+ol {
+	margin: 10px 0;
+}
+
+ol li{
+	margin-left:25px;
+	margin-bottom:0.5em;
+}
+
 a {
 	color: #495525;
 	text-decoration: underline;

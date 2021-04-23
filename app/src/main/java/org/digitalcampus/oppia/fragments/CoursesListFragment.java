@@ -1,9 +1,13 @@
 package org.digitalcampus.oppia.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +61,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         CourseInstallerListener,
         UpdateActivityListener, CoursesListAdapter.OnItemClickListener {
 
+    public  static final String ACTION_COURSES_UPDATES = "actionCoursesUpdates";
+
     private List<Course> courses;
 
     private View noCoursesView;
@@ -72,6 +78,15 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     private CoursesListAdapter adapterListCourses;
     private MediaScanView mediaScanView;
     private View emptyStateImage;
+
+    BroadcastReceiver coursesUpdatesReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (TextUtils.equals(intent.getAction(), ACTION_COURSES_UPDATES)) {
+                displayCourses();
+            }
+        }
+    };
 
     private void findViews(View layout) {
 
@@ -135,6 +150,9 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
         getActivity().registerReceiver(receiver, broadcastFilter);
 
+        IntentFilter coursesUpdatesBroadcastFilter = new IntentFilter(ACTION_COURSES_UPDATES);
+        getActivity().registerReceiver(coursesUpdatesReceiver, coursesUpdatesBroadcastFilter);
+
         if (adapterListCourses != null) {
             adapterListCourses.notifyDataSetChanged();
         }
@@ -144,6 +162,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     public void onPause(){
         super.onPause();
         getActivity().unregisterReceiver(receiver);
+        getActivity().unregisterReceiver(coursesUpdatesReceiver);
     }
 
     private void displayCourses() {
@@ -213,7 +232,10 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
                     i.putExtras(tb);
                     startActivity(i);
                 })
-                .setNegativeButton(R.string.cancel, null)
+                .setNegativeButton(R.string.continue_to_course, (dialog, which) -> {
+                    openCourse(selectedCourse);
+                })
+                .setNeutralButton(R.string.back, null)
                 .show();
     }
 
@@ -222,7 +244,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
                 .setTitle(R.string.course_deleted)
                 .setMessage(R.string.course_deleted_dialog_message)
                 .setPositiveButton(R.string.course_context_delete, (dialog, which) -> deleteCourse(selectedCourse))
-                .setNegativeButton(R.string.cancel, null)
+                .setNeutralButton(R.string.back, null)
                 .show();
     }
 

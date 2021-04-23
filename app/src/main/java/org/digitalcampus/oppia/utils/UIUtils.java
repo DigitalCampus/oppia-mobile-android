@@ -26,10 +26,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-
-import androidx.core.graphics.BlendModeColorFilterCompat;
-import androidx.core.graphics.BlendModeCompat;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,13 +33,10 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
-
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.ScorecardActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
@@ -53,6 +46,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
+
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.BlendModeColorFilterCompat;
+import androidx.core.graphics.BlendModeCompat;
+import androidx.preference.PreferenceManager;
 
 public class UIUtils {
 
@@ -238,7 +236,7 @@ public class UIUtils {
             try {
                 funct.call();
             } catch (Exception e) {
-                Mint.logException(e);
+                Analytics.logException(e);
                 Log.d(TAG, "Exception:", e);
             }
 
@@ -299,7 +297,7 @@ public class UIUtils {
                         try {
                             funct.call();
                         } catch (Exception e) {
-                            Mint.logException(e);
+                            Analytics.logException(e);
                             Log.d(TAG, "Exception:", e);
                         }
                     }).setTitle(ctx.getString(R.string.change_language))

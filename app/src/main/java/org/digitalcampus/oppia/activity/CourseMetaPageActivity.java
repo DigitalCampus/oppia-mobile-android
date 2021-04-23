@@ -19,14 +19,12 @@ package org.digitalcampus.oppia.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -35,6 +33,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Locale;
+
+import androidx.preference.PreferenceManager;
 
 public class CourseMetaPageActivity extends AppActivity {
 
@@ -82,7 +82,7 @@ public class CourseMetaPageActivity extends AppActivity {
 			content += "</html>";
 			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, content, "text/html", "utf-8", null);
 		} catch (IOException e) {
-			Mint.logException(e);
+			Analytics.logException(e);
 			Log.d(TAG, "IOException: ", e);
 			wv.loadUrl("file://" + url);
 		}
