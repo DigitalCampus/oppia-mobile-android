@@ -214,10 +214,10 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
                     i.putExtras(tb);
                     startActivity(i);
                 })
-                .setNeutralButton(R.string.continue_str, (dialog, which) -> {
+                .setNegativeButton(R.string.continue_to_course, (dialog, which) -> {
                     openCourse(selectedCourse);
                 })
-                .setNegativeButton(R.string.back, null)
+                .setNeutralButton(R.string.back, null)
                 .show();
     }
 
@@ -226,7 +226,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
                 .setTitle(R.string.course_deleted)
                 .setMessage(R.string.course_deleted_dialog_message)
                 .setPositiveButton(R.string.course_context_delete, (dialog, which) -> deleteCourse(selectedCourse))
-                .setNegativeButton(R.string.cancel, null)
+                .setNeutralButton(R.string.back, null)
                 .show();
     }
 

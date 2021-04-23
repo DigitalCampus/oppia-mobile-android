@@ -170,7 +170,7 @@ public class App extends Application {
         OppiaNotificationUtils.initializeOreoNotificationChannels(this);
 
         // TODO oppia-577 remove
-        launchTrackerWorker();
+//        launchTrackerWorker();
 
     }
 
@@ -238,7 +238,7 @@ public class App extends Application {
                 .build();
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_TRACKER_SEND,
-                ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
+                ExistingPeriodicWorkPolicy.KEEP, trackerSendWork);
 
     }
 
@@ -266,10 +266,9 @@ public class App extends Application {
 
         PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(CoursesChecksWorker.class, 12, TimeUnit.HOURS)
                 .setConstraints(constraints)
-                .setInitialDelay(5, TimeUnit.MINUTES)
                 .build();
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_COURSES_CHECKS,
-                ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
+                ExistingPeriodicWorkPolicy.KEEP, trackerSendWork);
 
     }
 

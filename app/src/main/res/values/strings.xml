@@ -529,6 +529,7 @@
     <string name="new_courses">New courses</string>
     <string name="back">Back</string>
     <string name="continue_str">Continue</string>
+    <string name="continue_to_course">Continue to course</string>
 
 </resources>
 
