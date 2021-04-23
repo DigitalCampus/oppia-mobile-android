@@ -157,12 +157,6 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
             try {
 
-                // TODO oppia-577 remove
-                if (DownloadActivity.MOCK_COURSES_RESPONSE != null) {
-                    response.setResultResponse(DownloadActivity.MOCK_COURSES_RESPONSE);
-                }
-
-
                 CoursesServerResponse coursesServerResponse = new Gson().fromJson(
                         response.getResultResponse(), CoursesServerResponse.class);
 
@@ -209,10 +203,6 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
             // First time app starts must not notify any "new courses"
             return;
         }
-
-
-        // TODO oppia-577 remove
-//        lastVersionTimestampChecked = 0;
 
         CourseUtils.setSyncStatus(prefs, coursesInstalled, lastVersionTimestampChecked);
 
