@@ -249,26 +249,18 @@ public class App extends Application {
 
     private void scheduleCoursesChecksWork() {
 
-        if (getPrefs(this).getLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, -1) == -1) {
-            // Initialize check_courses_timestamp the first time app starts to avoid notify current courses
-
-            long timestamp = Long.parseLong(DateUtils.COURSE_VERSION_TIMESTAMP_FORMAT.print(System.currentTimeMillis()));
-            getPrefs(this).edit()
-                    .putLong(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED, timestamp)
-                    .putLong(PrefsActivity.PREF_LAST_NEW_COURSE_TIMESTAMP, timestamp)
-                    .commit();
-        }
-
-
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
-        PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(CoursesChecksWorker.class, 12, TimeUnit.HOURS)
+        // TODO oppia-577 set 12 hours
+        PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(CoursesChecksWorker.class, 15, TimeUnit.MINUTES)
                 .setConstraints(constraints)
                 .build();
+
+        // TODO oppia-577 set KEEP
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_COURSES_CHECKS,
-                ExistingPeriodicWorkPolicy.KEEP, trackerSendWork);
+                ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
 
     }
 
