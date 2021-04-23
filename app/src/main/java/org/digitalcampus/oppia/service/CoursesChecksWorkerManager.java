@@ -22,6 +22,7 @@ import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.fragments.CoursesListFragment;
 import org.digitalcampus.oppia.listener.APIRequestFinishListener;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Course;
@@ -219,6 +220,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
         if (toUpdateCount > 0) {
             showToUpdateNotification(toUpdateCount);
+            context.sendBroadcast(new Intent(CoursesListFragment.ACTION_COURSES_UPDATES));
         }
 
 
