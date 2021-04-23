@@ -75,6 +75,28 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/about_privacy_terms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:focusable="true">
+
+                    <ImageView
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="55dp"
+                        android:layout_height="45dp"
+                        android:layout_alignParentEnd="true"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_arrow_right" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/privacy.terms" />
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/about_privacy_what"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
