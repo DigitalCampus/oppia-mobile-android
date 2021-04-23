@@ -259,7 +259,7 @@ public class App extends Application {
                 .build();
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_COURSES_CHECKS,
-                ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
+                ExistingPeriodicWorkPolicy.KEEP, trackerSendWork);
 
     }
 
