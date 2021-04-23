@@ -373,7 +373,7 @@
     <string name="privacy.download_data.label">Download data</string>
     <string name="privacy.delete_account.info">Completely remove your account and all associated data from the &appName; server.</string>
     <string name="privacy.delete_account.label">Delete account</string>
-    <string name="privace.delete_account.explanation">Deleting your account is permanent, all your data will be removed. To use &appName; again you will need to create a new account. \n\nPlease enter your password below to confirm deletion of your account.</string>
+    <string name="privacy.delete_account.explanation">Deleting your account is permanent, all your data will be removed. To use &appName; again you will need to create a new account. \n\nPlease enter your password below to confirm deletion of your account.</string>
 
     <string name="analytics.optin.title">Analytics Preferences</string>
     <string name="analytics.optin.description">To help improve &appName;, you can opt-in to sending automated bug reports and additional analytics. You can change these settings at any time in the app.</string>
