@@ -105,8 +105,9 @@ public class PrivacyActivity extends AppActivity {
     private void launchAboutPage(int tab){
         Intent i = new Intent(this, AboutActivity.class);
         Bundle tb = new Bundle();
-        tb.putSerializable(AboutActivity.ABOUT_CONTENTS, AboutActivity.ABOUT_PRIVACY);
-        tb.putSerializable(AboutActivity.TAB_ACTIVE, tab);
+        tb.putString(AboutActivity.TITLE, getString(R.string.privacy_section_privacy));
+        tb.putString(AboutActivity.ABOUT_CONTENTS, AboutActivity.ABOUT_PRIVACY);
+        tb.putInt(AboutActivity.TAB_ACTIVE, tab);
         i.putExtras(tb);
         startActivity(i);
     }

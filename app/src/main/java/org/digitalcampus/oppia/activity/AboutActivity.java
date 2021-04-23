@@ -20,6 +20,8 @@ package org.digitalcampus.oppia.activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.preference.PreferenceManager;
+
+import android.text.TextUtils;
 import android.view.MenuItem;
 
 import androidx.fragment.app.Fragment;
@@ -43,6 +45,7 @@ public class AboutActivity extends AppActivity {
 	public static final String ABOUT_MAIN = "MAIN";
 	public static final String ABOUT_PRIVACY = "PRIVACY";
 
+	public static final String TITLE = "TITLE";
 	public static final String TAB_ACTIVE = "TAB_ACTIVE";
 	public static final int TAB_HELP = 1;
 	public static final int TAB_PRIVACY_POLICY = 0;
@@ -69,6 +72,9 @@ public class AboutActivity extends AppActivity {
 		if (bundle != null) {
 			contents = bundle.getString(ABOUT_CONTENTS, ABOUT_MAIN);
 			currentTab = bundle.getInt(AboutActivity.TAB_ACTIVE, 0);
+
+			String actTitle = bundle.getString(TITLE);
+			if (!TextUtils.isEmpty(actTitle)){ setTitle(actTitle); }
 		}
 	}
 	
