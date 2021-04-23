@@ -18,12 +18,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:drawablePadding="@dimen/padding_medium_2"
+        android:drawablePadding="@dimen/padding_medium"
         android:gravity="center"
         android:paddingStart="@dimen/padding_medium"
         android:text="@string/privacy.section.privacy"
         android:textAppearance="@style/HeaderText"
-        app:drawableStartCompat="@drawable/ic_settings_security" />
+        app:drawableTint="@color/theme_primary"
+        app:drawableStartCompat="@drawable/ic_info" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -150,11 +151,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:drawablePadding="@dimen/padding_medium_2"
+        android:drawablePadding="@dimen/padding_medium"
         android:gravity="center"
         android:paddingStart="@dimen/padding_medium"
         android:text="@string/privacy.section.analytics"
         android:textAppearance="@style/HeaderText"
+        app:drawableTint="@color/theme_primary"
         app:drawableStartCompat="@drawable/ic_settings_security" />
 
     <androidx.cardview.widget.CardView
@@ -211,11 +213,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:drawablePadding="@dimen/padding_medium_2"
+        android:drawablePadding="@dimen/padding_medium"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:gravity="center"
         android:paddingStart="@dimen/padding_medium"
         android:text="@string/privacy.section.manage_data"
+        app:drawableTint="@color/theme_primary"
         android:textAppearance="@style/HeaderText"
         app:drawableStartCompat="@drawable/ic_settings_user" />
 
