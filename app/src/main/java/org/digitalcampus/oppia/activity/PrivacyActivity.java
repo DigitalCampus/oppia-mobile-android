@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -19,11 +21,14 @@ import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.fragments.DeleteAccountDialogFragment;
+import org.digitalcampus.oppia.fragments.DownloadUserDataDialogFragment;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.model.ActivityLogRepository;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
+import org.digitalcampus.oppia.task.DeleteAccountTask;
 import org.digitalcampus.oppia.task.ExportActivityTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.digitalcampus.oppia.utils.UIUtils;
@@ -40,11 +45,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class PrivacyActivity extends AppActivity {
+public class PrivacyActivity extends AppActivity implements DeleteAccountDialogFragment.DeleteAccountListener {
 
     private CheckBox analyticsCheck;
     private CheckBox bugreportCheck;
@@ -102,41 +108,38 @@ public class PrivacyActivity extends AppActivity {
 
         Button deleteBtn = findViewById(R.id.btn_delete_account);
         deleteBtn.setOnClickListener(v -> showDeleteAccountWarning());
+        Button downloadBtn = findViewById(R.id.btn_download_data);
+        downloadBtn.setOnClickListener(v -> showDownloadDataDialog());
+
     }
 
     private void launchAboutPage(int tab){
         Intent i = new Intent(this, AboutActivity.class);
         Bundle tb = new Bundle();
-        tb.putSerializable(AboutActivity.ABOUT_CONTENTS, AboutActivity.ABOUT_PRIVACY);
-        tb.putSerializable(AboutActivity.TAB_ACTIVE, tab);
+        tb.putString(AboutActivity.TITLE, getString(R.string.privacy_section_privacy));
+        tb.putString(AboutActivity.ABOUT_CONTENTS, AboutActivity.ABOUT_PRIVACY);
+        tb.putInt(AboutActivity.TAB_ACTIVE, tab);
         i.putExtras(tb);
         startActivity(i);
     }
 
     private void showDeleteAccountWarning(){
-        aDialog = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle).create();
-        aDialog.setTitle(R.string.privacy_delete_account_label);
-        aDialog.setMessage(this.getString(R.string.privace_delete_account_explanation));
 
-        aDialog.setButton(DialogInterface.BUTTON_POSITIVE, this.getString(R.string.open),
-                (dialog, which) -> {
+        FragmentManager fm = getSupportFragmentManager();
+        DeleteAccountDialogFragment deleteDialog = DeleteAccountDialogFragment.newInstance();
+        deleteDialog.show(fm, "fragment_delete_account");
 
-                });
-        aDialog.setButton(DialogInterface.BUTTON_NEGATIVE, this.getString(R.string.cancel), null, null);
-        aDialog.show();
+    }
+
+    private void showDownloadDataDialog(){
+        FragmentManager fm = getSupportFragmentManager();
+        DownloadUserDataDialogFragment downloadDialog = DownloadUserDataDialogFragment.newInstance();
+        downloadDialog.show(fm, "fragment_download_data");
     }
 
 
-    public class DeleteAccountDialog extends DialogFragment {
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-            return new AlertDialog.Builder(requireContext())
-                    .setTitle(R.string.privacy_delete_account_label)
-                    .setMessage(getString(R.string.privacy_delete_account_label))
-                    .setNegativeButton(getString(R.string.cancel), (dialog, which) -> {} )
-                    .create();
-        }
-
+    @Override
+    public void onDeleteAccountSuccess() {
+        logoutAndRestartApp();
     }
 }
