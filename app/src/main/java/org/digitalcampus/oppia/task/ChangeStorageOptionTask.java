@@ -18,18 +18,11 @@
 package org.digitalcampus.oppia.task;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-
-import androidx.preference.PreferenceManager;
-
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -40,8 +33,6 @@ import org.digitalcampus.oppia.utils.storage.StorageUtils;
 
 import java.io.File;
 import java.io.IOException;
-
-import javax.inject.Inject;
 
 public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress, Payload> {
 
@@ -145,7 +136,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
             FileUtils.deleteDir(source);
             Log.d(TAG, "Copying " + sourcePath + " completed");
         } catch (IOException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, "Copying " + sourcePath + " to " + destPath + " failed", e);
             return false;
         }

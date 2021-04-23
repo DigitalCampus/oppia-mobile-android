@@ -20,10 +20,9 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
@@ -83,7 +82,7 @@ public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_connection));
         } catch (JSONException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, "JSONException:", e);
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_processing_response));

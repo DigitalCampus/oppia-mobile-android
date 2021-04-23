@@ -8,6 +8,7 @@
     <string name="menu_download">Download Courses</string>
     <string name="menu_language">Change language</string>
     <string name="menu_settings">Settings</string>
+    <string name="menu_privacy">Privacy and Your Data</string>
     <string name="menu_about">About</string>
     <string name="menu_help">Help</string>
     <string name="menu_logout">Logout</string>
@@ -26,6 +27,7 @@
     <string name="fragment_welcome_title">Welcome to &appName;</string>
     <string name="fragment_welcome_desc">&appName; is a mobile learning platform for delivering learning content, video and quizzes.\n\n\'Oppia\' means \'to learn\' in Finnish</string>
     <string name="fragment_welcome_login_info">To get started with &appName;, you will need to register or login.</string>
+    <string name="fragment_welcome_privacy_info">By registering or logging in, you agree to our <a href="">Privacy Policy and Terms of Service</a>.</string>
     <string name="fragment_welcome_powered_by">Powered by <a href="http://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
 
     <string name="tab_title_about">About</string>
@@ -33,7 +35,8 @@
     <string name="tab_title_help">Help</string>
     <string name="tab_title_login">Login</string>
     <string name="tab_title_points">Points</string>
-    <string name="tab_title_privacy">Privacy</string>
+    <string name="tab_title_privacy">Privacy Policy</string>
+    <string name="tab_title_terms">Terms of Service</string>
     <string name="tab_title_register">Register</string>
     <string name="tab_title_reset">Reset Password</string>
     <string name="tab_title_scorecard">Scorecard</string>
@@ -256,6 +259,7 @@
     <string name="error_connection_required">You need an active internet connection to access this page. Please turn on wifi or mobile internet connection and try again.</string>
     <string name="error_connection_ssl">Error connecting to server due to SSL problems. Please, ensure that the host in your &appName;
         server setting is correct, and that your device has the right time/date</string>
+    <string name="error_connection_timeout">Timeout error connecting to server. Please check you have a stable internet connection and try again.</string>
     <string name="error_installing_course">%1$s: failed to install</string>
     <string name="error_latest_already_installed">%1$s: latest version already installed</string>
     <string name="error_login">Invalid username/password\nPlease try again</string>
@@ -356,6 +360,27 @@
     <string name="permissions.not_askable.info">You see this message because permissions were prompted before and you denied them and checked \"Don\'t ask again\"</string>
     <string name="permissions.bluetooth.message">The app needs some additional permissions to scan for Bluetooth devices.</string>
     <string name="error_apikey_expired">Your API key expired. Please, log in again.</string>
+
+    <string name="privacy.title">Privacy and Your Data</string>
+    <string name="privacy.policy_info">Privacy policy</string>
+    <string name="privacy.terms">Terms of Service</string>
+    <string name="privacy.data_why">How is your data used?</string>
+    <string name="privacy.data_what">What data is collected?</string>
+
+    <string name="privacy.section.privacy">Privacy and Data Use</string>
+    <string name="privacy.section.analytics">Analytics Preferences</string>
+    <string name="privacy.section.manage_data">Manage your data</string>
+
+    <string name="privacy.download_data.info">Export a copy of the contents in your &appName; account to back it up or explore it.</string>
+    <string name="privacy.download_data.label">Download data</string>
+    <string name="privacy.delete_account.info">Completely remove your account and all associated data from the &appName; server.</string>
+    <string name="privacy.delete_account.label">Delete account</string>
+    <string name="privace.delete_account.explanation">Deleting your account is permanent, all your data will be removed. To use &appName; again you will need to create a new account. \n\nPlease enter your password below to confirm deletion of your account.</string>
+
+    <string name="analytics.optin.title">Analytics Preferences</string>
+    <string name="analytics.optin.description">To help improve &appName;, you can opt-in to sending automated bug reports and additional analytics. You can change these settings at any time in the app.</string>
+    <string name="privacy.optin.bugreport.switch">Allow sending crash reports</string>
+    <string name="privacy.optin.analytics.switch">Allow sending usage info</string>
 
     <string name="open_digest.errors.invalid_param">The \"digest\" parameter is either misconfigured or missing. Please, check that the link is valid.</string>
     <string name="open_digest.errors.not_logged_in">You are not logged in. Please, login and try to open the link again.</string>
@@ -519,6 +544,7 @@
         <item quantity="few">There are %d new courses available</item>
         <item quantity="other">There are %d new courses available</item>
     </plurals>
+    <string name="btn_continue">Continue</string>
 
     <string name="course_deleted">Course deleted</string>
     <string name="course_deleted_dialog_message">This course was deleted from the server and it is no longer available in the app.\nDo you want to remove now from the app?</string>
@@ -528,7 +554,6 @@
     <string name="course_updates">Course updates</string>
     <string name="new_courses">New courses</string>
     <string name="back">Back</string>
-    <string name="continue_str">Continue</string>
     <string name="continue_to_course">Continue to course</string>
 
 </resources>

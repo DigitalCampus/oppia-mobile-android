@@ -3,17 +3,14 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.exception.WrongServerException;
 import org.digitalcampus.oppia.gamification.LeaderboardUtils;
-import org.digitalcampus.oppia.listener.SubmitEntityListener;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.task.result.BasicResult;
-import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
 
@@ -49,15 +46,15 @@ public class UpdateLeaderboardFromServerTask extends APIRequestTask<Void, Object
                     result.setSuccess(true);
                     result.setResultMessage(updatedPositions + " updated.");
                 } catch (ParseException e) {
-                    Mint.logException(e);
+                    Analytics.logException(e);
                     Log.d(TAG, "ParseException:", e);
                     result.setSuccess(false);
                 } catch (JSONException e) {
-                    Mint.logException(e);
+                    Analytics.logException(e);
                     Log.d(TAG, "JSONException:", e);
                     result.setSuccess(false);
                 } catch (WrongServerException e) {
-                    Mint.logException(e);
+                    Analytics.logException(e);
                     Log.d(TAG, "WrongServerException:", e);
                     result.setSuccess(false);
                 }
@@ -77,7 +74,7 @@ public class UpdateLeaderboardFromServerTask extends APIRequestTask<Void, Object
             }
 
         } catch (IOException e) {
-            Mint.logException(e);
+            Analytics.logException(e);
             Log.d(TAG, "IOException:", e);
             result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_connection_required));

@@ -60,17 +60,5 @@ public class AboutUITest {
         onView(withId(R.id.about_versionno)).check(matches(withText(containsString(BuildConfig.VERSION_NAME))));
     }
 
-    @Test
-    public void withBundleTab() {
-        Intent i = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putInt(AboutActivity.TAB_ACTIVE, AboutActivity.TAB_PRIVACY);
-        i.putExtras(bundle);
-        aboutActivityTestRule.launchActivity(i);
-
-        onView(allOf(withText(R.string.tab_title_privacy), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                isDescendantOfA(withId(R.id.tabs_toolbar))))
-                .perform(click());
-    }
 
 }

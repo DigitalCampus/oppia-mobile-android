@@ -145,6 +145,11 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_LAST_NEW_COURSE_SEEN_TIMESTAMP = "prefNewCourseTimestamp";
 
 
+    //Privacy tracking preferences
+    public static final String PREF_ANALYTICS_INITIAL_PROMPT = "prefAnalyticsInitialPrompt";
+    public static final String PREF_BUG_REPORT_ENABLED = "prefBugReportEnabled";
+    public static final String PREF_ANALYTICS_ENABLED = "prefAnalyticsEnabled";
+
     private ProgressDialog pDialog;
     private PreferenceChangedCallback currentPrefScreen;
 

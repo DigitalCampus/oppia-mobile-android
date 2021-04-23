@@ -40,6 +40,8 @@ import androidx.work.WorkManager;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.analytics.BaseAnalytics;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.database.MyDatabase;
 import org.digitalcampus.oppia.di.AppComponent;
@@ -124,6 +126,7 @@ public class App extends Application {
 
     private AppComponent appComponent;
     private static MyDatabase db;
+    private static volatile BaseAnalytics analytics;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -141,6 +144,7 @@ public class App extends Application {
                 .build();
 
         DbHelper.getInstance(this).getReadableDatabase();
+        Analytics.initializeAnalytics(getApplicationContext());
 
         // this method fires once at application start
         Log.d(TAG, "Application start");
@@ -294,7 +298,6 @@ public class App extends Application {
             editor.apply();
         }
     }
-
 
     public AppComponent getComponent() {
         if (appComponent == null) {

@@ -19,24 +19,22 @@ package org.digitalcampus.oppia.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
-
-import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
 import org.digitalcampus.oppia.adapter.QuizAnswersFeedbackAdapter;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizAnswerFeedback;
+import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.json.JSONArray;
@@ -48,6 +46,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -103,7 +102,7 @@ public class QuizAttemptActivity extends AppActivity {
 
 		} catch (InvalidXMLException ixmle) {
 			Log.d(TAG,"Invalid course xml file", ixmle);
-			Mint.logException(ixmle);
+			Analytics.logException(ixmle);
 		}
 
 		if (quizAttempt.getData() == null){
