@@ -5,14 +5,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.AppActivity;
+import org.digitalcampus.oppia.listener.APIRequestListener;
+import org.digitalcampus.oppia.task.DownloadUserDataTask;
+import org.digitalcampus.oppia.task.Payload;
 
 import androidx.annotation.Nullable;
 
-public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
+public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment implements APIRequestListener {
 
     protected static final String TAG = DownloadUserDataDialogFragment.class.getSimpleName();
 
@@ -35,6 +40,8 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        getDialog().setCanceledOnTouchOutside(false);
+
         downloadDataList = view.findViewById(R.id.download_data_list);
         loadingSpinner = view.findViewById(R.id.loading_download);
 
@@ -47,9 +54,24 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
 
 
     private void downloadUserData(String data){
-        getDialog().setCancelable(false);
         Log.d(TAG, data);
         loadingSpinner.setVisibility(View.VISIBLE);
         downloadDataList.setVisibility(View.INVISIBLE);
+
+        DownloadUserDataTask task = new DownloadUserDataTask(getContext());
+        task.setAPIRequestListener(this);
+        task.execute(data);
+    }
+
+    @Override
+    public void apiRequestComplete(Payload response) {
+        Toast.makeText(getActivity(), response.getResultResponse(), Toast.LENGTH_LONG).show();
+        dismiss();
+    }
+
+    @Override
+    public void apiKeyInvalidated() {
+        ((AppActivity) getActivity()).apiKeyInvalidated();
+        dismiss();
     }
 }

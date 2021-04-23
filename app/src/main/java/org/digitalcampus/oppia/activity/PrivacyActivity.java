@@ -124,17 +124,15 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
     private void showDeleteAccountWarning(){
 
         FragmentManager fm = getSupportFragmentManager();
-        DeleteAccountDialogFragment editNameDialogFragment = DeleteAccountDialogFragment.newInstance();
-        editNameDialogFragment.show(fm, "fragment_delete_account");
+        DeleteAccountDialogFragment deleteDialog = DeleteAccountDialogFragment.newInstance();
+        deleteDialog.show(fm, "fragment_delete_account");
 
     }
 
     private void showDownloadDataDialog(){
-
         FragmentManager fm = getSupportFragmentManager();
-        DownloadUserDataDialogFragment editNameDialogFragment = DownloadUserDataDialogFragment.newInstance();
-        editNameDialogFragment.show(fm, "fragment_download_data");
-
+        DownloadUserDataDialogFragment downloadDialog = DownloadUserDataDialogFragment.newInstance();
+        downloadDialog.show(fm, "fragment_download_data");
     }
 
 

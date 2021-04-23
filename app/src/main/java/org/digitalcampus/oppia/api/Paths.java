@@ -19,6 +19,7 @@ public class Paths {
     public static final String SERVER_INFO_PATH = "server/";
     public static final String UPDATE_PROFILE_PATH = OPPIAMOBILE_API + "profileupdate/";
     public static final String DELETE_ACCOUNT_PATH = OPPIAMOBILE_API + "deleteaccount/";
+    public static final String DOWNLOAD_ACCOUNT_DATA_PATH = OPPIAMOBILE_API + "downloaddata/";
 
     private Paths() {
         throw new IllegalStateException("Utility class");

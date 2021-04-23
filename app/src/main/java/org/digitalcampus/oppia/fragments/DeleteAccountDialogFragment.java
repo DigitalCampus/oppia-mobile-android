@@ -74,7 +74,7 @@ public class DeleteAccountDialogFragment extends DialogFragment implements APIRe
     @Override
     public void apiRequestComplete(Payload response) {
         if (response.isResult()){
-            Toast.makeText(getContext(), response.getResultResponse(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), response.getResultResponse(), Toast.LENGTH_LONG).show();
             listener.onDeleteAccountSuccess();
             dismiss();
         }
@@ -86,6 +86,7 @@ public class DeleteAccountDialogFragment extends DialogFragment implements APIRe
 
     @Override
     public void apiKeyInvalidated() {
+        dismiss();
         ((AppActivity) getActivity()).apiKeyInvalidated();
     }
 }
