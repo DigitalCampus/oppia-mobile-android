@@ -38,14 +38,16 @@
     <string name="tab_title_privacy">Privacy Policy</string>
     <string name="tab_title_terms">Terms of Service</string>
     <string name="tab_title_register">Register</string>
-    <string name="tab_title_reset">Reset Password</string>
+    <string name="tab_title_reset_password">Reset Password</string>
+    <string name="tab_title_remember_username">Remember username</string>
     <string name="tab_title_scorecard">Scorecard</string>
     <string name="tab_title_activity">Activity</string>
     <string name="tab_title_welcome">Welcome</string>
 
     <string name="title_about">About</string>
     <string name="title_baseline">Baseline</string>
-    <string name="title_btn_reset">Reset password</string>
+    <string name="title_btn_reset_password">Reset password</string>
+    <string name="title_btn_remember_username">Remember username</string>
     <string name="title_download_activity">Manage courses</string>
     <string name="title_activity_course_index">Course Index</string>
     <string name="title_activity_course">Activity</string>
@@ -279,7 +281,8 @@
     <string name="error_resource_app_not_found">You don\'t seem to have an app installed to open \'%1$s\'. Please install an app capable of opening this type of file.</string>
     <string name="error_resource_not_found">File: \'%1$s\' not found.</string>
     <string name="error_preloading_accounts">Error preloading accounts from CSV file</string>
-    <string name="error_reset">Username or email not found\nPlease try again</string>
+    <string name="error_reset_password">Username or email not found\nPlease try again</string>
+    <string name="error_remember_username">Email not found\nPlease try again</string>
     <string name="no_title_set">No title set</string>
 
     <string name="error_insufficient_storage_available">Insufficient storage available</string>
@@ -305,9 +308,11 @@
     <string name="register_process">Registering …</string>
     <string name="register_complete">Successfully registered</string>
 
-    <string name="reset_alert_title">Reset</string>
+    <string name="reset_password">Reset password</string>
     <string name="reset_process">Resetting password …</string>
-    <string name="reset_complete">Your password has now been reset.\n\nPlease check your email for your new password.</string>
+    <string name="reset_password_complete">Your password has now been reset.\n\nPlease check your email for your new password.</string>
+
+    <string name="remember_username_complete">An email has been sent with a reminder of your username</string>
 
     <string name="change_language">Change Language</string>
 
@@ -559,6 +564,7 @@
     <string name="new_courses">New courses</string>
     <string name="back">Back</string>
     <string name="continue_to_course">Continue to course</string>
+    <string name="processing">Processing...</string>
 
 </resources>
 

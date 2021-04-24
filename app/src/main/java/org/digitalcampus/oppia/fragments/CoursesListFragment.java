@@ -287,7 +287,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void deleteCourse(Course course) {
 
-        showProgressDialog(getString(R.string.course_deleting));
+        showProgressDialog(getString(R.string.course_deleting), false);
 
         DeleteCourseTask task = new DeleteCourseTask(getActivity());
         task.setOnDeleteCourseListener(CoursesListFragment.this);
@@ -309,7 +309,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void confirmCourseUpdateActivity(Course course){
 
-        showProgressDialog(getString(R.string.course_updating));
+        showProgressDialog(getString(R.string.course_updating), false);
 
         UpdateCourseActivityTask task = new UpdateCourseActivityTask(getActivity(),
                 SessionManager.getUserId(getActivity()), apiEndpoint);

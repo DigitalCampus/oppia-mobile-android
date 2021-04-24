@@ -38,7 +38,7 @@ public class ResetUITest extends MockedApiEndpointTest {
 
         onView(withId(R.id.welcome_login))
                 .perform(scrollTo(), click());
-        onView(withId(R.id.forgot_btn))
+        onView(withId(R.id.btn_reset_password))
                 .perform(click());
 
         onView(withId(R.id.reset_username_field))
@@ -59,7 +59,7 @@ public class ResetUITest extends MockedApiEndpointTest {
 
         onView(withId(R.id.welcome_login))
                 .perform(scrollTo(), click());
-        onView(withId(R.id.forgot_btn))
+        onView(withId(R.id.btn_reset_password))
                 .perform(click());
 
         onView(withId(R.id.reset_username_field))
@@ -68,7 +68,7 @@ public class ResetUITest extends MockedApiEndpointTest {
         onView(withId(R.id.reset_btn))
                 .perform(scrollTo(), click());
 
-        onView(withText(R.string.error_reset))
+        onView(withText(R.string.error_reset_password))
                 .check(matches(isDisplayed()));
     }
 }

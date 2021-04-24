@@ -66,11 +66,11 @@ public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
                 CourseInstallViewAdapter course = parseCourse(response.body().string());
                 payload.setResponseData(Collections.singletonList(course));
                 payload.setResult(true);
-                payload.setResultResponse(ctx.getString(R.string.reset_complete));
+                payload.setResultResponse(ctx.getString(R.string.reset_password_complete));
             } else {
                 payload.setResult(false);
                 if (response.code() == 400) {
-                    payload.setResultResponse(ctx.getString(R.string.error_reset));
+                    payload.setResultResponse(ctx.getString(R.string.error_reset_password));
                 } else if (response.code() == 404){
                     payload.setResultResponse(ctx.getString(R.string.open_digest_errors_course_not_found));
                 } else {

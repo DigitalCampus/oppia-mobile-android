@@ -64,8 +64,11 @@ public class AppFragment extends Fragment implements APIKeyRequestListener{
         return prefs;
     }
 
-
     public void showProgressDialog(String message) {
+        showProgressDialog(message, true);
+    }
+
+    public void showProgressDialog(String message, boolean cancelable) {
 
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
@@ -74,7 +77,7 @@ public class AppFragment extends Fragment implements APIKeyRequestListener{
 
         progressDialog = new ProgressDialog(getActivity(), R.style.Oppia_AlertDialogStyle);
         progressDialog.setMessage(message);
-        progressDialog.setCancelable(false);
+        progressDialog.setCancelable(cancelable);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
     }

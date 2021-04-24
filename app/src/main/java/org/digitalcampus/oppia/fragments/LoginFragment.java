@@ -55,6 +55,7 @@ public class LoginFragment extends AppFragment implements SubmitEntityListener<U
     private Button registerBtn;
     private Button loginBtn;
     private Button resetPasswordBtn;
+    private View rememberUsernameBtn;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -68,7 +69,8 @@ public class LoginFragment extends AppFragment implements SubmitEntityListener<U
         passwordField = v.findViewById(R.id.login_password_field);
         loginBtn = v.findViewById(R.id.login_btn);
         registerBtn = v.findViewById(R.id.action_register_btn);
-        resetPasswordBtn = v.findViewById(R.id.forgot_btn);
+        resetPasswordBtn = v.findViewById(R.id.btn_reset_password);
+        rememberUsernameBtn = v.findViewById(R.id.btn_remember_username);
         return v;
     }
 
@@ -82,12 +84,17 @@ public class LoginFragment extends AppFragment implements SubmitEntityListener<U
         loginBtn.setOnClickListener(v -> onLoginClick());
 
         resetPasswordBtn.setOnClickListener(v -> {
-            WelcomeActivity wa = (WelcomeActivity) LoginFragment.super.getActivity();
-            wa.switchTab(WelcomeActivity.TAB_PASSWORD);
+            WelcomeActivity wa = (WelcomeActivity) getActivity();
+            wa.switchTab(WelcomeActivity.TAB_RESET_PASSWORD);
         });
         registerBtn.setOnClickListener(v -> {
-            WelcomeActivity wa = (WelcomeActivity) LoginFragment.super.getActivity();
+            WelcomeActivity wa = (WelcomeActivity) getActivity();
             wa.switchTab(WelcomeActivity.TAB_REGISTER);
+        });
+
+        rememberUsernameBtn.setOnClickListener(v -> {
+            WelcomeActivity wa = (WelcomeActivity) getActivity();
+            wa.switchTab(WelcomeActivity.TAB_REMEMBER_USERNAME);
         });
 
     }
