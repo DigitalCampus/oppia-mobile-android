@@ -139,7 +139,7 @@
     <string name="register_form_phoneno_title">Numéro de téléphone</string>
     <string name="register_btn_text">S\'inscrire</string>
 
-    <string name="reset_username_title">Nom d\'utilisateur ou Email</string>
+    <string name="reset_password_field">Nom d\'utilisateur ou Email</string>
 
     <string name="yes">Oui</string>
     <string name="no">Non</string>

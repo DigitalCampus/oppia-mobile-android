@@ -148,7 +148,7 @@
 <string name="register_form_phoneno_title">رقم الهاتف </string>
 <string name="register_btn_text">تسجيل دخول</string>
 
-<string name="reset_username_title">الإسم أو عنوان البريد الإلكتروني</string>
+<string name="reset_password_field">الإسم أو عنوان البريد الإلكتروني</string>
 
 <string name="yes">نعم</string>
 <string name="no">كلا</string>

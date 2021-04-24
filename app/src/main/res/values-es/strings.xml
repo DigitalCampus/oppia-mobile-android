@@ -309,7 +309,7 @@
     <string name="prefDownloadViaCellularEnabled">Descargar multimedia usando los datos del teléfono</string>
     <string name="prefLogoutEnabled">Permitir cierre de sesión desde el menú principal</string>
     <string name="register_alert_title">Registro</string>
-    <string name="reset_username_title">Usuario o Email</string>
+    <string name="reset_password_field">Usuario o Email</string>
     <string name="reset_process">Restaurando contraseña…</string>
     <string name="reset_password_complete">Su contraseña ha sido restaurada.\n\nCompruebe su email para ver la nueva contraseña.</string>
     <string name="tab_title_activity">Actividad</string>

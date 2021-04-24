@@ -106,7 +106,7 @@
 	<string name="register_form_password_again_title">पासवर्ड दोबारा लिखें </string>
 	<string name="register_btn_text">पंजीकरण </string>
 	
-	<string name="reset_username_title">उपयोगकर्ता का नाम </string>
+	<string name="reset_password_field">उपयोगकर्ता का नाम </string>
 	
 	<string name="yes">हाँ </string>
 	<string name="no">नहीं</string>
