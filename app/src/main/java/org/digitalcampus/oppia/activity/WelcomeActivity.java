@@ -30,7 +30,8 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.LoginFragment;
 import org.digitalcampus.oppia.fragments.RegisterFragment;
-import org.digitalcampus.oppia.fragments.ResetFragment;
+import org.digitalcampus.oppia.fragments.RememberUsernameFragment;
+import org.digitalcampus.oppia.fragments.ResetPasswordFragment;
 import org.digitalcampus.oppia.fragments.WelcomeFragment;
 import org.digitalcampus.oppia.model.Lang;
 
@@ -42,7 +43,8 @@ public class WelcomeActivity extends AppActivity {
 	public static final int TAB_WELCOME = 0;
     public static final int TAB_LOGIN = 1;
     public static final int TAB_REGISTER = 2;
-    public static final int TAB_PASSWORD = 3;
+    public static final int TAB_RESET_PASSWORD = 3;
+	public static final int TAB_REMEMBER_USERNAME = 4;
 
     private ViewPager viewPager;
     private int currentTab = TAB_WELCOME;
@@ -79,9 +81,13 @@ public class WelcomeActivity extends AppActivity {
 		fragments.add(fRegister);
         tabTitles.add(this.getString(R.string.tab_title_register));
 
-		Fragment fReset = ResetFragment.newInstance();
-		fragments.add(fReset);
-        tabTitles.add(this.getString(R.string.tab_title_reset));
+		Fragment fResetPassword = ResetPasswordFragment.newInstance();
+		fragments.add(fResetPassword);
+        tabTitles.add(this.getString(R.string.tab_title_reset_password));
+
+		Fragment fRememberUsername = RememberUsernameFragment.newInstance();
+		fragments.add(fRememberUsername);
+		tabTitles.add(this.getString(R.string.tab_title_remember_username));
 
         ActivityPagerAdapter apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, tabTitles);
 		viewPager.setAdapter(apAdapter);

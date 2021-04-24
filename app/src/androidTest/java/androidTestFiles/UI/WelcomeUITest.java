@@ -48,7 +48,7 @@ public class WelcomeUITest {
         onView(withId(R.id.welcome_login))
                 .perform(scrollTo(), click());
 
-        onView(withId(R.id.forgot_btn))
+        onView(withId(R.id.btn_reset_password))
                 .perform(scrollTo(), click());
 
         onView(withId(R.id.reset_btn))
