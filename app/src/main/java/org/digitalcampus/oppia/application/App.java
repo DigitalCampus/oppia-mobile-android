@@ -31,7 +31,9 @@ import android.util.Log;
 import androidx.room.Room;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -45,8 +47,9 @@ import org.digitalcampus.oppia.database.MyDatabase;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
-import org.digitalcampus.oppia.service.NoCourseDownloadedWorker;
+import org.digitalcampus.oppia.service.CoursesChecksWorker;
 import org.digitalcampus.oppia.service.TrackerWorker;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
@@ -118,8 +121,8 @@ public class App extends Application {
 
     // only used in case a course doesn't have any lang specified
     public static final String DEFAULT_LANG = "en";
-    private static final String NAME_TRACKER_SEND_WORK = "tracker_send_work";
-    private static final String NAME_NO_COURSE_DOWNLOADED_WORKER = "no_course_worker";
+    private static final String WORK_TRACKER_SEND = "tracker_send_work";
+    private static final String WORK_COURSES_CHECKS = "no_course_worker";
 
     private AppComponent appComponent;
     private static MyDatabase db;
@@ -209,13 +212,20 @@ public class App extends Application {
 
         if (backgroundData) {
             scheduleTrackerWork();
-            scheduleNoCourseDownloadedNotification();
+            scheduleCoursesChecksWork();
         } else {
             cancelTrackerWork();
-            cancleNoCourseDownloadedNotification();
+            cancelCoursesChecksWork();
         }
     }
 
+    private void launchTrackerWorker() {
+
+        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(CoursesChecksWorker.class).build();
+        WorkManager.getInstance(this).enqueueUniqueWork(WORK_COURSES_CHECKS,
+                ExistingWorkPolicy.REPLACE, oneTimeWorkRequest);
+
+    }
 
     private void scheduleTrackerWork() {
 
@@ -228,32 +238,33 @@ public class App extends Application {
                 .setInitialDelay(1, TimeUnit.HOURS)
                 .build();
 
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(NAME_TRACKER_SEND_WORK,
-                ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_TRACKER_SEND,
+                ExistingPeriodicWorkPolicy.KEEP, trackerSendWork);
 
     }
 
     public void cancelTrackerWork() {
 
-        WorkManager.getInstance(this).cancelUniqueWork(NAME_TRACKER_SEND_WORK);
+        WorkManager.getInstance(this).cancelUniqueWork(WORK_TRACKER_SEND);
     }
 
-    private void scheduleNoCourseDownloadedNotification() {
+    private void scheduleCoursesChecksWork() {
+
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
-        PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(NoCourseDownloadedWorker.class, 12, TimeUnit.HOURS)
+        PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(CoursesChecksWorker.class, 12, TimeUnit.HOURS)
                 .setConstraints(constraints)
-                .setInitialDelay(5, TimeUnit.MINUTES)
                 .build();
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(NAME_NO_COURSE_DOWNLOADED_WORKER,
-                ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_COURSES_CHECKS,
+                ExistingPeriodicWorkPolicy.KEEP, trackerSendWork);
 
     }
 
-    public void cancleNoCourseDownloadedNotification() {
-        WorkManager.getInstance(this).cancelUniqueWork(NAME_NO_COURSE_DOWNLOADED_WORKER);
+    public void cancelCoursesChecksWork() {
+        WorkManager.getInstance(this).cancelUniqueWork(WORK_COURSES_CHECKS);
     }
 
     public static SharedPreferences getPrefs(Context context) {
