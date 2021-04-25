@@ -81,13 +81,22 @@
                 android:theme="@style/PrimaryButton"/>
 
             <Button
-                android:id="@+id/forgot_btn"
+                android:id="@+id/btn_reset_password"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding_large"
                 android:layout_marginRight="@dimen/padding_large"
-                android:text="@string/title_btn_reset"/>
+                android:text="@string/title_btn_reset_password"/>
+
+            <Button
+                android:id="@+id/btn_remember_username"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_large"
+                android:layout_marginRight="@dimen/padding_large"
+                android:text="@string/title_btn_remember_username"/>
 
             <TextView
                 android:id="@+id/dont_have_account"

@@ -26,6 +26,8 @@ import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -36,7 +38,7 @@ import okhttp3.Response;
 public class APIUserRequestTask extends APIRequestTask<String, Object, BasicResult>{
 
 	private APIRequestListener requestListener;
-	private boolean apiKeyInvalidated = false;
+	protected boolean apiKeyInvalidated = false;
 
     public APIUserRequestTask(Context ctx) { super(ctx); }
     public APIUserRequestTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
@@ -91,19 +93,32 @@ public class APIUserRequestTask extends APIRequestTask<String, Object, BasicResu
 	
 	@Override
 	protected void onPostExecute(BasicResult result) {
+
 		synchronized (this) {
             if (requestListener != null) {
                 if (apiKeyInvalidated){
                     requestListener.apiKeyInvalidated();
                 }
                 else{
+                    String message = result.getResultMessage();
+                    try {
+                        JSONObject json = new JSONObject(message);
+                        if (json.has("message")){
+                            message = json.getString("message");
+                        }
+                    } catch (JSONException e) {
+                        Log.d(TAG, e.getMessage());
+                    }
+
                     Payload payload = new Payload(); // TODO PAYLOAD REFACTOR
                     payload.setResult(result.isSuccess());
-                    payload.setResultResponse(result.getResultMessage());
+                    payload.setResultResponse(message);
                     requestListener.apiRequestComplete(payload);
                 }
             }
         }
+
+        super.onPostExecute(result);
 	}
 	
 	public void setAPIRequestListener(APIRequestListener srl) {

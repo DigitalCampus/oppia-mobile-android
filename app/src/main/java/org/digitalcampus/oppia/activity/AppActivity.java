@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.activity;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -77,6 +78,8 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     @Inject
     SharedPreferences prefs;
 
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +117,27 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     public SharedPreferences getPrefs() {
         return prefs;
+    }
+
+    public void showProgressDialog(String message) {
+
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+
+        progressDialog = new ProgressDialog(this, R.style.Oppia_AlertDialogStyle);
+        progressDialog.setMessage(message);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+    }
+
+    public void hideProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()){
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
     }
 
     @Override

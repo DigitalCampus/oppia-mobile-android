@@ -13,6 +13,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.transition.Hold;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.squareup.picasso.Picasso;
 
@@ -27,6 +28,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,11 +65,11 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
     @Override
     public void onBindViewHolder(final CourseListViewHolder viewHolder, final int position) {
 
-        final Course c = getItemAtPosition(position);
+        final Course course = getItemAtPosition(position);
 
         String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-        viewHolder.courseTitle.setText(c.getTitle(lang));
-        String description = c.getDescription(lang);
+        viewHolder.courseTitle.setText(course.getTitle(lang));
+        String description = course.getDescription(lang);
         if (!TextUtils.isEmpty(description) && prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, BuildConfig.SHOW_COURSE_DESCRIPTION)) {
             viewHolder.courseDescription.setText(description);
             viewHolder.courseDescription.setVisibility(View.VISIBLE);
@@ -76,7 +78,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         }
 
         if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, App.DEFAULT_DISPLAY_PROGRESS_BAR)) {
-            int courseProgress = (int) c.getProgressPercent();
+            int courseProgress = (int) course.getProgressPercent();
             viewHolder.circularProgressBar.setVisibility(View.VISIBLE);
             viewHolder.circularProgressBar.setProgressWithAnimation(courseProgress, 1000L);
         } else {
@@ -84,14 +86,24 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         }
 
         // set image
-        if (c.getImageFile() != null) {
-            String image = c.getImageFileFromRoot();
+        if (course.getImageFile() != null) {
+            String image = course.getImageFileFromRoot();
             Picasso.get().load(new File(image))
                     .placeholder(R.drawable.course_icon_placeholder)
                     .transform(new CircleTransform())
                     .into(viewHolder.courseImage);
         } else {
             viewHolder.courseImage.setImageResource(R.drawable.course_icon_placeholder);
+        }
+
+        if (course.isToUpdate()) {
+            viewHolder.imgSyncStatus.setVisibility(View.VISIBLE);
+            viewHolder.imgSyncStatus.setImageResource(R.drawable.ic_action_refresh);
+        } else if (course.isToDelete()) {
+            viewHolder.imgSyncStatus.setVisibility(View.VISIBLE);
+            viewHolder.imgSyncStatus.setImageResource(R.drawable.dialog_ic_action_delete);
+        } else {
+            viewHolder.imgSyncStatus.setVisibility(View.GONE);
         }
 
     }
@@ -112,6 +124,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         private TextView courseTitle;
         private TextView courseDescription;
         private ImageView courseImage;
+        private AppCompatImageView imgSyncStatus;
 
 
         public CourseListViewHolder(View itemView) {
@@ -122,6 +135,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
             courseDescription = itemView.findViewById(R.id.course_description);
             courseImage = itemView.findViewById(R.id.course_image);
             circularProgressBar = itemView.findViewById(R.id.circularProgressBar);
+            imgSyncStatus = itemView.findViewById(R.id.img_sync_status);
 
             itemView.setOnClickListener(v -> {
                 if (itemClickListener != null) {

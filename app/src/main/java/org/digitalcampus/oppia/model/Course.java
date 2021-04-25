@@ -45,6 +45,7 @@ public class Course extends MultiLangInfoModel implements Serializable {
     private Double versionId;
     private boolean installed;
     private boolean toUpdate;
+    private boolean toDelete;
     private String downloadUrl;
     private String imageFile;
     private List<Media> media = new ArrayList<>();
@@ -236,5 +237,13 @@ public class Course extends MultiLangInfoModel implements Serializable {
             }
         }
         throw new GamificationEventNotFound(event);
+    }
+
+    public boolean isToDelete() {
+        return toDelete;
+    }
+
+    public void setToDelete(boolean toDelete) {
+        this.toDelete = toDelete;
     }
 }
