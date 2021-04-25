@@ -36,14 +36,14 @@
     <string name="tab_title_points">Points</string>
     <string name="tab_title_privacy">رازداری</string>
     <string name="tab_title_register">رجسٹریشن</string>
-    <string name="tab_title_reset">پاس ورڈ ریسٹ کریں</string>
+    <string name="tab_title_reset_password">پاس ورڈ ریسٹ کریں</string>
     <string name="tab_title_scorecard">سكوركارڈ</string>
     <string name="tab_title_activity">سرگرمی</string>
     <string name="tab_title_welcome">خوش آمدید</string>
     
     <string name="title_about">پروگرام کے بارے میں معالومات</string>
     <string name="title_baseline">Baseline</string>
-    <string name="title_btn_reset">پاس ورڈ ریسٹ کریں</string>
+    <string name="title_btn_reset_password">پاس ورڈ ریسٹ کریں</string>
 	<string name="title_download_activity">Manage courses</string>
     <string name="title_activity_course_index">کورس کی فہرست</string>
     <string name="title_activity_course">سرگرمی</string>
@@ -116,7 +116,7 @@
 	<string name="register_form_password_again_title">پاسورڈ (دوبارہ) </string>
 	<string name="register_btn_text">رجسٹریشن</string>
 	
-	<string name="reset_username_title">استمعال کردہ نام</string>
+	<string name="reset_password_field">استمعال کردہ نام</string>
 	
 	<string name="yes">ہاں</string>
 	<string name="no">نہیں</string>
@@ -209,9 +209,9 @@
 	<string name="register_process">Registering &#8203;</string>
 	<string name="register_complete">Successfully registered</string>
 	
-	<string name="reset_alert_title">رسےٹ</string>
+	<string name="reset_password">رسےٹ</string>
 	<string name="reset_process">&#8203;پاسورڈ رسےٹ ہو رہا ہے </string>
-	<string name="reset_complete">آپ کا پاس ورڈ رسےٹ ہو گیا ہے.\n\nPlease check your email for your new password.</string>
+	<string name="reset_password_complete">آپ کا پاس ورڈ رسےٹ ہو گیا ہے.\n\nPlease check your email for your new password.</string>
 	
 	<string name="change_language">زبان تبدیل کریں</string>
 	

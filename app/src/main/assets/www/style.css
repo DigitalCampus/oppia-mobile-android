@@ -51,12 +51,13 @@ ul {
 	margin: 10px 0;
 }
 
-li{
+ul li{
 	margin-left:25px;
 	margin-bottom:0.5em;
 	list-style: none;	
 }
-li:before {
+
+ul li:before {
       content:'\2022';
       display: block;
       position: relative;
@@ -67,6 +68,16 @@ li:before {
       color: #6F79EA;
       font-size: 30px;
  }
+
+ol {
+	margin: 10px 0;
+}
+
+ol li{
+	margin-left:25px;
+	margin-bottom:0.5em;
+}
+
 a {
 	color: #6163BB;
 	text-decoration: underline;

@@ -29,6 +29,7 @@ public class Tag implements Serializable{
 	private static final long serialVersionUID = 5144400570961137778L;
 	
 	public static final String TAG_CLASS = Tag.class.getSimpleName();
+
 	private String name;
 	private int count;
 	private int id;

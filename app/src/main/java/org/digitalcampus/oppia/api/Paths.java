@@ -13,11 +13,14 @@ public class Paths {
     public static final String COURSE_INFO_PATH = SERVER_COURSES_PATH + "%s";
     public static final String QUIZ_SUBMIT_PATH = OPPIAMOBILE_API + "quizattempt/";
     public static final String RESET_PATH = OPPIAMOBILE_API + "reset/";
+    public static final String REMEMBER_USERNAME_PATH = OPPIAMOBILE_API + "username/";
     public static final String REGISTER_PATH = OPPIAMOBILE_API + "register/";
     public static final String LOGIN_PATH = OPPIAMOBILE_API + "user/";
     public static final String ACTIVITYLOG_PATH = "api/activitylog/";
     public static final String SERVER_INFO_PATH = "server/";
     public static final String UPDATE_PROFILE_PATH = OPPIAMOBILE_API + "profileupdate/";
+    public static final String DELETE_ACCOUNT_PATH = OPPIAMOBILE_API + "deleteaccount/";
+    public static final String DOWNLOAD_ACCOUNT_DATA_PATH = OPPIAMOBILE_API + "downloaddata/";
 
     private Paths() {
         throw new IllegalStateException("Utility class");

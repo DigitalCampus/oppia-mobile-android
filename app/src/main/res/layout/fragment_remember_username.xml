@@ -11,25 +11,41 @@
         android:padding="@dimen/activity_horizontal_margin">
 
         <TextView
+            android:id="@+id/remember_username_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/HeaderText"
+            android:layout_marginTop="@android:dimen/notification_large_icon_height"
+            android:padding="5dp"
+            android:text="@string/tab_title_remember_username"/>
+
+        <TextView
+            android:id="@+id/remember_username_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/remember_username_description"/>
+
+        <TextView
             android:id="@+id/reset_username_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@android:dimen/notification_large_icon_height"
             android:padding="5dp"
-            android:text="@string/reset_username_title"/>
+            android:text="@string/register_form_email_title"/>
 
         <EditText
-            android:id="@+id/reset_username_field"
+            android:id="@+id/edit_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:padding="5dp"/>
 
         <Button
-            android:id="@+id/reset_btn"
+            android:id="@+id/btn_remember_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/title_btn_reset"/>
+            android:text="@string/title_btn_remember_username"/>
 
     </LinearLayout>
 

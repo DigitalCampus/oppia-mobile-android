@@ -17,8 +17,6 @@
 
 package org.digitalcampus.oppia.fragments;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +28,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.listener.SubmitEntityListener;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.task.ResetTask;
+import org.digitalcampus.oppia.task.ResetPasswordTask;
 import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
@@ -38,26 +36,25 @@ import org.json.JSONObject;
 
 import javax.inject.Inject;
 
-public class ResetFragment extends AppFragment implements SubmitEntityListener<User> {
+public class ResetPasswordFragment extends AppFragment implements SubmitEntityListener<User> {
 
     private EditText usernameField;
-    private ProgressDialog pDialog;
     private Button resetButton;
 
     @Inject
     ApiEndpoint apiEndpoint;
 
-    public static ResetFragment newInstance() {
-        return new ResetFragment();
+    public static ResetPasswordFragment newInstance() {
+        return new ResetPasswordFragment();
     }
 
-    public ResetFragment() {
+    public ResetPasswordFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_reset, container, false);
+        View v = inflater.inflate(R.layout.fragment_reset_password, container, false);
         getAppComponent().inject(this);
 
         usernameField = v.findViewById(R.id.reset_username_field);
@@ -72,19 +69,23 @@ public class ResetFragment extends AppFragment implements SubmitEntityListener<U
     }
 
     public void submitComplete(EntityResult<User> result) {
-        pDialog.dismiss();
+
+        if (getActivity() == null) {
+            return;
+        }
+
+        hideProgressDialog();
+
         if (result.isSuccess()) {
-            UIUtils.showAlert(super.getActivity(), R.string.reset_alert_title, result.getResultMessage());
+            UIUtils.showAlert(super.getActivity(), R.string.reset_password, result.getResultMessage());
         } else {
-            Context ctx = super.getActivity();
-            if (ctx != null) {
-                try {
-                    JSONObject jo = new JSONObject(result.getResultMessage());
-                    UIUtils.showAlert(super.getActivity(), R.string.error, jo.getString("error"));
-                } catch (JSONException je) {
-                    UIUtils.showAlert(super.getActivity(), R.string.error, result.getResultMessage());
-                }
+            try {
+                JSONObject jo = new JSONObject(result.getResultMessage());
+                UIUtils.showAlert(super.getActivity(), R.string.error, jo.getString("error"));
+            } catch (JSONException je) {
+                UIUtils.showAlert(super.getActivity(), R.string.error, result.getResultMessage());
             }
+
         }
     }
 
@@ -99,15 +100,11 @@ public class ResetFragment extends AppFragment implements SubmitEntityListener<U
             return;
         }
 
-        pDialog = new ProgressDialog(super.getActivity());
-        pDialog.setTitle(R.string.reset_alert_title);
-        pDialog.setMessage(getString(R.string.reset_process));
-        pDialog.setCancelable(true);
-        pDialog.show();
+        showProgressDialog(getString(R.string.reset_process));
 
         User user = new User();
         user.setUsername(username);
-        ResetTask rt = new ResetTask(super.getActivity(), apiEndpoint);
+        ResetPasswordTask rt = new ResetPasswordTask(super.getActivity(), apiEndpoint);
         rt.setResetListener(this);
         rt.execute(user);
     }

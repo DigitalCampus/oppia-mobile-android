@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:showDividers="middle"
+    android:padding="@dimen/padding_medium_2">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/privacy.download_data.description"
+        android:layout_margin="@dimen/activity_vertical_margin"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/download_data_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="?android:listDivider"
+            android:orientation="vertical"
+            android:showDividers="middle">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/download_data_profile"
+                style="@style/Oppia.Theme.BottomSheetItem"
+                android:drawableStart="@drawable/ic_settings_user"
+                android:drawableLeft="@drawable/ic_settings_user"
+                android:text="@string/privacy.download_data.profile"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/download_data_course"
+                style="@style/Oppia.Theme.BottomSheetItem"
+                android:drawableStart="@drawable/ic_notification"
+                android:drawableLeft="@drawable/ic_notification"
+                android:text="@string/privacy.download_data.course"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/download_data_quizzes"
+                style="@style/Oppia.Theme.BottomSheetItem"
+                android:drawableStart="@drawable/ic_nav_scorecard"
+                android:drawableLeft="@drawable/ic_nav_scorecard"
+                android:text="@string/privacy.download_data.quizzes"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/download_data_points"
+                style="@style/Oppia.Theme.BottomSheetItem"
+                android:drawableStart="@drawable/ic_nav_points"
+                android:drawableLeft="@drawable/ic_nav_points"
+                android:text="@string/nav_points"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/download_data_badges"
+                style="@style/Oppia.Theme.BottomSheetItem"
+                android:drawableStart="@drawable/ic_award"
+                android:drawableLeft="@drawable/ic_award"
+                android:text="@string/tab_title_badges"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/loading_download"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:orientation="vertical">
+
+            <ProgressBar
+                android:id="@+id/progressBar2"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/textView"
+                style="@style/SmallTextDark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/loading" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+
+
+</LinearLayout>

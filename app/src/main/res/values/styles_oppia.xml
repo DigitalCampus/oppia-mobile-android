@@ -202,4 +202,16 @@
         <item name="android:dividerHeight">2dp</item>
     </style>
 
+    <style name="Oppia.Theme.BottomSheetItem">
+        <item name="android:textSize">13sp</item>
+        <item name="android:drawablePadding">14dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">15dp</item>
+        <item name="drawableTint">@color/grey_dark</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:focusable">true</item>
+    </style>
+
 </resources>

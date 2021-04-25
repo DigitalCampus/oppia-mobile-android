@@ -27,7 +27,7 @@
     <string name="register_form_username_title">Käyttäjätunnus</string>
     <string name="prefUser">Käyttäjätunnus</string>
     <string name="register_form_email_title">Sähköposti</string>
-    <string name="reset_username_title">Käyttäjätunnus tai sähköposti</string>
+    <string name="reset_password_field">Käyttäjätunnus tai sähköposti</string>
     <string name="warning">Varokaa</string>
     <string name="title_login">Kirjaudu sisään</string>
     <string name="tab_title_welcome">Tervetuloa</string>

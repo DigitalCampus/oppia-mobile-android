@@ -32,13 +32,13 @@
     <string name="tab_title_points">पॉइंट्स</string>
     <string name="tab_title_privacy">गोपनीयता</string>
     <string name="tab_title_register">पंजीकरण</string>
-    <string name="tab_title_reset">पासवर्ड रिसेट करें</string>
+    <string name="tab_title_reset_password">पासवर्ड रिसेट करें</string>
     <string name="tab_title_scorecard">स्कोरकार्ड</string>
     <string name="tab_title_welcome">नमस्कार</string>
     
     <string name="title_about">प्रोग्राम के बारे में जाने</string>
     <string name="title_baseline">Baseline</string>
-    <string name="title_btn_reset">पासवर्ड रिसेट करें</string>
+    <string name="title_btn_reset_password">पासवर्ड रिसेट करें</string>
 	<string name="title_download_activity">Manage courses</string>
     <string name="title_activity_course_index">Course Index</string>
     <string name="title_activity_course">Activity</string>
@@ -106,7 +106,7 @@
 	<string name="register_form_password_again_title">पासवर्ड दोबारा लिखें </string>
 	<string name="register_btn_text">पंजीकरण </string>
 	
-	<string name="reset_username_title">उपयोगकर्ता का नाम </string>
+	<string name="reset_password_field">उपयोगकर्ता का नाम </string>
 	
 	<string name="yes">हाँ </string>
 	<string name="no">नहीं</string>
@@ -200,9 +200,9 @@
 	<string name="register_process">Registering &#8203;</string>
 	<string name="register_complete">Successfully registered</string>
 	
-	<string name="reset_alert_title">रिसेट </string>
+	<string name="reset_password">रिसेट </string>
 	<string name="reset_process">पासवर्ड रिसेट हो रहा है  &#8203;</string>
-	<string name="reset_complete">आपका पासवर्ड रिसेट हो गया है.\n\nPlease check your email for your new password.</string>
+	<string name="reset_password_complete">आपका पासवर्ड रिसेट हो गया है.\n\nPlease check your email for your new password.</string>
 	
 	<string name="change_language">भाषा बदलें</string>
 	
