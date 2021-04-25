@@ -27,8 +27,8 @@
     <string name="fragment_welcome_title">Welcome to &appName;</string>
     <string name="fragment_welcome_desc">&appName; is a mobile learning platform for delivering learning content, video and quizzes.</string>
     <string name="fragment_welcome_login_info">To get started with &appName;, you will need to register or login.</string>
-    <string name="fragment_welcome_privacy_info">By registering or logging in, you agree to our <a href="">Privacy Policy</a>.</string>
-    <string name="fragment_welcome_powered_by">Powered by <a href="http://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
+    <string name="fragment_welcome_privacy_info">By registering or logging in, you agree to our <a href="">Privacy Policy and Terms of Service</a>.</string>
+    <string name="fragment_welcome_powered_by">Powered by <a href="https://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
 
     <string name="tab_title_about">About</string>
     <string name="tab_title_badges">Badges</string>
@@ -36,15 +36,18 @@
     <string name="tab_title_login">Login</string>
     <string name="tab_title_points">Points</string>
     <string name="tab_title_privacy">Privacy Policy</string>
+    <string name="tab_title_terms">Terms of Service</string>
     <string name="tab_title_register">Register</string>
-    <string name="tab_title_reset">Reset Password</string>
+    <string name="tab_title_reset_password">Reset Password</string>
+    <string name="tab_title_remember_username">Forgotten username</string>
     <string name="tab_title_scorecard">Scorecard</string>
     <string name="tab_title_activity">Activity</string>
     <string name="tab_title_welcome">Welcome</string>
 
     <string name="title_about">About</string>
     <string name="title_baseline">Baseline</string>
-    <string name="title_btn_reset">Reset password</string>
+    <string name="title_btn_reset_password">Reset password</string>
+    <string name="title_btn_remember_username">Forgotten username</string>
     <string name="title_download_activity">Manage courses</string>
     <string name="title_activity_course_index">Course Index</string>
     <string name="title_activity_course">Activity</string>
@@ -179,8 +182,10 @@
     <string name="register_form_phoneno_title">Phone number</string>
     <string name="register_btn_text">Register</string>
 
-    <string name="reset_username_title">Username or Email</string>
+    <string name="reset_password_field">Username or Email</string>
+    <string name="reset_password_description">Please enter your username or email below and you will be sent an email with a link to reset your password.</string>
 
+    <string name="remember_username_description">Please enter your email below and you will be sent an email with a reminder of your username.</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="close">Close</string>
@@ -278,7 +283,8 @@
     <string name="error_resource_app_not_found">You don\'t seem to have an app installed to open \'%1$s\'. Please install an app capable of opening this type of file.</string>
     <string name="error_resource_not_found">File: \'%1$s\' not found.</string>
     <string name="error_preloading_accounts">Error preloading accounts from CSV file</string>
-    <string name="error_reset">Username or email not found\nPlease try again</string>
+    <string name="error_reset_password">Username or email not found\nPlease try again</string>
+    <string name="error_remember_username">Email not found\nPlease try again</string>
     <string name="no_title_set">No title set</string>
 
     <string name="error_insufficient_storage_available">Insufficient storage available</string>
@@ -304,9 +310,11 @@
     <string name="register_process">Registering …</string>
     <string name="register_complete">Successfully registered</string>
 
-    <string name="reset_alert_title">Reset</string>
+    <string name="reset_password">Reset password</string>
     <string name="reset_process">Resetting password …</string>
-    <string name="reset_complete">Your password has now been reset.\n\nPlease check your email for your new password.</string>
+    <string name="reset_password_complete">Your password has now been reset.\n\nPlease check your email for your new password.</string>
+
+    <string name="remember_username_complete">An email has been sent with a reminder of your username</string>
 
     <string name="change_language">Change Language</string>
 
@@ -362,6 +370,7 @@
 
     <string name="privacy.title">Privacy and Your Data</string>
     <string name="privacy.policy_info">Privacy policy</string>
+    <string name="privacy.terms">Terms of Service</string>
     <string name="privacy.data_why">How is your data used?</string>
     <string name="privacy.data_what">What data is collected?</string>
 
@@ -371,9 +380,13 @@
 
     <string name="privacy.download_data.info">Export a copy of the contents in your &appName; account to back it up or explore it.</string>
     <string name="privacy.download_data.label">Download data</string>
+    <string name="privacy.download_data.description">You can export to this device your data in the &appName; server in a readable format. Please select the information you want to download: </string>
+    <string name="privacy.download_data.profile">Profile data</string>
+    <string name="privacy.download_data.course">Course activity</string>
+    <string name="privacy.download_data.quizzes">Quiz and feedback attempts</string>
     <string name="privacy.delete_account.info">Completely remove your account and all associated data from the &appName; server.</string>
     <string name="privacy.delete_account.label">Delete account</string>
-    <string name="privace.delete_account.explanation">Deleting your account is permanent, all your data will be removed. To use &appName; again you will need to create a new account. \n\nPlease enter your password below to confirm deletion of your account.</string>
+    <string name="privacy.delete_account.explanation">Deleting your account is permanent, all your data will be removed. To use &appName; again you will need to create a new account. \n\nPlease enter your password below to confirm deletion of your account.</string>
 
     <string name="analytics.optin.title">Analytics Preferences</string>
     <string name="analytics.optin.description">To help improve &appName;, you can opt-in to sending automated bug reports and additional analytics. You can change these settings at any time in the app.</string>
@@ -526,8 +539,34 @@
     <string name="error_register_username_lenght">Username must have at least %d characters</string>
     <string name="change_server_logout_warning">You are already logged in. If you change the server your current session will finish. Do you confirm?</string>
     <string name="accept">Accept</string>
+    <string name="user_not_logged_in">User not logged in</string>
+
+    <string name="notification_courses_to_update_title">New course updates</string>
+    <plurals name="notification_courses_to_update_text">
+        <item quantity="one">There is %d course ready to update</item>
+        <item quantity="few">There are %d courses ready to update</item>
+        <item quantity="other">There are %d courses ready to update</item>
+    </plurals>
+
+
+    <string name="notification_new_courses_title">New courses available</string>
+    <plurals name="notification_new_courses_text">
+        <item quantity="one">There is %d new course available</item>
+        <item quantity="few">There are %d new courses available</item>
+        <item quantity="other">There are %d new courses available</item>
+    </plurals>
     <string name="btn_continue">Continue</string>
 
+    <string name="course_deleted">Course deleted</string>
+    <string name="course_deleted_dialog_message">This course was deleted from the server and it is no longer available in the app.\nDo you want to remove now from the app?</string>
+    <string name="course_update">Course update</string>
+    <string name="course_update_dialog_message">There is an available update for this course.\nDo you want to update it now?</string>
+
+    <string name="course_updates">Course updates</string>
+    <string name="new_courses">New courses</string>
+    <string name="back">Back</string>
+    <string name="continue_to_course">Continue to course</string>
+    <string name="processing">Processing...</string>
 
 </resources>
 

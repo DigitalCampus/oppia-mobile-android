@@ -20,6 +20,8 @@ package org.digitalcampus.oppia.activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.preference.PreferenceManager;
+
+import android.text.TextUtils;
 import android.view.MenuItem;
 
 import androidx.fragment.app.Fragment;
@@ -42,12 +44,16 @@ public class AboutActivity extends AppActivity {
 	public static final String ABOUT_CONTENTS = "CONTENTS";
 	public static final String ABOUT_MAIN = "MAIN";
 	public static final String ABOUT_PRIVACY = "PRIVACY";
+	public static final String ABOUT_TERMS = "TERMS";
 
+	public static final String TITLE = "TITLE";
 	public static final String TAB_ACTIVE = "TAB_ACTIVE";
 	public static final int TAB_HELP = 1;
 	public static final int TAB_PRIVACY_POLICY = 0;
-	public static final int TAB_PRIVACY_WHAT = 1;
-	public static final int TAB_PRIVACY_WHY = 2;
+	public static final int TAB_PRIVACY_TERMS = 1;
+	public static final int TAB_PRIVACY_WHAT = 2;
+	public static final int TAB_PRIVACY_HOW = 3;
+
 
 	private String contents = ABOUT_MAIN;
 	private ViewPager viewPager;
@@ -69,6 +75,9 @@ public class AboutActivity extends AppActivity {
 		if (bundle != null) {
 			contents = bundle.getString(ABOUT_CONTENTS, ABOUT_MAIN);
 			currentTab = bundle.getInt(AboutActivity.TAB_ACTIVE, 0);
+
+			String actTitle = bundle.getString(TITLE);
+			if (!TextUtils.isEmpty(actTitle)){ setTitle(actTitle); }
 		}
 	}
 	
@@ -97,13 +106,18 @@ public class AboutActivity extends AppActivity {
 			fragments.add(fPolicy);
 			titles.add(this.getString(R.string.tab_title_privacy));
 
+			String urlTerms = Storage.getLocalizedFilePath(this, lang, "terms.html");
+			Fragment fTerms = OppiaWebViewFragment.newInstance(TAB_PRIVACY_TERMS, urlTerms);
+			fragments.add(fTerms);
+			titles.add(this.getString(R.string.tab_title_terms));
+
 			String urlWhat = Storage.getLocalizedFilePath(this, lang, "privacy_data_what.html");
-			Fragment fWhat = OppiaWebViewFragment.newInstance(TAB_PRIVACY_WHY, urlWhat);
+			Fragment fWhat = OppiaWebViewFragment.newInstance(TAB_PRIVACY_WHAT, urlWhat);
 			fragments.add(fWhat);
 			titles.add(this.getString(R.string.privacy_data_what));
 
 			String urlWhy = Storage.getLocalizedFilePath(this, lang, "privacy_data_how.html");
-			Fragment fWhy = OppiaWebViewFragment.newInstance(TAB_HELP, urlWhy);
+			Fragment fWhy = OppiaWebViewFragment.newInstance(TAB_PRIVACY_HOW, urlWhy);
 			fragments.add(fWhy);
 			titles.add(this.getString(R.string.privacy_data_why));
 		}

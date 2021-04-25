@@ -24,10 +24,11 @@ import org.digitalcampus.oppia.fragments.LeaderboardFragment;
 import org.digitalcampus.oppia.fragments.LoginFragment;
 import org.digitalcampus.oppia.fragments.PointsFragment;
 import org.digitalcampus.oppia.fragments.RegisterFragment;
-import org.digitalcampus.oppia.fragments.ResetFragment;
+import org.digitalcampus.oppia.fragments.RememberUsernameFragment;
+import org.digitalcampus.oppia.fragments.ResetPasswordFragment;
 import org.digitalcampus.oppia.fragments.prefs.AdvancedPrefsFragment;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.service.NoCourseDownloadedManager;
+import org.digitalcampus.oppia.service.CoursesChecksWorkerManager;
 import org.digitalcampus.oppia.widgets.AnswerWidget;
 
 import javax.inject.Singleton;
@@ -48,7 +49,8 @@ public interface AppComponent {
     void inject(PrefsActivity activity);
     void inject(CourseQuizAttemptsActivity activity);
     void inject(LoginFragment fragment);
-    void inject(ResetFragment fragment);
+    void inject(ResetPasswordFragment fragment);
+    void inject(RememberUsernameFragment fragment);
     void inject(GlobalScorecardFragment fragment);
     void inject(PointsFragment fragment);
     void inject(LeaderboardFragment fragment);
@@ -67,7 +69,7 @@ public interface AppComponent {
 
     void inject(AdminSecurityManager adminSecurityManager);
 
-    void inject(NoCourseDownloadedManager noCourseDownloadedManager);
+    void inject(CoursesChecksWorkerManager coursesChecksWorkerManager);
 
     User getUser();
 

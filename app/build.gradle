@@ -197,6 +197,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.mikhaellopez:circularprogressbar:3.0.3'
     implementation 'com.github.badoualy:stepper-indicator:1.0.7'
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.hbb20:ccp:2.5.1' //Phone code picker
 
     //Dagger Dependencies
