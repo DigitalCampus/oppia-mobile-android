@@ -23,7 +23,7 @@
     <string name="fragment_welcome_title">Bienvenido a &appName;</string>
     <string name="fragment_welcome_desc">&appName; es una plataforma de aprendizaje móvil de código abierto para la entrega de contenido de aprendizaje, vídeo y cuestionarios.\n\n\'Oppia\' viene del verbo \'aprender\' en finés.</string>
     <string name="fragment_welcome_login_info">Para empezar a utilizar &appName;, necesitará registrarse o iniciar sesión.</string>
-    <string name="fragment_welcome_powered_by">Con tecnología de <a href="http://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
+    <string name="fragment_welcome_powered_by">Con tecnología de <a href="https://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
 
     <string name="tab_title_about">Acerca de</string>
     <string name="tab_title_badges">Insignias</string>
