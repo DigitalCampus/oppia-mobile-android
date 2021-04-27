@@ -23,7 +23,7 @@
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:gravity="center"
             android:text="@string/analytics.optin.title"
-            android:textAppearance="@style/Highlight.Text" />
+            style="@style/HeaderText" />
 
         <TextView
             android:id="@+id/textView13"
