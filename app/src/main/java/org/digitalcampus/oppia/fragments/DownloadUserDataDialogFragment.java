@@ -11,6 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
+import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.task.DownloadUserDataTask;
 import org.digitalcampus.oppia.task.Payload;
@@ -23,6 +24,7 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment im
 
     private View downloadDataList;
     private View loadingSpinner;
+    private ViewGroup permissionsExplanation;
 
 
     public static DownloadUserDataDialogFragment newInstance() {
@@ -44,12 +46,22 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment im
 
         downloadDataList = view.findViewById(R.id.download_data_list);
         loadingSpinner = view.findViewById(R.id.loading_download);
+        permissionsExplanation = view.findViewById(R.id.permissions_explanation);
 
         view.findViewById(R.id.download_data_profile).setOnClickListener(v -> downloadUserData("profile"));
         view.findViewById(R.id.download_data_course).setOnClickListener(v -> downloadUserData("course"));
         view.findViewById(R.id.download_data_quizzes).setOnClickListener(v -> downloadUserData("quizzes"));
         view.findViewById(R.id.download_data_points).setOnClickListener(v -> downloadUserData("points"));
         view.findViewById(R.id.download_data_badges).setOnClickListener(v -> downloadUserData("badges"));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        boolean hasPermissions = PermissionsManager.checkPermissionsAndInform(getActivity(),
+                PermissionsManager.STORAGE_PERMISSIONS, permissionsExplanation);
+
+        downloadDataList.setVisibility(hasPermissions ? View.VISIBLE : View.GONE);
     }
 
 
@@ -65,7 +77,13 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment im
 
     @Override
     public void apiRequestComplete(Payload response) {
-        Toast.makeText(getActivity(), response.getResultResponse(), Toast.LENGTH_LONG).show();
+        if (response.isResult()){
+
+        }
+        else{
+            Toast.makeText(getActivity(), response.getResultResponse(), Toast.LENGTH_LONG).show();
+        }
+
         dismiss();
     }
 
