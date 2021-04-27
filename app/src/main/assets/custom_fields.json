@@ -1,5 +1,6 @@
 {
   "fields": [],
+  "required_fields": ["email"],
   "collections": [],
   "register_steps": [
     {
