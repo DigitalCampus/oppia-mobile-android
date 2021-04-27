@@ -32,7 +32,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class NumericInexactNoFeedbackTest {
+public class NumericInexactNoFeedbackTest extends BaseQuizTest {
 
     private static final String NUMERIC_CLOSE_NO_FEEDBACK_JSON =
             "quizzes/numeric_close_no_feedback.json";
@@ -41,25 +41,9 @@ public class NumericInexactNoFeedbackTest {
     private static final String CLOSE_ANSWER = "8799";
     private static final String INCORRECT_ANSWER = "8797";
 
-    private Activity act;
-    private Bundle args;
-
-    @Before
-    public void setup() throws Exception {
-        // Setting up before every test
-        act = new Activity();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(),
-                NUMERIC_CLOSE_NO_FEEDBACK_JSON);
-
-        ArrayList<Lang> contents = new ArrayList<>();
-        contents.add(new Lang("en", quizContent));
-        act.setContents(contents);
-
-        args = new Bundle();
-        args.putSerializable(Activity.TAG, act);
-        args.putSerializable(Course.TAG, new Course(""));
-        args.putBoolean(CourseActivity.BASELINE_TAG, false);
+    @Override
+    protected String getQuizContentFile() {
+        return NUMERIC_CLOSE_NO_FEEDBACK_JSON;
     }
 
     @Test

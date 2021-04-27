@@ -30,7 +30,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.containsString;
 
 @RunWith(AndroidJUnit4.class)
-public class MultiselectWithFeedbackTest {
+public class MultiselectWithFeedbackTest extends BaseQuizTest {
 
     private static final String MULTISELECT_WITHFEEDBACK_JSON =
             "quizzes/multiselect_with_feedback.json";
@@ -43,25 +43,9 @@ public class MultiselectWithFeedbackTest {
     private static final String CORRECT_ANSWER_02_FEEDBACK = CORRECT_ANSWER_2 + ": correct";
     private static final String INCORRECT_ANSWER_FEEDBACK = INCORRECT_ANSWER_1 + ": wrong";
 
-    private Activity act;
-    private Bundle args;
-
-    @Before
-    public void setup() throws Exception {
-        // Setting up before every test
-        act = new Activity();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(),
-                MULTISELECT_WITHFEEDBACK_JSON);
-
-        ArrayList<Lang> contents = new ArrayList<>();
-        contents.add(new Lang("en", quizContent));
-        act.setContents(contents);
-
-        args = new Bundle();
-        args.putSerializable(Activity.TAG, act);
-        args.putSerializable(Course.TAG, new Course(""));
-        args.putBoolean(CourseActivity.BASELINE_TAG, false);
+    @Override
+    protected String getQuizContentFile() {
+        return MULTISELECT_WITHFEEDBACK_JSON;
     }
 
     @Test

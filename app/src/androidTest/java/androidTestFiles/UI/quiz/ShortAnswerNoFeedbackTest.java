@@ -32,7 +32,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class ShortAnswerNoFeedbackTest {
+public class ShortAnswerNoFeedbackTest extends BaseQuizTest {
 
     private static final String SHORTANSWER_NO_FEEDBACK_JSON =
             "quizzes/shortanswer_no_feedback.json";
@@ -40,25 +40,9 @@ public class ShortAnswerNoFeedbackTest {
     private static final String CORRECT_ANSWER = "Madrid";
     private static final String INCORRECT_ANSWER = "Lisbon";
 
-    private Activity act;
-    private Bundle args;
-
-    @Before
-    public void setup() throws Exception {
-        // Setting up before every test
-        act = new Activity();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(),
-                SHORTANSWER_NO_FEEDBACK_JSON);
-
-        ArrayList<Lang> contents = new ArrayList<>();
-        contents.add(new Lang("en", quizContent));
-        act.setContents(contents);
-
-        args = new Bundle();
-        args.putSerializable(Activity.TAG, act);
-        args.putSerializable(Course.TAG, new Course(""));
-        args.putBoolean(CourseActivity.BASELINE_TAG, false);
+    @Override
+    protected String getQuizContentFile() {
+        return SHORTANSWER_NO_FEEDBACK_JSON;
     }
 
     @Test

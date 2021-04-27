@@ -30,7 +30,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.containsString;
 
 @RunWith(AndroidJUnit4.class)
-public class MultiselectNoFeedbackTest {
+public class MultiselectNoFeedbackTest extends BaseQuizTest {
 
     private static final String MULTISELECT_NOFEEDBACK_JSON =
             "quizzes/multiselect_no_feedback.json";
@@ -40,25 +40,9 @@ public class MultiselectNoFeedbackTest {
     private static final String CORRECT_ANSWER_2 = "Yellow";
     private static final String INCORRECT_ANSWER_1 = "Black";
 
-    private Activity act;
-    private Bundle args;
-
-    @Before
-    public void setup() throws Exception {
-        // Setting up before every test
-        act = new Activity();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(),
-                MULTISELECT_NOFEEDBACK_JSON);
-
-        ArrayList<Lang> contents = new ArrayList<>();
-        contents.add(new Lang("en", quizContent));
-        act.setContents(contents);
-
-        args = new Bundle();
-        args.putSerializable(Activity.TAG, act);
-        args.putSerializable(Course.TAG, new Course(""));
-        args.putBoolean(CourseActivity.BASELINE_TAG, false);
+    @Override
+    protected String getQuizContentFile() {
+        return MULTISELECT_NOFEEDBACK_JSON;
     }
 
     @Test

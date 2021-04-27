@@ -1,5 +1,6 @@
 package androidTestFiles.UI.quiz;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -10,13 +11,19 @@ import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.QuizAttemptRepository;
+import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.widgets.QuizWidget;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
+import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.Utils.TestUtils;
 
@@ -27,9 +34,10 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.mockito.Matchers.any;
 
 @RunWith(AndroidJUnit4.class)
-public class MultichoiceNoFeedbackTest {
+public class MultichoiceNoFeedbackTest extends BaseQuizTest {
 
     private static final String MULTICHOICE_NOFEEDBACK_JSON =
             "quizzes/multichoice_no_feedback.json";
@@ -37,25 +45,9 @@ public class MultichoiceNoFeedbackTest {
     private static final String CORRECT_ANSWER = "Berlin";
     private static final String INCORRECT_ANSWER = "Bonn";
 
-    private Activity act;
-    private Bundle args;
-
-    @Before
-    public void setup() throws Exception {
-        // Setting up before every test
-        act = new Activity();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(),
-                MULTICHOICE_NOFEEDBACK_JSON);
-
-        ArrayList<Lang> contents = new ArrayList<>();
-        contents.add(new Lang("en", quizContent));
-        act.setContents(contents);
-
-        args = new Bundle();
-        args.putSerializable(Activity.TAG, act);
-        args.putSerializable(Course.TAG, new Course(""));
-        args.putBoolean(CourseActivity.BASELINE_TAG, false);
+    @Override
+    protected String getQuizContentFile() {
+        return MULTICHOICE_NOFEEDBACK_JSON;
     }
 
     @Test

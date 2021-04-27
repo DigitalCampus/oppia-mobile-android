@@ -37,7 +37,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.mockito.Matchers.any;
 
 @RunWith(AndroidJUnit4.class)
-public class MultichoiceWithFeedbackTest extends DaggerInjectMockUITest {
+public class MultichoiceWithFeedbackTest extends BaseQuizTest {
 
     private static final String MULTICHOICE_WITHFEEDBACK_JSON =
             "quizzes/multichoice_with_feedback.json";
@@ -48,32 +48,9 @@ public class MultichoiceWithFeedbackTest extends DaggerInjectMockUITest {
     private static final String CORRECT_ANSWER_FEEDBACK = "correct";
     private static final String INCORRECT_ANSWER_FEEDBACK = "try again";
 
-    private Activity act;
-    private Bundle args;
-    private QuizStats stats;
-
-    @Mock
-    QuizAttemptRepository attemptsRepository;
-
-    @Before
-    public void setup() throws Exception {
-        // Setting up before every test
-        act = new Activity();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(),
-                MULTICHOICE_WITHFEEDBACK_JSON);
-
-        ArrayList<Lang> contents = new ArrayList<>();
-        contents.add(new Lang("en", quizContent));
-        act.setContents(contents);
-
-        args = new Bundle();
-        args.putSerializable(Activity.TAG, act);
-        args.putSerializable(Course.TAG, new Course(""));
-        args.putBoolean(CourseActivity.BASELINE_TAG, false);
-
-        stats = new QuizStats();
-        Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), any());
+    @Override
+    protected String getQuizContentFile() {
+        return MULTICHOICE_WITHFEEDBACK_JSON;
     }
 
     @Test

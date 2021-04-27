@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
+import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.FileUtils;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
@@ -28,7 +29,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class MatchingDefaultFeedbackTest {
+public class MatchingDefaultFeedbackTest extends BaseQuizTest {
 
     private static final String MATCHING_DEFAULT_FEEDBACK_JSON =
             "quizzes/matching_default_feedback.json";
@@ -38,26 +39,12 @@ public class MatchingDefaultFeedbackTest {
     private static final String CORRECT_ANSWER_2 = "Yellow";
     private static final String INCORRECT_ANSWER_1 = "Black";
 
-    private Activity act;
-    private Bundle args;
 
-    @Before
-    public void setup() throws Exception {
-        // Setting up before every test
-        act = new Activity();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(),
-                MATCHING_DEFAULT_FEEDBACK_JSON);
-
-        ArrayList<Lang> contents = new ArrayList<>();
-        contents.add(new Lang("en", quizContent));
-        act.setContents(contents);
-
-        args = new Bundle();
-        args.putSerializable(Activity.TAG, act);
-        args.putSerializable(Course.TAG, new Course(""));
-        args.putBoolean(CourseActivity.BASELINE_TAG, false);
+    @Override
+    protected String getQuizContentFile() {
+        return MATCHING_DEFAULT_FEEDBACK_JSON;
     }
+
 
     @Test
     public void correctAnswer() {
