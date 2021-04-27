@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.Utils.TestUtils;
+import androidTestFiles.quiz.models.MatchingQuestionTest;
 
 import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
 import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
@@ -92,24 +93,107 @@ public class MatchingDefaultFeedbackTest extends BaseQuizTest {
         onView(withId(R.id.quiz_results_score))
                 .check(matches(withText(actual)));
 
-
         onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
                 .atPositionOnView(0, R.id.quiz_question_text))
                 .check(matches(withText(FIRST_QUESTION_TITLE)));
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-                .atPositionOnView(0, R.id.quiz_question_user_response_text))
-                .check(matches(withText(containsString(CORRECT_ANSWER_1))));
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-                .atPositionOnView(0, R.id.quiz_question_user_response_text))
-                .check(matches(withText(containsString(CORRECT_ANSWER_2))));
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-                .atPositionOnView(0, R.id.quiz_question_user_response_text))
-                .check(matches(withText(containsString(CORRECT_ANSWER_3))));
 
-        // TODO - check the image matches for question response
+        checkResultAnswersContains(CORRECT_ANSWER_1, CORRECT_ANSWER_2, CORRECT_ANSWER_3);
+
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
+                .check(matches(withText(MatchingQuestionTest.FEEDBACK_TEXT_CORRECT)));
+
         onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
                 .atPositionOnView(0, R.id.quiz_question_feedback_image))
                 .check(matches(withDrawable(R.drawable.quiz_tick)));
 
+    }
+
+    @Test
+    public void partiallyIncorrectAnswer() throws InterruptedException {
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        onView(withId(R.id.take_quiz_btn)).perform(click());
+
+        onView(withId(R.id.question_text))
+                .check(matches(withText(FIRST_QUESTION_TITLE)));
+
+        onView(withQuestionText(QUESTION_TEXT_1)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(CORRECT_ANSWER_2))).perform(click());
+
+        onView(withQuestionText(QUESTION_TEXT_2)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(CORRECT_ANSWER_2))).perform(click());
+
+        onView(withQuestionText(QUESTION_TEXT_3)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(CORRECT_ANSWER_3))).perform(click());
+
+        onView(withId(R.id.mquiz_next_btn)).perform(click());
+
+        String actual = TestUtils.getCurrentActivity().getString(R.string.widget_quiz_results_score, (float) 67);
+        onView(withId(R.id.quiz_results_score))
+                .check(matches(withText(actual)));
+
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_text))
+                .check(matches(withText(FIRST_QUESTION_TITLE)));
+
+        checkResultAnswersContains(CORRECT_ANSWER_1, CORRECT_ANSWER_2, CORRECT_ANSWER_3);
+
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
+                .check(matches(withText(MatchingQuestionTest.FEEDBACK_TEXT_PARTIALLY_CORRECT)));
+
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_feedback_image))
+                .check(matches(withDrawable(R.drawable.quiz_cross)));
+
+
+    }
+
+    @Test
+    public void incorrectAnswer() throws InterruptedException {
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        onView(withId(R.id.take_quiz_btn)).perform(click());
+
+        onView(withId(R.id.question_text))
+                .check(matches(withText(FIRST_QUESTION_TITLE)));
+
+        onView(withQuestionText(QUESTION_TEXT_1)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(CORRECT_ANSWER_2))).perform(click());
+
+        onView(withQuestionText(QUESTION_TEXT_2)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(CORRECT_ANSWER_3))).perform(click());
+
+        onView(withQuestionText(QUESTION_TEXT_3)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(CORRECT_ANSWER_1))).perform(click());
+
+        onView(withId(R.id.mquiz_next_btn)).perform(click());
+
+        String actual = TestUtils.getCurrentActivity().getString(R.string.widget_quiz_results_score, (float) 0);
+        onView(withId(R.id.quiz_results_score))
+                .check(matches(withText(actual)));
+
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_text))
+                .check(matches(withText(FIRST_QUESTION_TITLE)));
+
+        checkResultAnswersContains(CORRECT_ANSWER_1, CORRECT_ANSWER_2, CORRECT_ANSWER_3);
+
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
+                .check(matches(withText(MatchingQuestionTest.FEEDBACK_TEXT_INCORRECT)));
+
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_feedback_image))
+                .check(matches(withDrawable(R.drawable.quiz_cross)));
+
+
+    }
+
+    private void checkResultAnswersContains(String... texts) {
+        for (String text : texts) {
+            onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                    .atPositionOnView(0, R.id.quiz_question_user_response_text))
+                    .check(matches(withText(containsString(text))));
+        }
     }
 }
