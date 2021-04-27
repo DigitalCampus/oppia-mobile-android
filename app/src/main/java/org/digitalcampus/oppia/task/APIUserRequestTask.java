@@ -93,6 +93,7 @@ public class APIUserRequestTask extends APIRequestTask<String, Object, BasicResu
 	
 	@Override
 	protected void onPostExecute(BasicResult result) {
+
 		synchronized (this) {
             if (requestListener != null) {
                 if (apiKeyInvalidated){
@@ -116,6 +117,8 @@ public class APIUserRequestTask extends APIRequestTask<String, Object, BasicResu
                 }
             }
         }
+
+        super.onPostExecute(result);
 	}
 	
 	public void setAPIRequestListener(APIRequestListener srl) {

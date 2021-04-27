@@ -11,14 +11,13 @@ import androidx.work.impl.utils.futures.SettableFuture;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import org.digitalcampus.oppia.application.SessionManager;
+@SuppressLint("RestrictedApi")
+public class CoursesChecksWorker extends ListenableWorker {
 
-public class NoCourseDownloadedWorker extends ListenableWorker {
-
-    public static final String TAG = NoCourseDownloadedWorker.class.getSimpleName() ;
+    public static final String TAG = CoursesChecksWorker.class.getSimpleName();
     private SettableFuture<Result> future;
 
-    public NoCourseDownloadedWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+    public CoursesChecksWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 
@@ -26,21 +25,19 @@ public class NoCourseDownloadedWorker extends ListenableWorker {
     @NonNull
     @Override
     public ListenableFuture<Result> startWork() {
-        Log.i(TAG, "startWork: NoCourseDownloadWorker");
+        Log.i(TAG, "startWork: CoursesChecksWorker");
 
         future = SettableFuture.create();
-        boolean isLoggedIn = SessionManager.isLoggedIn(getApplicationContext());
-        if (isLoggedIn) {
-            new NoCourseDownloadedManager(getApplicationContext()).checkNoCoursesNotification();
-        } else {
-            Log.i(TAG, "startWork: user not logged in. exiting NoCourseDownloadWorker");
-            future.set(Result.success());
-        }
+
+        CoursesChecksWorkerManager coursesChecksWorkerManager = new CoursesChecksWorkerManager(getApplicationContext());
+        coursesChecksWorkerManager.setOnFinishListener(message -> future.set(Result.success()));
+        coursesChecksWorkerManager.startChecks();
 
         future.set(Result.success());
 
         return future;
     }
+
 
     @Override
     public void onStopped() {

@@ -9,7 +9,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.listener.SubmitEntityListener;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.task.ResetTask;
+import org.digitalcampus.oppia.task.ResetPasswordTask;
 import org.digitalcampus.oppia.task.result.EntityResult;
 import org.junit.After;
 import org.junit.Before;
@@ -31,7 +31,7 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class ResetTest {
+public class ResetPasswordTest {
 
 
     private CountDownLatch signal;
@@ -56,7 +56,7 @@ public class ResetTest {
         try {
             mockServer = new MockWebServer();
 
-            String filename = "responses/response_201_reset.json";
+            String filename = "responses/response_201_reset_password.json";
 
             mockServer.enqueue(new MockResponse()
                     .setResponseCode(201)
@@ -75,7 +75,7 @@ public class ResetTest {
         user.setPassword("");
         
         try {
-            ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
+            ResetPasswordTask task = new ResetPasswordTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitEntityListener<User>() {
                 @Override
                 public void apiKeyInvalidated() { }
@@ -91,7 +91,7 @@ public class ResetTest {
             signal.await();
             System.out.println(resultUser.getResultMessage());
             assertTrue(resultUser.isSuccess());
-            assertEquals(context.getString(R.string.reset_complete), resultUser.getResultMessage());
+            assertEquals(context.getString(R.string.reset_password_complete), resultUser.getResultMessage());
 
         }catch (InterruptedException ie) {
             ie.printStackTrace();
@@ -106,7 +106,7 @@ public class ResetTest {
         try {
             mockServer = new MockWebServer();
 
-            String filename = "responses/response_400_reset.json";
+            String filename = "responses/response_400_reset_password.json";
 
             mockServer.enqueue(new MockResponse()
                     .setResponseCode(400)
@@ -125,7 +125,7 @@ public class ResetTest {
         user.setPassword("");
 
         try {
-            ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
+            ResetPasswordTask task = new ResetPasswordTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitEntityListener<User>() {
                 @Override
                 public void apiKeyInvalidated() { }
@@ -141,7 +141,7 @@ public class ResetTest {
             signal.await();
             System.out.println(resultUser.getResultMessage());
             assertFalse(resultUser.isSuccess());
-            assertEquals(context.getString(R.string.error_reset), resultUser.getResultMessage());
+            assertEquals(context.getString(R.string.error_reset_password), resultUser.getResultMessage());
 
         }catch (InterruptedException ie) {
             ie.printStackTrace();
@@ -172,7 +172,7 @@ public class ResetTest {
         user.setPassword("");
 
         try {
-            ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
+            ResetPasswordTask task = new ResetPasswordTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitEntityListener<User>() {
                 @Override
                 public void apiKeyInvalidated() {  }
@@ -219,7 +219,7 @@ public class ResetTest {
         user.setPassword("");
 
         try {
-            ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
+            ResetPasswordTask task = new ResetPasswordTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitEntityListener<User>() {
                 @Override
                 public void apiKeyInvalidated() {  }

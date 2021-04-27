@@ -17,13 +17,13 @@
 
         <TextView
             android:id="@+id/textView12"
+            style="@style/HeaderText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:gravity="center"
-            android:text="@string/analytics.optin.title"
-            style="@style/HeaderText" />
+            android:text="@string/analytics.optin.title"/>
 
         <TextView
             android:id="@+id/textView13"

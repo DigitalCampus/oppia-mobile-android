@@ -23,7 +23,7 @@
     <string name="fragment_welcome_title">Bienvenido a &appName;</string>
     <string name="fragment_welcome_desc">&appName; es una plataforma de aprendizaje móvil de código abierto para la entrega de contenido de aprendizaje, vídeo y cuestionarios.\n\n\'Oppia\' viene del verbo \'aprender\' en finés.</string>
     <string name="fragment_welcome_login_info">Para empezar a utilizar &appName;, necesitará registrarse o iniciar sesión.</string>
-    <string name="fragment_welcome_powered_by">Con tecnología de <a href="http://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
+    <string name="fragment_welcome_powered_by">Con tecnología de <a href="https://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
 
     <string name="tab_title_about">Acerca de</string>
     <string name="tab_title_badges">Insignias</string>
@@ -262,8 +262,8 @@
     <string name="admin_password_error_incorrect_password">Contraseña de admin incorrecta. Inténtalo de nuevo</string>
     <string name="info_upgrading">Actualizando a %1$s</string>
 
-    <string name="tab_title_reset">Restaurar contraseña</string>
-    <string name="title_btn_reset">Restaurar contraseña</string>
+    <string name="tab_title_reset_password">Restaurar contraseña</string>
+    <string name="title_btn_reset_password">Restaurar contraseña</string>
     <string name="error_insufficient_storage_available">Espacio de almacenamiento libre insuficiente</string>
     <string name="error_register_no_phoneno">Introduce tu número de teléfono</string>
     <string name="error_register_username_spaces">El nombre de usuario no puede contener espacios</string>
@@ -278,7 +278,7 @@
     <string name="sequencing.dialog_title">Actividad bloqueada</string>
     <string name="sequencing.section.message">Debe completar todas las actividades anteriores de esta sección antes de que ésta esté disponible.</string>
     <string name="error_preloading_accounts">Error precargando cuentas de usuario desde fichero CSV</string>
-    <string name="error_reset">Nombre de usuario o email no encontrado\nInténtelo de nuevo</string>
+    <string name="error_reset_password">Nombre de usuario o email no encontrado\nInténtelo de nuevo</string>
     <string name="no_title_set">Sin título</string>
     h
     <string name="info.startup.preloaded_accounts">Precargadas %1$d nueva(s) cuenta(s) de usuario.</string>
@@ -309,9 +309,9 @@
     <string name="prefDownloadViaCellularEnabled">Descargar multimedia usando los datos del teléfono</string>
     <string name="prefLogoutEnabled">Permitir cierre de sesión desde el menú principal</string>
     <string name="register_alert_title">Registro</string>
-    <string name="reset_username_title">Usuario o Email</string>
+    <string name="reset_password_field">Usuario o Email</string>
     <string name="reset_process">Restaurando contraseña…</string>
-    <string name="reset_complete">Su contraseña ha sido restaurada.\n\nCompruebe su email para ver la nueva contraseña.</string>
+    <string name="reset_password_complete">Su contraseña ha sido restaurada.\n\nCompruebe su email para ver la nueva contraseña.</string>
     <string name="tab_title_activity">Actividad</string>
     <string name="widget_quiz_continue"><![CDATA[Continuar >>]]></string>
     <string name="widget_quiz_media_caption">Pulse en la imagen para ver el vídeo</string>
@@ -386,7 +386,7 @@
     <string name="points_event_quiz_attempt">Cuestionario \'%1$s - %2$s\' realizado</string>
     <string name="no_points_data">No hay datos</string>
 
-    <string name="reset_alert_title">Restaurar</string>
+    <string name="reset_password">Restaurar</string>
 
     <string name="bluetooth.send_all">Enviar todos</string>
     <string name="bluetooth.btn_disconnect">Desconectar</string>

@@ -39,14 +39,14 @@
     <string name="tab_title_points">نقاط</string>
     <string name="tab_title_privacy">سياسة الخصوصية</string>
     <string name="tab_title_register">تسجيل دخول</string>
-    <string name="tab_title_reset">تغيير كلمة السر</string>
+    <string name="tab_title_reset_password">تغيير كلمة السر</string>
     <string name="tab_title_scorecard">دفتر العلامات</string>
     <string name="tab_title_activity">نشاط</string>
     <string name="tab_title_welcome">أهلا وسهلا في التطبيق طبشورة أوبيا</string>
 
     <string name="title_about">عن طبشورة أوبيا</string>
     <string name="title_baseline">المرجع الاساسي</string>
-    <string name="title_btn_reset">تغيير كلمة السر</string>
+    <string name="title_btn_reset_password">تغيير كلمة السر</string>
     <string name="title_download_activity">إدارة الدروس</string>
     <string name="title_activity_course_index">مناهج الدروس</string>
     <string name="title_activity_course">نشاط</string>
@@ -148,7 +148,7 @@
 <string name="register_form_phoneno_title">رقم الهاتف </string>
 <string name="register_btn_text">تسجيل دخول</string>
 
-<string name="reset_username_title">الإسم أو عنوان البريد الإلكتروني</string>
+<string name="reset_password_field">الإسم أو عنوان البريد الإلكتروني</string>
 
 <string name="yes">نعم</string>
 <string name="no">كلا</string>
@@ -273,9 +273,9 @@
 <string name="register_process">جاري تسجيل الدخول</string>
 <string name="register_complete">نجاح تسجيل الدخول</string>
 
-<string name="reset_alert_title">أعد تعيين</string>
+<string name="reset_password">أعد تعيين</string>
 <string name="reset_process">أعد تعيين كلمة السر</string>
-<string name="reset_complete">تمت إعادة تعيين كلمة السر بنجاح رجاء مراجعة البريد الالكتروني للحصول على كلمة السر الجديدة</string>
+<string name="reset_password_complete">تمت إعادة تعيين كلمة السر بنجاح رجاء مراجعة البريد الالكتروني للحصول على كلمة السر الجديدة</string>
 
 <string name="change_language">تغيير اللغة</string>
 

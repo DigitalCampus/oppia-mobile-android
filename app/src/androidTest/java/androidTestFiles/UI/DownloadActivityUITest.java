@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
@@ -12,6 +13,7 @@ import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.MultiLangInfoModel;
+import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.task.Payload;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
 
 import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
-import static androidTestFiles.Utils.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -88,6 +90,19 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
         ctx.sendOrderedBroadcast(intent, null);
     }
 
+    private Intent getMockTagCoursesIntent() {
+
+        Tag tag = new Tag();
+        tag.setId(1);
+        tag.setName("any_tag");
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Intent intent = new Intent(context, DownloadActivity.class);
+        intent.putExtra(DownloadActivity.EXTRA_MODE, DownloadActivity.MODE_TAG_COURSES);
+        intent.putExtra(DownloadActivity.EXTRA_TAG, tag);
+        return intent;
+    }
+
     @Test
     public void showDraftTextIfCourseIsDraft() throws Exception{
         CourseInstallViewAdapter c = getBaseCourse();
@@ -95,7 +110,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.course_draft))
@@ -110,7 +125,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.course_draft))
@@ -128,7 +143,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.course_title))
@@ -142,7 +157,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.course_title))
@@ -160,7 +175,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.course_description))
@@ -173,7 +188,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.course_description))
@@ -189,7 +204,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.course_author))
@@ -202,13 +217,14 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, getBaseCourse());
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.course_author))
                 .check(matches(not(isDisplayed())));
 
     }
+
 
     @Test
     public void showCancelButtonOnDownloadingCourse() throws Exception {
@@ -221,7 +237,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
             return null;
         }).when(courseInstallerServiceDelegate).installCourse(any(), any(), any());
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.download_course_btn))
@@ -244,7 +260,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
             return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.download_course_btn))
@@ -264,7 +280,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
             return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.download_course_btn))
@@ -288,7 +304,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
             return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.download_course_btn))
@@ -309,7 +325,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.download_progress))
@@ -330,7 +346,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
             return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.download_course_btn))
@@ -352,7 +368,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.download_course_btn))
@@ -370,7 +386,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.download_course_btn))
@@ -388,7 +404,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.download_course_btn))
@@ -409,7 +425,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
             return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.download_course_btn))
@@ -441,7 +457,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
         }).when(courseInstallerServiceDelegate).installCourse(any(), any(), any());
 
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.download_course_btn))
@@ -459,7 +475,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(null);
+        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
 
 //        onView(withRecyclerView(R.id.recycler_tags).atPosition(0)).perform(click());
 

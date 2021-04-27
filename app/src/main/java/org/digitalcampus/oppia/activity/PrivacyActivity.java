@@ -36,10 +36,12 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
         View aboutPrivacyInfo = findViewById(R.id.about_privacy_policy);
         View aboutWhatDataInfo = findViewById(R.id.about_privacy_what);
         View aboutWhyDataInfo = findViewById(R.id.about_privacy_why);
+        View aboutTermsInfo = findViewById(R.id.about_privacy_terms);
 
         aboutPrivacyInfo.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_POLICY));
         aboutWhatDataInfo.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_WHAT));
-        aboutWhyDataInfo.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_WHY));
+        aboutWhyDataInfo.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_HOW));
+        aboutTermsInfo.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_TERMS));
 
         analyticsCheck = findViewById(R.id.analytics_checkbox);
         analyticsCheck.setChecked(Analytics.isTrackingEnabled(this));

@@ -1,4 +1,4 @@
-package androidTestFiles.Utils;
+package androidTestFiles.Matchers;
 
 
 import android.content.res.Resources;

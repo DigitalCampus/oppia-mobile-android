@@ -156,6 +156,9 @@ public class CourseInstall {
 
         }  else {
             listener.onFail(ctx.getString(R.string.error_latest_already_installed, title) );
+            FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
+            Log.e(TAG, ctx.getString(R.string.error_latest_already_installed, title));
+            return;
         }
 
         listener.onInstallProgress(70);

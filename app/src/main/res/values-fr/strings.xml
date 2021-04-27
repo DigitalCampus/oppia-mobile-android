@@ -38,14 +38,14 @@
     <string name="tab_title_points">Points</string>
     <string name="tab_title_privacy">Vie privée</string>
     <string name="tab_title_register">S\'inscrire</string>
-    <string name="tab_title_reset">Changer le mot de passe</string>
+    <string name="tab_title_reset_password">Changer le mot de passe</string>
     <string name="tab_title_scorecard">Carnet</string>
     <string name="tab_title_activity">Activité</string>
     <string name="tab_title_welcome">Bienvenue</string>
 
     <string name="title_about">À propos</string>
     <string name="title_baseline">Base de référence</string>
-    <string name="title_btn_reset">Changer le mot de passe</string>
+    <string name="title_btn_reset_password">Changer le mot de passe</string>
     <string name="title_download_activity">Gérer les cours</string>
     <string name="title_activity_course_index">Catalogue des cours</string>
     <string name="title_activity_course">Activité</string>
@@ -139,7 +139,7 @@
     <string name="register_form_phoneno_title">Numéro de téléphone</string>
     <string name="register_btn_text">S\'inscrire</string>
 
-    <string name="reset_username_title">Nom d\'utilisateur ou Email</string>
+    <string name="reset_password_field">Nom d\'utilisateur ou Email</string>
 
     <string name="yes">Oui</string>
     <string name="no">Non</string>
@@ -252,9 +252,9 @@
     <string name="register_process">Inscription en cours…</string>
     <string name="register_complete">Inscription réussie</string>
 
-    <string name="reset_alert_title">Réinitialisation</string>
+    <string name="reset_password">Réinitialisation</string>
     <string name="reset_process">Réinitialisation du mot de passe …</string>
-    <string name="reset_complete">Votre mot de passe a bien été réinitialisé.\n\nVeuillez consulter votre email pour obtenir votre nouveau mot de passe.</string>
+    <string name="reset_password_complete">Votre mot de passe a bien été réinitialisé.\n\nVeuillez consulter votre email pour obtenir votre nouveau mot de passe.</string>
 
     <string name="change_language">Changer la langue</string>
 
