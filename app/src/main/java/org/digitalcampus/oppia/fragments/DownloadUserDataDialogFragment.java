@@ -1,6 +1,9 @@
 package org.digitalcampus.oppia.fragments;
 
+import android.app.DownloadManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +14,23 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
+import org.digitalcampus.oppia.api.Paths;
+import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.application.PermissionsManager;
+import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.APIRequestListener;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.DownloadUserDataTask;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.HTTPClientUtils;
 
 import androidx.annotation.Nullable;
+
+import java.io.File;
+
+import static android.content.Context.DOWNLOAD_SERVICE;
 
 public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment implements APIRequestListener {
 
@@ -70,9 +84,31 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment im
         loadingSpinner.setVisibility(View.VISIBLE);
         downloadDataList.setVisibility(View.INVISIBLE);
 
-        DownloadUserDataTask task = new DownloadUserDataTask(getContext());
-        task.setAPIRequestListener(this);
-        task.execute(data);
+
+        DbHelper db = DbHelper.getInstance(getActivity());
+        User u = null;
+        try {
+            u = db.getUser(SessionManager.getUsername(getActivity()));
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        String path = Paths.DOWNLOAD_ACCOUNT_DATA_PATH + data + File.separator;
+        String url = new RemoteApiEndpoint().getFullURL(getActivity(), path);
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        request.addRequestHeader(HTTPClientUtils.HEADER_AUTH,
+                HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()));
+
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, u.getUsername());
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); // to notify when download is complete
+        request.allowScanningByMediaScanner();// if you want to be available from media players
+        DownloadManager manager = (DownloadManager) getActivity().getSystemService(DOWNLOAD_SERVICE);
+        manager.enqueue(request);
+
+//        DownloadUserDataTask task = new DownloadUserDataTask(getContext());
+//        task.setAPIRequestListener(this);
+//        task.execute(data);
     }
 
     @Override
