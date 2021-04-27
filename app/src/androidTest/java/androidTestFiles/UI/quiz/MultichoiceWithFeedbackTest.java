@@ -1,33 +1,15 @@
 package androidTestFiles.UI.quiz;
 
-import android.content.Context;
-import android.os.Bundle;
-
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.CourseActivity;
-import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.model.QuizAttemptRepository;
-import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.widgets.QuizWidget;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
 
-import java.util.ArrayList;
-
-import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.Utils.TestUtils;
 
-import static androidTestFiles.Utils.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
