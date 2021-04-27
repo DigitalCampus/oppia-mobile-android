@@ -134,6 +134,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                 .setTitle(R.string.warning)
                 .setMessage(R.string.change_server_logout_warning)
                 .setPositiveButton(R.string.accept, (dialog, which) -> {
+                    SessionManager.invalidateCurrentUserApiKey(getContext());
                     SessionManager.logoutCurrentUser(getActivity());
                     usernamePref.setSummary(R.string.about_not_logged_in);
                     ((PrefsActivity)getActivity()).forzeGoToLoginScreen();

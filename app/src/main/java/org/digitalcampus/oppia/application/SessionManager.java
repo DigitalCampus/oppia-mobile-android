@@ -197,6 +197,15 @@ public class SessionManager {
         App.getDb().userPreferenceDao().insert(userPreference);
     }
 
+    public static void invalidateCurrentUserApiKey(Context ctx){
+        try {
+            User u = DbHelper.getInstance(ctx).getUser(SessionManager.getUsername(ctx));
+            SessionManager.setUserApiKeyValid(u, false);
+        } catch (UserNotFoundException e) {
+            Log.d(TAG, e.getMessage());
+        }
+    }
+
     public static boolean isUserApiKeyValid(Context ctx) {
         if (isLoggedIn(ctx)) {
             String user = getUsername(ctx);
