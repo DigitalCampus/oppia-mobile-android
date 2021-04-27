@@ -35,17 +35,18 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
                 continue;
             }
             editTextPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-
                 boolean mustUpdate = onPreferenceChangedDelegate(preference, newValue);
                 if (!mustUpdate) {
                     return false;
                 }
 
                 if (!App.getPrefs(getActivity()).getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false)) {
+                    afterPreferenceCheckDelegate(preference, newValue);
                     return true;
                 }
 
                 AdminSecurityManager.with(getActivity()).promptAdminPassword(() -> {
+                    afterPreferenceCheckDelegate(preference, newValue);
                     editTextPreference.setText((String) newValue);
                     preference.getSharedPreferences().edit().putString(preference.getKey(), (String) newValue).apply();
                 });
@@ -53,6 +54,8 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
             });
         }
     }
+
+    protected void afterPreferenceCheckDelegate(Preference preference, Object newValue){ }
 
     protected boolean onPreferenceChangedDelegate(Preference preference, Object newValue) {
         return true;
