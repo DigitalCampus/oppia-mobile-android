@@ -32,15 +32,6 @@ public class AboutUITest {
             new ActivityTestRule<>(AboutActivity.class);
 
     @Test
-    public void clickPrivacyTab() throws InterruptedException {
-
-        onView(allOf(withText(R.string.tab_title_privacy),
-                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                isDescendantOfA(withId(R.id.tabs_toolbar))))
-                .perform(click());
-    }
-
-    @Test
     public void clickHelpTab() {
 
         onView(allOf(withText(R.string.tab_title_help),
