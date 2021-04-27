@@ -100,7 +100,7 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment im
         request.addRequestHeader(HTTPClientUtils.HEADER_AUTH,
                 HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()));
 
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, u.getUsername());
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, u.getUsername()+"-"+data);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); // to notify when download is complete
         request.allowScanningByMediaScanner();// if you want to be available from media players
         DownloadManager manager = (DownloadManager) getActivity().getSystemService(DOWNLOAD_SERVICE);
