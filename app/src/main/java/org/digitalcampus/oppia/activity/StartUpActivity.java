@@ -123,11 +123,12 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
         View explanation = layoutInflater.inflate(R.layout.view_analytics_optin, container);
         container.setVisibility(View.VISIBLE);
 
+        CheckBox analyticsCheck = explanation.findViewById(R.id.analytics_checkbox);
+        CheckBox bugreportCheck = explanation.findViewById(R.id.bugreport_checkbox);
         Button continueBtn = explanation.findViewById(R.id.continue_button);
         continueBtn.setOnClickListener(view -> {
             Analytics.optOutRationaleShown(this);
-            CheckBox analyticsCheck = explanation.findViewById(R.id.analytics_checkbox);
-            CheckBox bugreportCheck = explanation.findViewById(R.id.bugreport_checkbox);
+
             if (analyticsCheck.isChecked()){
                 Analytics.enableTracking(this);
             }

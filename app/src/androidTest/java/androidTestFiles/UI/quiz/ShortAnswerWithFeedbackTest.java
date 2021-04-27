@@ -1,26 +1,16 @@
 package androidTestFiles.UI.quiz;
 
-import android.os.Bundle;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.CourseActivity;
-import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.widgets.QuizWidget;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-
-import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.Utils.TestUtils;
 
-import static androidTestFiles.Utils.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
+import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -32,7 +22,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class ShortAnswerWithFeedbackTest {
+public class ShortAnswerWithFeedbackTest extends BaseQuizTest {
 
     private static final String SHORTANSWER_WITH_FEEDBACK_JSON =
             "quizzes/shortanswer_with_feedback.json";
@@ -42,26 +32,9 @@ public class ShortAnswerWithFeedbackTest {
     private static final String CORRECT_ANSWER_FEEDBACK = "correct";
     private static final String INCORRECT_ANSWER_FEEDBACK = "wrong";
 
-
-    private Activity act;
-    private Bundle args;
-
-    @Before
-    public void setup() throws Exception {
-        // Setting up before every test
-        act = new Activity();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(),
-                SHORTANSWER_WITH_FEEDBACK_JSON);
-
-        ArrayList<Lang> contents = new ArrayList<>();
-        contents.add(new Lang("en", quizContent));
-        act.setContents(contents);
-
-        args = new Bundle();
-        args.putSerializable(Activity.TAG, act);
-        args.putSerializable(Course.TAG, new Course(""));
-        args.putBoolean(CourseActivity.BASELINE_TAG, false);
+    @Override
+    protected String getQuizContentFile() {
+        return SHORTANSWER_WITH_FEEDBACK_JSON;
     }
 
     @Test
@@ -91,10 +64,10 @@ public class ShortAnswerWithFeedbackTest {
         onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
                 .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
                 .check(matches(withText(CORRECT_ANSWER_FEEDBACK)));
-        // TODO - check the image matches for question response
-        // onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-        // .atPositionOnView(0, R.id.quiz_question_feedback_image))
-        // .check(matches(R.drawable.quiz_tick));
+
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_feedback_image))
+                .check(matches(withDrawable(R.drawable.quiz_tick)));
 
     }
 
@@ -125,9 +98,8 @@ public class ShortAnswerWithFeedbackTest {
                 .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
                 .check(matches(withText(INCORRECT_ANSWER_FEEDBACK)));
 
-        // TODO - check the image matches for question response
-        // onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-        // .atPositionOnView(0, R.id.quiz_question_feedback_image))
-        // .check(matches(R.drawable.quiz_cross));
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_feedback_image))
+                .check(matches(withDrawable(R.drawable.quiz_cross)));
     }
 }
