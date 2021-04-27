@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
 
 import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
-import static androidTestFiles.Utils.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
