@@ -51,15 +51,11 @@ public abstract class BaseQuizTest extends DaggerInjectMockUITest {
         args.putSerializable(Course.TAG, new Course(""));
         args.putBoolean(CourseActivity.BASELINE_TAG, false);
 
-        if (mockStats()) {
-            stats = new QuizStats();
-            Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), any());
-        }
+        stats = new QuizStats();
+        Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), any());
+
     }
 
-    protected boolean mockStats() {
-        return true;
-    }
 
     protected abstract String getQuizContentFile();
 }
