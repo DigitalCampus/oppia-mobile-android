@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 
 import androidTestFiles.Utils.TestUtils;
 
+import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
 import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;
@@ -70,10 +71,9 @@ public class MultiselectWithFeedbackTest extends BaseQuizTest {
                 .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
                 .check(matches(withText(containsString(CORRECT_ANSWER_02_FEEDBACK))));
 
-        // TODO - check the image matches for question response
-        // onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-        // .atPositionOnView(0, R.id.quiz_question_feedback_image))
-        // .check(matches(R.drawable.quiz_tick));
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_feedback_image))
+                .check(matches(withDrawable(R.drawable.quiz_tick)));
 
     }
 
@@ -102,10 +102,9 @@ public class MultiselectWithFeedbackTest extends BaseQuizTest {
                 .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
                 .check(matches(withText(containsString(INCORRECT_ANSWER_FEEDBACK))));
 
-        // TODO - check the image matches for question response
-        // onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-        // .atPositionOnView(0, R.id.quiz_question_feedback_image))
-        // .check(matches(R.drawable.quiz_cross));
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_feedback_image))
+                .check(matches(withDrawable(R.drawable.quiz_cross)));
     }
 
     @Test
@@ -133,10 +132,9 @@ public class MultiselectWithFeedbackTest extends BaseQuizTest {
                 .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
                 .check(matches(withText(containsString(CORRECT_ANSWER_01_FEEDBACK))));
 
-        // TODO - check the image matches for question response
-        // onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-        // .atPositionOnView(0, R.id.quiz_question_feedback_image))
-        // .check(matches(R.drawable.quiz_cross));
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_feedback_image))
+                .check(matches(withDrawable(R.drawable.quiz_cross)));
     }
 
     @Test
@@ -172,10 +170,9 @@ public class MultiselectWithFeedbackTest extends BaseQuizTest {
                 .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
                 .check(matches(withText(containsString(INCORRECT_ANSWER_FEEDBACK))));
 
-        // TODO - check the image matches for question response
-        // onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-        // .atPositionOnView(0, R.id.quiz_question_feedback_image))
-        // .check(matches(R.drawable.quiz_cross));
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_feedback_image))
+                .check(matches(withDrawable(R.drawable.quiz_cross)));
     }
 
 }

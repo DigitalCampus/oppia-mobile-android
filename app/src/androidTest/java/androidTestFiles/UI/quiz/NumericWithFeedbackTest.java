@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 
 import androidTestFiles.Utils.TestUtils;
 
+import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
 import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;
@@ -64,10 +65,10 @@ public class NumericWithFeedbackTest extends BaseQuizTest {
         onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
                 .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
                 .check(matches(withText(CORRECT_ANSWER_FEEDBACK)));
-        // TODO - check the image matches for question response
-        // onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-        // .atPositionOnView(0, R.id.quiz_question_feedback_image))
-        // .check(matches(R.drawable.quiz_tick));
+
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_feedback_image))
+                .check(matches(withDrawable(R.drawable.quiz_tick)));
 
     }
 
@@ -98,9 +99,8 @@ public class NumericWithFeedbackTest extends BaseQuizTest {
                 .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
                 .check(matches(withText(INCORRECT_ANSWER_FEEDBACK)));
 
-        // TODO - check the image matches for question response
-        // onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-        // .atPositionOnView(0, R.id.quiz_question_feedback_image))
-        // .check(matches(R.drawable.quiz_cross));
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_feedback_image))
+                .check(matches(withDrawable(R.drawable.quiz_cross)));
     }
 }
