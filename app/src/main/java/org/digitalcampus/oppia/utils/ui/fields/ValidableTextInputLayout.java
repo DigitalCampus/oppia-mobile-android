@@ -51,14 +51,21 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
     }
 
     public void setRequired(boolean required){
+        if (!this.required && required){
+            setRequiredHint();
+        }
         this.required = required;
+    }
+
+    private void setRequiredHint(){
+        String html = String.format(REQUIRED_SPANNED_HINT, this.getHint());
+        Spanned requiredHint = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY);
+        this.setHint(requiredHint);
     }
 
     public void initialize(){
         if (required && this.getEditText() != null){
-            String html = String.format(REQUIRED_SPANNED_HINT, this.getHint());
-            Spanned requiredHint = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY);
-            this.setHint(requiredHint);
+            setRequiredHint();
         }
 
         if (!TextUtils.isEmpty(getHelperText())){
