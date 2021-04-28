@@ -17,4 +17,9 @@ public class CustomFieldsRepository {
         String customFieldsData = StorageUtils.readFileFromAssets(ctx, CustomField.CUSTOMFIELDS_FILE);
         return CustomField.parseRegisterSteps(customFieldsData);
     }
+
+    public List<String> getRequiredFields(Context ctx){
+        String customFieldsData = StorageUtils.readFileFromAssets(ctx, CustomField.CUSTOMFIELDS_FILE);
+        return CustomField.getRequiredFields(customFieldsData);
+    }
 }

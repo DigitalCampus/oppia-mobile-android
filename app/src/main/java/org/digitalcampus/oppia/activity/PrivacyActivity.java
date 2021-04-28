@@ -70,7 +70,7 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
             findViewById(R.id.privacy_user_section).setVisibility(View.GONE);
             return;
         }
-        
+
         Button deleteBtn = findViewById(R.id.btn_delete_account);
         deleteBtn.setOnClickListener(v -> showDeleteAccountWarning());
         Button downloadBtn = findViewById(R.id.btn_download_data);

@@ -1,4 +1,5 @@
 {
+  "required_fields": ["phoneno"],
   "fields": [
 
     {
@@ -294,7 +295,6 @@
       ]
     }
   ],
-
   "register_steps": [
     {
       "order": 1,
