@@ -62,6 +62,14 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         fields.put("organisation", binding.fieldOrganisation);
         fields.put("phoneno", binding.fieldPhoneno);
 
+        List<String> requiredFields = customFieldsRepo.getRequiredFields(this);
+        for (String f : requiredFields){
+            ValidableField field = fields.get(f);
+            if (field != null){
+                field.setRequired(true);
+            }
+        }
+
         phoneNoFieldPicker = (CountryCodePicker) findViewById(R.id.ccp);
         EditText phoneEditText = findViewById(R.id.register_form_phoneno_edittext);
         phoneNoFieldPicker.registerCarrierNumberEditText(phoneEditText);
@@ -90,7 +98,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         binding.fieldLastname.setText(user.getLastname());
         binding.fieldOrganisation.setText(user.getOrganisation());
         binding.fieldJobtitle.setText(user.getJobTitle());
-        if (user.getPhoneNo().startsWith("+")){
+        if (user.getPhoneNo()!= null && user.getPhoneNo().startsWith("+")){
             // Check if we already had a number saved with country code
             phoneNoFieldPicker.setFullNumber(user.getPhoneNo());
         }
