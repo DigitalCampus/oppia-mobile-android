@@ -1,8 +1,8 @@
 package org.digitalcampus.oppia.fragments;
 
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -10,30 +10,23 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.AppActivity;
-import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
-import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.task.DownloadUserDataTask;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
+import org.digitalcampus.oppia.utils.UIUtils;
 
 import androidx.annotation.Nullable;
 
@@ -41,7 +34,7 @@ import java.io.File;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 
-public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment implements APIRequestListener {
+public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
 
     protected static final String TAG = DownloadUserDataDialogFragment.class.getSimpleName();
 
@@ -99,12 +92,12 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment im
 
     private void downloadUserData(String data){
         Log.d(TAG, data);
-//        loadingSpinner.setVisibility(View.VISIBLE);
-//        downloadDataList.setVisibility(View.INVISIBLE);
+        loadingSpinner.setVisibility(View.VISIBLE);
+        downloadDataList.setVisibility(View.INVISIBLE);
 
 
         DbHelper db = DbHelper.getInstance(getActivity());
-        User u = null;
+        User u;
         try {
             u = db.getUser(SessionManager.getUsername(getActivity()));
         } catch (UserNotFoundException e) {
@@ -118,24 +111,21 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment im
         request.addRequestHeader(HTTPClientUtils.HEADER_AUTH,
                 HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()));
 
-//        request.setTitle(getString(R.string.downloading) + " " + data);
-
-        filename = u.getUsername() + "-" + data + ".html";
+        String filename = u.getUsername() + "-" + data + ".html";
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); // to notify when download is complete
-        request.allowScanningByMediaScanner();// if you want to be available from media players
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE); // to notify when download is complete
         downloadManager = (DownloadManager) getActivity().getSystemService(DOWNLOAD_SERVICE);
         downloadManager.enqueue(request);
 
-
-//        DownloadUserDataTask task = new DownloadUserDataTask(getContext());
-//        task.setAPIRequestListener(this);
-//        task.execute(data);
     }
 
     private BroadcastReceiver onDownloadComplete = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
+            loadingSpinner.setVisibility(View.GONE);
+            downloadDataList.setVisibility(View.VISIBLE);
+
             //Fetching the download id received with the broadcast
             long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             Cursor c = downloadManager.query(new DownloadManager.Query()
@@ -144,49 +134,31 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment im
             c.moveToFirst();
 
             int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-            if (status == DownloadManager.STATUS_FAILED) {
-                Log.i(TAG, "onReceive: download failed");
-                String reason = c.getString(c.getColumnIndex(DownloadManager.COLUMN_REASON));
-                Log.i(TAG, "onReceive: reason: " + reason);
-                String fileUri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-                Log.i(TAG, "onReceive: uri: " + fileUri);
 
-                File file = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), filename);
-                if (file.exists()) {
-                    boolean deleteOk = file.delete();
-                    Log.i(TAG, "onReceive: deleteOk " + deleteOk);
-                }
+            switch (status) {
 
-                if (fileUri == null) {
-                    return;
-                }
-                String path = Uri.parse(fileUri).getPath();
-                Log.i(TAG, "onReceive: path: " + path);
-                File file1 = new File(path);
-                boolean deleteOk = file1.delete();
-                Log.i(TAG, "onReceive: deleteOk: " + deleteOk);
+                case DownloadManager.STATUS_SUCCESSFUL:
+                    showDownloadSuccessDialog();
+                    break;
 
+                case DownloadManager.STATUS_FAILED:
+                    downloadManager.remove(id);
+                    String reason = c.getString(c.getColumnIndex(DownloadManager.COLUMN_REASON));
+                    UIUtils.showAlert(getActivity(), R.string.error, getString(R.string.error_download_failure_reason_format, reason));
+                    break;
             }
 
-            Snackbar.make(getView().getRootView(), R.string.ok, Snackbar.LENGTH_LONG).show();
         }
     };
 
-    @Override
-    public void apiRequestComplete(Payload response) {
-        if (response.isResult()){
+    private void showDownloadSuccessDialog() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.download_complete)
+                .setMessage(R.string.user_data_download_success)
+                .setPositiveButton(R.string.open_download_folder, (dialog, which) -> startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS)))
+                .setNeutralButton(R.string.back, null)
+                .show();
 
-        }
-        else{
-            Toast.makeText(getActivity(), response.getResultResponse(), Toast.LENGTH_LONG).show();
-        }
-
-        dismiss();
     }
 
-    @Override
-    public void apiKeyInvalidated() {
-        ((AppActivity) getActivity()).apiKeyInvalidated();
-        dismiss();
-    }
 }
