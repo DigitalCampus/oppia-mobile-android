@@ -42,8 +42,6 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
     private View loadingSpinner;
     private ViewGroup permissionsExplanation;
     private DownloadManager downloadManager;
-    private String filename;
-
 
     public static DownloadUserDataDialogFragment newInstance() {
         return new DownloadUserDataDialogFragment();
