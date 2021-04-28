@@ -173,6 +173,20 @@ public class CustomField {
         }
     }
 
+    public static List<String> getRequiredFields(String data){
+        ArrayList<String> fields = new ArrayList<>();
+        try {
+            JSONObject json = new JSONObject(data);
+            JSONArray requiredFields = json.getJSONArray("required_fields");
+            for (int i = 0; i<requiredFields.length(); i++){
+                fields.add(requiredFields.getString(i));
+            }
+        } catch (JSONException e) {
+            Analytics.logException(e);
+        }
+        return fields;
+    }
+
     public static List<RegisterFormStep> parseRegisterSteps(String data){
         ArrayList<RegisterFormStep> steps = new ArrayList<>();
         try {

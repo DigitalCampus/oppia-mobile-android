@@ -104,12 +104,6 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                         R.string.prefServer_errorDescription);
                 return false;
             }
-
-            if (isLoggedIn()) {
-                showWarningLogout(url);
-                return false;
-            }
-
             // If it is correct, we allow the change
             return true;
         }
@@ -122,21 +116,33 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         return super.onPreferenceChangedDelegate(preference, newValue);
     }
 
+    @Override
+    protected void afterPreferenceCheckDelegate(Preference preference, Object newValue){
+        if (preference == serverPref && isLoggedIn()) {
+            String currentUrl = App.getPrefs(getActivity()).getString(PrefsActivity.PREF_SERVER, null);
+            String newUrl = ((String) newValue).trim();
+            showWarningLogout(currentUrl, newUrl);
+        }
+    }
+
     private boolean isLoggedIn() {
         return !TextUtils.isEmpty(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
     }
 
-    private void showWarningLogout(String url) {
+    private void showWarningLogout(String currentUrl, String newUrl) {
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.warning)
                 .setMessage(R.string.change_server_logout_warning)
                 .setPositiveButton(R.string.accept, (dialog, which) -> {
+                    SessionManager.invalidateCurrentUserApiKey(getContext());
                     SessionManager.logoutCurrentUser(getActivity());
                     usernamePref.setSummary(R.string.about_not_logged_in);
                     ((PrefsActivity)getActivity()).forzeGoToLoginScreen();
-                    App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, url).apply();
+                    App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, newUrl).apply();
                 })
-                .setNegativeButton(R.string.cancel, null)
+                .setNegativeButton(R.string.cancel, (dialog, which) ->{
+                    App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, currentUrl).apply();
+                })
                 .show();
     }
 

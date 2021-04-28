@@ -25,6 +25,11 @@ public class MatchingQuestionTest {
     private static final String MATCHING_DEFAULT_FEEDBACK_JSON = "quizzes/matching_default_feedback.json";
     private static final String MATCHING_WITH_FEEDBACK_JSON = "quizzes/matching_with_feedback.json";
     private static final String DEFAULT_LANG = "en";
+
+    public static final String FEEDBACK_TEXT_CORRECT = "Your answer is correct.";
+    public static final String FEEDBACK_TEXT_PARTIALLY_CORRECT = "Your answer is partially correct.";
+    public static final String FEEDBACK_TEXT_INCORRECT = "Your answer is incorrect.";
+
     private Quiz quizDefaultFeedback;
     private Quiz quizWithFeedback;
 
@@ -69,7 +74,7 @@ public class MatchingQuestionTest {
         userResponses.add("Paper beats|Rock");
         userResponses.add("Scissors beat|Paper");
         quizQuestion.setUserResponses(userResponses);
-        assertEquals("Your answer is correct.", quizQuestion.getFeedback(DEFAULT_LANG));
+        assertEquals(FEEDBACK_TEXT_CORRECT, quizQuestion.getFeedback(DEFAULT_LANG));
         assertEquals(df.format(0.9999), df.format(quizQuestion.getUserscore()));
         assertEquals(99, quizQuestion.getScoreAsPercent());
 
@@ -100,7 +105,7 @@ public class MatchingQuestionTest {
         userResponses.add("Paper beats|Scissors");
         userResponses.add("Scissors beat|Scissors");
         quizQuestion.setUserResponses(userResponses);
-        assertEquals("Your answer is partially correct.", quizQuestion.getFeedback(DEFAULT_LANG));
+        assertEquals(FEEDBACK_TEXT_PARTIALLY_CORRECT, quizQuestion.getFeedback(DEFAULT_LANG));
         assertEquals(df.format(0.3333), df.format(quizQuestion.getUserscore()));
         assertEquals(33, quizQuestion.getScoreAsPercent());
 
@@ -132,7 +137,7 @@ public class MatchingQuestionTest {
         userResponses.add("Paper beats|Paper");
         userResponses.add("Scissors beat|Scissors");
         quizQuestion.setUserResponses(userResponses);
-        assertEquals("Your answer is incorrect.", quizQuestion.getFeedback(DEFAULT_LANG));
+        assertEquals(FEEDBACK_TEXT_INCORRECT, quizQuestion.getFeedback(DEFAULT_LANG));
         assertEquals(df.format(0), df.format(quizQuestion.getUserscore()));
         assertEquals(0, quizQuestion.getScoreAsPercent());
 

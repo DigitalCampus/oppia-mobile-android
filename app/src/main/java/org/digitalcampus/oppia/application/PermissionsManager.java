@@ -48,9 +48,13 @@ public class PermissionsManager {
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
     );
+    private static final List<String> STORAGE_PERMISSIONS_REQUIRED = Arrays.asList(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    );
 
     public static final int STARTUP_PERMISSIONS = 1;
     public static final int BLUETOOTH_PERMISSIONS = 2;
+    public static final int STORAGE_PERMISSIONS = 3;
 
     private PermissionsManager() {
         throw new IllegalStateException("Utility class");
@@ -65,16 +69,33 @@ public class PermissionsManager {
     }
 
     public static boolean checkPermissionsAndInform(final Activity act, int perms){
+        ViewGroup container = act.findViewById(R.id.permissions_explanation);
+        return checkPermissionsAndInform(act, perms, container);
+    }
+
+    public static boolean checkPermissionsAndInform(final Activity act, int perms, ViewGroup container){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             //If sdk version prior to 23 (Android M), the permissions are granted by manifest
             return true;
         }
 
-        final List<String> permissions = (perms == STARTUP_PERMISSIONS) ?
-                    STARTUP_PERMISSIONS_REQUIRED : BLUETOOTH_PERMISSIONS_REQUIRED;
-        final List<String> permissionsToAsk = filterNotGrantedPermissions(act, permissions);
+        List<String> permissions = new ArrayList<>();
+        switch (perms){
+            case STARTUP_PERMISSIONS: {
+                permissions = STARTUP_PERMISSIONS_REQUIRED;
+                break;
+            }
+            case BLUETOOTH_PERMISSIONS: {
+                permissions = BLUETOOTH_PERMISSIONS_REQUIRED;
+                break;
+            }
+            case STORAGE_PERMISSIONS: {
+                permissions = STORAGE_PERMISSIONS_REQUIRED;
+                break;
+            }
+        }
 
-        ViewGroup container = act.findViewById(R.id.permissions_explanation);
+        final List<String> permissionsToAsk = filterNotGrantedPermissions(act, permissions);
         if (!permissionsToAsk.isEmpty()) {
             //Show the permissions informative view
             LayoutInflater layoutInflater = (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

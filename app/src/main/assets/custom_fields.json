@@ -1,4 +1,5 @@
 {
+  "required_fields": ["phoneno"],
   "fields": [
     {
       "name":"region",
