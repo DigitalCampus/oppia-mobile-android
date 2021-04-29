@@ -64,7 +64,12 @@ android {
 
         all {
             //Define all the constant values that depend on the config properties
+
+            buildConfigField "String", "ANALYTICS_LIBRARY", "\"" + runtimeProps['ANALYTICS_LIBRARY'] + "\""
+            buildConfigField "String", "COUNTLY_APP_KEY", "\"" + runtimeProps['COUNTLY_APP_KEY'] + "\""
             buildConfigField "String", "MINT_API_KEY", "\"" + runtimeProps['MINT_API_KEY'] + "\""
+            buildConfigField "String", "COUNTLY_SERVER_URL", "\"" + runtimeProps['COUNTLY_SERVER_URL'] + "\""
+
             buildConfigField "boolean", "ADMIN_PROTECT_SETTINGS", runtimeProps['ADMIN_PROTECT_SETTINGS']
             buildConfigField "boolean", "ADMIN_PROTECT_ACTIVITY_SYNC", runtimeProps['ADMIN_PROTECT_ACTIVITY_SYNC']
             buildConfigField "boolean", "ADMIN_PROTECT_ACTIVITY_EXPORT", runtimeProps['ADMIN_PROTECT_ACTIVITY_EXPORT']
@@ -192,6 +197,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.4.0'
     implementation 'com.splunk.mint:mint:5.0.0'
+    implementation 'ly.count.android:sdk:20.11.3'
     implementation 'io.github.inflationx:calligraphy3:3.1.1'
     implementation 'io.github.inflationx:viewpump:2.0.3'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'

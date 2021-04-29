@@ -3,6 +3,7 @@ package org.digitalcampus.oppia.analytics;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.SessionManager;
 
@@ -10,11 +11,20 @@ import androidx.preference.PreferenceManager;
 
 public class Analytics {
 
+    public static final String ANALYTICS_LIBRARY_MINT = "MINT";
+    public static final String ANALYTICS_LIBRARY_COUNTLY = "COUNTLY";
+
     private static volatile BaseAnalytics analytics;
 
     public static void initializeAnalytics(Context ctx){
         if (analytics == null) {
-            analytics = new MintAnalytics(ctx);
+            if (BuildConfig.ANALYTICS_LIBRARY.equals(ANALYTICS_LIBRARY_MINT)){
+                analytics = new MintAnalytics(ctx);
+            }
+            else{
+                analytics = new CountlyAnalytics(ctx);
+            }
+
         }
     }
 
@@ -44,12 +54,22 @@ public class Analytics {
 
     public static void enableTracking(Context ctx){
         getPrefs(ctx).edit().putBoolean(PrefsActivity.PREF_ANALYTICS_ENABLED, true).apply();
-        analytics.startTrackingSession();
+        if (!isBugReportEnabled(ctx)){
+            analytics.startTrackingSession();
+        }
+        else{
+            analytics.trackingConfigChanged();
+        }
     }
 
     public static void enableBugReport(Context ctx){
         getPrefs(ctx).edit().putBoolean(PrefsActivity.PREF_BUG_REPORT_ENABLED, true).apply();
-        analytics.startTrackingSession();
+        if (!isTrackingEnabled(ctx)){
+            analytics.startTrackingSession();
+        }
+        else{
+            analytics.trackingConfigChanged();
+        }
     }
 
     public static void disableTracking(Context ctx){
@@ -57,12 +77,18 @@ public class Analytics {
         if (!isBugReportEnabled(ctx)){
             analytics.stopTrackingSession();
         }
+        else{
+            analytics.trackingConfigChanged();
+        }
     }
 
     public static void disableBugReport(Context ctx){
         getPrefs(ctx).edit().putBoolean(PrefsActivity.PREF_BUG_REPORT_ENABLED, false).apply();
         if (!isTrackingEnabled(ctx)){
             analytics.stopTrackingSession();
+        }
+        else{
+            analytics.trackingConfigChanged();
         }
     }
 
