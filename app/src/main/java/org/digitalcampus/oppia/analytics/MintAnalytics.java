@@ -27,6 +27,11 @@ public class MintAnalytics extends BaseAnalytics {
     }
 
     @Override
+    protected void trackingConfigChanged() {
+
+    }
+
+    @Override
     public void setUserIdentifier(String username) {
         Mint.setUserIdentifier(username.equals("") ? "anon" : username);
     }
