@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.analytics;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -105,5 +106,18 @@ public class Analytics {
     public static boolean isBugReportEnabled(Context ctx){
         return getPrefs(ctx).getBoolean(PrefsActivity.PREF_BUG_REPORT_ENABLED, false);
     }
+
+    public static void trackViewOnStart(Activity a){
+        if (analytics.isAnalyticsEnabled()){
+            analytics.trackViewOnStart(a);
+        }
+    }
+
+    public static void trackViewOnStop(Activity a){
+        if (analytics.isAnalyticsEnabled()){
+            analytics.trackViewOnStop(a);
+        }
+    }
+
 
 }

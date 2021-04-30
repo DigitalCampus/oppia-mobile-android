@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.analytics;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.splunk.mint.Mint;
@@ -34,6 +35,16 @@ public class MintAnalytics extends BaseAnalytics {
     @Override
     public void setUserIdentifier(String username) {
         Mint.setUserIdentifier(username.equals("") ? "anon" : username);
+    }
+
+    @Override
+    public void trackViewOnStart(Activity activity) {
+
+    }
+
+    @Override
+    public void trackViewOnStop(Activity activity) {
+
     }
 
     @Override

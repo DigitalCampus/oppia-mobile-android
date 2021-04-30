@@ -7,6 +7,7 @@ apply plugin: "com.hiya.jacoco-android"
 
 repositories {
     maven { url "https://mint.splunk.com/gradle/" }
+    maven { url  "http://dl.bintray.com/countly/maven" }
     maven { url "https://jitpack.io" }
 }
 

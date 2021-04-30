@@ -104,7 +104,8 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         }
     }
 
-    protected void onStart(){
+    @Override
+    public void onStart(){
         super.onStart();
         videoSurface = findViewById(R.id.videoSurface);
         endContainer = findViewById(R.id.end_container);
