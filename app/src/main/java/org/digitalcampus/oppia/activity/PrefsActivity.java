@@ -138,8 +138,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_NOTIFICATIONS_SCREEN = "prefNotifications";
     public static final String PREF_ADVANCED_SCREEN = "prefsAdvanced";
     public static final String PREF_APP_INSTANCE_ID = "prefAppInstanceId";
+
     public static final String PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED = "prefLastCourseVersionTimestampChecked";
-    public static final String PREF_LAST_COURSES_CHECKS_SUCCESSFUL = "prefLastCoursesChecksSuccessful";
+    public static final String PREF_LAST_COURSES_CHECKS_SUCCESSFUL_TIME = "prefLastCoursesChecksSuccessful";
     public static final String PREF_SERVER_COURSES_CACHE = "prefServerCoursesCache";
     public static final String PREF_NEW_COURSES_LIST_NOTIFIED = "prefNewCoursesListNotified";
     public static final String PREF_LAST_NEW_COURSE_SEEN_TIMESTAMP = "prefNewCourseTimestamp";

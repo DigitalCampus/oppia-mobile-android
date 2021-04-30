@@ -11,7 +11,6 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
@@ -33,7 +32,6 @@ import org.digitalcampus.oppia.model.responses.CoursesServerResponse;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.CourseUtils;
-import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.util.HashSet;
@@ -163,7 +161,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
                         response.getResultResponse(), CoursesServerResponse.class);
 
                 prefs.edit()
-                        .putLong(PrefsActivity.PREF_LAST_COURSES_CHECKS_SUCCESSFUL, System.currentTimeMillis())
+                        .putLong(PrefsActivity.PREF_LAST_COURSES_CHECKS_SUCCESSFUL_TIME, System.currentTimeMillis())
                         .putString(PrefsActivity.PREF_SERVER_COURSES_CACHE, response.getResultResponse())
                         .commit();
 

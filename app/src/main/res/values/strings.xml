@@ -569,7 +569,7 @@
     <string name="back">Back</string>
     <string name="continue_to_course">Continue to course</string>
     <string name="processing">Processing...</string>
-    <string name="user_data_download_success">Your data was downloaded successfuly.\nYou can open it through the notification or accessing the Downloads system folder.</string>
+    <string name="user_data_download_success">Your data was downloaded successfuly.\nYou can access it in the Downloads system folder.</string>
     <string name="open_download_folder">Open download folder</string>
     <string name="error_download_failure_reason_format">Download failure. Reason: %s</string>
 
