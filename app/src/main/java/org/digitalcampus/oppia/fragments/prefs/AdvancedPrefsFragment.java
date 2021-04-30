@@ -136,6 +136,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                 .setPositiveButton(R.string.accept, (dialog, which) -> {
                     SessionManager.invalidateCurrentUserApiKey(getContext());
                     SessionManager.logoutCurrentUser(getActivity());
+                    clearNotificationProcessCachedData();
                     usernamePref.setSummary(R.string.about_not_logged_in);
                     ((PrefsActivity)getActivity()).forzeGoToLoginScreen();
                     App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, newUrl).apply();
@@ -144,6 +145,16 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                     App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, currentUrl).apply();
                 })
                 .show();
+    }
+
+    private void clearNotificationProcessCachedData() {
+
+        prefs.edit()
+                .remove(PrefsActivity.PREF_SERVER_COURSES_CACHE)
+                .remove(PrefsActivity.PREF_NEW_COURSES_LIST_NOTIFIED)
+                .remove(PrefsActivity.PREF_LAST_NEW_COURSE_SEEN_TIMESTAMP)
+                .remove(PrefsActivity.PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED)
+                .apply();
     }
 
     private boolean checkMaxIntOnString(Object newValue) {
