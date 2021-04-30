@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.analytics;
 
+import android.app.Activity;
 import android.content.Context;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
@@ -47,6 +48,16 @@ public class CountlyAnalytics extends BaseAnalytics {
         userFields.put("username", username);
         Countly.userData.setUserData(userFields);
         Countly.userData.save();
+    }
+
+    @Override
+    public void trackViewOnStart(Activity activity) {
+        Countly.sharedInstance().onStart(activity);
+    }
+
+    @Override
+    public void trackViewOnStop(Activity activity) {
+        Countly.sharedInstance().onStop();
     }
 
     @Override
