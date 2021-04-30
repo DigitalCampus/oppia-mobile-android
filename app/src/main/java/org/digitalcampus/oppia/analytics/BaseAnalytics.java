@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.analytics;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -13,8 +14,11 @@ public abstract class BaseAnalytics {
 
     protected abstract void startTrackingSession();
     protected abstract void stopTrackingSession();
+    protected abstract void trackingConfigChanged();
     protected abstract void logHandledException(Exception e);
     public abstract void setUserIdentifier(String username);
+    public abstract void trackViewOnStart(Activity activity);
+    public abstract void trackViewOnStop(Activity activity);
 
     public BaseAnalytics(Context ctx){
         this.ctx = ctx;
