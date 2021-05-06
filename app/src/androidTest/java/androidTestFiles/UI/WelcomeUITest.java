@@ -9,15 +9,19 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidTestFiles.Utils.MockedApiEndpointTest;
+
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class WelcomeUITest {
+public class WelcomeUITest extends MockedApiEndpointTest {
 
     @Rule
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
@@ -56,4 +60,25 @@ public class WelcomeUITest {
                 .check(matches(isDisplayed()));
     }
 
+    @Test
+    public void resetPassword_goToLoginScreenAfterSuccess() {
+
+        startServer(200, null, 0);
+
+        onView(withId(R.id.welcome_login))
+                .perform(scrollTo(), click());
+
+        onView(withId(R.id.btn_reset_password))
+                .perform(scrollTo(), click());
+
+        onView(withId(R.id.reset_username_field)).perform(typeText("username"));
+
+        onView(withId(R.id.reset_btn)).perform(click());
+
+        onView(withText(R.string.ok)).perform(click());
+
+        onView(withId(R.id.login_btn))
+                .perform(scrollTo())
+                .check(matches(isDisplayed()));
+    }
 }
