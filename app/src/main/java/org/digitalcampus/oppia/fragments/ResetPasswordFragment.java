@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.listener.SubmitEntityListener;
 import org.digitalcampus.oppia.model.User;
@@ -33,6 +34,8 @@ import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
@@ -77,7 +80,14 @@ public class ResetPasswordFragment extends AppFragment implements SubmitEntityLi
         hideProgressDialog();
 
         if (result.isSuccess()) {
-            UIUtils.showAlert(super.getActivity(), R.string.reset_password, result.getResultMessage());
+            UIUtils.showAlert(getActivity(), getString(R.string.reset_password), result.getResultMessage(),
+                    getString(R.string.ok), () -> {
+                        UIUtils.hideSoftKeyboard(getActivity());
+                        usernameField.setText("");
+                        WelcomeActivity wa = (WelcomeActivity) getActivity();
+                        wa.switchTab(WelcomeActivity.TAB_LOGIN);
+                        return null;
+                    });
         } else {
             try {
                 JSONObject jo = new JSONObject(result.getResultMessage());
