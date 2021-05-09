@@ -22,10 +22,12 @@ public class Analytics {
             if (BuildConfig.ANALYTICS_LIBRARY.equals(ANALYTICS_LIBRARY_MINT)){
                 analytics = new MintAnalytics(ctx);
             }
-            else{
+            else if (BuildConfig.ANALYTICS_LIBRARY.equals(ANALYTICS_LIBRARY_COUNTLY)){
                 analytics = new CountlyAnalytics(ctx);
             }
-
+            else{
+                analytics = new DefaultNoOpAnalytics(ctx);
+            }
         }
     }
 
