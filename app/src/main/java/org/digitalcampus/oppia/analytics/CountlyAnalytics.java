@@ -44,10 +44,12 @@ public class CountlyAnalytics extends BaseAnalytics {
 
     @Override
     public void setUserIdentifier(String username) {
-        Map<String, String> userFields = new HashMap<>();
-        userFields.put("username", username);
-        Countly.userData.setUserData(userFields);
-        Countly.userData.save();
+        if (isBugReportEnabled() || isAnalyticsEnabled()) {
+            Map<String, String> userFields = new HashMap<>();
+            userFields.put("username", username);
+            Countly.userData.setUserData(userFields);
+            Countly.userData.save();
+        }
     }
 
     @Override
