@@ -26,6 +26,7 @@ import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.UtteranceProgressListener;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
@@ -34,6 +35,7 @@ import android.widget.Toast;
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityCourseBinding;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -79,18 +81,18 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     private TextToSpeech myTTS;
     private boolean ttsRunning = false;
 
-    TabLayout tabs;
-    private ViewPager viewPager;
     private ActivityPagerAdapter apAdapter;
     private boolean launchTTSAfterLanguageSelection;
+    private ActivityCourseBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_course);
+        binding = ActivityCourseBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
+        
         ActionBar actionBar = getSupportActionBar();
-        viewPager = findViewById(R.id.activity_widget_pager);
 
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
@@ -111,7 +113,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 actionBar.setDisplayShowTitleEnabled(true);
             }
         }
-        tabs = findViewById(R.id.tabs_toolbar);
 
         loadActivities();
     }
@@ -120,7 +121,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     public void onStart() {
         super.onStart();
         initialize();
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+        binding.activityWidgetPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabsToolbar));
 
     }
 
@@ -294,11 +295,11 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         }
 
         apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles);
-        viewPager.setAdapter(apAdapter);
-        tabs.setupWithViewPager(viewPager);
-        tabs.setTabMode(activities.size() > 1 ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED);
-        tabs.addOnTabSelectedListener(this);
-        apAdapter.updateTabViews(tabs);
+        binding.activityWidgetPager.setAdapter(apAdapter);
+        binding.tabsToolbar.setupWithViewPager(binding.activityWidgetPager);
+        binding.tabsToolbar.setTabMode(activities.size() > 1 ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED);
+        binding.tabsToolbar.addOnTabSelectedListener(this);
+        apAdapter.updateTabViews(binding.tabsToolbar);
 
         if (currentActivityNo >= fragments.size()){
             //Wrong activity number passed
@@ -306,7 +307,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             this.finish();
             return;
         }
-        viewPager.setCurrentItem(currentActivityNo);
+        binding.activityWidgetPager.setCurrentItem(currentActivityNo);
     }
 
     private Activity determineActivityType(int i, List<Fragment> fragments){
@@ -360,7 +361,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         Log.d(TAG, "Tab selected " + tabSelected + " current act " + currentActivityNo);
 
         if (canNavigateTo(tabSelected)) {
-            viewPager.setCurrentItem(tabSelected);
+            binding.activityWidgetPager.setCurrentItem(tabSelected);
             currentActivityNo = tabSelected;
             this.stopReading();
             BaseWidget currentWidget = (BaseWidget) apAdapter.getItem(currentActivityNo);
@@ -368,7 +369,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         } else {
             Runnable setPreviousTab = () -> {
                 UIUtils.showAlert(CourseActivity.this, R.string.sequencing_dialog_title, R.string.sequencing_section_message);
-                TabLayout.Tab target = tabs.getTabAt(currentActivityNo);
+                TabLayout.Tab target = binding.tabsToolbar.getTabAt(currentActivityNo);
                 if (target != null) {
                     target.select();
                 }

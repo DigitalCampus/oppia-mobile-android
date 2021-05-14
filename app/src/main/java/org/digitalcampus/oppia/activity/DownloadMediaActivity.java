@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityDownloadMediaBinding;
 import org.digitalcampus.oppia.adapter.DownloadMediaAdapter;
 import org.digitalcampus.oppia.listener.DownloadMediaListener;
 import org.digitalcampus.oppia.model.Media;
@@ -54,14 +56,11 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
     private ArrayList<Media> missingMedia;
     private DownloadBroadcastReceiver receiver;
-    private TextView emptyState;
     private boolean isSortByCourse;
-    private TextView downloadSelected;
-    private View missingMediaContainer;
-    private RecyclerView recyclerMedia;
     private ArrayList<Media> mediaSelected;
     private DownloadMediaAdapter adapterMedia;
     private MultiChoiceHelper multiChoiceHelper;
+    private ActivityDownloadMediaBinding binding;
 
     public enum DownloadMode {INDIVIDUALLY, DOWNLOAD_ALL, STOP_ALL}
 
@@ -74,20 +73,13 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         initialize();
     }
 
-    private void findViews() {
-        missingMediaContainer = findViewById(R.id.home_messages);
-        downloadSelected = findViewById(R.id.download_selected);
-        emptyState = findViewById(R.id.empty_state);
-        recyclerMedia = findViewById(R.id.missing_media_list);
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_download_media);
+        binding = ActivityDownloadMediaBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
         getAppComponent().inject(this);
-        findViews();
 
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
@@ -115,7 +107,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
                 for (Media m : mediaSelected) {
                     if (!m.isDownloading()) {
-                        downloadSelected.setText(getString(R.string.missing_media_download_selected));
+                        binding.downloadSelected.setText(getString(R.string.missing_media_download_selected));
                         break;
                     }
                 }
@@ -127,13 +119,13 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                 onPrepareOptionsMenu(menu);
                 mode.setTitle(R.string.title_download_media);
 
-                if (missingMediaContainer.getVisibility() != View.VISIBLE) {
-                    missingMediaContainer.setVisibility(View.VISIBLE);
-                    downloadSelected.setOnClickListener(v -> {
-                        DownloadMode downloadMode = downloadSelected.getText()
+                if (binding.homeMessages.getVisibility() != View.VISIBLE) {
+                    binding.homeMessages.setVisibility(View.VISIBLE);
+                    binding.downloadSelected.setOnClickListener(v -> {
+                        DownloadMode downloadMode = binding.downloadSelected.getText()
                                 .equals(getString(R.string.missing_media_download_selected)) ? DownloadMode.DOWNLOAD_ALL
                                 : DownloadMode.STOP_ALL;
-                        downloadSelected.setText(downloadSelected.getText()
+                        binding.downloadSelected.setText(binding.downloadSelected.getText()
                                 .equals(getString(R.string.missing_media_download_selected)) ? getString(R.string.missing_media_stop_selected)
                                 : getString(R.string.missing_media_download_selected));
 
@@ -149,7 +141,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
                 adapterMedia.setEnterOnMultiChoiceMode(true);
                 adapterMedia.notifyDataSetChanged();
-                downloadSelected.setText(getString(R.string.missing_media_stop_selected));
+                binding.downloadSelected.setText(getString(R.string.missing_media_stop_selected));
 
                 menu.findItem(R.id.menu_sort_by).setVisible(false);
 
@@ -196,7 +188,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         adapterMedia.setMultiChoiceHelper(multiChoiceHelper);
         adapterMedia.sortByFilename();
-        recyclerMedia.setAdapter(adapterMedia);
+        binding.missingMediaList.setAdapter(adapterMedia);
 
         adapterMedia.setOnItemClickListener(position -> {
             Log.d(TAG, "Clicked " + position);
@@ -217,9 +209,9 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             // We already have loaded media (coming from orientation change)
             isSortByCourse = false;
             adapterMedia.notifyDataSetChanged();
-            emptyState.setVisibility(View.GONE);
+            binding.emptyState.setVisibility(View.GONE);
         } else {
-            emptyState.setVisibility(View.VISIBLE);
+            binding.emptyState.setVisibility(View.VISIBLE);
         }
         receiver = new DownloadBroadcastReceiver();
         receiver.setMediaListener(this);
@@ -329,7 +321,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
             missingMedia.remove(mediaFile);
             adapterMedia.notifyDataSetChanged();
-            emptyState.setVisibility((missingMedia.isEmpty()) ? View.VISIBLE : View.GONE);
+            binding.emptyState.setVisibility((missingMedia.isEmpty()) ? View.VISIBLE : View.GONE);
             invalidateOptionsMenu();
         }
     }
@@ -374,10 +366,10 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         mediaToDownload.setProgress(0);
         adapterMedia.notifyDataSetChanged();
 
-        downloadSelected.setText(getString(R.string.missing_media_download_selected));
+        binding.downloadSelected.setText(getString(R.string.missing_media_download_selected));
         for (Media m : mediaSelected) {
             if (m.isDownloading()) {
-                downloadSelected.setText(getString(R.string.missing_media_stop_selected));
+                binding.downloadSelected.setText(getString(R.string.missing_media_stop_selected));
                 break;
             }
         }
@@ -393,7 +385,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         for (Media m : mediaSelected) {
             if (!m.isDownloading()) {
-                downloadSelected.setText(getString(R.string.missing_media_download_selected));
+                binding.downloadSelected.setText(getString(R.string.missing_media_download_selected));
                 break;
             }
         }
@@ -402,13 +394,13 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     private void showDownloadMediaMessage() {
         TranslateAnimation anim = new TranslateAnimation(0, 0, -200, 0);
         anim.setDuration(900);
-        missingMediaContainer.startAnimation(anim);
+        binding.homeMessages.startAnimation(anim);
 
-        missingMediaContainer.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        ValueAnimator animator = ValueAnimator.ofInt(0, missingMediaContainer.getMeasuredHeight());
+        binding.homeMessages.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ValueAnimator animator = ValueAnimator.ofInt(0, binding.homeMessages.getMeasuredHeight());
         //@Override
         animator.addUpdateListener(
-                valueAnimator -> recyclerMedia.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0));
+                valueAnimator -> binding.missingMediaList.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0));
         animator.setStartDelay(200);
         animator.setDuration(700);
         animator.start();
@@ -418,19 +410,19 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         TranslateAnimation anim = new TranslateAnimation(0, 0, 0, -200);
         anim.setDuration(900);
-        missingMediaContainer.startAnimation(anim);
+        binding.homeMessages.startAnimation(anim);
 
-        missingMediaContainer.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        ValueAnimator animator = ValueAnimator.ofInt(missingMediaContainer.getMeasuredHeight(), 0);
+        binding.homeMessages.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ValueAnimator animator = ValueAnimator.ofInt(binding.homeMessages.getMeasuredHeight(), 0);
         //@Override
         animator.addUpdateListener(
-                valueAnimator -> recyclerMedia.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0));
+                valueAnimator -> binding.missingMediaList.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0));
         animator.setStartDelay(0);
         animator.setDuration(700);
         animator.start();
 
 
-        missingMediaContainer.setVisibility(View.GONE);
+        binding.homeMessages.setVisibility(View.GONE);
     }
 
 }
