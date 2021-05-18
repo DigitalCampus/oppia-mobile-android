@@ -50,7 +50,6 @@ public class MetadataUtilsTest {
             put("network", BuildConfig.METADATA_INCLUDE_NETWORK);
             put("battery", BuildConfig.METADATA_INCLUDE_BATTERY_LEVEL);
             put("appInstanceId", BuildConfig.METADATA_INCLUDE_APP_INSTANCE_ID);
-            put("gps", BuildConfig.METADATA_INCLUDE_GPS);
             put("netconnected", BuildConfig.METADATA_INCLUDE_NETWORK_CONNECTED);
             put("manufacturermodel", BuildConfig.METADATA_INCLUDE_MANUFACTURER_MODEL);
             put("wifion", BuildConfig.METADATA_INCLUDE_WIFI_ON);
@@ -67,7 +66,6 @@ public class MetadataUtilsTest {
             put("network", BuildConfig.METADATA_INCLUDE_NETWORK);
             put("battery", BuildConfig.METADATA_INCLUDE_BATTERY_LEVEL);
             put("appInstanceId", BuildConfig.METADATA_INCLUDE_APP_INSTANCE_ID);
-            put("gps", BuildConfig.METADATA_INCLUDE_GPS);
             put("netconnected", BuildConfig.METADATA_INCLUDE_NETWORK_CONNECTED);
             put("manufacturermodel", BuildConfig.METADATA_INCLUDE_MANUFACTURER_MODEL);
             put("wifion", BuildConfig.METADATA_INCLUDE_WIFI_ON);

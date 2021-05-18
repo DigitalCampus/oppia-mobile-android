@@ -97,7 +97,6 @@ android {
             buildConfigField "boolean", "METADATA_INCLUDE_WIFI_ON", runtimeProps['METADATA_INCLUDE_WIFI_ON']
             buildConfigField "boolean", "METADATA_INCLUDE_NETWORK_CONNECTED", runtimeProps['METADATA_INCLUDE_NETWORK_CONNECTED']
             buildConfigField "boolean", "METADATA_INCLUDE_BATTERY_LEVEL", runtimeProps['METADATA_INCLUDE_BATTERY_LEVEL']
-            buildConfigField "boolean", "METADATA_INCLUDE_GPS", runtimeProps['METADATA_INCLUDE_GPS']
 
             buildConfigField "String", "GAMIFICATION_MEDIA_CRITERIA", "\"" + runtimeProps['GAMIFICATION_MEDIA_CRITERIA'] + "\""
             buildConfigField "int", "GAMIFICATION_DEFAULT_MEDIA_THRESHOLD", runtimeProps['GAMIFICATION_DEFAULT_MEDIA_THRESHOLD']
