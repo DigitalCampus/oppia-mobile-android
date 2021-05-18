@@ -28,6 +28,7 @@ import android.webkit.WebView;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -39,7 +40,8 @@ import androidx.preference.PreferenceManager;
 public class AboutFragment extends AppFragment {
 
 	private SharedPreferences prefs;
-	
+	private FragmentAboutBinding binding;
+
 	public static AboutFragment newInstance() {
 	    return new AboutFragment();
 	}
@@ -51,7 +53,8 @@ public class AboutFragment extends AppFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		return inflater.inflate(R.layout.fragment_about, container, false);
+		binding = FragmentAboutBinding.inflate(inflater, container, false);
+		return binding.getRoot();
 	}
 	
 	@Override

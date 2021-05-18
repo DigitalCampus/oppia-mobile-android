@@ -35,6 +35,8 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentActivitiesBinding;
 import org.digitalcampus.oppia.adapter.ActivityTypesAdapter;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -74,11 +76,10 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
     private List<Points> pointsFiltered = new ArrayList<>();
     private List<String> labels = new ArrayList<>();
     private Map<String, ActivityCount> activitiesGrouped = new LinkedHashMap<>(); // LinkedHashMap: ordered by insertion. TreeMap: sorts naturally by key
-    private LineChart chart;
     private int currentDatesRangePosition;
     private Course course;
-    private RecyclerView recyclerActivityTypes;
     private ArrayList<ActivityType> activityTypes;
+    private FragmentActivitiesBinding binding;
 
     public static ActivitiesFragment newInstance(Course course) {
         ActivitiesFragment fragment = new ActivitiesFragment();
@@ -88,24 +89,17 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
         return fragment ;
     }
 
-    private void findViews() {
-        recyclerActivityTypes = getView().findViewById(R.id.recycler_activity_types);
-        TabLayout tabsFilterPoints = getView().findViewById(R.id.tabs_filter_points);
-        chart = getView().findViewById(R.id.chart);
-
-        tabsFilterPoints.addOnTabSelectedListener(this);
-
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_activities, container, false);
+        binding = FragmentActivitiesBinding.inflate(inflater, container, false);
+
+        binding.tabsFilterPoints.addOnTabSelectedListener(this);
+        return binding.getRoot();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        findViews();
         getAppComponent().inject(this);
         configureActivityTypes();
         configureChart();
@@ -132,26 +126,26 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
 
         ActivityTypesAdapter adapterActivityTypes = new ActivityTypesAdapter(getActivity(), activityTypes);
         adapterActivityTypes.setOnItemClickListener(this);
-        recyclerActivityTypes.setAdapter(adapterActivityTypes);
+        binding.recyclerActivityTypes.setAdapter(adapterActivityTypes);
     }
 
     private void configureChart() {
-        chart.setNoDataText(getString(R.string.no_points_data));
-        chart.setDrawGridBackground(false);
-        chart.getDescription().setEnabled(false);
+        binding.chart.setNoDataText(getString(R.string.no_points_data));
+        binding.chart.setDrawGridBackground(false);
+        binding.chart.getDescription().setEnabled(false);
 
-        chart.setPinchZoom(true);
+        binding.chart.setPinchZoom(true);
 
-        chart.offsetLeftAndRight(getResources().getDimensionPixelSize(R.dimen.offset_chart_horizontal));
+        binding.chart.offsetLeftAndRight(getResources().getDimensionPixelSize(R.dimen.offset_chart_horizontal));
 
-        Legend l = chart.getLegend();
+        Legend l = binding.chart.getLegend();
         l.setEnabled(false);
 
-        chart.getAxisRight().setEnabled(false);
+        binding.chart.getAxisRight().setEnabled(false);
 
-        chart.getAxisLeft().setAxisMinimum(0);
+        binding.chart.getAxisLeft().setAxisMinimum(0);
 
-        XAxis xAxis = chart.getXAxis();
+        XAxis xAxis = binding.chart.getXAxis();
 
         xAxis.setGranularity(1);
         xAxis.setGranularityEnabled(true);
@@ -296,16 +290,16 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
             lineData.addDataSet(dataSet);
         }
 
-        if (chart.getData() != null) {
-            chart.clear();
+        if (binding.chart.getData() != null) {
+            binding.chart.clear();
         }
-        chart.setData(lineData);
+        binding.chart.setData(lineData);
 
         configureAxis(maxYValue);
-        chart.invalidate(); // refresh
+        binding.chart.invalidate(); // refresh
 
         if (animate) {
-            chart.animateY(DURATION_CHART_Y_VALUES_ANIMATION, Easing.EaseInOutQuad);
+            binding.chart.animateY(DURATION_CHART_Y_VALUES_ANIMATION, Easing.EaseInOutQuad);
         }
 
     }
@@ -326,7 +320,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
     }
 
     private void configureAxis(int maxYValue){
-        XAxis xAxis = chart.getXAxis();
+        XAxis xAxis = binding.chart.getXAxis();
         xAxis.setLabelCount(Math.min(labels.size(), 12));
         xAxis.setValueFormatter(new ValueFormatter(){
             @Override
@@ -342,7 +336,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
             }
         });
 
-        YAxis yAxis = chart.getAxisLeft();
+        YAxis yAxis = binding.chart.getAxisLeft();
         yAxis.setLabelCount(Math.min(maxYValue, 10));
         yAxis.setValueFormatter(new ValueFormatter(){
 
