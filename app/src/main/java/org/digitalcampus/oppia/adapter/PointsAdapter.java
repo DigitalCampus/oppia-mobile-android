@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowFragmentPointsListBinding;
 import org.digitalcampus.oppia.model.Points;
 
 import java.util.List;
@@ -39,10 +40,10 @@ public class PointsAdapter extends RecyclerView.Adapter<PointsAdapter.PointsView
 
         final Points point = getItemAtPosition(position);
 
-        viewHolder.pointsDescription.setText(point.getDescriptionPrettified());
-        viewHolder.pointsTime.setText(point.getTimeHoursMinutes());
-        viewHolder.pointsDate.setText(point.getDateDayMonth());
-        viewHolder.pointsPoints.setText(String.valueOf(point.getPointsAwarded()));
+        viewHolder.binding.pointsDescription.setText(point.getDescriptionPrettified());
+        viewHolder.binding.pointsTime.setText(point.getTimeHoursMinutes());
+        viewHolder.binding.pointsDate.setText(point.getDateDayMonth());
+        viewHolder.binding.pointsPoints.setText(String.valueOf(point.getPointsAwarded()));
 
     }
 
@@ -58,19 +59,13 @@ public class PointsAdapter extends RecyclerView.Adapter<PointsAdapter.PointsView
 
     public class PointsViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView pointsDescription;
-        private TextView pointsTime;
-        private TextView pointsDate;
-        private TextView pointsPoints;
+        private final RowFragmentPointsListBinding binding;
 
         public PointsViewHolder(View itemView) {
 
             super(itemView);
+            binding = RowFragmentPointsListBinding.bind(itemView);
 
-            pointsDescription = itemView.findViewById(R.id.points_description);
-            pointsTime = itemView.findViewById(R.id.points_time);
-            pointsDate = itemView.findViewById(R.id.points_date);
-            pointsPoints = itemView.findViewById(R.id.points_points);
         }
 
     }

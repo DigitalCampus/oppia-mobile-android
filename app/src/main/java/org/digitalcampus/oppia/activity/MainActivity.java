@@ -58,21 +58,16 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private View btnExpandProfileOptions;
     private View viewProfileOptions;
     private TextView tvBadgeNumber;
+    private View btnEditProfile;
 
-    private void findViews() {
-
+    private void findHeaderDrawerViews() {
 
         View headerDrawer = binding.navigationView.getHeaderView(0);
-        View btnEditProfile = headerDrawer.findViewById(R.id.btn_edit_profile);
+        btnEditProfile = headerDrawer.findViewById(R.id.btn_edit_profile);
         btnLogout = headerDrawer.findViewById(R.id.btn_logout);
         btnExpandProfileOptions = headerDrawer.findViewById(R.id.btn_expand_profile_options);
         viewProfileOptions = headerDrawer.findViewById(R.id.view_profile_options);
 
-        btnExpandProfileOptions.setOnClickListener(this);
-        btnEditProfile.setOnClickListener(this);
-        btnLogout.setOnClickListener(this);
-
-        binding.navBottomView.setOnNavigationItemSelectedListener(this);
     }
 
 
@@ -83,16 +78,21 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
-        
         getAppComponent().inject(this);
+
+        findHeaderDrawerViews();
+
+        btnExpandProfileOptions.setOnClickListener(this);
+        btnEditProfile.setOnClickListener(this);
+        btnLogout.setOnClickListener(this);
+
+        binding.navBottomView.setOnNavigationItemSelectedListener(this);
 
         configureBadgePointsView();
 
         viewProfileOptions.setVisibility(View.GONE);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
-
-
 
     }
 
