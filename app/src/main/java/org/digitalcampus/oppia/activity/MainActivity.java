@@ -23,6 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityMainBinding;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.fragments.CoursesListFragment;
 import org.digitalcampus.oppia.fragments.MainPointsFragment;
@@ -47,23 +48,21 @@ import javax.inject.Inject;
 public class MainActivity extends AppActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
         SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener {
 
-    private BottomNavigationView navBottomView;
     private DrawerMenuManager drawer;
-    private View btnLogout;
-    private View btnExpandProfileOptions;
-    private View viewProfileOptions;
     private MenuItem searchMenuItem;
-    private TextView tvBadgeNumber;
 
     @Inject
     CoursesRepository coursesRepository;
+    private ActivityMainBinding binding;
+    private View btnLogout;
+    private View btnExpandProfileOptions;
+    private View viewProfileOptions;
+    private TextView tvBadgeNumber;
 
     private void findViews() {
 
-        navBottomView = findViewById(R.id.nav_bottom_view);
-        NavigationView navDrawerView = findViewById(R.id.navigation_view);
 
-        View headerDrawer = navDrawerView.getHeaderView(0);
+        View headerDrawer = binding.navigationView.getHeaderView(0);
         View btnEditProfile = headerDrawer.findViewById(R.id.btn_edit_profile);
         btnLogout = headerDrawer.findViewById(R.id.btn_logout);
         btnExpandProfileOptions = headerDrawer.findViewById(R.id.btn_expand_profile_options);
@@ -73,7 +72,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         btnEditProfile.setOnClickListener(this);
         btnLogout.setOnClickListener(this);
 
-        navBottomView.setOnNavigationItemSelectedListener(this);
+        binding.navBottomView.setOnNavigationItemSelectedListener(this);
     }
 
 
@@ -81,8 +80,10 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        findViews();
+        
+        binding = ActivityMainBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
+        
         getAppComponent().inject(this);
 
         configureBadgePointsView();
@@ -99,7 +100,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private void configureBadgePointsView() {
 
         BottomNavigationMenuView bottomNavigationMenuView =
-                (BottomNavigationMenuView) navBottomView.getChildAt(0);
+                (BottomNavigationMenuView) binding.navBottomView.getChildAt(0);
         BottomNavigationItemView itemView = (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(2);
 
         View badgeView = LayoutInflater.from(this).inflate(R.layout.view_badge, null);
@@ -140,7 +141,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         Map<Integer, DrawerMenuManager.MenuOption> options = getMenuOptions();
         drawer.onPrepareOptionsMenu(options);
 
-        configureSearchButtonVisibility(navBottomView.getSelectedItemId());
+        configureSearchButtonVisibility(binding.navBottomView.getSelectedItemId());
 
         return super.onPrepareOptionsMenu(menu);
     }

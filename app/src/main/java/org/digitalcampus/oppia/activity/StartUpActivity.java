@@ -37,6 +37,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityStartUpBinding;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.analytics.BaseAnalytics;
 import org.digitalcampus.oppia.application.PermissionsManager;
@@ -59,15 +60,15 @@ import java.util.ArrayList;
 public class StartUpActivity extends Activity implements UpgradeListener, InstallCourseListener {
 
     public static final String TAG = StartUpActivity.class.getSimpleName();
-    private TextView tvProgress;
     private SharedPreferences prefs;
+    private ActivityStartUpBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start_up);
+        binding = ActivityStartUpBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
 
-        tvProgress = this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         Analytics.startTrackingIfEnabled(this);
@@ -95,8 +96,8 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
 
 
     private void updateProgress(String text) {
-        if (tvProgress != null) {
-            tvProgress.setText(text);
+        if (binding.startUpProgress != null) {
+            binding.startUpProgress.setText(text);
         }
     }
 
