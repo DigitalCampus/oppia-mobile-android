@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowMediaDownloadBinding;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.Course;
@@ -59,39 +60,39 @@ public class DownloadMediaAdapter extends MultiChoiceRecyclerViewAdapter<Downloa
             courses.append( i != 0 ? ", " + title : title);
         }
 
-        viewHolder.mediaCourses.setText(courses.toString());
-        viewHolder.mediaTitle.setText(m.getFilename());
-        viewHolder.mediaPath.setText(m.getDownloadUrl());
+        viewHolder.binding.mediaCourses.setText(courses.toString());
+        viewHolder.binding.mediaTitle.setText(m.getFilename());
+        viewHolder.binding.mediaPath.setText(m.getDownloadUrl());
         if (m.getFileSize() != 0) {
-            viewHolder.mediaFileSize.setText(context.getString(R.string.media_file_size, m.getFileSize() / (1024 * 1024)));
-            viewHolder.mediaFileSize.setVisibility(View.VISIBLE);
+            viewHolder.binding.mediaFileSize.setText(context.getString(R.string.media_file_size, m.getFileSize() / (1024 * 1024)));
+            viewHolder.binding.mediaFileSize.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.mediaFileSize.setVisibility(View.INVISIBLE);
+            viewHolder.binding.mediaFileSize.setVisibility(View.INVISIBLE);
         }
 
-        viewHolder.downloadBtn.setVisibility(isMultiChoiceMode ? View.INVISIBLE : View.VISIBLE);
+        viewHolder.binding.actionBtn.setVisibility(isMultiChoiceMode ? View.INVISIBLE : View.VISIBLE);
 
         int actionBtnimagRes;
         if (m.isDownloading()) {
             actionBtnimagRes = R.drawable.ic_action_cancel;
 
-            viewHolder.downloadProgress.setVisibility(View.VISIBLE);
-            viewHolder.mediaPath.setVisibility(View.GONE);
-            viewHolder.errorText.setVisibility(View.GONE);
+            viewHolder.binding.downloadProgress.setVisibility(View.VISIBLE);
+            viewHolder.binding.mediaPath.setVisibility(View.GONE);
+            viewHolder.binding.downloadError.setVisibility(View.GONE);
             if (m.getProgress() > 0) {
-                viewHolder.downloadProgress.setIndeterminate(false);
-                viewHolder.downloadProgress.setProgress(m.getProgress());
+                viewHolder.binding.downloadProgress.setIndeterminate(false);
+                viewHolder.binding.downloadProgress.setProgress(m.getProgress());
             } else {
-                viewHolder.downloadProgress.setIndeterminate(true);
+                viewHolder.binding.downloadProgress.setIndeterminate(true);
             }
         } else {
             actionBtnimagRes = m.hasFailed() ? R.drawable.dialog_ic_action_update : R.drawable.ic_action_download;
-            viewHolder.errorText.setVisibility(m.hasFailed() ? View.VISIBLE : View.GONE);
-            viewHolder.downloadProgress.setVisibility(View.GONE);
-            viewHolder.mediaPath.setVisibility(View.VISIBLE);
+            viewHolder.binding.downloadError.setVisibility(m.hasFailed() ? View.VISIBLE : View.GONE);
+            viewHolder.binding.downloadProgress.setVisibility(View.GONE);
+            viewHolder.binding.mediaPath.setVisibility(View.VISIBLE);
         }
-        viewHolder.downloadBtn.setImageResource(actionBtnimagRes);
-        viewHolder.downloadBtn.setTag(actionBtnimagRes);
+        viewHolder.binding.actionBtn.setImageResource(actionBtnimagRes);
+        viewHolder.binding.actionBtn.setTag(actionBtnimagRes);
     }
 
     @Override
@@ -125,26 +126,14 @@ public class DownloadMediaAdapter extends MultiChoiceRecyclerViewAdapter<Downloa
 
     public class DownloadMediaViewHolder extends MultiChoiceRecyclerViewAdapter.ViewHolder {
 
-        private final TextView mediaCourses;
-        private final TextView mediaTitle;
-        private final TextView mediaPath;
-        private final TextView mediaFileSize;
-        private final ImageButton downloadBtn;
-        private final ProgressBar downloadProgress;
-        private final TextView errorText;
+        private final RowMediaDownloadBinding binding;
 
         public DownloadMediaViewHolder(View itemView) {
 
             super(itemView);
-            mediaCourses = itemView.findViewById(R.id.media_courses);
-            mediaTitle = itemView.findViewById(R.id.media_title);
-            mediaPath = itemView.findViewById(R.id.media_path);
-            mediaFileSize = itemView.findViewById(R.id.media_file_size);
-            downloadBtn = itemView.findViewById(R.id.action_btn);
-            downloadProgress = itemView.findViewById(R.id.download_progress);
-            errorText = itemView.findViewById(R.id.download_error);
+            binding = RowMediaDownloadBinding.bind(itemView);
 
-            downloadBtn.setOnClickListener(v -> {
+            binding.actionBtn.setOnClickListener(v -> {
                 if (itemClickListener != null)
                     itemClickListener.onClick(getAdapterPosition());
             });
