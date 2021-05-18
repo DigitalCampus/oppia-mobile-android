@@ -15,13 +15,11 @@
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.digitalcampus.oppia.adapter;
+package org.digitalcampus.oppia.model;
 
 import android.content.Context;
 
 import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.json.JSONArray;
 import org.json.JSONException;

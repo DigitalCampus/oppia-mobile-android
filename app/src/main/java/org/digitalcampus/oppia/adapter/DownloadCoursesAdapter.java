@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 
 import java.util.List;
 import java.util.Locale;

@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/subtitle_bar"
-    android:padding="@dimen/padding_medium"
-    >
+    android:padding="@dimen/padding_medium">
 
     <ImageView
+        android:id="@+id/course_icon"
         android:layout_width="@dimen/course_icon_size"
         android:layout_height="@dimen/course_icon_size"
-        android:src="@drawable/course_icon_placeholder"
         android:layout_centerVertical="true"
-        android:id="@+id/course_icon"
-    />
+        android:src="@drawable/course_icon_placeholder" />
 
     <TextView
         android:id="@+id/course_title"
         style="@style/CourseTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_centerVertical="true"
-        android:text="@string/loading_course"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/margin_medium"
         android:layout_marginLeft="@dimen/margin_medium"
-        android:layout_toRightOf="@id/course_icon"
         android:layout_toEndOf="@id/course_icon"
-        android:layout_marginStart="@dimen/margin_medium" />
+        android:layout_toRightOf="@id/course_icon"
+        android:text="@string/loading_course" />
 
 </RelativeLayout>
