@@ -21,9 +21,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityDownloadBinding;
 import org.digitalcampus.oppia.adapter.TagsAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.listener.APIRequestListener;
@@ -52,6 +54,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 
 	@Inject TagRepository tagRepository;
 	private TagsAdapter adapterTags;
+	private ActivityDownloadBinding binding;
 
 	@Override
 	public void onStart(){
@@ -62,16 +65,16 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_download);
-		View subtitleBar = findViewById(R.id.action_bar_subtitle);
-		subtitleBar.setVisibility(View.GONE);
+		binding = ActivityDownloadBinding.inflate(LayoutInflater.from(this));
+		setContentView(binding.getRoot());
+
+		binding.actionBarSubtitle.setVisibility(View.GONE);
 		getAppComponent().inject(this);
 
         tags = new ArrayList<>();
         adapterTags = new TagsAdapter(this, tags);
 
-		RecyclerView recyclerTags = findViewById(R.id.recycler_tags);
-		recyclerTags.setAdapter(adapterTags);
+		binding.recyclerTags.setAdapter(adapterTags);
 		adapterTags.setOnItemClickListener((view, position) -> {
 			Tag selectedTag = tags.get(position);
 			Intent i = new Intent(TagSelectActivity.this, DownloadActivity.class);
@@ -150,7 +153,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 			tagRepository.refreshTagList(tags, json);
 
             adapterTags.notifyDataSetChanged();
-            findViewById(R.id.empty_state).setVisibility((tags.isEmpty()) ? View.VISIBLE : View.GONE);
+            binding.emptyState.setVisibility((tags.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		} catch (JSONException e) {
             Analytics.logException(e);
