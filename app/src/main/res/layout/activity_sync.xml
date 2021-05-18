@@ -120,12 +120,10 @@
                     app:tabTextAppearance="@style/TabLayoutAppearance">
 
                     <com.google.android.material.tabs.TabItem
-                        android:id="@+id/tab_activitylog"
                         style="@style/TabText"
                         android:text="@string/bluetooth.tab_activitylog" />
 
                     <com.google.android.material.tabs.TabItem
-                        android:id="@+id/tab_course"
                         style="@style/TabText"
                         android:text="@string/bluetooth.tab_course" />
 

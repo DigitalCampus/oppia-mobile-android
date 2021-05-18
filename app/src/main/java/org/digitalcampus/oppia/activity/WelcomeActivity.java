@@ -62,10 +62,9 @@ public class WelcomeActivity extends AppActivity {
 	public void onStart() {
 		super.onStart();
 
-		Toolbar toolbar = findViewById(R.id.toolbar);
-		toolbar.getMenu().clear();
-		toolbar.inflateMenu(R.menu.activity_welcome);
-		toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
+		binding.toolbar.getMenu().clear();
+		binding.toolbar.inflateMenu(R.menu.activity_welcome);
+		binding.toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
 
 		List<Fragment> fragments = new ArrayList<>();
         List<String> tabTitles = new ArrayList<>();

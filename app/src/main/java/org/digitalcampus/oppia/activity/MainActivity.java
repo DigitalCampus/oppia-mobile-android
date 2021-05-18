@@ -24,6 +24,8 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityMainBinding;
+import org.digitalcampus.mobile.learning.databinding.DrawerHeaderBinding;
+import org.digitalcampus.mobile.learning.databinding.ViewBadgeBinding;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.fragments.CoursesListFragment;
 import org.digitalcampus.oppia.fragments.MainPointsFragment;
@@ -54,21 +56,8 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     @Inject
     CoursesRepository coursesRepository;
     private ActivityMainBinding binding;
-    private View btnLogout;
-    private View btnExpandProfileOptions;
-    private View viewProfileOptions;
-    private TextView tvBadgeNumber;
-    private View btnEditProfile;
-
-    private void findHeaderDrawerViews() {
-
-        View headerDrawer = binding.navigationView.getHeaderView(0);
-        btnEditProfile = headerDrawer.findViewById(R.id.btn_edit_profile);
-        btnLogout = headerDrawer.findViewById(R.id.btn_logout);
-        btnExpandProfileOptions = headerDrawer.findViewById(R.id.btn_expand_profile_options);
-        viewProfileOptions = headerDrawer.findViewById(R.id.view_profile_options);
-
-    }
+    private DrawerHeaderBinding bindingHeader;
+    private ViewBadgeBinding bindingBadgeView;
 
 
     @SuppressLint("RestrictedApi")
@@ -80,17 +69,17 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         setContentView(binding.getRoot());
         getAppComponent().inject(this);
 
-        findHeaderDrawerViews();
+        bindingHeader = DrawerHeaderBinding.bind(binding.navigationView.getHeaderView(0));
 
-        btnExpandProfileOptions.setOnClickListener(this);
-        btnEditProfile.setOnClickListener(this);
-        btnLogout.setOnClickListener(this);
+        bindingHeader.btnExpandProfileOptions.setOnClickListener(this);
+        bindingHeader.btnEditProfile.setOnClickListener(this);
+        bindingHeader.btnLogout.setOnClickListener(this);
 
         binding.navBottomView.setOnNavigationItemSelectedListener(this);
 
         configureBadgePointsView();
 
-        viewProfileOptions.setVisibility(View.GONE);
+        bindingHeader.viewProfileOptions.setVisibility(View.GONE);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
 
@@ -103,11 +92,8 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
                 (BottomNavigationMenuView) binding.navBottomView.getChildAt(0);
         BottomNavigationItemView itemView = (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(2);
 
-        View badgeView = LayoutInflater.from(this).inflate(R.layout.view_badge, null);
-
-        tvBadgeNumber = badgeView.findViewById(R.id.tv_badge_number);
-
-        itemView.addView(badgeView);
+        bindingBadgeView = ViewBadgeBinding.inflate(LayoutInflater.from(this));
+        itemView.addView(bindingBadgeView.getRoot());
     }
 
     @Override
@@ -123,7 +109,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         App app = (App) getApplicationContext();
         User u = app.getComponent().getUser();
 
-        tvBadgeNumber.setText(String.valueOf(u.getPoints()));
+        bindingBadgeView.tvBadgeNumber.setText(String.valueOf(u.getPoints()));
     }
 
     @Override
@@ -215,15 +201,15 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     // CONFIGURATIONS
     private void configureLogoutOption() {
         boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, App.MENU_ALLOW_LOGOUT);
-        btnLogout.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
+        bindingHeader.btnLogout.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
         if (!logoutVisible) {
             setupProfileOptionsView(false);
         }
     }
 
     private void setupProfileOptionsView(boolean visible) {
-        viewProfileOptions.setVisibility(visible ? View.VISIBLE : View.GONE);
-        btnExpandProfileOptions.setRotation(visible ? 180f : 0f);
+        bindingHeader.viewProfileOptions.setVisibility(visible ? View.VISIBLE : View.GONE);
+        bindingHeader.btnExpandProfileOptions.setRotation(visible ? 180f : 0f);
     }
 
     // INTERACTIONS
@@ -265,7 +251,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         switch (v.getId()) {
 
             case R.id.btn_expand_profile_options:
-                boolean isProfileOptionsViewVisible = viewProfileOptions.getVisibility() == View.VISIBLE;
+                boolean isProfileOptionsViewVisible = bindingHeader.viewProfileOptions.getVisibility() == View.VISIBLE;
                 setupProfileOptionsView(!isProfileOptionsViewVisible);
                 break;
 

@@ -114,7 +114,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         }
 
         binding.viewMediaScan.setMessage(getString(R.string.info_scan_course_media_missing));
-        binding.viewMediaScan.setViewBelow(findViewById(R.id.view_course_sections));
+        binding.viewMediaScan.setViewBelow(binding.viewCourseSections);
     }
 
     @Override
