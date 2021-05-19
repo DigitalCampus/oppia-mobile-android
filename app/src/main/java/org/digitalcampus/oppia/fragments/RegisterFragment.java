@@ -135,7 +135,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		binding.registerFormUsernameField.setCustomValidator(field -> {
 			boolean validValue = !TextUtils.isEmpty(field.getCleanedValue()) && field.getCleanedValue().length() >= App.USERNAME_MIN_CHARACTERS;
 			if (!validValue) {
-				binding.registerFormUsernameField.setError(getString(R.string.error_register_username_lenght, App.USERNAME_MIN_CHARACTERS));
+				binding.registerFormUsernameField.setError(getString(R.string.error_register_username_length, App.USERNAME_MIN_CHARACTERS));
 			}
 			return validValue;
 		});
