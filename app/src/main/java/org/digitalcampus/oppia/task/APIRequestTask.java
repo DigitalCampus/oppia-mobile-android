@@ -3,6 +3,7 @@ package org.digitalcampus.oppia.task;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -18,6 +19,9 @@ import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 
 import androidx.preference.PreferenceManager;
+
+import java.net.URLEncoder;
+
 import okhttp3.Request;
 
 public abstract class APIRequestTask<P, G, R> extends AsyncTask<P, G, R> {
@@ -46,8 +50,15 @@ public abstract class APIRequestTask<P, G, R> extends AsyncTask<P, G, R> {
         Request.Builder requestBuilder = null;
         try {
             User u = db.getUser(SessionManager.getUsername(ctx));
+
+            Uri.Builder authUriBuilder = Uri.parse(url).buildUpon();
+            authUriBuilder.appendQueryParameter("username", u.getUsername());
+            authUriBuilder.appendQueryParameter("api_key", u.getApiKey());
+
+            String urlWithAuth = authUriBuilder.build().toString();
+
             requestBuilder = new Request.Builder()
-                    .url(url)
+                    .url(urlWithAuth)
                     .addHeader(HTTPClientUtils.HEADER_AUTH,
                             HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()));
 
