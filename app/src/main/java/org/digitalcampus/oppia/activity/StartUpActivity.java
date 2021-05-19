@@ -38,6 +38,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityStartUpBinding;
+import org.digitalcampus.mobile.learning.databinding.ViewAnalyticsOptinBinding;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.analytics.BaseAnalytics;
 import org.digitalcampus.oppia.application.PermissionsManager;
@@ -118,22 +119,18 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
             return;
         }
 
-        ViewGroup container = findViewById(R.id.permissions_explanation);
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        container.removeAllViews();
-        View explanation = layoutInflater.inflate(R.layout.view_analytics_optin, container);
-        container.setVisibility(View.VISIBLE);
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        binding.permissionsExplanation.removeAllViews();
+        @NonNull ViewAnalyticsOptinBinding bindingExplanation = ViewAnalyticsOptinBinding.inflate(layoutInflater, binding.permissionsExplanation, true);
+        binding.permissionsExplanation.setVisibility(View.VISIBLE);
 
-        CheckBox analyticsCheck = explanation.findViewById(R.id.analytics_checkbox);
-        CheckBox bugreportCheck = explanation.findViewById(R.id.bugreport_checkbox);
-        Button continueBtn = explanation.findViewById(R.id.continue_button);
-        continueBtn.setOnClickListener(view -> {
+        bindingExplanation.continueButton.setOnClickListener(view -> {
             Analytics.optOutRationaleShown(this);
 
-            if (analyticsCheck.isChecked()){
+            if (bindingExplanation.analyticsCheckbox.isChecked()){
                 Analytics.enableTracking(this);
             }
-            if (bugreportCheck.isChecked()){
+            if (bindingExplanation.bugreportCheckbox.isChecked()){
                 Analytics.enableBugReport(this);
             }
             endStartUpScreen();

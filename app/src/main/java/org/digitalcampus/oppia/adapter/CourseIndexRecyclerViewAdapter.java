@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.CourseTitleBarBinding;
+import org.digitalcampus.mobile.learning.databinding.RowCourseIndexSectionHeaderBinding;
 import org.digitalcampus.mobile.learning.databinding.RowCourseIndexSectionItemBinding;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
@@ -130,8 +131,8 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
         Section section = getGroupItem(group);
         String title = showSectionNumbers ? section.getOrder() + ". " : "";
         title += section.getTitle(prefLang);
-        holder.title.setText(title);
-        holder.completedActivities.setText(section.getCompletedActivities() + "/" + section.getActivities().size());
+        holder.binding.title.setText(title);
+        holder.binding.activitiesCompleted.setText(section.getCompletedActivities() + "/" + section.getActivities().size());
 
     }
 
@@ -176,14 +177,11 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
     }
 
     public class SectionViewHolder extends ExpandableRecyclerView.GroupViewHolder {
-        private TextView title;
-
-        private TextView completedActivities;
+        private final RowCourseIndexSectionHeaderBinding binding;
 
         public SectionViewHolder(View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.title);
-            completedActivities = itemView.findViewById(R.id.activities_completed);
+            binding = RowCourseIndexSectionHeaderBinding.bind(itemView);
             itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 

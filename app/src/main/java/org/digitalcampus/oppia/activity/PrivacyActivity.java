@@ -61,14 +61,12 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
 
 
         if (!SessionManager.isLoggedIn(this)){
-            findViewById(R.id.privacy_user_section).setVisibility(View.GONE);
+            binding.privacyUserSection.setVisibility(View.GONE);
             return;
         }
 
-        Button deleteBtn = findViewById(R.id.btn_delete_account);
-        deleteBtn.setOnClickListener(v -> showDeleteAccountWarning());
-        Button downloadBtn = findViewById(R.id.btn_download_data);
-        downloadBtn.setOnClickListener(v -> showDownloadDataDialog());
+        binding.btnDeleteAccount.setOnClickListener(v -> showDeleteAccountWarning());
+        binding.btnDownloadData.setOnClickListener(v -> showDownloadDataDialog());
 
     }
 

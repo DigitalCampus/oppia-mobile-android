@@ -62,19 +62,17 @@ public class AboutFragment extends AppFragment {
 		super.onActivityCreated(savedInstanceState);
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		WebView webView = super.getActivity().findViewById(R.id.about_webview);
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		String url = Storage.getLocalizedFilePath(super.getActivity(), lang, "about.html");
 
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
-		webView.getSettings().setDefaultFontSize(defaultFontSize);
-		
-		webView.loadUrl(url);
-		
-		TextView versionNo = super.getActivity().findViewById(R.id.about_versionno);
+		binding.aboutWebview.getSettings().setDefaultFontSize(defaultFontSize);
+
+		binding.aboutWebview.loadUrl(url);
+
 		try {
 			String no = super.getActivity().getPackageManager().getPackageInfo(super.getActivity().getPackageName(), 0).versionName;
-			versionNo.setText(getString(R.string.version,no));
+			binding.aboutVersionno.setText(getString(R.string.version,no));
 		} catch (NameNotFoundException e) {
 			Analytics.logException(e);
 			Log.d(TAG, "Error getting version name: ", e);
