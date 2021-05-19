@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentGlobalQuizAttemptsBinding;
 import org.digitalcampus.oppia.activity.QuizAttemptActivity;
 import org.digitalcampus.oppia.adapter.GlobalQuizAttemptsAdapter;
 import org.digitalcampus.oppia.model.QuizAttempt;
@@ -23,6 +25,7 @@ public class GlobalQuizAttemptsFragment extends AppFragment {
 
     @Inject
     QuizAttemptRepository attemptsRepository;
+    private FragmentGlobalQuizAttemptsBinding binding;
 
     public static GlobalQuizAttemptsFragment newInstance() {
         return new GlobalQuizAttemptsFragment();
@@ -30,13 +33,12 @@ public class GlobalQuizAttemptsFragment extends AppFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_global_quiz_attempts, container, false);
+        binding = FragmentGlobalQuizAttemptsBinding.inflate(inflater, container, false);
         getAppComponent().inject(this);
 
         List<QuizAttempt> attempts = attemptsRepository.getGlobalQuizAttempts(this.getContext());
         GlobalQuizAttemptsAdapter adapter = new GlobalQuizAttemptsAdapter(this.getContext(), attempts);
-        RecyclerView attemptsList = layout.findViewById(R.id.attempts_list);
-        attemptsList.setAdapter(adapter);
+        binding.attemptsList.setAdapter(adapter);
         adapter.setOnItemClickListener((v, position) -> {
             Intent i = new Intent(getActivity(), QuizAttemptActivity.class);
             Bundle tb = new Bundle();
@@ -46,9 +48,9 @@ public class GlobalQuizAttemptsFragment extends AppFragment {
             startActivity(i);
         });
 
-        layout.findViewById(R.id.empty_state).setVisibility(attempts.isEmpty() ? View.VISIBLE : View.GONE);
+        binding.emptyState.setVisibility(attempts.isEmpty() ? View.VISIBLE : View.GONE);
 
-        return layout;
+        return binding.getRoot();
     }
 
 }

@@ -42,6 +42,8 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentPointsBinding;
 import org.digitalcampus.oppia.adapter.PointsAdapter;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -72,14 +74,12 @@ public class PointsFragment extends AppFragment implements TabLayout.OnTabSelect
     List<Points> pointsFiltered = new ArrayList<>();
     private Map<String, Integer> pointsGrouped = new LinkedHashMap<>();
     private int totalPoints;
-    private RecyclerView recyclerPoints;
-    private TextView tvTotalPoints;
-    private LineChart chart;
     List<Integer> yVals = new ArrayList<>();
     List<String> labels = new ArrayList<>();
     private int currentDatesRangePosition;
     private Course course;
     private PointsAdapter adapterPoints;
+    private FragmentPointsBinding binding;
 
     public static PointsFragment newInstance(Course course) {
         PointsFragment pointsFragment = new PointsFragment();
@@ -89,25 +89,19 @@ public class PointsFragment extends AppFragment implements TabLayout.OnTabSelect
         return pointsFragment;
     }
 
-    private void findViews() {
-        recyclerPoints = getView().findViewById(R.id.recycler_points);
-        tvTotalPoints = getView().findViewById(R.id.tv_total_points);
-        TabLayout tabsFilterPoints = getView().findViewById(R.id.tabs_filter_points);
-        chart = getView().findViewById(R.id.chart);
-
-        tabsFilterPoints.addOnTabSelectedListener(this);
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_points, container, false);
+        binding = FragmentPointsBinding.inflate(inflater, container, false);
+
+        binding.tabsFilterPoints.addOnTabSelectedListener(this);
+
+        return binding.getRoot();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        findViews();
         getAppComponent().inject(this);
         configureChart();
 
@@ -115,10 +109,10 @@ public class PointsFragment extends AppFragment implements TabLayout.OnTabSelect
 
         loadPoints();
 
-        recyclerPoints.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        binding.recyclerPoints.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
 
         adapterPoints = new PointsAdapter(getActivity(), pointsFiltered);
-        recyclerPoints.setAdapter(adapterPoints);
+        binding.recyclerPoints.setAdapter(adapterPoints);
 
         showPointsFiltered(POSITION_TAB_LAST_WEEK);
 
@@ -126,20 +120,20 @@ public class PointsFragment extends AppFragment implements TabLayout.OnTabSelect
     }
 
     private void configureChart() {
-        chart.setNoDataText(getString(R.string.no_points_data));
-        chart.setDrawGridBackground(false);
-        chart.getDescription().setEnabled(false);
+        binding.chart.setNoDataText(getString(R.string.no_points_data));
+        binding.chart.setDrawGridBackground(false);
+        binding.chart.getDescription().setEnabled(false);
 
-        chart.setPinchZoom(true);
-        chart.offsetLeftAndRight(getResources().getDimensionPixelSize(R.dimen.offset_chart_horizontal));
+        binding.chart.setPinchZoom(true);
+        binding.chart.offsetLeftAndRight(getResources().getDimensionPixelSize(R.dimen.offset_chart_horizontal));
 
-        Legend l = chart.getLegend();
+        Legend l = binding.chart.getLegend();
         l.setEnabled(false);
 
-        chart.getAxisRight().setEnabled(false);
-        chart.getAxisLeft().setAxisMinimum(0);
+        binding.chart.getAxisRight().setEnabled(false);
+        binding.chart.getAxisLeft().setAxisMinimum(0);
 
-        XAxis xAxis = chart.getXAxis();
+        XAxis xAxis = binding.chart.getXAxis();
         xAxis.setGranularity(1);
         xAxis.setGranularityEnabled(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -184,7 +178,7 @@ public class PointsFragment extends AppFragment implements TabLayout.OnTabSelect
 
         groupPoints();
 
-        tvTotalPoints.setText(String.valueOf(totalPoints));
+        binding.tvTotalPoints.setText(String.valueOf(totalPoints));
 
         adapterPoints.notifyDataSetChanged();
 
@@ -196,7 +190,7 @@ public class PointsFragment extends AppFragment implements TabLayout.OnTabSelect
 
         yVals.clear();
         labels.clear();
-        chart.animateY(1000, Easing.EaseInOutQuad);
+        binding.chart.animateY(1000, Easing.EaseInOutQuad);
 
         for (Map.Entry<String, Integer> entry : pointsGrouped.entrySet()) {
             yVals.add(entry.getValue());
@@ -217,15 +211,15 @@ public class PointsFragment extends AppFragment implements TabLayout.OnTabSelect
 
         LineData lineData = new LineData(dataSet);
 
-        if (chart.getData() != null) {
-            chart.clear();
+        if (binding.chart.getData() != null) {
+            binding.chart.clear();
         }
 
 
-        chart.setData(lineData);
-        chart.animateY(1000, Easing.EaseInOutQuad);
+        binding.chart.setData(lineData);
+        binding.chart.animateY(1000, Easing.EaseInOutQuad);
 
-        XAxis xAxis = chart.getXAxis();
+        XAxis xAxis = binding.chart.getXAxis();
         xAxis.setLabelCount(Math.min(entries.size(), 12));
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
@@ -239,7 +233,7 @@ public class PointsFragment extends AppFragment implements TabLayout.OnTabSelect
             }
         });
 
-        chart.invalidate(); // refresh
+        binding.chart.invalidate(); // refresh
     }
 
     private Drawable getGradientDrawable() {

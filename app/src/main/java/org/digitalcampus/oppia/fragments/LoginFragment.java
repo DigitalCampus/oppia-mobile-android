@@ -29,6 +29,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentLoginBinding;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.ViewDigestActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
@@ -44,18 +46,13 @@ import javax.inject.Inject;
 
 public class LoginFragment extends AppFragment implements SubmitEntityListener<User> {
 
-    private EditText usernameField;
-    private EditText passwordField;
     private ProgressDialog pDialog;
     private Context appContext;
 
     @Inject
     ApiEndpoint apiEndpoint;
 
-    private Button registerBtn;
-    private Button loginBtn;
-    private Button resetPasswordBtn;
-    private View rememberUsernameBtn;
+    private FragmentLoginBinding binding;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -63,15 +60,10 @@ public class LoginFragment extends AppFragment implements SubmitEntityListener<U
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_login, container, false);
+        
+        binding = FragmentLoginBinding.inflate(inflater, container, false);
 
-        usernameField = v.findViewById(R.id.login_username_field);
-        passwordField = v.findViewById(R.id.login_password_field);
-        loginBtn = v.findViewById(R.id.login_btn);
-        registerBtn = v.findViewById(R.id.action_register_btn);
-        resetPasswordBtn = v.findViewById(R.id.btn_reset_password);
-        rememberUsernameBtn = v.findViewById(R.id.btn_remember_username);
-        return v;
+        return binding.getRoot();
     }
 
 
@@ -81,18 +73,18 @@ public class LoginFragment extends AppFragment implements SubmitEntityListener<U
         appContext = super.getActivity().getApplicationContext();
         getAppComponent().inject(this);
 
-        loginBtn.setOnClickListener(v -> onLoginClick());
+        binding.loginBtn.setOnClickListener(v -> onLoginClick());
 
-        resetPasswordBtn.setOnClickListener(v -> {
+        binding.btnResetPassword.setOnClickListener(v -> {
             WelcomeActivity wa = (WelcomeActivity) getActivity();
             wa.switchTab(WelcomeActivity.TAB_RESET_PASSWORD);
         });
-        registerBtn.setOnClickListener(v -> {
+        binding.actionRegisterBtn.setOnClickListener(v -> {
             WelcomeActivity wa = (WelcomeActivity) getActivity();
             wa.switchTab(WelcomeActivity.TAB_REGISTER);
         });
 
-        rememberUsernameBtn.setOnClickListener(v -> {
+        binding.btnRememberUsername.setOnClickListener(v -> {
             WelcomeActivity wa = (WelcomeActivity) getActivity();
             wa.switchTab(WelcomeActivity.TAB_REMEMBER_USERNAME);
         });
@@ -108,14 +100,14 @@ public class LoginFragment extends AppFragment implements SubmitEntityListener<U
     }
 
     protected void onLoginClick() {
-        String username = usernameField.getText().toString();
+        String username = binding.loginUsernameField.getText().toString();
         //check valid email address format
         if (username.length() == 0) {
             UIUtils.showAlert(super.getActivity(), R.string.error, R.string.error_no_username);
             return;
         }
 
-        String password = passwordField.getText().toString();
+        String password = binding.loginPasswordField.getText().toString();
 
         // show progress dialog
         pDialog = new ProgressDialog(super.getActivity());

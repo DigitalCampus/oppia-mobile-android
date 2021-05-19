@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentLeaderboardBinding;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.adapter.LeaderboardAdapter;
 import org.digitalcampus.oppia.api.ApiEndpoint;
@@ -36,14 +38,11 @@ import javax.inject.Inject;
 
 public class LeaderboardFragment extends AppFragment implements SubmitListener {
 
+    private FragmentLeaderboardBinding binding;
+
     public static LeaderboardFragment newInstance() {
         return new LeaderboardFragment();
     }
-
-    private RecyclerView leaderboardView;
-    private TextView rankingPosition;
-    private TextView totalPoints;
-    private ProgressBar loadingSpinner;
 
     @Inject
     ApiEndpoint apiEndpoint;
@@ -53,16 +52,12 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View vv = inflater.inflate(R.layout.fragment_leaderboard, container, false);
+        
+        binding = FragmentLeaderboardBinding.inflate(inflater, container, false);
 
-        leaderboardView = vv.findViewById(R.id.list_leaderboard);
-        rankingPosition = vv.findViewById(R.id.tv_ranking);
-        totalPoints= vv.findViewById(R.id.tv_total_points);
+        binding.loadingSpinner.setVisibility(View.VISIBLE);
 
-        loadingSpinner = vv.findViewById(R.id.loading_spinner);
-        loadingSpinner.setVisibility(View.VISIBLE);
-
-        return vv;
+        return binding.getRoot();
     }
 
     @Override
@@ -72,8 +67,8 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
         leaderboard = new ArrayList<>();
 
         adapter = new LeaderboardAdapter(this.getContext(), leaderboard);
-        leaderboardView.setLayoutManager( new LinearLayoutManager(this.getContext()));
-        leaderboardView.setAdapter(adapter);
+        binding.listLeaderboard.setLayoutManager( new LinearLayoutManager(this.getContext()));
+        binding.listLeaderboard.setAdapter(adapter);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         if (LeaderboardUtils.shouldFetchLeaderboard(prefs)){
@@ -107,14 +102,14 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
         }
 
         if ( userPos != null){
-            rankingPosition.setText(String.format(Locale.getDefault(), "%d", (i+1)));
-            totalPoints.setText(getString(R.string.leaderboard_points, String.format(Locale.getDefault(), "%d", userPos.getPoints())));
+            binding.tvRanking.setText(String.format(Locale.getDefault(), "%d", (i+1)));
+            binding.tvTotalPoints.setText(getString(R.string.leaderboard_points, String.format(Locale.getDefault(), "%d", userPos.getPoints())));
         }
 
         adapter.notifyDataSetChanged();
 
-        loadingSpinner.setVisibility(View.GONE);
-        leaderboardView.setVisibility(View.VISIBLE);
+        binding.loadingSpinner.setVisibility(View.GONE);
+        binding.listLeaderboard.setVisibility(View.VISIBLE);
     }
 
     @Override
