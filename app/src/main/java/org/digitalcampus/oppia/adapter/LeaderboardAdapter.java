@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowLeaderboardBinding;
 import org.digitalcampus.oppia.model.db_model.Leaderboard;
 
 import java.util.List;
@@ -25,20 +26,13 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     private int normalTextColor;
 
     public class GlobalQuizAttemptsViewHolder extends RecyclerView.ViewHolder {
-        private TextView points;
-        private TextView pos;
-        private TextView username;
-        private TextView fullname;
-        private CardView userCard;
 
+        private final RowLeaderboardBinding binding;
 
         public GlobalQuizAttemptsViewHolder(View v) {
             super(v);
-            points = v.findViewById(R.id.leaderboard_points);
-            pos = v.findViewById(R.id.leaderboard_position);
-            username = v.findViewById(R.id.leaderboard_username);
-            fullname = v.findViewById(R.id.leaderboard_fullname);
-            userCard = v.findViewById(R.id.user_card);
+            binding = RowLeaderboardBinding.bind(v);
+
         }
     }
 
@@ -61,18 +55,18 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
     @Override
     public void onBindViewHolder(GlobalQuizAttemptsViewHolder holder, int position) {
-        Leaderboard pos = leaderboard.get(position);
-        holder.fullname.setText(pos.getFullname());
-        holder.username.setText(pos.getUsername());
-        holder.points.setText(String.format(Locale.getDefault(), "%d", pos.getPoints()));
-        holder.pos.setText(String.format(Locale.getDefault(), "%d", (position + 1)));
+        Leaderboard leaderboardItem = leaderboard.get(position);
+        holder.binding.leaderboardFullname.setText(leaderboardItem.getFullname());
+        holder.binding.leaderboardUsername.setText(leaderboardItem.getUsername());
+        holder.binding.leaderboardPoints.setText(String.format(Locale.getDefault(), "%d", leaderboardItem.getPoints()));
+        holder.binding.leaderboardPosition.setText(String.format(Locale.getDefault(), "%d", (position + 1)));
 
-        if (pos.isUser()) {
-            holder.userCard.setCardBackgroundColor(highlightBgColor);
-            holder.fullname.setTextColor(highlightTextColor);
+        if (leaderboardItem.isUser()) {
+            holder.binding.userCard.setCardBackgroundColor(highlightBgColor);
+            holder.binding.leaderboardFullname.setTextColor(highlightTextColor);
         } else {
-            holder.userCard.setCardBackgroundColor(normalBgColor);
-            holder.fullname.setTextColor(normalTextColor);
+            holder.binding.userCard.setCardBackgroundColor(normalBgColor);
+            holder.binding.leaderboardFullname.setTextColor(normalTextColor);
         }
     }
 

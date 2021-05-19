@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,7 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityCourseIndexBinding;
 import org.digitalcampus.oppia.adapter.CourseIndexRecyclerViewAdapter;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -66,28 +68,24 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private CompleteCourse parsedCourse;
     private ArrayList<Section> sections;
     @Inject SharedPreferences prefs;
-    private View loadingCourseView;
     private CourseIndexRecyclerViewAdapter adapter;
     private String digestJumpTo;
 
     @Inject
     CompleteCourseProvider completeCourseProvider;
     private AlertDialog aDialog;
-    private MediaScanView mediaScanView;
-    private RecyclerView recyclerCourseSections;
+    private ActivityCourseIndexBinding binding;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_index);
+        binding = ActivityCourseIndexBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
+        
         getAppComponent().inject(this);
 
         prefs.registerOnSharedPreferenceChangeListener(this);
-        loadingCourseView = findViewById(R.id.loading_course);
-        mediaScanView = findViewById(R.id.view_media_scan);
-        recyclerCourseSections = findViewById(R.id.recycler_course_sections);
-
 
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
@@ -115,8 +113,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             }
         }
 
-        mediaScanView.setMessage(getString(R.string.info_scan_course_media_missing));
-        mediaScanView.setViewBelow(findViewById(R.id.view_course_sections));
+        binding.viewMediaScan.setMessage(getString(R.string.info_scan_course_media_missing));
+        binding.viewMediaScan.setViewBelow(binding.viewCourseSections);
     }
 
     @Override
@@ -124,7 +122,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         super.onStart();
         initialize(false);
 
-        mediaScanView.scanMedia(Arrays.asList(course));
+        binding.viewMediaScan.scanMedia(Arrays.asList(course));
     }
 
     @Override
@@ -286,21 +284,21 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             fadeOutAnimation.setDuration(700);
             fadeOutAnimation.setFillAfter(true);
 
-            recyclerCourseSections.setAlpha(0f);
+            binding.recyclerCourseSections.setAlpha(0f);
             ValueAnimator animator = ValueAnimator.ofFloat(1f, 0f);
             animator.addUpdateListener(valueAnimator -> {
-                recyclerCourseSections.setTranslationX((Float) valueAnimator.getAnimatedValue() * 80);
-                recyclerCourseSections.setAlpha(1f - (Float) valueAnimator.getAnimatedValue());
+                binding.recyclerCourseSections.setTranslationX((Float) valueAnimator.getAnimatedValue() * 80);
+                binding.recyclerCourseSections.setAlpha(1f - (Float) valueAnimator.getAnimatedValue());
             });
             animator.setDuration(700);
             animator.start();
-            loadingCourseView.startAnimation(fadeOutAnimation);
+            binding.loadingCourse.startAnimation(fadeOutAnimation);
 
         } else {
-            loadingCourseView.setVisibility(View.GONE);
-            recyclerCourseSections.setVisibility(View.VISIBLE);
+            binding.loadingCourse.setVisibility(View.GONE);
+            binding.recyclerCourseSections.setVisibility(View.VISIBLE);
         }
-        recyclerCourseSections.setAdapter(adapter);
+        binding.recyclerCourseSections.setAdapter(adapter);
 
     }
 
@@ -399,7 +397,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     //@Override
     public void onParseComplete(CompleteCourse parsed) {
-        loadingCourseView.setVisibility(View.GONE);
+        binding.loadingCourse.setVisibility(View.GONE);
         parsedCourse = parsed;
         course.setMetaPages(parsedCourse.getMetaPages());
         course.setMedia(parsedCourse.getMedia());
@@ -415,7 +413,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     //@Override
     public void onParseError() {
-        loadingCourseView.setVisibility(View.GONE);
+        binding.loadingCourse.setVisibility(View.GONE);
         showErrorMessage();
     }
 

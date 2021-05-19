@@ -32,6 +32,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentGlobalScorecardBinding;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
@@ -59,13 +61,8 @@ public class GlobalScorecardFragment extends AppFragment implements ScorecardsGr
     @Inject
     ApiEndpoint apiEndpoint;
 
-    private RecyclerView recyclerScorecards;
-    private View emptyState;
-    private View badgesAwardingInfo;
-    private TextView badgeCriteria;
-    private ImageButton dismissBadgeInfoBtn;
-
     private final List<Course> courses = new ArrayList<>();
+    private FragmentGlobalScorecardBinding binding;
 
     public static GlobalScorecardFragment newInstance() {
         return new GlobalScorecardFragment();
@@ -75,27 +72,18 @@ public class GlobalScorecardFragment extends AppFragment implements ScorecardsGr
     }
 
 
-    private void findViews(View layout) {
-        recyclerScorecards = layout.findViewById(R.id.recycler_scorecards);
-        emptyState = layout.findViewById(R.id.empty_state);
-        badgesAwardingInfo = layout.findViewById(R.id.badge_award);
-        badgeCriteria = layout.findViewById(R.id.badge_award_criteria);
-        dismissBadgeInfoBtn = layout.findViewById(R.id.dismiss_badge);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_global_scorecard, container, false);
-        findViews(layout);
+        binding = FragmentGlobalScorecardBinding.inflate(inflater, container, false);
 
         getAppComponent().inject(this);
         showBadgeAwardingInfo();
 
         adapterScorecards = new ScorecardsGridAdapter(getActivity(), courses);
         adapterScorecards.setOnItemClickListener(this);
-        recyclerScorecards.setAdapter(adapterScorecards);
+        binding.recyclerScorecards.setAdapter(adapterScorecards);
 
-        return layout;
+        return binding.getRoot();
     }
 
     @Override
@@ -121,28 +109,27 @@ public class GlobalScorecardFragment extends AppFragment implements ScorecardsGr
         }
 
         if (criteriaDescription != null){
-            badgesAwardingInfo.setVisibility(View.VISIBLE);
-            dismissBadgeInfoBtn.setOnClickListener(view -> badgesAwardingInfo.setVisibility(View.GONE));
+            binding.badgeAward.setVisibility(View.VISIBLE);
+            binding.dismissBadge.setOnClickListener(view -> binding.badgeAward.setVisibility(View.GONE));
             String badgeCriteriaTitle = getString(R.string.badges_award_method_criteria);
             SpannableString badgeText = new SpannableString(badgeCriteriaTitle + " " + criteriaDescription);
             badgeText.setSpan(new StyleSpan(Typeface.BOLD), 0, badgeCriteriaTitle.length(),  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            badgeCriteria.setText(badgeText, TextView.BufferType.SPANNABLE);
+            binding.badgeAwardCriteria.setText(badgeText, TextView.BufferType.SPANNABLE);
         }
     }
 
     private void showEmptyStateView(boolean show) {
 
         if (show) {
-            recyclerScorecards.setVisibility(View.GONE);
-            emptyState.setVisibility(View.VISIBLE);
+            binding.recyclerScorecards.setVisibility(View.GONE);
+            binding.emptyState.setVisibility(View.VISIBLE);
 
-            Button download = emptyState.findViewById(R.id.btn_download_courses);
-            download.setOnClickListener(v ->
+            binding.btnDownloadCourses.setOnClickListener(v ->
                     AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.menu_download, () ->
                             startActivity(new Intent(getActivity(), TagSelectActivity.class))));
         } else {
-            recyclerScorecards.setVisibility(View.VISIBLE);
-            emptyState.setVisibility(View.GONE);
+            binding.recyclerScorecards.setVisibility(View.VISIBLE);
+            binding.emptyState.setVisibility(View.GONE);
         }
     }
 

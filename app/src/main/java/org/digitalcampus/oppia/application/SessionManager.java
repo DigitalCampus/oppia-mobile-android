@@ -202,7 +202,7 @@ public class SessionManager {
             User u = DbHelper.getInstance(ctx).getUser(SessionManager.getUsername(ctx));
             SessionManager.setUserApiKeyValid(u, false);
         } catch (UserNotFoundException e) {
-            Log.d(TAG, e.getMessage());
+            e.printStackTrace();
         }
     }
 

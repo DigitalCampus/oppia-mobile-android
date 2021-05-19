@@ -22,14 +22,14 @@ import android.os.Bundle;
 import androidx.preference.PreferenceManager;
 
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityAboutBinding;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.AboutFragment;
 import org.digitalcampus.oppia.fragments.OppiaWebViewFragment;
@@ -56,20 +56,18 @@ public class AboutActivity extends AppActivity {
 
 
 	private String contents = ABOUT_MAIN;
-	private ViewPager viewPager;
-    private TabLayout tabs;
 	private int currentTab = 0;
 	private SharedPreferences sharedPreferences;
-	
+	private ActivityAboutBinding binding;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_about);
+		binding = ActivityAboutBinding.inflate(LayoutInflater.from(this));
+		setContentView(binding.getRoot());
+		
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		viewPager = findViewById(R.id.activity_about_pager);
-
-        tabs = findViewById(R.id.tabs_toolbar);
 
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
@@ -124,17 +122,17 @@ public class AboutActivity extends AppActivity {
 
 
 		ActivityPagerAdapter adapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles);
-		viewPager.setAdapter(adapter);
-        tabs.setupWithViewPager(viewPager);
-		adapter.updateTabViews(tabs);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+		binding.activityAboutPager.setAdapter(adapter);
+        binding.tabsToolbar.setupWithViewPager(binding.activityAboutPager);
+		adapter.updateTabViews(binding.tabsToolbar);
+        binding.activityAboutPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabsToolbar));
 
 	}
 
 	@Override
 	public void onResume(){
 		super.onResume();
-		viewPager.setCurrentItem(currentTab);
+		binding.activityAboutPager.setCurrentItem(currentTab);
 	}
 	
 	@Override

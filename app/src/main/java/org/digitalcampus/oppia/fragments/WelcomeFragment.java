@@ -26,18 +26,18 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentWelcomeBinding;
 import org.digitalcampus.oppia.activity.PrivacyActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 
 public class WelcomeFragment extends AppFragment {
 
-    public static WelcomeFragment newInstance() {
+	private FragmentWelcomeBinding binding;
+
+	public static WelcomeFragment newInstance() {
         return new WelcomeFragment();
 	}
-
-	private Button loginButton;
-    private Button registerButton;
-    private TextView privacyLink;
 
 	public WelcomeFragment() {
         // do nothing
@@ -45,30 +45,26 @@ public class WelcomeFragment extends AppFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_welcome, container, false);
-        loginButton = v.findViewById(R.id.welcome_login);
-        registerButton = v.findViewById(R.id.welcome_register);
-		privacyLink = v.findViewById(R.id.welcome_privacy_info);
-
-		return v;
+		binding = FragmentWelcomeBinding.inflate(inflater, container, false);
+		return binding.getRoot();
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		loginButton.setOnClickListener(v -> {
-            WelcomeActivity wa = (WelcomeActivity) WelcomeFragment.super.getActivity();
+		binding.welcomeLogin.setOnClickListener(v -> {
+            WelcomeActivity wa = (WelcomeActivity) getActivity();
             wa.switchTab(WelcomeActivity.TAB_LOGIN);
         });
 		
-		registerButton.setOnClickListener(v -> {
-            WelcomeActivity wa = (WelcomeActivity) WelcomeFragment.super.getActivity();
+		binding.welcomeRegister.setOnClickListener(v -> {
+            WelcomeActivity wa = (WelcomeActivity) getActivity();
             wa.switchTab(WelcomeActivity.TAB_REGISTER);
         });
 
-		privacyLink.setOnClickListener(v -> {
-			Intent iA = new Intent(WelcomeFragment.super.getActivity(), PrivacyActivity.class);
+		binding.welcomePrivacyInfo.setOnClickListener(v -> {
+			Intent iA = new Intent(getActivity(), PrivacyActivity.class);
 			startActivity(iA);
 		});
 	}

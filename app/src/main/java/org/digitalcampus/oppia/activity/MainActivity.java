@@ -23,6 +23,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityMainBinding;
+import org.digitalcampus.mobile.learning.databinding.DrawerHeaderBinding;
+import org.digitalcampus.mobile.learning.databinding.ViewBadgeBinding;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.fragments.CoursesListFragment;
 import org.digitalcampus.oppia.fragments.MainPointsFragment;
@@ -47,51 +50,38 @@ import javax.inject.Inject;
 public class MainActivity extends AppActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
         SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener {
 
-    private BottomNavigationView navBottomView;
     private DrawerMenuManager drawer;
-    private View btnLogout;
-    private View btnExpandProfileOptions;
-    private View viewProfileOptions;
     private MenuItem searchMenuItem;
-    private TextView tvBadgeNumber;
 
     @Inject
     CoursesRepository coursesRepository;
-
-    private void findViews() {
-
-        navBottomView = findViewById(R.id.nav_bottom_view);
-        NavigationView navDrawerView = findViewById(R.id.navigation_view);
-
-        View headerDrawer = navDrawerView.getHeaderView(0);
-        View btnEditProfile = headerDrawer.findViewById(R.id.btn_edit_profile);
-        btnLogout = headerDrawer.findViewById(R.id.btn_logout);
-        btnExpandProfileOptions = headerDrawer.findViewById(R.id.btn_expand_profile_options);
-        viewProfileOptions = headerDrawer.findViewById(R.id.view_profile_options);
-
-        btnExpandProfileOptions.setOnClickListener(this);
-        btnEditProfile.setOnClickListener(this);
-        btnLogout.setOnClickListener(this);
-
-        navBottomView.setOnNavigationItemSelectedListener(this);
-    }
+    private ActivityMainBinding binding;
+    private DrawerHeaderBinding bindingHeader;
+    private ViewBadgeBinding bindingBadgeView;
 
 
     @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        findViews();
+        
+        binding = ActivityMainBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
         getAppComponent().inject(this);
+
+        bindingHeader = DrawerHeaderBinding.bind(binding.navigationView.getHeaderView(0));
+
+        bindingHeader.btnExpandProfileOptions.setOnClickListener(this);
+        bindingHeader.btnEditProfile.setOnClickListener(this);
+        bindingHeader.btnLogout.setOnClickListener(this);
+
+        binding.navBottomView.setOnNavigationItemSelectedListener(this);
 
         configureBadgePointsView();
 
-        viewProfileOptions.setVisibility(View.GONE);
+        bindingHeader.viewProfileOptions.setVisibility(View.GONE);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
-
-
 
     }
 
@@ -99,14 +89,11 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private void configureBadgePointsView() {
 
         BottomNavigationMenuView bottomNavigationMenuView =
-                (BottomNavigationMenuView) navBottomView.getChildAt(0);
+                (BottomNavigationMenuView) binding.navBottomView.getChildAt(0);
         BottomNavigationItemView itemView = (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(2);
 
-        View badgeView = LayoutInflater.from(this).inflate(R.layout.view_badge, null);
-
-        tvBadgeNumber = badgeView.findViewById(R.id.tv_badge_number);
-
-        itemView.addView(badgeView);
+        bindingBadgeView = ViewBadgeBinding.inflate(LayoutInflater.from(this));
+        itemView.addView(bindingBadgeView.getRoot());
     }
 
     @Override
@@ -122,7 +109,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         App app = (App) getApplicationContext();
         User u = app.getComponent().getUser();
 
-        tvBadgeNumber.setText(String.valueOf(u.getPoints()));
+        bindingBadgeView.tvBadgeNumber.setText(String.valueOf(u.getPoints()));
     }
 
     @Override
@@ -140,7 +127,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         Map<Integer, DrawerMenuManager.MenuOption> options = getMenuOptions();
         drawer.onPrepareOptionsMenu(options);
 
-        configureSearchButtonVisibility(navBottomView.getSelectedItemId());
+        configureSearchButtonVisibility(binding.navBottomView.getSelectedItemId());
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -214,15 +201,15 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     // CONFIGURATIONS
     private void configureLogoutOption() {
         boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, App.MENU_ALLOW_LOGOUT);
-        btnLogout.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
+        bindingHeader.btnLogout.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
         if (!logoutVisible) {
             setupProfileOptionsView(false);
         }
     }
 
     private void setupProfileOptionsView(boolean visible) {
-        viewProfileOptions.setVisibility(visible ? View.VISIBLE : View.GONE);
-        btnExpandProfileOptions.setRotation(visible ? 180f : 0f);
+        bindingHeader.viewProfileOptions.setVisibility(visible ? View.VISIBLE : View.GONE);
+        bindingHeader.btnExpandProfileOptions.setRotation(visible ? 180f : 0f);
     }
 
     // INTERACTIONS
@@ -264,7 +251,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         switch (v.getId()) {
 
             case R.id.btn_expand_profile_options:
-                boolean isProfileOptionsViewVisible = viewProfileOptions.getVisibility() == View.VISIBLE;
+                boolean isProfileOptionsViewVisible = bindingHeader.viewProfileOptions.getVisibility() == View.VISIBLE;
                 setupProfileOptionsView(!isProfileOptionsViewVisible);
                 break;
 

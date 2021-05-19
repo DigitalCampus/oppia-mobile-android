@@ -39,6 +39,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import org.digitalcampus.mobile.learning.databinding.WidgetQuizBinding;
 import org.digitalcampus.mobile.quiz.InvalidQuizException;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
@@ -87,24 +89,18 @@ public abstract class AnswerWidget extends BaseWidget {
     private QuestionWidget currentQuestion;
     private String contents;
 
-    private Button prevBtn;
-    private Button nextBtn;
-    private ImageView playAudioBtn;
-    private TextView qText;
-    private LinearLayout questionImage;
-    private ViewGroup container;
-    private MediaPlayer mp;
-    private FrameLayout initialInfoContainer;
-
     boolean isOnResultsPage = false;
     private boolean initialInfoShown = false;
     private boolean quizAttemptSaved = false;
     private boolean loadingQuizErrorDisplayed = false;
 
-    private ProgressBar progressBar;
+    private MediaPlayer mp;
+
     private ProgressBarAnimator barAnim;
 
     @Inject QuizAttemptRepository attemptsRepository;
+    protected WidgetQuizBinding binding;
+    private ViewGroup container;
 
     public AnswerWidget() {
         // Required empty public constructor
@@ -124,7 +120,8 @@ public abstract class AnswerWidget extends BaseWidget {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View vv = inflater.inflate(R.layout.widget_quiz, container, false);
+        binding = WidgetQuizBinding.inflate(inflater, container, false);
+        
         this.container = container;
         course = (Course) getArguments().getSerializable(Course.TAG);
         activity = ((Activity) getArguments().getSerializable(Activity.TAG));
@@ -133,12 +130,12 @@ public abstract class AnswerWidget extends BaseWidget {
         getAppComponent().inject(this);
 
         setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
-        vv.setId(activity.getActId());
+        binding.getRoot().setId(activity.getActId());
         if ((savedInstanceState != null) && (savedInstanceState.getSerializable(BaseWidget.WIDGET_CONFIG) != null)){
             setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable(BaseWidget.WIDGET_CONFIG));
         }
 
-        return vv;
+        return binding.getRoot();
     }
 
     @Override
@@ -155,18 +152,10 @@ public abstract class AnswerWidget extends BaseWidget {
     }
 
     private void fetchViews(){
-        this.prevBtn = getView().findViewById(R.id.mquiz_prev_btn);
-        this.nextBtn = getView().findViewById(R.id.mquiz_next_btn);
-        this.qText = getView().findViewById(R.id.question_text);
-        this.questionImage = getView().findViewById(R.id.question_image);
-        this.playAudioBtn = getView().findViewById(R.id.playAudioBtn);
-        this.progressBar =  getView().findViewById(R.id.progress_quiz);
-        this.initialInfoContainer = getView().findViewById(R.id.initial_info_container);
-        this.barAnim = new ProgressBarAnimator(progressBar);
+        this.barAnim = new ProgressBarAnimator(binding.progressQuiz);
         this.barAnim.setAnimDuration(PROGRESS_ANIM_DURATION);
-        this.questionImage.setVisibility(View.GONE);
-        this.playAudioBtn.setVisibility(View.GONE);
-
+        this.binding.questionImage.setVisibility(View.GONE);
+        this.binding.playAudioBtn.setVisibility(View.GONE);
     }
 
     @Override
@@ -200,12 +189,12 @@ public abstract class AnswerWidget extends BaseWidget {
         }
 
         if (!initialInfoShown && shouldShowInitialInfo()){
-            loadInitialInfo(initialInfoContainer);
-            initialInfoContainer.setVisibility(View.VISIBLE);
+            loadInitialInfo(binding.initialInfoContainer);
+            binding.initialInfoContainer.setVisibility(View.VISIBLE);
             return;
         }
 
-        initialInfoContainer.setVisibility(View.GONE);
+        binding.initialInfoContainer.setVisibility(View.GONE);
         this.showQuestion();
     }
 
@@ -226,7 +215,7 @@ public abstract class AnswerWidget extends BaseWidget {
 
     protected void showQuestion() {
 
-        initialInfoContainer.setVisibility(View.GONE);
+        binding.initialInfoContainer.setVisibility(View.GONE);
         initialInfoShown = true;
 
         clearMediaPlayer();
@@ -240,13 +229,13 @@ public abstract class AnswerWidget extends BaseWidget {
             return;
         }
 
-        qText.setVisibility(View.VISIBLE);
+        binding.questionText.setVisibility(View.VISIBLE);
         // convert in case has any html special chars
         String questionText = stripAudioFromText(q);
-        qText.setText(HtmlCompat.fromHtml(questionText, HtmlCompat.FROM_HTML_MODE_LEGACY));
+        binding.questionText.setText(HtmlCompat.fromHtml(questionText, HtmlCompat.FROM_HTML_MODE_LEGACY));
 
         if (q.getProp("image") == null) {
-            questionImage.setVisibility(View.GONE);
+            binding.questionImage.setVisibility(View.GONE);
         } else {
             String fileUrl = course.getLocation() + q.getProp("image");
             Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
@@ -259,13 +248,13 @@ public abstract class AnswerWidget extends BaseWidget {
                 iv.setOnClickListener(oicl);
                 TextView tv = getView().findViewById(R.id.question_image_caption);
                 tv.setText(R.string.widget_quiz_image_caption);
-                questionImage.setVisibility(View.VISIBLE);
+                binding.questionImage.setVisibility(View.VISIBLE);
             } else {
                 TextView tv = getView().findViewById(R.id.question_image_caption);
                 tv.setText(R.string.widget_quiz_media_caption);
                 OnMediaClickListener omcl = new OnMediaClickListener(q.getProp("media"));
                 iv.setOnClickListener(omcl);
-                questionImage.setVisibility(View.VISIBLE);
+                binding.questionImage.setVisibility(View.VISIBLE);
             }
 
         }
@@ -301,14 +290,14 @@ public abstract class AnswerWidget extends BaseWidget {
             questionText = questionText.replace(mp3filename, "");
             File file = new File(course.getLocation() + "resources/" + mp3filename);
             if (!file.exists()){
-                playAudioBtn.setVisibility(View.GONE);
+                binding.playAudioBtn.setVisibility(View.GONE);
                 return questionText;
             }
             final Uri mp3Uri = Uri.fromFile(file);
             Log.d(TAG, mp3Uri.getPath());
 
-            playAudioBtn.setVisibility(View.VISIBLE);
-            playAudioBtn.setOnClickListener(v -> {
+            binding.playAudioBtn.setVisibility(View.VISIBLE);
+            binding.playAudioBtn.setOnClickListener(v -> {
                 if ((mp != null) && mp.isPlaying() ) {
                     mp.stop();
                     mp.release();
@@ -319,17 +308,17 @@ public abstract class AnswerWidget extends BaseWidget {
             });
         }
         else{
-            playAudioBtn.setVisibility(View.GONE);
+            binding.playAudioBtn.setVisibility(View.GONE);
         }
         return questionText;
     }
 
     private void setNav() {
-        nextBtn.setVisibility(View.VISIBLE);
-        prevBtn.setVisibility(View.VISIBLE);
+        binding.mquizNextBtn.setVisibility(View.VISIBLE);
+        binding.mquizPrevBtn.setVisibility(View.VISIBLE);
 
         if (quiz.hasPrevious()) {
-            prevBtn.setOnClickListener(v -> {
+            binding.mquizPrevBtn.setOnClickListener(v -> {
                 // save answer
                 saveAnswer();
                 if (quiz.hasPrevious()) {
@@ -337,17 +326,17 @@ public abstract class AnswerWidget extends BaseWidget {
                     showQuestion();
                 }
             });
-            prevBtn.setEnabled(true);
+            binding.mquizPrevBtn.setEnabled(true);
         } else {
-            prevBtn.setEnabled(false);
+            binding.mquizPrevBtn.setEnabled(false);
         }
 
-        nextBtn.setOnClickListener(nextBtnClickListener());
+        binding.mquizNextBtn.setOnClickListener(nextBtnClickListener());
         // set label on next button
         if (quiz.hasNext()) {
-            nextBtn.setText(getString(R.string.widget_quiz_next));
+            binding.mquizNextBtn.setText(getString(R.string.widget_quiz_next));
         } else {
-            nextBtn.setText(getFinishButtonLabel());
+            binding.mquizNextBtn.setText(getFinishButtonLabel());
         }
     }
 
@@ -400,16 +389,15 @@ public abstract class AnswerWidget extends BaseWidget {
     }
 
     private void setProgress() {
-        TextView progress = getView().findViewById(R.id.quiz_progress);
 
-        int current = progressBar.getProgress();
-        progressBar.setMax(quiz.getTotalNoQuestions());
+        int current = binding.progressQuiz.getProgress();
+        binding.progressQuiz.setMax(quiz.getTotalNoQuestions());
         barAnim.animate(current, quiz.getCurrentQuestionNo());
         try {
             if (quiz.getCurrentQuestion().responseExpected()) {
-                progress.setText(quiz.getCurrentQuestionNo() + "/" + quiz.getTotalNoQuestions());
+                binding.tvQuizProgress.setText(quiz.getCurrentQuestionNo() + "/" + quiz.getTotalNoQuestions());
             } else {
-                progress.setText("");
+                binding.tvQuizProgress.setText("");
             }
         } catch (InvalidQuizException e) {
             Analytics.logException(e);

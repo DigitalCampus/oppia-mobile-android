@@ -25,6 +25,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentResetPasswordBinding;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.listener.SubmitEntityListener;
@@ -41,11 +43,9 @@ import javax.inject.Inject;
 
 public class ResetPasswordFragment extends AppFragment implements SubmitEntityListener<User> {
 
-    private EditText usernameField;
-    private Button resetButton;
-
     @Inject
     ApiEndpoint apiEndpoint;
+    private FragmentResetPasswordBinding binding;
 
     public static ResetPasswordFragment newInstance() {
         return new ResetPasswordFragment();
@@ -57,18 +57,15 @@ public class ResetPasswordFragment extends AppFragment implements SubmitEntityLi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_reset_password, container, false);
+        binding = FragmentResetPasswordBinding.inflate(inflater, container, false);
         getAppComponent().inject(this);
-
-        usernameField = v.findViewById(R.id.reset_username_field);
-        resetButton = v.findViewById(R.id.reset_btn);
-        return v;
+        return binding.getRoot();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        resetButton.setOnClickListener(v -> onResetClick());
+        binding.resetBtn.setOnClickListener(v -> onResetClick());
     }
 
     public void submitComplete(EntityResult<User> result) {
@@ -83,7 +80,7 @@ public class ResetPasswordFragment extends AppFragment implements SubmitEntityLi
             UIUtils.showAlert(getActivity(), getString(R.string.reset_password), result.getResultMessage(),
                     getString(R.string.ok), () -> {
                         UIUtils.hideSoftKeyboard(getActivity());
-                        usernameField.setText("");
+                        binding.resetUsernameField.setText("");
                         WelcomeActivity wa = (WelcomeActivity) getActivity();
                         wa.switchTab(WelcomeActivity.TAB_LOGIN);
                         return null;
@@ -101,7 +98,7 @@ public class ResetPasswordFragment extends AppFragment implements SubmitEntityLi
 
     public void onResetClick() {
         // get form fields
-        String username = usernameField.getText().toString();
+        String username = binding.resetUsernameField.getText().toString();
 
         // do validation
         // check firstname

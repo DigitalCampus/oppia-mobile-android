@@ -23,6 +23,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+
+import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +33,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ViewPermissionsExplanationBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -98,28 +101,27 @@ public class PermissionsManager {
         final List<String> permissionsToAsk = filterNotGrantedPermissions(act, permissions);
         if (!permissionsToAsk.isEmpty()) {
             //Show the permissions informative view
-            LayoutInflater layoutInflater = (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = LayoutInflater.from(act);
             container.removeAllViews();
-            View explanation = layoutInflater.inflate(R.layout.view_permissions_explanation, container);
-            showPermissionDescriptions(act, explanation, permissionsToAsk);
+            @NonNull ViewPermissionsExplanationBinding bindingExplanation = ViewPermissionsExplanationBinding.inflate(layoutInflater, container, true);
+//            View explanation = layoutInflater.inflate(R.layout.view_permissions_explanation, container);
+            showPermissionDescriptions(act, bindingExplanation.getRoot(), permissionsToAsk);
             container.setVisibility(View.VISIBLE);
 
-            Button reqPermsBtn = explanation.findViewById(R.id.btn_permissions);
-            View permsNotAskable = explanation.findViewById(R.id.not_askable_description);
             //Check the user has not selected the "Don't ask again" option for any permission yet
             if (canAskForAllPermissions(act, permissionsToAsk)) {
                 //First, set the permissions as asked
-                reqPermsBtn.setVisibility(View.VISIBLE);
-                permsNotAskable.setVisibility(View.GONE);
-                reqPermsBtn.setOnClickListener(v ->
+                bindingExplanation.btnPermissions.setVisibility(View.VISIBLE);
+                bindingExplanation.notAskableDescription.setVisibility(View.GONE);
+                bindingExplanation.btnPermissions.setOnClickListener(v ->
                     //Open the dialog to ask for permissions
                     requestPermissions(act, permissionsToAsk)
                 );
             }
             else{
                 //Just show the informative option
-                reqPermsBtn.setVisibility(View.GONE);
-                permsNotAskable.setVisibility(View.VISIBLE);
+                bindingExplanation.btnPermissions.setVisibility(View.GONE);
+                bindingExplanation.notAskableDescription.setVisibility(View.VISIBLE);
             }
         }
         else{

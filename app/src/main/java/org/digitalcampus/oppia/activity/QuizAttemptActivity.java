@@ -20,9 +20,11 @@ package org.digitalcampus.oppia.activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityQuizAttemptBinding;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
@@ -52,6 +54,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class QuizAttemptActivity extends AppActivity {
 
+	private ActivityQuizAttemptBinding binding;
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -61,7 +65,8 @@ public class QuizAttemptActivity extends AppActivity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_quiz_attempt);
+		binding = ActivityQuizAttemptBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
@@ -76,20 +81,13 @@ public class QuizAttemptActivity extends AppActivity {
 		quizAttempt = (QuizAttempt) bundle.getSerializable(QuizAttempt.TAG);
 		Course course = DbHelper.getInstance(this).getCourse(quizAttempt.getCourseId(), quizAttempt.getUserId());
 
-		TextView courseTitle = findViewById(R.id.course_title);
-		TextView quizTitle = findViewById(R.id.quiz_title);
-		TextView score = findViewById(R.id.score);
-		TextView attemptDate = findViewById(R.id.attempt_date);
-		TextView timetaken = findViewById(R.id.attempt_timetaken);
+		binding.courseTitle.setText(course.getTitle(prefLang));
+		binding.quizTitle.setText(quizAttempt.getDisplayTitle(this));
+		binding.attemptDate.setText(DateUtils.DISPLAY_DATETIME_FORMAT.print(quizAttempt.getDatetime()));
+		binding.score.setText(quizAttempt.getScorePercentLabel());
+		binding.attemptTimetaken.setText(quizAttempt.getHumanTimetaken());
 
-		courseTitle.setText(course.getTitle(prefLang));
-		quizTitle.setText(quizAttempt.getDisplayTitle(this));
-		attemptDate.setText(DateUtils.DISPLAY_DATETIME_FORMAT.print(quizAttempt.getDatetime()));
-		score.setText(quizAttempt.getScorePercentLabel());
-		timetaken.setText(quizAttempt.getHumanTimetaken());
-
-		RecyclerView recyclerQuestionFeedbackLV = findViewById(R.id.recycler_quiz_results_feedback);
-		recyclerQuestionFeedbackLV.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+		binding.recyclerQuizResultsFeedback.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 		Quiz quiz = new Quiz();
 		Activity act = DbHelper.getInstance(this).getActivityByDigest(quizAttempt.getActivityDigest());
 
@@ -133,7 +131,7 @@ public class QuizAttemptActivity extends AppActivity {
 		}
 
 		QuizAnswersFeedbackAdapter adapterQuizFeedback = new QuizAnswersFeedbackAdapter(this, quizAnswerFeedback);
-		recyclerQuestionFeedbackLV.setAdapter(adapterQuizFeedback);
+		binding.recyclerQuizResultsFeedback.setAdapter(adapterQuizFeedback);
 	    
 	}
 
