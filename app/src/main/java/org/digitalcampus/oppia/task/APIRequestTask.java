@@ -58,9 +58,7 @@ public abstract class APIRequestTask<P, G, R> extends AsyncTask<P, G, R> {
             String urlWithAuth = authUriBuilder.build().toString();
 
             requestBuilder = new Request.Builder()
-                    .url(urlWithAuth)
-                    .addHeader(HTTPClientUtils.HEADER_AUTH,
-                            HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()));
+                    .url(urlWithAuth);
 
         } catch (UserNotFoundException e) {
             Analytics.logException(e);
