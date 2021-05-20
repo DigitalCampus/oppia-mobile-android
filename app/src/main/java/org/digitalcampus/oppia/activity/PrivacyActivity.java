@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityPrivacyBinding;
@@ -13,6 +14,7 @@ import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.fragments.DeleteAccountDialogFragment;
 import org.digitalcampus.oppia.fragments.DownloadUserDataDialogFragment;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentManager;
@@ -82,6 +84,11 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
 
     private void showDeleteAccountWarning(){
 
+        if (!ConnectionUtils.isNetworkConnected(this)) {
+            toast(R.string.error_connection);
+            return;
+        }
+
         FragmentManager fm = getSupportFragmentManager();
         DeleteAccountDialogFragment deleteDialog = DeleteAccountDialogFragment.newInstance();
         deleteDialog.show(fm, "fragment_delete_account");
@@ -89,6 +96,12 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
     }
 
     private void showDownloadDataDialog(){
+
+        if (!ConnectionUtils.isNetworkConnected(this)) {
+            toast(R.string.error_connection);
+            return;
+        }
+
         FragmentManager fm = getSupportFragmentManager();
         DownloadUserDataDialogFragment downloadDialog = DownloadUserDataDialogFragment.newInstance();
         downloadDialog.show(fm, "fragment_download_data");

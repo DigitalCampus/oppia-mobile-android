@@ -89,11 +89,6 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
 
     private void downloadUserData(String data){
 
-        if (!ConnectionUtils.isNetworkConnected(getActivity())) {
-            Toast.makeText(getActivity(), R.string.error_connection, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         Log.d(TAG, data);
         binding.loadingDownload.setVisibility(View.VISIBLE);
         binding.downloadDataList.setVisibility(View.INVISIBLE);
