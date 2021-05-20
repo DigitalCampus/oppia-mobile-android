@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -27,6 +28,7 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
@@ -86,6 +88,12 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void downloadUserData(String data){
+
+        if (!ConnectionUtils.isNetworkConnected(getActivity())) {
+            Toast.makeText(getActivity(), R.string.error_connection, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Log.d(TAG, data);
         binding.loadingDownload.setVisibility(View.VISIBLE);
         binding.downloadDataList.setVisibility(View.INVISIBLE);
