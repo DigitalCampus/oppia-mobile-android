@@ -55,7 +55,7 @@ android {
 
     def oppiaPropsFile = rootProject.file('custom.properties')
     if (oppiaPropsFile.canRead()) {
-        logger.info('Fetching properties from external file')
+        logger.lifecycle('Fetching properties from external file')
         runtimeProps.load(new FileInputStream(oppiaPropsFile))
     } else {
         logger.error('No properties file found. Using default values.')
@@ -66,10 +66,19 @@ android {
         all {
             //Define all the constant values that depend on the config properties
 
-            buildConfigField "String", "ANALYTICS_LIBRARY", "\"" + runtimeProps['ANALYTICS_LIBRARY'] + "\""
-            buildConfigField "String", "COUNTLY_APP_KEY", "\"" + runtimeProps['COUNTLY_APP_KEY'] + "\""
-            buildConfigField "String", "MINT_API_KEY", "\"" + runtimeProps['MINT_API_KEY'] + "\""
-            buildConfigField "String", "COUNTLY_SERVER_URL", "\"" + runtimeProps['COUNTLY_SERVER_URL'] + "\""
+            def analyticsLibrary = "none"
+            if (runtimeProps.containsKey('ANALYTICS_LIBRARY')){
+                analyticsLibrary = runtimeProps['ANALYTICS_LIBRARY']
+                if (analyticsLibrary == ""){ analyticsLibrary = "none" }
+            }
+            if (analyticsLibrary == "none"){
+                logger.error('No analytics library configured, will use empty value')
+            }
+
+            buildConfigField "String", "ANALYTICS_LIBRARY", "\"" + analyticsLibrary + "\""
+            buildConfigField "String", "COUNTLY_APP_KEY", "\"" + runtimeProps.getProperty('COUNTLY_APP_KEY','') + "\""
+            buildConfigField "String", "MINT_API_KEY", "\"" + runtimeProps.getProperty('MINT_API_KEY','') + "\""
+            buildConfigField "String", "COUNTLY_SERVER_URL", "\"" + runtimeProps.getProperty('COUNTLY_SERVER_URL','') + "\""
 
             buildConfigField "boolean", "ADMIN_PROTECT_SETTINGS", runtimeProps['ADMIN_PROTECT_SETTINGS']
             buildConfigField "boolean", "ADMIN_PROTECT_ACTIVITY_SYNC", runtimeProps['ADMIN_PROTECT_ACTIVITY_SYNC']
@@ -262,9 +271,9 @@ task grantPermissions(type: Exec, dependsOn: 'installNormalDebug') {
 
     def adb = android.getAdbExe().toString()
     if (!System.getProperty('os.name').toLowerCase().contains('windows')) {
-        println "Granting permissions for a non windows os"
+        logger.lifecycle('Granting permissions for a non windows os')
     } else {
-        println "Granting permissions for a windows os"
+        logger.lifecycle('Granting permissions for a windows os')
     }
 
     commandLine "${adb} shell pm grant ${android.defaultConfig.applicationId} android.permission.SET_ANIMATION_SCALE".split(' ')
