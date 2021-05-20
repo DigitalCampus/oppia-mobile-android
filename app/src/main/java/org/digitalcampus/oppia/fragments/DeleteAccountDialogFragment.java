@@ -18,6 +18,7 @@ import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.task.DeleteAccountTask;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
