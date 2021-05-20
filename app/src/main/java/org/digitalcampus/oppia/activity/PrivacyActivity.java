@@ -85,7 +85,7 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
     private void showDeleteAccountWarning(){
 
         if (!ConnectionUtils.isNetworkConnected(this)) {
-            alert(R.string.error_connection);
+            alert(R.string.error_connection_needed);
             return;
         }
 
@@ -98,7 +98,7 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
     private void showDownloadDataDialog(){
 
         if (!ConnectionUtils.isNetworkConnected(this)) {
-            alert(R.string.error_connection);
+            alert(R.string.error_connection_needed);
             return;
         }
 

@@ -261,6 +261,7 @@
 
     <string name="error_connection">Error connecting to server. Please check you have an active internet connection and try again.</string>
     <string name="error_connection_required">You need an active internet connection to access this page. Please turn on wifi or mobile internet connection and try again.</string>
+    <string name="error_connection_needed">You need an active internet connection to complete this action. Please try again when you have an active internet connection.</string>
     <string name="error_connection_ssl">Error connecting to server due to SSL problems. Please, ensure that the host in your &appName;
         server setting is correct, and that your device has the right time/date</string>
     <string name="error_connection_timeout">Timeout error connecting to server. Please check you have a stable internet connection and try again.</string>
