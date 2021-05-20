@@ -65,11 +65,6 @@ public class DeleteAccountDialogFragment extends DialogFragment implements APIRe
                 return;
             }
 
-            if (!ConnectionUtils.isNetworkConnected(getActivity())) {
-                Toast.makeText(getActivity(), R.string.error_connection, Toast.LENGTH_SHORT).show();
-                return;
-            }
-
             DeleteAccountTask task = new DeleteAccountTask(getContext());
             task.setAPIRequestListener(this);
             task.execute(password);
