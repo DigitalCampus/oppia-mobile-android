@@ -24,6 +24,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -91,7 +92,7 @@ public class LoginUITest extends MockedApiEndpointTest {
         onView(withId(R.id.login_btn))
                .perform(scrollTo(), click());
 
-        assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
+        assertNotEquals(WelcomeActivity.class, TestUtils.getCurrentActivity().getClass());
     }
 
 

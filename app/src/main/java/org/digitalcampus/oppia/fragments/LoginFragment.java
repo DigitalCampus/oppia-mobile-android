@@ -46,7 +46,6 @@ import javax.inject.Inject;
 
 public class LoginFragment extends AppFragment implements SubmitEntityListener<User> {
 
-    private ProgressDialog pDialog;
     private Context appContext;
 
     @Inject
@@ -94,9 +93,7 @@ public class LoginFragment extends AppFragment implements SubmitEntityListener<U
     @Override
     public void onPause() {
         super.onPause();
-        if (pDialog != null && pDialog.isShowing()) {
-            pDialog.dismiss();
-        }
+        hideProgressDialog();
     }
 
     protected void onLoginClick() {
@@ -109,12 +106,7 @@ public class LoginFragment extends AppFragment implements SubmitEntityListener<U
 
         String password = binding.loginPasswordField.getText().toString();
 
-        // show progress dialog
-        pDialog = new ProgressDialog(super.getActivity());
-        pDialog.setTitle(R.string.title_login);
-        pDialog.setMessage(this.getString(R.string.login_process));
-        pDialog.setCancelable(true);
-        pDialog.show();
+        showProgressDialog(getString(R.string.login_process));
 
         User user = new User();
         user.setUsername(username);
@@ -127,25 +119,11 @@ public class LoginFragment extends AppFragment implements SubmitEntityListener<U
 
 
     public void submitComplete(EntityResult<User> response) {
-        try {
-            pDialog.dismiss();
-        } catch (IllegalArgumentException iae) {
-            //
-        }
-
-        boolean fromViewDigest = getActivity().getIntent().getBooleanExtra(ViewDigestActivity.EXTRA_FROM_VIEW_DIGEST, false);
+        hideProgressDialog();
 
         if (response.isSuccess()) {
             User user = response.getEntity();
-            SessionManager.loginUser(appContext, user);
-
-            if (fromViewDigest) {
-                getActivity().setResult(Activity.RESULT_OK);
-            } else {
-                startActivity(new Intent(super.getActivity(), MainActivity.class));
-            }
-
-            super.getActivity().finish();
+            ((WelcomeActivity) getActivity()).onSuccessUserAccess(user);
 
         } else {
             Context ctx = super.getActivity();
