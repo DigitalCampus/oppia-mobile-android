@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -73,10 +74,6 @@ public class HTTPClientUtils {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         return logging;
-    }
-
-    public static String getAuthHeaderValue(String username, String apiKey) {
-        return "ApiKey " + username + ":" + apiKey;
     }
 
     public static HttpUrl getUrlWithCredentials(String url, String username, String apiKey) {

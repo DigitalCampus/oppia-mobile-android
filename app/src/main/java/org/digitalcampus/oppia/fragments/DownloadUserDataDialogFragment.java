@@ -36,6 +36,8 @@ import androidx.annotation.Nullable;
 
 import java.io.File;
 
+import okhttp3.HttpUrl;
+
 import static android.content.Context.DOWNLOAD_SERVICE;
 
 public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
@@ -95,9 +97,9 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
 
 
         DbHelper db = DbHelper.getInstance(getActivity());
-        User u;
+        User user;
         try {
-            u = db.getUser(SessionManager.getUsername(getActivity()));
+            user = db.getUser(SessionManager.getUsername(getActivity()));
         } catch (UserNotFoundException e) {
             e.printStackTrace();
             return;
@@ -105,11 +107,10 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
 
         String path = Paths.DOWNLOAD_ACCOUNT_DATA_PATH + data + File.separator;
         String url = new RemoteApiEndpoint().getFullURL(getActivity(), path);
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.addRequestHeader(HTTPClientUtils.HEADER_AUTH,
-                HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()));
+        HttpUrl urlWithCredentials = HTTPClientUtils.getUrlWithCredentials(url, user.getUsername(), user.getApiKey());
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(urlWithCredentials.toString()));
 
-        String filename = u.getUsername() + "-" + data + ".html";
+        String filename = user.getUsername() + "-" + data + ".html";
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE); // to notify when download is complete
         downloadManager = (DownloadManager) getActivity().getSystemService(DOWNLOAD_SERVICE);
