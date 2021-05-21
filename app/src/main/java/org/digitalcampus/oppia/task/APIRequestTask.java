@@ -51,14 +51,8 @@ public abstract class APIRequestTask<P, G, R> extends AsyncTask<P, G, R> {
         try {
             User u = db.getUser(SessionManager.getUsername(ctx));
 
-            Uri.Builder authUriBuilder = Uri.parse(url).buildUpon();
-            authUriBuilder.appendQueryParameter("username", u.getUsername());
-            authUriBuilder.appendQueryParameter("api_key", u.getApiKey());
-
-            String urlWithAuth = authUriBuilder.build().toString();
-
             requestBuilder = new Request.Builder()
-                    .url(urlWithAuth);
+                    .url(HTTPClientUtils.getUrlWithCredentials(url, u.getUsername(), u.getApiKey()));
 
         } catch (UserNotFoundException e) {
             Analytics.logException(e);
