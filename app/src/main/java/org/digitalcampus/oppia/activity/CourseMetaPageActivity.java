@@ -20,10 +20,12 @@ package org.digitalcampus.oppia.activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.webkit.WebView;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityCourseMetapageBinding;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
@@ -40,6 +42,7 @@ public class CourseMetaPageActivity extends AppActivity {
 
 	private Course course;
 	private CourseMetaPage cmp;
+	private ActivityCourseMetapageBinding binding;
 
 	@Override
 	public void onStart() {
@@ -50,7 +53,8 @@ public class CourseMetaPageActivity extends AppActivity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_metapage);
+		binding = ActivityCourseMetapageBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
@@ -61,16 +65,15 @@ public class CourseMetaPageActivity extends AppActivity {
             cmp = course.getMetaPage(pageID);
         }
 		
-		TextView titleTV = findViewById(R.id.course_title);
-		TextView versionTV = findViewById(R.id.course_versionid);
-		TextView shortnameTV = findViewById(R.id.course_shortname);
+        
+        
+        
 		String title = cmp.getLang(prefLang).getContent();
-		titleTV.setText(title);
+		binding.courseTitle.setText(title);
 		BigDecimal big = new BigDecimal(course.getVersionId());
-		versionTV.setText(big.toString());
-		shortnameTV.setText(course.getShortname());
-		
-		WebView wv = this.findViewById(R.id.metapage_webview);
+		binding.courseVersionid.setText(big.toString());
+		binding.courseShortname.setText(course.getShortname());
+
 		String url = course.getLocation() + File.separator +cmp.getLang(prefLang).getLocation();
 		
 		try {
@@ -80,11 +83,11 @@ public class CourseMetaPageActivity extends AppActivity {
 			content += "</head>";
 			content += FileUtils.readFile(url);
 			content += "</html>";
-			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, content, "text/html", "utf-8", null);
+			binding.metapageWebview.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, content, "text/html", "utf-8", null);
 		} catch (IOException e) {
 			Analytics.logException(e);
 			Log.d(TAG, "IOException: ", e);
-			wv.loadUrl("file://" + url);
+			binding.metapageWebview.loadUrl("file://" + url);
 		}
 	    
 	}

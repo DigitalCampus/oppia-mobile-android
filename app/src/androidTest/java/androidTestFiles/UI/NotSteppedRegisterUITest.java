@@ -87,7 +87,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
                 .perform(click());
 
         String usernameLengthError = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().getString(
-                R.string.error_register_username_lenght, App.USERNAME_MIN_CHARACTERS);
+                R.string.error_register_username_length, App.USERNAME_MIN_CHARACTERS);
 
         onErrorViewWithinTextInputLayoutWithId(R.id.register_form_username_field)
                 .check(matches(withText(usernameLengthError)));

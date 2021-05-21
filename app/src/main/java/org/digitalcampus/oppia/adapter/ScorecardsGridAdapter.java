@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowScorecardBinding;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Course;
@@ -47,16 +48,16 @@ public class ScorecardsGridAdapter extends RecyclerViewClickableAdapter<Scorecar
     public void onBindViewHolder(final ScorecardsGridViewHolder viewHolder, final int position) {
 
         final Course course = getItemAtPosition(position);
-        viewHolder.courseTitle.setText(course.getTitle(prefLang));
+        viewHolder.binding.courseTitle.setText(course.getTitle(prefLang));
 
         int totalActivities = course.getNoActivities();
         int completedActivities = course.getNoActivitiesCompleted();
 
-        viewHolder.activitiesCompleted.setText(String.valueOf(completedActivities));
-        viewHolder.activitiesTotal.setText(String.valueOf(totalActivities));
+        viewHolder.binding.scorecardActivitiesCompleted.setText(String.valueOf(completedActivities));
+        viewHolder.binding.scorecardActivitiesTotal.setText(String.valueOf(totalActivities));
 
-        viewHolder.circularProgressBar.setProgressMax(totalActivities);
-        viewHolder.circularProgressBar.setProgressWithAnimation(completedActivities, App.SCORECARD_ANIM_DURATION);
+        viewHolder.binding.cpbScorecard.setProgressMax(totalActivities);
+        viewHolder.binding.cpbScorecard.setProgressWithAnimation(completedActivities, App.SCORECARD_ANIM_DURATION);
 
     }
 
@@ -71,18 +72,12 @@ public class ScorecardsGridAdapter extends RecyclerViewClickableAdapter<Scorecar
 
     class ScorecardsGridViewHolder extends RecyclerViewClickableAdapter.ViewHolder {
 
-        private TextView courseTitle;
-        private TextView activitiesCompleted;
-        private TextView activitiesTotal;
-        private CircularProgressBar circularProgressBar;
+        private final RowScorecardBinding binding;
 
         ScorecardsGridViewHolder(final View itemView) {
 
             super(itemView);
-            courseTitle = itemView.findViewById(R.id.course_title);
-            circularProgressBar = itemView.findViewById(R.id.cpb_scorecard);
-            activitiesCompleted = itemView.findViewById(R.id.scorecard_activities_completed);
-            activitiesTotal = itemView.findViewById(R.id.scorecard_activities_total);
+            binding = RowScorecardBinding.bind(itemView);
 
         }
 

@@ -13,6 +13,7 @@ import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowWidgetQuizFeedbackBinding;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.model.QuizAnswerFeedback;
 
@@ -54,35 +55,35 @@ public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswers
             }
         }
 
-        viewHolder.quizQuestion.setText(HtmlCompat.fromHtml(qf.getQuestionText(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+        viewHolder.binding.quizQuestionText.setText(HtmlCompat.fromHtml(qf.getQuestionText(), HtmlCompat.FROM_HTML_MODE_LEGACY));
         if (qf.isSurvey() && TextUtils.isEmpty(userResponseText)){
-            viewHolder.quizUserResponseTitle.setText(R.string.widget_quiz_feedback_response_skipped);
-            viewHolder.quizUserResponse.setVisibility(View.GONE);
+            viewHolder.binding.quizQuestionUserResponseTitle.setText(R.string.widget_quiz_feedback_response_skipped);
+            viewHolder.binding.quizQuestionUserResponseText.setVisibility(View.GONE);
         }
         else{
-            viewHolder.quizUserResponseTitle.setText(R.string.widget_quiz_feedback_response_title);
-            viewHolder.quizUserResponse.setVisibility(View.VISIBLE);
-            viewHolder.quizUserResponse.setText(HtmlCompat.fromHtml(userResponseText.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+            viewHolder.binding.quizQuestionUserResponseTitle.setText(R.string.widget_quiz_feedback_response_title);
+            viewHolder.binding.quizQuestionUserResponseText.setVisibility(View.VISIBLE);
+            viewHolder.binding.quizQuestionUserResponseText.setText(HtmlCompat.fromHtml(userResponseText.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY));
         }
 
 
 
         if (qf.getFeedbackText() != null && !qf.getFeedbackText().equals("")){
-            viewHolder.quizFeedbackTitle.setVisibility(View.VISIBLE);
-            viewHolder.quizFeedbackText.setVisibility(View.VISIBLE);
-            viewHolder.quizFeedbackText.setText(HtmlCompat.fromHtml(qf.getFeedbackText(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+            viewHolder.binding.quizQuestionUserFeedbackTitle.setVisibility(View.VISIBLE);
+            viewHolder.binding.quizQuestionUserFeedbackText.setVisibility(View.VISIBLE);
+            viewHolder.binding.quizQuestionUserFeedbackText.setText(HtmlCompat.fromHtml(qf.getFeedbackText(), HtmlCompat.FROM_HTML_MODE_LEGACY));
 
         } else {
             //If there's no feedback to show, hide both text and title
-            viewHolder.quizFeedbackTitle.setVisibility(View.GONE);
-            viewHolder.quizFeedbackText.setVisibility(View.GONE);
+            viewHolder.binding.quizQuestionUserFeedbackTitle.setVisibility(View.GONE);
+            viewHolder.binding.quizQuestionUserFeedbackText.setVisibility(View.GONE);
         }
 
         if (qf.isSurvey()){
-            viewHolder.quizFeedbackIcon.setVisibility(View.GONE);
+            viewHolder.binding.quizQuestionFeedbackImage.setVisibility(View.GONE);
         }else {
-            viewHolder.quizFeedbackIcon.setVisibility(View.VISIBLE);
-            viewHolder.quizFeedbackIcon.setImageResource(
+            viewHolder.binding.quizQuestionFeedbackImage.setVisibility(View.VISIBLE);
+            viewHolder.binding.quizQuestionFeedbackImage.setImageResource(
                     (qf.getScore() >= Quiz.QUIZ_QUESTION_PASS_THRESHOLD)?
                             R.drawable.quiz_tick:
                             R.drawable.quiz_cross
@@ -104,23 +105,13 @@ public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswers
 
     public class QuizFeedbackViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView quizQuestion;
-        private TextView quizUserResponse;
-        private TextView quizFeedbackTitle;
-        private TextView quizFeedbackText;
-        private TextView quizUserResponseTitle;
-        private ImageView quizFeedbackIcon;
+        private final RowWidgetQuizFeedbackBinding binding;
 
         public QuizFeedbackViewHolder(View itemView) {
 
             super(itemView);
 
-            quizQuestion = itemView.findViewById(R.id.quiz_question_text);
-            quizUserResponse = itemView.findViewById(R.id.quiz_question_user_response_text);
-            quizUserResponseTitle = itemView.findViewById(R.id.quiz_question_user_response_title);
-            quizFeedbackText = itemView.findViewById(R.id.quiz_question_user_feedback_text);
-            quizFeedbackTitle = itemView.findViewById(R.id.quiz_question_user_feedback_title);
-            quizFeedbackIcon = itemView.findViewById(R.id.quiz_question_feedback_image);
+            binding = RowWidgetQuizFeedbackBinding.bind(itemView);
 
             itemView.setOnClickListener(v -> {
                 if (itemClickListener != null) {

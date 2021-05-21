@@ -12,22 +12,25 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.DialogDeleteAccountBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.task.DeleteAccountTask;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class DeleteAccountDialogFragment extends DialogFragment implements APIRequestListener {
 
+    private DialogDeleteAccountBinding binding;
+
     public interface DeleteAccountListener{
         void onDeleteAccountSuccess();
     }
 
-
-    private TextInputLayout passwordInput;
     private DeleteAccountListener listener;
 
     public static DeleteAccountDialogFragment newInstance() {
@@ -37,7 +40,8 @@ public class DeleteAccountDialogFragment extends DialogFragment implements APIRe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_delete_account, container);
+        binding = DialogDeleteAccountBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
 
@@ -48,19 +52,16 @@ public class DeleteAccountDialogFragment extends DialogFragment implements APIRe
         listener = (DeleteAccountListener) getActivity();
         getDialog().setTitle(R.string.privacy_delete_account_label);
 
-        passwordInput = view.findViewById(R.id.input_layout_password);
         // Show soft keyboard automatically and request focus to field
-        passwordInput.requestFocus();
+        binding.inputLayoutPassword.requestFocus();
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         getDialog().setCancelable(false);
 
-        Button btnDelete = view.findViewById(R.id.btn_delete);
-        Button btnCancel = view.findViewById(R.id.btn_cancel);
-        btnDelete.setOnClickListener(v -> {
-            String password = passwordInput.getEditText().getText().toString();
+        binding.btnDelete.setOnClickListener(v -> {
+            String password = binding.inputLayoutPassword.getEditText().getText().toString();
             if (TextUtils.isEmpty(password)){
-                passwordInput.setErrorEnabled(true);
-                passwordInput.setError(getText(R.string.field_required));
+                binding.inputLayoutPassword.setErrorEnabled(true);
+                binding.inputLayoutPassword.setError(getText(R.string.field_required));
                 return;
             }
 
@@ -68,7 +69,8 @@ public class DeleteAccountDialogFragment extends DialogFragment implements APIRe
             task.setAPIRequestListener(this);
             task.execute(password);
         });
-        btnCancel.setOnClickListener(v -> dismiss());
+
+        binding.btnCancel.setOnClickListener(v -> dismiss());
     }
 
     @Override
@@ -79,8 +81,8 @@ public class DeleteAccountDialogFragment extends DialogFragment implements APIRe
             dismiss();
         }
         else{
-            passwordInput.setErrorEnabled(true);
-            passwordInput.setError(getText(R.string.error_register_password_no_match));
+            binding.inputLayoutPassword.setErrorEnabled(true);
+            binding.inputLayoutPassword.setError(getText(R.string.error_register_password_no_match));
         }
     }
 

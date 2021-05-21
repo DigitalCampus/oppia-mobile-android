@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentCoursesListBinding;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -65,19 +67,14 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private List<Course> courses;
 
-    private View noCoursesView;
+    private FragmentCoursesListBinding binding;
+    private CoursesListAdapter adapterListCourses;
 
     private InstallerBroadcastReceiver receiver;
 
     @Inject CoursesRepository coursesRepository;
     @Inject SharedPreferences sharedPrefs;
     @Inject ApiEndpoint apiEndpoint;
-    private TextView tvManageCourses;
-    private Button manageBtn;
-    private RecyclerView recyclerCourses;
-    private CoursesListAdapter adapterListCourses;
-    private MediaScanView mediaScanView;
-    private View emptyStateImage;
 
     BroadcastReceiver coursesUpdatesReceiver = new BroadcastReceiver() {
         @Override
@@ -88,25 +85,11 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         }
     };
 
-    private void findViews(View layout) {
-
-        mediaScanView = layout.findViewById(R.id.view_media_scan);
-        recyclerCourses = layout.findViewById(R.id.recycler_courses);
-        noCoursesView = layout.findViewById(R.id.no_courses);
-
-        tvManageCourses = layout.findViewById(R.id.manage_courses_text);
-        manageBtn = layout.findViewById(R.id.manage_courses_btn);
-        emptyStateImage = layout.findViewById(R.id.empty_state_img);
-        
-        
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View layout = inflater.inflate(R.layout.fragment_courses_list, container, false);
-        findViews(layout);
+        binding = FragmentCoursesListBinding.inflate(inflater, container, false);
         getAppComponent().inject(this);
 
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
@@ -117,20 +100,20 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         }
 
         if (getResources().getBoolean(R.bool.is_tablet)) {
-            recyclerCourses.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+            binding.recyclerCourses.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         } else {
-            recyclerCourses.setLayoutManager(new LinearLayoutManager(getActivity()));
+            binding.recyclerCourses.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
 
         courses = new ArrayList<>();
         adapterListCourses = new CoursesListAdapter(getActivity(), courses);
         adapterListCourses.setOnItemClickListener(this);
-        recyclerCourses.setAdapter(adapterListCourses);
+        binding.recyclerCourses.setAdapter(adapterListCourses);
 
-        mediaScanView.setViewBelow(recyclerCourses);
-        mediaScanView.setUpdateMediaScan(true);
+        binding.viewMediaScan.setViewBelow(binding.recyclerCourses);
+        binding.viewMediaScan.setUpdateMediaScan(true);
 
-        return layout;
+        return binding.getRoot();
     }
 
 
@@ -173,21 +156,21 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY){
             displayDownloadSection();
         } else {
-            tvManageCourses.setText(R.string.no_courses);
-            noCoursesView.setVisibility(View.GONE);
+            binding.manageCoursesText.setText(R.string.no_courses);
+            binding.noCourses.setVisibility(View.GONE);
         }
 
         adapterListCourses.notifyDataSetChanged();
 
-        mediaScanView.scanMedia(courses);
+        binding.viewMediaScan.scanMedia(courses);
     }
 
 
     private void displayDownloadSection(){
-        noCoursesView.setVisibility(View.VISIBLE);
-        tvManageCourses.setText((!courses.isEmpty())? R.string.more_courses : R.string.no_courses);
-        manageBtn.setOnClickListener(v -> onManageCoursesClick());
-        emptyStateImage.setOnClickListener(v -> onManageCoursesClick());
+        binding.noCourses.setVisibility(View.VISIBLE);
+        binding.manageCoursesText.setText((!courses.isEmpty())? R.string.more_courses : R.string.no_courses);
+        binding.manageCoursesBtn.setOnClickListener(v -> onManageCoursesClick());
+        binding.emptyStateImg.setOnClickListener(v -> onManageCoursesClick());
 
     }
 

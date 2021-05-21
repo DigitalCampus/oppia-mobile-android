@@ -12,7 +12,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowCourseDownloadBinding;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 
 import java.util.List;
 import java.util.Locale;
@@ -60,74 +62,74 @@ public class DownloadCoursesAdapter extends MultiChoiceRecyclerViewAdapter<Downl
         updateViewHolder(viewHolder, position);
         final CourseInstallViewAdapter c = getItemAtPosition(position);
 
-        viewHolder.courseTitle.setText(c.getTitle(prefLang));
-        viewHolder.actionBtn.setVisibility(isMultiChoiceMode ? View.INVISIBLE : View.VISIBLE);
+        viewHolder.binding.courseTitle.setText(c.getTitle(prefLang));
+        viewHolder.binding.downloadCourseBtn.setVisibility(isMultiChoiceMode ? View.INVISIBLE : View.VISIBLE);
 
         if (c.isDraft()){
-            viewHolder.courseDraft.setVisibility(View.VISIBLE);
-            viewHolder.courseDraft.setText(context.getString(R.string.course_draft));
+            viewHolder.binding.courseDraft.setVisibility(View.VISIBLE);
+            viewHolder.binding.courseDraft.setText(context.getString(R.string.course_draft));
         } else {
-            viewHolder.courseDraft.setVisibility(View.GONE);
+            viewHolder.binding.courseDraft.setVisibility(View.GONE);
         }
 
         String desc = c.getDescription(prefLang);
         if (desc != null){
-            viewHolder.courseDescription.setVisibility(View.VISIBLE);
-            viewHolder.courseDescription.setText(desc);
+            viewHolder.binding.courseDescription.setVisibility(View.VISIBLE);
+            viewHolder.binding.courseDescription.setText(desc);
         } else {
-            viewHolder.courseDescription.setVisibility(View.GONE);
+            viewHolder.binding.courseDescription.setVisibility(View.GONE);
         }
 
         String organisation = c.getOrganisationName();
         if (!TextUtils.isEmpty(organisation) && !(c.isDownloading() || c.isInstalling())){
-            viewHolder.labelAuthor.setVisibility(View.VISIBLE);
-            viewHolder.courseAuthor.setVisibility(View.VISIBLE);
-            viewHolder.courseAuthor.setText(organisation);
+            viewHolder.binding.labelAuthor.setVisibility(View.VISIBLE);
+            viewHolder.binding.courseAuthor.setVisibility(View.VISIBLE);
+            viewHolder.binding.courseAuthor.setText(organisation);
         }
         else{
-            viewHolder.labelAuthor.setVisibility(View.GONE);
-            viewHolder.courseAuthor.setVisibility(View.GONE);
+            viewHolder.binding.labelAuthor.setVisibility(View.GONE);
+            viewHolder.binding.courseAuthor.setVisibility(View.GONE);
         }
 
 
         int actionBtnImageRes;
         if (c.isDownloading() || c.isInstalling()){
             actionBtnImageRes =  R.drawable.ic_action_cancel;
-            viewHolder.actionBtn.setContentDescription(cancelDescription);
-            viewHolder.actionBtn.setEnabled(!c.isInstalling());
+            viewHolder.binding.downloadCourseBtn.setContentDescription(cancelDescription);
+            viewHolder.binding.downloadCourseBtn.setEnabled(!c.isInstalling());
 
-            viewHolder.actionProgress.setVisibility(View.VISIBLE);
+            viewHolder.binding.downloadProgress.setVisibility(View.VISIBLE);
             if (c.getProgress()>0){
-                viewHolder.actionProgress.setIndeterminate(false);
-                viewHolder.actionProgress.setProgress(c.getProgress());
+                viewHolder.binding.downloadProgress.setIndeterminate(false);
+                viewHolder.binding.downloadProgress.setProgress(c.getProgress());
             }
             else {
-                viewHolder.actionProgress.setIndeterminate(true);
+                viewHolder.binding.downloadProgress.setIndeterminate(true);
             }
         }
         else{
-            viewHolder.actionProgress.setVisibility(View.GONE);
+            viewHolder.binding.downloadProgress.setVisibility(View.GONE);
 
             if(c.isInstalled()){
                 if(c.isToUpdate()){
                     actionBtnImageRes = R.drawable.ic_action_refresh;
-                    viewHolder.actionBtn.setContentDescription(updateDescription);
-                    viewHolder.actionBtn.setEnabled(true);
+                    viewHolder.binding.downloadCourseBtn.setContentDescription(updateDescription);
+                    viewHolder.binding.downloadCourseBtn.setEnabled(true);
                 } else {
                     actionBtnImageRes = R.drawable.ic_action_accept;
-                    viewHolder.actionBtn.setContentDescription(installedDescription);
-                    viewHolder.actionBtn.setEnabled(false);
-                    viewHolder.actionBtn.setVisibility(View.VISIBLE);
+                    viewHolder.binding.downloadCourseBtn.setContentDescription(installedDescription);
+                    viewHolder.binding.downloadCourseBtn.setEnabled(false);
+                    viewHolder.binding.downloadCourseBtn.setVisibility(View.VISIBLE);
                 }
             } else {
                 actionBtnImageRes = R.drawable.ic_action_download;
-                viewHolder.actionBtn.setContentDescription(installDescription);
-                viewHolder.actionBtn.setEnabled(true);
+                viewHolder.binding.downloadCourseBtn.setContentDescription(installDescription);
+                viewHolder.binding.downloadCourseBtn.setEnabled(true);
             }
         }
 
-        viewHolder.actionBtn.setImageResource(actionBtnImageRes);
-        viewHolder.actionBtn.setTag(actionBtnImageRes);
+        viewHolder.binding.downloadCourseBtn.setImageResource(actionBtnImageRes);
+        viewHolder.binding.downloadCourseBtn.setTag(actionBtnImageRes);
     }
 
     @Override
@@ -142,27 +144,16 @@ public class DownloadCoursesAdapter extends MultiChoiceRecyclerViewAdapter<Downl
 
     public class DownloadCoursesViewHolder extends MultiChoiceRecyclerViewAdapter.ViewHolder {
 
-        private TextView courseTitle;
-        private TextView courseDraft;
-        private TextView courseDescription;
-        private ImageButton actionBtn;
-        private ProgressBar actionProgress;
-        private TextView courseAuthor;
-        private TextView labelAuthor;
+
+        private final RowCourseDownloadBinding binding;
 
         public DownloadCoursesViewHolder(View itemView) {
 
             super(itemView);
 
-            courseTitle = itemView.findViewById(R.id.course_title);
-            courseDraft = itemView.findViewById(R.id.course_draft);
-            courseDescription = itemView.findViewById(R.id.course_description);
-            actionBtn = itemView.findViewById(R.id.download_course_btn);
-            actionProgress = itemView.findViewById(R.id.download_progress);
-            courseAuthor = itemView.findViewById(R.id.course_author);
-            labelAuthor = itemView.findViewById(R.id.label_author);
+            binding = RowCourseDownloadBinding.bind(itemView);
 
-            actionBtn.setOnClickListener(v -> {
+            binding.downloadCourseBtn.setOnClickListener(v -> {
                 if (itemClickListener != null) {
                     itemClickListener.onDownloadButtonClick(v, getAdapterPosition());
                 }

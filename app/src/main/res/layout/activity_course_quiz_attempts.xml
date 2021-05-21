@@ -47,6 +47,7 @@
         android:orientation="vertical">
 
         <include
+            android:id="@+id/view_quiz_stats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/padding_medium"

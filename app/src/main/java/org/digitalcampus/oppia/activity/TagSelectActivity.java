@@ -21,9 +21,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityDownloadBinding;
 import org.digitalcampus.oppia.adapter.TagsAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.listener.APIRequestListener;
@@ -44,11 +46,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class TagSelectActivity extends AppActivity implements APIRequestListener {
 
+	private static final String KEY_JSON = "json";
+	private static final String KEY_TAGS = "tags";
+
 	private JSONObject json;
     private ArrayList<Tag> tags;
 
 	@Inject TagRepository tagRepository;
 	private TagsAdapter adapterTags;
+	private ActivityDownloadBinding binding;
 
 	@Override
 	public void onStart(){
@@ -59,16 +65,16 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_download);
-		View subtitleBar = findViewById(R.id.action_bar_subtitle);
-		subtitleBar.setVisibility(View.GONE);
+		binding = ActivityDownloadBinding.inflate(LayoutInflater.from(this));
+		setContentView(binding.getRoot());
+
+		binding.actionBarSubtitle.setVisibility(View.GONE);
 		getAppComponent().inject(this);
 
         tags = new ArrayList<>();
         adapterTags = new TagsAdapter(this, tags);
 
-		RecyclerView recyclerTags = findViewById(R.id.recycler_tags);
-		recyclerTags.setAdapter(adapterTags);
+		binding.recyclerTags.setAdapter(adapterTags);
 		adapterTags.setOnItemClickListener((view, position) -> {
 			Tag selectedTag = tags.get(position);
 			Intent i = new Intent(TagSelectActivity.this, DownloadActivity.class);
@@ -108,13 +114,17 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 	    super.onRestoreInstanceState(savedInstanceState);
         try {
-            Serializable savedTags = savedInstanceState.getSerializable("tags");
-            if (savedTags != null){
-                ArrayList<Tag> savedTagsList = (ArrayList<Tag>) savedTags;
-                this.tags.addAll(savedTagsList);
-            }
+			if (savedInstanceState.containsKey(KEY_TAGS)) {
+				Serializable savedTags = savedInstanceState.getSerializable(KEY_TAGS);
+				if (savedTags != null){
+					ArrayList<Tag> savedTagsList = (ArrayList<Tag>) savedTags;
+					this.tags.addAll(savedTagsList);
+				}
+			}
 
-            this.json = new JSONObject(savedInstanceState.getString("json"));
+			if (savedInstanceState.containsKey(KEY_JSON)) {
+				this.json = new JSONObject(savedInstanceState.getString(KEY_JSON));
+			}
         } catch (Exception e) {
             Analytics.logException(e);
             Log.d(TAG, "Error restoring saved state: ", e);
@@ -126,8 +136,8 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	    super.onSaveInstanceState(savedInstanceState);
         if (json != null){
             //Only save the instance if the request has been proccessed already
-            savedInstanceState.putString("json", json.toString());
-            savedInstanceState.putSerializable("tags", tags);
+            savedInstanceState.putString(KEY_JSON, json.toString());
+            savedInstanceState.putSerializable(KEY_TAGS, tags);
         }
 	}
 	
@@ -143,7 +153,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 			tagRepository.refreshTagList(tags, json);
 
             adapterTags.notifyDataSetChanged();
-            findViewById(R.id.empty_state).setVisibility((tags.isEmpty()) ? View.VISIBLE : View.GONE);
+            binding.emptyState.setVisibility((tags.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		} catch (JSONException e) {
             Analytics.logException(e);

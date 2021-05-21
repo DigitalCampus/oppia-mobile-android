@@ -27,6 +27,8 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentWebviewBinding;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 
 public class OppiaWebViewFragment extends Fragment{
@@ -36,7 +38,8 @@ public class OppiaWebViewFragment extends Fragment{
 
 	private int id;
 	private SharedPreferences prefs;
-	
+	private FragmentWebviewBinding binding;
+
 	public static OppiaWebViewFragment newInstance(int id, String url) {
 		OppiaWebViewFragment myFragment = new OppiaWebViewFragment();
 		Bundle args = new Bundle();
@@ -53,23 +56,20 @@ public class OppiaWebViewFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		View vv = inflater.inflate(R.layout.fragment_webview, container, false);
-		this.id = (Integer) getArguments().getSerializable(OppiaWebViewFragment.TAG_ID);
-		vv.setId(id);
+		binding = FragmentWebviewBinding.inflate(inflater, container, false);
 
-		return vv;
+		return binding.getRoot();
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		WebView webView = super.getActivity().findViewById(this.id);
-		webView.getSettings().setJavaScriptEnabled(true);
+		binding.webviewOppia.getSettings().setJavaScriptEnabled(true);
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
-		webView.getSettings().setDefaultFontSize(defaultFontSize);
+		binding.webviewOppia.getSettings().setDefaultFontSize(defaultFontSize);
 		String url = getArguments().getString(OppiaWebViewFragment.TAG);
-		webView.loadUrl(url);
+		binding.webviewOppia.loadUrl(url);
 
 	}
 

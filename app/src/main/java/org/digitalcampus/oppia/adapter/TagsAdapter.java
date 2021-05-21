@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowTagBinding;
 import org.digitalcampus.oppia.model.Tag;
 
 import java.util.List;
@@ -43,18 +44,18 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder
 
         final Tag t = getItemAtPosition(position);
 
-        viewHolder.tagName.setText(t.getName());
-        viewHolder.tagCount.setText(String.valueOf(t.getCount()));
+        viewHolder.binding.tagName.setText(t.getName());
+        viewHolder.binding.tagCount.setText(String.valueOf(t.getCount()));
         if(t.isHighlight()){
-            viewHolder.tagName.setTypeface(null, Typeface.BOLD);
+            viewHolder.binding.tagName.setTypeface(null, Typeface.BOLD);
         } else {
-            viewHolder.tagName.setTypeface(null, Typeface.NORMAL);
+            viewHolder.binding.tagName.setTypeface(null, Typeface.NORMAL);
         }
         if(t.getDescription() != null && !t.getDescription().trim().equals("") ){
-            viewHolder.tagDescription.setText(t.getDescription());
-            viewHolder.tagDescription.setVisibility(View.VISIBLE);
+            viewHolder.binding.tagDescription.setText(t.getDescription());
+            viewHolder.binding.tagDescription.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.tagDescription.setVisibility(View.GONE);
+            viewHolder.binding.tagDescription.setVisibility(View.GONE);
         }
     }
 
@@ -69,18 +70,13 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder
 
 
     public class TagsViewHolder extends RecyclerView.ViewHolder {
-        
-        private TextView tagName;
-        private TextView tagDescription;
-        private TextView tagCount;
+
+        private final RowTagBinding binding;
 
         public TagsViewHolder(View itemView) {
 
             super(itemView);
-
-            tagName = itemView.findViewById(R.id.tag_name);
-            tagDescription = itemView.findViewById(R.id.tag_description);
-            tagCount = itemView.findViewById(R.id.tag_count);
+            binding = RowTagBinding.bind(itemView);
 
             itemView.setOnClickListener(v -> {
                 if (itemClickListener != null) {

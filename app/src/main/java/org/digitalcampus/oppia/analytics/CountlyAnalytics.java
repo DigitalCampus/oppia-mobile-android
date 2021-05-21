@@ -14,7 +14,7 @@ import ly.count.android.sdk.DeviceId;
 
 public class CountlyAnalytics extends BaseAnalytics {
 
-    public CountlyAnalytics(Context ctx){
+    public CountlyAnalytics(Context ctx) {
         super(ctx);
     }
 
@@ -23,7 +23,7 @@ public class CountlyAnalytics extends BaseAnalytics {
         CountlyConfig config = new CountlyConfig(ctx, BuildConfig.COUNTLY_APP_KEY, BuildConfig.COUNTLY_SERVER_URL);
         config.setLoggingEnabled(Analytics.isTrackingEnabled(ctx));
         config.setViewTracking(Analytics.isTrackingEnabled(ctx));
-        if (Analytics.isBugReportEnabled(ctx)){
+        if (Analytics.isBugReportEnabled(ctx)) {
             config.enableCrashReporting();
         }
         config.setIdMode(DeviceId.Type.OPEN_UDID);

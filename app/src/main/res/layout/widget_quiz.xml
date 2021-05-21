@@ -31,7 +31,7 @@
                     android:progressDrawable="@drawable/progress_bar_light"/>
 
                 <TextView
-                    android:id="@+id/quiz_progress"
+                    android:id="@+id/tv_quiz_progress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"

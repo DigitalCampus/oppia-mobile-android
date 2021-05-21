@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -37,6 +38,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityDeviceListBinding;
 import org.digitalcampus.oppia.adapter.DevicesBTAdapter;
 import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
@@ -66,12 +68,11 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
             Manifest.permission.ACCESS_FINE_LOCATION
     );
 
-    private View scanningMessage;
-
     private BluetoothBroadcastReceiver receiver;
     private BluetoothAdapter mBtAdapter;
     private DevicesBTAdapter adapterNewDevices;
     private List<String> newDevicesNames = new ArrayList<>();
+    private ActivityDeviceListBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,15 +80,14 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
 
         // Setup the window
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.activity_device_list);
+        binding = ActivityDeviceListBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
 
         // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
 
-        scanningMessage = findViewById(R.id.scanning_message);
         // Initialize the button to perform device discovery
-        Button scanButton = findViewById(R.id.button_scan);
-        scanButton.setOnClickListener(v -> {
+        binding.buttonScan.setOnClickListener(v -> {
             final List<String> notGrantedPerms = PermissionsManager.filterNotGrantedPermissions(DeviceListActivity.this, BLUETOOTH_PERMISSIONS);
             if (!notGrantedPerms.isEmpty()) {
                 if (PermissionsManager.canAskForAllPermissions(DeviceListActivity.this, notGrantedPerms)) {
@@ -109,7 +109,7 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
                             R.string.permissions_not_askable_message);
                 }
             } else {
-                scanButton.setVisibility(View.GONE);
+                binding.buttonScan.setVisibility(View.GONE);
                 doDiscovery();
             }
 
@@ -125,7 +125,7 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
 
         // If there are paired devices, add each one to the ArrayAdapter
         if (!pairedDevices.isEmpty()) {
-            findViewById(R.id.paired_devices_title).setVisibility(View.VISIBLE);
+            binding.pairedDevicesTitle.setVisibility(View.VISIBLE);
             for (BluetoothDevice device : pairedDevices) {
                 pairedDevicesNames.add(device.getName() + "\n" + device.getAddress());
             }
@@ -139,18 +139,16 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
         DevicesBTAdapter adapterPairedDevices = new DevicesBTAdapter(this, pairedDevicesNames);
 
         // Find and set up the RecyclerView for paired devices
-        RecyclerView recyclerPairedDevices = findViewById(R.id.recycler_paired_devices);
         adapterPairedDevices.setOnItemClickListener((v, position) -> selectDevice(v));
-        recyclerPairedDevices.setAdapter(adapterPairedDevices);
+        binding.recyclerPairedDevices.setAdapter(adapterPairedDevices);
 
         // Find and set up the RecyclerView for newly discovered devices
 
         newDevicesNames.clear();
         adapterNewDevices = new DevicesBTAdapter(this, newDevicesNames);
 
-        RecyclerView recyclerNewDevices = findViewById(R.id.recycler_new_devices);
         adapterNewDevices.setOnItemClickListener((v, position) -> selectDevice(v));
-        recyclerNewDevices.setAdapter(adapterNewDevices);
+        binding.recyclerNewDevices.setAdapter(adapterNewDevices);
 
         // Register for broadcasts when a device is discovered
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -194,11 +192,11 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
         // Indicate scanning in the title
         setProgressBarIndeterminateVisibility(true);
         setTitle(R.string.bluetooth_scanning);
-        scanningMessage.setVisibility(View.VISIBLE);
+        binding.scanningMessage.setVisibility(View.VISIBLE);
 
         // Turn on sub-title for new devices
-        findViewById(R.id.new_devices_title).setVisibility(View.VISIBLE);
-        findViewById(R.id.recycler_new_devices).setVisibility(View.VISIBLE);
+        binding.newDevicesTitle.setVisibility(View.VISIBLE);
+        binding.recyclerNewDevices.setVisibility(View.VISIBLE);
 
         // If we're already discovering, stop it
         if (mBtAdapter.isDiscovering()) {
@@ -269,7 +267,7 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
                     String noDevices = getResources().getText(R.string.bluetooth_no_devices_found).toString();
                     newDevicesNames.add(noDevices);
                 }
-                scanningMessage.setVisibility(View.GONE);
+                binding.scanningMessage.setVisibility(View.GONE);
             }
 
             adapterNewDevices.notifyDataSetChanged();

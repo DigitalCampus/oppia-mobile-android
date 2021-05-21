@@ -12,6 +12,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentTabsBinding;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 
 import java.util.List;
@@ -21,15 +23,7 @@ import java.util.List;
  */
 public class TabsFragment extends AppFragment {
 
-    private TabLayout tabs;
-    private ViewPager viewPager;
-
-    private void findViews(View layout) {
-        tabs = layout.findViewById( R.id.tabs );
-        viewPager = layout.findViewById( R.id.view_pager );
-    }
-
-
+    private FragmentTabsBinding binding;
 
     public TabsFragment() {
         // Required empty public constructor
@@ -39,22 +33,17 @@ public class TabsFragment extends AppFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        View layout = inflater.inflate(R.layout.fragment_tabs, container, false);
-        findViews(layout);
-
-
-
-        return layout;
+        binding = FragmentTabsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     public void configureFragments(List<Fragment> fragments, List<String> tabTitles) {
 
         ActivityPagerAdapter apAdapter = new ActivityPagerAdapter(getActivity(),
                 getActivity().getSupportFragmentManager(), fragments, tabTitles);
-        viewPager.setAdapter(apAdapter);
-        tabs.setupWithViewPager(viewPager);
-        apAdapter.updateTabViews(tabs);
+        binding.viewPager.setAdapter(apAdapter);
+        binding.tabs.setupWithViewPager(binding.viewPager);
+        apAdapter.updateTabViews(binding.tabs);
     }
 
 }

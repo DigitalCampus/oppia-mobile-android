@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowCourseListBinding;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Course;
@@ -68,21 +69,21 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         final Course course = getItemAtPosition(position);
 
         String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-        viewHolder.courseTitle.setText(course.getTitle(lang));
+        viewHolder.binding.courseTitle.setText(course.getTitle(lang));
         String description = course.getDescription(lang);
         if (!TextUtils.isEmpty(description) && prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, BuildConfig.SHOW_COURSE_DESCRIPTION)) {
-            viewHolder.courseDescription.setText(description);
-            viewHolder.courseDescription.setVisibility(View.VISIBLE);
+            viewHolder.binding.courseDescription.setText(description);
+            viewHolder.binding.courseDescription.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.courseDescription.setVisibility(View.GONE);
+            viewHolder.binding.courseDescription.setVisibility(View.GONE);
         }
 
         if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, App.DEFAULT_DISPLAY_PROGRESS_BAR)) {
             int courseProgress = (int) course.getProgressPercent();
-            viewHolder.circularProgressBar.setVisibility(View.VISIBLE);
-            viewHolder.circularProgressBar.setProgressWithAnimation(courseProgress, 1000L);
+            viewHolder.binding.circularProgressBar.setVisibility(View.VISIBLE);
+            viewHolder.binding.circularProgressBar.setProgressWithAnimation(courseProgress, 1000L);
         } else {
-            viewHolder.circularProgressBar.setVisibility(View.GONE);
+            viewHolder.binding.circularProgressBar.setVisibility(View.GONE);
         }
 
         // set image
@@ -91,19 +92,19 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
             Picasso.get().load(new File(image))
                     .placeholder(R.drawable.course_icon_placeholder)
                     .transform(new CircleTransform())
-                    .into(viewHolder.courseImage);
+                    .into(viewHolder.binding.courseImage);
         } else {
-            viewHolder.courseImage.setImageResource(R.drawable.course_icon_placeholder);
+            viewHolder.binding.courseImage.setImageResource(R.drawable.course_icon_placeholder);
         }
 
         if (course.isToUpdate()) {
-            viewHolder.imgSyncStatus.setVisibility(View.VISIBLE);
-            viewHolder.imgSyncStatus.setImageResource(R.drawable.ic_action_refresh);
+            viewHolder.binding.imgSyncStatus.setVisibility(View.VISIBLE);
+            viewHolder.binding.imgSyncStatus.setImageResource(R.drawable.ic_action_refresh);
         } else if (course.isToDelete()) {
-            viewHolder.imgSyncStatus.setVisibility(View.VISIBLE);
-            viewHolder.imgSyncStatus.setImageResource(R.drawable.dialog_ic_action_delete);
+            viewHolder.binding.imgSyncStatus.setVisibility(View.VISIBLE);
+            viewHolder.binding.imgSyncStatus.setImageResource(R.drawable.dialog_ic_action_delete);
         } else {
-            viewHolder.imgSyncStatus.setVisibility(View.GONE);
+            viewHolder.binding.imgSyncStatus.setVisibility(View.GONE);
         }
 
     }
@@ -120,22 +121,14 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
 
     public class CourseListViewHolder extends RecyclerView.ViewHolder {
 
-        private CircularProgressBar circularProgressBar;
-        private TextView courseTitle;
-        private TextView courseDescription;
-        private ImageView courseImage;
-        private AppCompatImageView imgSyncStatus;
+        RowCourseListBinding binding;
 
 
         public CourseListViewHolder(View itemView) {
 
             super(itemView);
 
-            courseTitle = itemView.findViewById(R.id.course_title);
-            courseDescription = itemView.findViewById(R.id.course_description);
-            courseImage = itemView.findViewById(R.id.course_image);
-            circularProgressBar = itemView.findViewById(R.id.circularProgressBar);
-            imgSyncStatus = itemView.findViewById(R.id.img_sync_status);
+            binding = RowCourseListBinding.bind(itemView);
 
             itemView.setOnClickListener(v -> {
                 if (itemClickListener != null) {

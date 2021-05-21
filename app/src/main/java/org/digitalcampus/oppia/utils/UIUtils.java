@@ -21,6 +21,7 @@ import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,6 +31,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -308,5 +311,33 @@ public class UIUtils {
         }
     }
 
+
+    public static void hideSoftKeyboard(Activity activity) {
+        hideSoftKeyboard(activity.getWindow());
+    }
+
+    public static void hideSoftKeyboard(Dialog dialog) {
+        hideSoftKeyboard(dialog.getWindow());
+    }
+
+    public static void hideSoftKeyboard(Window window) {
+
+        View view = window.getCurrentFocus();
+        hideSoftKeyboard(view);
+    }
+
+    public static void hideSoftKeyboard(View view) {
+
+        try {
+            InputMethodManager imm =
+                    (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+            if (view != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        } catch (Exception e) {
+
+        }
+    }
 
 }

@@ -14,6 +14,7 @@ import androidx.core.graphics.BlendModeCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowActivityTypeBinding;
 import org.digitalcampus.oppia.model.ActivityType;
 
 import java.util.List;
@@ -46,17 +47,17 @@ public class ActivityTypesAdapter extends RecyclerView.Adapter<ActivityTypesAdap
 
         final ActivityType activityType = getItemAtPosition(holder.getAdapterPosition());
 
-        holder.tvActivityType.setText(activityType.getName());
-        holder.tvActivityType.setTextColor(activityType.getColor());
-        holder.imgShowHide.getBackground().setColorFilter(BlendModeColorFilterCompat.createBlendModeColorFilterCompat(activityType.getColor(), BlendModeCompat.SRC_OVER));
+        holder.binding.tvActivityType.setText(activityType.getName());
+        holder.binding.tvActivityType.setTextColor(activityType.getColor());
+        holder.binding.imgShowHide.getBackground().setColorFilter(BlendModeColorFilterCompat.createBlendModeColorFilterCompat(activityType.getColor(), BlendModeCompat.SRC_OVER));
         if (activityType.isEnabled()) {
-            holder.imgShowHide.setImageResource(R.drawable.ic_eye_show);
-            holder.imgShowHide.getBackground().setAlpha(255);
-            holder.imgShowHide.setColorFilter(BlendModeColorFilterCompat.createBlendModeColorFilterCompat(Color.WHITE, BlendModeCompat.SRC_ATOP));
+            holder.binding.imgShowHide.setImageResource(R.drawable.ic_eye_show);
+            holder.binding.imgShowHide.getBackground().setAlpha(255);
+            holder.binding.imgShowHide.setColorFilter(BlendModeColorFilterCompat.createBlendModeColorFilterCompat(Color.WHITE, BlendModeCompat.SRC_ATOP));
         } else {
-            holder.imgShowHide.setImageResource(R.drawable.ic_eye_hide);
-            holder.imgShowHide.getBackground().setAlpha(0);
-            holder.imgShowHide.setColorFilter(BlendModeColorFilterCompat.createBlendModeColorFilterCompat(activityType.getColor(), BlendModeCompat.SRC_ATOP));
+            holder.binding.imgShowHide.setImageResource(R.drawable.ic_eye_hide);
+            holder.binding.imgShowHide.getBackground().setAlpha(0);
+            holder.binding.imgShowHide.setColorFilter(BlendModeColorFilterCompat.createBlendModeColorFilterCompat(activityType.getColor(), BlendModeCompat.SRC_ATOP));
         }
     }
 
@@ -72,15 +73,13 @@ public class ActivityTypesAdapter extends RecyclerView.Adapter<ActivityTypesAdap
 
     public class ActivityTypesViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView tvActivityType;
-        private final AppCompatImageButton imgShowHide;
+        private final RowActivityTypeBinding binding;
 
         public ActivityTypesViewHolder(View itemView) {
 
             super(itemView);
 
-            tvActivityType = itemView.findViewById(R.id.tv_activity_type);
-            imgShowHide = itemView.findViewById(R.id.img_show_hide);
+            binding = RowActivityTypeBinding.bind(itemView);
 
             itemView.setOnClickListener(v -> {
                 ActivityType activityType = getItemAtPosition(getAdapterPosition());

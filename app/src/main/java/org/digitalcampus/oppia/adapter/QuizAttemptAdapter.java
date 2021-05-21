@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowQuizAttemptBinding;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.utils.DateUtils;
 
@@ -27,15 +28,11 @@ public class QuizAttemptAdapter extends RecyclerViewClickableAdapter<QuizAttempt
 
     class QuizAttemptViewHolder extends RecyclerViewClickableAdapter.ViewHolder {
 
-        private TextView date;
-        private TextView timetaken;
-        private TextView score;
+        private final RowQuizAttemptBinding binding;
 
         QuizAttemptViewHolder(View itemView) {
             super(itemView);
-            timetaken = itemView.findViewById(R.id.attempt_timetaken);
-            date = itemView.findViewById(R.id.attempt_date);
-            score = itemView.findViewById(R.id.score);
+            binding = RowQuizAttemptBinding.bind(itemView);
         }
     }
 
@@ -51,10 +48,10 @@ public class QuizAttemptAdapter extends RecyclerViewClickableAdapter<QuizAttempt
     public void onBindViewHolder(@NonNull QuizAttemptViewHolder viewHolder, int position) {
         final QuizAttempt quiz = getItemAtPosition(position);
 
-        viewHolder.timetaken.setText(quiz.getHumanTimetaken());
-        viewHolder.date.setText(DateUtils.DISPLAY_DATETIME_FORMAT.print(quiz.getDatetime()));
-        viewHolder.score.setText(quiz.getScorePercentLabel());
-        viewHolder.score.setBackgroundResource(
+        viewHolder.binding.attemptTimetaken.setText(quiz.getHumanTimetaken());
+        viewHolder.binding.attemptDate.setText(DateUtils.DISPLAY_DATETIME_FORMAT.print(quiz.getDatetime()));
+        viewHolder.binding.score.percentLabel.setText(quiz.getScorePercentLabel());
+        viewHolder.binding.score.percentLabel.setBackgroundResource(
                 quiz.isPassed()
                         ? R.drawable.scorecard_quiz_item_passed
                         : R.drawable.scorecard_quiz_item_attempted);

@@ -29,63 +29,66 @@ import android.widget.EditText;
 import androidx.appcompat.app.AlertDialog;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.DialogPasswordBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 
 public class PasswordDialogFragment extends DialogFragment {
 
     private AdminSecurityManager.AuthListener listener;
+    private DialogPasswordBinding binding;
 
-    /**      
-     * @deprecated
-     */
+    /**
+     *      
+     *
+     * @deprecated  
+     */
     @Override
     @Deprecated
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        builder.setView(inflater.inflate(R.layout.dialog_password, null))
+        binding = DialogPasswordBinding.inflate(inflater);
+
+        builder.setView(binding.getRoot())
                 .setPositiveButton(R.string.ok, null)
                 .setNegativeButton(android.R.string.cancel, null);
         return builder.create();
     }
 
-    /**      
-     * @deprecated
-     */
+
     @Override
     @Deprecated
     public void onStart() {
         super.onStart();
-        final AlertDialog d = (AlertDialog)getDialog();
-        if(d != null) {
+        final AlertDialog d = (AlertDialog) getDialog();
+        if (d != null) {
             Button positiveButton = d.getButton(DialogInterface.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(v -> {
-                EditText passwordField = d.findViewById(R.id.admin_password_field);
-                View errorMessage = d.findViewById(R.id.admin_password_error);
-                String password = passwordField.getText().toString();
+
+                String password = binding.adminPasswordField.getText().toString();
 
                 //If the user leave the input blank, we don't perform any action
                 if (password.equals("")) return;
 
                 boolean passCorrect = AdminSecurityManager.with(getActivity()).checkAdminPassword(password);
-                if(passCorrect) {
+                if (passCorrect) {
                     d.dismiss();
                     if (listener != null) {
                         listener.onPermissionGranted();
                     }
-                }
-                else{
-                    errorMessage.setVisibility(View.VISIBLE);
-                    SimpleAnimator.fade(errorMessage, SimpleAnimator.FADE_IN);
-                    passwordField.setText("");
+                } else {
+                    binding.adminPasswordError.setVisibility(View.VISIBLE);
+                    SimpleAnimator.fade(binding.adminPasswordError, SimpleAnimator.FADE_IN);
+                    binding.adminPasswordField.setText("");
                 }
             });
         }
     }
 
-    public void setListener(AdminSecurityManager.AuthListener listener){
+    public void setListener(AdminSecurityManager.AuthListener listener) {
         this.listener = listener;
     }
 }

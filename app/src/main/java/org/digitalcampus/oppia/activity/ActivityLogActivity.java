@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityActivitylogBinding;
+import org.digitalcampus.mobile.learning.databinding.DialogDeleteAccountBinding;
 import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -35,47 +38,29 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ActivityLogActivity extends AppActivity implements TrackerServiceListener, ExportActivityListener, ExportedTrackersFileAdapter.OnItemClickListener {
 
-    // Intent request codes
-    private Button exportBtn;
-    private Button submitBtn;
-    private View progressContainer;
-    private View actionsContainer;
-
-    private TextView unsentTrackers;
-    private TextView submittedTrackers;
-    private TextView unexportedTrackers;
 
     @Inject
     ActivityLogRepository logsRepository;
 
-    private RecyclerView exportedFilesRecyclerView;
     private RecyclerView.Adapter<ExportedTrackersFileAdapter.ViewHolder> filesAdapter;
     private ArrayList<File> files = new ArrayList<>();
 
-    private RecyclerView archivedFilesRecyclerView;
     private RecyclerView.Adapter<ExportedTrackersFileAdapter.ViewHolder> archivedFilesAdapter;
     private ArrayList<File> archivedFiles = new ArrayList<>();
 
     private SubmitTrackerMultipleTask omSubmitTrackerMultipleTask;
     private boolean showCompleteExportMessage;
+    private ActivityActivitylogBinding binding;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_activitylog);
+        binding = ActivityActivitylogBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
         // Prevent activity from going to sleep
         getAppComponent().inject(this);
-        exportedFilesRecyclerView = findViewById(R.id.exported_files_list);
-        archivedFilesRecyclerView = findViewById(R.id.archived_files_list);
-        exportBtn = findViewById(R.id.export_btn);
-        submitBtn = findViewById(R.id.submit_btn);
-        progressContainer = findViewById(R.id.progress_container);
-        actionsContainer = findViewById(R.id.export_actions);
 
-        unsentTrackers = findViewById(R.id.highlight_to_submit);
-        unexportedTrackers = findViewById(R.id.highlight_to_export);
-        submittedTrackers = findViewById(R.id.highlight_submitted);
     }
 
     @Override
@@ -83,7 +68,7 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
         super.onStart();
         initialize();
 
-        submitBtn.setOnClickListener(v -> {
+        binding.submitBtn.setOnClickListener(v -> {
             if (omSubmitTrackerMultipleTask == null) {
                 Log.d(TAG, "Sumitting trackers multiple task");
                 updateActions(false);
@@ -93,24 +78,24 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
             }
         });
 
-        exportBtn.setOnClickListener(v -> {
+        binding.exportBtn.setOnClickListener(v -> {
 
             showCompleteExportMessage = true;
             exportActivities();
 
         });
 
-        exportedFilesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.exportedFilesList.setLayoutManager(new LinearLayoutManager(this));
         filesAdapter = new ExportedTrackersFileAdapter(files, this);
-        exportedFilesRecyclerView.setAdapter(filesAdapter);
-        exportedFilesRecyclerView.addItemDecoration(
+        binding.exportedFilesList.setAdapter(filesAdapter);
+        binding.exportedFilesList.addItemDecoration(
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
 
-        archivedFilesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.archivedFilesList.setLayoutManager(new LinearLayoutManager(this));
         archivedFilesAdapter = new ExportedTrackersFileAdapter(archivedFiles, this, true);
-        archivedFilesRecyclerView.setAdapter(archivedFilesAdapter);
-        archivedFilesRecyclerView.addItemDecoration(
+        binding.archivedFilesList.setAdapter(archivedFilesAdapter);
+        binding.archivedFilesList.addItemDecoration(
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         updateActions(true);
@@ -134,13 +119,13 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
 
     private void updateActions(boolean enable) {
         if (enable) {
-            progressContainer.setVisibility(View.GONE);
-            actionsContainer.setVisibility(View.VISIBLE);
+            binding.progressContainer.setVisibility(View.GONE);
+            binding.exportActions.setVisibility(View.VISIBLE);
             refreshFileList();
             refreshStats();
         } else {
-            progressContainer.setVisibility(View.VISIBLE);
-            actionsContainer.setVisibility(View.GONE);
+            binding.progressContainer.setVisibility(View.VISIBLE);
+            binding.exportActions.setVisibility(View.GONE);
         }
     }
 
@@ -149,13 +134,13 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
         DbHelper db = DbHelper.getInstance(this);
         int unsent = db.getUnsentTrackersCount();
         int unexported = db.getUnexportedTrackersCount();
-        unexportedTrackers.setText(NumberFormat.getNumberInstance().format(unexported));
-        unsentTrackers.setText(NumberFormat.getNumberInstance().format(unsent));
-        submittedTrackers.setText(NumberFormat.getNumberInstance().format(db.getSentTrackersCount()));
+        binding.highlightToExport.setText(NumberFormat.getNumberInstance().format(unexported));
+        binding.highlightToSubmit.setText(NumberFormat.getNumberInstance().format(unsent));
+        binding.highlightSubmitted.setText(NumberFormat.getNumberInstance().format(db.getSentTrackersCount()));
 
         Log.d(TAG, "files " + files.size());
-        submitBtn.setEnabled((unsent > 0) || !files.isEmpty());
-        exportBtn.setEnabled((unexported > 0));
+        binding.submitBtn.setEnabled((unsent > 0) || !files.isEmpty());
+        binding.exportBtn.setEnabled((unexported > 0));
 
     }
 

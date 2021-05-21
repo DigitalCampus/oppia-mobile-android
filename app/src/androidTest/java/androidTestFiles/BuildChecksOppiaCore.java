@@ -66,7 +66,6 @@ public class BuildChecksOppiaCore {
         assertEquals(true, BuildConfig.METADATA_INCLUDE_WIFI_ON);
         assertEquals(true, BuildConfig.METADATA_INCLUDE_NETWORK_CONNECTED);
         assertEquals(true, BuildConfig.METADATA_INCLUDE_BATTERY_LEVEL);
-        assertEquals(true, BuildConfig.METADATA_INCLUDE_GPS);
 
         assertEquals(true, BuildConfig.OFFLINE_REGISTER_ENABLED);
         assertEquals(false, BuildConfig.SESSION_EXPIRATION_ENABLED);

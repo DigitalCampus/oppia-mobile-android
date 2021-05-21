@@ -7,6 +7,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowActivitylogBinding;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -31,34 +32,28 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        private TextView fileName;
-        private TextView fileSize;
-        private TextView fileDate;
+        
+        private final RowActivitylogBinding binding;
 
         public ViewHolder(View v) {
             super(v);
-            fileName = v.findViewById(R.id.file_name);
-            fileSize = v.findViewById(R.id.file_size);
-            fileDate = v.findViewById(R.id.file_date);
+            binding = RowActivitylogBinding.bind(v);
 
-            ImageButton btnShare = v.findViewById(R.id.share_btn);
-            ImageButton btnDelete = v.findViewById(R.id.delete_btn);
-
-            btnShare.setOnClickListener(v1 -> {
+            binding.shareBtn.setOnClickListener(v1 -> {
                 if (listener != null){
                     listener.onItemShareClick(fileList.get(getAdapterPosition()));
                 }
             });
+
             if (showDeleteButton){
-                btnDelete.setOnClickListener(view -> {
+                binding.deleteBtn.setOnClickListener(view -> {
                     if (listener != null){
                         listener.onItemToDelete(fileList.get(getAdapterPosition()));
                     }
                 });
             }
             else{
-                btnDelete.setVisibility(View.GONE);
+                binding.deleteBtn.setVisibility(View.GONE);
             }
 
         }
@@ -96,9 +91,9 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
         DateTime dateTime = f.parseDateTime(filename.substring(filename.lastIndexOf('_')+1, filename.lastIndexOf('.')));
         String date = DateUtils.DISPLAY_DATETIME_FORMAT.print(dateTime);
 
-        holder.fileName.setText(username);
-        holder.fileSize.setText( org.apache.commons.io.FileUtils.byteCountToDisplaySize(current.length()));
-        holder.fileDate.setText(date);
+        holder.binding.fileName.setText(username);
+        holder.binding.fileSize.setText( org.apache.commons.io.FileUtils.byteCountToDisplaySize(current.length()));
+        holder.binding.fileDate.setText(date);
     }
 
     @Override
