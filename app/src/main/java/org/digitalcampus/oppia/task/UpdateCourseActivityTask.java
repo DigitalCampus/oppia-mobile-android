@@ -63,13 +63,12 @@ public class UpdateCourseActivityTask extends APIRequestTask<Course, DownloadPro
 
 		try {
 			DbHelper db = DbHelper.getInstance(this.ctx);
-			User u = db.getUser(userId);
+			User user = db.getUser(userId);
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
+            String url = apiEndpoint.getFullURL(ctx, course.getTrackerLogUrl());
             Request request = new Request.Builder()
-                    .url(apiEndpoint.getFullURL(ctx, course.getTrackerLogUrl()))
-                    .addHeader(HTTPClientUtils.HEADER_AUTH,
-                            HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()))
+                    .url(HTTPClientUtils.getUrlWithCredentials(url, user.getUsername(), user.getApiKey()))
                     .build();
 
             Response response = client.newCall(request).execute();
