@@ -133,6 +133,10 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     }
 
     public void showProgressDialog(String message) {
+        showProgressDialog(message, true);
+    }
+
+    public void showProgressDialog(String message, boolean cancelable) {
 
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
@@ -141,7 +145,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
         progressDialog = new ProgressDialog(this, R.style.Oppia_AlertDialogStyle);
         progressDialog.setMessage(message);
-        progressDialog.setCancelable(false);
+        progressDialog.setCancelable(cancelable);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
     }
@@ -151,6 +155,10 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             progressDialog.dismiss();
             progressDialog = null;
         }
+    }
+
+    protected boolean isProgressDialogShowing() {
+        return progressDialog != null && progressDialog.isShowing();
     }
 
     @Override

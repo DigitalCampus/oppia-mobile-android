@@ -156,9 +156,8 @@ public class WelcomeActivity extends AppActivity {
             startActivity(new Intent(this, MainActivity.class));
         }
 
-        overridePendingTransition(0, 0);
-
 		if (Analytics.shouldShowOptOutRationale(this)){
+            overridePendingTransition(0, 0);
             startActivity(new Intent(this, AnalyticsOptinActivity.class));
         }
 
