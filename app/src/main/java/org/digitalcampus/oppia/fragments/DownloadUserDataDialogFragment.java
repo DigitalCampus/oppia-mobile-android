@@ -14,10 +14,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.DialogDownloadUserDataBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.application.PermissionsManager;
@@ -25,6 +28,7 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
@@ -32,16 +36,16 @@ import androidx.annotation.Nullable;
 
 import java.io.File;
 
+import okhttp3.HttpUrl;
+
 import static android.content.Context.DOWNLOAD_SERVICE;
 
 public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
 
     protected static final String TAG = DownloadUserDataDialogFragment.class.getSimpleName();
 
-    private View downloadDataList;
-    private View loadingSpinner;
-    private ViewGroup permissionsExplanation;
     private DownloadManager downloadManager;
+    private DialogDownloadUserDataBinding binding;
 
     public static DownloadUserDataDialogFragment newInstance() {
         return new DownloadUserDataDialogFragment();
@@ -50,7 +54,8 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_download_user_data, container);
+        binding = DialogDownloadUserDataBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
 
@@ -60,24 +65,20 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
 
         getDialog().setCanceledOnTouchOutside(false);
 
-        downloadDataList = view.findViewById(R.id.download_data_list);
-        loadingSpinner = view.findViewById(R.id.loading_download);
-        permissionsExplanation = view.findViewById(R.id.permissions_explanation);
-
-        view.findViewById(R.id.download_data_profile).setOnClickListener(v -> downloadUserData("profile"));
-        view.findViewById(R.id.download_data_course).setOnClickListener(v -> downloadUserData("activity"));
-        view.findViewById(R.id.download_data_quizzes).setOnClickListener(v -> downloadUserData("quiz"));
-        view.findViewById(R.id.download_data_points).setOnClickListener(v -> downloadUserData("points"));
-        view.findViewById(R.id.download_data_badges).setOnClickListener(v -> downloadUserData("badges"));
+        binding.downloadDataProfile.setOnClickListener(v -> downloadUserData("profile"));
+        binding.downloadDataCourse.setOnClickListener(v -> downloadUserData("activity"));
+        binding.downloadDataQuizzes.setOnClickListener(v -> downloadUserData("quiz"));
+        binding.downloadDataPoints.setOnClickListener(v -> downloadUserData("points"));
+        binding.downloadDataBadges.setOnClickListener(v -> downloadUserData("badges"));
     }
 
     @Override
     public void onResume() {
         super.onResume();
         boolean hasPermissions = PermissionsManager.checkPermissionsAndInform(getActivity(),
-                PermissionsManager.STORAGE_PERMISSIONS, permissionsExplanation);
+                PermissionsManager.STORAGE_PERMISSIONS, binding.permissionsExplanation);
 
-        downloadDataList.setVisibility(hasPermissions ? View.VISIBLE : View.GONE);
+        binding.downloadDataList.setVisibility(hasPermissions ? View.VISIBLE : View.GONE);
         getActivity().registerReceiver(onDownloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
@@ -89,15 +90,16 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void downloadUserData(String data){
+
         Log.d(TAG, data);
-        loadingSpinner.setVisibility(View.VISIBLE);
-        downloadDataList.setVisibility(View.INVISIBLE);
+        binding.loadingDownload.setVisibility(View.VISIBLE);
+        binding.downloadDataList.setVisibility(View.INVISIBLE);
 
 
         DbHelper db = DbHelper.getInstance(getActivity());
-        User u;
+        User user;
         try {
-            u = db.getUser(SessionManager.getUsername(getActivity()));
+            user = db.getUser(SessionManager.getUsername(getActivity()));
         } catch (UserNotFoundException e) {
             e.printStackTrace();
             return;
@@ -105,11 +107,10 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
 
         String path = Paths.DOWNLOAD_ACCOUNT_DATA_PATH + data + File.separator;
         String url = new RemoteApiEndpoint().getFullURL(getActivity(), path);
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.addRequestHeader(HTTPClientUtils.HEADER_AUTH,
-                HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()));
+        HttpUrl urlWithCredentials = HTTPClientUtils.getUrlWithCredentials(url, user.getUsername(), user.getApiKey());
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(urlWithCredentials.toString()));
 
-        String filename = u.getUsername() + "-" + data + ".html";
+        String filename = user.getUsername() + "-" + data + ".html";
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE); // to notify when download is complete
         downloadManager = (DownloadManager) getActivity().getSystemService(DOWNLOAD_SERVICE);
@@ -121,8 +122,8 @@ public class DownloadUserDataDialogFragment extends BottomSheetDialogFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            loadingSpinner.setVisibility(View.GONE);
-            downloadDataList.setVisibility(View.VISIBLE);
+            binding.loadingDownload.setVisibility(View.GONE);
+            binding.downloadDataList.setVisibility(View.VISIBLE);
 
             //Fetching the download id received with the broadcast
             long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);

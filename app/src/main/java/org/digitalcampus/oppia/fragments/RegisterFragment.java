@@ -39,6 +39,8 @@ import androidx.appcompat.app.AlertDialog;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentRegisterBinding;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.ViewDigestActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
@@ -67,34 +69,14 @@ import javax.inject.Inject;
 public class RegisterFragment extends AppFragment implements RegisterTask.RegisterListener {
 
 
-	private ValidableTextInputLayout usernameField;
-	private ValidableTextInputLayout emailField;
-	private ValidableTextInputLayout passwordField;
-	private ValidableTextInputLayout passwordAgainField;
-	private ValidableTextInputLayout firstnameField;
-	private ValidableTextInputLayout lastnameField;
-	private ValidableTextInputLayout jobTitleField;
-	private ValidableTextInputLayout organisationField;
-	private ValidableTextInputLayout phoneNoField;
-	private CountryCodePicker phoneNoFieldPicker;
 	private HashMap<String, ValidableField> fields = new HashMap<>();
 
-	private LinearLayout customFieldsContainer;
 	private List<CustomField> profileCustomFields;
 
-	private LinearLayout steppedFieldsContainer;
 	private CustomFieldsUIManager fieldsManager;
-	private StepperIndicator stepperIndicator;
 	private SteppedFormUIManager stepsManager;
-	private TextView stepDescription;
 
-	private Button registerButton;
-	private Button nextStepButton;
-	private Button prevStepButton;
-	private Button loginButton;
-	private ProgressDialog pDialog;
-	private View stepperContainer;
-	private View loginContainer;
+	private FragmentRegisterBinding binding;
 
 
 	@Inject
@@ -114,81 +96,60 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View layout = inflater.inflate(R.layout.fragment_register, container, false);
-		usernameField = layout.findViewById(R.id.register_form_username_field);
-		emailField = layout.findViewById(R.id.register_form_email_field);
-		passwordField = layout.findViewById(R.id.register_form_password_field);
-		passwordAgainField = layout.findViewById(R.id.register_form_password_again_field);
-		firstnameField = layout.findViewById(R.id.register_form_firstname_field);
-		lastnameField = layout.findViewById(R.id.register_form_lastname_field);
-		jobTitleField = layout.findViewById(R.id.register_form_jobtitle_field);
-		organisationField = layout.findViewById(R.id.register_form_organisation_field);
-		phoneNoField = layout.findViewById(R.id.register_form_phoneno_field);
-		registerButton = layout.findViewById(R.id.register_btn);
-		loginButton = layout.findViewById(R.id.action_login_btn);
-		customFieldsContainer = layout.findViewById(R.id.custom_fields_container);
-		stepperIndicator = layout.findViewById(R.id.stepper_indicator);
-		stepperContainer = layout.findViewById(R.id.frame_stepper_indicator);
-		prevStepButton = layout.findViewById(R.id.prev_btn);
-		nextStepButton = layout.findViewById(R.id.next_btn);
-		loginContainer = layout.findViewById(R.id.login_container);
-		stepDescription = layout.findViewById(R.id.step_description);
-		steppedFieldsContainer = layout.findViewById(R.id.stepped_fields_container);
+		binding = FragmentRegisterBinding.inflate(inflater, container, false);
 
-		emailField.setCustomValidator(field -> {
+		binding.registerFormEmailField.setCustomValidator(field -> {
 			String email = field.getCleanedValue();
 			if (!TextUtils.isEmpty(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-				emailField.setErrorEnabled(true);
-				emailField.setError(getString(R.string.error_register_email));
+				binding.registerFormEmailField.setErrorEnabled(true);
+				binding.registerFormEmailField.setError(getString(R.string.error_register_email));
 				return false;
 			}
 			return true;
 		});
 
-		phoneNoFieldPicker = (CountryCodePicker) layout.findViewById(R.id.ccp);
-		EditText phoneEditText = layout.findViewById(R.id.register_form_phoneno_edittext);
-		phoneNoFieldPicker.registerCarrierNumberEditText(phoneEditText);
-		View phoneInput = phoneNoField.getChildAt(0);
-		phoneNoField.removeView(phoneInput);
+		binding.ccp.registerCarrierNumberEditText(binding.registerFormPhonenoEdittext);
+		View phoneInput = binding.registerFormPhonenoField.getChildAt(0);
+		binding.registerFormPhonenoField.removeView(phoneInput);
 		phoneInput.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-		((LinearLayout)layout.findViewById(R.id.field_phoneno_container)).addView(phoneInput);
-		phoneNoField.setCustomValidator(field -> {
+		binding.fieldPhonenoContainer.addView(phoneInput);
+		binding.registerFormPhonenoField.setCustomValidator(field -> {
 			String phoneNo = field.getCleanedValue();
-			if ((phoneNo.length() > 0) && !phoneNoFieldPicker.isValidFullNumber()){
-				phoneNoField.setErrorEnabled(true);
-				phoneNoField.setError(getString(R.string.error_register_no_phoneno));
-				phoneNoField.requestFocus();
+			if ((phoneNo.length() > 0) && !binding.ccp.isValidFullNumber()){
+				binding.registerFormPhonenoField.setErrorEnabled(true);
+				binding.registerFormPhonenoField.setError(getString(R.string.error_register_no_phoneno));
+				binding.registerFormPhonenoField.requestFocus();
 				return false;
 			}
 			return true;
 		});
 
-		passwordField.setCustomValidator(field -> {
-			String password = passwordField.getCleanedValue();
-			String passwordAgain = passwordAgainField.getCleanedValue();
+		binding.registerFormPasswordField.setCustomValidator(field -> {
+			String password = binding.registerFormPasswordField.getCleanedValue();
+			String passwordAgain = binding.registerFormPasswordAgainField.getCleanedValue();
 			return checkPasswordCriteria(password, passwordAgain);
 		});
 
-		usernameField.setCustomValidator(field -> {
+		binding.registerFormUsernameField.setCustomValidator(field -> {
 			boolean validValue = !TextUtils.isEmpty(field.getCleanedValue()) && field.getCleanedValue().length() >= App.USERNAME_MIN_CHARACTERS;
 			if (!validValue) {
-				usernameField.setError(getString(R.string.error_register_username_lenght, App.USERNAME_MIN_CHARACTERS));
+				binding.registerFormUsernameField.setError(getString(R.string.error_register_username_length, App.USERNAME_MIN_CHARACTERS));
 			}
 			return validValue;
 		});
 
 		fields = new HashMap<>();
-		fields.put("username", usernameField);
-		fields.put("email", emailField);
-		fields.put("password", passwordField);
-		fields.put("passwordagain", passwordAgainField);
-		fields.put("first_name", firstnameField);
-		fields.put("last_name", lastnameField);
-		fields.put("jobtitle", jobTitleField);
-		fields.put("organisation", organisationField);
-		fields.put("phoneno", phoneNoField);
+		fields.put("username", binding.registerFormUsernameField);
+		fields.put("email", binding.registerFormEmailField);
+		fields.put("password", binding.registerFormPasswordField);
+		fields.put("passwordagain", binding.registerFormPasswordAgainField);
+		fields.put("first_name", binding.registerFormFirstnameField);
+		fields.put("last_name", binding.registerFormLastnameField);
+		fields.put("jobtitle", binding.registerFormJobtitleField);
+		fields.put("organisation", binding.registerFormOrganisationField);
+		fields.put("phoneno", binding.registerFormPhonenoField);
 
-		return layout;
+		return binding.getRoot();
 	}
 
 	@Override
@@ -207,25 +168,25 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		profileCustomFields = customFieldsRepo.getAll(getContext());
 		List<CustomField.RegisterFormStep> registerSteps = customFieldsRepo.getRegisterSteps(getContext());
 		fieldsManager = new CustomFieldsUIManager(this.getActivity(), fields, profileCustomFields);
-		fieldsManager.populateAndInitializeFields(customFieldsContainer);
+		fieldsManager.populateAndInitializeFields(binding.customFieldsContainer);
 		if (registerSteps == null || registerSteps.isEmpty()){
-			stepperContainer.setVisibility(View.GONE);
-			loginContainer.setVisibility(View.VISIBLE);
+			binding.frameStepperIndicator.setVisibility(View.GONE);
+			binding.loginContainer.setVisibility(View.VISIBLE);
 		}
 		else{
-			stepsManager = new SteppedFormUIManager(stepperIndicator, registerSteps, fieldsManager);
-			stepperContainer.setVisibility(View.VISIBLE);
-			loginContainer.setVisibility(View.GONE);
-			registerButton.setVisibility(View.GONE);
-			nextStepButton.setVisibility(View.VISIBLE);
-			prevStepButton.setVisibility(View.INVISIBLE);
-			stepsManager.initialize(customFieldsContainer, steppedFieldsContainer, stepDescription);
+			stepsManager = new SteppedFormUIManager(binding.stepperIndicator, registerSteps, fieldsManager);
+			binding.frameStepperIndicator.setVisibility(View.VISIBLE);
+			binding.loginContainer.setVisibility(View.GONE);
+			binding.registerBtn.setVisibility(View.GONE);
+			binding.nextBtn.setVisibility(View.VISIBLE);
+			binding.prevBtn.setVisibility(View.INVISIBLE);
+			stepsManager.initialize(binding.customFieldsContainer, binding.steppedFieldsContainer, binding.stepDescription);
 		}
 
-		registerButton.setOnClickListener(v -> onRegisterClick());
-		nextStepButton.setOnClickListener(v -> nextStep());
-		prevStepButton.setOnClickListener(v -> prevStep());
-		loginButton.setOnClickListener(v -> {
+		binding.registerBtn.setOnClickListener(v -> onRegisterClick());
+		binding.nextBtn.setOnClickListener(v -> nextStep());
+		binding.prevBtn.setOnClickListener(v -> prevStep());
+		binding.actionLoginBtn.setOnClickListener(v -> {
 			WelcomeActivity activity = (WelcomeActivity) RegisterFragment.super.getActivity();
 			if (activity != null){
 				activity.switchTab(WelcomeActivity.TAB_LOGIN);
@@ -239,21 +200,21 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 	private void nextStep(){
 		if (stepsManager.nextStep()){
-			prevStepButton.setVisibility(View.VISIBLE);
+			binding.prevBtn.setVisibility(View.VISIBLE);
 		}
 		if (stepsManager.isLastStep()){
-			nextStepButton.setVisibility(View.GONE);
-			registerButton.setVisibility(View.VISIBLE);
+			binding.nextBtn.setVisibility(View.GONE);
+			binding.registerBtn.setVisibility(View.VISIBLE);
 		}
 
 	}
 
 	private void prevStep(){
 		if (stepsManager.prevStep()){
-			prevStepButton.setVisibility(View.INVISIBLE);
+			binding.prevBtn.setVisibility(View.INVISIBLE);
 		}
-		registerButton.setVisibility(View.GONE);
-		nextStepButton.setVisibility(View.VISIBLE);
+		binding.registerBtn.setVisibility(View.GONE);
+		binding.nextBtn.setVisibility(View.VISIBLE);
 	}
 
 
@@ -274,15 +235,15 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 		if (valid){
             User u = new User();
-            u.setUsername(usernameField.getCleanedValue());
-            u.setPassword(passwordField.getCleanedValue());
-            u.setPasswordAgain(passwordAgainField.getCleanedValue());
-            u.setFirstname(firstnameField.getCleanedValue());
-            u.setLastname(lastnameField.getCleanedValue());
-            u.setEmail(emailField.getCleanedValue());
-            u.setJobTitle(jobTitleField.getCleanedValue());
-            u.setOrganisation(organisationField.getCleanedValue());
-            u.setPhoneNo(phoneNoFieldPicker.getFormattedFullNumber());
+            u.setUsername(binding.registerFormUsernameField.getCleanedValue());
+            u.setPassword(binding.registerFormPasswordField.getCleanedValue());
+            u.setPasswordAgain(binding.registerFormPasswordAgainField.getCleanedValue());
+            u.setFirstname(binding.registerFormFirstnameField.getCleanedValue());
+            u.setLastname(binding.registerFormLastnameField.getCleanedValue());
+            u.setEmail(binding.registerFormEmailField.getCleanedValue());
+            u.setJobTitle(binding.registerFormJobtitleField.getCleanedValue());
+            u.setOrganisation(binding.registerFormOrganisationField.getCleanedValue());
+            u.setPhoneNo(binding.ccp.getFormattedFullNumber());
 			u.setUserCustomFields(fieldsManager.getCustomFieldValues());
             executeRegisterTask(u);
         }
@@ -291,13 +252,13 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 	private boolean checkPasswordCriteria(String password, String passwordAgain){
 		if (password.length() < App.PASSWORD_MIN_LENGTH) {
-			passwordField.setErrorEnabled(true);
-			passwordField.setError(getString(R.string.error_register_password,  App.PASSWORD_MIN_LENGTH ));
+			binding.registerFormPasswordField.setErrorEnabled(true);
+			binding.registerFormPasswordField.setError(getString(R.string.error_register_password,  App.PASSWORD_MIN_LENGTH ));
 			return false;
 		}
 		else if (!password.equals(passwordAgain)) {
-			passwordField.setErrorEnabled(true);
-			passwordField.setError(getString(R.string.error_register_password_no_match ));
+			binding.registerFormPasswordField.setErrorEnabled(true);
+			binding.registerFormPasswordField.setError(getString(R.string.error_register_password_no_match ));
 			return false;
 		}
 		return true;
@@ -305,8 +266,8 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 	@Override
 	public void onSubmitComplete(User registeredUser) {
-		pDialog.dismiss();
-		SessionManager.loginUser(getActivity(), registeredUser);
+		hideProgressDialog();
+
 		// registration gamification
 		GamificationEngine gamificationEngine = new GamificationEngine(super.getActivity());
 		gamificationEngine.processEventRegister();
@@ -314,20 +275,13 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		//Save the search tracker
 		new Tracker(super.getActivity()).saveRegisterTracker();
 
-		boolean fromViewDigest = getActivity().getIntent().getBooleanExtra(ViewDigestActivity.EXTRA_FROM_VIEW_DIGEST, false);
+		((WelcomeActivity) getActivity()).onSuccessUserAccess(registeredUser);
 
-		if (fromViewDigest) {
-			getActivity().setResult(Activity.RESULT_OK);
-		} else {
-			startActivity(new Intent(getActivity(), MainActivity.class));
-		}
-
-		super.getActivity().finish();
 	}
 
 	@Override
 	public void onSubmitError(String error) {
-		pDialog.dismiss();
+		hideProgressDialog();
 		Context ctx = super.getActivity();
 		if (ctx != null){
 			UIUtils.showAlert(getActivity(), R.string.error, error);
@@ -336,7 +290,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 	@Override
 	public void onConnectionError(String error, final User u) {
-		pDialog.dismiss();
+		hideProgressDialog();
 		Context ctx = super.getActivity();
 		if (ctx == null){
 			return;
@@ -360,11 +314,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 	private void executeRegisterTask(User user){
 
-		pDialog = new ProgressDialog(super.getActivity());
-		pDialog.setTitle(R.string.register_alert_title);
-		pDialog.setMessage(getString(R.string.register_process));
-		pDialog.setCancelable(true);
-		pDialog.show();
+		showProgressDialog(getString(R.string.register_process));
 
 		RegisterTask rt = new RegisterTask(super.getActivity(), apiEndpoint);
 		rt.setRegisterListener(this);

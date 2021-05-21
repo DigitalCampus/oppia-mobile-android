@@ -145,6 +145,11 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="org.digitalcampus.oppia.activity.AnalyticsOptinActivity"
+            android:label="@string/analytics.optin.title"
+            android:theme="@style/Oppia.ToolbarTheme"/>
+
+
         <service
             android:name="org.digitalcampus.oppia.service.DownloadService"
             android:exported="false"

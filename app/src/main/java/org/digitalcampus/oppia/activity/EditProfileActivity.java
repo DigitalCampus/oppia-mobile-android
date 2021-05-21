@@ -31,8 +31,6 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
     private CustomFieldsUIManager fieldsManager;
     private HashMap<String, ValidableField> fields = new HashMap<>();
 
-    private CountryCodePicker phoneNoFieldPicker;
-
     @Inject
     ApiEndpoint apiEndpoint;
 
@@ -70,13 +68,11 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
             }
         }
 
-        phoneNoFieldPicker = (CountryCodePicker) findViewById(R.id.ccp);
-        EditText phoneEditText = findViewById(R.id.register_form_phoneno_edittext);
-        phoneNoFieldPicker.registerCarrierNumberEditText(phoneEditText);
+        binding.ccp.registerCarrierNumberEditText(binding.registerFormPhonenoEdittext);
         View phoneInput = binding.fieldPhoneno.getChildAt(0);
         binding.fieldPhoneno.removeView(phoneInput);
         phoneInput.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        ((LinearLayout) findViewById(R.id.field_phoneno_container)).addView(phoneInput);
+        binding.fieldPhonenoContainer.addView(phoneInput);
 
         profileCustomFields = customFieldsRepo.getAll(this);
         fieldsManager = new CustomFieldsUIManager(this, fields, profileCustomFields);
@@ -100,7 +96,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         binding.fieldJobtitle.setText(user.getJobTitle());
         if (user.getPhoneNo()!= null && user.getPhoneNo().startsWith("+")){
             // Check if we already had a number saved with country code
-            phoneNoFieldPicker.setFullNumber(user.getPhoneNo());
+            binding.ccp.setFullNumber(user.getPhoneNo());
         }
         else{
             binding.fieldPhoneno.setText(user.getPhoneNo());
@@ -111,7 +107,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
         binding.fieldPhoneno.setCustomValidator(field -> {
             String phoneNo = field.getCleanedValue();
-            if ((phoneNo.length() > 0) && !phoneNoFieldPicker.isValidFullNumber()){
+            if ((phoneNo.length() > 0) && !binding.ccp.isValidFullNumber()){
                 binding.fieldPhoneno.setErrorEnabled(true);
                 binding.fieldPhoneno.setError(getString(R.string.error_register_no_phoneno));
                 binding.fieldPhoneno.requestFocus();
@@ -147,7 +143,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         String lastname = binding.fieldLastname.getCleanedValue();
         String jobTitle = binding.fieldJobtitle.getCleanedValue();
         String organisation = binding.fieldOrganisation.getCleanedValue();
-        String phoneNo = phoneNoFieldPicker.getFormattedFullNumber();
+        String phoneNo = binding.ccp.getFormattedFullNumber();
 
         boolean valid = true;
         for (ValidableField field : fields.values()){

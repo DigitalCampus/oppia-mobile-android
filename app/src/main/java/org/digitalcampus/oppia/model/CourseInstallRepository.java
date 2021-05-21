@@ -3,10 +3,8 @@ package org.digitalcampus.oppia.model;
 
 import android.content.Context;
 
-import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
-import org.digitalcampus.oppia.task.Payload;
 import org.json.JSONException;
 import org.json.JSONObject;
 

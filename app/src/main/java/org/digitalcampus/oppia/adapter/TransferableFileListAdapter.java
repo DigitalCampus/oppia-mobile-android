@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowTransferableFileBinding;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
 
@@ -25,22 +26,14 @@ public class TransferableFileListAdapter extends RecyclerView.Adapter<Transferab
     private final ListInnerBtnOnClickListener listener;
 
     public class TclaViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        private TextView fileTitle;
-        private TextView fileSubtitle;
-        private TextView fileAside;
-        private ImageButton actionBtn;
-        private ImageView icon;
+
+        private final RowTransferableFileBinding binding;
 
         public TclaViewHolder(View v) {
             super(v);
-            fileTitle = v.findViewById(R.id.file_title);
-            fileSubtitle = v.findViewById(R.id.file_subtitle);
-            fileAside = v.findViewById(R.id.file_aside);
-            actionBtn = v.findViewById(R.id.download_course_btn);
-            icon = v.findViewById(R.id.elem_icon);
+            binding = RowTransferableFileBinding.bind(v);
 
-            actionBtn.setOnClickListener(v1 -> {
+            binding.downloadCourseBtn.setOnClickListener(v1 -> {
                 if (listener != null){
                     listener.onClick(getAdapterPosition());
                 }
@@ -108,26 +101,26 @@ public class TransferableFileListAdapter extends RecyclerView.Adapter<Transferab
         CourseTransferableFile current = courseFiles.get(position);
 
         if (current.getTitle() != null){
-            holder.fileTitle.setVisibility(View.VISIBLE);
-            holder.fileTitle.setText(current.getTitle());
+            holder.binding.fileTitle.setVisibility(View.VISIBLE);
+            holder.binding.fileTitle.setText(current.getTitle());
         }
         else{
-            holder.fileTitle.setVisibility(View.GONE);
+            holder.binding.fileTitle.setVisibility(View.GONE);
         }
 
         if (current.getType().equals(CourseTransferableFile.TYPE_ACTIVITY_LOG)){
-            holder.fileSubtitle.setText(current.getDisplayDateTimeFromFilename());
-            holder.fileAside.setVisibility(View.VISIBLE);
-            holder.fileAside.setText(current.getDisplayFileSize());
-            holder.icon.setImageResource(R.drawable.ic_file_account);
+            holder.binding.fileSubtitle.setText(current.getDisplayDateTimeFromFilename());
+            holder.binding.fileAside.setVisibility(View.VISIBLE);
+            holder.binding.fileAside.setText(current.getDisplayFileSize());
+            holder.binding.elemIcon.setImageResource(R.drawable.ic_file_account);
         }
         else{
 
-            holder.icon.setImageResource(
+            holder.binding.elemIcon.setImageResource(
                     current.getType().equals(CourseTransferableFile.TYPE_COURSE_BACKUP)?
                             R.drawable.ic_notification : R.drawable.default_icon_video);
-            holder.fileSubtitle.setText( current.getDisplayFileSize() );
-            holder.fileAside.setVisibility(View.GONE);
+            holder.binding.fileSubtitle.setText( current.getDisplayFileSize() );
+            holder.binding.fileAside.setVisibility(View.GONE);
         }
 
     }

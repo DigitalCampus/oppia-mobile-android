@@ -2,11 +2,14 @@ package org.digitalcampus.oppia.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityCourseQuizAttemptsBinding;
+import org.digitalcampus.mobile.learning.databinding.ActivityQuizAttemptBinding;
 import org.digitalcampus.oppia.adapter.QuizAttemptAdapter;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizAttemptRepository;
@@ -24,6 +27,7 @@ public class CourseQuizAttemptsActivity extends AppActivity {
 
     @Inject
     QuizAttemptRepository attemptsRepository;
+    private ActivityCourseQuizAttemptsBinding binding;
 
     @Override
     public void onStart() {
@@ -34,6 +38,7 @@ public class CourseQuizAttemptsActivity extends AppActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivityCourseQuizAttemptsBinding.inflate(LayoutInflater.from(this));
         setContentView(R.layout.activity_course_quiz_attempts);
         getAppComponent().inject(this);
 
@@ -46,26 +51,20 @@ public class CourseQuizAttemptsActivity extends AppActivity {
         stats = (QuizStats) bundle.getSerializable(QuizStats.TAG);
         setTitle(stats.getSectionTitle() + " > " + stats.getQuizTitle());
 
-        TextView average = findViewById(R.id.highlight_average);
-        TextView best = findViewById(R.id.highlight_best);
-        TextView numAttempts = findViewById(R.id.highlight_attempted);
-        Button retakeQuizBtn = findViewById(R.id.retake_quiz_btn);
-        RecyclerView attemptsList = findViewById(R.id.attempts_list);
-        numAttempts.setText(String.valueOf(stats.getNumAttempts()));
+        binding.viewQuizStats.highlightAttempted.setText(String.valueOf(stats.getNumAttempts()));
 
         if (stats.getNumAttempts() == 0){
-            retakeQuizBtn.setVisibility(View.GONE);
-            attemptsList.setVisibility(View.GONE);
-            average.setText("-");
-            best.setText("-");
-            findViewById(R.id.empty_state).setVisibility(View.VISIBLE);
-            Button takeQuizBtn = findViewById(R.id.btn_take_quiz);
-            takeQuizBtn.setOnClickListener(view -> takeQuiz());
+            binding.retakeQuizBtn.setVisibility(View.GONE);
+            binding.attemptsList.setVisibility(View.GONE);
+            binding.viewQuizStats.highlightAverage.setText("-");
+            binding.viewQuizStats.highlightBest.setText("-");
+            binding.emptyState.setVisibility(View.VISIBLE);
+            binding.btnTakeQuiz.setOnClickListener(view -> takeQuiz());
         }
         else{
-            average.setText(stats.getAveragePercent() + "%");
-            best.setText(stats.getPercent() + "%");
-            retakeQuizBtn.setOnClickListener(view -> takeQuiz());
+            binding.viewQuizStats.highlightAverage.setText(stats.getAveragePercent() + "%");
+            binding.viewQuizStats.highlightBest.setText(stats.getPercent() + "%");
+            binding.retakeQuizBtn.setOnClickListener(view -> takeQuiz());
         }
 
         final List<QuizAttempt> attempts = attemptsRepository.getQuizAttempts(this, stats);
@@ -80,7 +79,7 @@ public class CourseQuizAttemptsActivity extends AppActivity {
             i.putExtras(tb);
             startActivity(i);
         });
-        attemptsList.setAdapter(adapter);
+        binding.attemptsList.setAdapter(adapter);
     }
 
     private void takeQuiz(){

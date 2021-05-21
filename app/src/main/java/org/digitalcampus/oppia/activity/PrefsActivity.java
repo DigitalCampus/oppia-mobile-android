@@ -24,11 +24,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityPreferencesBinding;
 import org.digitalcampus.oppia.fragments.prefs.MainPreferencesFragment;
 import org.digitalcampus.oppia.fragments.prefs.PreferenceChangedCallback;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
@@ -151,13 +153,13 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_BUG_REPORT_ENABLED = "prefBugReportEnabled";
     public static final String PREF_ANALYTICS_ENABLED = "prefAnalyticsEnabled";
 
-    private ProgressDialog pDialog;
     private PreferenceChangedCallback currentPrefScreen;
 
     @Inject
     CoursesRepository coursesRepository;
     private FetchServerInfoTask fetchServerInfoTask;
     private boolean forzeGoToLoginScreen;
+    private ActivityPreferencesBinding binding;
 
     @Override
     public void onStart() {
@@ -168,7 +170,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_preferences);
+        binding = ActivityPreferencesBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
         getAppComponent().inject(this);
 
         if (savedInstanceState == null) {
@@ -390,21 +393,13 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         ChangeStorageOptionTask changeStorageTask = new ChangeStorageOptionTask(PrefsActivity.this.getApplicationContext());
         changeStorageTask.setMoveStorageListener(this);
 
-        if (pDialog != null && pDialog.isShowing()) {
-//            pDialog.dismiss();
-//            pDialog = null;
-
-            // Still executing the task
+        if (isProgressDialogShowing()) {
             Log.i(TAG, "executeChangeStorageTask: Exiting. Previous task is being executed");
             return;
 
         }
 
-        pDialog = new ProgressDialog(this, R.style.Oppia_AlertDialogStyle);
-        pDialog.setTitle(R.string.loading);
-        pDialog.setMessage(getString(R.string.moving_storage_location));
-        pDialog.setCancelable(false);
-        pDialog.show();
+        showProgressDialog(getString(R.string.moving_storage_location), false);
 
         changeStorageTask.execute(p);
 
@@ -433,7 +428,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             editor.putString(PrefsActivity.PREF_STORAGE_OPTION, STORAGE_OPTION_EXTERNAL).apply();
         }
 
-        pDialog.dismiss();
+        hideProgressDialog();
     }
 
     //@Override

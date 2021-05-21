@@ -18,27 +18,19 @@
 package org.digitalcampus.oppia.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
-
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.preference.PreferenceManager;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityStartUpBinding;
 import org.digitalcampus.oppia.analytics.Analytics;
-import org.digitalcampus.oppia.analytics.BaseAnalytics;
 import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
@@ -59,15 +51,15 @@ import java.util.ArrayList;
 public class StartUpActivity extends Activity implements UpgradeListener, InstallCourseListener {
 
     public static final String TAG = StartUpActivity.class.getSimpleName();
-    private TextView tvProgress;
     private SharedPreferences prefs;
+    private ActivityStartUpBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start_up);
+        binding = ActivityStartUpBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
 
-        tvProgress = this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         Analytics.startTrackingIfEnabled(this);
@@ -95,48 +87,28 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
 
 
     private void updateProgress(String text) {
-        if (tvProgress != null) {
-            tvProgress.setText(text);
+        if (binding.startUpProgress != null) {
+            binding.startUpProgress.setText(text);
         }
     }
 
     private void endStartUpScreen() {
         // launch new activity and close splash screen
 
-        startActivity(new Intent(StartUpActivity.this,
-                SessionManager.isLoggedIn(StartUpActivity.this)
-                        ? MainActivity.class
-                        : WelcomeActivity.class));
+        if (SessionManager.isLoggedIn(this)) {
 
-        finish();
-    }
+            startActivity(new Intent(this, MainActivity.class));
 
-    private void showAnalyticsRationaleIfNeeded(){
-        if (!Analytics.shouldShowOptOutRationale(this)){
-            endStartUpScreen();
-            return;
+            if (Analytics.shouldShowOptOutRationale(this)) {
+                overridePendingTransition(0, 0);
+                startActivity(new Intent(this, AnalyticsOptinActivity.class));
+            }
+
+        } else {
+            startActivity(new Intent(this, WelcomeActivity.class));
         }
 
-        ViewGroup container = findViewById(R.id.permissions_explanation);
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        container.removeAllViews();
-        View explanation = layoutInflater.inflate(R.layout.view_analytics_optin, container);
-        container.setVisibility(View.VISIBLE);
-
-        CheckBox analyticsCheck = explanation.findViewById(R.id.analytics_checkbox);
-        CheckBox bugreportCheck = explanation.findViewById(R.id.bugreport_checkbox);
-        Button continueBtn = explanation.findViewById(R.id.continue_button);
-        continueBtn.setOnClickListener(view -> {
-            Analytics.optOutRationaleShown(this);
-
-            if (analyticsCheck.isChecked()){
-                Analytics.enableTracking(this);
-            }
-            if (bugreportCheck.isChecked()){
-                Analytics.enableBugReport(this);
-            }
-            endStartUpScreen();
-        });
+        finish();
     }
 
     private void installCourses() {
@@ -208,7 +180,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
 
     private void importLeaderboard() {
         ImportLeaderboardsTask imTask = new ImportLeaderboardsTask(StartUpActivity.this);
-        imTask.setListener((success, message) -> showAnalyticsRationaleIfNeeded());
+        imTask.setListener((success, message) -> endStartUpScreen());
         imTask.execute(new Payload());
     }
 }

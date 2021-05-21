@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -26,6 +27,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityScorecardBinding;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.ActivitiesFragment;
 import org.digitalcampus.oppia.fragments.BadgesFragment;
@@ -51,15 +53,13 @@ public class ScorecardActivity extends AppActivity {
 
 	private List<Fragment> fragments = new ArrayList<>();
 	private List<String> tabTitles = new ArrayList<>();
+	private ActivityScorecardBinding binding;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.activity_scorecard);
-
-		ViewPager viewPager = findViewById(R.id.activity_scorecard_pager);
-		TabLayout tabs = findViewById(R.id.tabs_toolbar);
+		binding = ActivityScorecardBinding.inflate(LayoutInflater.from(this));
+		setContentView(binding.getRoot());
 
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
@@ -90,9 +90,9 @@ public class ScorecardActivity extends AppActivity {
 		}
 
 		ActivityPagerAdapter apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, tabTitles);
-		viewPager.setAdapter(apAdapter);
-		tabs.setupWithViewPager(viewPager);
-		apAdapter.updateTabViews(tabs);
+		binding.activityScorecardPager.setAdapter(apAdapter);
+		binding.tabsToolbar.setupWithViewPager(binding.activityScorecardPager);
+		apAdapter.updateTabViews(binding.tabsToolbar);
 
 		int currentTab = 0;
 		if ( targetTabOnLoad != null){
@@ -103,9 +103,9 @@ public class ScorecardActivity extends AppActivity {
 				currentTab = scoringEnabled ? 3 : 2;
 			}
 		}
-		viewPager.setCurrentItem(currentTab);
-		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-		tabs.setTabMode(TabLayout.MODE_FIXED);
+		binding.activityScorecardPager.setCurrentItem(currentTab);
+		binding.activityScorecardPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabsToolbar));
+		binding.tabsToolbar.setTabMode(TabLayout.MODE_FIXED);
 	}
 
 	@Override

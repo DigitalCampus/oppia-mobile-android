@@ -127,9 +127,6 @@ public class MetaDataUtils {
         if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_BATTERY_LEVEL), App.METADATA_INCLUDE_BATTERY_LEVEL)) {
             json.put("battery", this.getBatteryLevel());
         }
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_GPS), App.METADATA_INCLUDE_GPS)) {
-            json.put("gps", "0,0");
-        }
         return json;
     }
 }

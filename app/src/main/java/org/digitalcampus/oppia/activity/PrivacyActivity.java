@@ -2,29 +2,28 @@ package org.digitalcampus.oppia.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
+
+import androidx.fragment.app.FragmentManager;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityPrivacyBinding;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.fragments.DeleteAccountDialogFragment;
 import org.digitalcampus.oppia.fragments.DownloadUserDataDialogFragment;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentManager;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
 
 public class PrivacyActivity extends AppActivity implements DeleteAccountDialogFragment.DeleteAccountListener {
 
-    private CheckBox analyticsCheck;
-    private CheckBox bugreportCheck;
-    private AlertDialog aDialog;
+    private ActivityPrivacyBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_privacy);
+        binding = ActivityPrivacyBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
         getAppComponent().inject(this);
     }
 
@@ -33,19 +32,13 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
         super.onStart();
         initialize();
 
-        View aboutPrivacyInfo = findViewById(R.id.about_privacy_policy);
-        View aboutWhatDataInfo = findViewById(R.id.about_privacy_what);
-        View aboutWhyDataInfo = findViewById(R.id.about_privacy_why);
-        //View aboutTermsInfo = findViewById(R.id.about_privacy_terms);
+        binding.aboutPrivacyPolicy.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_POLICY));
+        binding.aboutPrivacyWhat.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_WHAT));
+        binding.aboutPrivacyWhy.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_HOW));
+        //binding.aboutPrivacyTerms.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_TERMS));
 
-        aboutPrivacyInfo.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_POLICY));
-        aboutWhatDataInfo.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_WHAT));
-        aboutWhyDataInfo.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_HOW));
-        //aboutTermsInfo.setOnClickListener(view -> launchAboutPage(AboutActivity.TAB_PRIVACY_TERMS));
-
-        analyticsCheck = findViewById(R.id.analytics_checkbox);
-        analyticsCheck.setChecked(Analytics.isTrackingEnabled(this));
-        analyticsCheck.setOnCheckedChangeListener((compoundButton, b) -> {
+        binding.analyticsCheckbox.setChecked(Analytics.isTrackingEnabled(this));
+        binding.analyticsCheckbox.setOnCheckedChangeListener((compoundButton, b) -> {
             if (compoundButton.isChecked()){
                 Analytics.enableTracking(this);
             }
@@ -54,9 +47,8 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
             }
         });
 
-        bugreportCheck = findViewById(R.id.bugreport_checkbox);
-        bugreportCheck.setChecked(Analytics.isBugReportEnabled(this));
-        bugreportCheck.setOnCheckedChangeListener((compoundButton, b) -> {
+        binding.bugreportCheckbox.setChecked(Analytics.isBugReportEnabled(this));
+        binding.bugreportCheckbox.setOnCheckedChangeListener((compoundButton, b) -> {
             if (compoundButton.isChecked()){
                 Analytics.enableBugReport(this);
             }
@@ -67,14 +59,12 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
 
 
         if (!SessionManager.isLoggedIn(this)){
-            findViewById(R.id.privacy_user_section).setVisibility(View.GONE);
+            binding.privacyUserSection.setVisibility(View.GONE);
             return;
         }
 
-        Button deleteBtn = findViewById(R.id.btn_delete_account);
-        deleteBtn.setOnClickListener(v -> showDeleteAccountWarning());
-        Button downloadBtn = findViewById(R.id.btn_download_data);
-        downloadBtn.setOnClickListener(v -> showDownloadDataDialog());
+        binding.btnDeleteAccount.setOnClickListener(v -> showDeleteAccountWarning());
+        binding.btnDownloadData.setOnClickListener(v -> showDownloadDataDialog());
 
     }
 
@@ -90,6 +80,11 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
 
     private void showDeleteAccountWarning(){
 
+        if (!ConnectionUtils.isNetworkConnected(this)) {
+            alert(R.string.error_connection_needed);
+            return;
+        }
+
         FragmentManager fm = getSupportFragmentManager();
         DeleteAccountDialogFragment deleteDialog = DeleteAccountDialogFragment.newInstance();
         deleteDialog.show(fm, "fragment_delete_account");
@@ -97,6 +92,12 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
     }
 
     private void showDownloadDataDialog(){
+
+        if (!ConnectionUtils.isNetworkConnected(this)) {
+            alert(R.string.error_connection_needed);
+            return;
+        }
+
         FragmentManager fm = getSupportFragmentManager();
         DownloadUserDataDialogFragment downloadDialog = DownloadUserDataDialogFragment.newInstance();
         downloadDialog.show(fm, "fragment_download_data");

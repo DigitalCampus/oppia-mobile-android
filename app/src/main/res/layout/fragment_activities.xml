@@ -20,17 +20,14 @@
         app:tabIndicatorHeight="0dp">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_last_week"
             style="@style/TabText"
             android:text="@string/last_week"/>
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_last_month"
             style="@style/TabText"
             android:text="@string/last_month"/>
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_last_year"
             style="@style/TabText"
             android:text="@string/last_year" />
 

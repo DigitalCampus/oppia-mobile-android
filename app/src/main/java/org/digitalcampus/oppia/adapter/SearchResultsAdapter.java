@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowSearchResultsBinding;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -63,23 +64,23 @@ public class SearchResultsAdapter extends RecyclerViewClickableAdapter<SearchRes
         String sTitle = sr.getSection().getTitle(prefLang);
         String aTitle = activity.getTitle(prefLang);
 
-        viewHolder.activityTitle.setText(aTitle);
-        viewHolder.sectionTitle.setText(sTitle);
-        viewHolder.courseTitle.setText(cTitle);
+        viewHolder.binding.activityTitle.setText(aTitle);
+        viewHolder.binding.sectionTitle.setText(sTitle);
+        viewHolder.binding.courseTitle.setText(cTitle);
         Log.d(TAG, course.getLocation());
-        viewHolder.rootView.setTag(R.id.TAG_COURSE, course);
-        viewHolder.rootView.setTag(R.id.TAG_ACTIVITY_DIGEST, activity.getDigest());
+        viewHolder.binding.getRoot().setTag(R.id.TAG_COURSE, course);
+        viewHolder.binding.getRoot().setTag(R.id.TAG_ACTIVITY_DIGEST, activity.getDigest());
 
         Log.d(TAG, activity.getImageFilePath(""));
         if (activity.hasCustomImage()){
 
             String image = activity.getImageFilePath(course.getLocation());
             Log.d(TAG, new File(image).exists() ? "Exists" : "Noooo");
-            Picasso.get().load(new File(image)).into(viewHolder.activityImage);
+            Picasso.get().load(new File(image)).into(viewHolder.binding.activityIcon);
         }
         else {
             int defaultActivityDrawable = activity.getDefaultResourceImage();
-            viewHolder.activityImage.setImageResource(defaultActivityDrawable);
+            viewHolder.binding.activityIcon.setImageResource(defaultActivityDrawable);
         }
     }
 
@@ -95,21 +96,13 @@ public class SearchResultsAdapter extends RecyclerViewClickableAdapter<SearchRes
 
     class SearchResultsViewHolder extends RecyclerViewClickableAdapter.ViewHolder {
 
-        private View rootView;
-        private TextView activityTitle;
-        private TextView sectionTitle;
-        private TextView courseTitle;
-        private ImageView activityImage;
+        private final RowSearchResultsBinding binding;
 
         public SearchResultsViewHolder(View itemView) {
             super(itemView);
 
-            activityTitle = itemView.findViewById(R.id.activity_title);
-            sectionTitle = itemView.findViewById(R.id.section_title);
-            courseTitle = itemView.findViewById(R.id.course_title);
-            activityImage = itemView.findViewById(R.id.activity_icon);
+            binding = RowSearchResultsBinding.bind(itemView);
 
-            rootView = itemView;
         }
 
     }

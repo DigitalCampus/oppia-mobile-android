@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowDeviceBinding;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class DevicesBTAdapter extends RecyclerViewClickableAdapter<DevicesBTAdap
 
         final String device = getItemAtPosition(position);
 
-        holder.rootView.setText(device);
+        holder.binding.getRoot().setText(device);
 
     }
 
@@ -53,13 +54,12 @@ public class DevicesBTAdapter extends RecyclerViewClickableAdapter<DevicesBTAdap
 
     public class DevicesBTViewHolder extends RecyclerViewClickableAdapter.ViewHolder {
 
-        private TextView rootView;
+        private final RowDeviceBinding binding;
 
         public DevicesBTViewHolder(View itemView) {
 
             super(itemView);
-
-            rootView = (TextView) itemView;
+            binding = RowDeviceBinding.bind(itemView);
         }
 
     }

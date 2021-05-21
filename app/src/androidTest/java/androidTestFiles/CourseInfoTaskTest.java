@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
+import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.task.CourseInfoTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.junit.After;

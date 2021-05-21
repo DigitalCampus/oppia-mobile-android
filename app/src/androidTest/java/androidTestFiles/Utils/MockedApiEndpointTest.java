@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 public abstract class MockedApiEndpointTest extends DaggerInjectMockUITest {
 
     public static final String ERROR_MESSAGE_BODY = "responses/response_body_error_message.txt";
+    private static final String EMPTY_JSON = "{}";
 
     @Mock
     protected ApiEndpoint apiEndpoint;
@@ -42,7 +43,11 @@ public abstract class MockedApiEndpointTest extends DaggerInjectMockUITest {
 
                 if (responseBody != null) {
                     response.setBody(responseBody);
+                } else {
+                    throw new IllegalArgumentException("responseAsset does not exists");
                 }
+            } else {
+                response.setBody(EMPTY_JSON);
             }
 
             if (timeoutDelay > 0) {
