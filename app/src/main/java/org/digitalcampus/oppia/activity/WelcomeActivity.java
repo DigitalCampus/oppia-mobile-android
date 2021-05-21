@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,12 +30,15 @@ import androidx.fragment.app.Fragment;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityWelcomeBinding;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
+import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.fragments.LoginFragment;
 import org.digitalcampus.oppia.fragments.RegisterFragment;
 import org.digitalcampus.oppia.fragments.RememberUsernameFragment;
 import org.digitalcampus.oppia.fragments.ResetPasswordFragment;
 import org.digitalcampus.oppia.fragments.WelcomeFragment;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,6 +143,26 @@ public class WelcomeActivity extends AppActivity {
 		else{
 			switchTab(TAB_WELCOME);
 		}
+	}
+
+	public void onSuccessUserAccess(User user) {
+
+		boolean fromViewDigest = getIntent().getBooleanExtra(ViewDigestActivity.EXTRA_FROM_VIEW_DIGEST, false);
+
+		SessionManager.loginUser(this, user);
+
+		if (fromViewDigest) {
+			setResult(Activity.RESULT_OK);
+		} else {
+			startActivity(new Intent(this, MainActivity.class));
+		}
+
+
+		if (Analytics.shouldShowOptOutRationale(this)){
+			startActivity(new Intent(this, AnalyticsOptinActivity.class));
+		}
+
+		finish();
 	}
 }
 

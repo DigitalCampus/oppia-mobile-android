@@ -18,29 +18,19 @@
 package org.digitalcampus.oppia.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
-
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.preference.PreferenceManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityStartUpBinding;
-import org.digitalcampus.mobile.learning.databinding.ViewAnalyticsOptinBinding;
 import org.digitalcampus.oppia.analytics.Analytics;
-import org.digitalcampus.oppia.analytics.BaseAnalytics;
 import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
@@ -113,30 +103,6 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
         finish();
     }
 
-    private void showAnalyticsRationaleIfNeeded(){
-        if (!Analytics.shouldShowOptOutRationale(this)){
-            endStartUpScreen();
-            return;
-        }
-
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        binding.permissionsExplanation.removeAllViews();
-        @NonNull ViewAnalyticsOptinBinding bindingExplanation = ViewAnalyticsOptinBinding.inflate(layoutInflater, binding.permissionsExplanation, true);
-        binding.permissionsExplanation.setVisibility(View.VISIBLE);
-
-        bindingExplanation.continueButton.setOnClickListener(view -> {
-            Analytics.optOutRationaleShown(this);
-
-            if (bindingExplanation.analyticsCheckbox.isChecked()){
-                Analytics.enableTracking(this);
-            }
-            if (bindingExplanation.bugreportCheckbox.isChecked()){
-                Analytics.enableBugReport(this);
-            }
-            endStartUpScreen();
-        });
-    }
-
     private void installCourses() {
         File dir = new File(Storage.getDownloadPath(this));
         String[] children = dir.list();
@@ -206,7 +172,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
 
     private void importLeaderboard() {
         ImportLeaderboardsTask imTask = new ImportLeaderboardsTask(StartUpActivity.this);
-        imTask.setListener((success, message) -> showAnalyticsRationaleIfNeeded());
+        imTask.setListener((success, message) -> endStartUpScreen());
         imTask.execute(new Payload());
     }
 }
