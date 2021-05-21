@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowFragmentBadgesListBinding;
 import org.digitalcampus.oppia.model.Badge;
 
 import java.util.List;
@@ -40,8 +41,8 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.BadgesView
 
         final Badge b = getItemAtPosition(position);
 
-        viewHolder.badgeDescription.setText(b.getDescription());
-        viewHolder.badgeDate.setText(b.getDateAsString());
+        viewHolder.binding.badgesDescription.setText(b.getDescription());
+        viewHolder.binding.badgesDate.setText(b.getDateAsString());
 
     }
 
@@ -57,15 +58,14 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.BadgesView
 
     public class BadgesViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView badgeDescription;
-        private TextView badgeDate;
+        private final RowFragmentBadgesListBinding binding;
 
         public BadgesViewHolder(View itemView) {
 
             super(itemView);
 
-            badgeDescription = itemView.findViewById(R.id.badges_description);
-            badgeDate = itemView.findViewById(R.id.badges_date);
+            binding = RowFragmentBadgesListBinding.bind(itemView);
+
         }
     }
 

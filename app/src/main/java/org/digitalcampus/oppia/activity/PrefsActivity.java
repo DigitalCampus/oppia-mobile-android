@@ -24,11 +24,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityPreferencesBinding;
 import org.digitalcampus.oppia.fragments.prefs.MainPreferencesFragment;
 import org.digitalcampus.oppia.fragments.prefs.PreferenceChangedCallback;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
@@ -158,6 +160,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     CoursesRepository coursesRepository;
     private FetchServerInfoTask fetchServerInfoTask;
     private boolean forzeGoToLoginScreen;
+    private ActivityPreferencesBinding binding;
 
     @Override
     public void onStart() {
@@ -168,7 +171,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_preferences);
+        binding = ActivityPreferencesBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
         getAppComponent().inject(this);
 
         if (savedInstanceState == null) {

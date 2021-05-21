@@ -29,6 +29,7 @@ import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.QuizAttempt;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
@@ -60,10 +61,10 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<List<QuizAttempt>, Ob
 			try {
 				Log.d(TAG, quizAttempt.getData());
                 OkHttpClient client = HTTPClientUtils.getClient(ctx);
+				String url = apiEndpoint.getFullURL(ctx, Paths.QUIZ_SUBMIT_PATH);
                 Request request = new Request.Builder()
-                        .url(apiEndpoint.getFullURL(ctx, Paths.QUIZ_SUBMIT_PATH))
-                        .addHeader(HTTPClientUtils.HEADER_AUTH,
-                                HTTPClientUtils.getAuthHeaderValue(quizAttempt.getUser().getUsername(), quizAttempt.getUser().getApiKey()))
+                        .url(HTTPClientUtils.getUrlWithCredentials(url,
+								quizAttempt.getUser().getUsername(), quizAttempt.getUser().getApiKey()))
                         .post(RequestBody.create(quizAttempt.getData(), HTTPClientUtils.MEDIA_TYPE_JSON))
                         .build();
 

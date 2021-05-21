@@ -25,6 +25,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -33,6 +34,7 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityVideoPlayerBinding;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
@@ -50,18 +52,16 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 	public static final String TAG = VideoPlayerActivity.class.getSimpleName();
 	public static final String MEDIA_TAG = "mediaFileName";
 
-    SurfaceView videoSurface;
     MediaPlayer player;
-    VideoControllerView controller;
+    private VideoControllerView controller;
 
     private String mediaFileName;
     private long startTime = System.currentTimeMillis()/1000;
     private Activity activity;
     private Course course;
 
-    private View endContainer;
-
     protected SharedPreferences prefs;
+    private ActivityVideoPlayerBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,9 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         // Prevent activity from going to sleep
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        setContentView(R.layout.activity_video_player);
+        binding = ActivityVideoPlayerBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         player = new MediaPlayer();
 
@@ -107,16 +109,12 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     @Override
     public void onStart(){
         super.onStart();
-        videoSurface = findViewById(R.id.videoSurface);
-        endContainer = findViewById(R.id.end_container);
-        ImageButton replayBtn = findViewById(R.id.replay_button);
-        ImageButton continueBtn = findViewById(R.id.continue_button);
 
-        replayBtn.setOnClickListener(v -> start());
-        continueBtn.setOnClickListener(v -> VideoPlayerActivity.this.finish());
+        binding.replayButton.setOnClickListener(v -> start());
+        binding.continueButton.setOnClickListener(v -> VideoPlayerActivity.this.finish());
 
-        videoSurface.setKeepScreenOn(true); //prevents player going into sleep mode
-        SurfaceHolder videoHolder = videoSurface.getHolder();
+        binding.videoSurface.setKeepScreenOn(true); //prevents player going into sleep mode
+        SurfaceHolder videoHolder = binding.videoSurface.getHolder();
         videoHolder.addCallback(this);
     }
 
@@ -175,7 +173,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     // Implement MediaPlayer.OnPreparedListener
     public void onPrepared(MediaPlayer mp) {
         controller.setMediaPlayer(this);
-        controller.setAnchorView(findViewById(R.id.videoSurfaceContainer));
+        controller.setAnchorView(binding.videoSurfaceContainer);
         player.start();
         player.setOnCompletionListener(this);
     }
@@ -220,7 +218,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 
     public void start() {
         player.start();
-        endContainer.setVisibility(View.GONE);
+        binding.endContainer.setVisibility(View.GONE);
         player.setOnCompletionListener(this);
     }
 
@@ -272,7 +270,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     @Override
     public void onCompletion(MediaPlayer mp) {
         Log.d(TAG, "Video completed!");
-        endContainer.setVisibility(View.VISIBLE);
+        binding.endContainer.setVisibility(View.VISIBLE);
     }
     // End SurfaceHolder.Callback
 

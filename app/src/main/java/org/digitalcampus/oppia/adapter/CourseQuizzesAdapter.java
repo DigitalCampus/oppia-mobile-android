@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowQuizScorecardBinding;
 import org.digitalcampus.oppia.model.QuizStats;
 
 import java.util.List;
@@ -44,16 +45,12 @@ public class CourseQuizzesAdapter extends RecyclerViewClickableAdapter<CourseQui
 
     public class CourseQuizzesViewHolder extends RecyclerViewClickableAdapter.ViewHolder {
 
-        private TextView title;
-        private TextView section;
-        private TextView score;
+        private final RowQuizScorecardBinding binding;
 
         public CourseQuizzesViewHolder(View itemView) {
 
             super(itemView);
-            section = itemView.findViewById(R.id.section_title);
-            title = itemView.findViewById(R.id.quiz_title);
-            score = itemView.findViewById(R.id.score);
+            binding = RowQuizScorecardBinding.bind(itemView);
 
         }
     }
@@ -69,22 +66,22 @@ public class CourseQuizzesAdapter extends RecyclerViewClickableAdapter<CourseQui
 
         final QuizStats quiz = getItemAtPosition(position);
 
-        viewHolder.title.setText(quiz.getQuizTitle());
-        viewHolder.section.setText(quiz.getSectionTitle());
+        viewHolder.binding.quizTitle.setText(quiz.getQuizTitle());
+        viewHolder.binding.sectionTitle.setText(quiz.getSectionTitle());
 
         if (quiz.isAttempted()){
-            viewHolder.score.setText(""+quiz.getPercent()+"%");
-            viewHolder.score.setVisibility(View.VISIBLE);
+            viewHolder.binding.score.percentLabel.setText(""+quiz.getPercent()+"%");
+            viewHolder.binding.score.percentLabel.setVisibility(View.VISIBLE);
             if (quiz.isPassed()){
-                viewHolder.score.setBackgroundResource(R.drawable.scorecard_quiz_item_passed);
+                viewHolder.binding.score.percentLabel.setBackgroundResource(R.drawable.scorecard_quiz_item_passed);
             }
             else{
-                viewHolder.score.setBackgroundResource(R.drawable.scorecard_quiz_item_attempted);
+                viewHolder.binding.score.percentLabel.setBackgroundResource(R.drawable.scorecard_quiz_item_attempted);
             }
         }
         else{
-            viewHolder.score.setText("");
-            viewHolder.score.setBackgroundResource(R.drawable.scorecard_quiz_item);
+            viewHolder.binding.score.percentLabel.setText("");
+            viewHolder.binding.score.percentLabel.setBackgroundResource(R.drawable.scorecard_quiz_item);
         }
 
 

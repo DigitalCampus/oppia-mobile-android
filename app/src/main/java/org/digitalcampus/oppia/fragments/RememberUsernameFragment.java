@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.FragmentRememberUsernameBinding;
+import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.listener.SubmitEntityListener;
 import org.digitalcampus.oppia.model.User;
@@ -73,7 +74,14 @@ public class RememberUsernameFragment extends AppFragment implements SubmitEntit
         hideProgressDialog();
 
         if (result.isSuccess()) {
-            UIUtils.showAlert(super.getActivity(), R.string.tab_title_remember_username, result.getResultMessage());
+            UIUtils.showAlert(getActivity(), getString(R.string.tab_title_remember_username), result.getResultMessage(),
+                    getString(R.string.ok), () -> {
+                        UIUtils.hideSoftKeyboard(getActivity());
+                        binding.editEmail.setText("");
+                        WelcomeActivity wa = (WelcomeActivity) getActivity();
+                        wa.switchTab(WelcomeActivity.TAB_LOGIN);
+                        return null;
+                    });
         } else {
 
             try {

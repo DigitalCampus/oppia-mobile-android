@@ -19,16 +19,17 @@ package org.digitalcampus.oppia.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivityWelcomeBinding;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.LoginFragment;
 import org.digitalcampus.oppia.fragments.RegisterFragment;
@@ -48,16 +49,14 @@ public class WelcomeActivity extends AppActivity {
     public static final int TAB_RESET_PASSWORD = 3;
 	public static final int TAB_REMEMBER_USERNAME = 4;
 
-    private ViewPager viewPager;
-	private TabLayout tabs;
     private int currentTab = TAB_WELCOME;
-	private RegisterFragment fRegister;
+	private ActivityWelcomeBinding binding;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_welcome);
-		viewPager = findViewById(R.id.activity_welcome_pager);
+		binding = ActivityWelcomeBinding.inflate(LayoutInflater.from(this));
+		setContentView(binding.getRoot());
 		getAppComponent().inject(this);
 	}
 	
@@ -65,10 +64,9 @@ public class WelcomeActivity extends AppActivity {
 	public void onStart() {
 		super.onStart();
 
-		Toolbar toolbar = findViewById(R.id.toolbar);
-		toolbar.getMenu().clear();
-		toolbar.inflateMenu(R.menu.activity_welcome);
-		toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
+		binding.toolbar.getMenu().clear();
+		binding.toolbar.inflateMenu(R.menu.activity_welcome);
+		binding.toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
 
 		List<Fragment> fragments = new ArrayList<>();
         List<String> tabTitles = new ArrayList<>();
@@ -81,7 +79,7 @@ public class WelcomeActivity extends AppActivity {
 		fragments.add(fLogin);
         tabTitles.add(this.getString(R.string.tab_title_login));
 
-		fRegister = RegisterFragment.newInstance();
+		Fragment fRegister = RegisterFragment.newInstance();
 		fragments.add(fRegister);
         tabTitles.add(this.getString(R.string.tab_title_register));
 
@@ -94,10 +92,8 @@ public class WelcomeActivity extends AppActivity {
 		tabTitles.add(this.getString(R.string.tab_title_remember_username));
 
         ActivityPagerAdapter apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, tabTitles);
-		viewPager.setAdapter(apAdapter);
-		viewPager.setCurrentItem(currentTab);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-
+		binding.activityWelcomePager.setAdapter(apAdapter);
+		binding.activityWelcomePager.setCurrentItem(currentTab);
 	}
 	
 	@Override
@@ -133,24 +129,12 @@ public class WelcomeActivity extends AppActivity {
 	}
 	
 	public void switchTab(int tab){
-		viewPager.setCurrentItem(tab);
+		binding.activityWelcomePager.setCurrentItem(tab);
 		this.currentTab = tab;
 	}
 
 	@Override
 	public void onBackPressed() {
-
-		switch (currentTab) {
-			case TAB_WELCOME:
-				super.onBackPressed();
-				return;
-
-			case TAB_REGISTER:
-				if (fRegister.goBack()) {
-					return;
-				}
-				break;
-		}
 
 		switchTab(TAB_WELCOME);
 

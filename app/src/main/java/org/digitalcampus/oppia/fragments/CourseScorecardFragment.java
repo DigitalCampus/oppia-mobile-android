@@ -29,6 +29,8 @@ import android.widget.TextView;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentScorecardBinding;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
 import org.digitalcampus.oppia.adapter.CourseQuizzesAdapter;
@@ -50,22 +52,10 @@ import androidx.recyclerview.widget.RecyclerView;
 public class CourseScorecardFragment extends AppFragment implements ParseCourseXMLTask.OnParseXmlListener {
 
 	private Course course = null;
-    private RecyclerView quizzesGrid;
     private ArrayList<QuizStats> quizStats = new ArrayList<>();
     private CourseQuizzesAdapter quizzesAdapter;
     private ParseCourseXMLTask xmlTask;
-
-    private TextView highlightPretest;
-    private TextView highlightAttempted;
-    private TextView highlightPassed;
-    private TextView activitiesTotal;
-    private TextView activitiesCompleted;
-    private ProgressBar quizzesProgressBar;
-    private View quizzesView;
-    private View quizzesContainer;
-
-    private ProgressBar loadingSpinner;
-    private CircularProgressBar cpbScorecard;
+    private FragmentScorecardBinding binding;
 
     public static CourseScorecardFragment newInstance(Course course) {
 		CourseScorecardFragment myFragment = new CourseScorecardFragment();
@@ -86,27 +76,16 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = inflater.inflate(R.layout.fragment_scorecard, container, false);
+        binding = FragmentScorecardBinding.inflate(inflater, container, false);
+        
         // refresh course to get most recent info (otherwise gets the info from when course first opened)
         DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(getActivity()));
         this.course = db.getCourse(this.course.getCourseId(), userId);
 
-        quizzesGrid = vv.findViewById(R.id.scorecard_grid_quizzes);
-        cpbScorecard = vv.findViewById(R.id.cpb_scorecard);
-
-        highlightPretest = vv.findViewById(R.id.tv_ranking);
-        highlightAttempted = vv.findViewById(R.id.highlight_attempted);
-        highlightPassed = vv.findViewById(R.id.highlight_passed);
-        quizzesProgressBar = vv.findViewById(R.id.progress_quizzes);
-        quizzesView = vv.findViewById(R.id.quizzes_view);
-        quizzesContainer = vv.findViewById(R.id.scorecard_quizzes_container);
-        activitiesTotal = vv.findViewById(R.id.scorecard_activities_total);
-        activitiesCompleted = vv.findViewById(R.id.scorecard_activities_completed);
-
-        loadingSpinner = vv.findViewById(R.id.loading_spinner);
-        loadingSpinner.setVisibility(View.VISIBLE);
-		return vv;
+        binding.loadingSpinner.setVisibility(View.VISIBLE);
+        
+        return binding.getRoot();
 	}
 	
 	@Override
@@ -115,15 +94,15 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
 
         int totalActivities = course.getNoActivities();
         int completedActivities = course.getNoActivitiesCompleted();
-        cpbScorecard.setProgressMax(totalActivities);
-        cpbScorecard.setProgressWithAnimation(completedActivities, App.SCORECARD_ANIM_DURATION);
+        binding.cpbScorecard.setProgressMax(totalActivities);
+        binding.cpbScorecard.setProgressWithAnimation(completedActivities, App.SCORECARD_ANIM_DURATION);
 
-        activitiesTotal.setText(String.valueOf(course.getNoActivities()));
-        activitiesCompleted.setText(String.valueOf(course.getNoActivitiesCompleted()));
+        binding.scorecardActivitiesTotal.setText(String.valueOf(course.getNoActivities()));
+        binding.scorecardActivitiesCompleted.setText(String.valueOf(course.getNoActivitiesCompleted()));
 
         quizzesAdapter = new CourseQuizzesAdapter(getActivity(), quizStats);
-        quizzesGrid.setAdapter(quizzesAdapter);
-        quizzesGrid.setNestedScrollingEnabled(false);
+        binding.scorecardGridQuizzes.setAdapter(quizzesAdapter);
+        binding.scorecardGridQuizzes.setNestedScrollingEnabled(false);
         quizzesAdapter.setOnItemClickListener((v, position)->{
             QuizStats quiz = quizzesAdapter.getItemAtPosition(position);
             Intent i = new Intent(getActivity(), CourseQuizAttemptsActivity.class);
@@ -176,28 +155,28 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         quizStats.clear();
         quizStats.addAll(quizzes);
         if (quizStats.isEmpty()){
-            quizzesContainer.setVisibility(View.GONE);
+            binding.scorecardQuizzesContainer.setVisibility(View.GONE);
             return;
         }
         
-        highlightPretest.setText(pretestScore >= 0 ? (pretestScore + "%") : "-");
-        highlightAttempted.setText(String.valueOf(quizzesAttempted));
-        highlightPassed.setText(String.valueOf(quizzesPassed));
+        binding.tvRanking.setText(pretestScore >= 0 ? (pretestScore + "%") : "-");
+        binding.highlightAttempted.setText(String.valueOf(quizzesAttempted));
+        binding.highlightPassed.setText(String.valueOf(quizzesPassed));
         quizzesAdapter.notifyDataSetChanged();
 
-        loadingSpinner.setVisibility(View.GONE);
+        binding.loadingSpinner.setVisibility(View.GONE);
         AlphaAnimation fadeInAnimation = new AlphaAnimation(0f, 1f);
         fadeInAnimation.setDuration(700);
         fadeInAnimation.setFillAfter(true);
 
-        quizzesProgressBar.setProgress(0);
-        quizzesProgressBar.setSecondaryProgress(0);
+        binding.progressQuizzes.setProgress(0);
+        binding.progressQuizzes.setSecondaryProgress(0);
 
-        quizzesView.setVisibility(View.VISIBLE);
-        quizzesView.startAnimation(fadeInAnimation);
+        binding.quizzesView.setVisibility(View.VISIBLE);
+        binding.quizzesView.startAnimation(fadeInAnimation);
 
-        quizzesProgressBar.setMax(quizStats.size());
-        ProgressBarAnimator animator = new ProgressBarAnimator(quizzesProgressBar);
+        binding.progressQuizzes.setMax(quizStats.size());
+        ProgressBarAnimator animator = new ProgressBarAnimator(binding.progressQuizzes);
         animator.setStartDelay(500);
         animator.animateBoth(quizzesPassed, quizzesAttempted);
     }

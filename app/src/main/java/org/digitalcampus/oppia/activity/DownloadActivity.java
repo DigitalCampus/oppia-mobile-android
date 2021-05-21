@@ -17,27 +17,21 @@
 
 package org.digitalcampus.oppia.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
+import org.digitalcampus.mobile.learning.databinding.ActivityDownloadBinding;
+import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.adapter.DownloadCoursesAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.Paths;
@@ -80,8 +74,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     private ArrayList<CourseInstallViewAdapter> courses;
     private ArrayList<CourseInstallViewAdapter> selected;
 
-    private Button downloadButton;
-
     private InstallerBroadcastReceiver receiver;
 
     @Inject
@@ -94,6 +86,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     private MultiChoiceHelper multiChoiceHelper;
     private Course courseToUpdate;
     private int mode;
+    private ActivityDownloadBinding binding;
 
     @Override
     public void onStart() {
@@ -104,10 +97,9 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_download);
+        binding = ActivityDownloadBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
         getAppComponent().inject(this);
-
-        downloadButton = findViewById(R.id.btn_download_courses);
 
         Bundle bundle = this.getIntent().getExtras();
         if (!bundle.containsKey(EXTRA_MODE)) {
@@ -131,9 +123,8 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
                 Tag tag = (Tag) bundle.getSerializable(EXTRA_TAG);
                 this.url = Paths.SERVER_TAG_PATH + tag.getId() + File.separator;
-                TextView tagTitle = findViewById(R.id.category_title);
-                tagTitle.setVisibility(View.VISIBLE);
-                tagTitle.setText(tag.getName());
+                binding.categoryTitle.setVisibility(View.VISIBLE);
+                binding.categoryTitle.setText(tag.getName());
                 break;
 
             case MODE_COURSE_TO_UPDATE:
@@ -143,7 +134,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                 }
 
                 setTitle(R.string.course_updates);
-                findViewById(R.id.action_bar_subtitle).setVisibility(View.GONE);
+                binding.actionBarSubtitle.setVisibility(View.GONE);
 
                 courseToUpdate = (Course) bundle.getSerializable(EXTRA_COURSE);
                 this.url = Paths.SERVER_COURSES_PATH;
@@ -152,7 +143,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             case MODE_NEW_COURSES:
 
                 setTitle(R.string.new_courses);
-                findViewById(R.id.action_bar_subtitle).setVisibility(View.GONE);
+                binding.actionBarSubtitle.setVisibility(View.GONE);
 
                 this.url = Paths.SERVER_COURSES_PATH;
 
@@ -189,7 +180,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             public boolean onCreateActionMode(final androidx.appcompat.view.ActionMode mode, Menu menu) {
 
                 onPrepareOptionsMenu(menu);
-                downloadButton.setOnClickListener(view -> {
+                binding.btnDownloadCourses.setOnClickListener(view -> {
                     for (CourseInstallViewAdapter course : selected) {
                         downloadCourse(course);
                     }
@@ -247,9 +238,8 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         });
 
         coursesAdapter.setMultiChoiceHelper(multiChoiceHelper);
-        RecyclerView recyclerCourses = findViewById(R.id.recycler_tags);
-        if (recyclerCourses != null) {
-            recyclerCourses.setAdapter(coursesAdapter);
+        if (binding.recyclerTags != null) {
+            binding.recyclerTags.setAdapter(coursesAdapter);
         }
 
     }
@@ -321,7 +311,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     }
 
     private void showDownloadButton(boolean show) {
-        downloadButton.setVisibility(show ? View.VISIBLE : View.GONE);
+        binding.btnDownloadCourses.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void downloadCourse(CourseInstallViewAdapter course) {
@@ -353,7 +343,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                 filterNewCoursesNotSeen();
             }
             coursesAdapter.notifyDataSetChanged();
-            findViewById(R.id.empty_state).setVisibility((courses.isEmpty()) ? View.VISIBLE : View.GONE);
+            binding.emptyState.setVisibility((courses.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		} catch (Exception e) {
 			Analytics.logException(e);

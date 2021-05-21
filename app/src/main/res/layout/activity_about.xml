@@ -21,7 +21,7 @@
 
         <include android:id="@+id/toolbar" layout="@layout/toolbar" />
 
-        <com.google.android.material.tabs.TabLayout
+            <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs_toolbar"
             android:layout_width="match_parent"
             app:tabMaxWidth="0dp"

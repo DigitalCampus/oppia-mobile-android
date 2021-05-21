@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -32,6 +33,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.ActivitySearchBinding;
 import org.digitalcampus.oppia.adapter.SearchResultsAdapter;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
@@ -52,24 +54,21 @@ public class SearchActivity extends AppActivity {
 
     private long userId = 0;
 
-    private EditText searchText;
-    private TextView summary;
-    private ProgressBar loadingSpinner;
-    private RecyclerView recyclerResults;
-    private ImageView searchButton;
-
     private String currentSearch;
     protected ArrayList<SearchResult> results = new ArrayList<>();
     private SearchResultsAdapter adapterResults;
+    private ActivitySearchBinding binding;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        binding = ActivitySearchBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
+        
         adapterResults = new SearchResultsAdapter(this, results);
-        recyclerResults = findViewById(R.id.recycler_results_search);
-        recyclerResults.setAdapter(adapterResults);
+        
+        binding.recyclerResultsSearch.setAdapter(adapterResults);
         adapterResults.setOnItemClickListener((view, position) -> {
             Course course = (Course) view.getTag(R.id.TAG_COURSE);
             String digest = (String) view.getTag(R.id.TAG_ACTIVITY_DIGEST);
@@ -108,19 +107,16 @@ public class SearchActivity extends AppActivity {
         DbHelper db = DbHelper.getInstance(this);
         userId = db.getUserId(SessionManager.getUsername(this));
 
-        searchText = findViewById(R.id.search_string);
         //@Override
-        searchText.setOnEditorActionListener((v, actionId, event) -> {
+        binding.searchString.setOnEditorActionListener((v, actionId, event) -> {
             hideKeyboard(v);
             performSearch();
             return false;
         });
-        summary = findViewById(R.id.search_results_summary);
-        loadingSpinner = findViewById(R.id.progressBar);
-        searchButton = findViewById(R.id.searchbutton);
-        if (searchButton != null) {
-            searchButton.setClickable(true);
-            searchButton.setOnClickListener(v -> {
+
+        if (binding.searchbutton != null) {
+            binding.searchbutton.setClickable(true);
+            binding.searchbutton.setOnClickListener(v -> {
                 hideKeyboard(v);
                 performSearch();
             });
@@ -131,8 +127,8 @@ public class SearchActivity extends AppActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (!summary.getText().toString().equals("")) {
-            summary.setVisibility(View.VISIBLE);
+        if (!binding.searchResultsSummary.getText().toString().equals("")) {
+            binding.searchResultsSummary.setVisibility(View.VISIBLE);
         }
     }
 
@@ -147,7 +143,7 @@ public class SearchActivity extends AppActivity {
         super.onRestoreInstanceState(savedInstanceState);
         currentSearch = savedInstanceState.getString("currentSearch");
         if (!TextUtils.isEmpty(currentSearch)) {
-            searchText.setText(currentSearch);
+            binding.searchString.setText(currentSearch);
             currentSearch = "";
             performSearch();
         }
@@ -160,22 +156,22 @@ public class SearchActivity extends AppActivity {
     }
 
     private void performSearch() {
-        String newSearch = searchText.getText().toString().trim();
+        String newSearch = binding.searchString.getText().toString().trim();
 
         if (TextUtils.isEmpty(newSearch)) {
-            searchText.setText("");
+            binding.searchString.setText("");
             return;
         }
 
         if (!newSearch.equals(currentSearch)) {
             currentSearch = newSearch;
 
-            searchButton.setEnabled(false);
-            loadingSpinner.setVisibility(View.VISIBLE);
-            summary.setText(getString(R.string.search_message_searching));
-            summary.setVisibility(View.VISIBLE);
-            SimpleAnimator.fadeFromTop(recyclerResults, SimpleAnimator.FADE_OUT);
-            SimpleAnimator.fadeFromTop(summary, SimpleAnimator.FADE_IN);
+            binding.searchbutton.setEnabled(false);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.searchResultsSummary.setText(getString(R.string.search_message_searching));
+            binding.searchResultsSummary.setVisibility(View.VISIBLE);
+            SimpleAnimator.fadeFromTop(binding.recyclerResultsSearch, SimpleAnimator.FADE_OUT);
+            SimpleAnimator.fadeFromTop(binding.searchResultsSummary, SimpleAnimator.FADE_IN);
 
             new SearchTask().execute("");
         }
@@ -186,7 +182,7 @@ public class SearchActivity extends AppActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            summary.setText(getString(R.string.search_message_fetching));
+            binding.searchResultsSummary.setText(getString(R.string.search_message_fetching));
         }
 
         @Override
@@ -207,11 +203,11 @@ public class SearchActivity extends AppActivity {
             results.clear();
             results.addAll(searchResults);
             adapterResults.notifyDataSetChanged();
-            SimpleAnimator.fadeFromTop(recyclerResults, SimpleAnimator.FADE_IN);
-            loadingSpinner.setVisibility(View.GONE);
-            searchButton.setEnabled(true);
+            SimpleAnimator.fadeFromTop(binding.recyclerResultsSearch, SimpleAnimator.FADE_IN);
+            binding.progressBar.setVisibility(View.GONE);
+            binding.searchbutton.setEnabled(true);
 
-            summary.setText(!results.isEmpty() ?
+            binding.searchResultsSummary.setText(!results.isEmpty() ?
                     getString(R.string.search_result_summary, results.size(), currentSearch) :
                     getString(R.string.search_message_no_results, currentSearch));
         }

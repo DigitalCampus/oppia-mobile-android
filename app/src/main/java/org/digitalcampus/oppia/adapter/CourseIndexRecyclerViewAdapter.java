@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.CourseTitleBarBinding;
+import org.digitalcampus.mobile.learning.databinding.RowCourseIndexSectionHeaderBinding;
+import org.digitalcampus.mobile.learning.databinding.RowCourseIndexSectionItemBinding;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Activity;
@@ -114,12 +117,12 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
 
     @Override
     public void onBindHeaderViewHolder(HeaderViewHolder holder) {
-        holder.title.setText(courseTitle);
+        holder.binding.courseTitle.setText(courseTitle);
         Picasso.get().load(new File(courseIcon))
                 .placeholder(R.drawable.course_icon_placeholder)
                 .error(R.drawable.course_icon_placeholder)
                 .transform(new CircleTransform())
-                .into(holder.courseImage);
+                .into(holder.binding.courseIcon);
     }
 
     @Override
@@ -128,8 +131,8 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
         Section section = getGroupItem(group);
         String title = showSectionNumbers ? section.getOrder() + ". " : "";
         title += section.getTitle(prefLang);
-        holder.title.setText(title);
-        holder.completedActivities.setText(section.getCompletedActivities() + "/" + section.getActivities().size());
+        holder.binding.title.setText(title);
+        holder.binding.activitiesCompleted.setText(section.getCompletedActivities() + "/" + section.getActivities().size());
 
     }
 
@@ -138,54 +141,47 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
         super.onBindChildViewHolder(holder, group, position);
         Activity activity = getChildItem(group, position);
         boolean highlightActivity = highlightCompleted && activity.getCompleted();
-        holder.title.setText(activity.getTitle(prefLang));
-        holder.title.setTextColor(highlightActivity ? highlightColor : normalColor);
-        holder.completedBadge.setVisibility(highlightActivity ? View.VISIBLE : View.GONE);
+        holder.binding.title.setText(activity.getTitle(prefLang));
+        holder.binding.title.setTextColor(highlightActivity ? highlightColor : normalColor);
+        holder.binding.badge.setVisibility(highlightActivity ? View.VISIBLE : View.GONE);
 
         if (activity.hasCustomImage()) {
             String image = activity.getImageFilePath(courseLocation);
-            Picasso.get().load(new File(image)).into(holder.activityImage);
+            Picasso.get().load(new File(image)).into(holder.binding.icon);
         } else {
             int defaultActivityDrawable = activity.getDefaultResourceImage();
-            holder.activityImage.setImageResource(defaultActivityDrawable);
+            holder.binding.icon.setImageResource(defaultActivityDrawable);
         }
     }
 
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
-        private TextView title;
-        private ImageView courseImage;
+        private final CourseTitleBarBinding binding;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.course_title);
-            courseImage = itemView.findViewById(R.id.course_icon);
+            binding = CourseTitleBarBinding.bind(itemView);
         }
     }
 
     public class ChildViewHolder extends RecyclerView.ViewHolder {
-        private TextView title;
-        private ImageView activityImage;
-        private View completedBadge;
+
+
+        private final RowCourseIndexSectionItemBinding binding;
 
         public ChildViewHolder(View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.title);
-            activityImage = itemView.findViewById(R.id.icon);
-            completedBadge = itemView.findViewById(R.id.badge);
+            binding = RowCourseIndexSectionItemBinding.bind(itemView);
 
         }
     }
 
     public class SectionViewHolder extends ExpandableRecyclerView.GroupViewHolder {
-        private TextView title;
-
-        private TextView completedActivities;
+        private final RowCourseIndexSectionHeaderBinding binding;
 
         public SectionViewHolder(View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.title);
-            completedActivities = itemView.findViewById(R.id.activities_completed);
+            binding = RowCourseIndexSectionHeaderBinding.bind(itemView);
             itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 

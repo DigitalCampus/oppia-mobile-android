@@ -88,7 +88,6 @@ public class App extends Application {
     public static final boolean METADATA_INCLUDE_WIFI_ON = BuildConfig.METADATA_INCLUDE_WIFI_ON;
     public static final boolean METADATA_INCLUDE_NETWORK_CONNECTED = BuildConfig.METADATA_INCLUDE_NETWORK_CONNECTED;
     public static final boolean METADATA_INCLUDE_BATTERY_LEVEL = BuildConfig.METADATA_INCLUDE_BATTERY_LEVEL;
-    public static final boolean METADATA_INCLUDE_GPS = BuildConfig.METADATA_INCLUDE_GPS;
 
     // general other settings
     public static final String MINT_API_KEY = BuildConfig.MINT_API_KEY;

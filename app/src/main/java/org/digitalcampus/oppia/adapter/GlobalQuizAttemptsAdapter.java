@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.RowQuizAttemptGlobalBinding;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.utils.DateUtils;
 
@@ -25,18 +26,12 @@ public class GlobalQuizAttemptsAdapter extends RecyclerViewClickableAdapter<Glob
     }
 
     class GlobalQuizAttemptsViewHolder extends RecyclerViewClickableAdapter.ViewHolder {
-
-        private TextView date;
-        private TextView score;
-        private TextView courseTitle;
-        private TextView quizTitle;
+        
+        private final RowQuizAttemptGlobalBinding binding;
 
         GlobalQuizAttemptsViewHolder(View itemView) {
             super(itemView);
-            date = itemView.findViewById(R.id.attempt_date);
-            score = itemView.findViewById(R.id.score);
-            courseTitle = itemView.findViewById(R.id.course_title);
-            quizTitle = itemView.findViewById(R.id.quiz_title);
+            binding = RowQuizAttemptGlobalBinding.bind(itemView);
 
         }
     }
@@ -52,12 +47,12 @@ public class GlobalQuizAttemptsAdapter extends RecyclerViewClickableAdapter<Glob
     public void onBindViewHolder(@NonNull GlobalQuizAttemptsViewHolder viewHolder, int position) {
         final QuizAttempt quiz = getItemAtPosition(position);
 
-        viewHolder.quizTitle.setText(quiz.getDisplayTitle(ctx));
+        viewHolder.binding.quizTitle.setText(quiz.getDisplayTitle(ctx));
         String course = quiz.getCourseTitle();
-        viewHolder.courseTitle.setText(course == null ? ctx.getString(R.string.quiz_attempts_unknown_course) : course);
-        viewHolder.date.setText(DateUtils.DISPLAY_DATETIME_FORMAT.print(quiz.getDatetime()));
-        viewHolder.score.setText(quiz.getScorePercentLabel());
-        viewHolder.score.setBackgroundResource(
+        viewHolder.binding.courseTitle.setText(course == null ? ctx.getString(R.string.quiz_attempts_unknown_course) : course);
+        viewHolder.binding.attemptDate.setText(DateUtils.DISPLAY_DATETIME_FORMAT.print(quiz.getDatetime()));
+        viewHolder.binding.score.percentLabel.setText(quiz.getScorePercentLabel());
+        viewHolder.binding.score.percentLabel.setBackgroundResource(
                 quiz.isPassed()
                         ? R.drawable.scorecard_quiz_item_passed
                         : R.drawable.scorecard_quiz_item_attempted);
