@@ -16,7 +16,6 @@ def version_name = "7.2.1"
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '29.0.2'
 
     defaultConfig {
         versionCode version_code
