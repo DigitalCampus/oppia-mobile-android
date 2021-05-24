@@ -17,6 +17,12 @@
 
 package org.digitalcampus.oppia.model;
 
+import android.content.Context;
+
+import androidx.preference.PreferenceManager;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 
@@ -25,6 +31,7 @@ public class Badge {
 	private DateTime datetime;
 	private String description;
 	private String icon;
+	private String certificatePdf;
 
 	public static final String BADGE_CRITERIA_ALL_ACTIVITIES = "all_activities";
 	public static final String BADGE_CRITERIA_ALL_QUIZZES = "all_quizzes";
@@ -63,4 +70,13 @@ public class Badge {
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
+
+	public String getCertificatePdf() {
+		return certificatePdf;
+	}
+
+	public void setCertificatePdf(String certificatePdf) {
+		this.certificatePdf = certificatePdf;
+	}
+
 }
