@@ -20,6 +20,7 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.BadgesView
 
     private List<Badge> badges;
     private Context context;
+    private OnItemClickListener onItemClickListener;
 
     public BadgesAdapter(Context context, List<Badge> badges) {
         this.context = context;
@@ -39,10 +40,12 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.BadgesView
     @Override
     public void onBindViewHolder(final BadgesViewHolder viewHolder, final int position) {
 
-        final Badge b = getItemAtPosition(position);
+        final Badge badge = getItemAtPosition(position);
 
-        viewHolder.binding.badgesDescription.setText(b.getDescription());
-        viewHolder.binding.badgesDate.setText(b.getDateAsString());
+        viewHolder.binding.badgesDescription.setText(badge.getDescription());
+        viewHolder.binding.badgesDate.setText(badge.getDateAsString());
+        viewHolder.binding.btnDownloadCertificate.setVisibility(TextUtils.isEmpty(badge.getCertificatePdf())
+                ? View.INVISIBLE : View.VISIBLE);
 
     }
 
@@ -66,11 +69,21 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.BadgesView
 
             binding = RowFragmentBadgesListBinding.bind(itemView);
 
+            binding.btnDownloadCertificate.setOnClickListener(v -> {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onDownloadCertificateButtonClick(getAdapterPosition());
+                }
+            });
+
         }
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
+    }
+
     public interface OnItemClickListener {
-        void onItemClick(View view, int position);
+        void onDownloadCertificateButtonClick(int position);
     }
 }
 
