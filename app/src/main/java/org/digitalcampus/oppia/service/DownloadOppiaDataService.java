@@ -11,8 +11,11 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
@@ -52,7 +55,12 @@ public class DownloadOppiaDataService {
         this.showDialog = showDialog;
     }
 
-    public void downloadOppiaData(String path, String filename) {
+    /**
+     * Download an oppia file
+     * @param path for the download request
+     * @param filename for store in downloads folder. If null, the last segment of path will be used
+     */
+    public void downloadOppiaData(String path, @Nullable String filename) {
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             int permitted = context.checkSelfPermission( Manifest.permission.WRITE_EXTERNAL_STORAGE );
@@ -74,6 +82,14 @@ public class DownloadOppiaDataService {
         String url = new RemoteApiEndpoint().getFullURL(context, path);
         HttpUrl urlWithCredentials = HTTPClientUtils.getUrlWithCredentials(url, user.getUsername(), user.getApiKey());
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(urlWithCredentials.toString()));
+
+        if (TextUtils.isEmpty(filename)) {
+            filename = urlWithCredentials.pathSegments().get(urlWithCredentials.pathSize() - 1);
+        }
+
+        if (listener != null) {
+            listener.onDownloadStarted();
+        }
 
         String filenameUser = user.getUsername() + "-" + filename;
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filenameUser);
