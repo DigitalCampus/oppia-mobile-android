@@ -80,7 +80,7 @@ public class RegisterTask extends APIRequestTask<User, Object, EntityResult<User
         if (saveUser) {
             DbHelper db = DbHelper.getInstance(ctx);
             boolean usernameExists = db.isUser(user.getUsername()) != -1;
-            if (!usernameExists) {
+            if (!user.isOfflineRegister() || !usernameExists) {
                 // add or update user in db
                 db.addOrUpdateUser(user);
                 result.setSuccess(true);
