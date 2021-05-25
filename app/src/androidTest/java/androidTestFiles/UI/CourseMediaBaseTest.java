@@ -40,9 +40,6 @@ public abstract class CourseMediaBaseTest extends DaggerInjectMockUITest {
         testDBHelper = new TestDBHelper(InstrumentationRegistry.getInstrumentation().getTargetContext());
         testDBHelper.setUp();
 
-        StorageAccessStrategy storageStrategy = new ExternalStorageStrategy();
-        Storage.setStorageStrategy(storageStrategy);
-
         CourseUtils.cleanUp();
     }
 
@@ -51,7 +48,7 @@ public abstract class CourseMediaBaseTest extends DaggerInjectMockUITest {
     @After
     public void tearDown() throws Exception {
         testDBHelper.tearDown();
-//        CourseUtils.cleanUp();
+        CourseUtils.cleanUp();
     }
 
     protected void copyCourseFromAssets(String filename){
