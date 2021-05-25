@@ -59,7 +59,7 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
 
     @Parameterized.Parameters
     public static StorageAccessStrategy[] storageStrategies() {
-        return new StorageAccessStrategy[]{ new InternalStorageStrategy(), new ExternalStorageStrategy()};
+        return FileUtils.getStorageStrategiesBasedOnDeviceAvailableStorage();
     }
 
     @Before

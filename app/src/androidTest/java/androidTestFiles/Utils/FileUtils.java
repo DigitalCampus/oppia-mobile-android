@@ -4,7 +4,10 @@ import android.content.Context;
 import android.util.Log;
 
 import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
+import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,10 +16,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
 public class FileUtils {
+
+    public static  StorageAccessStrategy[] getStorageStrategiesBasedOnDeviceAvailableStorage() {
+        Context ctx = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ExternalStorageStrategy externalStrategy = new ExternalStorageStrategy();
+        String externalLocation = externalStrategy.getStorageLocation(ctx);
+
+        ArrayList<StorageAccessStrategy> params = new ArrayList<>();
+        params.add(new InternalStorageStrategy());
+        if (externalLocation != null){
+            params.add(externalStrategy);
+        }
+        return params.toArray(new StorageAccessStrategy[0]);
+    }
+
 
     ///from https://github.com/riggaroo/android-retrofit-test-examples/blob/master/RetrofitTestExample/app/src/androidTest/java/za/co/riggaroo/retrofittestexample/RestServiceTestHelper.java
 
