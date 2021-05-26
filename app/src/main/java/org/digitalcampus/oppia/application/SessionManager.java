@@ -63,7 +63,10 @@ public class SessionManager {
             PrefsActivity.PREF_SHOW_SECTION_NOS,
             PrefsActivity.PREF_HIGHLIGHT_COMPLETED,
             PrefsActivity.PREF_DISABLE_NOTIFICATIONS,
-            PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS);
+            PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS,
+            PrefsActivity.PREF_BUG_REPORT_ENABLED,
+            PrefsActivity.PREF_ANALYTICS_ENABLED,
+            PrefsActivity.PREF_ANALYTICS_INITIAL_PROMPT);
 
     private static final String STR_FALSE = "false";
     private static final String STR_TRUE = "true";

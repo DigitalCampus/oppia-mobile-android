@@ -18,20 +18,22 @@
 package org.digitalcampus.oppia.fragments;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.mobile.learning.databinding.FragmentBadgesBinding;
 import org.digitalcampus.oppia.adapter.BadgesAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
+import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Badge;
+import org.digitalcampus.oppia.service.DownloadOppiaDataService;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
@@ -42,9 +44,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.recyclerview.widget.RecyclerView;
-
-public class BadgesFragment extends AppFragment implements APIRequestListener {
+public class BadgesFragment extends AppFragment implements APIRequestListener, DownloadOppiaDataService.DownloadOppiaDataListener {
 
 	private static final String STR_JSON_OBJECTS = "objects";
 
@@ -57,6 +57,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 	@Inject
 	List<Badge> badges;
 	private FragmentBadgesBinding binding;
+	private DownloadOppiaDataService downloadOppiaDataService;
 
 	public static BadgesFragment newInstance() {
 	    return new BadgesFragment();
@@ -78,13 +79,31 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 		getAppComponent().inject(this);
 
         adapterBadges = new BadgesAdapter(super.getActivity(), badges);
+        adapterBadges.setOnItemClickListener(position -> checkPermissionAndDownloadCertificate(badges.get(position)));
 		binding.recyclerBadges.setAdapter(adapterBadges);
+
+		downloadOppiaDataService = new DownloadOppiaDataService(getActivity());
+		downloadOppiaDataService.setDownloadOppiaDataListener(this);
+		downloadOppiaDataService.setShowOpenDownloadsDialogOnSuccess(true);
 
 		getBadges();
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
 
-	private void getBadges(){		
+		binding.permissionsExplanation.setVisibility(View.GONE);
+		downloadOppiaDataService.onResume();
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		downloadOppiaDataService.onPause();
+	}
+
+	private void getBadges(){
 		APIUserRequestTask task = new APIUserRequestTask(super.getActivity(), apiEndpoint);
 		String url = Paths.SERVER_AWARDS_PATH;
 		task.setAPIRequestListener(this);
@@ -106,10 +125,14 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 			}
 			for (int i = 0; i < (json.getJSONArray(STR_JSON_OBJECTS).length()); i++) {
 				JSONObject jsonObj = (JSONObject) json.getJSONArray(STR_JSON_OBJECTS).get(i);
-				Badge b = new Badge();
-				b.setDescription(jsonObj.getString("description"));
-				b.setDateTime(jsonObj.getString("award_date"));
-				badges.add(b);
+				Badge badge = new Badge();
+				badge.setDescription(jsonObj.getString("description"));
+				badge.setDateTime(jsonObj.getString("award_date"));
+				if (!jsonObj.isNull("certificate_pdf")) {
+					badge.setCertificatePdf(jsonObj.getString("certificate_pdf"));
+				}
+
+				badges.add(badge);
 			}
 
             adapterBadges.notifyDataSetChanged();
@@ -145,5 +168,30 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 		binding.errorState.setVisibility(View.VISIBLE);
 	}
 
+	private void checkPermissionAndDownloadCertificate(Badge badge) {
 
+		boolean hasPermissions = PermissionsManager.checkPermissionsAndInform(getActivity(),
+				PermissionsManager.STORAGE_PERMISSIONS, binding.permissionsExplanation);
+
+		if (hasPermissions) {
+			downloadCertificate(badge);
+		}
+	}
+
+	private void downloadCertificate(Badge badge) {
+		downloadOppiaDataService.downloadOppiaData(badge.getCertificatePdf(), null);
+	}
+
+	@Override
+	public void onDownloadStarted() {
+		showProgressDialog(getString(R.string.downloading));
+	}
+
+	@Override
+	public void onDownloadFinished(boolean success, String errorMessage) {
+		hideProgressDialog();
+		if (!TextUtils.isEmpty(errorMessage)) {
+			toast(errorMessage);
+		}
+	}
 }
