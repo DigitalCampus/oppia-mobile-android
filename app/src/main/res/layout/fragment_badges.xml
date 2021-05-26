@@ -103,4 +103,14 @@
         app:spanCount="2"
         tools:listitem="@layout/row_fragment_badges_list" />
 
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="40dp"
+        android:id="@+id/permissions_explanation"
+        android:background="@android:color/white"
+        android:layout_margin="@dimen/margin_medium"
+        android:layout_gravity="center"
+        android:visibility="gone">
+    </FrameLayout>
 </FrameLayout>

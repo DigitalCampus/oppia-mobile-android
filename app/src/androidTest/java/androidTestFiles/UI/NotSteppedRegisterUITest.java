@@ -35,6 +35,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -364,10 +365,8 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
         onView(withId(R.id.register_btn))
                 .perform( click());
 
-        Thread.sleep(5000);
-
         try {
-            assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
+            assertNotEquals(WelcomeActivity.class, TestUtils.getCurrentActivity().getClass());
         } catch (AssertionFailedError afe) {
             // If server returns any error:
             onView(withText(R.string.error)).check(matches(isDisplayed()));

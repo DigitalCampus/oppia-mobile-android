@@ -76,8 +76,6 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 	private CustomFieldsUIManager fieldsManager;
 	private SteppedFormUIManager stepsManager;
 
-	private ProgressDialog pDialog;
-
 	private FragmentRegisterBinding binding;
 
 
@@ -286,8 +284,8 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 	@Override
 	public void onSubmitComplete(User registeredUser) {
-		pDialog.dismiss();
-		SessionManager.loginUser(getActivity(), registeredUser);
+		hideProgressDialog();
+
 		// registration gamification
 		GamificationEngine gamificationEngine = new GamificationEngine(super.getActivity());
 		gamificationEngine.processEventRegister();
@@ -295,20 +293,13 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		//Save the search tracker
 		new Tracker(super.getActivity()).saveRegisterTracker();
 
-		boolean fromViewDigest = getActivity().getIntent().getBooleanExtra(ViewDigestActivity.EXTRA_FROM_VIEW_DIGEST, false);
+		((WelcomeActivity) getActivity()).onSuccessUserAccess(registeredUser);
 
-		if (fromViewDigest) {
-			getActivity().setResult(Activity.RESULT_OK);
-		} else {
-			startActivity(new Intent(getActivity(), MainActivity.class));
-		}
-
-		super.getActivity().finish();
 	}
 
 	@Override
 	public void onSubmitError(String error) {
-		pDialog.dismiss();
+		hideProgressDialog();
 		Context ctx = super.getActivity();
 		if (ctx != null){
 			UIUtils.showAlert(getActivity(), R.string.error, error);
@@ -317,7 +308,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 	@Override
 	public void onConnectionError(String error, final User u) {
-		pDialog.dismiss();
+		hideProgressDialog();
 		Context ctx = super.getActivity();
 		if (ctx == null){
 			return;
@@ -341,11 +332,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 	private void executeRegisterTask(User user){
 
-		pDialog = new ProgressDialog(super.getActivity());
-		pDialog.setTitle(R.string.register_alert_title);
-		pDialog.setMessage(getString(R.string.register_process));
-		pDialog.setCancelable(true);
-		pDialog.show();
+		showProgressDialog(getString(R.string.register_process));
 
 		RegisterTask rt = new RegisterTask(super.getActivity(), apiEndpoint);
 		rt.setRegisterListener(this);
