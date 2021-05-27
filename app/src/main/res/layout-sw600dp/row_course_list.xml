@@ -27,7 +27,7 @@
             android:gravity="center">
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <ImageView
@@ -35,6 +35,7 @@
                     android:layout_width="@dimen/course_icon_size"
                     android:layout_height="@dimen/course_icon_size"
                     android:layout_margin="5dp"
+                    android:layout_centerHorizontal="true"
                     android:contentDescription="@string/app_logo_alt"
                     android:padding="@dimen/padding_course_list_item_circular_progress"
                     android:src="@drawable/course_icon_placeholder" />
@@ -47,12 +48,22 @@
                     android:layout_alignTop="@+id/course_image"
                     android:layout_alignRight="@+id/course_image"
                     android:layout_alignBottom="@+id/course_image"
+
                     app:cpb_background_progressbar_width="@dimen/padding_course_list_item_circular_progress"
                     app:cpb_progressbar_width="@dimen/padding_course_list_item_circular_progress"
                     app:cpb_progress_direction="to_right"
                     app:cpb_progress_max="100"
                     app:cpb_background_progressbar_color="@color/grey_light"
                     app:cpb_progressbar_color="@color/theme_secondary_light" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/img_sync_status"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:adjustViewBounds="true"
+                    android:layout_alignParentEnd="true"
+                    app:srcCompat="@drawable/ic_action_refresh"
+                    app:tint="@color/text_dark"/>
 
             </RelativeLayout>
 
