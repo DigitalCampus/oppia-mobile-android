@@ -39,7 +39,7 @@ repositories {
 }
 
 def version_code = 87
-def version_name = "7.2.1-lb.1-int"
+def version_name = "7.2.1-lb.2-int"
 
 android {
     compileSdkVersion 29
