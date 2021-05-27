@@ -28,6 +28,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityDownloadBinding;
 import org.digitalcampus.oppia.adapter.TagsAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
@@ -53,6 +54,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
     private ArrayList<Tag> tags;
 
 	@Inject TagRepository tagRepository;
+	@Inject	ApiEndpoint apiEndpoint;
 	private TagsAdapter adapterTags;
 	private ActivityDownloadBinding binding;
 
@@ -144,7 +146,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	private void getTagList() {
 		showProgressDialog(getString(R.string.loading));
 
-		tagRepository.getTagList(this);
+		tagRepository.getTagList(this, apiEndpoint);
 	}
 
 	public void refreshTagList() {
