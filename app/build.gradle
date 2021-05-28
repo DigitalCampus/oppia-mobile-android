@@ -15,7 +15,7 @@ def version_code = 88
 def version_name = "7.2.2"
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         versionCode version_code
@@ -24,7 +24,7 @@ android {
         applicationId "org.digitalcampus.mobile.learning"
 
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
