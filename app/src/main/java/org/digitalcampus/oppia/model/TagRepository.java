@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.model;
 
 import android.content.Context;
 
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
@@ -42,8 +43,8 @@ public class TagRepository {
     private static final String JSON_PROPERTY_HIGHLIGHT = "highlight";
     private static final String JSON_PROPERTY_ORDER_PRIORITY = "order_priority";
 
-    public void getTagList(Context ctx){
-        APIUserRequestTask task = new APIUserRequestTask(ctx);
+    public void getTagList(Context ctx,  ApiEndpoint api){
+        APIUserRequestTask task = new APIUserRequestTask(ctx, api);
         String url = Paths.SERVER_TAG_PATH;
         task.setAPIRequestListener((APIRequestListener) ctx);
         task.execute(url);

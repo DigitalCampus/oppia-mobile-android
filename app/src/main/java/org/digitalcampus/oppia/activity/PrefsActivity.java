@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityPreferencesBinding;
+import org.digitalcampus.oppia.fragments.prefs.BasePreferenceFragment;
 import org.digitalcampus.oppia.fragments.prefs.MainPreferencesFragment;
 import org.digitalcampus.oppia.fragments.prefs.PreferenceChangedCallback;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
@@ -438,9 +439,10 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
     @Override
     public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {
-        PreferenceFragmentCompat fragment = null;
+        BasePreferenceFragment fragment = null;
         try {
-            fragment = (PreferenceFragmentCompat) Class.forName(pref.getFragment()).newInstance();
+            fragment = (BasePreferenceFragment) Class.forName(pref.getFragment()).newInstance();
+            fragment.setPrefs(this.prefs);
         } catch (ClassNotFoundException e) {
             Log.d(TAG, "Class not found exception", e);
         } catch (IllegalAccessException e) {

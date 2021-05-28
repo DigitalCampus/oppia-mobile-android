@@ -85,6 +85,7 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
     }
 
     private void initMockEditor() {
+        when(editor.remove(anyString())).thenReturn(editor);
         when(editor.putString(anyString(), anyString())).thenReturn(editor);
         when(editor.putLong(anyString(), anyLong())).thenReturn(editor);
         when(editor.putBoolean(anyString(), anyBoolean())).thenReturn(editor);
@@ -190,6 +191,8 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
     public void goToWelcomeActivityIfUserModifyServerUrl() throws InterruptedException {
 
         when(prefs.getString(eq(PrefsActivity.PREF_USER_NAME), anyString())).thenReturn("test_user");
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(false);
+        when(prefs.edit()).thenReturn(editor);
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             onView(withId(R.id.drawer))
