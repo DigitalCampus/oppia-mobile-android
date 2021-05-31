@@ -45,7 +45,7 @@ public class TagActivityUITest extends DaggerInjectMockUITest {
             response.setResultResponse("{}");
             ((TagSelectActivity) ctx).apiRequestComplete(response);
             return null;
-        }).when(tagRepository).getTagList(any());
+        }).when(tagRepository).getTagList(any(), any());
 
 
         doAnswer(invocationOnMock -> {

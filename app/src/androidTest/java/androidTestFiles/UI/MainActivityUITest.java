@@ -37,8 +37,10 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Points;
+import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
+import org.digitalcampus.oppia.task.Payload;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -81,6 +83,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
@@ -105,6 +108,9 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
     ArrayList<Points> pointList;
     @Mock
     ArrayList<Badge> badgeList;
+
+    @Mock
+    TagRepository tagRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -159,6 +165,15 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
     @Test
     public void showsTagSelectActivityOnClickManageCourses() throws Exception {
 
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            Payload response = new Payload();
+            response.setResult(true);
+            response.setResultResponse("{}");
+            ((TagSelectActivity) ctx).apiRequestComplete(response);
+            return null;
+        }).when(tagRepository).getTagList(any(), any());
+
         givenThereAreSomeCourses(0);
 
         mainActivityTestRule.launchActivity(null);
@@ -172,6 +187,15 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
     @Test
     public void showsTagSelectActivityOnClickManageCoursesImage() throws Exception {
+
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            Payload response = new Payload();
+            response.setResult(true);
+            response.setResultResponse("{}");
+            ((TagSelectActivity) ctx).apiRequestComplete(response);
+            return null;
+        }).when(tagRepository).getTagList(any(), any());
 
         givenThereAreSomeCourses(0);
 

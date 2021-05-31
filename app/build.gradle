@@ -14,7 +14,7 @@ def version_code = 88
 def version_name = "7.2.2"
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         versionCode version_code
@@ -23,9 +23,14 @@ android {
         applicationId "org.digitalcampus.mobile.learning"
 
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -144,6 +149,7 @@ android {
     }
 
     testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
         unitTests.returnDefaultValues = true
         unitTests.includeAndroidResources = true
         animationsDisabled = true
@@ -187,6 +193,7 @@ dependencies {
     implementation 'androidx.core:core:1.3.2'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.navigation:navigation-fragment:2.3.4'
     implementation 'androidx.navigation:navigation-ui:2.3.4'
@@ -195,7 +202,7 @@ dependencies {
     implementation 'androidx.concurrent:concurrent-futures:1.1.0'
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     implementation "androidx.work:work-runtime:$workVersion"
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+
     androidTestImplementation "androidx.work:work-testing:$workVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
 
@@ -231,6 +238,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.annotation:annotation:1.1.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    androidTestUtil 'androidx.test:orchestrator:1.3.0'
 
     //Espresso Dependencies
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
