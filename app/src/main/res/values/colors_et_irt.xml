@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="irt_primary">#00366A</color>
+    <color name="irt_primary_dark">#00366A</color>
+    <color name="irt_secondary">#0077DB</color>
+    <color name="irt_secondary_light">#0077DB</color>
+    <color name="irt_dark">#00366A</color>
+
+    <color name="irt_orange">#F3722C</color>
+    <color name="irt_orange_light">#F3722C</color>
+    <color name="irt_teal">#43AA8B</color>
+    <color name="irt_teal_dark">#43AA8B</color>
+
+</resources>

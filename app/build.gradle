@@ -12,7 +12,7 @@ repositories {
 }
 
 def version_code = 87
-def version_name = "7.2.1.et-irt.2.int"
+def version_name = "7.2.1.et-irt.3.int"
 
 android {
     compileSdkVersion 29
