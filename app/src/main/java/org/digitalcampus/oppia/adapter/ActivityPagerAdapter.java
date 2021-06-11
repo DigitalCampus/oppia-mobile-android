@@ -60,7 +60,7 @@ public class ActivityPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         String title = tabTitles.get(position);
-        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(ctx.getAssets(), "fonts/montserrat.ttf"));
+        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(ctx.getAssets(), "fonts/Helvetica.ttf"));
         SpannableStringBuilder s = new SpannableStringBuilder();
         s.append(title).setSpan(typefaceSpan, 0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return SpannableString.valueOf(s);

@@ -151,7 +151,7 @@ public class App extends Application {
         ViewPump.init(ViewPump.builder()
                 .addInterceptor(new CalligraphyInterceptor(
                         new CalligraphyConfig.Builder()
-                                .setDefaultFontPath("fonts/lato.ttf")
+                                .setDefaultFontPath("fonts/Helvetica.ttf")
                                 .setFontAttrId(R.attr.fontPath)
                                 .build()))
                 .build());

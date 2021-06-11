@@ -4,12 +4,12 @@
 
 @font-face {
   font-family: mainFont;
-  src: url('../fonts/lato.ttf');
+  src: url('../fonts/Helvetica.ttf');
 }
 
 @font-face {
   font-family: headerFont;
-  src: url('../fonts/montserrat.ttf');
+  src: url('../fonts/Helvetica.ttf');
 }
 
 * { padding:0px;

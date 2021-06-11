@@ -37,7 +37,7 @@
                     android:gravity="center"
                     android:padding="3dp"
                     android:textSize="15sp"
-                    fontPath="fonts/montserrat.ttf"
+                    fontPath="fonts/Helvetica.ttf"
                     android:textStyle="bold"/>
 
             </FrameLayout>
