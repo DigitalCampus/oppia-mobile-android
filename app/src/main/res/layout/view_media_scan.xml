@@ -3,7 +3,7 @@
     android:id="@+id/view_media_missing"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/subtitle_bar"
+    android:background="@color/irt_secondary"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="@dimen/padding_medium"

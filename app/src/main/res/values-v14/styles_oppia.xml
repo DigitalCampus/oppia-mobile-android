@@ -42,6 +42,7 @@
         <item name="colorAccent">@color/theme_secondary</item>
         <item name="android:textAppearanceButton">@style/TextAppearanceButtonBorderless</item>
         <item name="android:buttonStyle">@style/RaisedButton</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
     
     <style name="Oppia.Theme.Dark" parent="@style/Oppia.Theme">
@@ -87,5 +88,7 @@
     <style name="Oppia.CAB.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">@drawable/bg_toolbar</item>
     </style>
+
+
 
 </resources>

@@ -100,10 +100,12 @@
         <item name="progressBarStyle">@style/ProgressBar.Om</item>
         <item name="titleTextStyle">@style/Oppia.ActionBar.TitleTextStyle</item>
         <item name="elevation">4dp</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="subtitleTextColor">@color/white</item>
     </style>
 
     <style name="Oppia.ActionBar.TitleTextStyle" parent="Base.ThemeOverlay.AppCompat.ActionBar">
-        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:textColor">@color/text_light</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
     </style>
@@ -212,6 +214,11 @@
         <item name="android:clickable">true</item>
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:focusable">true</item>
+    </style>
+
+    <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/white</item>
     </style>
 
 </resources>

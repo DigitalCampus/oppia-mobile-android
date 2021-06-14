@@ -37,11 +37,11 @@
     <color name="listitem_icon_tint">@color/theme_primary</color>
     <color name="listitem_action_item_tint">@color/quiz_navigation_button</color>
     <color name="design_snackbar_background_color" tools:override="true">@color/theme_primary</color>
-    <color name="gamification_snackbar_gradient_start">@color/irt_teal</color>
-    <color name="gamification_snackbar_gradient_end">@color/irt_teal_dark</color>
-    <color name="points_badge">@color/irt_teal</color>
+    <color name="gamification_snackbar_gradient_start">@color/irt_secondary</color>
+    <color name="gamification_snackbar_gradient_end">@color/irt_primary</color>
+    <color name="points_badge">@color/irt_orange</color>
     <color name="quiz_attempted">@color/irt_teal_dark</color>
-    <color name="quiz_passed">@color/irt_teal</color>
+    <color name="quiz_passed">@color/irt_orange</color>
     <!--  Course index  -->
     <color name="course_index_section_title">@color/text_dark</color>
     <color name="course_index_highlight">@color/theme_secondary</color>
