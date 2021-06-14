@@ -30,7 +30,7 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.model.responses.CourseServer;
 import org.digitalcampus.oppia.model.responses.CoursesServerResponse;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.CourseUtils;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
@@ -151,18 +151,18 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
 
     @Override
-    public void apiRequestComplete(Payload response) {
+    public void apiRequestComplete(BasicResult result) {
 
-        if (response.isResult()) {
+        if (result.isSuccess()) {
 
             try {
 
                 CoursesServerResponse coursesServerResponse = new Gson().fromJson(
-                        response.getResultResponse(), CoursesServerResponse.class);
+                        result.getResultMessage(), CoursesServerResponse.class);
 
                 prefs.edit()
                         .putLong(PrefsActivity.PREF_LAST_COURSES_CHECKS_SUCCESSFUL_TIME, System.currentTimeMillis())
-                        .putString(PrefsActivity.PREF_SERVER_COURSES_CACHE, response.getResultResponse())
+                        .putString(PrefsActivity.PREF_SERVER_COURSES_CACHE, result.getResultMessage())
                         .commit();
 
 

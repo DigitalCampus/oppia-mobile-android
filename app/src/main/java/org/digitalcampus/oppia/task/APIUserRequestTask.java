@@ -110,10 +110,7 @@ public class APIUserRequestTask extends APIRequestTask<String, Object, BasicResu
                         Log.d(TAG, e.getMessage());
                     }
 
-                    Payload payload = new Payload(); // TODO PAYLOAD REFACTOR
-                    payload.setResult(result.isSuccess());
-                    payload.setResultResponse(message);
-                    requestListener.apiRequestComplete(payload);
+                    requestListener.apiRequestComplete(result);
                 }
             }
         }

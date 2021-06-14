@@ -17,8 +17,6 @@
 
 package org.digitalcampus.oppia.listener;
 
-import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.result.EntityResult;
 
 public interface SubmitEntityListener<T> extends APIKeyRequestListener {

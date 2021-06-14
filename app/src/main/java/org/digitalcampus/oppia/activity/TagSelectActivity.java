@@ -32,7 +32,7 @@ import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -164,7 +164,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 		
 	}
 	
-	public void apiRequestComplete(Payload response) {
+	public void apiRequestComplete(BasicResult result) {
 		hideProgressDialog();
 		
         Callable<Boolean> finishActivity = () -> {
@@ -172,9 +172,9 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 			return true;
 		};
 	
-		if(response.isResult()){
+		if(result.isSuccess()){
 			try {
-				json = new JSONObject(response.getResultResponse());
+				json = new JSONObject(result.getResultMessage());
 				refreshTagList();
 			} catch (JSONException e) {
 				Analytics.logException(e);
@@ -182,7 +182,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
 			}
 		} else {
-            String errorMsg = response.getResultResponse();
+			String errorMsg = result.getResultMessage();
 			UIUtils.showAlert(this, R.string.error, errorMsg, finishActivity);
 		}
 
