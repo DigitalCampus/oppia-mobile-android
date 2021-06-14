@@ -1,6 +1,5 @@
 package androidTestFiles;
 
-import android.Manifest;
 import android.content.Context;
 import android.util.Log;
 
@@ -14,10 +13,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.result.BasicResult;
-import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
-import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.junit.Before;
@@ -27,7 +23,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 

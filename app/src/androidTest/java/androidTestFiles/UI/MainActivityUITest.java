@@ -40,7 +40,6 @@ import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -54,7 +53,6 @@ import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
-
 
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.CourseUtils;
@@ -538,7 +536,6 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
 
     @Test
-    @Ignore
     public void showsTagSelectActivityOnDrawerClickDownloadCourses() throws Exception {
 
         mainActivityTestRule.launchActivity(null);

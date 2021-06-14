@@ -49,8 +49,6 @@ public class ScanMediaTask extends AsyncTask<List<Course>, String, EntityListRes
 
         EntityListResult<Media> result = new EntityListResult<>();
 
-//        Payload payload = params[0];
-//        currentMedia = (ArrayList<Object>) payload.getResponseData();
         downloadingMedia = DownloadService.getTasksDownloading();
         DbHelper db = DbHelper.getInstance(ctx);
 

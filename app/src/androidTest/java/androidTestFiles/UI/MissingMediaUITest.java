@@ -6,15 +6,15 @@ import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
 
-import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
 import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -46,8 +46,8 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
 
         copyCourseFromAssets(COURSE_WITH_NO_MEDIA);
 
-        Payload response = runInstallCourseTask(context);
-        assertTrue(response.isResult());
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
 
         mainActivityTestRule.launchActivity(null);
 
@@ -62,8 +62,8 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
 
         copyCourseFromAssets(COURSE_WITH_MEDIA_1);
 
-        Payload response = runInstallCourseTask(context);
-        assertTrue(response.isResult());
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
 
         mainActivityTestRule.launchActivity(null);
 
@@ -78,8 +78,8 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
 
         copyCourseFromAssets(COURSE_WITH_MEDIA_1);
 
-        Payload response = runInstallCourseTask(context);
-        assertTrue(response.isResult());
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
 
         copyMediaFromAssets(MEDIA_FILE_VIDEO_TEST_1);
 
@@ -96,8 +96,8 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
         copyCourseFromAssets(COURSE_WITH_MEDIA_1);
         copyCourseFromAssets(COURSE_WITH_MEDIA_2);
 
-        Payload response = runInstallCourseTask(context);
-        assertTrue(response.isResult());
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
 
         copyMediaFromAssets(MEDIA_FILE_VIDEO_TEST_1);
 
@@ -113,8 +113,8 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
         copyCourseFromAssets(COURSE_WITH_MEDIA_1);
         copyCourseFromAssets(COURSE_WITH_MEDIA_2);
 
-        Payload response = runInstallCourseTask(context);
-        assertTrue(response.isResult());
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
 
         copyMediaFromAssets(MEDIA_FILE_VIDEO_TEST_1);
         copyMediaFromAssets(MEDIA_FILE_VIDEO_TEST_2);
@@ -130,8 +130,8 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
 
         copyCourseFromAssets(COURSE_WITH_NO_MEDIA);
 
-        Payload response = runInstallCourseTask(context);
-        assertTrue(response.isResult());
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
 
         mainActivityTestRule.launchActivity(null);
         onView(withRecyclerView(R.id.recycler_courses)
@@ -149,8 +149,8 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
 
         copyCourseFromAssets(COURSE_WITH_MEDIA_2);
 
-        Payload response = runInstallCourseTask(context);
-        assertTrue(response.isResult());
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
 
         copyMediaFromAssets(MEDIA_FILE_VIDEO_TEST_2);
 
@@ -170,8 +170,8 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
 
         copyCourseFromAssets(COURSE_WITH_MEDIA_1);
 
-        Payload response = runInstallCourseTask(context);
-        assertTrue(response.isResult());
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
 
         copyMediaFromAssets(MEDIA_FILE_VIDEO_TEST_1);
 
@@ -188,8 +188,8 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
         copyCourseFromAssets(COURSE_WITH_MEDIA_1);
         copyCourseFromAssets(COURSE_WITH_MEDIA_2);
 
-        Payload response = runInstallCourseTask(context);
-        assertTrue(response.isResult());
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
 
 
         mainActivityTestRule.launchActivity(null);
@@ -205,8 +205,8 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
         copyCourseFromAssets(COURSE_WITH_MEDIA_1);
         copyCourseFromAssets(COURSE_WITH_MEDIA_2);
 
-        Payload response = runInstallCourseTask(context);
-        assertTrue(response.isResult());
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
 
         mainActivityTestRule.launchActivity(null);
 

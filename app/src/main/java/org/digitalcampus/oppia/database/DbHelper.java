@@ -24,10 +24,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import androidx.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -54,7 +55,6 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.model.db_model.Leaderboard;
 import org.digitalcampus.oppia.model.db_model.UserCustomField;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.joda.time.DateTime;
