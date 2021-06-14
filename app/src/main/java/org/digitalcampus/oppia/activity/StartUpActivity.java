@@ -36,17 +36,14 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.task.ImportLeaderboardsTask;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.UpgradeManagerTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
-import java.util.ArrayList;
 
 public class StartUpActivity extends Activity implements UpgradeListener, InstallCourseListener {
 
@@ -176,6 +173,6 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
     private void importLeaderboard() {
         ImportLeaderboardsTask imTask = new ImportLeaderboardsTask(StartUpActivity.this);
         imTask.setListener((success, message) -> endStartUpScreen());
-        imTask.execute(new Payload());
+        imTask.execute();
     }
 }

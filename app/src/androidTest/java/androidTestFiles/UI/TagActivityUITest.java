@@ -9,7 +9,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.junit.Rule;
 import org.junit.Test;

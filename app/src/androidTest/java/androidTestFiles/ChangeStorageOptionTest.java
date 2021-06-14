@@ -12,7 +12,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.ExternalStorageState;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -64,10 +63,7 @@ public class ChangeStorageOptionTest {
 
         ChangeStorageOptionTask task = new ChangeStorageOptionTask(context);
 
-        ArrayList<Object> data = new ArrayList<>();
         String storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
-        data.add(storageOption);
-        Payload p = new Payload(data);
         task.setMoveStorageListener(new MoveStorageListener() {
             @Override
             public void moveStorageComplete(BasicResult result) {
