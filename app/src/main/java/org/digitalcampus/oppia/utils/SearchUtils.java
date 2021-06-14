@@ -28,7 +28,6 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
@@ -46,8 +45,7 @@ public class SearchUtils {
 
 	public static void reindexAll(Context ctx){
 		SearchReIndexTask task = new SearchReIndexTask(ctx);
-		Payload p = new Payload();
-		task.execute(p);
+		task.execute();
 	}
 
     public static void indexAddCourse(Context ctx, Course course, CompleteCourse parsedCourse){
@@ -96,7 +94,7 @@ public class SearchUtils {
 	}
 
 
-	private static class SearchReIndexTask extends AsyncTask<Payload, String, Payload> {
+	private static class SearchReIndexTask extends AsyncTask<Void, Void, Void> {
 		
 		private Context ctx;
 		
@@ -105,8 +103,7 @@ public class SearchUtils {
 		}
 		
 		@Override
-		protected Payload doInBackground(Payload... params) {
-			Payload payload = params[0];
+		protected Void doInBackground(Void... params) {
 			DbHelper db = DbHelper.getInstance(ctx);
 			db.deleteSearchIndex();
 			List<Course> courses  = db.getAllCourses();
@@ -114,8 +111,8 @@ public class SearchUtils {
 				Log.d(TAG,"indexing: "+ c.getTitle("en"));
 				SearchUtils.indexAddCourse(ctx,c);
 			}
-			
-			return payload;
-		}
+
+            return null;
+        }
 	}
 }

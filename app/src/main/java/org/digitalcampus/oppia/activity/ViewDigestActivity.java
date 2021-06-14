@@ -156,10 +156,9 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
         binding.courseTitle.setText(R.string.open_digest_fetching_course_info);
         binding.downloadProgress.setVisibility(View.VISIBLE);
 
-        Payload p = new Payload(Arrays.asList(shortname));
         CourseInfoTask task = new CourseInfoTask(this, apiEndpoint);
         task.setListener(this);
-        task.execute(p);
+        task.execute(shortname);
     }
 
     private void downloadCourse() {

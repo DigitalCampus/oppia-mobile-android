@@ -47,7 +47,6 @@ public class CourseInfoTaskTest  extends MockedApiEndpointTaskTest {
     private void fetchCourseInfoSync(){
         final CountDownLatch signal = new CountDownLatch(1);  //Control AsyncTask sincronization for testing
 
-        Payload p = new Payload(Collections.singletonList("test"));
         CourseInfoTask task = new CourseInfoTask(context, new MockApiEndpoint(mockServer));
         task.setListener(new CourseInfoTask.CourseInfoListener() {
             @Override
@@ -62,7 +61,7 @@ public class CourseInfoTaskTest  extends MockedApiEndpointTaskTest {
             }
         });
 
-        task.execute(p);
+        task.execute("test");
 
         try {
             signal.await();
