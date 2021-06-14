@@ -15,6 +15,7 @@ import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -188,12 +189,10 @@ public class DeleteCourseTest extends BaseTestDB {
 
         FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
 
-        ArrayList<Object> data = new ArrayList<>();
-        Payload payload = new Payload(data);
         InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
         imTask.setInstallerListener(new InstallCourseListener() {
             @Override
-            public void installComplete(Payload r) {
+            public void installComplete(BasicResult result) {
                 signal.countDown();
             }
 
@@ -201,7 +200,7 @@ public class DeleteCourseTest extends BaseTestDB {
             public void installProgressUpdate(DownloadProgress dp) {
             }
         });
-        imTask.execute(payload);
+        imTask.execute();
 
         try {
             signal.await();

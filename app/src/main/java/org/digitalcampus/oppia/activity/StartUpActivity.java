@@ -115,11 +115,9 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
         File dir = new File(Storage.getDownloadPath(this));
         String[] children = dir.list();
         if (children != null) {
-            ArrayList<Object> data = new ArrayList<>();
-            Payload payload = new Payload(data);
             InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(this);
             imTask.setInstallerListener(this);
-            imTask.execute(payload);
+            imTask.execute();
         } else {
             preloadAccounts();
         }
@@ -167,10 +165,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
         this.updateProgress(s);
     }
 
-    public void installComplete(Payload p) {
-        if (!p.getResponseData().isEmpty()) {
-            Media.resetMediaScan(prefs);
-        }
+    public void installComplete(BasicResult result) {
         preloadAccounts();
     }
 

@@ -25,11 +25,12 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstall;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
 
-public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadProgress, Payload>{
+public class InstallDownloadedCoursesTask extends AsyncTask<Void, DownloadProgress, BasicResult>{
 	
 	public static final String TAG = InstallDownloadedCoursesTask.class.getSimpleName();
 	private Context ctx;
@@ -40,9 +41,9 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 	}
 
 	@Override
-	protected Payload doInBackground(Payload... params) {
+	protected BasicResult doInBackground(Void... params) {
 
-		final Payload payload = params[0] == null ? new Payload() : params[0];
+		BasicResult result = new BasicResult();
 
 		File dir = new File(Storage.getDownloadPath(ctx));
 		String[] children = dir.list();
@@ -62,25 +63,26 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					@Override
 					public void onError(String message) {
 						Log.d(TAG, message);
-						payload.setResult(false);
-						payload.setResultResponse(ctx.getString(R.string.error_installing_course, course_filename));
+						result.setSuccess(false);
+						result.setResultMessage(ctx.getString(R.string.error_installing_course, course_filename));
 					}
 
 					@Override
 					public void onFail(String message) {
-						payload.setResult(false);
-						payload.setResultResponse(message);
+						result.setSuccess(false);
+						result.setResultMessage(message);
 					}
 
 					@Override
 					public void onComplete() {
-						payload.setResult(true);
+						result.setSuccess(true);
 					}
 				});
 
 			}
 		}
-		return payload;
+
+		return result;
 	}
 
 	@Override
@@ -94,10 +96,10 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 	}
 
 	@Override
-	protected void onPostExecute(Payload p) {
+	protected void onPostExecute(BasicResult result) {
 		synchronized (this) {
             if (mStateListener != null) {
-               mStateListener.installComplete(p);
+               mStateListener.installComplete(result);
             }
         }
 	}
