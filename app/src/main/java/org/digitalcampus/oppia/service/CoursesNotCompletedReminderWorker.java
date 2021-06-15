@@ -10,11 +10,12 @@ import androidx.work.WorkerParameters;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
-public class CoursesReminderWorker extends Worker {
+public class CoursesNotCompletedReminderWorker extends Worker {
 
-    public CoursesReminderWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+    public CoursesNotCompletedReminderWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 
@@ -37,6 +38,7 @@ public class CoursesReminderWorker extends Worker {
 
 
     private boolean checkActivityLastWeek() {
+
         return false;
     }
 
