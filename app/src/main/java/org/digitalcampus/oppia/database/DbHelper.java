@@ -24,7 +24,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import androidx.preference.PreferenceManager;
+
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,6 +35,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.exception.ActivityNotFoundException;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -267,9 +270,10 @@ public class DbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public SQLiteDatabase getDB(){
+    public SQLiteDatabase getDB() {
         return db;
     }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         createCourseTable(db);
@@ -418,15 +422,15 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createUserCustomFieldsTable(SQLiteDatabase db) {
 
-        String sql = "CREATE TABLE IF NOT EXISTS ["+USER_CF_TABLE+"] (" +
-                "["+USER_CF_ID+"]" + STR_INT_PRIMARY_KEY_AUTO +
-                "["+ USER_CF_USERNAME +"]" + STR_TEXT_COMMA+
-                "["+ CF_FIELD_KEY +"]" + STR_TEXT_COMMA +
-                "["+ CF_VALUE_STR +"]" + STR_TEXT_COMMA +
-                "["+ CF_VALUE_INT +"]" + STR_INT_COMMA +
-                "["+ CF_VALUE_BOOL +"] BOOLEAN, " +
-                "["+ CF_VALUE_FLOAT +"] FLOAT, " +
-                "CONSTRAINT unq UNIQUE (" + USER_CF_USERNAME + ", "+ CF_FIELD_KEY +")" +
+        String sql = "CREATE TABLE IF NOT EXISTS [" + USER_CF_TABLE + "] (" +
+                "[" + USER_CF_ID + "]" + STR_INT_PRIMARY_KEY_AUTO +
+                "[" + USER_CF_USERNAME + "]" + STR_TEXT_COMMA +
+                "[" + CF_FIELD_KEY + "]" + STR_TEXT_COMMA +
+                "[" + CF_VALUE_STR + "]" + STR_TEXT_COMMA +
+                "[" + CF_VALUE_INT + "]" + STR_INT_COMMA +
+                "[" + CF_VALUE_BOOL + "] BOOLEAN, " +
+                "[" + CF_VALUE_FLOAT + "] FLOAT, " +
+                "CONSTRAINT unq UNIQUE (" + USER_CF_USERNAME + ", " + CF_FIELD_KEY + ")" +
                 ");";
         db.execSQL(sql);
     }
@@ -484,9 +488,9 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         if (oldVersion <= 7 && newVersion >= 8) {
-            String sql = STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_STARTDATE + STR_DATETIME_NULL +";";
+            String sql = STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_STARTDATE + STR_DATETIME_NULL + ";";
             db.execSQL(sql);
-            sql = STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_ENDDATE + STR_DATETIME_NULL +";";
+            sql = STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_ENDDATE + STR_DATETIME_NULL + ";";
             db.execSQL(sql);
         }
 
@@ -502,8 +506,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // This is a fix as previous versions may not have upgraded db tables correctly
         if (oldVersion <= 10 && newVersion >= 11) {
-            String sql1 = STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_STARTDATE + STR_DATETIME_NULL +";";
-            String sql2 = STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_ENDDATE + STR_DATETIME_NULL +";";
+            String sql1 = STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_STARTDATE + STR_DATETIME_NULL + ";";
+            String sql2 = STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_ENDDATE + STR_DATETIME_NULL + ";";
             String sql3 = STR_ALTER_TABLE + COURSE_TABLE + STR_ADD_COLUMN + COURSE_C_SCHEDULE + " int null;";
             String sql4 = STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_TITLE + STR_TEXT_NULL + ";";
 
@@ -537,7 +541,7 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         if (oldVersion <= 16 && newVersion >= 17) {
-            String sql = STR_ALTER_TABLE + COURSE_TABLE + STR_ADD_COLUMN + COURSE_C_ORDER_PRIORITY  + STR_INT_DEFAULT_O + ";";
+            String sql = STR_ALTER_TABLE + COURSE_TABLE + STR_ADD_COLUMN + COURSE_C_ORDER_PRIORITY + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql);
         }
 
@@ -546,11 +550,11 @@ public class DbHelper extends SQLiteOpenHelper {
             this.createSearchTable(db);
 
             // alter quiz results table
-            String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_USERID  + STR_INT_DEFAULT_O + ";";
+            String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_USERID + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql1);
 
             // alter tracker table
-            String sql2 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + STR_ADD_COLUMN + TRACKER_LOG_C_USERID  + STR_INT_DEFAULT_O + ";";
+            String sql2 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + STR_ADD_COLUMN + TRACKER_LOG_C_USERID + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql2);
 
             // create user table
@@ -563,13 +567,13 @@ public class DbHelper extends SQLiteOpenHelper {
             // alter quiz results table
             String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_SCORE + " real default 0;";
             db.execSQL(sql1);
-            String sql2 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_PASSED  + STR_INT_DEFAULT_O + ";";
+            String sql2 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_PASSED + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql2);
 
             // alter user table
-            String sql3 = STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_LAST_LOGIN_DATE + STR_DATETIME_NULL +";";
+            String sql3 = STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_LAST_LOGIN_DATE + STR_DATETIME_NULL + ";";
             db.execSQL(sql3);
-            String sql4 = STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_NO_LOGINS  + STR_INT_DEFAULT_O + ";";
+            String sql4 = STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_NO_LOGINS + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql4);
         }
 
@@ -587,9 +591,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
         if (oldVersion <= 21 && newVersion >= 22) {
             // add points and badges columns
-            String sql1 = STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_POINTS  + STR_INT_DEFAULT_O + ";";
+            String sql1 = STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_POINTS + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql1);
-            String sql2 = STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_BADGES  + STR_INT_DEFAULT_O + ";";
+            String sql2 = STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_BADGES + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql2);
         }
 
@@ -607,13 +611,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
         if (oldVersion <= 25 && newVersion >= 26) {
             // add field "exported" to Tracker table
-            String sql1 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + STR_ADD_COLUMN + TRACKER_LOG_C_EXPORTED  + STR_INT_DEFAULT_O + ";";
+            String sql1 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + STR_ADD_COLUMN + TRACKER_LOG_C_EXPORTED + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql1);
         }
 
         if (oldVersion <= 26 && newVersion >= 27) {
             // add field "exported" to Tracker table
-            String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_EXPORTED  + STR_INT_DEFAULT_O + ";";
+            String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_EXPORTED + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql1);
         }
 
@@ -622,13 +626,13 @@ public class DbHelper extends SQLiteOpenHelper {
             createActivityGamificationTable(db);
 
             // update tracker table
-            String sql1 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + STR_ADD_COLUMN + TRACKER_LOG_C_POINTS  + STR_INT_DEFAULT_O + ";";
+            String sql1 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + STR_ADD_COLUMN + TRACKER_LOG_C_POINTS + STR_INT_DEFAULT_O + ";";
             String sql2 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + STR_ADD_COLUMN + TRACKER_LOG_C_EVENT + STR_TEXT_NULL + ";";
             db.execSQL(sql1);
             db.execSQL(sql2);
 
             // update quizattempt table
-            String sql3 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_POINTS  + STR_INT_DEFAULT_O + ";";
+            String sql3 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_POINTS + STR_INT_DEFAULT_O + ";";
             String sql4 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_EVENT + STR_TEXT_NULL + ";";
             db.execSQL(sql3);
             db.execSQL(sql4);
@@ -649,36 +653,35 @@ public class DbHelper extends SQLiteOpenHelper {
             createCustomFieldTable(db);
         }
 
-        if (oldVersion < 41){
+        if (oldVersion < 41) {
             // add the timetaken field
             db.execSQL(STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_TIMETAKEN + STR_INT_DEFAULT_O + ";");
             extractQuizAttemptsTimetaken(db);
         }
 
-        if (oldVersion < 43){
+        if (oldVersion < 43) {
             db.execSQL(STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_TYPE + STR_TEXT_DEFAULT + QuizAttempt.TYPE_QUIZ + "';");
         }
 
-        if (oldVersion < 44){
+        if (oldVersion < 44) {
             db.execSQL(STR_ALTER_TABLE + CUSTOM_FIELD_TABLE + STR_ADD_COLUMN + CUSTOM_FIELD_C_COLLECTION + STR_TEXT_NULL + ";");
             createCustomFieldsCollectionTable(db);
         }
 
-        if (oldVersion < 45){
+        if (oldVersion < 45) {
             db.execSQL(STR_ALTER_TABLE + CUSTOM_FIELD_TABLE + STR_ADD_COLUMN + CUSTOM_FIELD_C_VISIBLE_BY + STR_TEXT_NULL + ";");
             db.execSQL(STR_ALTER_TABLE + CUSTOM_FIELD_TABLE + STR_ADD_COLUMN + CUSTOM_FIELD_C_VISIBLE_VALUE + STR_TEXT_NULL + ";");
         }
 
-        if (oldVersion < 46){
+        if (oldVersion < 46) {
             db.execSQL(STR_ALTER_TABLE + CUSTOM_FIELD_TABLE + STR_ADD_COLUMN + CUSTOM_FIELD_C_COLLECTION_BY + STR_TEXT_NULL + ";");
         }
 
-        if (oldVersion < 47){
+        if (oldVersion < 47) {
             createMediaTable(db);
         }
 
     }
-
 
 
     public void updateV43(long userId) {
@@ -695,13 +698,13 @@ public class DbHelper extends SQLiteOpenHelper {
         db.update(QUIZATTEMPTS_TABLE, values2, "1=1", null);
     }
 
-    public void extractQuizAttemptsTimetaken(SQLiteDatabase database){
+    public void extractQuizAttemptsTimetaken(SQLiteDatabase database) {
         Cursor c1 = database.query(QUIZATTEMPTS_TABLE, null, null, null, null, null, null);
         c1.moveToFirst();
         while (!c1.isAfterLast()) {
 
             String data = c1.getString(c1.getColumnIndex(QUIZATTEMPTS_C_DATA));
-            if (TextUtils.isEmpty(data)){
+            if (TextUtils.isEmpty(data)) {
                 c1.moveToNext();
                 continue;
             }
@@ -713,7 +716,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 long time = -1;
 
                 String s = TRACKER_LOG_C_DATA + " LIKE ?";
-                String[] args = new String[]{ "%" + instanceID + "%" };
+                String[] args = new String[]{"%" + instanceID + "%"};
                 Cursor c = database.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
                 if (c.getCount() > 0) {
                     c.moveToFirst();
@@ -723,7 +726,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 }
                 c.close();
 
-                if (time > 0){
+                if (time > 0) {
                     ContentValues values = new ContentValues();
                     values.put(QUIZATTEMPTS_C_TIMETAKEN, time);
                     database.update(QUIZATTEMPTS_TABLE, values, QUIZATTEMPTS_C_ID + "=" + attemptID, null);
@@ -848,7 +851,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 db.insertOrThrow(USER_CF_TABLE, null, contentValues);
             } catch (SQLiteException e) {
                 String s = USER_CF_USERNAME + STR_EQUALS_AND + CF_FIELD_KEY + "=?";
-                String[] args = new String[] { String.valueOf(user.getUsername()), contentValues.getAsString(CF_FIELD_KEY) };
+                String[] args = new String[]{String.valueOf(user.getUsername()), contentValues.getAsString(CF_FIELD_KEY)};
                 db.update(USER_CF_TABLE, contentValues, s, args);
             }
         }
@@ -968,7 +971,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return getQuizAttempts(db);
     }
 
-    public List<QuizAttempt> getQuizAttempts(SQLiteDatabase database){
+    public List<QuizAttempt> getQuizAttempts(SQLiteDatabase database) {
         ArrayList<QuizAttempt> quizAttempts = new ArrayList<>();
         Cursor c = database.query(QUIZATTEMPTS_TABLE, null, null, null, null, null, null);
         c.moveToFirst();
@@ -981,7 +984,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return quizAttempts;
     }
 
-    private QuizAttempt fetchQuizAttempt(Cursor c){
+    private QuizAttempt fetchQuizAttempt(Cursor c) {
         QuizAttempt qa = new QuizAttempt();
         qa.setId(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
         qa.setActivityDigest(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
@@ -1042,7 +1045,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return -1;
     }
 
-    private Course setupCourseObject(Cursor c){
+    private Course setupCourseObject(Cursor c) {
         String location = Storage.getStorageLocationRoot(ctx);
         Course course = new Course(location);
         course.setCourseId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
@@ -1115,13 +1118,13 @@ public class DbHelper extends SQLiteOpenHelper {
         return quizzes;
     }
 
-    public String getCourseFinalQuizDigest(long courseId) throws ActivityNotFoundException{
+    public String getCourseFinalQuizDigest(long courseId) throws ActivityNotFoundException {
         String s = ACTIVITY_C_COURSEID + STR_EQUALS_AND + ACTIVITY_C_ACTTYPE + STR_EQUALS_AND + ACTIVITY_C_SECTIONID + ">0";
         String[] args = new String[]{String.valueOf(courseId), "quiz"};
         String orderBy = ACTIVITY_C_SECTIONID + " DESC, " + ACTIVITY_C_ACTID + " DESC";
         Cursor c = db.query(ACTIVITY_TABLE, null, s, args, null, null, orderBy);
         String digest = "";
-        if(c != null) {
+        if (c != null) {
             if (c.moveToFirst()) {
                 digest = c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST));
             }
@@ -1291,7 +1294,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.delete(ACTIVITY_TABLE, s, args);
 
         // delete media
-        s = MEDIA_COURSE  + "=?";
+        s = MEDIA_COURSE + "=?";
         db.delete(MEDIA_TABLE, s, args);
 
         // delete course
@@ -1359,7 +1362,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private void fetchUserCustomFields(User u) {
 
         String s = USER_C_USERNAME + "=? ";
-        String[] args = new String[]{ u.getUsername() };
+        String[] args = new String[]{u.getUsername()};
         Cursor c = db.query(USER_CF_TABLE, null, s, args, null, null, null);
 
         List<CustomField> cFields = this.getCustomFields();
@@ -1367,22 +1370,19 @@ public class DbHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         while (!c.isAfterLast()) {
             String key = c.getString(c.getColumnIndex(CF_FIELD_KEY));
-            for (CustomField field : cFields){
-                if (TextUtils.equals(key, field.getKey())){
-                    if (field.isString() || field.isChoices()){
+            for (CustomField field : cFields) {
+                if (TextUtils.equals(key, field.getKey())) {
+                    if (field.isString() || field.isChoices()) {
                         // Internally, we just save the choices key value as a str
                         String value = c.getString(c.getColumnIndex(CF_VALUE_STR));
                         u.putCustomField(key, new CustomValue<>(value));
-                    }
-                    else if (field.isBoolean()){
+                    } else if (field.isBoolean()) {
                         boolean value = c.getInt(c.getColumnIndex(CF_VALUE_BOOL)) == 1;
                         u.putCustomField(key, new CustomValue<>(value));
-                    }
-                    else if (field.isInteger()){
+                    } else if (field.isInteger()) {
                         int value = c.getInt(c.getColumnIndex(CF_VALUE_INT));
                         u.putCustomField(key, new CustomValue<>(value));
-                    }
-                    else if (field.isFloat()){
+                    } else if (field.isFloat()) {
                         float value = c.getFloat(c.getColumnIndex(CF_VALUE_FLOAT));
                         u.putCustomField(key, new CustomValue<>(value));
                     }
@@ -1504,7 +1504,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
             // get course and activity title
             String event = c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT));
-            if (TextUtils.isEmpty(event)){
+            if (TextUtils.isEmpty(event)) {
                 c.moveToNext();
                 continue;
             }
@@ -1792,7 +1792,7 @@ public class DbHelper extends SQLiteOpenHelper {
         endTransaction(true);
     }
 
-    private ContentValues createContentValuesFromQuizAttempt(QuizAttempt qa){
+    private ContentValues createContentValuesFromQuizAttempt(QuizAttempt qa) {
         ContentValues values = new ContentValues();
         values.put(QUIZATTEMPTS_C_DATA, qa.getData());
         values.put(QUIZATTEMPTS_C_COURSEID, qa.getCourseId());
@@ -1881,7 +1881,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public boolean isQuizFirstAttempt(String digest) {
         // digest could be null (quiz wrongly configured)
-        if (digest == null){
+        if (digest == null) {
             return false;
         }
         //get current user id
@@ -1899,7 +1899,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public boolean isQuizFirstAttemptToday(String digest) {
         // digest could be null (quiz wrongly configured)
-        if (digest == null){
+        if (digest == null) {
             return false;
         }
         //get current user id
@@ -1921,9 +1921,32 @@ public class DbHelper extends SQLiteOpenHelper {
         return (count == 0);
     }
 
+    public String getLastTrackerDatetime(long userId) {
+
+        String selection = TRACKER_LOG_C_USERID + "=?";
+        String[] selectionArgs = new String[]{String.valueOf(userId)};
+        String[] columns = new String[]{TRACKER_LOG_C_DATETIME};
+        String order = TRACKER_LOG_C_DATETIME + " DESC";
+        String limit = "1";
+
+        Cursor c = db.query(TRACKER_LOG_TABLE, columns, selection, selectionArgs, null, null, order, limit);
+
+        try {
+            if (c.getCount() > 0) {
+                c.moveToFirst();
+                String datetime = c.getString(0);
+                return datetime;
+            }
+        } finally {
+            c.close();
+        }
+
+        return null;
+    }
+
     public boolean isActivityFirstAttemptToday(String digest) {
         // digest could be null (activity wrongly configured)
-        if (digest == null){
+        if (digest == null) {
             return false;
         }
         //get current user id
@@ -2237,7 +2260,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public void clearCustomFieldsAndCollections(){
+    public void clearCustomFieldsAndCollections() {
         db.delete(CUSTOM_FIELD_TABLE, null, null);
         db.delete(CUSTOM_FIELDS_COLLECTION_TABLE, null, null);
     }
@@ -2252,7 +2275,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(CUSTOM_FIELD_C_TYPE, field.getType());
         values.put(CUSTOM_FIELD_C_HELPTEXT, field.getHelperText());
         values.put(CUSTOM_FIELD_C_LABEL, field.getLabel());
-        values.put(CUSTOM_FIELD_C_REQUIRED, field.isRequired()?1:0);
+        values.put(CUSTOM_FIELD_C_REQUIRED, field.isRequired() ? 1 : 0);
         values.put(CUSTOM_FIELD_C_ORDER, field.getOrder());
         values.put(CUSTOM_FIELD_C_COLLECTION, field.getCollectionName());
         values.put(CUSTOM_FIELD_C_VISIBLE_BY, field.getFieldVisibleBy());
@@ -2260,53 +2283,51 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(CUSTOM_FIELD_C_COLLECTION_BY, field.getCollectionNameBy());
 
         String s = CUSTOM_FIELD_C_KEY + "=?";
-        String[] args = new String[]{ field.getKey() };
+        String[] args = new String[]{field.getKey()};
         Cursor c = db.query(CUSTOM_FIELD_TABLE, null, s, args, null, null, null);
         boolean toUpdate = c.getCount() > 0;
         c.close();
 
-        if (toUpdate){
+        if (toUpdate) {
             db.update(CUSTOM_FIELD_TABLE, values, s, args);
-        }
-        else{
+        } else {
             db.insertOrThrow(CUSTOM_FIELD_TABLE, null, values);
         }
 
     }
 
     public void insertOrUpdateCustomFieldCollection(String collectionName, List<CustomField.CollectionItem> items) {
-        for (CustomField.CollectionItem item : items){
+        for (CustomField.CollectionItem item : items) {
             ContentValues values = new ContentValues();
             values.put(CUSTOM_FIELDS_COLLECTION_C_COLLECTION_ID, collectionName);
             values.put(CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY, item.getKey());
             values.put(CUSTOM_FIELDS_COLLECTION_C_ITEM_VALUE, item.getLabel());
 
             String s = CUSTOM_FIELDS_COLLECTION_C_COLLECTION_ID + STR_EQUALS_AND + CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY + "=?";
-            String[] args = new String[]{ collectionName, item.getKey() };
+            String[] args = new String[]{collectionName, item.getKey()};
             Cursor c = db.query(CUSTOM_FIELDS_COLLECTION_TABLE, null, s, args, null, null, null);
             boolean toUpdate = c.getCount() > 0;
             c.close();
 
-            if (toUpdate){
+            if (toUpdate) {
                 db.update(CUSTOM_FIELDS_COLLECTION_TABLE, values, s, args);
-            }
-            else{
+            } else {
                 db.insertOrThrow(CUSTOM_FIELDS_COLLECTION_TABLE, null, values);
             }
         }
 
     }
 
-    public List<CustomField.CollectionItem> getCollection(String collectionName){
+    public List<CustomField.CollectionItem> getCollection(String collectionName) {
         String s = CUSTOM_FIELDS_COLLECTION_C_COLLECTION_ID + "=?";
-        String[] args = new String[]{ collectionName };
+        String[] args = new String[]{collectionName};
         Cursor c = db.query(CUSTOM_FIELDS_COLLECTION_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
         List<CustomField.CollectionItem> items = new ArrayList<>();
         while (!c.isAfterLast()) {
             String key = c.getString(c.getColumnIndex(CUSTOM_FIELDS_COLLECTION_C_ITEM_KEY));
             String value = c.getString(c.getColumnIndex(CUSTOM_FIELDS_COLLECTION_C_ITEM_VALUE));
-            items.add( new CustomField.CollectionItem(key, value));
+            items.add(new CustomField.CollectionItem(key, value));
             c.moveToNext();
         }
         c.close();
@@ -2314,7 +2335,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return items;
     }
 
-    public List<CustomField> getCustomFields(){
+    public List<CustomField> getCustomFields() {
         Cursor c = db.query(CUSTOM_FIELD_TABLE, null, null, null, null, null, CUSTOM_FIELD_C_ORDER);
         c.moveToFirst();
 
@@ -2323,7 +2344,7 @@ public class DbHelper extends SQLiteOpenHelper {
             CustomField field = new CustomField();
             field.setKey(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_KEY)));
             field.setType(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_TYPE)));
-            field.setRequired(c.getInt(c.getColumnIndex(CUSTOM_FIELD_C_REQUIRED))==1);
+            field.setRequired(c.getInt(c.getColumnIndex(CUSTOM_FIELD_C_REQUIRED)) == 1);
             field.setOrder(c.getInt(c.getColumnIndex(CUSTOM_FIELD_C_ORDER)));
             field.setLabel(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_LABEL)));
             field.setHelperText(c.getString(c.getColumnIndex(CUSTOM_FIELD_C_HELPTEXT)));
@@ -2337,8 +2358,8 @@ public class DbHelper extends SQLiteOpenHelper {
         }
         c.close();
 
-        for (CustomField field : fields){
-            if (field.isChoices() && !TextUtils.isEmpty(field.getCollectionName())){
+        for (CustomField field : fields) {
+            if (field.isChoices() && !TextUtils.isEmpty(field.getCollectionName())) {
                 field.setCollection(getCollection(field.getCollectionName()));
             }
         }
@@ -2485,7 +2506,7 @@ public class DbHelper extends SQLiteOpenHelper {
         endTransaction(true);
     }
 
-    public List<Media> getCourseMedia(long courseId){
+    public List<Media> getCourseMedia(long courseId) {
         ArrayList<Media> media = new ArrayList<>();
         String s = MEDIA_COURSE + "=?";
         String[] args = new String[]{String.valueOf(courseId)};
@@ -2505,9 +2526,9 @@ public class DbHelper extends SQLiteOpenHelper {
         return media;
     }
 
-    public int getMediaUsages(String mediaFilename){
+    public int getMediaUsages(String mediaFilename) {
         String s = MEDIA_FILENAME + "=?";
-        String[] args = new String[]{ mediaFilename };
+        String[] args = new String[]{mediaFilename};
         Cursor c = db.query(MEDIA_TABLE, null, s, args, null, null, null);
         int usages = c.getCount();
         c.close();

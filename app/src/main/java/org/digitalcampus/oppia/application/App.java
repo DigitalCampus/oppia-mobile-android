@@ -29,7 +29,9 @@ import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -170,7 +172,10 @@ public class App extends Application {
 
         OppiaNotificationUtils.initializeOreoNotificationChannels(this);
 
+//        launchWorkerToTest();
+
     }
+
 
     private void checkAppInstanceIdCreated(SharedPreferences prefs) {
         if (prefs.getString(PrefsActivity.PREF_APP_INSTANCE_ID, null) == null) {
@@ -201,6 +206,13 @@ public class App extends Application {
 
     public static MyDatabase getDb() {
         return db;
+    }
+
+    private void launchWorkerToTest() {
+
+        OneTimeWorkRequest request = OneTimeWorkRequest.from(CoursesNotCompletedReminderWorker.class);
+        WorkManager.getInstance(this)
+                .enqueueUniqueWork("worker_test", ExistingWorkPolicy.REPLACE, request);
     }
 
     private void setupPeriodicWorkers() {
