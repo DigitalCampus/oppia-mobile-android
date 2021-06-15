@@ -25,6 +25,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
@@ -34,7 +35,7 @@ import org.digitalcampus.oppia.utils.storage.StorageUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress, Payload> {
+public class ChangeStorageOptionTask extends AsyncTask<String, Void, BasicResult> {
 
     public static final String TAG = ChangeStorageOptionTask.class.getSimpleName();
 
@@ -47,10 +48,10 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
     }
 
     @Override
-    protected Payload doInBackground(Payload... params) {
+    protected BasicResult doInBackground(String... params) {
 
-        Payload payload = params[0];
-        String storageType = (String) payload.getData().get(0);
+        String storageType = params[0];
+        BasicResult result = new BasicResult();
 
         StorageAccessStrategy previousStrategy = Storage.getStorageStrategy();
         String sourcePath = previousStrategy.getStorageLocation(ctx);
@@ -99,7 +100,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
                     //Delete the files from source
                     FileUtils.deleteDir(new File(sourcePath));
                     Log.d(TAG, "Update storage location succeeded!");
-                    payload.setResult(true);
+                    result.setSuccess(true);
                 } else {
                     //Delete the files that were actually copied
                     File destDirDelete = new File(destPath);
@@ -113,14 +114,14 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
 
         } catch (Exception e) {
             resetStrategy(previousStrategy);
-            payload.setResult(false);
+            result.setSuccess(false);
             String errorMessage = e instanceof ChangeStorageException ? e.getMessage() : ctx.getString(R.string.error);
-            payload.setResultResponse(errorMessage);
-            return payload;
+            result.setResultMessage(errorMessage);
+            return result;
         }
 
         StorageUtils.saveStorageData(ctx, storageType);
-        return payload;
+        return result;
 
     }
 
@@ -170,10 +171,10 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
     }
 
     @Override
-    protected void onPostExecute(Payload results) {
+    protected void onPostExecute(BasicResult result) {
         synchronized (this) {
             if (mStateListener != null) {
-                mStateListener.moveStorageComplete(results);
+                mStateListener.moveStorageComplete(result);
             }
         }
     }

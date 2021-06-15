@@ -7,7 +7,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.task.CourseInfoTask;
-import org.digitalcampus.oppia.task.Payload;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +46,6 @@ public class CourseInfoTaskTest  extends MockedApiEndpointTaskTest {
     private void fetchCourseInfoSync(){
         final CountDownLatch signal = new CountDownLatch(1);  //Control AsyncTask sincronization for testing
 
-        Payload p = new Payload(Collections.singletonList("test"));
         CourseInfoTask task = new CourseInfoTask(context, new MockApiEndpoint(mockServer));
         task.setListener(new CourseInfoTask.CourseInfoListener() {
             @Override
@@ -62,7 +60,7 @@ public class CourseInfoTaskTest  extends MockedApiEndpointTaskTest {
             }
         });
 
-        task.execute(p);
+        task.execute("test");
 
         try {
             signal.await();

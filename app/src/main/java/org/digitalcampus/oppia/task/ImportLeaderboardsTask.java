@@ -8,6 +8,7 @@ import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.exception.WrongServerException;
 import org.digitalcampus.oppia.gamification.LeaderboardUtils;
 import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.json.JSONException;
@@ -16,7 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 
-public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress, Payload> {
+public class ImportLeaderboardsTask extends AsyncTask<Void, DownloadProgress, BasicResult> {
 
 
     private static final String TAG = ImportLeaderboardsTask.class.getSimpleName();
@@ -33,10 +34,10 @@ public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress,
     }
 
     @Override
-    protected Payload doInBackground(Payload... params) {
+    protected BasicResult doInBackground(Void... params) {
 
-        final Payload payload = params[0] == null ? new Payload() : params[0];
-        payload.setResult(true);
+        BasicResult result = new BasicResult();
+        result.setSuccess(true);
 
         File dir = new File(Storage.getLeaderboardImportPath(ctx));
         String[] children = dir.list();
@@ -54,23 +55,23 @@ public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress,
                     } catch (IOException | WrongServerException | ParseException | JSONException e) {
                         Analytics.logException(e);
                         Log.d(TAG, "Error: ", e);
-                        payload.setResult(false);
+                        result.setSuccess(false);
                     }
 
                     FileUtils.deleteFile(jsonFile);
                 }
             }
         }
-        payload.setResult( payload.isResult() || (updatedPositions > 0) );
-        return payload;
+        result.setSuccess( result.isSuccess() || (updatedPositions > 0) );
+        return result;
     }
 
 
     @Override
-    protected void onPostExecute(Payload p) {
+    protected void onPostExecute(BasicResult result) {
         synchronized (this) {
             if (listener != null) {
-                listener.onLeaderboardImportComplete(p.isResult(), p.getResultResponse());
+                listener.onLeaderboardImportComplete(result.isSuccess(), result.getResultMessage());
             }
         }
     }

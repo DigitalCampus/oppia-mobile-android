@@ -40,10 +40,11 @@ import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,7 +53,6 @@ import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
-
 
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.CourseUtils;
@@ -167,10 +167,10 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         doAnswer(invocationOnMock -> {
             Context ctx = (Context) invocationOnMock.getArguments()[0];
-            Payload response = new Payload();
-            response.setResult(true);
-            response.setResultResponse("{}");
-            ((TagSelectActivity) ctx).apiRequestComplete(response);
+            BasicResult result = new BasicResult();
+            result.setSuccess(true);
+            result.setResultMessage("{}");
+            ((TagSelectActivity) ctx).apiRequestComplete(result);
             return null;
         }).when(tagRepository).getTagList(any(), any());
 
@@ -190,10 +190,10 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         doAnswer(invocationOnMock -> {
             Context ctx = (Context) invocationOnMock.getArguments()[0];
-            Payload response = new Payload();
-            response.setResult(true);
-            response.setResultResponse("{}");
-            ((TagSelectActivity) ctx).apiRequestComplete(response);
+            BasicResult result = new BasicResult();
+            result.setSuccess(true);
+            result.setResultMessage("{}");
+            ((TagSelectActivity) ctx).apiRequestComplete(result);
             return null;
         }).when(tagRepository).getTagList(any(), any());
 
