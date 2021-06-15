@@ -46,7 +46,7 @@ import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
 import org.digitalcampus.oppia.service.CoursesChecksWorker;
-import org.digitalcampus.oppia.service.CoursesNotCompletedReminderWorker;
+import org.digitalcampus.oppia.service.CoursesCompletionReminderWorker;
 import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
@@ -210,7 +210,7 @@ public class App extends Application {
 
     private void launchWorkerToTest() {
 
-        OneTimeWorkRequest request = OneTimeWorkRequest.from(CoursesNotCompletedReminderWorker.class);
+        OneTimeWorkRequest request = OneTimeWorkRequest.from(CoursesCompletionReminderWorker.class);
         WorkManager.getInstance(this)
                 .enqueueUniqueWork("worker_test", ExistingWorkPolicy.REPLACE, request);
     }
@@ -245,7 +245,7 @@ public class App extends Application {
 
         long delayFromNow = calendar.getTimeInMillis() - System.currentTimeMillis();
 
-        PeriodicWorkRequest coursesNotCompletedReminder = new PeriodicWorkRequest.Builder(CoursesNotCompletedReminderWorker.class, 7, TimeUnit.DAYS)
+        PeriodicWorkRequest coursesNotCompletedReminder = new PeriodicWorkRequest.Builder(CoursesCompletionReminderWorker.class, 7, TimeUnit.DAYS)
                 .setInitialDelay(delayFromNow, TimeUnit.MILLISECONDS)
                 .build();
 

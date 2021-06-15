@@ -8,12 +8,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
+import androidx.work.ListenableWorker;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -26,21 +24,19 @@ import org.joda.time.DateTime;
 import java.util.Calendar;
 import java.util.List;
 
-import okhttp3.Request;
+import androidx.work.ListenableWorker.Result;
 
-public class CoursesNotCompletedReminderWorker extends Worker {
+public class CoursesCompletionReminderWorkerManager {
 
-    private static final String TAG = CoursesNotCompletedReminderWorker.class.getSimpleName();
+    private static final String TAG = CoursesCompletionReminderWorkerManager.class.getSimpleName();
+    private final Context context;
 
-    public CoursesNotCompletedReminderWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
-        super(context, workerParams);
+    public CoursesCompletionReminderWorkerManager(@NonNull Context context) {
+        this.context = context;
     }
 
-    @NonNull
-    @Override
-    public Result doWork() {
-
-        if (!SessionManager.isLoggedIn(getApplicationContext())) {
+    public Result checkCompletionReminder() {
+        if (!SessionManager.isLoggedIn(context)) {
             return Result.success();
         }
 
@@ -57,13 +53,14 @@ public class CoursesNotCompletedReminderWorker extends Worker {
 
         return Result.success();
     }
+    
 
 
     private boolean checkActivityLastWeek() {
-        DbHelper db = DbHelper.getInstance(getApplicationContext());
+        DbHelper db = DbHelper.getInstance(context);
         User user = null;
         try {
-            user = db.getUser(SessionManager.getUsername(getApplicationContext()));
+            user = db.getUser(SessionManager.getUsername(context));
         } catch (UserNotFoundException e) {
             e.printStackTrace();
             throw new IllegalStateException("Wrong data");
@@ -98,14 +95,14 @@ public class CoursesNotCompletedReminderWorker extends Worker {
 
     private boolean checkAllCoursesCompleted() throws IllegalStateException {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String criteria = prefs.getString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, null);
         int percent = prefs.getInt(PrefsActivity.PREF_BADGE_AWARD_CRITERIA_PERCENT, 0);
 
-        DbHelper db = DbHelper.getInstance(getApplicationContext());
+        DbHelper db = DbHelper.getInstance(context);
         User user = null;
         try {
-            user = db.getUser(SessionManager.getUsername(getApplicationContext()));
+            user = db.getUser(SessionManager.getUsername(context));
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
@@ -118,7 +115,7 @@ public class CoursesNotCompletedReminderWorker extends Worker {
         List<Course> courses = db.getAllCourses();
 
         for (Course course : courses) {
-            if (!course.isComplete(getApplicationContext(), user, criteria, percent)) {
+            if (!course.isComplete(context, user, criteria, percent)) {
                 return false;
             }
         }
@@ -127,18 +124,19 @@ public class CoursesNotCompletedReminderWorker extends Worker {
     }
 
     private void showReminderNotification() {
-        NotificationCompat.Builder builder = OppiaNotificationUtils.getBaseBuilder(getApplicationContext(), true);
-        builder.setContentTitle(getApplicationContext().getString(R.string.courses_reminder_notif_title));
+        NotificationCompat.Builder builder = OppiaNotificationUtils.getBaseBuilder(context, true);
+        builder.setContentTitle(context.getString(R.string.courses_reminder_notif_title));
         builder.setStyle(new NotificationCompat.BigTextStyle()
-                .bigText(getApplicationContext().getString(R.string.courses_reminder_notif_text)));
-        builder.setContentText(getApplicationContext().getString(R.string.courses_reminder_notif_text));
-        builder.setContentIntent(OppiaNotificationUtils.getMainActivityPendingIntent(getApplicationContext()));
+                .bigText(context.getString(R.string.courses_reminder_notif_text)));
+        builder.setContentText(context.getString(R.string.courses_reminder_notif_text));
+        builder.setContentIntent(OppiaNotificationUtils.getMainActivityPendingIntent(context));
 
-        builder.addAction(0, getApplicationContext().getString(R.string.courses_reminder_settings),
-                OppiaNotificationUtils.getActivityPendingIntent(getApplicationContext(), PrefsActivity.class, null));
+        builder.addAction(0, context.getString(R.string.courses_reminder_settings),
+                OppiaNotificationUtils.getActivityPendingIntent(context, PrefsActivity.class, null));
 
-        OppiaNotificationUtils.sendNotification(getApplicationContext(),
+        OppiaNotificationUtils.sendNotification(context,
                 OppiaNotificationUtils.NOTIF_ID_COURSES_REMINDER, builder.build());
 
     }
+
 }
