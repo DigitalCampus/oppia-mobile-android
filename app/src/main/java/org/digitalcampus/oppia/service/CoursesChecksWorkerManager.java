@@ -284,9 +284,6 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
     private void showToUpdateNotification(int toUpdateCount) {
 
-        Intent resultIntent = new Intent(context, MainActivity.class);
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         String contentText = context.getResources().getQuantityString(
                 R.plurals.notification_courses_to_update_text, toUpdateCount, toUpdateCount);
 
@@ -294,7 +291,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
         mBuilder
                 .setContentTitle(getString(R.string.notification_courses_to_update_title))
                 .setContentText(contentText)
-                .setContentIntent(resultPendingIntent);
+                .setContentIntent(OppiaNotificationUtils.getMainActivityPendingIntent(context));
 
         OppiaNotificationUtils.sendNotification(context, ID_NOTIF_TO_UPDATE, mBuilder.build());
     }

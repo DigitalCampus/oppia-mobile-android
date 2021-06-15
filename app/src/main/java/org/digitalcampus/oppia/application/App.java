@@ -21,13 +21,11 @@ package org.digitalcampus.oppia.application;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import androidx.multidex.MultiDex;
-import androidx.preference.PreferenceManager;
-
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.multidex.MultiDex;
+import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
@@ -48,8 +46,8 @@ import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
 import org.digitalcampus.oppia.service.CoursesChecksWorker;
+import org.digitalcampus.oppia.service.CoursesReminderWorker;
 import org.digitalcampus.oppia.service.TrackerWorker;
-import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
@@ -122,6 +120,7 @@ public class App extends Application {
     public static final String DEFAULT_LANG = "en";
     private static final String WORK_TRACKER_SEND = "tracker_send_work";
     private static final String WORK_COURSES_CHECKS = "no_course_worker";
+    private static final String WORK_COURSES_REMINDER = "courses_reminder";
 
     private AppComponent appComponent;
     private static MyDatabase db;
@@ -172,6 +171,8 @@ public class App extends Application {
 
         OppiaNotificationUtils.initializeOreoNotificationChannels(this);
 
+        launchReminderWorker();
+
     }
 
     private void checkAppInstanceIdCreated(SharedPreferences prefs) {
@@ -218,12 +219,19 @@ public class App extends Application {
         }
     }
 
-    private void launchTrackerWorker() {
+    private void launchReminderWorker() {
 
-        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(CoursesChecksWorker.class).build();
-        WorkManager.getInstance(this).enqueueUniqueWork(WORK_COURSES_CHECKS,
+        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(CoursesReminderWorker.class).build();
+        WorkManager.getInstance(this).enqueueUniqueWork(WORK_COURSES_REMINDER,
                 ExistingWorkPolicy.REPLACE, oneTimeWorkRequest);
 
+
+//        PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(TrackerWorker.class, 1, TimeUnit.HOURS)
+//                .setScheduleRequestedAt()
+//                .build();
+//
+//        WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_TRACKER_SEND,
+//                ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
     }
 
     private void scheduleTrackerWork() {
