@@ -11,13 +11,15 @@ import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
-import androidx.core.app.NotificationCompat;
-
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 
@@ -100,8 +102,38 @@ public class OppiaNotificationUtils {
         return mainActivityPendingIntent;
     }
 
+    /**
+     * Method containing the back stack logic to go back to main activity (or the one configured in Manifest)
+     * @param context
+     * @param activityClass
+     * @param extras
+     * @return prepared PendingIntent
+     */
+    public static PendingIntent getActivityPendingIntent(Context context, Class<? extends AppActivity> activityClass, Bundle extras) {
+
+        // DON'T FORGET TO ADD parentActivityName IN MANIFEST
+
+        // Create an Intent for the activity you want to start
+        Intent activityIntent = new Intent(context, activityClass);
+        if (extras != null) {
+            activityIntent.putExtras(extras);
+        }
+        // Create the TaskStackBuilder and add the intent, which inflates the back stack
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addNextIntentWithParentStack(activityIntent);
+        // Get the PendingIntent containing the entire back stack
+        PendingIntent activityPendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        return activityPendingIntent;
+    }
+
     public static void cancelAllUserNotifications(Context ctx) {
         NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
+    }
+
+    public static void cancelNotifications(Context ctx, int id) {
+        NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(id);
     }
 }

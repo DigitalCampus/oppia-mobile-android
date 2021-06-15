@@ -54,17 +54,8 @@ public class CoursesReminderWorker extends Worker {
                 .bigText("You have not completed all your courses yet.\nGo to your courses"));
         builder.setContentIntent(OppiaNotificationUtils.getMainActivityPendingIntent(getApplicationContext()));
 
-
-
-// Create an Intent for the activity you want to start
-        Intent resultIntent = new Intent(getApplicationContext(), PrefsActivity.class);
-// Create the TaskStackBuilder and add the intent, which inflates the back stack
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
-        stackBuilder.addNextIntentWithParentStack(resultIntent);
-// Get the PendingIntent containing the entire back stack
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.addAction(0, "Reminder settings", resultPendingIntent);
+        builder.addAction(0, "Reminder settings",
+                OppiaNotificationUtils.getActivityPendingIntent(getApplicationContext(), PrefsActivity.class, null));
 //
 //        builder.addAction(0, "Go to your courses", reminderSettingsPendingIntent);
 

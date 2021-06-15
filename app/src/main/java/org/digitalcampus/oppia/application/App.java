@@ -46,6 +46,7 @@ import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
 import org.digitalcampus.oppia.service.CoursesChecksWorker;
+import org.digitalcampus.oppia.service.CoursesChecksWorkerManager;
 import org.digitalcampus.oppia.service.CoursesReminderWorker;
 import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -225,6 +226,10 @@ public class App extends Application {
         WorkManager.getInstance(this).enqueueUniqueWork(WORK_COURSES_REMINDER,
                 ExistingWorkPolicy.REPLACE, oneTimeWorkRequest);
 
+
+        OneTimeWorkRequest oneTimeWorkRequest2 = new OneTimeWorkRequest.Builder(CoursesChecksWorker.class).build();
+        WorkManager.getInstance(this).enqueueUniqueWork(WORK_COURSES_CHECKS,
+                ExistingWorkPolicy.REPLACE, oneTimeWorkRequest2);
 
 //        PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(TrackerWorker.class, 1, TimeUnit.HOURS)
 //                .setScheduleRequestedAt()
