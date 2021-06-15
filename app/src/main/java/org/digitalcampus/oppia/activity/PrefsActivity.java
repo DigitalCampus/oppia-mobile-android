@@ -46,6 +46,7 @@ import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
+import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -193,6 +194,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                     .commit();
         }
 
+        OppiaNotificationUtils.cancelNotifications(this, OppiaNotificationUtils.NOTIF_ID_COURSES_REMINDER);
     }
 
 

@@ -227,10 +227,6 @@ public class App extends Application {
                 ExistingWorkPolicy.REPLACE, oneTimeWorkRequest);
 
 
-        OneTimeWorkRequest oneTimeWorkRequest2 = new OneTimeWorkRequest.Builder(CoursesChecksWorker.class).build();
-        WorkManager.getInstance(this).enqueueUniqueWork(WORK_COURSES_CHECKS,
-                ExistingWorkPolicy.REPLACE, oneTimeWorkRequest2);
-
 //        PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(TrackerWorker.class, 1, TimeUnit.HOURS)
 //                .setScheduleRequestedAt()
 //                .build();

@@ -1,12 +1,9 @@
 package org.digitalcampus.oppia.service;
 
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.TaskStackBuilder;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -49,15 +46,14 @@ public class CoursesReminderWorker extends Worker {
 
     private void showReminderNotification() {
         NotificationCompat.Builder builder = OppiaNotificationUtils.getBaseBuilder(getApplicationContext(), true);
-        builder.setContentTitle("Courses reminder");
+        builder.setContentTitle(getApplicationContext().getString(R.string.courses_reminder_notif_title));
         builder.setStyle(new NotificationCompat.BigTextStyle()
-                .bigText("You have not completed all your courses yet.\nGo to your courses"));
+                .bigText(getApplicationContext().getString(R.string.courses_reminder_notif_text)));
+        builder.setContentText(getApplicationContext().getString(R.string.courses_reminder_notif_text));
         builder.setContentIntent(OppiaNotificationUtils.getMainActivityPendingIntent(getApplicationContext()));
 
-        builder.addAction(0, "Reminder settings",
+        builder.addAction(0, getApplicationContext().getString(R.string.courses_reminder_settings),
                 OppiaNotificationUtils.getActivityPendingIntent(getApplicationContext(), PrefsActivity.class, null));
-//
-//        builder.addAction(0, "Go to your courses", reminderSettingsPendingIntent);
 
         OppiaNotificationUtils.sendNotification(getApplicationContext(),
                 OppiaNotificationUtils.NOTIF_ID_COURSES_REMINDER, builder.build());
