@@ -47,6 +47,7 @@
     
     <style name="Oppia.Theme.Dark" parent="@style/Oppia.Theme">
         <item name="android:windowBackground">@color/background_dark</item>
+        <item name="colorControlNormal">@color/white</item>
     </style>
 
 
