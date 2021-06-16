@@ -17,7 +17,7 @@ import org.digitalcampus.oppia.model.db_model.UserPreference;
                 Leaderboard.class})
 public abstract class MyDatabase extends RoomDatabase {
 
-    public static final int DB_VERSION_ROOM = 1;
+    public static final int DB_VERSION_ROOM = 2;
     public static final String DB_NAME_ROOM = "oppia.db";
 
     public abstract UserPreferenceDao userPreferenceDao();

@@ -17,7 +17,7 @@ import javax.inject.Inject;
 public class DBMigration {
 
     public static final String TAG = DBMigration.class.getSimpleName();
-    public static final int DATA_MIGRATION_LAST_VERSION = 1;
+    public static final int DATA_MIGRATION_LAST_VERSION = 2;
 
     private final Context context;
 

@@ -828,7 +828,7 @@ public class DbHelper extends SQLiteOpenHelper {
         if (userId == -1) {
             Log.v(TAG, "Record added");
             userId = db.insertOrThrow(USER_TABLE, null, values);
-            this.insertOrUpdateUserLeaderboard(user.getUsername(), user.getDisplayName(), user.getPoints(), new DateTime());
+            this.insertOrUpdateUserLeaderboard(user.getUsername(), user.getDisplayName(), user.getPoints(), new DateTime(), 0);
 
         } else {
             String s = USER_C_ID + "=?";
@@ -1472,7 +1472,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.update(USER_TABLE, values, s, args);
 
         DateTime lastUpdate = new DateTime();
-        this.insertOrUpdateUserLeaderboard(username, fullname, currentPoints, lastUpdate);
+        this.insertOrUpdateUserLeaderboard(username, fullname, currentPoints, lastUpdate, 0);
     }
 
     public List<Points> getUserPoints(long userId, Course courseFilter, boolean onlyTrackerlogs,
@@ -2350,7 +2350,7 @@ public class DbHelper extends SQLiteOpenHelper {
         common methods to access Room Database and remove the inheritance of SQLiteOpenHelper and all db logic
      */
 
-    public boolean insertOrUpdateUserLeaderboard(String username, String fullname, int points, DateTime lastUpdate) {
+    public boolean insertOrUpdateUserLeaderboard(String username, String fullname, int points, DateTime lastUpdate, Integer position) {
 
         if ((username == null) || ("".equals(username)))
             return false;
@@ -2359,7 +2359,7 @@ public class DbHelper extends SQLiteOpenHelper {
         Leaderboard leaderboard = App.getDb().leaderboardDao().getLeaderboard(username);
         if (leaderboard == null) {
             // Insert
-            Leaderboard leaderboardItem = new Leaderboard(username, fullname, points, lastUpdate);
+            Leaderboard leaderboardItem = new Leaderboard(username, fullname, points, lastUpdate, position);
             App.getDb().leaderboardDao().insert(leaderboardItem);
         } else {
 
