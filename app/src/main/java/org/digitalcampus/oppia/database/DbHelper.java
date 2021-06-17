@@ -828,7 +828,7 @@ public class DbHelper extends SQLiteOpenHelper {
         if (userId == -1) {
             Log.v(TAG, "Record added");
             userId = db.insertOrThrow(USER_TABLE, null, values);
-            this.insertOrUpdateUserLeaderboard(user.getUsername(), user.getDisplayName(), user.getPoints(), new DateTime(), 0);
+            //this.insertOrUpdateUserLeaderboard(user.getUsername(), user.getDisplayName(), user.getPoints(), new DateTime(), 0);
 
         } else {
             String s = USER_C_ID + "=?";
@@ -1472,7 +1472,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.update(USER_TABLE, values, s, args);
 
         DateTime lastUpdate = new DateTime();
-        this.insertOrUpdateUserLeaderboard(username, fullname, currentPoints, lastUpdate, 0);
+        //this.insertOrUpdateUserLeaderboard(username, fullname, currentPoints, lastUpdate, 0);
     }
 
     public List<Points> getUserPoints(long userId, Course courseFilter, boolean onlyTrackerlogs,
@@ -2366,6 +2366,7 @@ public class DbHelper extends SQLiteOpenHelper {
             if (leaderboard.getLastupdate().isBefore(lastUpdate)) {
                 leaderboard.setFullname(fullname);
                 leaderboard.setPoints(points);
+                leaderboard.setPosition(position);
                 leaderboard.setLastupdate(lastUpdate);
                 int rowsUpdated = App.getDb().leaderboardDao().update(leaderboard);
                 updated = rowsUpdated == 1;
@@ -2415,6 +2416,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String leaderboardCFullname = "fullname";
         String leaderboardCPoints = "points";
         String leaderboardCLastupdate = "lastupdate";
+        String leaderboardCPosition = "position";
 
         ArrayList<Leaderboard> leaderboard = new ArrayList<>();
         Cursor c = db.query(LEADERBOARD_TABLE, null, null, null, null, null, null);
@@ -2424,6 +2426,7 @@ public class DbHelper extends SQLiteOpenHelper {
             leaderboardItem.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
             leaderboardItem.setFullname(c.getString(c.getColumnIndex(leaderboardCFullname)));
             leaderboardItem.setPoints(c.getInt(c.getColumnIndex(leaderboardCPoints)));
+            leaderboardItem.setPosition(c.getInt(c.getColumnIndex(leaderboardCPosition)));
             leaderboardItem.setLastupdateStr(c.getString(c.getColumnIndex(leaderboardCLastupdate)));
             leaderboard.add(leaderboardItem);
             c.moveToNext();

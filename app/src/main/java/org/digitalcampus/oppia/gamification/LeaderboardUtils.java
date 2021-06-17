@@ -38,15 +38,12 @@ public class LeaderboardUtils {
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        /*
         if (!prefs.getString(PrefsActivity.PREF_SERVER, "").equals(server)){
 
             Log.d(TAG, "Leaderboard server doesn't match with current one: " +
                     prefs.getString(PrefsActivity.PREF_SERVER, "") + " - " + server);
             throw new WrongServerException(server);
         }
-        */
-
 
         String lastUpdateStr = leaderboard.getString("generated_date");
         Date sdt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(lastUpdateStr);
@@ -79,7 +76,7 @@ public class LeaderboardUtils {
 
 
     public static void updateLeaderboardFetchTime(SharedPreferences prefs){
-        Log.d(TAG, "Updating last media scan to now");
+        Log.d(TAG, "Updating last leaderboard fetch to now");
         long now = System.currentTimeMillis()/1000;
         prefs.edit().putLong(PrefsActivity.PREF_LAST_LEADERBOARD_FETCH, now).apply();
     }

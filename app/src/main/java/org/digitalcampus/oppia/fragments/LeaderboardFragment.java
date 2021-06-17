@@ -102,7 +102,7 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
         }
 
         if ( userPos != null){
-            binding.tvRanking.setText(String.format(Locale.getDefault(), "%d", (i+1)));
+            binding.tvRanking.setText(String.format(Locale.getDefault(), "%d", userPos.getPosition()));
             binding.tvTotalPoints.setText(getString(R.string.leaderboard_points, String.format(Locale.getDefault(), "%d", userPos.getPoints())));
         }
 
