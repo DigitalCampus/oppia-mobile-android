@@ -140,6 +140,7 @@ public class App extends Application {
         db = Room.databaseBuilder(getApplicationContext(),
                 MyDatabase.class, MyDatabase.DB_NAME_ROOM)
                 .allowMainThreadQueries()
+                .addMigrations(MyDatabase.MIGRATIONS)
                 .build();
 
         DbHelper.getInstance(this).getReadableDatabase();

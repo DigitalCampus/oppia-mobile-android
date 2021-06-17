@@ -13,7 +13,7 @@ import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.activity.ViewDigestActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.database.DBMigration;
+import org.digitalcampus.oppia.database.DBDataMigration;
 import org.digitalcampus.oppia.fragments.ActivitiesFragment;
 import org.digitalcampus.oppia.fragments.AppFragment;
 import org.digitalcampus.oppia.fragments.BadgesFragment;
@@ -73,5 +73,5 @@ public interface AppComponent {
 
     User getUser();
 
-    void inject(DBMigration dbMigration);
+    void inject(DBDataMigration dbDataMigration);
 }
