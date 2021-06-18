@@ -250,7 +250,7 @@ public class App extends Application {
                 .build();
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_COURSES_NOT_COMPLETED_REMINDER,
-                ExistingPeriodicWorkPolicy.REPLACE, coursesCompletionReminder);
+                ExistingPeriodicWorkPolicy.KEEP, coursesCompletionReminder);
 
     }
 
