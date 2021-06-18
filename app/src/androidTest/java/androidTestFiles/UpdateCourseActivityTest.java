@@ -1,12 +1,38 @@
 package androidTestFiles;
 
-/*@RunWith(AndroidJUnit4.class)
+import android.content.Context;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.listener.UpdateActivityListener;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
+import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
+import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.task.result.EntityResult;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.util.concurrent.CountDownLatch;
+
+import androidTestFiles.Utils.CourseUtils;
+import androidTestFiles.Utils.FileUtils;
+
+import static org.junit.Assert.assertTrue;
+
+/**
+@RunWith(AndroidJUnit4.class)
 public class UpdateCourseActivityTest {
     private final String CORRECT_COURSE = "Correct_Course.zip";
-
     private Context context;
     private CountDownLatch signal;
-    private Payload response;
+    private BasicResult response;
 
     @Before
     public void setUp() throws Exception {
@@ -27,11 +53,8 @@ public class UpdateCourseActivityTest {
 
         FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
 
-
-        ArrayList<Object> data = new ArrayList<>();
-        Payload payload = new Payload(data);
         InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
-        imTask.execute(payload);
+        imTask.execute();
 
 
         DbHelper db = DbHelper.getInstance(context);
@@ -52,16 +75,13 @@ public class UpdateCourseActivityTest {
     private void runUpdateCourseActivityTask(long userId, Course tempCourse){
 
         UpdateCourseActivityTask task = new UpdateCourseActivityTask(context, userId);
-        ArrayList<Object> payloadData = new ArrayList<>();
-        payloadData.add(tempCourse);
-        Payload p = new Payload(payloadData);
         task.setUpdateActivityListener(new UpdateActivityListener() {
             @Override
             public void apiKeyInvalidated() {  }
 
             @Override
-            public void updateActivityComplete(Payload p) {
-                response = p;
+            public void updateActivityComplete(EntityResult<Course> result) {
+                response = result;
                 signal.countDown();
             }
 
@@ -70,7 +90,7 @@ public class UpdateCourseActivityTest {
 
             }
         });
-        task.execute(p);
+        task.execute(tempCourse);
 
     }
 }

@@ -1,7 +1,5 @@
 package org.digitalcampus.oppia.task.result;
 
-import org.digitalcampus.oppia.task.Payload;
-
 import java.util.ArrayList;
 import java.util.List;
 

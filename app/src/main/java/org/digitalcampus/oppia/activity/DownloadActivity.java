@@ -44,7 +44,7 @@ import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.MultiChoiceHelper;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -434,7 +434,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         }
     }
 
-    public void apiRequestComplete(Payload response) {
+    public void apiRequestComplete(BasicResult result) {
         hideProgressDialog();
 
         Callable<Boolean> finishActivity = () -> {
@@ -442,10 +442,10 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             return true;
         };
 
-        if (response.isResult()) {
+        if (result.isSuccess()) {
             try {
 
-                json = new JSONObject(response.getResultResponse());
+                json = new JSONObject(result.getResultMessage());
                 refreshCourseList();
 
                 if (courseToUpdate != null) {
@@ -458,7 +458,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                 UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
             }
         } else {
-            String errorMsg = response.getResultResponse();
+            String errorMsg = result.getResultMessage();
             UIUtils.showAlert(this, R.string.error, errorMsg, finishActivity);
         }
     }

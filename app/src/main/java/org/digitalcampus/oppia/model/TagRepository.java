@@ -24,7 +24,6 @@ import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
-import org.digitalcampus.oppia.task.Payload;
 import org.json.JSONException;
 import org.json.JSONObject;
 
