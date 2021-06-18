@@ -227,10 +227,10 @@ public class App extends Application {
             cancelCoursesChecksWork();
         }
 
-        scheduleCoursesNotCompletedReminderWorker();
+        scheduleCoursesCompletionReminderWorker();
     }
 
-    private void scheduleCoursesNotCompletedReminderWorker() {
+    private void scheduleCoursesCompletionReminderWorker() {
 
         // Calculate delay for next Tuesday at 10am (default date for these reminders)
         Calendar calendar = Calendar.getInstance();
@@ -245,12 +245,12 @@ public class App extends Application {
 
         long delayFromNow = calendar.getTimeInMillis() - System.currentTimeMillis();
 
-        PeriodicWorkRequest coursesNotCompletedReminder = new PeriodicWorkRequest.Builder(CoursesCompletionReminderWorker.class, 7, TimeUnit.DAYS)
+        PeriodicWorkRequest coursesCompletionReminder = new PeriodicWorkRequest.Builder(CoursesCompletionReminderWorker.class, 7, TimeUnit.DAYS)
                 .setInitialDelay(delayFromNow, TimeUnit.MILLISECONDS)
                 .build();
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_COURSES_NOT_COMPLETED_REMINDER,
-                ExistingPeriodicWorkPolicy.REPLACE, coursesNotCompletedReminder);
+                ExistingPeriodicWorkPolicy.REPLACE, coursesCompletionReminder);
 
     }
 
