@@ -31,6 +31,7 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
 import org.digitalcampus.oppia.task.PreloadAccountsTask;
 import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -139,6 +140,8 @@ public class SessionManager {
         if (!TextUtils.isEmpty(username)) {
             saveUserPrefs(username, prefs);
         }
+
+        OppiaNotificationUtils.cancelAllUserNotifications(ctx);
 
         //Logout the user (unregister from Preferences)
         editor.putString(PrefsActivity.PREF_USER_NAME, "");

@@ -21,13 +21,11 @@ package org.digitalcampus.oppia.application;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import androidx.multidex.MultiDex;
-import androidx.preference.PreferenceManager;
-
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.multidex.MultiDex;
+import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
@@ -48,14 +46,15 @@ import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
 import org.digitalcampus.oppia.service.CoursesChecksWorker;
+import org.digitalcampus.oppia.service.CoursesCompletionReminderWorker;
 import org.digitalcampus.oppia.service.TrackerWorker;
-import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 import org.digitalcampus.oppia.utils.storage.StorageUtils;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
+import java.util.Calendar;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -122,6 +121,7 @@ public class App extends Application {
     public static final String DEFAULT_LANG = "en";
     private static final String WORK_TRACKER_SEND = "tracker_send_work";
     private static final String WORK_COURSES_CHECKS = "no_course_worker";
+    private static final String WORK_COURSES_NOT_COMPLETED_REMINDER = "courses_reminder";
 
     private AppComponent appComponent;
     private static MyDatabase db;
@@ -168,11 +168,14 @@ public class App extends Application {
 
         configureStorageType();
 
-        setupPeriodicTrackerWorker();
+        setupPeriodicWorkers();
 
         OppiaNotificationUtils.initializeOreoNotificationChannels(this);
 
+//        launchWorkerToTest();
+
     }
+
 
     private void checkAppInstanceIdCreated(SharedPreferences prefs) {
         if (prefs.getString(PrefsActivity.PREF_APP_INSTANCE_ID, null) == null) {
@@ -205,7 +208,14 @@ public class App extends Application {
         return db;
     }
 
-    private void setupPeriodicTrackerWorker() {
+    private void launchWorkerToTest() {
+
+        OneTimeWorkRequest request = OneTimeWorkRequest.from(CoursesCompletionReminderWorker.class);
+        WorkManager.getInstance(this)
+                .enqueueUniqueWork("worker_test", ExistingWorkPolicy.REPLACE, request);
+    }
+
+    private void setupPeriodicWorkers() {
 
         boolean backgroundData = getPrefs(this).getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, true);
 
@@ -216,13 +226,31 @@ public class App extends Application {
             cancelTrackerWork();
             cancelCoursesChecksWork();
         }
+
+        scheduleCoursesCompletionReminderWorker();
     }
 
-    private void launchTrackerWorker() {
+    private void scheduleCoursesCompletionReminderWorker() {
 
-        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(CoursesChecksWorker.class).build();
-        WorkManager.getInstance(this).enqueueUniqueWork(WORK_COURSES_CHECKS,
-                ExistingWorkPolicy.REPLACE, oneTimeWorkRequest);
+        // Calculate delay for next Tuesday at 10am (default date for these reminders)
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+        calendar.set(Calendar.HOUR_OF_DAY, 10);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        if (calendar.before(Calendar.getInstance())) {
+            calendar.add(Calendar.DAY_OF_MONTH, 7);
+        }
+
+        long delayFromNow = calendar.getTimeInMillis() - System.currentTimeMillis();
+
+        PeriodicWorkRequest coursesCompletionReminder = new PeriodicWorkRequest.Builder(CoursesCompletionReminderWorker.class, 7, TimeUnit.DAYS)
+                .setInitialDelay(delayFromNow, TimeUnit.MILLISECONDS)
+                .build();
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_COURSES_NOT_COMPLETED_REMINDER,
+                ExistingPeriodicWorkPolicy.KEEP, coursesCompletionReminder);
 
     }
 

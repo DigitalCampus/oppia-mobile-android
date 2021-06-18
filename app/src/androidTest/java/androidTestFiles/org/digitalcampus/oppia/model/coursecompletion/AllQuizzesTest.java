@@ -1,4 +1,4 @@
-package androidTestFiles.org.digitalcampus.oppia.model.coursecomplete;
+package androidTestFiles.org.digitalcampus.oppia.model.coursecompletion;
 
 import android.content.Context;
 

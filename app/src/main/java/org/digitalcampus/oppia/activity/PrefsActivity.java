@@ -47,6 +47,7 @@ import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,6 +190,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                     .commit();
         }
 
+        OppiaNotificationUtils.cancelNotifications(this, OppiaNotificationUtils.NOTIF_ID_COURSES_REMINDER);
     }
 
 
