@@ -576,6 +576,8 @@
     <string name="courses_reminder_notif_text">You have not completed all your courses yet.\nGo to your courses</string>
     <string name="courses_reminder_notif_title">Courses reminder</string>
     <string name="courses_reminder_settings">Reminder settings</string>
+    <string name="prefSectionReminder">Courses reminder</string>
+    <string name="day_of_week">Day of week</string>
 
 </resources>
 

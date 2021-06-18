@@ -2,8 +2,13 @@ package org.digitalcampus.oppia.fragments.prefs;
 
 import android.os.Bundle;
 
+import androidx.fragment.app.DialogFragment;
+import androidx.preference.Preference;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.utils.custom_prefs.DayWeekTimePreference;
+import org.digitalcampus.oppia.utils.custom_prefs.DayWeekTimePreferenceDialogFragment;
 
 public class NotificationsPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback{
 
@@ -30,6 +35,17 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
         super.onCreate(savedInstance);
         liveUpdateSummary(PrefsActivity.PREF_GAMIFICATION_POINTS_ANIMATION);
 
+    }
+
+    @Override
+    public void onDisplayPreferenceDialog(Preference preference) {
+        if (preference instanceof DayWeekTimePreference) {
+            DialogFragment f = DayWeekTimePreferenceDialogFragment.newInstance(preference.getKey());
+            f.setTargetFragment(this, 0);
+            f.show(getParentFragmentManager(), null);
+        } else {
+            super.onDisplayPreferenceDialog(preference);
+        }
     }
 
     @Override
