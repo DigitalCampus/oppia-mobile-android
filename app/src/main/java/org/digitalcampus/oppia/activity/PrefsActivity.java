@@ -47,8 +47,6 @@ import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
-import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.util.ArrayList;
