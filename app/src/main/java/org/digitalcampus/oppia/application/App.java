@@ -47,6 +47,7 @@ import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
 import org.digitalcampus.oppia.service.CoursesChecksWorker;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorker;
+import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
@@ -245,7 +246,8 @@ public class App extends Application {
 
         long delayFromNow = calendar.getTimeInMillis() - System.currentTimeMillis();
 
-        PeriodicWorkRequest coursesCompletionReminder = new PeriodicWorkRequest.Builder(CoursesCompletionReminderWorker.class, 7, TimeUnit.DAYS)
+        PeriodicWorkRequest coursesCompletionReminder = new PeriodicWorkRequest.Builder(CoursesCompletionReminderWorker.class,
+                CoursesCompletionReminderWorkerManager.PERIOD_DAYS_REMINDER, TimeUnit.DAYS)
                 .setInitialDelay(delayFromNow, TimeUnit.MILLISECONDS)
                 .build();
 
