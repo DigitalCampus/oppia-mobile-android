@@ -55,12 +55,9 @@
         app:iconSpaceReserved="false">
 
         <org.digitalcampus.oppia.utils.custom_prefs.DayWeekTimePreference
-            android:defaultValue="@string/prefGamificationPointsAnimationDefault"
-            android:dependency="prefShowGamificationEvents"
-            android:entries="@array/GamificationPointsAnimation"
-            android:entryValues="@array/GamificationPointsAnimationValues"
             android:key="prefCoursesReminderDayOfWeek"
-            android:title="@string/day_of_week"
+            android:title="@string/weekly_reminder_day_time"
+            app:summary="@string/courses_reminder_default_day_time"
             app:allowDividerAbove="true"
             app:allowDividerBelow="true"
             app:iconSpaceReserved="false" />

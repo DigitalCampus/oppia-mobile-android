@@ -9,10 +9,13 @@ import android.view.View;
 import androidx.preference.DialogPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceDialogFragmentCompat;
+import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceViewHolder;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ViewPrefDayWeekTimeBinding;
+
+import java.util.Calendar;
 
 public class DayWeekTimePreferenceDialogFragment extends PreferenceDialogFragmentCompat {
 
@@ -32,6 +35,7 @@ public class DayWeekTimePreferenceDialogFragment extends PreferenceDialogFragmen
     @Override
     protected View onCreateDialogView(Context context) {
         binding = ViewPrefDayWeekTimeBinding.inflate(LayoutInflater.from(context));
+        binding.timePickerReminder.setIs24HourView(true);
         return binding.getRoot();
 
     }
