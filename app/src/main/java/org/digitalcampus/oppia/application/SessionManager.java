@@ -29,6 +29,7 @@ import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
+import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.task.PreloadAccountsTask;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
@@ -67,7 +68,8 @@ public class SessionManager {
             PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS,
             PrefsActivity.PREF_BUG_REPORT_ENABLED,
             PrefsActivity.PREF_ANALYTICS_ENABLED,
-            PrefsActivity.PREF_ANALYTICS_INITIAL_PROMPT);
+            PrefsActivity.PREF_ANALYTICS_INITIAL_PROMPT,
+            PrefsActivity.PREF_COURSES_REMINDER_DAY_TIME_MILLIS);
 
     private static final String STR_FALSE = "false";
     private static final String STR_TRUE = "true";
@@ -128,7 +130,9 @@ public class SessionManager {
         loadUserPrefs(ctx, username, editor);
         setUserApiKeyValid(user, true);
         Analytics.setUserId(username);
-        editor.apply();
+        editor.commit();
+
+        CoursesCompletionReminderWorkerManager.scheduleCoursesCompletionReminderWorker(ctx);
     }
 
     public static void logoutCurrentUser(Context ctx) {

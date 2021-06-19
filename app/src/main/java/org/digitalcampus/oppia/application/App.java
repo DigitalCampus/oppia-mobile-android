@@ -124,6 +124,7 @@ public class App extends Application {
     public static final String WORK_COURSES_CHECKS = "no_course_worker";
     public static final String WORK_COURSES_NOT_COMPLETED_REMINDER = "courses_reminder";
 
+
     private AppComponent appComponent;
     private static MyDatabase db;
     private static volatile BaseAnalytics analytics;
@@ -227,33 +228,8 @@ public class App extends Application {
             cancelWorks(WORK_COURSES_CHECKS, WORK_TRACKER_SEND);
         }
 
-        scheduleCoursesCompletionReminderWorker();
     }
 
-    private void scheduleCoursesCompletionReminderWorker() {
-
-        // Calculate delay for next Tuesday at 10am (default date for these reminders)
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
-        calendar.set(Calendar.HOUR_OF_DAY, 10);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-
-        if (calendar.before(Calendar.getInstance())) {
-            calendar.add(Calendar.DAY_OF_MONTH, 7);
-        }
-
-        long delayFromNow = calendar.getTimeInMillis() - System.currentTimeMillis();
-
-        PeriodicWorkRequest coursesCompletionReminder = new PeriodicWorkRequest.Builder(CoursesCompletionReminderWorker.class,
-                CoursesCompletionReminderWorkerManager.PERIOD_DAYS_REMINDER, TimeUnit.DAYS)
-                .setInitialDelay(delayFromNow, TimeUnit.MILLISECONDS)
-                .build();
-
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_COURSES_NOT_COMPLETED_REMINDER,
-                ExistingPeriodicWorkPolicy.KEEP, coursesCompletionReminder);
-
-    }
 
     private void scheduleTrackerWork() {
 

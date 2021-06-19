@@ -55,7 +55,7 @@
         app:iconSpaceReserved="false">
 
         <org.digitalcampus.oppia.utils.custom_prefs.DayWeekTimePreference
-            android:key="prefCoursesReminderDayOfWeek"
+            android:key="prefCoursesReminderDayTimeMillis"
             android:title="@string/weekly_reminder_day_time"
             app:summary="@string/courses_reminder_default_day_time"
             app:allowDividerAbove="true"

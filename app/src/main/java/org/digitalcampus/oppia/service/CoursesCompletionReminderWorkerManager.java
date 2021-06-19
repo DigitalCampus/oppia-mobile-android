@@ -8,6 +8,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
+import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ListenableWorker;
 
 import org.digitalcampus.mobile.learning.R;
@@ -27,8 +28,11 @@ import org.joda.time.DateTime;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import androidx.work.ListenableWorker.Result;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import javax.inject.Inject;
 
@@ -36,6 +40,8 @@ public class CoursesCompletionReminderWorkerManager {
 
     private static final String TAG = CoursesCompletionReminderWorkerManager.class.getSimpleName();
     private final Context context;
+
+    public static final String DEFAULT_COURSES_REMINDER_TIME_MILLIS = "1624348800254"; // Tuesday at 10:00
 
     public static final int PERIOD_DAYS_REMINDER = 7;
 
@@ -143,4 +149,35 @@ public class CoursesCompletionReminderWorkerManager {
 
     }
 
+
+    public static void scheduleCoursesCompletionReminderWorker(Context context) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        String coursesReminderDayTimeMillis = prefs.getString(PrefsActivity.PREF_COURSES_REMINDER_DAY_TIME_MILLIS, DEFAULT_COURSES_REMINDER_TIME_MILLIS);
+
+        Calendar calendarDayTime = Calendar.getInstance();
+        calendarDayTime.setTimeInMillis(Long.parseLong(coursesReminderDayTimeMillis));
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, calendarDayTime.get(Calendar.DAY_OF_WEEK));
+        calendar.set(Calendar.HOUR_OF_DAY, calendarDayTime.get(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendarDayTime.get(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, 0);
+
+        if (calendar.before(Calendar.getInstance())) {
+            calendar.add(Calendar.DAY_OF_MONTH, 7);
+        }
+
+        long delayFromNow = calendar.getTimeInMillis() - System.currentTimeMillis();
+
+        PeriodicWorkRequest coursesCompletionReminder = new PeriodicWorkRequest.Builder(CoursesCompletionReminderWorker.class,
+                CoursesCompletionReminderWorkerManager.PERIOD_DAYS_REMINDER, TimeUnit.DAYS)
+                .setInitialDelay(delayFromNow, TimeUnit.MILLISECONDS)
+                .build();
+
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(App.WORK_COURSES_NOT_COMPLETED_REMINDER,
+                ExistingPeriodicWorkPolicy.REPLACE, coursesCompletionReminder);
+
+    }
 }
