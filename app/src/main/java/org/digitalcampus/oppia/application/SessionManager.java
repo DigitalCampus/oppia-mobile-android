@@ -143,6 +143,9 @@ public class SessionManager {
 
         OppiaNotificationUtils.cancelAllUserNotifications(ctx);
 
+        ((App)ctx.getApplicationContext()).cancelWorks(
+                App.WORK_COURSES_NOT_COMPLETED_REMINDER, App.WORK_COURSES_CHECKS, App.WORK_TRACKER_SEND);
+
         //Logout the user (unregister from Preferences)
         editor.putString(PrefsActivity.PREF_USER_NAME, "");
         Analytics.setUserId("");

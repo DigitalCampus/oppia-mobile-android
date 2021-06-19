@@ -120,9 +120,9 @@ public class App extends Application {
 
     // only used in case a course doesn't have any lang specified
     public static final String DEFAULT_LANG = "en";
-    private static final String WORK_TRACKER_SEND = "tracker_send_work";
-    private static final String WORK_COURSES_CHECKS = "no_course_worker";
-    private static final String WORK_COURSES_NOT_COMPLETED_REMINDER = "courses_reminder";
+    public static final String WORK_TRACKER_SEND = "tracker_send_work";
+    public static final String WORK_COURSES_CHECKS = "no_course_worker";
+    public static final String WORK_COURSES_NOT_COMPLETED_REMINDER = "courses_reminder";
 
     private AppComponent appComponent;
     private static MyDatabase db;
@@ -224,8 +224,7 @@ public class App extends Application {
             scheduleTrackerWork();
             scheduleCoursesChecksWork();
         } else {
-            cancelTrackerWork();
-            cancelCoursesChecksWork();
+            cancelWorks(WORK_COURSES_CHECKS, WORK_TRACKER_SEND);
         }
 
         scheduleCoursesCompletionReminderWorker();
@@ -271,9 +270,10 @@ public class App extends Application {
 
     }
 
-    public void cancelTrackerWork() {
-
-        WorkManager.getInstance(this).cancelUniqueWork(WORK_TRACKER_SEND);
+    public void cancelWorks(String... uniqueNames) {
+        for (String workName : uniqueNames) {
+            WorkManager.getInstance(this).cancelUniqueWork(workName);
+        }
     }
 
     private void scheduleCoursesChecksWork() {
@@ -291,9 +291,6 @@ public class App extends Application {
 
     }
 
-    public void cancelCoursesChecksWork() {
-        WorkManager.getInstance(this).cancelUniqueWork(WORK_COURSES_CHECKS);
-    }
 
     public static SharedPreferences getPrefs(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
