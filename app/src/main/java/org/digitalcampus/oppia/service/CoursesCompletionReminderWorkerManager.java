@@ -2,6 +2,7 @@ package org.digitalcampus.oppia.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -9,15 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.ListenableWorker;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.exception.UserNotFoundException;
-import org.digitalcampus.oppia.model.ActivityLogRepository;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.TrackerLogRepository;
@@ -39,6 +35,7 @@ import javax.inject.Inject;
 public class CoursesCompletionReminderWorkerManager {
 
     private static final String TAG = CoursesCompletionReminderWorkerManager.class.getSimpleName();
+    public static final String EXTRA_GO_TO_NOTIFICATIONS_SETTINGS = "extra_go_to_notifications_settings";
     private final Context context;
 
     public static final String DEFAULT_COURSES_REMINDER_TIME_MILLIS = "1624348800254"; // Tuesday at 10:00
@@ -141,8 +138,10 @@ public class CoursesCompletionReminderWorkerManager {
         builder.setContentText(context.getString(R.string.courses_reminder_notif_text));
         builder.setContentIntent(OppiaNotificationUtils.getMainActivityPendingIntent(context));
 
+        Bundle extras = new Bundle();
+        extras.putBoolean(EXTRA_GO_TO_NOTIFICATIONS_SETTINGS, true);
         builder.addAction(0, context.getString(R.string.courses_reminder_settings),
-                OppiaNotificationUtils.getActivityPendingIntent(context, PrefsActivity.class, null));
+                OppiaNotificationUtils.getActivityPendingIntent(context, PrefsActivity.class, extras));
 
         OppiaNotificationUtils.sendNotification(context,
                 OppiaNotificationUtils.NOTIF_ID_COURSES_REMINDER, builder.build());
@@ -152,10 +151,6 @@ public class CoursesCompletionReminderWorkerManager {
     public static void configureCoursesCompletionReminderWorker(Context context) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-        String criteria = prefs.getString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, null);
-        int percent = prefs.getInt(PrefsActivity.PREF_BADGE_AWARD_CRITERIA_PERCENT, 0);
-
         String coursesReminderDayTimeMillis = prefs.getString(PrefsActivity.PREF_COURSES_REMINDER_DAY_TIME_MILLIS, DEFAULT_COURSES_REMINDER_TIME_MILLIS);
         if (!TextUtils.isEmpty(coursesReminderDayTimeMillis)) {
             scheduleCoursesCompletionReminderWorker(context, coursesReminderDayTimeMillis);
