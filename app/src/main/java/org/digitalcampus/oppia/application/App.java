@@ -175,8 +175,16 @@ public class App extends Application {
 
         OppiaNotificationUtils.initializeOreoNotificationChannels(this);
 
+        saveServerBadgeAwardCriteria();
+
 //        launchWorkerToTest();
 
+    }
+
+    private void saveServerBadgeAwardCriteria() {
+        if (getPrefs(this).getString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, null) == null) {
+            new FetchServerInfoTask(this).execute();
+        }
     }
 
 
