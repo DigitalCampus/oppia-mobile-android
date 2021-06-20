@@ -56,7 +56,8 @@ public class SessionManager {
             PrefsActivity.PREF_NO_SCHEDULE_REMINDERS,
             PrefsActivity.PREF_TEXT_SIZE,
             PrefsActivity.PREF_GAMIFICATION_POINTS_ANIMATION,
-            PrefsActivity.PREF_DURATION_GAMIFICATION_POINTS_VIEW);
+            PrefsActivity.PREF_DURATION_GAMIFICATION_POINTS_VIEW,
+            PrefsActivity.PREF_COURSES_REMINDER_DAY_TIME_MILLIS);
 
     private static final List<String> USER_BOOLEAN_PREFS = Arrays.asList(
             PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS,
@@ -68,8 +69,7 @@ public class SessionManager {
             PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS,
             PrefsActivity.PREF_BUG_REPORT_ENABLED,
             PrefsActivity.PREF_ANALYTICS_ENABLED,
-            PrefsActivity.PREF_ANALYTICS_INITIAL_PROMPT,
-            PrefsActivity.PREF_COURSES_REMINDER_DAY_TIME_MILLIS);
+            PrefsActivity.PREF_ANALYTICS_INITIAL_PROMPT);
 
     private static final String STR_FALSE = "false";
     private static final String STR_TRUE = "true";
@@ -132,7 +132,7 @@ public class SessionManager {
         Analytics.setUserId(username);
         editor.commit();
 
-        CoursesCompletionReminderWorkerManager.scheduleCoursesCompletionReminderWorker(ctx);
+        CoursesCompletionReminderWorkerManager.configureCoursesCompletionReminderWorker(ctx);
     }
 
     public static void logoutCurrentUser(Context ctx) {

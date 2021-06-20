@@ -149,12 +149,22 @@ public class CoursesCompletionReminderWorkerManager {
 
     }
 
-
-    public static void scheduleCoursesCompletionReminderWorker(Context context) {
+    public static void configureCoursesCompletionReminderWorker(Context context) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
+        String criteria = prefs.getString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, null);
+        int percent = prefs.getInt(PrefsActivity.PREF_BADGE_AWARD_CRITERIA_PERCENT, 0);
+
         String coursesReminderDayTimeMillis = prefs.getString(PrefsActivity.PREF_COURSES_REMINDER_DAY_TIME_MILLIS, DEFAULT_COURSES_REMINDER_TIME_MILLIS);
+        if (!TextUtils.isEmpty(coursesReminderDayTimeMillis)) {
+            scheduleCoursesCompletionReminderWorker(context, coursesReminderDayTimeMillis);
+        } else {
+            ((App) context.getApplicationContext()).cancelWorks(App.WORK_COURSES_NOT_COMPLETED_REMINDER);
+        }
+    }
+
+    private static void scheduleCoursesCompletionReminderWorker(Context context, String coursesReminderDayTimeMillis) {
 
         Calendar calendarDayTime = Calendar.getInstance();
         calendarDayTime.setTimeInMillis(Long.parseLong(coursesReminderDayTimeMillis));

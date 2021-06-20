@@ -49,6 +49,7 @@ import org.digitalcampus.oppia.service.CoursesChecksWorker;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorker;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.service.TrackerWorker;
+import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
