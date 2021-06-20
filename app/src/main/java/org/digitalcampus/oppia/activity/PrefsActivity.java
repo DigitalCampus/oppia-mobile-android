@@ -37,16 +37,19 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityPreferencesBinding;
 import org.digitalcampus.oppia.fragments.prefs.BasePreferenceFragment;
 import org.digitalcampus.oppia.fragments.prefs.MainPreferencesFragment;
+import org.digitalcampus.oppia.fragments.prefs.NotificationsPrefsFragment;
 import org.digitalcampus.oppia.fragments.prefs.PreferenceChangedCallback;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
 import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,6 +152,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_ANALYTICS_INITIAL_PROMPT = "prefAnalyticsInitialPrompt";
     public static final String PREF_BUG_REPORT_ENABLED = "prefBugReportEnabled";
     public static final String PREF_ANALYTICS_ENABLED = "prefAnalyticsEnabled";
+    public static final String PREF_COURSES_REMINDER_DAY_TIME_MILLIS = "prefCoursesReminderDayTimeMillis";
 
     private PreferenceChangedCallback currentPrefScreen;
 
@@ -189,6 +193,15 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                     .commit();
         }
 
+        if (getIntent().getBooleanExtra(CoursesCompletionReminderWorkerManager.EXTRA_GO_TO_NOTIFICATIONS_SETTINGS, false)) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.root_layout, NotificationsPrefsFragment.newInstance(), null)
+                    .addToBackStack(null)
+                    .commit();
+        }
+
+        OppiaNotificationUtils.cancelNotifications(this, OppiaNotificationUtils.NOTIF_ID_COURSES_REMINDER);
     }
 
 

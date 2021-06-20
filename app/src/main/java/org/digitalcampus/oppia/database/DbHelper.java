@@ -34,6 +34,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.exception.ActivityNotFoundException;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -267,9 +268,10 @@ public class DbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public SQLiteDatabase getDB(){
+    public SQLiteDatabase getDB() {
         return db;
     }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         createCourseTable(db);
@@ -418,15 +420,15 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createUserCustomFieldsTable(SQLiteDatabase db) {
 
-        String sql = "CREATE TABLE IF NOT EXISTS ["+USER_CF_TABLE+"] (" +
-                "["+USER_CF_ID+"]" + STR_INT_PRIMARY_KEY_AUTO +
-                "["+ USER_CF_USERNAME +"]" + STR_TEXT_COMMA+
-                "["+ CF_FIELD_KEY +"]" + STR_TEXT_COMMA +
-                "["+ CF_VALUE_STR +"]" + STR_TEXT_COMMA +
-                "["+ CF_VALUE_INT +"]" + STR_INT_COMMA +
-                "["+ CF_VALUE_BOOL +"] BOOLEAN, " +
-                "["+ CF_VALUE_FLOAT +"] FLOAT, " +
-                "CONSTRAINT unq UNIQUE (" + USER_CF_USERNAME + ", "+ CF_FIELD_KEY +")" +
+        String sql = "CREATE TABLE IF NOT EXISTS [" + USER_CF_TABLE + "] (" +
+                "[" + USER_CF_ID + "]" + STR_INT_PRIMARY_KEY_AUTO +
+                "[" + USER_CF_USERNAME + "]" + STR_TEXT_COMMA +
+                "[" + CF_FIELD_KEY + "]" + STR_TEXT_COMMA +
+                "[" + CF_VALUE_STR + "]" + STR_TEXT_COMMA +
+                "[" + CF_VALUE_INT + "]" + STR_INT_COMMA +
+                "[" + CF_VALUE_BOOL + "] BOOLEAN, " +
+                "[" + CF_VALUE_FLOAT + "] FLOAT, " +
+                "CONSTRAINT unq UNIQUE (" + USER_CF_USERNAME + ", " + CF_FIELD_KEY + ")" +
                 ");";
         db.execSQL(sql);
     }
@@ -1919,6 +1921,29 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "isQuizFirstAttemptToday returned " + count + " rows");
         c.close();
         return (count == 0);
+    }
+
+    public String getLastTrackerDatetime(long userId) {
+
+        String selection = TRACKER_LOG_C_USERID + "=?";
+        String[] selectionArgs = new String[]{String.valueOf(userId)};
+        String[] columns = new String[]{TRACKER_LOG_C_DATETIME};
+        String order = TRACKER_LOG_C_DATETIME + " DESC";
+        String limit = "1";
+
+        Cursor c = db.query(TRACKER_LOG_TABLE, columns, selection, selectionArgs, null, null, order, limit);
+
+        try {
+            if (c.getCount() > 0) {
+                c.moveToFirst();
+                String datetime = c.getString(0);
+                return datetime;
+            }
+        } finally {
+            c.close();
+        }
+
+        return null;
     }
 
     public boolean isActivityFirstAttemptToday(String digest) {
