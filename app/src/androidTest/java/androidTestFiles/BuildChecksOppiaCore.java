@@ -33,7 +33,7 @@ public class BuildChecksOppiaCore {
     @Test
     public void checkDefaultSettingsParameters() {
 
-        String oppiaServerDefault = prefs.getString("prefServer", context.getString(R.string.prefServerDefault));
+        String oppiaServerDefault = context.getString(R.string.prefServerDefault);
         String oppiaServerHost = context.getString(R.string.oppiaServerHost);
 
         assertEquals("https://demo.oppia-mobile.org/", oppiaServerDefault);

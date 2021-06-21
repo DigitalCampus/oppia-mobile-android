@@ -31,7 +31,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.database.DBMigration;
+import org.digitalcampus.oppia.database.DBDataMigration;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.UpgradeListener;
@@ -170,7 +170,7 @@ public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
 			result.setSuccess(true);
 		}
 
-		DBMigration.newInstance(ctx).checkMigrationStatus();
+		DBDataMigration.newInstance(ctx).checkMigrationStatus();
 
 		overrideAdminPasswordTask();
 		reloadCustomFieldsIfNeeded();

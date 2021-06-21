@@ -25,6 +25,7 @@ import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
+import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +37,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
+public class CourseInfoTask extends APIRequestTask<String, Void, EntityResult<CourseInstallViewAdapter>> {
 
     private CourseInfoListener listener;
 
@@ -50,11 +51,10 @@ public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
     }
 
     @Override
-    protected Payload doInBackground(Payload... params) {
+    protected EntityResult<CourseInstallViewAdapter> doInBackground(String... params) {
 
-        Payload payload = params[0];
-        String courseShortname = (String) payload.getData().get(0);
-        payload.getResponseData().clear();
+        EntityResult<CourseInstallViewAdapter> result = new EntityResult<>();
+        String courseShortname = params[0];
 
         try {
             String url = apiEndpoint.getFullURL(ctx, String.format(Paths.COURSE_INFO_PATH, courseShortname));
@@ -64,30 +64,30 @@ public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 CourseInstallViewAdapter course = parseCourse(response.body().string());
-                payload.setResponseData(Collections.singletonList(course));
-                payload.setResult(true);
-                payload.setResultResponse(ctx.getString(R.string.reset_password_complete));
+                result.setEntity(course);
+                result.setSuccess(true);
+                result.setResultMessage(ctx.getString(R.string.reset_password_complete));
             } else {
-                payload.setResult(false);
+                result.setSuccess(false);
                 if (response.code() == 400) {
-                    payload.setResultResponse(ctx.getString(R.string.error_reset_password));
+                    result.setResultMessage(ctx.getString(R.string.error_reset_password));
                 } else if (response.code() == 404){
-                    payload.setResultResponse(ctx.getString(R.string.open_digest_errors_course_not_found));
+                    result.setResultMessage(ctx.getString(R.string.open_digest_errors_course_not_found));
                 } else {
-                    payload.setResultResponse(ctx.getString(R.string.error_connection));
+                    result.setResultMessage(ctx.getString(R.string.error_connection));
                 }
             }
 
         } catch (IOException e) {
-            payload.setResult(false);
-            payload.setResultResponse(ctx.getString(R.string.error_connection));
+            result.setSuccess(false);
+            result.setResultMessage(ctx.getString(R.string.error_connection));
         } catch (JSONException e) {
             Analytics.logException(e);
             Log.d(TAG, "JSONException:", e);
-            payload.setResult(false);
-            payload.setResultResponse(ctx.getString(R.string.error_processing_response));
+            result.setSuccess(false);
+            result.setResultMessage(ctx.getString(R.string.error_processing_response));
         }
-        return payload;
+        return result;
     }
 
     private CourseInstallViewAdapter parseCourse(String courseJsonString) throws JSONException {
@@ -106,13 +106,13 @@ public class CourseInfoTask extends APIRequestTask<Payload, Object, Payload> {
     }
 
     @Override
-    protected void onPostExecute(Payload response) {
+    protected void onPostExecute(EntityResult<CourseInstallViewAdapter> result) {
         synchronized (this) {
             if (listener != null) {
-                if (response.isResult()) {
-                    listener.onSuccess((CourseInstallViewAdapter) response.getResponseData().get(0));
+                if (result.isSuccess()) {
+                    listener.onSuccess(result.getEntity());
                 } else {
-                    listener.onError(response.getResultResponse());
+                    listener.onError(result.getResultMessage());
                 }
             }
         }

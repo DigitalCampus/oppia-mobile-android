@@ -20,7 +20,6 @@ package org.digitalcampus.oppia.listener;
 
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.result.EntityResult;
 
 public interface UpdateActivityListener extends APIKeyRequestListener {

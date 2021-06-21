@@ -18,9 +18,9 @@
 package org.digitalcampus.oppia.listener;
 
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.BasicResult;
 
 public interface InstallCourseListener {
-	void installComplete(Payload p);
+	void installComplete(BasicResult result);
     void installProgressUpdate(DownloadProgress dp);
 }

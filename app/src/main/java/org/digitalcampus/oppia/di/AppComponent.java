@@ -13,7 +13,7 @@ import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.activity.ViewDigestActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.database.DBMigration;
+import org.digitalcampus.oppia.database.DBDataMigration;
 import org.digitalcampus.oppia.fragments.ActivitiesFragment;
 import org.digitalcampus.oppia.fragments.AppFragment;
 import org.digitalcampus.oppia.fragments.BadgesFragment;
@@ -29,6 +29,7 @@ import org.digitalcampus.oppia.fragments.ResetPasswordFragment;
 import org.digitalcampus.oppia.fragments.prefs.AdvancedPrefsFragment;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.CoursesChecksWorkerManager;
+import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.widgets.AnswerWidget;
 
 import javax.inject.Singleton;
@@ -71,7 +72,9 @@ public interface AppComponent {
 
     void inject(CoursesChecksWorkerManager coursesChecksWorkerManager);
 
+    void inject(CoursesCompletionReminderWorkerManager coursesCompletionReminderWorkerManager);
+
     User getUser();
 
-    void inject(DBMigration dbMigration);
+    void inject(DBDataMigration dbDataMigration);
 }

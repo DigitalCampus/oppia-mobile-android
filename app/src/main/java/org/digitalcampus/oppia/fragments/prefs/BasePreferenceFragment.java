@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.fragments.prefs;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -17,6 +18,11 @@ import androidx.preference.PreferenceFragmentCompat;
 public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
     protected List<String> adminProtectedValues = new ArrayList<>();
+    protected SharedPreferences parentPrefs;
+
+    public void setPrefs(SharedPreferences prefs){
+        this.parentPrefs = prefs;
+    }
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -40,7 +46,10 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
                     return false;
                 }
 
-                if (!App.getPrefs(getActivity()).getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false)) {
+                if (this.parentPrefs == null){
+                    parentPrefs = App.getPrefs(getActivity());
+                }
+                if (!parentPrefs.getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false)) {
                     afterPreferenceCheckDelegate(preference, newValue);
                     return true;
                 }

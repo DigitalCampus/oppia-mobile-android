@@ -12,20 +12,17 @@ import androidx.annotation.Nullable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityViewDigestBinding;
-import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.CourseInfoTask;
-import org.digitalcampus.oppia.task.Payload;
-
-import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -156,10 +153,9 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
         binding.courseTitle.setText(R.string.open_digest_fetching_course_info);
         binding.downloadProgress.setVisibility(View.VISIBLE);
 
-        Payload p = new Payload(Arrays.asList(shortname));
         CourseInfoTask task = new CourseInfoTask(this, apiEndpoint);
         task.setListener(this);
-        task.execute(p);
+        task.execute(shortname);
     }
 
     private void downloadCourse() {

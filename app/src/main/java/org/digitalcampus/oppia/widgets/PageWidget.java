@@ -89,8 +89,8 @@ public class PageWidget extends BaseWidget {
 
 	@Override
 	public void onSaveInstanceState(@NonNull Bundle outState) {
-		super.onSaveInstanceState(outState);
 		outState.putSerializable(BaseWidget.WIDGET_CONFIG, (Serializable) getWidgetConfig());
+		super.onSaveInstanceState(outState);
 	}
 	
 	@Override

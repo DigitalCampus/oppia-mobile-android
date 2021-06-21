@@ -17,10 +17,10 @@
 
 package org.digitalcampus.oppia.listener;
 
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.BasicResult;
 
 public interface MoveStorageListener {
 
-	void moveStorageComplete(Payload p);
+	void moveStorageComplete(BasicResult result);
     void moveStorageProgressUpdate(String s);
 }

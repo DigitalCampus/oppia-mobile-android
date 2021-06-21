@@ -12,7 +12,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.ExternalStorageState;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
@@ -37,7 +37,7 @@ public class ChangeStorageOptionTest {
     private Context context;
     private SharedPreferences prefs;
     private CountDownLatch signal;
-    private Payload response;
+    private BasicResult resultResponse;
 
     @Mock ExternalStorageState externalStorageState;
 
@@ -46,6 +46,7 @@ public class ChangeStorageOptionTest {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         signal = new CountDownLatch(1);
+        resultResponse = null;
     }
 
     @After
@@ -62,14 +63,11 @@ public class ChangeStorageOptionTest {
 
         ChangeStorageOptionTask task = new ChangeStorageOptionTask(context);
 
-        ArrayList<Object> data = new ArrayList<>();
         String storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
-        data.add(storageOption);
-        Payload p = new Payload(data);
         task.setMoveStorageListener(new MoveStorageListener() {
             @Override
-            public void moveStorageComplete(Payload p) {
-                response = p;
+            public void moveStorageComplete(BasicResult result) {
+                resultResponse = result;
                 signal.countDown();
             }
 
@@ -78,11 +76,11 @@ public class ChangeStorageOptionTest {
 
             }
         });
-        task.execute(p);
+        task.execute(storageOption);
 
         signal.await();
 
-        assertTrue(response.isResult());
+        assertTrue(resultResponse.isSuccess());
         assertEquals(PrefsActivity.STORAGE_OPTION_EXTERNAL, prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, ""));
     }
     */
@@ -102,14 +100,11 @@ public class ChangeStorageOptionTest {
 
         ChangeStorageOptionTask task = new ChangeStorageOptionTask(context);
 
-        ArrayList<Object> data = new ArrayList<>();
         String storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
-        data.add(storageOption);
-        Payload p = new Payload(data);
         task.setMoveStorageListener(new MoveStorageListener() {
             @Override
-            public void moveStorageComplete(Payload p) {
-                response = p;
+            public void moveStorageComplete(BasicResult result) {
+                resultResponse = result;
                 signal.countDown();
             }
 
@@ -118,12 +113,12 @@ public class ChangeStorageOptionTest {
 
             }
         });
-        task.execute(p);
+        task.execute(storageOption);
 
         signal.await();
 
-        assertFalse(response.isResult());
-        assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
+        assertFalse(resultResponse.isSuccess()); 
+        assertEquals(context.getString(R.string.error_sdcard), resultResponse.getResultMessage());
 
         ExternalStorageState.setExternalStorageState(new ExternalStorageState());   //Replace mocked object
     }
@@ -139,14 +134,11 @@ public class ChangeStorageOptionTest {
 
         ChangeStorageOptionTask task = new ChangeStorageOptionTask(context);
 
-        ArrayList<Object> data = new ArrayList<>();
         String storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
-        data.add(storageOption);
-        Payload p = new Payload(data);
         task.setMoveStorageListener(new MoveStorageListener() {
             @Override
-            public void moveStorageComplete(Payload p) {
-                response = p;
+            public void moveStorageComplete(BasicResult result) {
+                resultResponse = result;
                 signal.countDown();
             }
 
@@ -155,12 +147,12 @@ public class ChangeStorageOptionTest {
 
             }
         });
-        task.execute(p);
+        task.execute(storageOption);
 
         signal.await();
 
-        assertFalse(response.isResult());
-        assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
+        assertFalse(resultResponse.isSuccess());
+        assertEquals(context.getString(R.string.error_sdcard), resultResponse.getResultMessage());
 
         ExternalStorageState.setExternalStorageState(new ExternalStorageState());   //Replace mocked object
     }
@@ -176,14 +168,11 @@ public class ChangeStorageOptionTest {
 
         ChangeStorageOptionTask task = new ChangeStorageOptionTask(context);
 
-        ArrayList<Object> data = new ArrayList<>();
         String storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
-        data.add(storageOption);
-        Payload p = new Payload(data);
         task.setMoveStorageListener(new MoveStorageListener() {
             @Override
-            public void moveStorageComplete(Payload p) {
-                response = p;
+            public void moveStorageComplete(BasicResult result) {
+                resultResponse = result;
                 signal.countDown();
             }
 
@@ -192,12 +181,12 @@ public class ChangeStorageOptionTest {
 
             }
         });
-        task.execute(p);
+        task.execute(storageOption);
 
         signal.await();
 
-        assertFalse(response.isResult());
-        assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
+        assertFalse(resultResponse.isSuccess());
+        assertEquals(context.getString(R.string.error_sdcard), resultResponse.getResultMessage());
 
         ExternalStorageState.setExternalStorageState(new ExternalStorageState());   //Replace mocked object
     }
@@ -215,14 +204,11 @@ public class ChangeStorageOptionTest {
 
         ChangeStorageOptionTask task = new ChangeStorageOptionTask(context);
 
-        ArrayList<Object> data = new ArrayList<>();
         String storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
-        data.add(storageOption);
-        Payload p = new Payload(data);
         task.setMoveStorageListener(new MoveStorageListener() {
             @Override
-            public void moveStorageComplete(Payload p) {
-                response = p;
+            public void moveStorageComplete(BasicResult result) {
+                resultResponse = result;
                 signal.countDown();
             }
 
@@ -231,12 +217,12 @@ public class ChangeStorageOptionTest {
 
             }
         });
-        task.execute(p);
+        task.execute(storageOption);
 
         signal.await();
 
-        assertFalse(response.isResult());
-        assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
+        assertFalse(resultResponse.isSuccess());
+        assertEquals(context.getString(R.string.error_sdcard), resultResponse.getResultMessage());
 
         ExternalStorageState.setExternalStorageState(new ExternalStorageState());   //Replace mocked object
     }
@@ -252,14 +238,11 @@ public class ChangeStorageOptionTest {
 
         ChangeStorageOptionTask task = new ChangeStorageOptionTask(context);
 
-        ArrayList<Object> data = new ArrayList<>();
         String storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
-        data.add(storageOption);
-        Payload p = new Payload(data);
         task.setMoveStorageListener(new MoveStorageListener() {
             @Override
-            public void moveStorageComplete(Payload p) {
-                response = p;
+            public void moveStorageComplete(BasicResult result) {
+                resultResponse = result;
                 signal.countDown();
             }
 
@@ -268,12 +251,12 @@ public class ChangeStorageOptionTest {
 
             }
         });
-        task.execute(p);
+        task.execute(storageOption);
 
         signal.await();
 
-        assertFalse(response.isResult());
-        assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
+        assertFalse(resultResponse.isSuccess());
+        assertEquals(context.getString(R.string.error_sdcard), resultResponse.getResultMessage());
 
         ExternalStorageState.setExternalStorageState(new ExternalStorageState());   //Replace mocked object
     }
@@ -287,14 +270,11 @@ public class ChangeStorageOptionTest {
 
         ChangeStorageOptionTask task = new ChangeStorageOptionTask(context);
 
-        ArrayList<Object> data = new ArrayList<>();
         String storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
-        data.add(storageOption);
-        Payload p = new Payload(data);
         task.setMoveStorageListener(new MoveStorageListener() {
             @Override
-            public void moveStorageComplete(Payload p) {
-                response = p;
+            public void moveStorageComplete(BasicResult result) {
+                resultResponse = result;
                 signal.countDown();
             }
 
@@ -303,12 +283,12 @@ public class ChangeStorageOptionTest {
 
             }
         });
-        task.execute(p);
+        task.execute(storageOption);
 
         signal.await();
 
         //Expected to fail when moving to the same location
-        assertFalse(response.isResult());
+        assertFalse(resultResponse.isSuccess());
         assertEquals(PrefsActivity.STORAGE_OPTION_EXTERNAL, prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, ""));
     }
 

@@ -17,10 +17,16 @@
 
 package org.digitalcampus.oppia.model;
 
+import android.content.Context;
+
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.exception.CourseNotFoundException;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
+import org.digitalcampus.oppia.model.coursecomplete.AllActivities;
+import org.digitalcampus.oppia.model.coursecomplete.AllQuizzes;
+import org.digitalcampus.oppia.model.coursecomplete.AllQuizzesPlusPercent;
+import org.digitalcampus.oppia.model.coursecomplete.FinalQuiz;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
@@ -40,6 +46,12 @@ public class Course extends MultiLangInfoModel implements Serializable {
     public static final String SEQUENCING_MODE_COURSE = "course";
 
     public static final String TAG = Course.class.getSimpleName();
+
+    public final static String COURSE_COMPLETE_ALL_ACTIVITIES = "all_activities";
+    public final static String COURSE_COMPLETE_ALL_QUIZZES = "all_quizzes";
+    public final static String COURSE_COMPLETE_FINAL_QUIZ = "final_quiz";
+    public final static String COURSE_COMPLETE_ALL_QUIZZES_PLUS_PERCENT = "all_quizzes_plus_percent";
+
     private int courseId;
     private String shortname;
     private Double versionId;
@@ -245,5 +257,20 @@ public class Course extends MultiLangInfoModel implements Serializable {
 
     public void setToDelete(boolean toDelete) {
         this.toDelete = toDelete;
+    }
+
+    public boolean isComplete(Context ctx, User user, String criteria, int percent){
+        switch (criteria) {
+            case COURSE_COMPLETE_ALL_ACTIVITIES:
+                return AllActivities.isComplete(ctx, this.getCourseId(), user);
+            case COURSE_COMPLETE_ALL_QUIZZES:
+                return AllQuizzes.isComplete(ctx, this.getCourseId(), user);
+            case COURSE_COMPLETE_FINAL_QUIZ:
+                return FinalQuiz.isComplete(ctx, this.getCourseId(), user);
+            case COURSE_COMPLETE_ALL_QUIZZES_PLUS_PERCENT:
+                return AllQuizzesPlusPercent.isComplete(ctx, this.getCourseId(), user, percent);
+            default:
+                return false;
+        }
     }
 }

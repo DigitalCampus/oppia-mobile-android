@@ -9,9 +9,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
-import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.junit.Before;
@@ -50,7 +48,7 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
     private final String INSECURE_COURSE = "Insecure_Course.zip";
 
     private Context context;
-    private Payload response;
+    private BasicResult response;
     private StorageAccessStrategy storageStrategy;
 
     public InstallDownloadedCoursesTest(StorageAccessStrategy storageStrategy) {
@@ -59,7 +57,7 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
 
     @Parameterized.Parameters
     public static StorageAccessStrategy[] storageStrategies() {
-        return new StorageAccessStrategy[]{ new InternalStorageStrategy(), new ExternalStorageStrategy()};
+        return FileUtils.getStorageStrategiesBasedOnDeviceAvailableStorage();
     }
 
     @Before
@@ -88,7 +86,7 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
         response = runInstallCourseTask(context);//Run test task
 
         //Check if result is true
-        assertTrue(response.isResult());
+        assertTrue(response.isSuccess());
 
         File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertTrue(modulesPath.exists());
@@ -117,7 +115,7 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
         response = runInstallCourseTask(context);
 
         //Check that it failed
-        assertFalse(response.isResult());
+        assertFalse(response.isSuccess());
 
         File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertTrue(modulesPath.exists());
@@ -134,7 +132,7 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
         String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
         //Check if the resultResponse is correct
-        assertEquals(context.getString(R.string.error_latest_already_installed, title), response.getResultResponse());
+        assertEquals(context.getString(R.string.error_latest_already_installed, title), response.getResultMessage());
 
     }
 
@@ -146,9 +144,9 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
         response = runInstallCourseTask(context);
 
         //Check if result is true
-        assertFalse(response.isResult());
+        assertFalse(response.isSuccess());
         //Check if the resultResponse is correct
-        assertEquals(context.getString(R.string.error_installing_course, NOXML_COURSE), response.getResultResponse());
+        assertEquals(context.getString(R.string.error_installing_course, NOXML_COURSE), response.getResultMessage());
 
         File downloadPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertEquals(0, downloadPath.list().length); //Check that the course does not exists in the "downloads" directory
@@ -173,7 +171,7 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
         copyCourseFromAssets(INSECURE_COURSE);
         response = runInstallCourseTask(context);//Run test task
 
-        assertFalse(response.isResult());
+        assertFalse(response.isSuccess());
     }
 
   /*  @Test
@@ -189,9 +187,9 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
         signal.await();
 
         //Check if result is true
-        assertFalse(response.isResult());
+        assertFalse(response.isSuccess());
         //Check if the resultResponse is correct
-        assertEquals(context.getString(R.string.error_installing_course, filename), response.getResultResponse());
+        assertEquals(context.getString(R.string.error_installing_course, filename), response.getResultMessage());
         File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getInstrumentation().getTargetContext()), filename);
         assertFalse(initialPath.exists());  //Check that the course does not exists in the "downloads" directory
 
@@ -216,9 +214,9 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
         response = runInstallCourseTask(context);
 
         //Check if result is false
-        assertFalse(response.isResult());
+        assertFalse(response.isSuccess());
         //Check if the resultResponse is correct
-        assertEquals(context.getString(R.string.error_installing_course, INCORRECT_COURSE), response.getResultResponse());
+        assertEquals(context.getString(R.string.error_installing_course, INCORRECT_COURSE), response.getResultMessage());
 
         File downloadPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertEquals(0, downloadPath.list().length); //Check that the course does not exists in the "downloads" directory

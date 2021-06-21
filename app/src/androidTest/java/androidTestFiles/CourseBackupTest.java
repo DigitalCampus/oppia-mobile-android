@@ -8,9 +8,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
-import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.junit.Before;
@@ -40,7 +38,7 @@ public class CourseBackupTest extends BaseTestDB {
     private final String CORRECT_COURSE = "Correct_Course.zip";
 
     private Context context;
-    private Payload response;
+    private BasicResult response;
     private StorageAccessStrategy storageStrategy;
 
     public CourseBackupTest(StorageAccessStrategy storageStrategy) {
@@ -49,7 +47,7 @@ public class CourseBackupTest extends BaseTestDB {
 
     @Parameterized.Parameters
     public static StorageAccessStrategy[] storageStrategies() {
-        return new StorageAccessStrategy[]{ new InternalStorageStrategy(), new ExternalStorageStrategy()};
+        return FileUtils.getStorageStrategiesBasedOnDeviceAvailableStorage();
     }
 
     @Before
@@ -79,7 +77,7 @@ public class CourseBackupTest extends BaseTestDB {
         response = CourseUtils.runInstallCourseTask(context);//Run test task
 
         // Check if result is true
-        assertTrue(response.isResult());
+        assertTrue(response.isSuccess());
 
         // Check that the course backup exists
         File backupsPath = new File(Storage.getCourseBackupPath(context));
@@ -113,7 +111,7 @@ public class CourseBackupTest extends BaseTestDB {
         // Try to install again from backup file
         response = CourseUtils.runInstallCourseTask(context);//Run test task
         // Check if result is true
-        assertTrue(response.isResult());
+        assertTrue(response.isSuccess());
         courseId = getDbHelper().getCourseID(shortName);
         c = getDbHelper().getCourse(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
