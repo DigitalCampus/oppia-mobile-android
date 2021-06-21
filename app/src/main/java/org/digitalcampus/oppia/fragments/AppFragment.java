@@ -93,7 +93,7 @@ public class AppFragment extends Fragment implements APIKeyRequestListener{
         return progressDialog != null && progressDialog.isShowing();
     }
 
-    protected boolean isTabletLand() {
+    protected boolean isTabletLandscape() {
         return getResources().getBoolean(R.bool.is_tablet_land);
     }
 }

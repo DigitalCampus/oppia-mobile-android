@@ -46,7 +46,6 @@ public class WelcomeFragment extends AppFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		binding = FragmentWelcomeBinding.inflate(inflater, container, false);
-		binding.imgLogoWelcome.setVisibility(isTabletLand() ? View.GONE : View.VISIBLE);
 		return binding.getRoot();
 	}
 

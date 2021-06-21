@@ -327,5 +327,9 @@
         <item name="android:layout_weight">1</item>
     </style>
 
+    <style name="HideForTablets">
+        <item name="android:visibility">visible</item>
+    </style>
+
 
 </resources>
