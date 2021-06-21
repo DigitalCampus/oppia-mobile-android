@@ -62,6 +62,8 @@ public class LoginFragment extends AppFragment implements SubmitEntityListener<U
         
         binding = FragmentLoginBinding.inflate(inflater, container, false);
 
+        binding.tvLoginHeader.setVisibility(isTabletLand() ? View.GONE : View.VISIBLE);
+
         return binding.getRoot();
     }
 

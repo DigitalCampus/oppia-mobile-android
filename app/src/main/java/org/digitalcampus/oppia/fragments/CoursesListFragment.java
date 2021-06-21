@@ -99,7 +99,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
             sharedPrefs.edit().putString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()).apply();
         }
 
-        if (getResources().getBoolean(R.bool.is_tablet)) {
+        if (getResources().getBoolean(R.bool.is_tablet_land)) {
             binding.recyclerCourses.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         } else {
             binding.recyclerCourses.setLayoutManager(new LinearLayoutManager(getActivity()));
