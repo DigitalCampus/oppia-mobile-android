@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.FragmentCoursesListBinding;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
-import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.DownloadCoursesActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.adapter.CoursesListAdapter;
@@ -208,7 +207,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
                 .setTitle(R.string.course_update)
                 .setMessage(R.string.course_update_dialog_message)
                 .setPositiveButton(R.string.update, (dialog, which) -> {
-                    Intent i = new Intent(getActivity(), DownloadActivity.class);
+                    Intent i = new Intent(getActivity(), DownloadCoursesActivity.class);
                     Bundle tb = new Bundle();
                     tb.putInt(DownloadCoursesActivity.EXTRA_MODE, DownloadCoursesActivity.MODE_COURSE_TO_UPDATE);
                     tb.putSerializable(DownloadCoursesActivity.EXTRA_COURSE, selectedCourse);

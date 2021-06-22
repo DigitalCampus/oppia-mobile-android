@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.DownloadCoursesActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -266,7 +265,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
     private void showNewCoursesNotification(int newCoursesCount) {
 
-        Intent resultIntent = new Intent(context, DownloadActivity.class);
+        Intent resultIntent = new Intent(context, DownloadCoursesActivity.class);
         resultIntent.putExtra(DownloadCoursesActivity.EXTRA_MODE, DownloadCoursesActivity.MODE_NEW_COURSES);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 

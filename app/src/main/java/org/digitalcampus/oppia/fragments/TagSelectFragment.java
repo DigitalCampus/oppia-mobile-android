@@ -1,7 +1,6 @@
 package org.digitalcampus.oppia.fragments;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,10 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.databinding.ActivityDownloadBinding;
 import org.digitalcampus.mobile.learning.databinding.FragmentTagSelectBinding;
-import org.digitalcampus.oppia.activity.AppActivity;
-import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.DownloadCoursesActivity;
 import org.digitalcampus.oppia.adapter.TagsAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;

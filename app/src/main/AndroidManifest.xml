@@ -51,10 +51,6 @@
             android:theme="@style/Oppia.ToolbarTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name="org.digitalcampus.oppia.activity.DownloadActivity"
-            android:label="@string/title_download_activity"
-            android:theme="@style/Oppia.ToolbarTheme" />
-        <activity
             android:name="org.digitalcampus.oppia.activity.DownloadCoursesActivity"
             android:label="@string/title_download_courses_activity"
             android:theme="@style/Oppia.ToolbarTheme" />

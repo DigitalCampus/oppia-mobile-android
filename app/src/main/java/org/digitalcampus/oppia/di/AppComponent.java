@@ -4,7 +4,6 @@ import org.digitalcampus.oppia.activity.ActivityLogActivity;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
-import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.DownloadMediaActivity;
 import org.digitalcampus.oppia.activity.EditProfileActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
@@ -45,7 +44,6 @@ public interface AppComponent {
     void inject(DownloadCoursesActivity activity);
     void inject(ViewDigestActivity activity);
     void inject(ActivityLogActivity activity);
-    void inject(DownloadActivity activity);
     void inject(DownloadMediaActivity activity);
     void inject(AppActivity activity);
     void inject(PrefsActivity activity);
