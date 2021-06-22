@@ -19,6 +19,7 @@ import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.QuizAttemptRepository;
 import org.digitalcampus.oppia.model.TagRepository;
+import org.digitalcampus.oppia.model.TrackerLogRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.DownloadServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
@@ -95,6 +96,11 @@ public class AppModule {
         return new ActivityLogRepository();
     }
 
+    @Provides
+    @Singleton
+    public TrackerLogRepository provideTrackerLogRepository() {
+        return new TrackerLogRepository();
+    }
 
     @Provides
     @Singleton

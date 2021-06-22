@@ -9,14 +9,14 @@ import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
-import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
+import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.MultiLangInfoModel;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,10 +54,10 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         doAnswer(invocationOnMock -> {
             Context ctx = (Context) invocationOnMock.getArguments()[0];
-            Payload response = new Payload();
-            response.setResult(true);
-            response.setResultResponse("{}");
-            ((DownloadActivity) ctx).apiRequestComplete(response);
+            BasicResult result = new BasicResult();
+            result.setSuccess(true);
+            result.setResultMessage("{}");
+            ((DownloadActivity) ctx).apiRequestComplete(result);
             return null;
         }).when(courseInstallRepository).getCourseList(any(), anyString());
 

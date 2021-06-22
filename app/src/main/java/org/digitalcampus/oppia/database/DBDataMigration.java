@@ -14,9 +14,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class DBMigration {
+public class DBDataMigration {
 
-    public static final String TAG = DBMigration.class.getSimpleName();
+    public static final String TAG = DBDataMigration.class.getSimpleName();
     public static final int DATA_MIGRATION_LAST_VERSION = 1;
 
     private final Context context;
@@ -24,11 +24,11 @@ public class DBMigration {
     @Inject
     SharedPreferences prefs;
 
-    public static DBMigration newInstance(Context context) {
-        return new DBMigration(context);
+    public static DBDataMigration newInstance(Context context) {
+        return new DBDataMigration(context);
     }
 
-    private DBMigration(Context context) {
+    private DBDataMigration(Context context) {
         this.context = context;
 
         App app = (App) context.getApplicationContext();

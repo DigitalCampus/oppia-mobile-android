@@ -4,9 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,7 +57,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         holder.binding.leaderboardFullname.setText(leaderboardItem.getFullname());
         holder.binding.leaderboardUsername.setText(leaderboardItem.getUsername());
         holder.binding.leaderboardPoints.setText(String.format(Locale.getDefault(), "%d", leaderboardItem.getPoints()));
-        holder.binding.leaderboardPosition.setText(String.format(Locale.getDefault(), "%d", (position + 1)));
+        holder.binding.leaderboardPosition.setText(String.format(Locale.getDefault(), "%d", leaderboardItem.getPosition()));
 
         if (leaderboardItem.isUser()) {
             holder.binding.userCard.setCardBackgroundColor(highlightBgColor);

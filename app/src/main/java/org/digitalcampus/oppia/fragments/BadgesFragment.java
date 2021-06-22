@@ -35,7 +35,7 @@ import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.service.DownloadOppiaDataService;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -143,14 +143,14 @@ public class BadgesFragment extends AppFragment implements APIRequestListener, D
 
 	}
 	
-	public void apiRequestComplete(Payload response) {
+	public void apiRequestComplete(BasicResult result) {
         //If the fragment has been detached, we don't process the result, as is not going to be shown
         // and could cause NullPointerExceptions
         if (super.getActivity() == null) return;
 
-		if(response.isResult()){
+		if(result.isSuccess()){
 			try {
-				json = new JSONObject(response.getResultResponse());
+				json = new JSONObject(result.getResultMessage());
 				Log.d(TAG,json.toString(4));
 				refreshBadgesList();
 				return;

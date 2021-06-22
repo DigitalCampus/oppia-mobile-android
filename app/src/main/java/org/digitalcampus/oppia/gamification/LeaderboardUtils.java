@@ -56,7 +56,8 @@ public class LeaderboardUtils {
                 pos.getString("username"),
                 pos.getString("first_name") + " " + pos.getString("last_name"),
                 pos.getInt("points"),
-                lastUpdate
+                lastUpdate,
+                pos.getInt("position")
             );
             if (updated){
                 updatedPositions++;
@@ -75,7 +76,7 @@ public class LeaderboardUtils {
 
 
     public static void updateLeaderboardFetchTime(SharedPreferences prefs){
-        Log.d(TAG, "Updating last media scan to now");
+        Log.d(TAG, "Updating last leaderboard fetch to now");
         long now = System.currentTimeMillis()/1000;
         prefs.edit().putLong(PrefsActivity.PREF_LAST_LEADERBOARD_FETCH, now).apply();
     }

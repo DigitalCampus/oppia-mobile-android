@@ -15,7 +15,7 @@ import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.mockito.Mockito;
@@ -131,19 +131,17 @@ public class CourseUtils {
     }
 
 
-    public static Payload runInstallCourseTask(Context context){
+    public static BasicResult runInstallCourseTask(Context context){
 
         final CountDownLatch signal = new CountDownLatch(1);  //Control AsyncTask sincronization for testing
-        ArrayList<Object> data = new ArrayList<>();
-        Payload payload = new Payload(data);
-        final Payload[] response = new Payload[1];
+        final BasicResult[] response = new BasicResult[1];
         response[0] = null;
         InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
         imTask.setInstallerListener(new InstallCourseListener() {
             @Override
-            public void installComplete(Payload r) {
+            public void installComplete(BasicResult result) {
                 Log.d(TAG, "Course installation complete!");
-                response[0] = r;
+                response[0] = result;
                 signal.countDown();
             }
 
@@ -153,7 +151,7 @@ public class CourseUtils {
 
             }
         });
-        imTask.execute(payload);
+        imTask.execute();
 
         try {
             signal.await();
