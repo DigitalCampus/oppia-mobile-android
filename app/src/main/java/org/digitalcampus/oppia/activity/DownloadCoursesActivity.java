@@ -123,25 +123,32 @@ public class DownloadCoursesActivity extends AppActivity {
 
 	private void setUpScreen(int mode) {
 
-		if (isTabletLandscape()) {
-			coursesDownloadFragment = new CoursesDownloadFragment();
-			coursesDownloadFragment.setArguments(getIntent().getExtras());
-			getSupportFragmentManager().beginTransaction().replace(R.id.frame_courses_download, coursesDownloadFragment).commit();
-		}
+		Bundle args = new Bundle();
+		args.putInt(CoursesDownloadFragment.ARG_MODE, mode);
+		coursesDownloadFragment = new CoursesDownloadFragment();
+		coursesDownloadFragment.setArguments(args);
 
 		switch (mode) {
 
 			case MODE_TAG_COURSES:
 				TagSelectFragment tagSelectFragment = new TagSelectFragment();
 				getSupportFragmentManager().beginTransaction().replace(R.id.frame_tags, tagSelectFragment).commit();
-				return;
+
+				if (isTabletLandscape()) {
+					getSupportFragmentManager().beginTransaction().replace(R.id.frame_courses_download, coursesDownloadFragment).commit();
+				}
+				break;
 
 			case MODE_COURSE_TO_UPDATE:
 				binding.categoryTitle.setText(R.string.course_updates);
 
-				if (!isTabletLandscape()) {
-					coursesDownloadFragment = new CoursesDownloadFragment();
-					coursesDownloadFragment.setArguments(getIntent().getExtras()); // todo pass arguments one by one
+				coursesDownloadFragment.getArguments().putSerializable(
+						CoursesDownloadFragment.ARG_COURSE, getIntent().getSerializableExtra(EXTRA_COURSE));
+
+				if (isTabletLandscape()) {
+					getSupportFragmentManager().beginTransaction().replace(R.id.frame_courses_download, coursesDownloadFragment).commit();
+					binding.frameTags.setVisibility(View.GONE);
+				} else {
 					getSupportFragmentManager().beginTransaction().replace(R.id.frame_tags, coursesDownloadFragment).commit();
 				}
 				break;
@@ -149,9 +156,10 @@ public class DownloadCoursesActivity extends AppActivity {
 			case MODE_NEW_COURSES:
 				binding.categoryTitle.setText(R.string.new_courses);
 
-				if (!isTabletLandscape()) {
-					coursesDownloadFragment = new CoursesDownloadFragment();
-					coursesDownloadFragment.setArguments(getIntent().getExtras()); // todo pass arguments one by one
+				if (isTabletLandscape()) {
+					getSupportFragmentManager().beginTransaction().replace(R.id.frame_courses_download, coursesDownloadFragment).commit();
+					binding.frameTags.setVisibility(View.GONE);
+				} else {
 					getSupportFragmentManager().beginTransaction().replace(R.id.frame_tags, coursesDownloadFragment).commit();
 				}
 				break;

@@ -51,9 +51,9 @@ import javax.inject.Inject;
 
 public class CoursesDownloadFragment extends AppFragment implements APIRequestListener, CourseInstallerListener {
 
-    public static final String ARG_TAG = "extra_tag";
-    public static final String ARG_COURSE = "extra_course";
-    public static final String ARG_MODE = "extra_mode";
+    public static final String ARG_TAG = "arg_tag";
+    public static final String ARG_COURSE = "arg_course";
+    public static final String ARG_MODE = "arg_mode";
 
     public static final int MODE_TAG_COURSES = 0;
     public static final int MODE_COURSE_TO_UPDATE = 1;
