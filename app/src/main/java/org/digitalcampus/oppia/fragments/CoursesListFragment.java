@@ -177,12 +177,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     public void onItemClick(int position) {
         Course selectedCourse = courses.get(position);
 
-        // TODO REMOVE TEST CODE
-        if (true) {
-            showCourseToUpdateDialog(selectedCourse);
-            return;
-        }
-
         boolean toUpdateOrDelete = checkToUpdateOrDeleteStatusWarning(selectedCourse);
         if (!toUpdateOrDelete) {
             openCourse(selectedCourse);

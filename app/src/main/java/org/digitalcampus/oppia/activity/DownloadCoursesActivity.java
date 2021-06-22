@@ -148,28 +148,41 @@ public class DownloadCoursesActivity extends AppActivity {
 
 	private void setUpScreen(int mode) {
 
-		switch (mode) {
-
-			case MODE_TAG_COURSES:
-				TagSelectFragment tagSelectFragment = new TagSelectFragment();
-				getSupportFragmentManager().beginTransaction().replace(R.id.frame_tags, tagSelectFragment).commit();
-				break;
-
-			case MODE_COURSE_TO_UPDATE:
-				binding.categoryTitle.setText(R.string.course_updates);
-				break;
-
-			case MODE_NEW_COURSES:
-				binding.categoryTitle.setText(R.string.new_courses);
-				break;
-		}
-
 		if (isTabletLandscape()) {
 			// Tablet landscape
 			coursesDownloadFragment = new CoursesDownloadFragment();
 			coursesDownloadFragment.setArguments(getIntent().getExtras());
 			getSupportFragmentManager().beginTransaction().replace(R.id.frame_courses_download, coursesDownloadFragment).commit();
 		}
+
+		switch (mode) {
+
+			case MODE_TAG_COURSES:
+				TagSelectFragment tagSelectFragment = new TagSelectFragment();
+				getSupportFragmentManager().beginTransaction().replace(R.id.frame_tags, tagSelectFragment).commit();
+				return;
+
+			case MODE_COURSE_TO_UPDATE:
+				binding.categoryTitle.setText(R.string.course_updates);
+
+				if (!isTabletLandscape()) {
+					coursesDownloadFragment = new CoursesDownloadFragment();
+					coursesDownloadFragment.setArguments(getIntent().getExtras());
+					getSupportFragmentManager().beginTransaction().replace(R.id.frame_tags, coursesDownloadFragment).commit();
+				}
+				break;
+
+			case MODE_NEW_COURSES:
+				binding.categoryTitle.setText(R.string.new_courses);
+
+				if (!isTabletLandscape()) {
+					coursesDownloadFragment = new CoursesDownloadFragment();
+					coursesDownloadFragment.setArguments(getIntent().getExtras());
+					getSupportFragmentManager().beginTransaction().replace(R.id.frame_tags, coursesDownloadFragment).commit();
+				}
+				break;
+		}
+
 	}
 
 	public void showDownloadButton(boolean show) {
