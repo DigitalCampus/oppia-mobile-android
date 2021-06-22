@@ -6,7 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.TagSelectActivity;
+import org.digitalcampus.oppia.activity.DownloadCoursesActivity;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.task.result.BasicResult;
@@ -31,8 +31,8 @@ import static org.mockito.Mockito.doAnswer;
 public class TagActivityUITest extends DaggerInjectMockUITest {
 
     @Rule
-    public ActivityTestRule<TagSelectActivity> tagSelectActivityTestRule =
-            new ActivityTestRule<>(TagSelectActivity.class, false, false);
+    public ActivityTestRule<DownloadCoursesActivity> tagSelectActivityTestRule =
+            new ActivityTestRule<>(DownloadCoursesActivity.class, false, false);
 
     @Mock TagRepository tagRepository;
 
@@ -43,7 +43,7 @@ public class TagActivityUITest extends DaggerInjectMockUITest {
             BasicResult result = new BasicResult();
             result.setSuccess(true);
             result.setResultMessage("{}");
-            ((TagSelectActivity) ctx).apiRequestComplete(result);
+            ((DownloadCoursesActivity) ctx).apiRequestComplete(result);
             return null;
         }).when(tagRepository).getTagList(any(), any());
 

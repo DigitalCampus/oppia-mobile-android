@@ -32,10 +32,10 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
 import org.digitalcampus.oppia.activity.ActivityLogActivity;
 import org.digitalcampus.oppia.activity.AppActivity;
+import org.digitalcampus.oppia.activity.DownloadCoursesActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.PrivacyActivity;
 import org.digitalcampus.oppia.activity.SyncActivity;
-import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -144,7 +144,7 @@ public class DrawerMenuManager {
             if (customOptions.containsKey(itemId)) {
                 customOptions.get(itemId).onOptionSelected();
             } else if (itemId == R.id.menu_download) {
-                launchIntentForActivity(TagSelectActivity.class);
+                launchIntentForActivity(DownloadCoursesActivity.class);
             } else if (itemId == R.id.menu_privacy) {
                 launchIntentForActivity(PrivacyActivity.class);
             } else if (itemId == R.id.menu_activitylog) {

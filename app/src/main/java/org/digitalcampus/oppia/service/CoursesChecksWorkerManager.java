@@ -14,9 +14,9 @@ import com.google.gson.JsonSyntaxException;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.activity.DownloadCoursesActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.App;
@@ -118,7 +118,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
         List<Course> courses = coursesRepository.getCourses(context);
         if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY) {
-            Intent resultIntent = new Intent(context, TagSelectActivity.class);
+            Intent resultIntent = new Intent(context, DownloadCoursesActivity.class);
             PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             NotificationCompat.Builder mBuilder = OppiaNotificationUtils.getBaseBuilder(context, true);

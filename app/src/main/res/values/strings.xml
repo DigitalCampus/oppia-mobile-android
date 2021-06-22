@@ -573,6 +573,8 @@
     <string name="error_download_failure_reason_format">Download failure. Reason: %s</string>
     <string name="download_certificate">Download certificate</string>
     <string name="storage_permission_not_granted">Storage permission not granted</string>
+    <string name="select_category">Select category</string>
+    <string name="title_download_courses_activity">Download courses</string>
 
 </resources>
 
