@@ -1,6 +1,5 @@
 package androidTestFiles;
 
-import android.Manifest;
 import android.content.Context;
 import android.util.Log;
 
@@ -14,9 +13,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
-import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.junit.Before;
@@ -26,7 +23,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 
@@ -64,7 +60,7 @@ public class DeleteCourseTest extends BaseTestDB {
 
     @Parameterized.Parameters
     public static StorageAccessStrategy[] storageStrategies() {
-        return new StorageAccessStrategy[]{new InternalStorageStrategy(), new ExternalStorageStrategy()};
+        return FileUtils.getStorageStrategiesBasedOnDeviceAvailableStorage();
     }
 
     @Before
@@ -188,12 +184,10 @@ public class DeleteCourseTest extends BaseTestDB {
 
         FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
 
-        ArrayList<Object> data = new ArrayList<>();
-        Payload payload = new Payload(data);
         InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
         imTask.setInstallerListener(new InstallCourseListener() {
             @Override
-            public void installComplete(Payload r) {
+            public void installComplete(BasicResult result) {
                 signal.countDown();
             }
 
@@ -201,7 +195,7 @@ public class DeleteCourseTest extends BaseTestDB {
             public void installProgressUpdate(DownloadProgress dp) {
             }
         });
-        imTask.execute(payload);
+        imTask.execute();
 
         try {
             signal.await();

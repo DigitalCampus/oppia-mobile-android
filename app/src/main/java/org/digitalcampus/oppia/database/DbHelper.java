@@ -24,15 +24,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import androidx.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.exception.ActivityNotFoundException;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.gamification.Gamification;
@@ -53,7 +56,6 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.model.db_model.Leaderboard;
 import org.digitalcampus.oppia.model.db_model.UserCustomField;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.joda.time.DateTime;
@@ -266,9 +268,10 @@ public class DbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public SQLiteDatabase getDB(){
+    public SQLiteDatabase getDB() {
         return db;
     }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         createCourseTable(db);
@@ -417,15 +420,15 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private void createUserCustomFieldsTable(SQLiteDatabase db) {
 
-        String sql = "CREATE TABLE IF NOT EXISTS ["+USER_CF_TABLE+"] (" +
-                "["+USER_CF_ID+"]" + STR_INT_PRIMARY_KEY_AUTO +
-                "["+ USER_CF_USERNAME +"]" + STR_TEXT_COMMA+
-                "["+ CF_FIELD_KEY +"]" + STR_TEXT_COMMA +
-                "["+ CF_VALUE_STR +"]" + STR_TEXT_COMMA +
-                "["+ CF_VALUE_INT +"]" + STR_INT_COMMA +
-                "["+ CF_VALUE_BOOL +"] BOOLEAN, " +
-                "["+ CF_VALUE_FLOAT +"] FLOAT, " +
-                "CONSTRAINT unq UNIQUE (" + USER_CF_USERNAME + ", "+ CF_FIELD_KEY +")" +
+        String sql = "CREATE TABLE IF NOT EXISTS [" + USER_CF_TABLE + "] (" +
+                "[" + USER_CF_ID + "]" + STR_INT_PRIMARY_KEY_AUTO +
+                "[" + USER_CF_USERNAME + "]" + STR_TEXT_COMMA +
+                "[" + CF_FIELD_KEY + "]" + STR_TEXT_COMMA +
+                "[" + CF_VALUE_STR + "]" + STR_TEXT_COMMA +
+                "[" + CF_VALUE_INT + "]" + STR_INT_COMMA +
+                "[" + CF_VALUE_BOOL + "] BOOLEAN, " +
+                "[" + CF_VALUE_FLOAT + "] FLOAT, " +
+                "CONSTRAINT unq UNIQUE (" + USER_CF_USERNAME + ", " + CF_FIELD_KEY + ")" +
                 ");";
         db.execSQL(sql);
     }
@@ -827,7 +830,7 @@ public class DbHelper extends SQLiteOpenHelper {
         if (userId == -1) {
             Log.v(TAG, "Record added");
             userId = db.insertOrThrow(USER_TABLE, null, values);
-            this.insertOrUpdateUserLeaderboard(user.getUsername(), user.getDisplayName(), user.getPoints(), new DateTime());
+            //this.insertOrUpdateUserLeaderboard(user.getUsername(), user.getDisplayName(), user.getPoints(), new DateTime(), 0);
 
         } else {
             String s = USER_C_ID + "=?";
@@ -1088,6 +1091,7 @@ public class DbHelper extends SQLiteOpenHelper {
             activity.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
             activity.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
             activity.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
+            activity.setActType(c.getString(c.getColumnIndex(ACTIVITY_C_ACTTYPE)));
             activities.add(activity);
             c.moveToNext();
         }
@@ -1111,6 +1115,24 @@ public class DbHelper extends SQLiteOpenHelper {
         }
         c.close();
         return quizzes;
+    }
+
+    public String getCourseFinalQuizDigest(long courseId) throws ActivityNotFoundException{
+        String s = ACTIVITY_C_COURSEID + STR_EQUALS_AND + ACTIVITY_C_ACTTYPE + STR_EQUALS_AND + ACTIVITY_C_SECTIONID + ">0";
+        String[] args = new String[]{String.valueOf(courseId), "quiz"};
+        String orderBy = ACTIVITY_C_SECTIONID + " DESC, " + ACTIVITY_C_ACTID + " DESC";
+        Cursor c = db.query(ACTIVITY_TABLE, null, s, args, null, null, orderBy);
+        String digest = "";
+        if(c != null) {
+            if (c.moveToFirst()) {
+                digest = c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST));
+            }
+            c.close();
+        }
+        if (digest == "") {
+            throw new ActivityNotFoundException();
+        }
+        return digest;
     }
 
     public QuizStats getQuizAttempt(String digest, long userId) {
@@ -1452,7 +1474,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.update(USER_TABLE, values, s, args);
 
         DateTime lastUpdate = new DateTime();
-        this.insertOrUpdateUserLeaderboard(username, fullname, currentPoints, lastUpdate);
+        //this.insertOrUpdateUserLeaderboard(username, fullname, currentPoints, lastUpdate, 0);
     }
 
     public List<Points> getUserPoints(long userId, Course courseFilter, boolean onlyTrackerlogs,
@@ -1901,6 +1923,29 @@ public class DbHelper extends SQLiteOpenHelper {
         return (count == 0);
     }
 
+    public String getLastTrackerDatetime(long userId) {
+
+        String selection = TRACKER_LOG_C_USERID + "=?";
+        String[] selectionArgs = new String[]{String.valueOf(userId)};
+        String[] columns = new String[]{TRACKER_LOG_C_DATETIME};
+        String order = TRACKER_LOG_C_DATETIME + " DESC";
+        String limit = "1";
+
+        Cursor c = db.query(TRACKER_LOG_TABLE, columns, selection, selectionArgs, null, null, order, limit);
+
+        try {
+            if (c.getCount() > 0) {
+                c.moveToFirst();
+                String datetime = c.getString(0);
+                return datetime;
+            }
+        } finally {
+            c.close();
+        }
+
+        return null;
+    }
+
     public boolean isActivityFirstAttemptToday(String digest) {
         // digest could be null (activity wrongly configured)
         if (digest == null){
@@ -2330,7 +2375,7 @@ public class DbHelper extends SQLiteOpenHelper {
         common methods to access Room Database and remove the inheritance of SQLiteOpenHelper and all db logic
      */
 
-    public boolean insertOrUpdateUserLeaderboard(String username, String fullname, int points, DateTime lastUpdate) {
+    public boolean insertOrUpdateUserLeaderboard(String username, String fullname, int points, DateTime lastUpdate, Integer position) {
 
         if ((username == null) || ("".equals(username)))
             return false;
@@ -2339,13 +2384,14 @@ public class DbHelper extends SQLiteOpenHelper {
         Leaderboard leaderboard = App.getDb().leaderboardDao().getLeaderboard(username);
         if (leaderboard == null) {
             // Insert
-            Leaderboard leaderboardItem = new Leaderboard(username, fullname, points, lastUpdate);
+            Leaderboard leaderboardItem = new Leaderboard(username, fullname, points, lastUpdate, position);
             App.getDb().leaderboardDao().insert(leaderboardItem);
         } else {
 
             if (leaderboard.getLastupdate().isBefore(lastUpdate)) {
                 leaderboard.setFullname(fullname);
                 leaderboard.setPoints(points);
+                leaderboard.setPosition(position);
                 leaderboard.setLastupdate(lastUpdate);
                 int rowsUpdated = App.getDb().leaderboardDao().update(leaderboard);
                 updated = rowsUpdated == 1;
@@ -2395,6 +2441,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String leaderboardCFullname = "fullname";
         String leaderboardCPoints = "points";
         String leaderboardCLastupdate = "lastupdate";
+        String leaderboardCPosition = "position";
 
         ArrayList<Leaderboard> leaderboard = new ArrayList<>();
         Cursor c = db.query(LEADERBOARD_TABLE, null, null, null, null, null, null);
@@ -2404,6 +2451,7 @@ public class DbHelper extends SQLiteOpenHelper {
             leaderboardItem.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
             leaderboardItem.setFullname(c.getString(c.getColumnIndex(leaderboardCFullname)));
             leaderboardItem.setPoints(c.getInt(c.getColumnIndex(leaderboardCPoints)));
+            leaderboardItem.setPosition(c.getInt(c.getColumnIndex(leaderboardCPosition)));
             leaderboardItem.setLastupdateStr(c.getString(c.getColumnIndex(leaderboardCLastupdate)));
             leaderboard.add(leaderboardItem);
             c.moveToNext();

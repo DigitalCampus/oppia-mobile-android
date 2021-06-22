@@ -13,12 +13,10 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.DialogDeleteAccountBinding;
-import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.task.DeleteAccountTask;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.utils.ConnectionUtils;
+import org.digitalcampus.oppia.task.result.BasicResult;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -74,9 +72,9 @@ public class DeleteAccountDialogFragment extends DialogFragment implements APIRe
     }
 
     @Override
-    public void apiRequestComplete(Payload response) {
-        if (response.isResult()){
-            Toast.makeText(getActivity(), response.getResultResponse(), Toast.LENGTH_LONG).show();
+    public void apiRequestComplete(BasicResult result) {
+        if (result.isSuccess()){
+            Toast.makeText(getActivity(), result.getResultMessage(), Toast.LENGTH_LONG).show();
             listener.onDeleteAccountSuccess();
             dismiss();
         }

@@ -36,9 +36,8 @@ public class ScanMediaTask extends AsyncTask<List<Course>, String, EntityListRes
 
     public static final String TAG = ScanMediaTask.class.getSimpleName();
     private ScanMediaListener mStateListener;
-    private Context ctx;
+    private final Context ctx;
 
-    private List<Media> currentMedia = new ArrayList<>();
     private List<String> downloadingMedia;
 
     public ScanMediaTask(Context ctx) {
@@ -50,8 +49,6 @@ public class ScanMediaTask extends AsyncTask<List<Course>, String, EntityListRes
 
         EntityListResult<Media> result = new EntityListResult<>();
 
-//        Payload payload = params[0];
-//        currentMedia = (ArrayList<Object>) payload.getResponseData();
         downloadingMedia = DownloadService.getTasksDownloading();
         DbHelper db = DbHelper.getInstance(ctx);
 
@@ -75,7 +72,7 @@ public class ScanMediaTask extends AsyncTask<List<Course>, String, EntityListRes
                 (downloadingMedia != null && downloadingMedia.contains(media.getDownloadUrl()))) {
             // check media not already in list
             boolean add = true;
-            for (Media currentMedia : currentMedia) {
+            for (Media currentMedia : result.getEntityList()) {
                 //We have to add it if there is not other object with that filename
                 add = !currentMedia.getFilename().equals(media.getFilename());
                 if (!add) {

@@ -21,13 +21,11 @@ package org.digitalcampus.oppia.application;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import androidx.multidex.MultiDex;
-import androidx.preference.PreferenceManager;
-
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.multidex.MultiDex;
+import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
@@ -48,14 +46,17 @@ import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
 import org.digitalcampus.oppia.service.CoursesChecksWorker;
+import org.digitalcampus.oppia.service.CoursesCompletionReminderWorker;
+import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.service.TrackerWorker;
-import org.digitalcampus.oppia.utils.DateUtils;
+import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 import org.digitalcampus.oppia.utils.storage.StorageUtils;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
+import java.util.Calendar;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -120,8 +121,10 @@ public class App extends Application {
 
     // only used in case a course doesn't have any lang specified
     public static final String DEFAULT_LANG = "en";
-    private static final String WORK_TRACKER_SEND = "tracker_send_work";
-    private static final String WORK_COURSES_CHECKS = "no_course_worker";
+    public static final String WORK_TRACKER_SEND = "tracker_send_work";
+    public static final String WORK_COURSES_CHECKS = "no_course_worker";
+    public static final String WORK_COURSES_NOT_COMPLETED_REMINDER = "courses_reminder";
+
 
     private AppComponent appComponent;
     private static MyDatabase db;
@@ -140,6 +143,7 @@ public class App extends Application {
         db = Room.databaseBuilder(getApplicationContext(),
                 MyDatabase.class, MyDatabase.DB_NAME_ROOM)
                 .allowMainThreadQueries()
+                .addMigrations(MyDatabase.MIGRATIONS)
                 .build();
 
         DbHelper.getInstance(this).getReadableDatabase();
@@ -168,11 +172,22 @@ public class App extends Application {
 
         configureStorageType();
 
-        setupPeriodicTrackerWorker();
+        setupPeriodicWorkers();
 
         OppiaNotificationUtils.initializeOreoNotificationChannels(this);
 
+        saveServerBadgeAwardCriteria();
+
+//        launchWorkerToTest();
+
     }
+
+    private void saveServerBadgeAwardCriteria() {
+        if (getPrefs(this).getString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, null) == null) {
+            new FetchServerInfoTask(this).execute();
+        }
+    }
+
 
     private void checkAppInstanceIdCreated(SharedPreferences prefs) {
         if (prefs.getString(PrefsActivity.PREF_APP_INSTANCE_ID, null) == null) {
@@ -205,7 +220,14 @@ public class App extends Application {
         return db;
     }
 
-    private void setupPeriodicTrackerWorker() {
+    private void launchWorkerToTest() {
+
+        OneTimeWorkRequest request = OneTimeWorkRequest.from(CoursesCompletionReminderWorker.class);
+        WorkManager.getInstance(this)
+                .enqueueUniqueWork("worker_test", ExistingWorkPolicy.REPLACE, request);
+    }
+
+    private void setupPeriodicWorkers() {
 
         boolean backgroundData = getPrefs(this).getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, true);
 
@@ -213,18 +235,11 @@ public class App extends Application {
             scheduleTrackerWork();
             scheduleCoursesChecksWork();
         } else {
-            cancelTrackerWork();
-            cancelCoursesChecksWork();
+            cancelWorks(WORK_COURSES_CHECKS, WORK_TRACKER_SEND);
         }
-    }
-
-    private void launchTrackerWorker() {
-
-        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(CoursesChecksWorker.class).build();
-        WorkManager.getInstance(this).enqueueUniqueWork(WORK_COURSES_CHECKS,
-                ExistingWorkPolicy.REPLACE, oneTimeWorkRequest);
 
     }
+
 
     private void scheduleTrackerWork() {
 
@@ -241,9 +256,10 @@ public class App extends Application {
 
     }
 
-    public void cancelTrackerWork() {
-
-        WorkManager.getInstance(this).cancelUniqueWork(WORK_TRACKER_SEND);
+    public void cancelWorks(String... uniqueNames) {
+        for (String workName : uniqueNames) {
+            WorkManager.getInstance(this).cancelUniqueWork(workName);
+        }
     }
 
     private void scheduleCoursesChecksWork() {
@@ -261,9 +277,6 @@ public class App extends Application {
 
     }
 
-    public void cancelCoursesChecksWork() {
-        WorkManager.getInstance(this).cancelUniqueWork(WORK_COURSES_CHECKS);
-    }
 
     public static SharedPreferences getPrefs(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);

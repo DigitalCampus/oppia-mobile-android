@@ -20,6 +20,7 @@ public class Leaderboard  implements Comparable<Leaderboard>{
     private String username;
     private String fullname;
     private Integer points = 0;
+    private Integer position = 0;
 
     @TypeConverters(TimestampConverter.class)
     private DateTime lastupdate = new DateTime();
@@ -29,18 +30,20 @@ public class Leaderboard  implements Comparable<Leaderboard>{
 
 
     @Ignore
-    public Leaderboard(@NonNull String username, String fullname, Integer points, DateTime lastupdate) {
+    public Leaderboard(@NonNull String username, String fullname, Integer points, DateTime lastupdate, Integer position) {
         this.username = username;
         this.fullname = fullname;
         this.points = points;
+        this.position = position;
         this.lastupdate = lastupdate;
     }
 
     @Ignore
-    public Leaderboard(@NonNull String username, String fullname, Integer points, String lastupdateStr) {
+    public Leaderboard(@NonNull String username, String fullname, Integer points, String lastupdateStr, Integer position) {
         this.username = username;
         this.fullname = fullname;
         this.points = points;
+        this.position = position;
         setLastupdateStr(lastupdateStr);
     }
 
@@ -109,6 +112,15 @@ public class Leaderboard  implements Comparable<Leaderboard>{
 
     public void setUser(boolean user) {
         isUser = user;
+    }
+
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 
 }

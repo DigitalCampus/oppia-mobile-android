@@ -38,7 +38,7 @@ import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferServiceDelegat
 import org.digitalcampus.oppia.task.ExportActivityTask;
 import org.digitalcampus.oppia.task.FetchCourseTransferableFilesTask;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
 import java.lang.ref.WeakReference;
@@ -327,7 +327,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     private void installCourses() {
         InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(this);
         imTask.setInstallerListener(this);
-        imTask.execute(new Payload());
+        imTask.execute();
     }
 
     private void installTransferredCourses(){
@@ -442,15 +442,15 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     }
 
     @Override
-    public void installComplete(Payload p) {
+    public void installComplete(BasicResult result) {
         Log.d(TAG, "Course completed installing!");
         if (progressDialog != null){
             progressDialog.dismiss();
             progressDialog = null;
         }
 
-        if (!p.isResult()){
-            Toast.makeText(this, p.getResultResponse(), Toast.LENGTH_SHORT).show();
+        if (!result.isSuccess()){
+            Toast.makeText(this, result.getResultMessage(), Toast.LENGTH_SHORT).show();
         }
         refreshFileList(false);
         Toast.makeText(this, R.string.install_complete, Toast.LENGTH_SHORT).show();

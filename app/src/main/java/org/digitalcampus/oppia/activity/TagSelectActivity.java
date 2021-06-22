@@ -28,10 +28,11 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityDownloadBinding;
 import org.digitalcampus.oppia.adapter.TagsAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +54,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
     private ArrayList<Tag> tags;
 
 	@Inject TagRepository tagRepository;
+	@Inject	ApiEndpoint apiEndpoint;
 	private TagsAdapter adapterTags;
 	private ActivityDownloadBinding binding;
 
@@ -144,7 +146,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	private void getTagList() {
 		showProgressDialog(getString(R.string.loading));
 
-		tagRepository.getTagList(this);
+		tagRepository.getTagList(this, apiEndpoint);
 	}
 
 	public void refreshTagList() {
@@ -162,7 +164,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 		
 	}
 	
-	public void apiRequestComplete(Payload response) {
+	public void apiRequestComplete(BasicResult result) {
 		hideProgressDialog();
 		
         Callable<Boolean> finishActivity = () -> {
@@ -170,9 +172,9 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 			return true;
 		};
 	
-		if(response.isResult()){
+		if(result.isSuccess()){
 			try {
-				json = new JSONObject(response.getResultResponse());
+				json = new JSONObject(result.getResultMessage());
 				refreshTagList();
 			} catch (JSONException e) {
 				Analytics.logException(e);
@@ -180,7 +182,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
 			}
 		} else {
-            String errorMsg = response.getResultResponse();
+			String errorMsg = result.getResultMessage();
 			UIUtils.showAlert(this, R.string.error, errorMsg, finishActivity);
 		}
 

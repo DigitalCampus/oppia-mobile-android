@@ -29,8 +29,10 @@ import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
+import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.task.PreloadAccountsTask;
 import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,7 +56,8 @@ public class SessionManager {
             PrefsActivity.PREF_NO_SCHEDULE_REMINDERS,
             PrefsActivity.PREF_TEXT_SIZE,
             PrefsActivity.PREF_GAMIFICATION_POINTS_ANIMATION,
-            PrefsActivity.PREF_DURATION_GAMIFICATION_POINTS_VIEW);
+            PrefsActivity.PREF_DURATION_GAMIFICATION_POINTS_VIEW,
+            PrefsActivity.PREF_COURSES_REMINDER_DAY_TIME_MILLIS);
 
     private static final List<String> USER_BOOLEAN_PREFS = Arrays.asList(
             PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS,
@@ -127,7 +130,9 @@ public class SessionManager {
         loadUserPrefs(ctx, username, editor);
         setUserApiKeyValid(user, true);
         Analytics.setUserId(username);
-        editor.apply();
+        editor.commit();
+
+        CoursesCompletionReminderWorkerManager.configureCoursesCompletionReminderWorker(ctx);
     }
 
     public static void logoutCurrentUser(Context ctx) {
@@ -139,6 +144,8 @@ public class SessionManager {
         if (!TextUtils.isEmpty(username)) {
             saveUserPrefs(username, prefs);
         }
+
+        OppiaNotificationUtils.cancelAllUserNotifications(ctx);
 
         //Logout the user (unregister from Preferences)
         editor.putString(PrefsActivity.PREF_USER_NAME, "");
