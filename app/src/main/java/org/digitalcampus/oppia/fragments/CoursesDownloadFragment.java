@@ -14,8 +14,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ActionMode;
+
+import android.view.ActionMode;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.FragmentCoursesDownloadBinding;
@@ -81,7 +81,7 @@ public class CoursesDownloadFragment extends AppFragment implements APIRequestLi
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentCoursesDownloadBinding.inflate(LayoutInflater.from(getActivity()), container, false);
 
@@ -137,10 +137,10 @@ public class CoursesDownloadFragment extends AppFragment implements APIRequestLi
         courses = new ArrayList<>();
         selected = new ArrayList<>();
         coursesAdapter = new DownloadCoursesAdapter(getActivity(), courses);
-        multiChoiceHelper = new MultiChoiceHelper((AppCompatActivity) getActivity(), coursesAdapter);
+        multiChoiceHelper = new MultiChoiceHelper(getActivity(), coursesAdapter);
         multiChoiceHelper.setMultiChoiceModeListener(new MultiChoiceHelper.MultiChoiceModeListener() {
             @Override
-            public void onItemCheckedStateChanged(androidx.appcompat.view.ActionMode mode, int position, long id, boolean checked) {
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
                 Log.v(TAG, "Count: " + multiChoiceHelper.getCheckedItemCount());
                 CourseInstallViewAdapter course = courses.get(position);
                 if (checked) {
@@ -158,7 +158,7 @@ public class CoursesDownloadFragment extends AppFragment implements APIRequestLi
             }
 
             @Override
-            public boolean onCreateActionMode(final androidx.appcompat.view.ActionMode mode, Menu menu) {
+            public boolean onCreateActionMode(final ActionMode mode, Menu menu) {
 
                 onPrepareOptionsMenu(menu);
                 actionMode = mode;
@@ -171,12 +171,12 @@ public class CoursesDownloadFragment extends AppFragment implements APIRequestLi
             }
 
             @Override
-            public boolean onPrepareActionMode(androidx.appcompat.view.ActionMode mode, Menu menu) {
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
                 return false;
             }
 
             @Override
-            public boolean onActionItemClicked(androidx.appcompat.view.ActionMode mode, MenuItem item) {
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_select_all:
                         selectAllInstallableCourses();
@@ -190,7 +190,7 @@ public class CoursesDownloadFragment extends AppFragment implements APIRequestLi
             }
 
             @Override
-            public void onDestroyActionMode(androidx.appcompat.view.ActionMode mode) {
+            public void onDestroyActionMode(ActionMode mode) {
                 selected.clear();
                 getDownloadCoursesActivity().showDownloadButton(false);
                 multiChoiceHelper.clearChoices();

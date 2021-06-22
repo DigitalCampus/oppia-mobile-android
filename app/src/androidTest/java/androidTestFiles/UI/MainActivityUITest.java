@@ -30,6 +30,7 @@ import org.digitalcampus.oppia.activity.SearchActivity;
 import org.digitalcampus.oppia.activity.StartUpActivity;
 import org.digitalcampus.oppia.activity.DownloadCoursesActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
+import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
@@ -164,14 +165,14 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
     @Test
     public void showsTagSelectActivityOnClickManageCourses() throws Exception {
 
-//        doAnswer(invocationOnMock -> {
-//            Context ctx = (Context) invocationOnMock.getArguments()[0];
-//            BasicResult result = new BasicResult();
-//            result.setSuccess(true);
-//            result.setResultMessage("{}");
-//            ((DownloadCoursesActivity) ctx).apiRequestComplete(result);
-//            return null;
-//        }).when(tagRepository).getTagList(any(), any());
+        doAnswer(invocationOnMock -> {
+            APIRequestListener apiRequestListener = (APIRequestListener) invocationOnMock.getArguments()[1];
+            BasicResult result = new BasicResult();
+            result.setSuccess(true);
+            result.setResultMessage("{}");
+            apiRequestListener.apiRequestComplete(result);
+            return null;
+        }).when(tagRepository).getTagList(any(), any(), any());
 
         givenThereAreSomeCourses(0);
 
@@ -187,14 +188,14 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
     @Test
     public void showsTagSelectActivityOnClickManageCoursesImage() throws Exception {
 
-//        doAnswer(invocationOnMock -> {
-//            Context ctx = (Context) invocationOnMock.getArguments()[0];
-//            BasicResult result = new BasicResult();
-//            result.setSuccess(true);
-//            result.setResultMessage("{}");
-//            ((DownloadCoursesActivity) ctx).apiRequestComplete(result);
-//            return null;
-//        }).when(tagRepository).getTagList(any(), any());
+        doAnswer(invocationOnMock -> {
+            APIRequestListener apiRequestListener = (APIRequestListener) invocationOnMock.getArguments()[1];
+            BasicResult result = new BasicResult();
+            result.setSuccess(true);
+            result.setResultMessage("{}");
+            apiRequestListener.apiRequestComplete(result);
+            return null;
+        }).when(tagRepository).getTagList(any(), any(), any());
 
         givenThereAreSomeCourses(0);
 

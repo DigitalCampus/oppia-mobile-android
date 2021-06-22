@@ -54,11 +54,12 @@ public class DownloadCoursesActivity extends AppActivity {
 		setContentView(binding.getRoot());
 
 		Bundle extras = getIntent().getExtras();
-		if (extras == null || !extras.containsKey(EXTRA_MODE)) {
-			throw new IllegalArgumentException("Missing extra argument: " + EXTRA_MODE);
+		int mode = MODE_TAG_COURSES; // default
+		if (extras != null && extras.containsKey(EXTRA_MODE)) {
+			mode = extras.getInt(EXTRA_MODE);
 		}
 
-		setUpScreen(extras.getInt(EXTRA_MODE));
+		setUpScreen(mode);
 
 		binding.btnDownloadCourses.setOnClickListener(view -> {
 
@@ -123,7 +124,6 @@ public class DownloadCoursesActivity extends AppActivity {
 	private void setUpScreen(int mode) {
 
 		if (isTabletLandscape()) {
-			// Tablet landscape
 			coursesDownloadFragment = new CoursesDownloadFragment();
 			coursesDownloadFragment.setArguments(getIntent().getExtras());
 			getSupportFragmentManager().beginTransaction().replace(R.id.frame_courses_download, coursesDownloadFragment).commit();
@@ -141,7 +141,7 @@ public class DownloadCoursesActivity extends AppActivity {
 
 				if (!isTabletLandscape()) {
 					coursesDownloadFragment = new CoursesDownloadFragment();
-					coursesDownloadFragment.setArguments(getIntent().getExtras());
+					coursesDownloadFragment.setArguments(getIntent().getExtras()); // todo pass arguments one by one
 					getSupportFragmentManager().beginTransaction().replace(R.id.frame_tags, coursesDownloadFragment).commit();
 				}
 				break;
@@ -151,7 +151,7 @@ public class DownloadCoursesActivity extends AppActivity {
 
 				if (!isTabletLandscape()) {
 					coursesDownloadFragment = new CoursesDownloadFragment();
-					coursesDownloadFragment.setArguments(getIntent().getExtras());
+					coursesDownloadFragment.setArguments(getIntent().getExtras()); // todo pass arguments one by one
 					getSupportFragmentManager().beginTransaction().replace(R.id.frame_tags, coursesDownloadFragment).commit();
 				}
 				break;

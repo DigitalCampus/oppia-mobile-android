@@ -79,7 +79,7 @@ public class TagSelectFragment extends AppFragment implements APIRequestListener
         super.onResume();
         // Get tags list
         if(this.json == null){
-            this.getTagList();
+            getTagList();
         } else if ((tags != null) && !tags.isEmpty()) {
             //We already have loaded JSON and tags (coming from orientationchange)
             adapterTags.notifyDataSetChanged();

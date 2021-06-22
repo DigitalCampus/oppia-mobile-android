@@ -145,9 +145,7 @@ public class DrawerMenuManager {
             if (customOptions.containsKey(itemId)) {
                 customOptions.get(itemId).onOptionSelected();
             } else if (itemId == R.id.menu_download) {
-                Bundle extras = new Bundle();
-                extras.putInt(DownloadCoursesActivity.EXTRA_MODE, DownloadCoursesActivity.MODE_TAG_COURSES);
-                launchIntentForActivity(DownloadCoursesActivity.class, extras);
+                launchIntentForActivity(DownloadCoursesActivity.class);
             } else if (itemId == R.id.menu_privacy) {
                 launchIntentForActivity(PrivacyActivity.class);
             } else if (itemId == R.id.menu_activitylog) {
@@ -170,7 +168,9 @@ public class DrawerMenuManager {
 
     public void launchIntentForActivity(Class<?> activityClass, Bundle extras) {
         Intent i = new Intent(drawerAct, activityClass);
-        i.putExtras(extras);
+        if (extras != null) {
+            i.putExtras(extras);
+        }
         drawerAct.overridePendingTransition(
                 android.R.anim.slide_in_left,
                 android.R.anim.fade_out);

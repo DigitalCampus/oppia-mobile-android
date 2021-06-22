@@ -66,6 +66,10 @@ public abstract class MockedApiEndpointTest extends DaggerInjectMockUITest {
         }
     }
 
+    protected void startServer(int responseCode, String responseBody){
+        startServer(responseCode, responseBody, 0);
+    }
+
     public App getApp() {
         return (App) InstrumentationRegistry.getInstrumentation()
                 .getTargetContext().getApplicationContext();
