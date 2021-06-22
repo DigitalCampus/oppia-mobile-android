@@ -22,6 +22,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder
     private List<Tag> tags;
     private Context context;
     private OnItemClickListener itemClickListener;
+    private int selectedTagPosition = -1;
 
 
     public TagsAdapter(Context context, List<Tag> tags) {
@@ -57,6 +58,13 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder
         } else {
             viewHolder.binding.tagDescription.setVisibility(View.GONE);
         }
+
+        viewHolder.binding.getRoot().setSelected(selectedTagPosition == position);
+    }
+
+    public void setSelectedTagPosition(int position) {
+        this.selectedTagPosition = position;
+        notifyDataSetChanged();
     }
 
     @Override

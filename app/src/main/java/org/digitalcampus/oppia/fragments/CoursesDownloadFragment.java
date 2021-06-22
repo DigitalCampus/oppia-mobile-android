@@ -111,7 +111,8 @@ public class CoursesDownloadFragment extends AppFragment implements APIRequestLi
                     Tag tag = (Tag) bundle.getSerializable(ARG_TAG);
                     this.url = Paths.SERVER_TAG_PATH + tag.getId() + File.separator;
                 } else {
-                    // todo show "select tag" message in empty state
+                    binding.emptyState.setVisibility(View.VISIBLE);
+                    binding.emptyState.setText(R.string.select_category);
                 }
 
                 break;
@@ -334,6 +335,7 @@ public class CoursesDownloadFragment extends AppFragment implements APIRequestLi
             }
             coursesAdapter.notifyDataSetChanged();
             binding.emptyState.setVisibility((courses.isEmpty()) ? View.VISIBLE : View.GONE);
+            binding.emptyState.setText(R.string.empty_state_courses);
 
         } catch (Exception e) {
             Analytics.logException(e);
@@ -412,9 +414,6 @@ public class CoursesDownloadFragment extends AppFragment implements APIRequestLi
             case R.id.menu_select_all:
                 selectAllInstallableCourses();
                 return true;
-//            case android.R.id.home:
-//                onBackPressed();
-//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -65,6 +65,10 @@ public class TagSelectFragment extends AppFragment implements APIRequestListener
         adapterTags.setOnItemClickListener((view1, position) -> {
             Tag selectedTag = tags.get(position);
             getDownloadCoursesActivity().onTagSelected(selectedTag);
+
+            if (isTabletLandscape()) {
+                adapterTags.setSelectedTagPosition(position);
+            }
         });
 
         return binding.getRoot();

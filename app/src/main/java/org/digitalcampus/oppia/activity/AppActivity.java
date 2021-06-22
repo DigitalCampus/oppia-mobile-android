@@ -435,6 +435,10 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     }
 
+    protected boolean isTabletLandscape() {
+        return getResources().getBoolean(R.bool.is_tablet_land);
+    }
+
     private void waitAndClose(final Snackbar snackbar) {
 
         int durationViewPoints = Integer.parseInt(prefs.getString(PrefsActivity.PREF_DURATION_GAMIFICATION_POINTS_VIEW,

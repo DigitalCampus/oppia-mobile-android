@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import org.digitalcampus.mobile.learning.R;
@@ -50,6 +51,7 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class DownloadCoursesActivity extends AppActivity {
@@ -85,7 +87,7 @@ public class DownloadCoursesActivity extends AppActivity {
 		TagSelectFragment tagSelectFragment = new TagSelectFragment();
 		getSupportFragmentManager().beginTransaction().replace(R.id.frame_tags, tagSelectFragment).commit();
 
-		if (findViewById(R.id.frame_courses_download) != null) {
+		if (isTabletLandscape()) {
 			// Tablet landscape
 			coursesDownloadFragment = new CoursesDownloadFragment();
 			coursesDownloadFragment.setArguments(getIntent().getExtras());
@@ -100,12 +102,40 @@ public class DownloadCoursesActivity extends AppActivity {
 			}
 		});
 
+		// For phones
+		getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+			if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+				binding.categoryTitle.setText(R.string.select_category);
+			}
+		});
+
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		int itemId = item.getItemId();
+		switch (itemId) {
+			case android.R.id.home:
+				onBackPressed();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+			getSupportFragmentManager().popBackStack();
+		} else {
+			super.onBackPressed();
+		}
 	}
 
 	public void onTagSelected(Tag tag) {
 
 		binding.categoryTitle.setText(tag.getName());
-		// TODO change selected background in tag list
 
 		Bundle args = new Bundle();
 		args.putInt(CoursesDownloadFragment.ARG_MODE, CoursesDownloadFragment.MODE_TAG_COURSES);
@@ -113,7 +143,7 @@ public class DownloadCoursesActivity extends AppActivity {
 		coursesDownloadFragment = new CoursesDownloadFragment();
 		coursesDownloadFragment.setArguments(args);
 
-		if (findViewById(R.id.frame_courses_download) != null) {
+		if (isTabletLandscape()) {
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.frame_courses_download, coursesDownloadFragment)
 					.commit();
