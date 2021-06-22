@@ -298,8 +298,10 @@ public class CoursesDownloadFragment extends AppFragment implements APIRequestLi
     }
 
     private void getCourseList() {
-        showProgressDialog(getString(R.string.loading));
-        courseInstallRepository.getCourseList(getActivity(), url);
+        if (url != null) {
+            showProgressDialog(getString(R.string.loading));
+            courseInstallRepository.getCourseList(getActivity(), this, url);
+        }
     }
 
     private void downloadCourse(CourseInstallViewAdapter course) {

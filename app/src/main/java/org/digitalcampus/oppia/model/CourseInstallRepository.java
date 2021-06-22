@@ -12,9 +12,9 @@ import java.util.List;
 
 public class CourseInstallRepository {
 
-    public void getCourseList(Context ctx, String url) {
+    public void getCourseList(Context ctx, APIRequestListener listener, String url) {
         APIUserRequestTask task = new APIUserRequestTask(ctx);
-        task.setAPIRequestListener((APIRequestListener) ctx);
+        task.setAPIRequestListener(listener);
         task.execute(url);
     }
 

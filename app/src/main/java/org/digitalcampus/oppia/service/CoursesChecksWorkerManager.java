@@ -267,7 +267,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
     private void showNewCoursesNotification(int newCoursesCount) {
 
         Intent resultIntent = new Intent(context, DownloadActivity.class);
-        resultIntent.putExtra(DownloadActivity.EXTRA_MODE, DownloadActivity.MODE_NEW_COURSES);
+        resultIntent.putExtra(DownloadCoursesActivity.EXTRA_MODE, DownloadCoursesActivity.MODE_NEW_COURSES);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         String contentText = context.getResources().getQuantityString(

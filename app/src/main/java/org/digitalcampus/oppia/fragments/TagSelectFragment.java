@@ -16,6 +16,7 @@ import org.digitalcampus.mobile.learning.databinding.ActivityDownloadBinding;
 import org.digitalcampus.mobile.learning.databinding.FragmentTagSelectBinding;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.activity.DownloadCoursesActivity;
 import org.digitalcampus.oppia.adapter.TagsAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
@@ -63,15 +64,14 @@ public class TagSelectFragment extends AppFragment implements APIRequestListener
         binding.recyclerTags.setAdapter(adapterTags);
         adapterTags.setOnItemClickListener((view1, position) -> {
             Tag selectedTag = tags.get(position);
-            Intent i = new Intent(getActivity(), DownloadActivity.class);
-            Bundle tb = new Bundle();
-            tb.putInt(DownloadActivity.EXTRA_MODE, DownloadActivity.MODE_TAG_COURSES);
-            tb.putSerializable(DownloadActivity.EXTRA_TAG, selectedTag);
-            i.putExtras(tb);
-            startActivity(i);
+            getDownloadCoursesActivity().onTagSelected(selectedTag);
         });
 
         return binding.getRoot();
+    }
+
+    private DownloadCoursesActivity getDownloadCoursesActivity() {
+        return (DownloadCoursesActivity) getActivity();
     }
 
     @Override
