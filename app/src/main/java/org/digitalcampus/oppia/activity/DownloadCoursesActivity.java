@@ -17,42 +17,16 @@
 
 package org.digitalcampus.oppia.activity;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.databinding.ActivityDownloadBinding;
 import org.digitalcampus.mobile.learning.databinding.ActivityDownloadCoursesBinding;
-import org.digitalcampus.oppia.adapter.TagsAdapter;
-import org.digitalcampus.oppia.analytics.Analytics;
-import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.fragments.CoursesDownloadFragment;
 import org.digitalcampus.oppia.fragments.TagSelectFragment;
-import org.digitalcampus.oppia.listener.APIRequestListener;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.model.Tag;
-import org.digitalcampus.oppia.model.TagRepository;
-import org.digitalcampus.oppia.task.result.BasicResult;
-import org.digitalcampus.oppia.utils.UIUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.concurrent.Callable;
-
-import javax.inject.Inject;
-
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class DownloadCoursesActivity extends AppActivity {
 

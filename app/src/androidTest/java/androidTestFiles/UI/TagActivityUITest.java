@@ -1,8 +1,11 @@
 package androidTestFiles.UI;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
@@ -38,14 +41,14 @@ public class TagActivityUITest extends DaggerInjectMockUITest {
 
     @Test
     public void showCorrectCategory() throws Exception {
-        doAnswer(invocationOnMock -> {
-            Context ctx = (Context) invocationOnMock.getArguments()[0];
-            BasicResult result = new BasicResult();
-            result.setSuccess(true);
-            result.setResultMessage("{}");
-            ((DownloadCoursesActivity) ctx).apiRequestComplete(result);
-            return null;
-        }).when(tagRepository).getTagList(any(), any());
+//        doAnswer(invocationOnMock -> {
+//            Context ctx = (Context) invocationOnMock.getArguments()[0];
+//            BasicResult result = new BasicResult();
+//            result.setSuccess(true);
+//            result.setResultMessage("{}");
+//            ((DownloadCoursesActivity) ctx).apiRequestComplete(result);
+//            return null;
+//        }).when(tagRepository).getTagList(any(), any());
 
 
         doAnswer(invocationOnMock -> {
@@ -57,7 +60,12 @@ public class TagActivityUITest extends DaggerInjectMockUITest {
             return null;
         }).when(tagRepository).refreshTagList(any(), any());
 
-        tagSelectActivityTestRule.launchActivity(null);
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+
+        Intent intent = new Intent(context, DownloadCoursesActivity.class);
+        intent.putExtra(DownloadCoursesActivity.EXTRA_MODE, DownloadCoursesActivity.MODE_TAG_COURSES);
+
+        tagSelectActivityTestRule.launchActivity(intent);
 
         onView(withRecyclerView(R.id.recycler_tags)
                 .atPositionOnView(0, R.id.tag_name))

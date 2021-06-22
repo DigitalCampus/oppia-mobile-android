@@ -164,14 +164,14 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
     @Test
     public void showsTagSelectActivityOnClickManageCourses() throws Exception {
 
-        doAnswer(invocationOnMock -> {
-            Context ctx = (Context) invocationOnMock.getArguments()[0];
-            BasicResult result = new BasicResult();
-            result.setSuccess(true);
-            result.setResultMessage("{}");
-            ((DownloadCoursesActivity) ctx).apiRequestComplete(result);
-            return null;
-        }).when(tagRepository).getTagList(any(), any());
+//        doAnswer(invocationOnMock -> {
+//            Context ctx = (Context) invocationOnMock.getArguments()[0];
+//            BasicResult result = new BasicResult();
+//            result.setSuccess(true);
+//            result.setResultMessage("{}");
+//            ((DownloadCoursesActivity) ctx).apiRequestComplete(result);
+//            return null;
+//        }).when(tagRepository).getTagList(any(), any());
 
         givenThereAreSomeCourses(0);
 
@@ -187,14 +187,14 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
     @Test
     public void showsTagSelectActivityOnClickManageCoursesImage() throws Exception {
 
-        doAnswer(invocationOnMock -> {
-            Context ctx = (Context) invocationOnMock.getArguments()[0];
-            BasicResult result = new BasicResult();
-            result.setSuccess(true);
-            result.setResultMessage("{}");
-            ((DownloadCoursesActivity) ctx).apiRequestComplete(result);
-            return null;
-        }).when(tagRepository).getTagList(any(), any());
+//        doAnswer(invocationOnMock -> {
+//            Context ctx = (Context) invocationOnMock.getArguments()[0];
+//            BasicResult result = new BasicResult();
+//            result.setSuccess(true);
+//            result.setResultMessage("{}");
+//            ((DownloadCoursesActivity) ctx).apiRequestComplete(result);
+//            return null;
+//        }).when(tagRepository).getTagList(any(), any());
 
         givenThereAreSomeCourses(0);
 
