@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -13,10 +14,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.activity.DownloadCoursesActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.App;
@@ -46,10 +46,6 @@ import javax.inject.Inject;
 public class CoursesChecksWorkerManager implements APIRequestFinishListener, APIRequestListener {
 
     public static final String TAG = CoursesChecksWorkerManager.class.getSimpleName();
-
-    private static final int ID_NOTIF_COURSES_NOT_INSTALLED = 0;
-    private static final int ID_NOTIF_TO_UPDATE = 1;
-    private static final int ID_NOTIF_NEW_COURSES = 2;
 
     private Context context;
     private int pendingChecks;
@@ -281,9 +277,6 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
     private void showToUpdateNotification(int toUpdateCount) {
 
-        Intent resultIntent = new Intent(context, MainActivity.class);
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         String contentText = context.getResources().getQuantityString(
                 R.plurals.notification_courses_to_update_text, toUpdateCount, toUpdateCount);
 
@@ -291,9 +284,9 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
         mBuilder
                 .setContentTitle(getString(R.string.notification_courses_to_update_title))
                 .setContentText(contentText)
-                .setContentIntent(resultPendingIntent);
+                .setContentIntent(OppiaNotificationUtils.getActivityPendingIntent(context, MainActivity.class, null));
 
-        OppiaNotificationUtils.sendNotification(context, ID_NOTIF_TO_UPDATE, mBuilder.build());
+        OppiaNotificationUtils.sendNotification(context, OppiaNotificationUtils.NOTIF_ID_TO_UPDATE, mBuilder.build());
     }
 
     private double getMostRecentVersionTimestamp(List<CourseServer> coursesServer) {
