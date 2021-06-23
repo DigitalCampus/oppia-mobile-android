@@ -1,4 +1,4 @@
-package androidTestFiles.org.digitalcampus.oppia.model.coursecomplete;
+package androidTestFiles.org.digitalcampus.oppia.model.coursecompletion;
 
 import android.content.Context;
 
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class AllActivitiesTest {
+public class FinalQuizTest {
 
     private Context context;
 
@@ -44,9 +44,9 @@ public class AllActivitiesTest {
         }
         Course course = db.getCourse(courseId, user.getUserId());
 
-        TrackerData.loadDataAllActivitiesCourseComplete(context);
+        TrackerData.loadDataFinalQuizCourseComplete(context);
 
-        boolean result = course.isComplete(context, user, Course.COURSE_COMPLETE_ALL_ACTIVITIES, 0);
+        boolean result = course.isComplete(context, user, Course.COURSE_COMPLETE_FINAL_QUIZ, 0);
 
         assertTrue(result);
 
@@ -64,9 +64,9 @@ public class AllActivitiesTest {
         }
         Course course = db.getCourse(courseId, user.getUserId());
 
-        TrackerData.loadDataAllActivitiesCourseNotComplete(context);
+        TrackerData.loadDataFinalQuizCourseNotComplete(context);
 
-        boolean result = course.isComplete(context, user, Course.COURSE_COMPLETE_ALL_ACTIVITIES, 0);
+        boolean result = course.isComplete(context, user, Course.COURSE_COMPLETE_FINAL_QUIZ, 0);
 
         assertFalse(result);
     }

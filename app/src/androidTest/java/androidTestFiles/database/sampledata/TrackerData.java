@@ -261,6 +261,8 @@ public class TrackerData {
         List<TrackerLog> trackerList = new ArrayList<TrackerLog>();
         trackerList.add(t4);
         trackerList.add(t6);
+
+        db.insertTrackers(trackerList);
     }
 
     public static void loadDataAllQuizzesPlusPercentCourseComplete(Context ctx){

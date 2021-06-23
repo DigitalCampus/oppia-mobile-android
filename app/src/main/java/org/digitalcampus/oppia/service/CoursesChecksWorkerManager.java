@@ -13,9 +13,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.DownloadCoursesActivity;
+import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.App;
@@ -117,16 +118,14 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
         List<Course> courses = coursesRepository.getCourses(context);
         if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY) {
-            Intent resultIntent = new Intent(context, DownloadCoursesActivity.class);
-            PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             NotificationCompat.Builder mBuilder = OppiaNotificationUtils.getBaseBuilder(context, true);
             mBuilder
                     .setContentTitle(context.getString(R.string.notification_course_download_title))
                     .setContentText(context.getString(R.string.notification_course_download_text))
-                    .setContentIntent(resultPendingIntent);
+                    .setContentIntent(OppiaNotificationUtils.getActivityPendingIntent(context, DownloadCoursesActivity.class, null));
 
-            OppiaNotificationUtils.sendNotification(context, ID_NOTIF_COURSES_NOT_INSTALLED, mBuilder.build());
+            OppiaNotificationUtils.sendNotification(context, OppiaNotificationUtils.NOTIF_ID_COURSES_NOT_INSTALLED, mBuilder.build());
         }
 
         onRequestFinish(null);
@@ -265,9 +264,8 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
     private void showNewCoursesNotification(int newCoursesCount) {
 
-        Intent resultIntent = new Intent(context, DownloadCoursesActivity.class);
-        resultIntent.putExtra(DownloadCoursesActivity.EXTRA_MODE, DownloadCoursesActivity.MODE_NEW_COURSES);
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Bundle extras = new Bundle();
+        extras.putInt(DownloadCoursesActivity.EXTRA_MODE, DownloadCoursesActivity.MODE_NEW_COURSES);
 
         String contentText = context.getResources().getQuantityString(
                 R.plurals.notification_new_courses_text, newCoursesCount, newCoursesCount);
@@ -276,9 +274,9 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
         mBuilder
                 .setContentTitle(getString(R.string.notification_new_courses_title))
                 .setContentText(contentText)
-                .setContentIntent(resultPendingIntent);
+                .setContentIntent(OppiaNotificationUtils.getActivityPendingIntent(context, DownloadCoursesActivity.class, extras));
 
-        OppiaNotificationUtils.sendNotification(context, ID_NOTIF_NEW_COURSES, mBuilder.build());
+        OppiaNotificationUtils.sendNotification(context, OppiaNotificationUtils.NOTIF_ID_NEW_COURSES, mBuilder.build());
     }
 
     private void showToUpdateNotification(int toUpdateCount) {

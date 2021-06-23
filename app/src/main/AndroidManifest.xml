@@ -57,7 +57,8 @@
         <activity
             android:name="org.digitalcampus.oppia.activity.PrefsActivity"
             android:label="@string/title_prefs"
-            android:theme="@style/Oppia.ToolbarTheme" />
+            android:theme="@style/Oppia.ToolbarTheme"
+            android:parentActivityName="org.digitalcampus.oppia.activity.MainActivity" />
         <activity
             android:name="org.digitalcampus.oppia.activity.AboutActivity"
             android:label="@string/title_about"
