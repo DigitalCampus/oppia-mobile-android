@@ -45,6 +45,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -155,6 +156,7 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
     // --- CHECKS ---
     private void checkAdminPasswordDialogIsDisplayed() {
         onView(withText(R.string.admin_password_required))
+                .perform(closeSoftKeyboard())
                 .check(matches(isDisplayed()));
     }
 

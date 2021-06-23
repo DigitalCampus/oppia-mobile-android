@@ -55,10 +55,6 @@ public class CoursesDownloadFragment extends AppFragment implements APIRequestLi
     public static final String ARG_COURSE = "arg_course";
     public static final String ARG_MODE = "arg_mode";
 
-    public static final int MODE_TAG_COURSES = 0;
-    public static final int MODE_COURSE_TO_UPDATE = 1;
-    public static final int MODE_NEW_COURSES = 2;
-
     private JSONObject json;
     private String url;
     private ArrayList<CourseInstallViewAdapter> courses;
@@ -105,7 +101,7 @@ public class CoursesDownloadFragment extends AppFragment implements APIRequestLi
     private void setUpScreen(int mode, Bundle bundle) {
 
         switch (mode) {
-            case MODE_TAG_COURSES:
+            case DownloadCoursesActivity.MODE_TAG_COURSES:
                 if (bundle.containsKey(ARG_TAG)) {
                     Tag tag = (Tag) bundle.getSerializable(ARG_TAG);
                     this.url = Paths.SERVER_TAG_PATH + tag.getId() + File.separator;
@@ -116,7 +112,7 @@ public class CoursesDownloadFragment extends AppFragment implements APIRequestLi
 
                 break;
 
-            case MODE_COURSE_TO_UPDATE:
+            case DownloadCoursesActivity.MODE_COURSE_TO_UPDATE:
 
                 if (!bundle.containsKey(ARG_COURSE)) {
                     throw new IllegalArgumentException("Course parameter not found");
@@ -126,7 +122,7 @@ public class CoursesDownloadFragment extends AppFragment implements APIRequestLi
                 this.url = Paths.SERVER_COURSES_PATH;
                 break;
 
-            case MODE_NEW_COURSES:
+            case DownloadCoursesActivity.MODE_NEW_COURSES:
                 this.url = Paths.SERVER_COURSES_PATH;
                 break;
         }
@@ -326,10 +322,11 @@ public class CoursesDownloadFragment extends AppFragment implements APIRequestLi
             courses.clear();
 
             // TODO 'refreshCourseList' method should be refactorized
-            courseInstallRepository.refreshCourseList(getActivity(), courses, json, storage, mode == MODE_COURSE_TO_UPDATE);
-            if (mode == MODE_COURSE_TO_UPDATE) {
+            courseInstallRepository.refreshCourseList(getActivity(), courses, json, storage,
+                    mode == DownloadCoursesActivity.MODE_COURSE_TO_UPDATE);
+            if (mode == DownloadCoursesActivity.MODE_COURSE_TO_UPDATE) {
                 filterOnlyInstalledCourses();
-            } else if (mode == MODE_NEW_COURSES) {
+            } else if (mode == DownloadCoursesActivity.MODE_NEW_COURSES) {
                 filterNewCoursesNotSeen();
             }
             coursesAdapter.notifyDataSetChanged();

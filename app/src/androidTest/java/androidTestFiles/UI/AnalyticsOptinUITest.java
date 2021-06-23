@@ -120,9 +120,9 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
         onView(withId(R.id.continue_button)).perform(click());
     }
 
-    private void performLogout() {
+    private void performLogout() throws Exception{
 
-        onView(withId(R.id.drawer)).perform(DrawerActions.open());
+        onView(withId(R.id.drawer)).perform(closeSoftKeyboard(), DrawerActions.open());
         onView(withId(R.id.btn_expand_profile_options)).perform(click());
         onView(withId(R.id.btn_logout)).perform(click());
         onView(withText(R.string.yes)).perform(click());

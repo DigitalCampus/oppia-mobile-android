@@ -104,7 +104,7 @@ public class DownloadCoursesActivity extends AppActivity {
 		binding.categoryTitle.setText(tag.getName());
 
 		Bundle args = new Bundle();
-		args.putInt(CoursesDownloadFragment.ARG_MODE, CoursesDownloadFragment.MODE_TAG_COURSES);
+		args.putInt(CoursesDownloadFragment.ARG_MODE, MODE_TAG_COURSES);
 		args.putSerializable(CoursesDownloadFragment.ARG_TAG, tag);
 		coursesDownloadFragment = new CoursesDownloadFragment();
 		coursesDownloadFragment.setArguments(args);

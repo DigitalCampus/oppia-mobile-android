@@ -99,7 +99,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
         Tag tag = new Tag();
         tag.setId(1);
         tag.setName("any_tag");
-        args.putInt(CoursesDownloadFragment.ARG_MODE, CoursesDownloadFragment.MODE_TAG_COURSES);
+        args.putInt(CoursesDownloadFragment.ARG_MODE, DownloadCoursesActivity.MODE_TAG_COURSES);
         args.putSerializable(CoursesDownloadFragment.ARG_TAG, tag);
         return args;
     }
