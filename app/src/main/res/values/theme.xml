@@ -6,10 +6,11 @@
     <color name="theme_secondary">@color/irt_secondary_light</color>
     <color name="theme_secondary_light">@color/irt_secondary_light</color>
     <!--  launcher icon drawable  -->
-    <item name="app_icon" type="drawable">@drawable/fmoh</item>
+    <item name="app_icon" type="drawable">@drawable/ee_logo_no_text</item>
     <!--  Drawables for brand icon and course default image  -->
-    <item name="brand_icon" type="drawable">@drawable/fmoh</item>
-    <item name="course_icon_placeholder" type="drawable">@drawable/fmoh</item>
+    <item name="brand_icon" type="drawable">@drawable/ee_logo_with_text</item>
+    <item name="brand_icon_white_bg" type="drawable">@drawable/ee_logo_with_text_white_bg</item>
+    <item name="course_icon_placeholder" type="drawable">@drawable/ee_logo_no_text</item>
     <!--  Color used for dropdown menus and list tints, it is "theme_secondary_light" with transparency  -->
     <color name="theme_focus_semitransparent">#cc00AB9F</color>
     <!--  added 80%(CC) transparency  -->
