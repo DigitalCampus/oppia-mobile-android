@@ -49,6 +49,7 @@ public class WelcomeFragment extends AppFragment {
 		return binding.getRoot();
 	}
 
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);

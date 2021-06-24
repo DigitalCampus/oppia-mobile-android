@@ -178,22 +178,24 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
 
         onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Select district")))))
                 .check(matches(isDisplayed()))
-                .perform(click());
+                .perform(scrollTo(), click());
         onView(withText("region1"))
                 .check(matches(isDisplayed()))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Select county")))))
-                .perform(scrollTo()).perform(click());
-        onView(withText("Area2")).perform(click());
+                .perform(scrollTo()).perform(scrollTo(), click());
+        onView(withText("Area2")).perform(scrollTo(), click());
 
         onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Select district")))))
                 .perform(scrollTo())
                 .check(matches(isDisplayed()))
-                .perform(click());
+                .perform(scrollTo(), click());
         onView(withText("region3"))
                 .check(matches(isDisplayed()))
-                .perform(click());
+                .perform(scrollTo(), click());
+
+        // TODO checks pending?
     }
 
 
@@ -242,7 +244,7 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
 
         onView(withId(R.id.next_btn)).perform(click());
 
-        onView(withText("Other role info")).check(matches(isDisplayed()));
+        onView(withText("Other role info")).perform(scrollTo()).check(matches(isDisplayed()));
 
     }
 

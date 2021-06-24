@@ -10,8 +10,7 @@ import android.view.View;
 import android.widget.Checkable;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ActionMode;
+import android.view.ActionMode;
 import androidx.collection.LongSparseArray;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -103,7 +102,7 @@ public class MultiChoiceHelper {
 
     private static final int CHECK_POSITION_SEARCH_DISTANCE = 20;
 
-    private final AppCompatActivity activity;
+    private final android.app.Activity activity;
     private final RecyclerView.Adapter adapter;
     private SparseBooleanArray checkStates;
     private LongSparseArray<Integer> checkedIdStates;
@@ -115,7 +114,7 @@ public class MultiChoiceHelper {
      * Make sure this constructor is called before setting the adapter on the RecyclerView
      * so this class will be notified before the RecyclerView in case of data set changes.
      */
-    public MultiChoiceHelper(@NonNull AppCompatActivity activity, @NonNull RecyclerView.Adapter adapter) {
+    public MultiChoiceHelper(@NonNull android.app.Activity activity, @NonNull RecyclerView.Adapter adapter) {
         this.activity = activity;
         this.adapter = adapter;
         adapter.registerAdapterDataObserver(new AdapterDataSetObserver());
@@ -218,7 +217,7 @@ public class MultiChoiceHelper {
             if (multiChoiceModeCallback == null) {
                 throw new IllegalStateException("No callback set");
             }
-            choiceActionMode = activity.startSupportActionMode(multiChoiceModeCallback);
+            choiceActionMode = activity.startActionMode(multiChoiceModeCallback);
         }
     }
 

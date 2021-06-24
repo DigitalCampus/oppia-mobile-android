@@ -97,7 +97,7 @@ public class CustomFieldsUITest extends MockedApiEndpointTest {
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("Surname"));
 
         onView(withId(R.id.register_btn)).perform(click());
-        onView(withText(R.string.field_required)).perform(scrollTo()).check(matches(isDisplayed()));
+        onView(withText(R.string.field_required)).perform(closeSoftKeyboard(), scrollTo()).check(matches(isDisplayed()));
     }
 
     @Test

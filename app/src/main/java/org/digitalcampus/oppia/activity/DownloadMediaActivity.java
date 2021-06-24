@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -94,7 +95,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         multiChoiceHelper = new MultiChoiceHelper(this, adapterMedia);
         multiChoiceHelper.setMultiChoiceModeListener(new MultiChoiceHelper.MultiChoiceModeListener() {
             @Override
-            public void onItemCheckedStateChanged(androidx.appcompat.view.ActionMode mode, int position, long id, boolean checked) {
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
                 Log.v(TAG, "Count: " + multiChoiceHelper.getCheckedItemCount());
                 if (checked) {
                     mediaSelected.add(missingMedia.get(position));
@@ -114,7 +115,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             }
 
             @Override
-            public boolean onCreateActionMode(final androidx.appcompat.view.ActionMode mode, Menu menu) {
+            public boolean onCreateActionMode(final ActionMode mode, Menu menu) {
 
                 onPrepareOptionsMenu(menu);
                 mode.setTitle(R.string.title_download_media);
@@ -149,12 +150,12 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             }
 
             @Override
-            public boolean onPrepareActionMode(androidx.appcompat.view.ActionMode mode, Menu menu) {
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
                 return false;
             }
 
             @Override
-            public boolean onActionItemClicked(androidx.appcompat.view.ActionMode mode, MenuItem item) {
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_select_all:
                         for (int i = 0; i < adapterMedia.getItemCount(); i++) {
@@ -174,7 +175,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             }
 
             @Override
-            public void onDestroyActionMode(androidx.appcompat.view.ActionMode mode) {
+            public void onDestroyActionMode(ActionMode mode) {
 
                 mediaSelected.clear();
                 hideDownloadMediaMessage();

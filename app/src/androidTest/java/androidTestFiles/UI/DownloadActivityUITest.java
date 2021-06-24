@@ -2,13 +2,19 @@ package androidTestFiles.UI;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 
+import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.activity.DownloadCoursesActivity;
+import org.digitalcampus.oppia.fragments.CoursesDownloadFragment;
+import org.digitalcampus.oppia.fragments.TagSelectFragment;
+import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.model.Lang;
@@ -21,6 +27,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
@@ -43,24 +51,19 @@ import static org.mockito.Mockito.doAnswer;
 @RunWith(AndroidJUnit4.class)
 public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
-    @Rule
-    public ActivityTestRule<DownloadActivity> downloadActivityTestRule =
-            new ActivityTestRule<>(DownloadActivity.class, false, false);
-
     @Mock CourseInstallRepository courseInstallRepository;
     @Mock CourseInstallerServiceDelegate courseInstallerServiceDelegate;
 
     private void givenThereAreSomeCourses(final int numberOfCourses, final CourseInstallViewAdapter course) throws Exception{
 
         doAnswer(invocationOnMock -> {
-            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            APIRequestListener apiRequestListenerArg = (APIRequestListener) invocationOnMock.getArguments()[1];
             BasicResult result = new BasicResult();
             result.setSuccess(true);
             result.setResultMessage("{}");
-            ((DownloadActivity) ctx).apiRequestComplete(result);
+            apiRequestListenerArg.apiRequestComplete(result);
             return null;
-        }).when(courseInstallRepository).getCourseList(any(), anyString());
-
+        }).when(courseInstallRepository).getCourseList(any(), any(), anyString());
 
         doAnswer(invocationOnMock -> {
             ArrayList<CourseInstallViewAdapter>  courses = (ArrayList<CourseInstallViewAdapter>) invocationOnMock.getArguments()[1];
@@ -69,7 +72,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
                 courses.add(course);
             }
             return null;
-        }).when(courseInstallRepository).refreshCourseList(any(), (ArrayList<CourseInstallViewAdapter>) any(),
+        }).when(courseInstallRepository).refreshCourseList(any(), any(),
                 any(), anyString(), anyBoolean());
 
     }
@@ -90,17 +93,15 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
         ctx.sendOrderedBroadcast(intent, null);
     }
 
-    private Intent getMockTagCoursesIntent() {
+    private Bundle getMockTagCoursesArgs() {
 
+        Bundle args = new Bundle();
         Tag tag = new Tag();
         tag.setId(1);
         tag.setName("any_tag");
-
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        Intent intent = new Intent(context, DownloadActivity.class);
-        intent.putExtra(DownloadActivity.EXTRA_MODE, DownloadActivity.MODE_TAG_COURSES);
-        intent.putExtra(DownloadActivity.EXTRA_TAG, tag);
-        return intent;
+        args.putInt(CoursesDownloadFragment.ARG_MODE, DownloadCoursesActivity.MODE_TAG_COURSES);
+        args.putSerializable(CoursesDownloadFragment.ARG_TAG, tag);
+        return args;
     }
 
     @Test
@@ -110,9 +111,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.course_draft))
                 .check(matches(withText(R.string.course_draft)));
 
@@ -125,9 +126,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.course_draft))
                 .check(matches(not(isDisplayed())));
     }
@@ -143,9 +144,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.course_title))
                 .check(matches(withText(title)));
 
@@ -157,9 +158,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.course_title))
                 .check(matches(withText(MultiLangInfoModel.DEFAULT_NOTITLE)));
 
@@ -175,9 +176,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.course_description))
                 .check(matches(withText(description)));
     }
@@ -188,9 +189,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.course_description))
                 .check(matches(not(isDisplayed())));
     }
@@ -204,9 +205,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.course_author))
                 .check(matches(withText(authorName)));
 
@@ -217,9 +218,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, getBaseCourse());
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.course_author))
                 .check(matches(not(isDisplayed())));
 
@@ -237,9 +238,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
             return null;
         }).when(courseInstallerServiceDelegate).installCourse(any(), any(), any());
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.download_course_btn))
                 .perform(click())
                 .check(matches(withDrawable(R.drawable.ic_action_cancel)));
@@ -260,9 +261,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
             return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.download_course_btn))
                 .perform(click())
                 .check(matches(withDrawable(R.drawable.ic_action_cancel)));
@@ -280,13 +281,13 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
             return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.download_course_btn))
                 .perform(click());
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.download_progress))
                 .check(matches(isDisplayed()));
 
@@ -304,13 +305,13 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
             return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.download_course_btn))
                 .perform(click());
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.download_progress))
                 .check(matches(isDisplayed()));
 
@@ -325,9 +326,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.download_progress))
                 .check(matches(not(isDisplayed())));
 
@@ -346,13 +347,13 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
             return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.download_course_btn))
                 .perform(click());
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.download_progress))
                 .check(matches(not(isDisplayed())));
 
@@ -368,9 +369,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.download_course_btn))
                 .check(matches(withDrawable(R.drawable.ic_action_download)));
 
@@ -386,9 +387,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.download_course_btn))
                 .check(matches(withDrawable(R.drawable.ic_action_refresh)));
 
@@ -404,9 +405,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.download_course_btn))
                 .check(matches(isEnabled()));
 
@@ -425,9 +426,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
             return null;
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseInstallViewAdapter) any());
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.download_course_btn))
                 .perform(click())
                 .check(matches(withDrawable(R.drawable.ic_action_accept)));
@@ -457,9 +458,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
         }).when(courseInstallerServiceDelegate).installCourse(any(), any(), any());
 
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.download_course_btn))
                 .perform(click())
                 .check(matches(withDrawable(R.drawable.ic_action_accept)));
@@ -475,11 +476,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        downloadActivityTestRule.launchActivity(getMockTagCoursesIntent());
+        FragmentScenario.launchInContainer(CoursesDownloadFragment.class, getMockTagCoursesArgs(), R.style.Oppia_ToolbarTheme, null); //, R.style.Oppia_ToolbarTheme, null
 
-//        onView(withRecyclerView(R.id.recycler_tags).atPosition(0)).perform(click());
-
-        onView(withRecyclerView(R.id.recycler_tags)
+        onView(withRecyclerView(R.id.recycler_courses_download)
                 .atPositionOnView(0, R.id.download_course_btn))
                 .check(matches(isEnabled()));
 

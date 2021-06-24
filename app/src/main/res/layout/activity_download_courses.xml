@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <RelativeLayout
+        android:id="@+id/action_bar_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/subtitle_bar_height"
+        android:background="@color/subtitle_bar"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_below="@+id/toolbar"
+        android:padding="5dp">
+
+        <Button
+            android:id="@+id/btn_download_courses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/padding_medium"
+            android:layout_marginLeft="@dimen/padding_medium"
+            android:text="@string/missing_media_download_selected"
+            android:textColor="@color/text_dark"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/category_title"
+            style="@style/CourseTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/padding_medium"
+            android:layout_toStartOf="@id/btn_download_courses"
+            android:gravity="center_vertical"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_medium"
+            android:text="@string/select_category"/>
+
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/frame_tags"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/action_bar_subtitle"/>
+
+</RelativeLayout>

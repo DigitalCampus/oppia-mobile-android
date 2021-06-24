@@ -2,7 +2,6 @@ package org.digitalcampus.oppia.fragments;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -12,23 +11,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.mobile.learning.databinding.FragmentCoursesListBinding;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
-import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.activity.DownloadCoursesActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.CoursesListAdapter;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
@@ -49,7 +43,6 @@ import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.CourseUtils;
-import org.digitalcampus.oppia.utils.ui.MediaScanView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +92,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
             sharedPrefs.edit().putString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()).apply();
         }
 
-        if (getResources().getBoolean(R.bool.is_tablet)) {
+        if (getResources().getBoolean(R.bool.is_tablet_land)) {
             binding.recyclerCourses.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         } else {
             binding.recyclerCourses.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -176,7 +169,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void onManageCoursesClick() {
         AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.menu_download, () ->
-                startActivity(new Intent(getActivity(), TagSelectActivity.class)));
+                startActivity(new Intent(getActivity(), DownloadCoursesActivity.class)));
     }
 
     // Recycler callbacks
@@ -208,10 +201,10 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
                 .setTitle(R.string.course_update)
                 .setMessage(R.string.course_update_dialog_message)
                 .setPositiveButton(R.string.update, (dialog, which) -> {
-                    Intent i = new Intent(getActivity(), DownloadActivity.class);
+                    Intent i = new Intent(getActivity(), DownloadCoursesActivity.class);
                     Bundle tb = new Bundle();
-                    tb.putInt(DownloadActivity.EXTRA_MODE, DownloadActivity.MODE_COURSE_TO_UPDATE);
-                    tb.putSerializable(DownloadActivity.EXTRA_COURSE, selectedCourse);
+                    tb.putInt(DownloadCoursesActivity.EXTRA_MODE, DownloadCoursesActivity.MODE_COURSE_TO_UPDATE);
+                    tb.putSerializable(DownloadCoursesActivity.EXTRA_COURSE, selectedCourse);
                     i.putExtras(tb);
                     startActivity(i);
                 })

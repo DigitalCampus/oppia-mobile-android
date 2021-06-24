@@ -28,8 +28,9 @@ import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.SearchActivity;
 import org.digitalcampus.oppia.activity.StartUpActivity;
-import org.digitalcampus.oppia.activity.TagSelectActivity;
+import org.digitalcampus.oppia.activity.DownloadCoursesActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
+import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
@@ -44,7 +45,6 @@ import org.digitalcampus.oppia.task.result.BasicResult;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -166,13 +166,13 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
     public void showsTagSelectActivityOnClickManageCourses() throws Exception {
 
         doAnswer(invocationOnMock -> {
-            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            APIRequestListener apiRequestListener = (APIRequestListener) invocationOnMock.getArguments()[1];
             BasicResult result = new BasicResult();
             result.setSuccess(true);
             result.setResultMessage("{}");
-            ((TagSelectActivity) ctx).apiRequestComplete(result);
+            apiRequestListener.apiRequestComplete(result);
             return null;
-        }).when(tagRepository).getTagList(any(), any());
+        }).when(tagRepository).getTagList(any(), any(), any());
 
         givenThereAreSomeCourses(0);
 
@@ -181,7 +181,7 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
         onView(withId(R.id.manage_courses_btn))
                 .perform(click());
 
-        checkCorrectActivity(TagSelectActivity.class);
+        checkCorrectActivity(DownloadCoursesActivity.class);
 
     }
 
@@ -189,13 +189,13 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
     public void showsTagSelectActivityOnClickManageCoursesImage() throws Exception {
 
         doAnswer(invocationOnMock -> {
-            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            APIRequestListener apiRequestListener = (APIRequestListener) invocationOnMock.getArguments()[1];
             BasicResult result = new BasicResult();
             result.setSuccess(true);
             result.setResultMessage("{}");
-            ((TagSelectActivity) ctx).apiRequestComplete(result);
+            apiRequestListener.apiRequestComplete(result);
             return null;
-        }).when(tagRepository).getTagList(any(), any());
+        }).when(tagRepository).getTagList(any(), any(), any());
 
         givenThereAreSomeCourses(0);
 
@@ -204,7 +204,7 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
         onView(withId(R.id.empty_state_img))
                 .perform(click());
 
-        checkCorrectActivity(TagSelectActivity.class);
+        checkCorrectActivity(DownloadCoursesActivity.class);
 
     }
 
@@ -542,7 +542,7 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         openDrawer();
         performClickDrawerItem(R.id.menu_download);
-        checkCorrectActivity(TagSelectActivity.class);
+        checkCorrectActivity(DownloadCoursesActivity.class);
 
     }
 

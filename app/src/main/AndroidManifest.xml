@@ -51,15 +51,9 @@
             android:theme="@style/Oppia.ToolbarTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name="org.digitalcampus.oppia.activity.DownloadActivity"
-            android:label="@string/title_download_activity"
-            android:theme="@style/Oppia.ToolbarTheme"
-            android:parentActivityName="org.digitalcampus.oppia.activity.MainActivity" />
-        <activity
-            android:name="org.digitalcampus.oppia.activity.TagSelectActivity"
-            android:label="@string/title_tag_select_activity"
-            android:theme="@style/Oppia.ToolbarTheme"
-            android:parentActivityName="org.digitalcampus.oppia.activity.MainActivity" />
+            android:name="org.digitalcampus.oppia.activity.DownloadCoursesActivity"
+            android:label="@string/title_download_courses_activity"
+            android:theme="@style/Oppia.ToolbarTheme" />
         <activity
             android:name="org.digitalcampus.oppia.activity.PrefsActivity"
             android:label="@string/title_prefs"

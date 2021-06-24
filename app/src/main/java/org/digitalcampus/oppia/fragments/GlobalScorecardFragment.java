@@ -27,16 +27,13 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.mobile.learning.databinding.FragmentGlobalScorecardBinding;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.activity.TagSelectActivity;
+import org.digitalcampus.oppia.activity.DownloadCoursesActivity;
 import org.digitalcampus.oppia.adapter.ScorecardsGridAdapter;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
@@ -48,8 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 public class GlobalScorecardFragment extends AppFragment implements ScorecardsGridAdapter.OnItemClickListener {
 
@@ -126,7 +121,7 @@ public class GlobalScorecardFragment extends AppFragment implements ScorecardsGr
 
             binding.btnDownloadCourses.setOnClickListener(v ->
                     AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.menu_download, () ->
-                            startActivity(new Intent(getActivity(), TagSelectActivity.class))));
+                            startActivity(new Intent(getActivity(), DownloadCoursesActivity.class))));
         } else {
             binding.recyclerScorecards.setVisibility(View.VISIBLE);
             binding.emptyState.setVisibility(View.GONE);

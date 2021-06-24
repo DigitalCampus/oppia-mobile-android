@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool name="is_tablet">true</bool>
+    <bool name="is_tablet_land">false</bool>
 
     <dimen name="height_plot">350dp</dimen>
 
     <dimen name="course_icon_size">120dp</dimen>
     <dimen name="padding_course_list_item_circular_progress">13dp</dimen>
+
+
+    <dimen name="text_size_small">15sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_large">24sp</dimen>
+    <dimen name="text_size_xlarge">28sp</dimen>
 </resources>

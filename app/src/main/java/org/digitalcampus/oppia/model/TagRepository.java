@@ -42,10 +42,10 @@ public class TagRepository {
     private static final String JSON_PROPERTY_HIGHLIGHT = "highlight";
     private static final String JSON_PROPERTY_ORDER_PRIORITY = "order_priority";
 
-    public void getTagList(Context ctx,  ApiEndpoint api){
+    public void getTagList(Context ctx, APIRequestListener listener, ApiEndpoint api){
         APIUserRequestTask task = new APIUserRequestTask(ctx, api);
         String url = Paths.SERVER_TAG_PATH;
-        task.setAPIRequestListener((APIRequestListener) ctx);
+        task.setAPIRequestListener(listener);
         task.execute(url);
     }
 

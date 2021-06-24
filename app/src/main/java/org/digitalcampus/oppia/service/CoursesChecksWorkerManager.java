@@ -14,10 +14,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.activity.DownloadCoursesActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.App;
@@ -120,7 +119,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
             mBuilder
                     .setContentTitle(context.getString(R.string.notification_course_download_title))
                     .setContentText(context.getString(R.string.notification_course_download_text))
-                    .setContentIntent(OppiaNotificationUtils.getActivityPendingIntent(context, TagSelectActivity.class, null));
+                    .setContentIntent(OppiaNotificationUtils.getActivityPendingIntent(context, DownloadCoursesActivity.class, null));
 
             OppiaNotificationUtils.sendNotification(context, OppiaNotificationUtils.NOTIF_ID_COURSES_NOT_INSTALLED, mBuilder.build());
         }
@@ -262,7 +261,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
     private void showNewCoursesNotification(int newCoursesCount) {
 
         Bundle extras = new Bundle();
-        extras.putInt(DownloadActivity.EXTRA_MODE, DownloadActivity.MODE_NEW_COURSES);
+        extras.putInt(DownloadCoursesActivity.EXTRA_MODE, DownloadCoursesActivity.MODE_NEW_COURSES);
 
         String contentText = context.getResources().getQuantityString(
                 R.plurals.notification_new_courses_text, newCoursesCount, newCoursesCount);
@@ -271,7 +270,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
         mBuilder
                 .setContentTitle(getString(R.string.notification_new_courses_title))
                 .setContentText(contentText)
-                .setContentIntent(OppiaNotificationUtils.getActivityPendingIntent(context, DownloadActivity.class, extras));
+                .setContentIntent(OppiaNotificationUtils.getActivityPendingIntent(context, DownloadCoursesActivity.class, extras));
 
         OppiaNotificationUtils.sendNotification(context, OppiaNotificationUtils.NOTIF_ID_NEW_COURSES, mBuilder.build());
     }
@@ -285,7 +284,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
         mBuilder
                 .setContentTitle(getString(R.string.notification_courses_to_update_title))
                 .setContentText(contentText)
-                .setContentIntent(OppiaNotificationUtils.getMainActivityPendingIntent(context));
+                .setContentIntent(OppiaNotificationUtils.getActivityPendingIntent(context, MainActivity.class, null));
 
         OppiaNotificationUtils.sendNotification(context, OppiaNotificationUtils.NOTIF_ID_TO_UPDATE, mBuilder.build());
     }
