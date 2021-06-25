@@ -106,7 +106,6 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/padding_large"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:autoText="true"
                 android:gravity="center"
                 android:text="@string/login_dont_have_account"/>
 
