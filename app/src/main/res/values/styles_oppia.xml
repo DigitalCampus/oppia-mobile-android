@@ -112,7 +112,17 @@
 
     <style name="Oppia.CAB.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">@drawable/bg_toolbar</item>
+        <item name="titleTextStyle">@style/ActionModeTitleTextStyle</item>
+        <item name="subtitleTextStyle">@style/ActionModeSubTitleTextStyle</item>
     </style>
+
+    <style name="ActionModeTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="ActionModeSubTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 
     <style name="PopupMenu.Om" parent="android:Widget.ListPopupWindow">
     </style>
@@ -145,9 +155,6 @@
         <item name="android:layout_height">6dp</item>
     </style>
 
-    <style name="ActionButton.CloseMode.Om" parent="android:Widget.ActionButton.CloseMode">
-    </style>
-
     <style name="OM.Light.TabText.Style.Dark" parent="android:Widget.ActionBar.TabText">
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
         <item name="android:textSize">12sp</item>
@@ -158,7 +165,7 @@
     </style>
 
     <style name="Oppia.Theme.ActionBarTheme">
-        <item name="colorControlNormal">@color/text_dark</item>
+        <item name="colorControlNormal">@color/white</item>
     </style>
 
     <style name="Oppia.AlertDialogStyle" parent="Theme.AppCompat.Light.Dialog">
