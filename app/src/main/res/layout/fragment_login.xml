@@ -108,7 +108,8 @@
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:autoText="true"
                 android:gravity="center"
-                android:text="@string/login_dont_have_account"/>
+                android:text="@string/login_dont_have_account"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/action_register_btn"
@@ -117,7 +118,7 @@
                 android:layout_marginLeft="@dimen/padding_large"
                 android:layout_marginRight="@dimen/padding_large"
                 android:text="@string/title_register"
-                />
+                android:visibility="gone"/>
         </LinearLayout>
 
 
