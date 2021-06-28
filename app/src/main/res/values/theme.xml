@@ -22,7 +22,7 @@
     <color name="toolbar_bg_color">@color/irt_primary</color>
     <color name="toolbar_icon_color">@color/white</color>
     <color name="statusbar_color">@color/black</color>
-    <color name="subtitle_bar">@color/theme_primary</color>
+    <color name="subtitle_bar">@color/theme_secondary_light</color>
     <color name="drawer_bg">@color/background_light</color>
     <color name="drawer_text">@color/text_dark</color>
     <color name="drawer_subtitle">@color/theme_secondary</color>
