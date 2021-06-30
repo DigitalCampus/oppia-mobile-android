@@ -33,6 +33,10 @@
     <color name="drawer_icontint">@color/default_icon_foreground</color>
     <color name="drawer_divider">@color/highlight_separator</color>
 
+    <!-- Register steps indicators -->
+    <color name="register_steps_indicator_circleColor">@color/theme_primary</color>
+    <color name="register_steps_indicator_doneColor">@color/theme_secondary</color>
+    <color name="register_steps_indicator_lineColor">@color/theme_secondary</color>
 
     <!-- TabLayout and filter tabs -->
     <color name="tab_bg_color">#e0dde2</color>

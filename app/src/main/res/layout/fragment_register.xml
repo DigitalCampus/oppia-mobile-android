@@ -37,9 +37,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            app:stpi_circleColor="@color/theme_primary"
+            app:stpi_circleColor="@color/register_steps_indicator_circleColor"
             app:stpi_circleRadius="8dp"
-            app:stpi_indicatorColor="@color/theme_secondary"
+            app:stpi_indicatorColor="@color/register_steps_indicator_doneColor"
+            app:stpi_lineColor="@color/register_steps_indicator_lineColor"
+            app:stpi_lineDoneColor="@color/register_steps_indicator_lineColor"
             app:stpi_stepCount="3" />
     </FrameLayout>
 
