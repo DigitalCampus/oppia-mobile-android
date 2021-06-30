@@ -14,7 +14,7 @@
         android:id="@+id/action_bar_subtitle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/subtitle_bar_height"
-        android:background="@color/subtitle_bar"
+        android:background="@color/subtitle_bar_bg_color"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:layout_below="@+id/toolbar"
@@ -43,7 +43,7 @@
             android:layout_marginStart="@dimen/padding_medium"
             android:layout_toStartOf="@id/btn_download_courses"
             android:gravity="center_vertical"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/subtitle_bar_text_color"
             android:textSize="@dimen/text_size_medium"
             android:text="@string/select_category"/>
 

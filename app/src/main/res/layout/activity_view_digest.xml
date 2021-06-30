@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:gravity="center"
+            android:textColor="@color/toolbar_text_color"
             android:text="@string/open_digest.description" />
     </LinearLayout>
 
