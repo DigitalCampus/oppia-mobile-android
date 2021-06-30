@@ -18,14 +18,14 @@
         android:paddingBottom="@dimen/padding_medium_2"
         android:text="@string/tab_title_register"
         android:textAppearance="@style/SectionHeader"
-        android:textColor="@color/text_light" />
+        android:textColor="@color/toolbar_text_color" />
 
     <FrameLayout
         android:id="@+id/frame_stepper_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/register_title"
-        android:background="@color/subtitle_bar"
+        android:background="@color/subtitle_bar_bg_color"
         android:paddingLeft="@dimen/padding_large"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingRight="@dimen/padding_large"
@@ -37,9 +37,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            app:stpi_circleColor="@color/theme_primary"
+            app:stpi_circleColor="@color/register_steps_indicator_circleColor"
             app:stpi_circleRadius="8dp"
-            app:stpi_indicatorColor="@color/theme_secondary"
+            app:stpi_indicatorColor="@color/register_steps_indicator_doneColor"
+            app:stpi_lineColor="@color/register_steps_indicator_lineColor"
+            app:stpi_lineDoneColor="@color/register_steps_indicator_lineColor"
             app:stpi_stepCount="3" />
     </FrameLayout>
 
