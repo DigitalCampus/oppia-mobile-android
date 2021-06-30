@@ -22,7 +22,8 @@
 
     <!-- Toolbar -->
     <color name="toolbar_bg_color">@color/theme_primary</color>
-    <color name="toolbar_icon_color">@color/text_dark</color>
+    <color name="toolbar_text_color">@color/white</color> <!-- TODO change to text_dark -->
+    <color name="toolbar_icon_color">@color/white</color> <!-- TODO change to text_dark -->
     <color name="statusbar_color">@color/theme_primary</color>
 
 
@@ -47,6 +48,7 @@
     <color name="gamification_snackbar_gradient_start">@color/theme_secondary_light</color>
     <color name="gamification_snackbar_gradient_end">@color/theme_primary</color>
     <color name="subtitle_bar">@color/theme_secondary_light</color>
+    <color name="text_subtitle_bar">@color/white</color> <!-- TODO change to text_dark -->
     <color name="points_badge">@color/theme_dark</color>
 
     <color name="quiz_attempted">@color/theme_secondary</color>

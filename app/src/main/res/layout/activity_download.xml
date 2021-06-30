@@ -62,7 +62,6 @@
             android:layout_marginStart="@dimen/padding_medium"
             android:gravity="center_vertical"
             android:layout_gravity="center"
-            android:textColor="@color/text_dark"
             tools:text="Tag title"
             android:textSize="15sp"
             />

@@ -197,7 +197,7 @@
     <style name="CourseTitle" parent="android:TextAppearance">
         <item name="android:textSize">17sp</item>
         <item name="fontPath">fonts/lato.ttf</item>
-        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:textColor">@color/text_subtitle_bar</item>
     </style>
 
     <style name="Highlight.Title" parent="android:TextAppearance.Medium">
