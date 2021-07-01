@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/padding_medium">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/file_icon"
         android:layout_width="@dimen/listitem_icon_size"
         android:layout_height="@dimen/listitem_icon_size"
@@ -18,7 +18,7 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:src="@drawable/ic_file_account"
-        android:tint="@color/listitem_icon_tint"
+        app:tint="@color/listitem_icon_tint"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:contentDescription="@string/alt_activity_icon"/>
 

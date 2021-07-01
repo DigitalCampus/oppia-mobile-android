@@ -12,7 +12,8 @@
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/padding_medium"
         android:text="@string/bluetooth.select_device"
-        android:textAppearance="@style/Oppia.ActionBar.TitleTextStyle"
+        android:textAppearance="@style/CourseTitle"
+        android:textStyle="bold"
         android:theme="@style/Header" />
 
 
