@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:text="User name"
+            android:textColor="@color/subtitle_bar_text_color"
             android:textSize="15sp" />
 
         <TextView
@@ -51,7 +52,7 @@
             android:layout_below="@id/drawer_username"
             android:layout_alignParentLeft="true"
             android:text="User full name"
-            android:textColor="@color/black"
+            android:textColor="@color/subtitle_bar_text_color"
             android:textSize="15sp" />
 
         <androidx.appcompat.widget.AppCompatImageView
