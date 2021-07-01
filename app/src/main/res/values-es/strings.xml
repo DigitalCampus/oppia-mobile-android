@@ -450,7 +450,6 @@
     <string name="exported_activities.title">Registros de actividad exportados</string>
     <string name="export_task_no_activities">No había actividades o cuestionarios que exportar.</string>
     <string name="submit_trackers_success">Registros enviados al servidor correctamente.</string>
-    <string name="download_via_pc_extenal_storage">Es necesario establecer un almacenamiento externo para poder copiar los ficheros descargados desde el PC a un directorio de la app. Por favor, cambia la opción de almacenamiento en Ajustes.</string>
 
     <string name="activitylog_delete_failed">No se pudo eliminar el archivo de logs</string>
     <string name="activitylog_delete_confirm">Estás seguro de que quieres eliminar este archivo?</string>
