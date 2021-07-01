@@ -64,7 +64,8 @@
             android:layout_marginRight="10dp"
             app:srcCompat="@drawable/ic_expand"
             android:background="@drawable/bg_pressable"
-            app:tint="@color/white" />
+            app:tint="@color/white"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 
