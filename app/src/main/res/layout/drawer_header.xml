@@ -64,8 +64,7 @@
             android:layout_marginRight="10dp"
             app:srcCompat="@drawable/ic_expand"
             android:background="@drawable/bg_pressable"
-            app:tint="@color/white"
-            android:visibility="gone"/>
+            app:tint="@color/white" />
 
     </RelativeLayout>
 
@@ -81,7 +80,8 @@
 
         <LinearLayout
             android:id="@+id/btn_edit_profile"
-            style="@style/MenuItemLayout">
+            style="@style/MenuItemLayout"
+            android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatImageView
                 style="@style/MenuIcon"
