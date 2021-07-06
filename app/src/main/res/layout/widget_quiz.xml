@@ -38,7 +38,8 @@
                     android:padding="3dp"
                     android:textSize="15sp"
                     fontPath="fonts/montserrat.ttf"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    style="@style/SmallTextDark"/>
 
             </FrameLayout>
 
@@ -78,7 +79,8 @@
                             android:layout_marginRight="10dp"
                             android:layout_marginTop="5dp"
                             android:gravity="left"
-                            android:textSize="20sp"/>
+                            android:textSize="20sp"
+                            style="@style/NormalTextDark"/>
                     </LinearLayout>
 
                     <LinearLayout

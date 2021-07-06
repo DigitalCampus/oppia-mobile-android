@@ -87,6 +87,8 @@ public class MatchingWidget extends QuestionWidget {
                 TextView tv = new TextView(ctx);
 
                 tv.setText(responsePairs.getKey());
+                tv.setTextColor(ctx.getResources().getColor(R.color.text_dark));
+                tv.setPadding(0,0,0,8);
 
                 Spinner spinner = new Spinner(ctx);
                 ArrayAdapter<String> responseAdapter = new ArrayAdapter<String>(ctx, R.layout.custom_spinner_item) {

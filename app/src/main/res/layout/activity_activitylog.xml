@@ -190,7 +190,8 @@
         android:paddingTop="@dimen/padding_medium"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingBottom="@dimen/padding_medium"
-        android:text="@string/exported_activities.title"/>
+        android:text="@string/exported_activities.title"
+        android:textColor="@color/text_grey"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -221,7 +222,8 @@
             android:paddingTop="@dimen/padding_medium"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingBottom="@dimen/padding_medium"
-            android:text="@string/archived_activities" />
+            android:text="@string/archived_activities"
+            android:textColor="@color/text_grey"/>
 
     <FrameLayout
         android:layout_width="match_parent"
