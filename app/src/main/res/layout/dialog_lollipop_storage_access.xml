@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:text="@string/storageAccess_help1"
             android:id="@+id/textView1"
-
+            android:textColor="@color/text_grey"
             android:padding="@dimen/padding_medium"/>
 
         <TextView
@@ -31,7 +31,8 @@
             android:layout_height="wrap_content"
             android:text="@string/storageAccess_help2"
             android:id="@+id/textView2"
-            android:padding="@dimen/padding_medium"/>
+            android:padding="@dimen/padding_medium"
+            android:textColor="@color/text_grey"/>
 
         <ImageView
             android:layout_width="match_parent"
@@ -47,7 +48,8 @@
             android:layout_height="wrap_content"
             android:text="@string/storageAccess_help3"
             android:id="@+id/textView3"
-            android:padding="@dimen/padding_medium"/>
+            android:padding="@dimen/padding_medium"
+            android:textColor="@color/text_grey"/>
 
         <ImageView
             android:layout_width="match_parent"
@@ -63,7 +65,8 @@
             android:layout_height="wrap_content"
             android:text="@string/storageAccess_help4"
             android:id="@+id/textView4"
-            android:padding="@dimen/padding_medium"/>
+            android:padding="@dimen/padding_medium"
+            android:textColor="@color/text_grey"/>
 
         <ImageView
             android:layout_width="match_parent"
@@ -79,7 +82,8 @@
             android:layout_height="wrap_content"
             android:text="@string/storageAccess_help5"
             android:id="@+id/textView5"
-            android:padding="@dimen/padding_medium"/>
+            android:padding="@dimen/padding_medium"
+            android:textColor="@color/text_grey"/>
 
         <Button
             android:layout_width="wrap_content"
