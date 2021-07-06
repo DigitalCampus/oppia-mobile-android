@@ -26,6 +26,7 @@
         <item name="colorAccent">@color/theme_secondary</item>
 
         <item name="android:windowBackground">@color/background_light</item>
+        <item name="android:textColor">@color/default_text_color</item>
 
         <item name="android:windowActionBar">true</item>
         <item name="windowActionBar">true</item>
@@ -90,6 +91,9 @@
         <item name="android:colorPrimary">@color/theme_primary</item>
         <item name="android:colorPrimaryDark">@color/theme_primary_dark</item>
         <item name="android:colorAccent">@color/theme_secondary</item>
+
+        <item name="android:windowBackground">@color/background_light</item>
+        <item name="android:textColor">@color/default_text_color</item>
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/statusbar_color</item>
