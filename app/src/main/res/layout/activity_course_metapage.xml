@@ -20,26 +20,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/subtitle_bar"
+            android:background="@color/subtitle_bar_bg_color"
             android:padding="@dimen/margin_medium">
 
             <TextView
                 android:id="@+id/course_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/HeaderText"/>
+                style="@style/HeaderText"
+                android:textColor="@color/subtitle_bar_text_color"/>
 
             <TextView
                 android:id="@+id/course_shortname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/SmallTextDark"/>
+                style="@style/SmallTextDark"
+                android:textColor="@color/subtitle_bar_text_color"/>
 
             <TextView
                 android:id="@+id/course_versionid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/SmallTextDark"/>
+                style="@style/SmallTextDark"
+                android:textColor="@color/subtitle_bar_text_color"/>
         </LinearLayout>
 
 

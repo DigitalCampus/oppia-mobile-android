@@ -31,7 +31,7 @@
                 android:imeOptions="actionSearch"
                 android:inputType="text" />
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/searchbutton"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
                 android:layout_alignBottom="@id/search_string"
                 android:contentDescription="@string/search.activity_title"
                 app:srcCompat="@drawable/ic_search"
-                android:tint="@color/highlight_label" />
+                app:tint="@color/highlight_label" />
 
         </RelativeLayout>
 

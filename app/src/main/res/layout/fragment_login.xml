@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -29,13 +27,12 @@
                 android:gravity="left"
                 android:paddingTop="@dimen/list_card_vertical_padding"
                 android:text="Community\nHealth\nAcademy"
-                android:textAppearance="@style/PointsText"
+                android:textAppearance="@style/SectionHeader"
                 android:textColor="@color/text_dark"
                 android:textSize="24sp"
                 android:lineHeight="24sp" />
 
         </FrameLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,20 +42,20 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                app:hintTextAppearance="@style/Oppia.TextLabel"
                 android:id="@+id/input_layout_username"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:hintTextAppearance="@style/Oppia.TextLabel">
 
                 <EditText
                     android:id="@+id/login_username_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
                     android:layout_marginLeft="@dimen/padding_large"
                     android:layout_marginRight="@dimen/padding_large"
                     android:hint="@string/login_username_title"
-                    android:inputType="text"/>
+                    android:inputType="text"
+                    android:textSize="15sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -71,11 +68,11 @@
                     android:id="@+id/login_password_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
                     android:layout_marginLeft="@dimen/padding_large"
                     android:layout_marginRight="@dimen/padding_large"
                     android:hint="@string/login_password_title"
-                    android:inputType="textPassword"/>
+                    android:inputType="textPassword"
+                    android:textSize="15sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -87,7 +84,7 @@
                 android:layout_marginTop="@dimen/padding_medium"
                 android:layout_marginRight="@dimen/padding_large"
                 android:text="@string/title_login"
-                android:theme="@style/PrimaryButton"/>
+                android:theme="@style/PrimaryButton" />
 
             <Button
                 android:id="@+id/btn_reset_password"
@@ -96,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding_large"
                 android:layout_marginRight="@dimen/padding_large"
-                android:text="@string/title_btn_reset_password"/>
+                android:text="@string/title_btn_reset_password" />
 
             <Button
                 android:id="@+id/btn_remember_username"
@@ -105,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding_large"
                 android:layout_marginRight="@dimen/padding_large"
-                android:text="@string/title_btn_remember_username"/>
+                android:text="@string/title_btn_remember_username" />
 
             <TextView
                 android:id="@+id/dont_have_account"
@@ -115,9 +112,8 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/padding_large"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:autoText="true"
                 android:gravity="center"
-                android:text="@string/login_dont_have_account"/>
+                android:text="@string/login_dont_have_account" />
 
             <Button
                 android:id="@+id/action_register_btn"
@@ -125,8 +121,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding_large"
                 android:layout_marginRight="@dimen/padding_large"
-                android:text="@string/title_register"
-                />
+                android:text="@string/title_register" />
         </LinearLayout>
 
 
