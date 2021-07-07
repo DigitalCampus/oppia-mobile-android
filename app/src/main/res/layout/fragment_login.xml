@@ -27,7 +27,7 @@
                 android:gravity="left"
                 android:paddingTop="@dimen/list_card_vertical_padding"
                 android:text="Community\nHealth\nAcademy"
-                android:textAppearance="@style/SectionHeader"
+                android:textAppearance="@style/PointsText"
                 android:textColor="@color/text_dark"
                 android:textSize="24sp"
                 android:lineHeight="24sp" />

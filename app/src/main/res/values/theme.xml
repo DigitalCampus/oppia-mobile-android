@@ -32,7 +32,7 @@
     <color name="subtitle_bar">@color/theme_primary</color>
 
     <!-- Subtitle bar -->
-    <color name="subtitle_bar_bg_color">@color/theme_secondary_light</color>
+    <color name="subtitle_bar_bg_color">@color/theme_primary</color>
     <color name="subtitle_bar_text_color">@color/text_dark</color>
     <color name="subtitle_bar_icon_color">@color/text_dark</color>
 
