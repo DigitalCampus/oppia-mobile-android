@@ -54,7 +54,6 @@
                 android:layout_below="@+id/course_draft"
                 android:layout_alignParentLeft="true"
                 android:layout_gravity="center_vertical"
-
                 android:layout_toLeftOf="@+id/download_course_btn" />
 
             <TextView
