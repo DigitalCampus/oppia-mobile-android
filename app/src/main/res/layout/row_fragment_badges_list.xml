@@ -37,7 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/badge_icon"
-        tools:text="2020-02-25" />
+        tools:text="2020-02-25"
+        style="@style/NormalTextDark"/>
 
     <TextView
         android:id="@+id/badges_description"

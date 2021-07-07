@@ -23,7 +23,7 @@ android {
         applicationId "et.gov.moh.training"
 
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 29
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The following argument makes the Android Test Orchestrator run its

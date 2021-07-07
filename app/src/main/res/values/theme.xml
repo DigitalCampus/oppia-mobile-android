@@ -1,4 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <!--  Main color for actionBar, buttons, etc  -->
     <color name="theme_primary">@color/irt_primary</color>
     <color name="theme_primary_dark">@color/irt_primary_dark</color>
@@ -24,6 +25,11 @@
     <color name="toolbar_icon_color">@color/white</color>
     <color name="statusbar_color">@color/black</color>
     <color name="subtitle_bar">@color/theme_secondary_light</color>
+
+
+
+    <color name="default_text_color">@color/black</color>
+
 
     <!-- Subtitle bar -->
     <color name="subtitle_bar_bg_color">@color/theme_secondary_light</color>

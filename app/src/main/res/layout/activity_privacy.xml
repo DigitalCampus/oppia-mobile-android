@@ -71,7 +71,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="@string/privacy.policy_info" />
+                        android:text="@string/privacy.policy_info"
+                        android:textColor="@color/text_grey"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -94,7 +95,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="@string/privacy.terms" />
+                        android:text="@string/privacy.terms"
+                        android:textColor="@color/text_grey"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -116,7 +118,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="@string/privacy.data_what" />
+                        android:text="@string/privacy.data_what"
+                        android:textColor="@color/text_grey"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -138,7 +141,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="@string/privacy.data_why" />
+                        android:text="@string/privacy.data_why"
+                        android:textColor="@color/text_grey"/>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -183,7 +187,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/padding_medium"
-                android:text="@string/analytics.optin.description" />
+                android:text="@string/analytics.optin.description"
+                android:textColor="@color/text_grey"/>
 
             <CheckBox
                 android:id="@+id/bugreport_checkbox"
@@ -254,7 +259,8 @@
                     android:gravity="center"
                     android:layout_alignStart="@id/btn_download_data"
                     android:layout_alignEnd="@id/btn_download_data"
-                    android:text="@string/privacy.download_data.info" />
+                    android:text="@string/privacy.download_data.info"
+                    android:textColor="@color/text_grey"/>
 
                     <Button
                         android:id="@+id/btn_download_data"
@@ -284,7 +290,8 @@
                     android:gravity="center"
                     android:layout_alignStart="@id/btn_delete_account"
                     android:layout_alignEnd="@id/btn_delete_account"
-                    android:text="@string/privacy.delete_account.info" />
+                    android:text="@string/privacy.delete_account.info"
+                    android:textColor="@color/text_grey"/>
 
                 <Button
                     android:id="@+id/btn_delete_account"
