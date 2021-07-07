@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:id="@+id/quiz_results_top_control_bar"
-        android:background="@color/subtitle_bar"
+        android:background="@color/subtitle_bar_bg_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_medium"
@@ -21,6 +21,7 @@
             android:gravity="center"
             android:textSize="24sp"
             android:textAppearance="@style/SectionHeader"
+            android:textColor="@color/subtitle_bar_text_color"
             android:textStyle="bold"
 
             tools:text="You scored: 28% "/>
@@ -63,7 +64,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="95dp"
-                    android:background="@color/subtitle_bar" />
+                    android:background="@color/subtitle_bar_bg_color" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"

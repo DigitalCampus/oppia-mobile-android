@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/tab_bg_color"
     android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/subtitle_bar"
+        android:background="@color/subtitle_bar_bg_color"
         android:paddingBottom="100dp">
 
         <ImageView
@@ -19,9 +19,9 @@
             android:layout_height="@dimen/course_icon_size_small"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            app:tint="@color/activity_icon_background"
+            android:contentDescription="@string/quiz_attempt.title"
             app:srcCompat="@drawable/ic_quiz"
-            android:contentDescription="@string/quiz_attempt.title" />
+            app:tint="@color/activity_icon_background" />
 
     </FrameLayout>
 
@@ -31,8 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="-80dp"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginRight="32dp"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:foreground="@drawable/bg_selectable"
         app:contentPaddingBottom="@dimen/list_card_vertical_padding"
         app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
@@ -42,16 +42,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/info_num_questions"
+                style="@style/HeaderText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/HeaderText"
                 android:gravity="center"
                 tools:text="11 questions" />
 
@@ -83,10 +82,10 @@
                 android:id="@+id/take_quiz_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/padding_large"
-                android:paddingRight="@dimen/padding_large"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/list_card_vertical_padding"
+                android:paddingLeft="@dimen/padding_large"
+                android:paddingRight="@dimen/padding_large"
                 android:text="@string/quiz_attempts.take_quiz"
                 tools:text="Take quiz" />
 
@@ -113,11 +112,11 @@
             android:text="@string/quiz_attempts.previous" />
 
         <include
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            layout="@layout/view_quiz_stats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/view_quiz_stats" />
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="@dimen/activity_vertical_margin" />
 
 
     </androidx.cardview.widget.CardView>

@@ -16,7 +16,7 @@
         android:layout_below="@+id/toolbar"
         android:layout_centerVertical="true"
         android:layout_gravity="center"
-        android:background="@color/subtitle_bar"
+        android:background="@color/subtitle_bar_bg_color"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="@dimen/padding_medium">

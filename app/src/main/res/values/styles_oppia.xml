@@ -21,27 +21,40 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Oppia.Theme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="actionBarTheme">@style/Oppia.Theme.ActionBarTheme</item>
-        <item name="android:windowBackground">@color/background_light</item>
-        <item name="actionBarTabTextStyle">@style/OM.Light.TabText.Style</item>
-        <item name="actionDropDownStyle">@style/DropDownNav.Om</item>
-        <item name="actionBarStyle">@style/ActionBar.Solid.Om</item>
-        <item name="android:windowActionBar">true</item>
-        <item name="windowActionBar">true</item>
-        <item name="actionModeStyle">@style/Oppia.CAB.ActionMode</item>
         <item name="colorPrimary">@color/theme_primary</item>
-
         <item name="colorPrimaryDark">@color/theme_primary_dark</item>
         <item name="colorAccent">@color/theme_secondary</item>
+
+        <item name="android:windowBackground">@color/background_light</item>
+        <item name="android:textColor">@color/default_text_color</item>
+
+        <item name="android:windowActionBar">true</item>
+        <item name="windowActionBar">true</item>
+        <item name="actionBarTheme">@style/Oppia.Theme.ActionBarTheme</item>
+        <item name="actionBarTabTextStyle">@style/OM.Light.TabText.Style</item>
+        <item name="android:actionBarTabTextStyle">@style/OM.Light.TabText.Style</item>
+        <item name="actionDropDownStyle">@style/DropDownNav.Om</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.Om</item>
+        <item name="actionBarStyle">@style/ActionBar.Solid.Om</item> <!-- TODO remove unsued namespace?? -->
+        <item name="android:actionBarStyle">@style/ActionBar.Solid.Om</item>
+        <item name="actionModeStyle">@style/Oppia.CAB.ActionMode</item>
+        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Om</item>
+
+        <item name="android:actionBarItemBackground">@drawable/bg_selectable</item>
+
         <item name="alertDialogTheme">@style/Oppia.AlertDialogStyle</item>
         <item name="android:textAppearanceButton">@style/TextAppearanceButtonBorderless</item>
         <item name="android:buttonStyle">@style/RaisedButton</item>
         <item name="android:preferenceStyle">@style/PrefsTheme</item>
         <item name="preferenceTheme">@style/PrefsTheme</item>
+
+        <item name="android:popupMenuStyle">@style/PopupMenu.Om</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Om</item>
     </style>
 
-    <style name="Oppia.Theme.Dark" parent="@style/Oppia.Theme">
-        <item name="android:windowBackground">@color/background_dark</item>
+    <style name="Oppia.Theme.ActionBarTheme">
+        <item name="android:windowBackground">@color/toolbar_bg_color</item>
+        <item name="colorControlNormal">@color/toolbar_icon_color</item>
     </style>
 
     <style name="Oppia.Theme.NavigationView" parent="Base.Theme.AppCompat" >
@@ -57,7 +70,7 @@
     </style>
 
     <style name="PrimaryButton" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/theme_primary</item>
+        <item name="android:colorButtonNormal">@color/theme_primary</item>
         <item name="android:textColor">@color/text_light</item>
     </style>
 
@@ -75,6 +88,18 @@
         <item name="colorPrimaryDark">@color/theme_primary_dark</item>
         <item name="colorAccent">@color/theme_secondary</item>
         <item name="windowActionModeOverlay">true</item>
+        <item name="android:colorPrimary">@color/theme_primary</item>
+        <item name="android:colorPrimaryDark">@color/theme_primary_dark</item>
+        <item name="android:colorAccent">@color/theme_secondary</item>
+
+        <item name="android:windowBackground">@color/background_light</item>
+        <item name="android:textColor">@color/default_text_color</item>
+
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/statusbar_color</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:textAppearanceButton">@style/TextAppearanceButtonBorderless</item>
+        <item name="android:buttonStyle">@style/RaisedButton</item>
     </style>
 
     <style name="Oppia.Dialog" parent="Theme.AppCompat.Light.Dialog">
@@ -90,26 +115,31 @@
     <style name="Oppia.Fullscreen" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowFullscreen">true</item>
         <item name="android:fitsSystemWindows">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
     <style name="ActionBar.Solid.Om" parent="android:Widget.Holo.ActionBar.Solid">
         <item name="android:background">@drawable/bg_toolbar</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Om</item>
-        <item name="android:titleTextStyle">@style/Oppia.ActionBar.TitleTextStyle</item>
         <item name="background">@drawable/bg_toolbar</item>
         <item name="progressBarStyle">@style/ProgressBar.Om</item>
-        <item name="titleTextStyle">@style/Oppia.ActionBar.TitleTextStyle</item>
         <item name="elevation">4dp</item>
+        <item name="titleTextColor">@color/toolbar_text_color</item>
+        <item name="subtitleTextColor">@color/toolbar_text_color</item>
     </style>
 
-    <style name="Oppia.ActionBar.TitleTextStyle" parent="Base.ThemeOverlay.AppCompat.ActionBar">
-        <item name="android:textColor">@color/text_dark</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">16sp</item>
-    </style>
 
     <style name="Oppia.CAB.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">@drawable/bg_toolbar</item>
+        <item name="titleTextStyle">@style/ActionModeTitleTextStyle</item>
+        <item name="subtitleTextStyle">@style/ActionModeSubTitleTextStyle</item>
+    </style>
+
+    <style name="ActionModeTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Title">
+        <item name="android:textColor">@color/toolbar_text_color</item>
+    </style>
+    <style name="ActionModeSubTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle">
+        <item name="android:textColor">@color/toolbar_text_color</item>
     </style>
 
     <style name="PopupMenu.Om" parent="android:Widget.ListPopupWindow">
@@ -129,6 +159,7 @@
         <item name="android:textColor">@color/text_light</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">2</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="DropDownNav.Om" parent="android:Widget.Spinner.DropDown">
@@ -144,19 +175,6 @@
     </style>
 
     <style name="ActionButton.CloseMode.Om" parent="android:Widget.ActionButton.CloseMode">
-    </style>
-
-    <style name="OM.Light.TabText.Style.Dark" parent="android:Widget.ActionBar.TabText">
-        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/text_light</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:maxLines">2</item>
-    </style>
-
-    <style name="Oppia.Theme.ActionBarTheme">
-        <item name="colorControlNormal">@color/text_dark</item>
     </style>
 
     <style name="Oppia.AlertDialogStyle" parent="Theme.AppCompat.Light.Dialog">

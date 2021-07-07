@@ -47,7 +47,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:text="1290"/>
+                android:text="1290"
+                android:textColor="@color/text_grey"/>
 
             <TextView
                 android:id="@+id/leaderboard_username"
@@ -57,7 +58,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/leaderboard_fullname"
                 android:fitsSystemWindows="true"
-                android:text="username "/>
+                android:text="username "
+                android:textColor="@color/text_grey"/>
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/subtitle_bar"
+            android:background="@color/subtitle_bar_bg_color"
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:padding="@dimen/padding_medium">
@@ -49,6 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding_medium"
                 android:layout_weight="1"
+                android:textColor="@color/subtitle_bar_text_color"
                 android:text="@string/quiz_attempts.title" />
 
             <RelativeLayout
@@ -71,6 +72,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_toEndOf="@id/ic_date"
                     android:layout_toRightOf="@id/ic_date"
+                    android:textColor="@color/subtitle_bar_text_color"
                     android:ellipsize="end"
                     android:maxLines="1" />
 
@@ -83,6 +85,7 @@
                     android:layout_alignBottom="@id/ic_time"
                     android:layout_gravity="center_vertical"
                     android:layout_toEndOf="@id/ic_time"
+                    android:textColor="@color/subtitle_bar_text_color"
                     android:layout_toRightOf="@id/ic_time" />
 
                 <androidx.appcompat.widget.AppCompatImageView

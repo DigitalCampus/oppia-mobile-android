@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/privacy.download_data.description"
-        android:layout_margin="@dimen/activity_vertical_margin"/>
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:textColor="@color/text_grey"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -40,7 +41,6 @@
                 android:id="@+id/download_data_profile"
                 style="@style/Oppia.Theme.BottomSheetItem"
                 android:drawableStart="@drawable/ic_settings_user"
-                android:drawableLeft="@drawable/ic_settings_user"
                 android:text="@string/privacy.download_data.profile"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
@@ -50,7 +50,6 @@
                 android:id="@+id/download_data_course"
                 style="@style/Oppia.Theme.BottomSheetItem"
                 android:drawableStart="@drawable/ic_notification"
-                android:drawableLeft="@drawable/ic_notification"
                 android:text="@string/privacy.download_data.course"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
@@ -60,7 +59,6 @@
                 android:id="@+id/download_data_quizzes"
                 style="@style/Oppia.Theme.BottomSheetItem"
                 android:drawableStart="@drawable/ic_nav_scorecard"
-                android:drawableLeft="@drawable/ic_nav_scorecard"
                 android:text="@string/privacy.download_data.quizzes"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
@@ -70,7 +68,6 @@
                 android:id="@+id/download_data_points"
                 style="@style/Oppia.Theme.BottomSheetItem"
                 android:drawableStart="@drawable/ic_nav_points"
-                android:drawableLeft="@drawable/ic_nav_points"
                 android:text="@string/nav_points"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
@@ -80,7 +77,6 @@
                 android:id="@+id/download_data_badges"
                 style="@style/Oppia.Theme.BottomSheetItem"
                 android:drawableStart="@drawable/ic_award"
-                android:drawableLeft="@drawable/ic_award"
                 android:text="@string/tab_title_badges"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
