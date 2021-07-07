@@ -27,7 +27,8 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingBottom="@dimen/padding_medium"
         android:text="@string/paired_devices"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:textColor="@color/text_grey"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_paired_devices"
@@ -47,7 +48,8 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingBottom="@dimen/padding_medium"
         android:text="@string/other_devices"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:textColor="@color/text_grey"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_new_devices"
@@ -82,7 +84,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/padding_medium"
             android:layout_weight="0"
-            android:text="@string/bluetooth_device_scanning" />
+            android:text="@string/bluetooth_device_scanning"
+            android:textColor="@color/text_grey"/>
     </LinearLayout>
 
     <Button

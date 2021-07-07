@@ -11,7 +11,8 @@
         android:padding="5dp"
         android:gravity="center"
         android:textSize="15sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="@color/text_grey"/>
 
     
     <WebView
