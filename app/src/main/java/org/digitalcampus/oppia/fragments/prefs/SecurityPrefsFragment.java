@@ -36,7 +36,7 @@ public class SecurityPrefsFragment extends BasePreferenceFragment implements Pre
 
         this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_ADMIN_PASSWORD);
 
-        if (!App.ADMIN_PROTECT_SETTINGS) {
+        if (App.ADMIN_PROTECT_SETTINGS) {
             protectAdminPreferences();
         }
     }
