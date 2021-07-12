@@ -22,7 +22,6 @@ public class SecurityPrefsFragment extends BasePreferenceFragment implements Pre
 
     public SecurityPrefsFragment(){
         // Required empty public constructor
-        this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_ADMIN_PASSWORD);
     }
 
     @Override
@@ -34,8 +33,10 @@ public class SecurityPrefsFragment extends BasePreferenceFragment implements Pre
     @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-        if (!App.ADMIN_PROTECT_SETTINGS){
-            // If the whole settings activity is not protected by password, we need to protect admin settings
+
+        this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_ADMIN_PASSWORD);
+
+        if (!App.ADMIN_PROTECT_SETTINGS) {
             protectAdminPreferences();
         }
     }

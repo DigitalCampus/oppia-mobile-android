@@ -49,7 +49,6 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
 
     public AdvancedPrefsFragment() {
         // Required empty public constructor
-        this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_SERVER);
     }
 
     @Override
@@ -63,6 +62,9 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         initializeDagger();
+
+        this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_SERVER);
+
         loadPrefs();
     }
 
