@@ -3,17 +3,18 @@ package org.digitalcampus.oppia.fragments.prefs;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.App;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.preference.EditTextPreference;
-import androidx.preference.ListPreference;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 
 public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
@@ -24,9 +25,11 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
         this.parentPrefs = prefs;
     }
 
+
     @Override
-    public void onCreate(Bundle savedInstance) {
-        super.onCreate(savedInstance);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
         if (!App.ADMIN_PROTECT_SETTINGS){
             // If the whole settings activity is not protected by password, we need to protect admin settings
             protectAdminEditTextPreferences();
