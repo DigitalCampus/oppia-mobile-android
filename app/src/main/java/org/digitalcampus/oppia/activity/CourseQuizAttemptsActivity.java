@@ -39,7 +39,7 @@ public class CourseQuizAttemptsActivity extends AppActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityCourseQuizAttemptsBinding.inflate(LayoutInflater.from(this));
-        setContentView(R.layout.activity_course_quiz_attempts);
+        setContentView(binding.getRoot());
         getAppComponent().inject(this);
 
         Bundle bundle = this.getIntent().getExtras();
