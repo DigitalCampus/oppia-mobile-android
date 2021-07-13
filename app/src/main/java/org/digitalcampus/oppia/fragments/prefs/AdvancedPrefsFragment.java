@@ -135,7 +135,9 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         if (isLoggedIn()) {
             String currentUrl = App.getPrefs(getActivity()).getString(PrefsActivity.PREF_SERVER, null);
             String newUrl = newValue.trim();
-            showWarningLogout(currentUrl, newUrl);
+            if (!TextUtils.equals(currentUrl, newUrl)) {
+                showWarningLogout(currentUrl, newUrl);
+            }
         }
     }
 
