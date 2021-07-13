@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.fragments.prefs;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.utils.custom_prefs.AdminEditTextPreference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,26 +45,34 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
             if (editTextPreference == null){
                 continue;
             }
+
+            if (editTextPreference instanceof AdminEditTextPreference) {
+                editTextPreference.setOnPreferenceClickListener(preference -> {
+
+                    if (parentPrefs == null){
+                        parentPrefs = App.getPrefs(getActivity());
+                    }
+
+                    if (parentPrefs.getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false)) {
+                        AdminSecurityManager.with((Activity) getContext()).promptAdminPassword(() -> {
+                            getPreferenceManager().showDialog(editTextPreference);
+                        });
+                        return true;
+                    }
+
+                    return false;
+                });
+            }
+
             editTextPreference.setOnPreferenceChangeListener((preference, newValue) -> {
                 boolean mustUpdate = onPreferenceChangedDelegate(preference, newValue);
                 if (!mustUpdate) {
                     return false;
                 }
 
-                if (this.parentPrefs == null){
-                    parentPrefs = App.getPrefs(getActivity());
-                }
-                if (!parentPrefs.getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false)) {
-                    afterPreferenceCheckDelegate(preference, newValue);
-                    return true;
-                }
+                afterPreferenceCheckDelegate(preference, newValue);
 
-                AdminSecurityManager.with(getActivity()).promptAdminPassword(() -> {
-                    afterPreferenceCheckDelegate(preference, newValue);
-                    editTextPreference.setText((String) newValue);
-                    preference.getSharedPreferences().edit().putString(preference.getKey(), (String) newValue).apply();
-                });
-                return false;
+                return true;
             });
         }
     }

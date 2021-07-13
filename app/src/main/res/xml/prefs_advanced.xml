@@ -23,7 +23,7 @@
         app:icon="@drawable/ic_settings_user"
         android:selectable="false" />
 
-    <EditTextPreference
+    <org.digitalcampus.oppia.utils.custom_prefs.AdminEditTextPreference
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
         app:icon="@drawable/ic_settings_server"
