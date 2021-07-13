@@ -23,7 +23,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
     protected List<String> adminProtectedValues = new ArrayList<>();
     protected SharedPreferences parentPrefs;
 
-    public void setPrefs(SharedPreferences prefs){
+    public void setPrefs(SharedPreferences prefs) {
         this.parentPrefs = prefs;
     }
 
@@ -32,10 +32,8 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (!App.ADMIN_PROTECT_SETTINGS) {
-            // If the whole settings activity is not protected by password, we need to protect admin settings
-            protectAdminEditTextPreferences();
-        }
+        protectAdminEditTextPreferences();
+
     }
 
     void protectAdminEditTextPreferences() {
@@ -70,30 +68,29 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
         return true;
     }
 
-    void liveUpdateSummary(String prefKey){
+    void liveUpdateSummary(String prefKey) {
         liveUpdateSummary(prefKey, "");
     }
 
-    void liveUpdateSummary(String prefKey, final String append){
+    void liveUpdateSummary(String prefKey, final String append) {
 
         Preference pref = findPreference(prefKey);
-        if (pref instanceof ListPreference){
+        if (pref instanceof ListPreference) {
             final ListPreference listPref = (ListPreference) pref;
             listPref.setSummary(listPref.getEntry() + append);
             listPref.setOnPreferenceChangeListener((preference, newValue) -> {
                 CharSequence[] entryValues = listPref.getEntryValues();
-                for (int i=0; i< entryValues.length; i++){
-                    if (entryValues[i].equals(newValue)){
+                for (int i = 0; i < entryValues.length; i++) {
+                    if (entryValues[i].equals(newValue)) {
                         listPref.setSummary(listPref.getEntries()[i] + append);
                         break;
                     }
                 }
                 return true;
             });
-        }
-        else if (pref instanceof EditTextPreference){
+        } else if (pref instanceof EditTextPreference) {
             final EditTextPreference editPref = (EditTextPreference) pref;
-            editPref.setSummary(editPref.getText() + append) ;
+            editPref.setSummary(editPref.getText() + append);
             editPref.setOnPreferenceChangeListener((preference, newValue) -> {
 
                 boolean mustUpdate = onPreferenceChangedDelegate(preference, newValue);
