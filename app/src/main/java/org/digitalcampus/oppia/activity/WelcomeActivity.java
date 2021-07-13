@@ -31,6 +31,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityWelcomeBinding;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.fragments.LoginFragment;
 import org.digitalcampus.oppia.fragments.RegisterFragment;
@@ -108,14 +109,10 @@ public class WelcomeActivity extends AppActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_settings) {
-            Intent i = new Intent(this, PrefsActivity.class);
-            Bundle tb = new Bundle();
-            ArrayList<Lang> langs = new ArrayList<>();
-            Lang lang = new Lang("en", "English");
-            langs.add(lang);
-            tb.putSerializable("langs", langs);
-            i.putExtras(tb);
-            startActivity(i);
+            AdminSecurityManager.with(this).checkAdminPermission(itemId, () -> {
+                Intent i = new Intent(this, PrefsActivity.class);
+                startActivity(i);
+            });
             return true;
         } else if (itemId == R.id.menu_about) {
             Intent iA = new Intent(this, AboutActivity.class);

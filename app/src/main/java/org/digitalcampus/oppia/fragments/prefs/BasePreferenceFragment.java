@@ -32,7 +32,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (App.ADMIN_PROTECT_SETTINGS){
+        if (!App.ADMIN_PROTECT_SETTINGS) {
             // If the whole settings activity is not protected by password, we need to protect admin settings
             protectAdminEditTextPreferences();
         }

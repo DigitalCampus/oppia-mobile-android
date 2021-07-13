@@ -82,8 +82,6 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
             return;
         }
 
-        protectAdminEditTextPreferences();
-
         updateServerPref();
         updateStorageList(this.getActivity());
         liveUpdateSummary(PrefsActivity.PREF_STORAGE_OPTION);
