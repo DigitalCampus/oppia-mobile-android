@@ -17,6 +17,7 @@ import android.webkit.URLUtil;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
+import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.utils.UIUtils;
@@ -63,7 +64,10 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         super.onCreate(savedInstance);
         initializeDagger();
 
-        this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_SERVER);
+        AdminSecurityManager adminSecurityManager = AdminSecurityManager.with(getActivity());
+        if (App.ADMIN_PROTECT_SERVER && adminSecurityManager.isAdminProtectionEnabled()) {
+            this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_SERVER);
+        }
 
         loadPrefs();
     }
@@ -91,6 +95,17 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                 getString(R.string.about_not_logged_in) :
                 getString(R.string.about_logged_in, usernamePref.getText()));
 
+        serverPref.setOnPreferenceChangeListener((preference, newValue) -> {
+            boolean mustUpdate = onPreferenceChangedDelegate(preference, newValue);
+            if (!mustUpdate) {
+                return false;
+            }
+
+            showWarningIfLoggedIn((String) newValue);
+
+            return true;
+        });
+
     }
 
     @Override
@@ -116,11 +131,10 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         return super.onPreferenceChangedDelegate(preference, newValue);
     }
 
-    @Override
-    protected void afterPreferenceCheckDelegate(Preference preference, Object newValue){
-        if (preference == serverPref && isLoggedIn()) {
+    protected void showWarningIfLoggedIn(String newValue){
+        if (isLoggedIn()) {
             String currentUrl = App.getPrefs(getActivity()).getString(PrefsActivity.PREF_SERVER, null);
-            String newUrl = ((String) newValue).trim();
+            String newUrl = newValue.trim();
             showWarningLogout(currentUrl, newUrl);
         }
     }

@@ -42,14 +42,14 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
         for (String prefKey : adminProtectedValues) {
 
             final EditTextPreference editTextPreference = findPreference(prefKey);
-            if (editTextPreference == null){
+            if (editTextPreference == null) {
                 continue;
             }
 
             if (editTextPreference instanceof AdminEditTextPreference) {
                 editTextPreference.setOnPreferenceClickListener(preference -> {
 
-                    if (parentPrefs == null){
+                    if (parentPrefs == null) {
                         parentPrefs = App.getPrefs(getActivity());
                     }
 
@@ -63,21 +63,8 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
                     return false;
                 });
             }
-
-            editTextPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                boolean mustUpdate = onPreferenceChangedDelegate(preference, newValue);
-                if (!mustUpdate) {
-                    return false;
-                }
-
-                afterPreferenceCheckDelegate(preference, newValue);
-
-                return true;
-            });
         }
     }
-
-    protected void afterPreferenceCheckDelegate(Preference preference, Object newValue){ }
 
     protected boolean onPreferenceChangedDelegate(Preference preference, Object newValue) {
         return true;

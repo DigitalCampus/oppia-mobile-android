@@ -1,12 +1,16 @@
 package org.digitalcampus.oppia.fragments.prefs;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.AdminSecurityManager;
+import org.digitalcampus.oppia.application.App;
 
 import androidx.preference.EditTextPreference;
+import androidx.preference.Preference;
 
 public class MainPreferencesFragment extends BasePreferenceFragment {
 
@@ -17,10 +21,11 @@ public class MainPreferencesFragment extends BasePreferenceFragment {
         return new MainPreferencesFragment();
     }
 
-    public MainPreferencesFragment(){
+    public MainPreferencesFragment() {
         // Required empty public constructor
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -29,12 +34,24 @@ public class MainPreferencesFragment extends BasePreferenceFragment {
 
         info.setTitle(getString(R.string.prefCurrentVersion, BuildConfig.VERSION_NAME));
         info.setSummary(BuildConfig.APPLICATION_ID);
+
+        findPreference(PrefsActivity.PREF_ADVANCED_SCREEN).setOnPreferenceClickListener(preference -> {
+            AdminSecurityManager adminSecurityManager = AdminSecurityManager.with(getActivity());
+            if (App.ADMIN_PROTECT_ADVANCED_SETTINGS && adminSecurityManager.isAdminProtectionEnabled()) {
+                adminSecurityManager.promptAdminPassword(() -> {
+                    preference.setOnPreferenceClickListener(null);
+                    preference.performClick();
+                });
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (!isHidden()){
+        if (!isHidden()) {
             getActivity().setTitle(R.string.menu_settings);
         }
     }
