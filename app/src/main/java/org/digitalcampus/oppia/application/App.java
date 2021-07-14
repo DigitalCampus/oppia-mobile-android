@@ -75,6 +75,8 @@ public class App extends Application {
 
     // admin security settings
     public static final boolean ADMIN_PROTECT_SETTINGS = BuildConfig.ADMIN_PROTECT_SETTINGS;
+    public static final boolean ADMIN_PROTECT_ADVANCED_SETTINGS = BuildConfig.ADMIN_PROTECT_ADVANCED_SETTINGS;
+    public static final boolean ADMIN_PROTECT_SERVER = BuildConfig.ADMIN_PROTECT_SERVER;
     public static final boolean ADMIN_PROTECT_COURSE_DELETE = BuildConfig.ADMIN_PROTECT_COURSE_DELETE;
     public static final boolean ADMIN_PROTECT_COURSE_RESET = BuildConfig.ADMIN_PROTECT_COURSE_RESET;
     public static final boolean ADMIN_PROTECT_COURSE_INSTALL = BuildConfig.ADMIN_PROTECT_COURSE_INSTALL;
