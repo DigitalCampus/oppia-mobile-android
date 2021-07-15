@@ -138,7 +138,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_DISPLAY_SCREEN = "prefDisplay";
     public static final String PREF_SECURITY_SCREEN = "prefSecurity";
     public static final String PREF_NOTIFICATIONS_SCREEN = "prefNotifications";
-    public static final String PREF_ADVANCED_SCREEN = "prefsAdvanced";
+    public static final String PREF_ADVANCED_SCREEN = "prefAdvanced";
     public static final String PREF_APP_INSTANCE_ID = "prefAppInstanceId";
 
     public static final String PREF_LAST_COURSE_VERSION_TIMESTAMP_CHECKED = "prefLastCourseVersionTimestampChecked";

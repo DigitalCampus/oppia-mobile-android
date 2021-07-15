@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@drawable/bg_toolbar"
-        android:paddingLeft="30dp"
+        android:paddingStart="30dp"
         android:paddingTop="@dimen/padding_medium_2"
         android:paddingBottom="@dimen/padding_medium_2"
         android:text="@string/tab_title_register"
@@ -26,9 +26,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/register_title"
         android:background="@color/subtitle_bar_bg_color"
-        android:paddingLeft="@dimen/padding_large"
+        android:paddingStart="@dimen/padding_large"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingRight="@dimen/padding_large"
+        android:paddingEnd="@dimen/padding_large"
         android:paddingBottom="@dimen/activity_vertical_margin">
 
         <com.badoualy.stepperindicator.StepperIndicator
@@ -57,8 +57,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/padding_large"
-            android:paddingRight="@dimen/activity_horizontal_margin">
+            android:paddingStart="@dimen/padding_large"
+            android:paddingEnd="@dimen/activity_horizontal_margin">
 
 
             <TextView
@@ -247,7 +247,7 @@
         android:layout_marginTop="@dimen/padding_medium"
         android:background="@color/background_light"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/padding_medium_2"
+        android:paddingStart="@dimen/padding_medium_2"
         android:paddingTop="@dimen/padding_medium"
         android:paddingRight="@dimen/padding_medium_2"
         android:paddingBottom="@dimen/padding_medium"

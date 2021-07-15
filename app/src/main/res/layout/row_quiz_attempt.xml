@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:layout_marginLeft="@dimen/list_card_horizontal_margin"
-    android:layout_marginRight="@dimen/list_card_horizontal_margin"
+    android:layout_marginStart="@dimen/list_card_horizontal_margin"
+    android:layout_marginEnd="@dimen/list_card_horizontal_margin"
     android:layout_marginBottom="7dp"
     app:contentPaddingBottom="@dimen/list_card_vertical_padding"
     app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
@@ -30,10 +30,9 @@
             android:layout_width="@dimen/small_icon_size"
             android:layout_height="@dimen/small_icon_size"
             android:layout_marginTop="4dp"
-            android:layout_marginRight="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/padding_medium"
             android:layout_marginBottom="4dp"
             android:layout_toEndOf="@id/score"
-            android:layout_toRightOf="@id/score"
             android:scaleType="fitCenter"
             android:tint="@color/text_grey"
             app:srcCompat="@drawable/ic_date" />
@@ -47,7 +46,6 @@
             android:layout_alignBottom="@id/ic_date"
             android:layout_gravity="center_vertical"
             android:layout_toEndOf="@id/ic_date"
-            android:layout_toRightOf="@id/ic_date"
             android:ellipsize="end"
             android:maxLines="1" />
 
@@ -56,9 +54,8 @@
             android:layout_width="@dimen/small_icon_size"
             android:layout_height="@dimen/small_icon_size"
             android:layout_below="@id/ic_date"
-            android:layout_marginRight="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/padding_medium"
             android:layout_toEndOf="@id/score"
-            android:layout_toRightOf="@id/score"
             android:scaleType="fitCenter"
             android:tint="@color/text_grey"
             app:srcCompat="@drawable/ic_time" />
@@ -71,8 +68,7 @@
             android:layout_alignTop="@id/ic_time"
             android:layout_alignBottom="@id/ic_time"
             android:layout_gravity="center_vertical"
-            android:layout_toEndOf="@id/ic_time"
-            android:layout_toRightOf="@id/ic_time" />
+            android:layout_toEndOf="@id/ic_time" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

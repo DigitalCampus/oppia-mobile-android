@@ -17,6 +17,7 @@ import android.webkit.URLUtil;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
+import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.utils.UIUtils;
@@ -49,7 +50,6 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
 
     public AdvancedPrefsFragment() {
         // Required empty public constructor
-        this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_SERVER);
     }
 
     @Override
@@ -63,6 +63,12 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         initializeDagger();
+
+        AdminSecurityManager adminSecurityManager = AdminSecurityManager.with(getActivity());
+        if (App.ADMIN_PROTECT_SERVER && adminSecurityManager.isAdminProtectionEnabled()) {
+            this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_SERVER);
+        }
+
         loadPrefs();
     }
 
@@ -80,8 +86,6 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
             return;
         }
 
-        protectAdminEditTextPreferences();
-
         updateServerPref();
         updateStorageList(this.getActivity());
         liveUpdateSummary(PrefsActivity.PREF_STORAGE_OPTION);
@@ -90,6 +94,17 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         usernamePref.setSummary("".equals(usernamePref.getText()) ?
                 getString(R.string.about_not_logged_in) :
                 getString(R.string.about_logged_in, usernamePref.getText()));
+
+        serverPref.setOnPreferenceChangeListener((preference, newValue) -> {
+            boolean mustUpdate = onPreferenceChangedDelegate(preference, newValue);
+            if (!mustUpdate) {
+                return false;
+            }
+
+            showWarningIfLoggedIn((String) newValue);
+
+            return true;
+        });
 
     }
 
@@ -116,12 +131,13 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         return super.onPreferenceChangedDelegate(preference, newValue);
     }
 
-    @Override
-    protected void afterPreferenceCheckDelegate(Preference preference, Object newValue){
-        if (preference == serverPref && isLoggedIn()) {
+    protected void showWarningIfLoggedIn(String newValue){
+        if (isLoggedIn()) {
             String currentUrl = App.getPrefs(getActivity()).getString(PrefsActivity.PREF_SERVER, null);
-            String newUrl = ((String) newValue).trim();
-            showWarningLogout(currentUrl, newUrl);
+            String newUrl = newValue.trim();
+            if (!TextUtils.equals(currentUrl, newUrl)) {
+                showWarningLogout(currentUrl, newUrl);
+            }
         }
     }
 
