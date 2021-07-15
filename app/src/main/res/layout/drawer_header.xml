@@ -19,9 +19,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/header"
         android:background="@color/theme_primary"
-        android:paddingLeft="15dp"
+        android:paddingStart="15dp"
         android:paddingTop="5dp"
-        android:paddingRight="15dp"
+        android:paddingEnd="15dp"
         android:paddingBottom="5dp">
 
         <TextView

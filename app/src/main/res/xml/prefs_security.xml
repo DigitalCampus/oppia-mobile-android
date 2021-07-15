@@ -46,14 +46,13 @@
 
         android:title="@string/prefAdminProtection" />
 
-    <EditTextPreference
+    <org.digitalcampus.oppia.utils.custom_prefs.AdminEditTextPreference
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
         app:iconSpaceReserved="false"
         android:defaultValue="@string/prefAdminPasswordDefault"
         android:key="prefAdminPassword"
         android:title="@string/prefAdminPassword"
-        android:inputType="textPassword"
         android:dependency="prefAdminProtection" />
 
 </androidx.preference.PreferenceScreen>
