@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
-        android:layout_toRightOf="@id/activities_completed"
+        android:layout_toEndOf="@id/activities_completed"
         android:text="@string/scorecard_activities_completed"
         android:textSize="11sp" />
 
@@ -48,8 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/padding_medium"
-        android:layout_marginLeft="@dimen/padding_medium"
-        android:layout_toLeftOf="@id/expanded_indicator"
+        android:layout_toStartOf="@id/expanded_indicator"
         android:text="Introduction blablabla"
         android:textColor="@color/course_index_section_title"
         android:textStyle="bold" />

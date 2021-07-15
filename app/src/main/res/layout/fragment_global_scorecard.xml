@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="@dimen/text_size_large"
-            android:layout_toLeftOf="@id/dismiss_badge"
+            android:layout_toStartOf="@id/dismiss_badge"
             android:padding="@dimen/padding_medium_2"
             android:textColor="@color/subtitle_bar_text_color"
             android:text="@string/badges.award_method.all_activities" />

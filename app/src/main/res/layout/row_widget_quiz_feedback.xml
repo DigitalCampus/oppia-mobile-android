@@ -28,7 +28,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/quiz_question_feedback_image"
-                android:layout_toRightOf="@id/quiz_question_feedback_image"
                 android:ellipsize="end"
                 android:maxLines="3"
                 android:textAppearance="@style/Oppia.Theme.CardTitle" />
