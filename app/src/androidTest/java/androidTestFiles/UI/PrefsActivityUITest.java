@@ -4,6 +4,7 @@ import android.app.UiAutomation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.Gravity;
+import android.widget.EditText;
 
 import androidx.preference.Preference;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,7 +41,9 @@ import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.Espresso.pressBackUnconditionally;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
@@ -148,6 +151,8 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
     public void goToMainActivityIfUserDontModifyServerUrl() throws InterruptedException {
 
         when(prefs.getString(eq(PrefsActivity.PREF_USER_NAME), anyString())).thenReturn("test_user");
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(false);
+        when(prefs.getString(eq(PrefsActivity.PREF_TEST_ACTION_PROTECTED), anyString())).thenReturn("false");
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             onView(withId(R.id.drawer))
@@ -171,13 +176,8 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
                     .check(matches(isDisplayed()))
                     .perform(click());
 
-            onView(withText(R.string.cancel))
-                    .inRoot(isDialog())
-                    .check(matches(isDisplayed()))
-                    .perform(click());
-
-            pressBack();
-            pressBack();
+            pressBackUnconditionally();
+            pressBackUnconditionally();
 
             assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
 
@@ -192,6 +192,7 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
 
         when(prefs.getString(eq(PrefsActivity.PREF_USER_NAME), anyString())).thenReturn("test_user");
         when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(false);
+        when(prefs.getString(eq(PrefsActivity.PREF_TEST_ACTION_PROTECTED), anyString())).thenReturn("false");
         when(prefs.edit()).thenReturn(editor);
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
@@ -209,6 +210,10 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
                     .perform(RecyclerViewActions.actionOnItem(
                             hasDescendant(withText(R.string.prefServer)), click()));
 
+            onView(allOf(instanceOf(EditText.class)))
+                    .inRoot(isDialog())
+                    .perform(typeText("changing_url"));
+
             closeSoftKeyboard();
 
             onView(withText("OK"))
@@ -216,13 +221,14 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
                     .check(matches(isDisplayed()))
                     .perform(click());
 
+
             onView(withText(R.string.accept))
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()))
                     .perform(click());
 
-            pressBack();
-            pressBack();
+            pressBackUnconditionally();
+            pressBackUnconditionally();
 
             assertEquals(WelcomeActivity.class, TestUtils.getCurrentActivity().getClass());
 

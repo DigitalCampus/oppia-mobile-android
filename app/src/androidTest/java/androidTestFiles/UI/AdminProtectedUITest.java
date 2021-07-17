@@ -273,21 +273,18 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
                 .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdvanced_title)),
                         click()));
 
-        try {
-            onView(withId(androidx.preference.R.id.recycler_view))
-                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefServer)),
-                            click()));
-        } catch (NoMatchingViewException e) {
-            // ignore it
-            // Should happen with first parameter. Admin pass shows when trying to enter advanced settings
-            // so pref server is not reached
+        if (adminProtectionOption == PROTECTION_OPTION_ADMIN_AND_ACTION) {
+            checkAdminPasswordDialogIsDisplayed();
+            // Advances settings admin pass
+            return;
         }
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefServer)),
+                        click()));
 
         switch (adminProtectionOption) {
 
-            case PROTECTION_OPTION_ADMIN_AND_ACTION:
-                // Exception thrown, ignore this check
-                break;
             case PROTECTION_OPTION_ONLY_ACTION:
                 checkAdminPasswordDialogIsNOTDisplayed();
                 break;

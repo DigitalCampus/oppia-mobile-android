@@ -1,7 +1,9 @@
 package org.digitalcampus.oppia.di;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.util.Log;
 
 import org.digitalcampus.oppia.analytics.Analytics;

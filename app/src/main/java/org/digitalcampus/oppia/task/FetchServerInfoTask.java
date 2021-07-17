@@ -21,6 +21,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.HashMap;
 
+import javax.inject.Inject;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -46,21 +48,14 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Void, HashMap<Stri
     }
 
     private FetchServerInfoListener listener;
-    private ConnectivityManager connectivityManager;
+
 
     public FetchServerInfoTask(Context ctx) {
         super(ctx);
-        connectivityManager = ConnectionUtils.getConnectivityManager(ctx);
     }
 
     public FetchServerInfoTask(Context ctx, ApiEndpoint api) {
         super(ctx, api);
-        connectivityManager = ConnectionUtils.getConnectivityManager(ctx);
-    }
-
-    public FetchServerInfoTask(Context ctx, ApiEndpoint api, ConnectivityManager connectivityManager){
-        super(ctx, api);
-        this.connectivityManager = connectivityManager != null ? connectivityManager: ConnectionUtils.getConnectivityManager(ctx);
     }
 
     @Override
@@ -68,7 +63,7 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Void, HashMap<Stri
 
         HashMap<String, String> result = new HashMap<>();
 
-        if (!ConnectionUtils.isNetworkConnected(connectivityManager)){
+        if (!ConnectionUtils.isNetworkConnected(ctx)){
             // If there is no connection available right now, we don't try to fetch info (to avoid setting a server as invalid)
             result.put(RESULT_TAG, RESULT_NOINTERNET);
             return result;
