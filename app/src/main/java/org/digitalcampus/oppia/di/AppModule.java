@@ -4,7 +4,8 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import org.digitalcampus.oppia.analytics.Analytics;
+import androidx.preference.PreferenceManager;
+
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -29,7 +30,6 @@ import java.util.List;
 
 import javax.inject.Singleton;
 
-import androidx.preference.PreferenceManager;
 import dagger.Module;
 import dagger.Provides;
 

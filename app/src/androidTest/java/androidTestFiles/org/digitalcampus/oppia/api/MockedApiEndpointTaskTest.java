@@ -3,6 +3,8 @@ package androidTestFiles.org.digitalcampus.oppia.api;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import androidx.test.platform.app.InstrumentationRegistry;
+
 import org.mockito.Mockito;
 
 import java.io.IOException;
@@ -37,7 +39,14 @@ public class MockedApiEndpointTaskTest {
     }
 
     protected void startServer(int responseCode, String responseBody){
+        enableConnectivity(true);
         startServer(responseCode, responseBody, 0);
+    }
+
+    protected void enableConnectivity(boolean enable) {
+        String command = enable ? "enable" : "disable";
+        InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand("svc wifi " + command);
+        InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand("svc data " + command);
     }
 
     protected ConnectivityManager getAvailableConnectivityManager(){

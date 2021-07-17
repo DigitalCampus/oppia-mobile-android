@@ -37,7 +37,7 @@ public class MainPreferencesFragment extends BasePreferenceFragment {
 
         findPreference(PrefsActivity.PREF_ADVANCED_SCREEN).setOnPreferenceClickListener(preference -> {
             AdminSecurityManager adminSecurityManager = AdminSecurityManager.with(getActivity());
-            if (App.ADMIN_PROTECT_ADVANCED_SETTINGS && adminSecurityManager.isAdminProtectionEnabled()) {
+            if (adminSecurityManager.isActionProtected(R.id.action_advanced_settings)) {
                 adminSecurityManager.promptAdminPassword(() -> {
                     preference.setOnPreferenceClickListener(null);
                     preference.performClick();

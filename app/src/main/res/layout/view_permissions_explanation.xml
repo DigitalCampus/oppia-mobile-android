@@ -48,8 +48,7 @@
             android:id="@+id/imageView10"
             android:src="@drawable/ic_settings_storage"
             android:layout_alignParentStart="false"
-            android:layout_marginRight="@dimen/padding_medium"
-            android:layout_alignParentLeft="true"
+            android:layout_marginEnd="@dimen/padding_medium"
             app:tint="@color/grey_dark"
             android:scaleType="fitCenter"/>
 
@@ -58,7 +57,7 @@
             android:layout_height="wrap_content"
             android:text="@string/permissions.storage.title"
             android:id="@+id/textView15"
-            android:layout_toRightOf="@+id/imageView10"
+            android:layout_toEndOf="@+id/imageView10"
             android:textStyle="bold"
             android:textColor="@color/highlight_label"/>
 
@@ -67,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textView15"
-                android:layout_toRightOf="@+id/imageView10"
+                android:layout_toEndOf="@+id/imageView10"
                 android:text="@string/permissions.storage.description"
                 android:textColor="@color/text_grey"/>
         </RelativeLayout>
@@ -85,8 +84,7 @@
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="false"
-                android:layout_alignParentLeft="true"
-                android:layout_marginRight="@dimen/padding_medium"
+                android:layout_marginEnd="@dimen/padding_medium"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_bluetooth"
                 app:tint="@color/grey_dark"/>
@@ -95,7 +93,7 @@
                 android:id="@+id/textView22"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/imageView12"
+                android:layout_toEndOf="@+id/imageView12"
                 android:text="@string/permissions.location.title"
                 android:textColor="@color/highlight_label"
                 android:textStyle="bold"/>
@@ -105,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textView22"
-                android:layout_toRightOf="@+id/imageView12"
+                android:layout_toEndOf="@+id/imageView12"
                 android:text="@string/permissions.location.description"
                 android:textColor="@color/text_grey"/>
         </RelativeLayout>

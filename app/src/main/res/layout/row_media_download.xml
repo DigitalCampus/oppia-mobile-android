@@ -28,7 +28,7 @@
                 android:id="@+id/media_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/action_btn"
+                android:layout_toStartOf="@+id/action_btn"
                 android:orientation="vertical">
 
                 <TextView
@@ -66,8 +66,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="-10dp"
                 android:gravity="center"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp" />
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp" />
 
             <TextView
                 android:id="@+id/download_error"
@@ -78,7 +78,7 @@
                 android:layout_alignStart="@id/action_btn"
                 android:layout_alignEnd="@id/action_btn"
                 android:gravity="center"
-                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
                 android:text="@string/error"
                 android:paddingRight="10dp"
                 android:background="@drawable/badge_error"
@@ -95,7 +95,7 @@
                 android:layout_below="@+id/media_info"
                 android:layout_alignParentLeft="true"
                 android:layout_gravity="center_vertical"
-                android:layout_toLeftOf="@+id/action_btn"
+                android:layout_toStartOf="@+id/action_btn"
                 android:indeterminate="true"
                 android:indeterminateOnly="false"
                 android:progress="0" />
@@ -107,9 +107,9 @@
                 android:layout_height="60dp"
                 android:layout_alignParentEnd="true"
                 android:contentDescription="@string/download"
-                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
                 android:paddingTop="10dp"
-                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
                 android:scaleType="fitCenter"
                 android:tint="@color/listitem_action_item_tint"
                 android:src="@drawable/ic_action_download" />

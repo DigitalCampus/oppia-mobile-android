@@ -37,7 +37,7 @@
                 style="@style/CourseTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding_medium"
+                android:layout_marginStart="@dimen/padding_medium"
                 android:layout_weight="1"
                 android:text="@string/quiz_attempts.title"
                 android:textSize="18sp" />
@@ -47,7 +47,7 @@
                 style="@style/SubheaderText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding_medium"
+                android:layout_marginStart="@dimen/padding_medium"
                 android:layout_weight="1"
                 android:textColor="@color/subtitle_bar_text_color"
                 android:text="@string/quiz_attempts.title" />
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:layout_marginBottom="@dimen/padding_medium"
-                android:layout_marginLeft="@dimen/padding_medium"
+                android:layout_marginStart="@dimen/padding_medium"
                 android:descendantFocusability="blocksDescendants"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp">
@@ -71,7 +71,6 @@
                     android:layout_alignBottom="@id/ic_date"
                     android:layout_gravity="center_vertical"
                     android:layout_toEndOf="@id/ic_date"
-                    android:layout_toRightOf="@id/ic_date"
                     android:textColor="@color/subtitle_bar_text_color"
                     android:ellipsize="end"
                     android:maxLines="1" />
@@ -85,17 +84,15 @@
                     android:layout_alignBottom="@id/ic_time"
                     android:layout_gravity="center_vertical"
                     android:layout_toEndOf="@id/ic_time"
-                    android:textColor="@color/subtitle_bar_text_color"
-                    android:layout_toRightOf="@id/ic_time" />
+                    android:textColor="@color/subtitle_bar_text_color" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/ic_time"
                     android:layout_width="@dimen/small_icon_size"
                     android:layout_height="@dimen/small_icon_size"
                     android:layout_below="@id/ic_date"
-                    android:layout_marginRight="@dimen/padding_medium"
+                    android:layout_marginEnd="@dimen/padding_medium"
                     android:layout_toEndOf="@id/score"
-                    android:layout_toRightOf="@id/score"
                     android:scaleType="fitCenter"
                     app:srcCompat="@drawable/ic_time" />
 
@@ -104,10 +101,9 @@
                     android:layout_width="@dimen/small_icon_size"
                     android:layout_height="@dimen/small_icon_size"
                     android:layout_marginTop="4dp"
-                    android:layout_marginRight="@dimen/padding_medium"
+                    android:layout_marginEnd="@dimen/padding_medium"
                     android:layout_marginBottom="4dp"
                     android:layout_toEndOf="@id/score"
-                    android:layout_toRightOf="@id/score"
                     android:scaleType="fitCenter"
                     app:srcCompat="@drawable/ic_date" />
 
@@ -119,10 +115,8 @@
                     android:background="@drawable/scorecard_quiz_item_highlight"
                     android:gravity="center"
                     android:textSize="15sp"
-                    android:layout_marginRight="@dimen/margin_medium"
                     android:layout_marginEnd="@dimen/margin_medium"
                     android:layout_centerVertical="true"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:focusable="false" />
 

@@ -33,6 +33,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
@@ -81,8 +82,15 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
 
+        saveServerBadgeAwardCriteria();
+
     }
 
+    private void saveServerBadgeAwardCriteria() {
+        if (getPrefs().getString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, null) == null) {
+            new FetchServerInfoTask(this).execute();
+        }
+    }
 
     private void configureBadgePointsView() {
 

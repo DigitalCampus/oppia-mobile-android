@@ -158,8 +158,8 @@
             android:textSize="14sp"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:visibility="gone" />
     </LinearLayout>
 

@@ -65,7 +65,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         initializeDagger();
 
         AdminSecurityManager adminSecurityManager = AdminSecurityManager.with(getActivity());
-        if (App.ADMIN_PROTECT_SERVER && adminSecurityManager.isAdminProtectionEnabled()) {
+        if (adminSecurityManager.isActionProtected(R.id.action_url_server)) {
             this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_SERVER);
         }
 

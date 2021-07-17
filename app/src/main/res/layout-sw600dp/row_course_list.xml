@@ -15,8 +15,8 @@
         android:layout_marginRight="8dp"
         android:foreground="?android:attr/selectableItemBackground"
         app:contentPaddingBottom="5dp"
-        app:contentPaddingLeft="10dp"
-        app:contentPaddingRight="10dp"
+        app:contentPaddingStart="10dp"
+        app:contentPaddingEnd="10dp"
         app:contentPaddingTop="5dp">
 
         <LinearLayout
@@ -44,9 +44,9 @@
                     android:id="@+id/circularProgressBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/course_image"
+                    android:layout_alignStart="@+id/course_image"
                     android:layout_alignTop="@+id/course_image"
-                    android:layout_alignRight="@+id/course_image"
+                    android:layout_alignEnd="@+id/course_image"
                     android:layout_alignBottom="@+id/course_image"
 
                     app:cpb_background_progressbar_width="@dimen/padding_course_list_item_circular_progress"

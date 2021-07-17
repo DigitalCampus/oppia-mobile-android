@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:background="@color/list_divider_light"
-        android:paddingLeft="@dimen/course_icon_size"
+        android:paddingStart="@dimen/course_icon_size"
         android:visibility="visible">
 
         <ImageView
@@ -19,7 +19,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:adjustViewBounds="true"
             app:srcCompat="@drawable/leaderboard_header"/>
@@ -29,7 +28,6 @@
             style="@style/Highlight.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_marginTop="-3dp"/>
@@ -49,7 +47,6 @@
             style="@style/NormalTextBoldDark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/tv_ranking"
             android:layout_alignStart="@+id/tv_ranking"
             android:layout_below="@+id/tv_ranking"
             android:layout_marginTop="-10dp"

@@ -14,7 +14,6 @@
         android:maxLines="1"
         android:ellipsize="end"
         android:layout_gravity="center_vertical"
-        android:layout_toRightOf="@id/score"
         android:layout_toEndOf="@id/score" />
 
     <TextView
@@ -25,7 +24,6 @@
         android:layout_gravity="center_vertical"
         android:layout_below="@id/section_title"
         android:layout_marginTop="-3dp"
-        android:layout_toRightOf="@id/score"
         android:layout_toEndOf="@id/score" />
 
     <include

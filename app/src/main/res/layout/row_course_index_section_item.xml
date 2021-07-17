@@ -44,9 +44,7 @@
             android:layout_alignWithParentIfMissing="false"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/padding_medium"
-            android:layout_marginLeft="@dimen/padding_medium"
             android:layout_toEndOf="@id/activity_icon"
-            android:layout_toRightOf="@id/activity_icon"
             android:textColor="@color/text_dark"
             android:textStyle="bold" />
 

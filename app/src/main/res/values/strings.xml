@@ -339,10 +339,10 @@
     <string name="scorecard_activities_completed">activities completed</string>
     <string name="scorecard_activities_total">total</string>
 
-    <string name="admin_password_required">This feature is protected for admin use only. Please, insert below the admin password to continue:</string>
+    <string name="admin_password_required">This feature is protected for admin use only. Please enter the admin password to continue:</string>
     <string name="admin_password_error_incorrect_password">Incorrect admin password. Try again</string>
     <string name="admin_password_newpassword_dialog_title">Admin password</string>
-    <string name="admin_password_newpassword_dialog_message">Please, introduce your admin password</string>
+    <string name="admin_password_newpassword_dialog_message">Please enter an admin password</string>
 
     <string name="notification.remote_admin.title">&appName; Remote Administration</string>
     <string name="notification.remote_admin.camera_disabled">The device cameras have been disabled remotely</string>

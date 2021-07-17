@@ -27,8 +27,6 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/file_icon"
-        android:layout_toLeftOf="@+id/actions"
-        android:layout_toRightOf="@+id/file_icon"
         android:layout_toStartOf="@+id/actions"
         android:orientation="vertical">
 
@@ -57,8 +55,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/file_name"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/padding_medium"
-            android:layout_toRightOf="@id/file_name"
+            android:layout_marginStart="@dimen/padding_medium"
+            android:layout_toEndOf="@id/file_name"
             tools:text="73 KB" />
     </RelativeLayout>
 

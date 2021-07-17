@@ -33,7 +33,6 @@
             android:textColor="@color/text_grey"
             android:layout_gravity="center_vertical"
             android:layout_toEndOf="@id/score"
-            android:layout_toRightOf="@id/score"
             android:layout_alignParentTop="true"
             android:ellipsize="end"
             android:maxLines="1" />
@@ -46,7 +45,6 @@
             android:textSize="13sp"
             android:textColor="@color/text_grey"
             android:layout_toEndOf="@id/score"
-            android:layout_toRightOf="@id/score"
             android:layout_below="@id/course_title"
             android:ellipsize="end"
             android:maxLines="1" />
@@ -56,9 +54,8 @@
             android:layout_width="@dimen/small_icon_size"
             android:layout_height="@dimen/small_icon_size"
             android:layout_marginTop="3dp"
-            android:layout_marginRight="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/padding_medium"
             android:layout_toEndOf="@id/score"
-            android:layout_toRightOf="@id/score"
             android:layout_below="@id/quiz_title"
             android:scaleType="fitCenter"
             android:tint="@color/text_grey"
@@ -75,7 +72,6 @@
             android:layout_alignBottom="@id/ic_date"
             android:layout_gravity="center_vertical"
             android:layout_toEndOf="@id/ic_date"
-            android:layout_toRightOf="@id/ic_date"
             android:ellipsize="end"
             android:maxLines="1" />
 

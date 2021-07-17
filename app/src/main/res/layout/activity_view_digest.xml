@@ -13,9 +13,9 @@
         android:background="@drawable/bg_toolbar"
         android:gravity="left"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
         android:paddingBottom="60dp">
 
         <ImageView
@@ -47,13 +47,13 @@
         android:layout_marginBottom="7dp"
         android:foreground="@drawable/bg_selectable"
         app:contentPaddingBottom="@dimen/list_card_vertical_padding"
-        app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
-        app:contentPaddingRight="@dimen/list_card_horizontal_padding"
+        app:contentPaddingStart="@dimen/list_card_horizontal_padding"
+        app:contentPaddingEnd="@dimen/list_card_horizontal_padding"
         app:contentPaddingTop="@dimen/list_card_vertical_padding">
 
         <RelativeLayout
             android:id="@+id/course_row"
-            android:layout_marginLeft="@dimen/list_card_horizontal_margin"
+            android:layout_marginStart="@dimen/list_card_horizontal_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -62,8 +62,8 @@
                 style="@style/NormalTextBoldDark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/download_course_btn" />
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/download_course_btn" />
 
             <TextView
                 android:id="@+id/course_description"
@@ -71,8 +71,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/course_title"
-                android:layout_alignLeft="@+id/course_title"
-                android:layout_alignRight="@+id/course_title"
+                android:layout_alignStart="@+id/course_title"
+                android:layout_alignEnd="@+id/course_title"
                 android:layout_gravity="center_vertical"
                 android:layout_marginBottom="@dimen/padding_medium"
                 android:layout_marginTop="5dp"/>
@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/course_description"
-                android:layout_toLeftOf="@+id/download_course_btn"
+                android:layout_toStartOf="@+id/download_course_btn"
                 android:indeterminate="true"
                 android:indeterminateOnly="false"
                 android:visibility="gone" />
@@ -118,10 +118,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/padding_large"
-        android:drawableLeft="@android:drawable/ic_dialog_alert"
+        android:drawableStart="@android:drawable/ic_dialog_alert"
         android:drawablePadding="15dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:text="@string/open_digest.errors.invalid_param"
         android:textColor="@color/text_light"
         android:visibility="gone" />

@@ -13,6 +13,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -49,7 +50,7 @@ public class FetchServerInfoTest extends MockedApiEndpointTaskTest {
     @After
     public void tearDown() throws Exception {
         if (mockServer!=null)
-        mockServer.shutdown();
+            mockServer.shutdown();
     }
 
     private void fetchServerInfoSync(Context context, ConnectivityManager manager){

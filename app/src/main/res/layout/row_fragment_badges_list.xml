@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/badge_icon"
+        android:layout_toEndOf="@id/badge_icon"
         tools:text="2020-02-25"
         style="@style/NormalTextDark"/>
 
@@ -46,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/badges_date"
-        android:layout_toRightOf="@id/badge_icon"
+        android:layout_toEndOf="@id/badge_icon"
         android:gravity="center_horizontal"
         tools:text="Course completed: Test feedback" />
 

@@ -39,7 +39,6 @@
                 android:id="@+id/activity_title"
                 style="@style/Oppia.Theme.CardTitle"
                 android:layout_width="wrap_content"
-                android:layout_toRightOf="@+id/activity_icon"
                 android:layout_toEndOf="@+id/activity_icon"
                 android:layout_height="wrap_content" />
 
@@ -49,7 +48,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/activity_title"
-                android:layout_toRightOf="@+id/activity_icon"
                 android:layout_toEndOf="@+id/activity_icon" />
 
             <TextView
@@ -57,7 +55,6 @@
                 style="@style/MediumTextDarkItalic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/activity_icon"
                 android:layout_toEndOf="@+id/activity_icon"
                 android:layout_below="@+id/course_title" />
 
