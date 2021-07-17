@@ -53,8 +53,8 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/highlight_submitted"
                         android:maxLines="2"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="4dp"
                         android:singleLine="false"
                         android:text="@string/activitylog_submitted" />
 
@@ -184,9 +184,9 @@
                 style="@style/TextBase"
                 android:layout_width="match_parent"
                 android:background="@color/stroke"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingStart="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/padding_medium"
-                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
                 android:paddingBottom="@dimen/padding_medium"
                 android:text="@string/exported_activities.title" />
 
@@ -215,9 +215,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/stroke"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingStart="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/padding_medium"
-                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
                 android:paddingBottom="@dimen/padding_medium"
                 android:text="@string/archived_activities"
                 android:textColor="@color/text_grey" />

@@ -84,8 +84,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/list_card_vertical_padding"
-                android:paddingLeft="@dimen/padding_large"
-                android:paddingRight="@dimen/padding_large"
+                android:paddingStart="@dimen/padding_large"
+                android:paddingEnd="@dimen/padding_large"
                 android:text="@string/quiz_attempts.take_quiz"
                 tools:text="Take quiz" />
 
