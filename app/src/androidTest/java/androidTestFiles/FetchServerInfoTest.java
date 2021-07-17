@@ -50,15 +50,13 @@ public class FetchServerInfoTest extends MockedApiEndpointTaskTest {
     @After
     public void tearDown() throws Exception {
         if (mockServer!=null)
-        mockServer.shutdown();
-
-        enableConnectivity(true);
+            mockServer.shutdown();
     }
 
     private void fetchServerInfoSync(Context context, ConnectivityManager manager){
         final CountDownLatch signal = new CountDownLatch(1);  //Control AsyncTask sincronization for testing
 
-        FetchServerInfoTask task = new FetchServerInfoTask(context, new MockApiEndpoint(mockServer));
+        FetchServerInfoTask task = new FetchServerInfoTask(context, new MockApiEndpoint(mockServer), manager);
         task.setListener(new FetchServerInfoTask.FetchServerInfoListener() {
             @Override
             public void onError(String message) {
@@ -118,15 +116,17 @@ public class FetchServerInfoTest extends MockedApiEndpointTaskTest {
     }
 
     @Test
-    public void fetchServerInfo_noConnection() throws InterruptedException {
+    public void fetchServerInfo_noConnection(){
+        final ConnectivityManager connectivityManager = Mockito.mock( ConnectivityManager.class );
+        Mockito.when( connectivityManager.getActiveNetworkInfo()).thenReturn( null );
 
-        enableConnectivity(false);
+        Context ctx = Mockito.mock(Context.class);
+        Mockito.when (ctx.getSystemService(Context.CONNECTIVITY_SERVICE)).thenReturn(connectivityManager);
 
-        fetchServerInfoSync(context, null);
+        fetchServerInfoSync(ctx, null);
 
         assertFalse(prefs.getBoolean(PrefsActivity.PREF_SERVER_CHECKED, false));
     }
-
 
     @Test
     public void fetchServerInfo_notfound(){
@@ -137,7 +137,6 @@ public class FetchServerInfoTest extends MockedApiEndpointTaskTest {
         assertFalse(prefs.getBoolean(PrefsActivity.PREF_SERVER_VALID, false));
     }
 
-    @Ignore
     @Test
     public void fetchServerInfo_connectionTimeout() throws Exception {
 

@@ -2,11 +2,7 @@ package org.digitalcampus.oppia.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
-import android.os.Build;
-import android.util.Log;
 
 public class ConnectionUtils {
 
@@ -23,30 +19,16 @@ public class ConnectionUtils {
     }
 
     public static boolean isNetworkConnected(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo ani = connectivityManager.getActiveNetworkInfo();
-        boolean connected =  connectivityManager != null
-                && connectivityManager.getActiveNetworkInfo() != null
-                && connectivityManager.getActiveNetworkInfo().isAvailable()
-                && connectivityManager.getActiveNetworkInfo().isConnected();
-        return connected;
+        return isNetworkConnected(getConnectivityManager(context));
     }
 
-    public static boolean isNetworkConnectedApi23Higher(ConnectivityManager connectivityManager) {
+    public static boolean isNetworkConnected(ConnectivityManager manager) {
+        return (manager.getActiveNetworkInfo() != null && manager.getActiveNetworkInfo().isAvailable() && manager
+                .getActiveNetworkInfo().isConnected());
+    }
 
-        if (connectivityManager != null) {
-
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
-                if (capabilities != null) {
-
-                    return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-                            || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-                            || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET);
-                }
-            }
-        }
-        return false;
+    public static ConnectivityManager getConnectivityManager(Context ctx){
+        return (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
 }
