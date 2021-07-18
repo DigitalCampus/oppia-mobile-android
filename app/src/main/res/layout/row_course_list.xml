@@ -15,8 +15,8 @@
         android:layout_marginBottom="7dp"
         android:foreground="?android:attr/selectableItemBackground"
         app:contentPaddingBottom="@dimen/list_card_vertical_padding"
-        app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
-        app:contentPaddingRight="@dimen/list_card_horizontal_padding"
+        app:contentPaddingStart="@dimen/list_card_horizontal_padding"
+        app:contentPaddingEnd="@dimen/list_card_horizontal_padding"
         app:contentPaddingTop="@dimen/list_card_vertical_padding">
 
         <LinearLayout
@@ -43,9 +43,9 @@
                     android:id="@+id/circularProgressBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/course_image"
+                    android:layout_alignStart="@+id/course_image"
                     android:layout_alignTop="@+id/course_image"
-                    android:layout_alignRight="@+id/course_image"
+                    android:layout_alignEnd="@+id/course_image"
                     android:layout_alignBottom="@+id/course_image"
                     app:cpb_background_progressbar_color="@color/grey_light"
                     app:cpb_background_progressbar_width="7dp"

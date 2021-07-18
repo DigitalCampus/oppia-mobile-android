@@ -510,8 +510,8 @@ public abstract class AnswerWidget extends BaseWidget {
         ViewGroup parent = (ViewGroup) quizResultsView.getParent();
         int index = parent.indexOfChild(quizResultsView);
         parent.removeView(quizResultsView);
-        quizResultsView = super.getActivity().getLayoutInflater().inflate(R.layout.widget_quiz, parent, false);
-        parent.addView(quizResultsView, index);
+        binding = WidgetQuizBinding.inflate(getLayoutInflater(), parent, false);
+        parent.addView(binding.getRoot(), index);
 
         fetchViews();
         showQuestion();
