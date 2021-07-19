@@ -175,30 +175,32 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         setContentView(binding.getRoot());
         getAppComponent().inject(this);
 
-        if (savedInstanceState == null) {
-            // Create the fragment only when the activity is created for the first time.
-            // ie. not after orientation changes
-            MainPreferencesFragment mPrefsFragment = (MainPreferencesFragment) getSupportFragmentManager().findFragmentByTag(MainPreferencesFragment.FRAGMENT_TAG);
-            if (mPrefsFragment == null) {
-                mPrefsFragment = MainPreferencesFragment.newInstance();
-                Bundle bundle = this.getIntent().getExtras();
-                if (bundle != null) {
-                    mPrefsFragment.setArguments(bundle);
-                }
+        // Create the fragment only when the activity is created for the first time.
+        // ie. not after orientation changes
+        MainPreferencesFragment mPrefsFragment = (MainPreferencesFragment) getSupportFragmentManager().findFragmentByTag(MainPreferencesFragment.FRAGMENT_TAG);
+        if (mPrefsFragment == null) {
+            mPrefsFragment = MainPreferencesFragment.newInstance();
+            Bundle bundle = this.getIntent().getExtras();
+            if (bundle != null) {
+                mPrefsFragment.setArguments(bundle);
             }
-
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.root_layout, mPrefsFragment, MainPreferencesFragment.FRAGMENT_TAG)
-                    .commit();
         }
 
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frame_prefs_main, mPrefsFragment, MainPreferencesFragment.FRAGMENT_TAG)
+                .commit();
+
         if (getIntent().getBooleanExtra(CoursesCompletionReminderWorkerManager.EXTRA_GO_TO_NOTIFICATIONS_SETTINGS, false)) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.root_layout, NotificationsPrefsFragment.newInstance(), null)
-                    .addToBackStack(null)
-                    .commit();
+
+            int frameId = isTabletLandscape() ? R.id.frame_prefs_right : R.id.frame_prefs_main;
+            FragmentTransaction ft = getSupportFragmentManager()
+                    .beginTransaction();
+            ft.replace(frameId, NotificationsPrefsFragment.newInstance(), null);
+            if (!isTabletLandscape()) {
+                ft.addToBackStack(null);
+            }
+            ft.commit();
         }
 
         OppiaNotificationUtils.cancelNotifications(this, OppiaNotificationUtils.NOTIF_ID_COURSES_REMINDER);
@@ -235,7 +237,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     @Override
     public void onBackPressed() {
 
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0 && !isTabletLandscape()) {
             getSupportFragmentManager().popBackStack();
             return;
         }
@@ -247,7 +249,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             return;
         }
 
-        super.onBackPressed();
+        finish();
     }
 
     public void forzeGoToLoginScreen() {
@@ -348,7 +350,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         } else {
             executeChangeStorageTask(storageOption);
         }
-
 
 
     }
@@ -470,8 +471,15 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             Log.d(TAG, "Langs added!");
         }
         fragment.setArguments(args);
-        ft.replace(R.id.root_layout, fragment, fragment.getTag());
-        ft.addToBackStack(caller.getTag());
+
+        int frameId = isTabletLandscape() ? R.id.frame_prefs_right : R.id.frame_prefs_main;
+
+        ft.replace(frameId, fragment, fragment.getTag());
+
+        if (!isTabletLandscape()) {
+            ft.addToBackStack(caller.getTag());
+        }
+
         ft.commit();
         currentPrefScreen = (PreferenceChangedCallback) fragment;
         setTitle(pref.getTitle());
