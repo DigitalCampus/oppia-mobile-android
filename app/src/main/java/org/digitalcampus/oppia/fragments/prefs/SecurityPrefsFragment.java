@@ -1,6 +1,7 @@
 package org.digitalcampus.oppia.fragments.prefs;
 
 import android.os.Bundle;
+import android.text.InputType;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -12,7 +13,7 @@ import java.util.Arrays;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 
-public class SecurityPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback{
+public class SecurityPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback {
 
     public static final String TAG = PrefsActivity.class.getSimpleName();
 
@@ -20,9 +21,8 @@ public class SecurityPrefsFragment extends BasePreferenceFragment implements Pre
         return new SecurityPrefsFragment();
     }
 
-    public SecurityPrefsFragment(){
+    public SecurityPrefsFragment() {
         // Required empty public constructor
-        this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_ADMIN_PASSWORD);
     }
 
     @Override
@@ -34,13 +34,20 @@ public class SecurityPrefsFragment extends BasePreferenceFragment implements Pre
     @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-        if (!App.ADMIN_PROTECT_SETTINGS){
-            // If the whole settings activity is not protected by password, we need to protect admin settings
+
+        this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_ADMIN_PASSWORD);
+
+        if (!App.ADMIN_PROTECT_SETTINGS) {
             protectAdminPreferences();
         }
+
+        EditTextPreference adminPassPref = findPreference(PrefsActivity.PREF_ADMIN_PASSWORD);
+        adminPassPref.setOnBindEditTextListener(editText -> {
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        });
     }
 
-    private void protectAdminPreferences(){
+    private void protectAdminPreferences() {
         final CheckBoxPreference adminEnabled = findPreference(PrefsActivity.PREF_ADMIN_PROTECTION);
         adminEnabled.setOnPreferenceChangeListener((preference, newValue) -> {
             final Boolean enableProtection = (Boolean) newValue;
@@ -60,13 +67,12 @@ public class SecurityPrefsFragment extends BasePreferenceFragment implements Pre
 
     @Override
     public void onPreferenceUpdated(String pref, String newValue) {
-        if (pref.equals(PrefsActivity.PREF_ADMIN_PASSWORD)){
+        if (pref.equals(PrefsActivity.PREF_ADMIN_PASSWORD)) {
             EditTextPreference passwordPref = findPreference(PrefsActivity.PREF_ADMIN_PASSWORD);
             passwordPref.setText(newValue);
-        }
-        else if (pref.equals(PrefsActivity.PREF_ADMIN_PROTECTION)){
+        } else if (pref.equals(PrefsActivity.PREF_ADMIN_PROTECTION)) {
             CheckBoxPreference adminEnabled = findPreference(PrefsActivity.PREF_ADMIN_PROTECTION);
-            if (adminEnabled != null){
+            if (adminEnabled != null) {
                 adminEnabled.setChecked("true".equals(newValue));
             }
         }

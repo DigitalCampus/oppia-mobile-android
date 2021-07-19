@@ -29,9 +29,9 @@
                 style="@style/NormalTextBoldDark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_gravity="center_vertical"
-                android:layout_toLeftOf="@+id/download_course_btn" />
+                android:layout_toStartOf="@+id/download_course_btn" />
 
             <TextView
                 android:id="@+id/course_draft"
@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/course_title"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/badge_tag_count"
                 android:padding="4dp"
@@ -52,18 +52,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/course_draft"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_gravity="center_vertical"
-
-                android:layout_toLeftOf="@+id/download_course_btn" />
+                android:layout_toStartOf="@+id/download_course_btn" />
 
             <TextView
                 android:id="@+id/label_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/course_description"
-                android:layout_alignParentLeft="true"
-                android:layout_marginRight="4dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="4dp"
                 android:text="@string/publisher"
                 android:textStyle="bold"
                 android:visibility="gone" />
@@ -73,8 +72,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/course_description"
-                android:layout_toLeftOf="@+id/download_course_btn"
-                android:layout_toRightOf="@+id/label_author"
+                android:layout_toStartOf="@+id/download_course_btn"
+                android:layout_toEndOf="@+id/label_author"
                 android:visibility="gone" />
 
             <ProgressBar
@@ -83,9 +82,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/course_description"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_gravity="center_vertical"
-                android:layout_toLeftOf="@+id/download_course_btn"
+                android:layout_toStartOf="@+id/download_course_btn"
                 android:indeterminate="true"
                 android:indeterminateOnly="false"
                 android:progress="0"
@@ -96,7 +95,7 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/download"
                 android:padding="10dp"
