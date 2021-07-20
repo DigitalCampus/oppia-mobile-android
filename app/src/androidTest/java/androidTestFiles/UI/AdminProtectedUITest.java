@@ -2,6 +2,7 @@ package androidTestFiles.UI;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.view.View;
 
 import androidx.preference.PreferenceManager;
 import androidx.test.espresso.Espresso;
@@ -21,6 +22,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.User;
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -52,7 +54,9 @@ import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -220,9 +224,13 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
                 .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefSecurity_title)),
                         click()));
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdminProtection)),
-                        click()));
+        Matcher<View> viewMatcher = withId(androidx.preference.R.id.recycler_view);
+        if (isTabletLand) {
+            viewMatcher = allOf(withId(androidx.preference.R.id.recycler_view),
+                    withParent(withParent(withParent(withId(R.id.frame_prefs_right)))));
+        }
+        onView(viewMatcher).perform(RecyclerViewActions.actionOnItem(
+                hasDescendant(withText(R.string.prefAdminProtection)), click()));
 
         switch (adminProtectionOption) {
 
@@ -231,7 +239,6 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
                 break;
             case PROTECTION_OPTION_ONLY_ACTION:
                 checkAdminPasswordDialogIsNOTDisplayed();
-                pressBack();
                 break;
             case PROTECTION_OPTION_ONLY_ADMIN:
                 checkAdminPasswordDialogIsDisplayed();
@@ -248,9 +255,14 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
                 .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefSecurity_title)),
                         click()));
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdminPassword)),
-                        click()));
+        Matcher<View> viewMatcher = withId(androidx.preference.R.id.recycler_view);
+        if (isTabletLand) {
+            viewMatcher = allOf(withId(androidx.preference.R.id.recycler_view),
+                    withParent(withParent(withParent(withId(R.id.frame_prefs_right)))));
+        }
+        onView(viewMatcher).perform(RecyclerViewActions.actionOnItem(
+                hasDescendant(withText(R.string.prefAdminPassword)), click()));
+
 
         switch (adminProtectionOption) {
 
@@ -281,9 +293,13 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
             return;
         }
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefServer)),
-                        click()));
+        Matcher<View> viewMatcher = withId(androidx.preference.R.id.recycler_view);
+        if (isTabletLand) {
+            viewMatcher = allOf(withId(androidx.preference.R.id.recycler_view),
+                    withParent(withParent(withParent(withId(R.id.frame_prefs_right)))));
+        }
+        onView(viewMatcher).perform(RecyclerViewActions.actionOnItem(
+                hasDescendant(withText(R.string.prefServer)), click()));
 
         switch (adminProtectionOption) {
 

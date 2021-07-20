@@ -492,7 +492,7 @@ public abstract class AnswerWidget extends BaseWidget {
         } else if (this.getActivityCompleted() || !contentAvailable){
             actionBtn.setVisibility(View.GONE);
         } else{
-            actionBtn.setText(getString(R.string.widget_quiz_results_restart));
+            actionBtn.setText(getString(R.string.quiz_attempts_retake_quiz));
             actionBtn.setOnClickListener(v -> restart());
         }
     }

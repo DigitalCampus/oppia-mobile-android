@@ -95,7 +95,7 @@ public class QuizUITest extends DaggerInjectMockUITest {
     }
 
     @Test
-    public void showRetakeIfQuizNotPassed() {
+    public void showRetakeIfQuizNotPassed() throws InterruptedException {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
         onView(withId(R.id.take_quiz_btn)).perform(click());
         onView(withText("correctanswer")).perform(click());
@@ -107,6 +107,7 @@ public class QuizUITest extends DaggerInjectMockUITest {
                 .check(matches(withText(R.string.widget_quiz_continue)));
         onView(withId(R.id.quiz_results_button))
                 .check(matches(isDisplayed()));
+
         onView(withId(R.id.quiz_results_button))
                 .check(matches(withText(R.string.quiz_attempts_retake_quiz)));
     }

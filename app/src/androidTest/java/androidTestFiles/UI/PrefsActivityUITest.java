@@ -3,12 +3,15 @@ package androidTestFiles.UI;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.EditText;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
@@ -18,6 +21,7 @@ import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,6 +48,7 @@ import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
@@ -102,7 +107,6 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
     }
 
 
-
     @Test
     public void showsChangeLanguageOptionIfThereAreCoursesWithManyLanguages() throws Exception {
 
@@ -155,26 +159,33 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
                     .perform(RecyclerViewActions.actionOnItem(
                             hasDescendant(withText(R.string.prefAdvanced_title)), click()));
 
-            onView(withId(androidx.preference.R.id.recycler_view))
-                    .perform(RecyclerViewActions.actionOnItem(
-                            hasDescendant(withText(R.string.prefServer)), click()));
+            Matcher<View> viewMatcher = withId(androidx.preference.R.id.recycler_view);
+            if (isTabletLand) {
+                viewMatcher = allOf(withId(androidx.preference.R.id.recycler_view),
+                        withParent(withParent(withParent(withId(R.id.frame_prefs_right)))));
+            }
+
+            onView(viewMatcher).perform(RecyclerViewActions.actionOnItem(
+                    hasDescendant(withText(R.string.prefServer)), click()));
 
             closeSoftKeyboard();
 
-            onView(withText("OK"))
+            onView(withText(android.R.string.ok))
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()))
                     .perform(click());
 
             pressBackUnconditionally();
-            pressBackUnconditionally();
+
+            if (!isTabletLand) {
+                pressBackUnconditionally();
+            }
 
             assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
 
         }
 
     }
-
 
 
     @Test
@@ -196,9 +207,14 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
                     .perform(RecyclerViewActions.actionOnItem(
                             hasDescendant(withText(R.string.prefAdvanced_title)), click()));
 
-            onView(withId(androidx.preference.R.id.recycler_view))
-                    .perform(RecyclerViewActions.actionOnItem(
-                            hasDescendant(withText(R.string.prefServer)), click()));
+            Matcher<View> viewMatcher = withId(androidx.preference.R.id.recycler_view);
+            if (isTabletLand) {
+                viewMatcher = allOf(withId(androidx.preference.R.id.recycler_view),
+                        withParent(withParent(withParent(withId(R.id.frame_prefs_right)))));
+            }
+
+            onView(viewMatcher).perform(RecyclerViewActions.actionOnItem(
+                    hasDescendant(withText(R.string.prefServer)), click()));
 
             onView(allOf(instanceOf(EditText.class)))
                     .inRoot(isDialog())
@@ -206,7 +222,7 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
 
             closeSoftKeyboard();
 
-            onView(withText("OK"))
+            onView(withText(android.R.string.ok))
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()))
                     .perform(click());
@@ -218,7 +234,10 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
                     .perform(click());
 
             pressBackUnconditionally();
-            pressBackUnconditionally();
+
+            if (!isTabletLand) {
+                pressBackUnconditionally();
+            }
 
             assertEquals(WelcomeActivity.class, TestUtils.getCurrentActivity().getClass());
 

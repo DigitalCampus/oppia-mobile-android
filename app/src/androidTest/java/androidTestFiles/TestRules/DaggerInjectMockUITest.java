@@ -7,9 +7,10 @@ import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.junit.Rule;
 
+import androidTestFiles.Utils.BaseUITest;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
-public class DaggerInjectMockUITest {
+public class DaggerInjectMockUITest extends BaseUITest {
 
     @Rule
     public DaggerMockRule<AppComponent> daggerRule =

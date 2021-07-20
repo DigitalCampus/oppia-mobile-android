@@ -6,13 +6,17 @@ import org.digitalcampus.oppia.model.CourseTransferableFile;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidTestFiles.Utils.BaseTest;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-public class CourseTransferableFileModelTest {
+public class CourseTransferableFileModelTest extends BaseTest {
 
     @Test
     public void getAndSetTest(){
@@ -40,7 +44,7 @@ public class CourseTransferableFileModelTest {
         ctf.setFileSize(999999);
         ctf.setRelatedFilesize(1234);
         assertEquals(999999, ctf.getFileSize());
-        assertEquals("977.8 KB", ctf.getDisplayFileSize());
+        assertEquals(String.format("977%s8 KB", getLocaleDecimalSeparator()), ctf.getDisplayFileSize());
 
         ctf.setType(CourseTransferableFile.TYPE_ACTIVITY_LOG);
         assertEquals("activity", ctf.getType());
@@ -85,4 +89,5 @@ public class CourseTransferableFileModelTest {
         ctf.setType("other");
         assertEquals(null, ctf.getNotificationName());
     }
+
 }

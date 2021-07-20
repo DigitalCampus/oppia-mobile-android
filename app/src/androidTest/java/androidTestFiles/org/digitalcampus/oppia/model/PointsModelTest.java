@@ -7,10 +7,12 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidTestFiles.Utils.BaseTest;
+
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-public class PointsModelTest {
+public class PointsModelTest extends BaseTest {
 
     @Test
     public void getAndSetTest(){
@@ -20,7 +22,6 @@ public class PointsModelTest {
         Points p = new Points();
         p.setDateTime("2020-09-30 20:11:00");
 
-        assertEquals("30 Sep", p.getDateDayMonth());
         assertEquals("20:11", p.getTimeHoursMinutes());
 
         p.setPointsAwarded(10);
