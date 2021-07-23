@@ -28,17 +28,31 @@
                 android:layout_weight="1"
                 android:cacheColorHint="#00000000"
                 android:divider="@color/list_divider"
-                android:foreground="?android:windowContentOverlay"
                 android:orientation="vertical"
                 app:layoutManager="LinearLayoutManager"
                 tools:listitem="@layout/row_course_index_section_item" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_couse_activities"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/view_course_section_activities_tablet"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1.5"
-                android:visibility="gone"/>
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <View style="@style/SeparatorVertical" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_course_section_activities"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="vertical"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

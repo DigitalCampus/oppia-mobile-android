@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
@@ -38,7 +40,7 @@ import androidx.work.WorkManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityCourseIndexBinding;
-import org.digitalcampus.oppia.adapter.CourseIndexRecyclerViewAdapter;
+import org.digitalcampus.oppia.adapter.CourseIndexAdapter;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
@@ -49,7 +51,6 @@ import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.ui.MediaScanView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,14 +68,16 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private Course course;
     private CompleteCourse parsedCourse;
     private ArrayList<Section> sections;
-    @Inject SharedPreferences prefs;
-    private CourseIndexRecyclerViewAdapter adapter;
+    @Inject
+    SharedPreferences prefs;
+    private CourseIndexAdapter adapter;
     private String digestJumpTo;
 
     @Inject
     CompleteCourseProvider completeCourseProvider;
     private AlertDialog aDialog;
     private ActivityCourseIndexBinding binding;
+    private CourseIndexAdapter adapterCourseActivities;
 
 
     @Override
@@ -82,7 +85,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         super.onCreate(savedInstanceState);
         binding = ActivityCourseIndexBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
-        
+
         getAppComponent().inject(this);
 
         prefs.registerOnSharedPreferenceChangeListener(this);
@@ -170,6 +173,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             parsedCourse.setCourseId(course.getCourseId());
             parsedCourse.updateCourseActivity(this);
             adapter.notifyDataSetChanged();
+            if (adapterCourseActivities != null) {
+                adapterCourseActivities.notifyDataSetChanged();
+            }
             if (!isBaselineCompleted()) {
                 showBaselineMessage(null);
             } else {
@@ -273,7 +279,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     private void initializeCourseIndex(boolean animate) {
 
-        adapter = new CourseIndexRecyclerViewAdapter(this, sections, course, isTabletLandscape());
+        boolean disableExpandability = isTabletLandscape();
+        adapter = new CourseIndexAdapter(this, sections, course, disableExpandability, true, false);
         adapter.setOnChildItemClickedListener((section, position) -> {
             Activity act = sections.get(section).getActivities().get(position);
             startCourseActivityByDigest(act.getDigest());
@@ -301,16 +308,41 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         binding.recyclerCourseSections.setAdapter(adapter);
 
         if (isTabletLandscape()) {
-            binding.recyclerCouseActivities.setVisibility(View.VISIBLE);
+            initializeCourseActivitiesTablet();
             adapter.setOnSectionClickListener(position -> {
-                toast("position: " + position);
+                // calculate position in expanded recyclerview
+                int positionSectionsAndActivities = 0;
+                for (int i = 0; i < position; i++) {
+                    positionSectionsAndActivities += sections.get(i).getActivities().size() + 1;
+                }
+                Log.i(TAG, "position: " + position + ", positionSectionsAndActivities: " + positionSectionsAndActivities);
+                RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(this) {
+                    @Override protected int getVerticalSnapPreference() {
+                        return LinearSmoothScroller.SNAP_TO_START;
+                    }
+                };
+                smoothScroller.setTargetPosition(positionSectionsAndActivities);
+                binding.recyclerCourseSectionActivities.getLayoutManager().startSmoothScroll(smoothScroller);
             });
             adapter.expandCollapseAllSections(false);
         }
 
     }
 
-    private Activity getBaselineActivity(){
+    private void initializeCourseActivitiesTablet() {
+        binding.viewCourseSectionActivitiesTablet.setVisibility(View.VISIBLE);
+        adapterCourseActivities = new CourseIndexAdapter(this, sections, course, true, false, true);
+        adapterCourseActivities.setOnChildItemClickedListener((section, position) -> {
+            Activity act = sections.get(section).getActivities().get(position);
+            startCourseActivityByDigest(act.getDigest());
+        });
+
+        adapterCourseActivities.expandCollapseAllSections(true);
+        binding.recyclerCourseSectionActivities.setAdapter(adapterCourseActivities);
+
+    }
+
+    private Activity getBaselineActivity() {
         ArrayList<Activity> baselineActs = (ArrayList<Activity>) parsedCourse.getBaselineActivities();
         for (Activity a : baselineActs) {
             if (!a.isAttempted()) {
@@ -351,7 +383,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         aDialog.show();
     }
 
-    private void startActivityOrShowSequencingRationale(Section s, int position, boolean previousSectionsCompleted, boolean previousActivitiesCompleted){
+    private void startActivityOrShowSequencingRationale(Section s, int position, boolean previousSectionsCompleted, boolean previousActivitiesCompleted) {
         if ((course.getSequencingMode().equals(Course.SEQUENCING_MODE_COURSE)) &&
                 (!previousSectionsCompleted || !previousActivitiesCompleted)) {
             UIUtils.showAlert(this, R.string.sequencing_dialog_title, R.string.sequencing_course_message);
@@ -429,7 +461,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_JUMPTO) {
-            String digest = data.getStringExtra( JUMPTO_TAG);
+            String digest = data.getStringExtra(JUMPTO_TAG);
             startCourseActivityByDigest(digest);
         }
     }

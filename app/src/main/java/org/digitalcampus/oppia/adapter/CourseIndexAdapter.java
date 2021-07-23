@@ -2,13 +2,9 @@ package org.digitalcampus.oppia.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,10 +28,11 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapter<CourseIndexRecyclerViewAdapter.ChildViewHolder, CourseIndexRecyclerViewAdapter.SectionViewHolder, CourseIndexRecyclerViewAdapter.HeaderViewHolder, Activity, Section> {
+public class CourseIndexAdapter extends ExpandableRecyclerView.Adapter<CourseIndexAdapter.ChildViewHolder, CourseIndexAdapter.SectionViewHolder, CourseIndexAdapter.HeaderViewHolder, Activity, Section> {
 
     private final Context context;
-    private final boolean tabletMode;
+    private final boolean disableExpandability;
+    private final boolean separateSections;
     private List<Section> sectionList;
     private boolean showSectionNumbers;
     private boolean highlightCompleted;
@@ -48,12 +45,12 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
     private OnSectionClickListener onSectionClickListener;
 
 
-    public CourseIndexRecyclerViewAdapter(Context ctx, List<Section> sectionList, Course course, boolean tabletMode) {
+    public CourseIndexAdapter(Context ctx, List<Section> sectionList, Course course, boolean disableExpandability, boolean headerVisible, boolean separateSections) {
         super();
         this.context = ctx;
         this.sectionList = sectionList;
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences prefs = App.getPrefs(context);
         prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         showSectionNumbers = prefs.getBoolean(PrefsActivity.PREF_SHOW_SECTION_NOS, false);
         highlightCompleted = prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, App.DEFAULT_DISPLAY_COMPLETED);
@@ -67,9 +64,10 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
         courseTitle = course.getTitle(prefLang);
         courseIcon = course.getImageFileFromRoot();
 
-        this.tabletMode = tabletMode;
+        this.disableExpandability = disableExpandability;
+        this.separateSections = separateSections;
 
-        this.setHeaderVisible(true);
+        this.setHeaderVisible(headerVisible);
     }
 
     public void expandCollapseAllSections(boolean expand) {
@@ -141,7 +139,7 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
         holder.binding.title.setText(title);
         holder.binding.activitiesCompleted.setText(section.getCompletedActivities() + "/" + section.getActivities().size());
 
-        if (tabletMode) {
+        if (disableExpandability) {
             holder.binding.expandedIndicator.setVisibility(View.GONE);
             holder.binding.getRoot().setOnClickListener(v -> {
                 if (onSectionClickListener != null) {
@@ -197,7 +195,14 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
         public SectionViewHolder(View itemView) {
             super(itemView);
             binding = RowCourseIndexSectionHeaderBinding.bind(itemView);
-            itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            int marginTop = context.getResources().getDimensionPixelSize(R.dimen.padding_large);
+
+            if (separateSections) {
+                layoutParams.setMargins(0, marginTop, 0, 0);
+            }
+
+            itemView.setLayoutParams(layoutParams);
 
         }
 

@@ -31,7 +31,7 @@ public class Section extends MultiLangInfoModel implements Serializable  {
 	
 	public static final String TAG = Section.class.getSimpleName();
 	private int order;
-	private ArrayList<Activity> activities;
+	private List<Activity> activities;
 	private String imageFile;
 	
 	public String getImageFile() {
