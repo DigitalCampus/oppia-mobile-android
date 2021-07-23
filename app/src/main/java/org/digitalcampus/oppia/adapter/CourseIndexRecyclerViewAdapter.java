@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +34,8 @@ import java.util.Locale;
 
 public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapter<CourseIndexRecyclerViewAdapter.ChildViewHolder, CourseIndexRecyclerViewAdapter.SectionViewHolder, CourseIndexRecyclerViewAdapter.HeaderViewHolder, Activity, Section> {
 
+    private final Context context;
+    private final boolean tabletMode;
     private List<Section> sectionList;
     private boolean showSectionNumbers;
     private boolean highlightCompleted;
@@ -42,10 +45,12 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
     private String courseIcon;
     private int highlightColor;
     private int normalColor;
+    private OnSectionClickListener onSectionClickListener;
 
 
-    public CourseIndexRecyclerViewAdapter(Context ctx, List<Section> sectionList, Course course) {
+    public CourseIndexRecyclerViewAdapter(Context ctx, List<Section> sectionList, Course course, boolean tabletMode) {
         super();
+        this.context = ctx;
         this.sectionList = sectionList;
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -61,6 +66,8 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
 
         courseTitle = course.getTitle(prefLang);
         courseIcon = course.getImageFileFromRoot();
+
+        this.tabletMode = tabletMode;
 
         this.setHeaderVisible(true);
     }
@@ -134,6 +141,14 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
         holder.binding.title.setText(title);
         holder.binding.activitiesCompleted.setText(section.getCompletedActivities() + "/" + section.getActivities().size());
 
+        if (tabletMode) {
+            holder.binding.expandedIndicator.setVisibility(View.GONE);
+            holder.binding.getRoot().setOnClickListener(v -> {
+                if (onSectionClickListener != null) {
+                    onSectionClickListener.onSectionClick(holder.getAdapterPosition() - 1); // Header position at 0
+                }
+            });
+        }
     }
 
     @Override
@@ -183,7 +198,16 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
             super(itemView);
             binding = RowCourseIndexSectionHeaderBinding.bind(itemView);
             itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
         }
 
+    }
+
+    public interface OnSectionClickListener {
+        void onSectionClick(int position);
+    }
+
+    public void setOnSectionClickListener(OnSectionClickListener onSectionClickListener) {
+        this.onSectionClickListener = onSectionClickListener;
     }
 }

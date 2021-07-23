@@ -273,7 +273,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     private void initializeCourseIndex(boolean animate) {
 
-        adapter = new CourseIndexRecyclerViewAdapter(this, sections, course);
+        adapter = new CourseIndexRecyclerViewAdapter(this, sections, course, isTabletLandscape());
         adapter.setOnChildItemClickedListener((section, position) -> {
             Activity act = sections.get(section).getActivities().get(position);
             startCourseActivityByDigest(act.getDigest());
@@ -299,6 +299,14 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             binding.recyclerCourseSections.setVisibility(View.VISIBLE);
         }
         binding.recyclerCourseSections.setAdapter(adapter);
+
+        if (isTabletLandscape()) {
+            binding.recyclerCouseActivities.setVisibility(View.VISIBLE);
+            adapter.setOnSectionClickListener(position -> {
+                toast("position: " + position);
+            });
+            adapter.expandCollapseAllSections(false);
+        }
 
     }
 
