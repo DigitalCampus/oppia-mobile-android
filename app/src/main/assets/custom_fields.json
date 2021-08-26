@@ -101,13 +101,42 @@
     }
   ,
     {
-      "name":"referral",
+      "name":"referral_how",
       "label":"How did you hear about the COVID-19 Ethiopia app?",
       "order":8,
       "required":false,
       "helper_text":"",
-      "collection":"referrals",
+      "collection":"referrals_how",
       "type":"choices"
+    },
+    {
+      "name":"referral_how_other",
+      "label":"Other (please specify)",
+      "order":5,
+      "required":false,
+      "helper_text":"",
+      "visible_byfield":"referral_how",
+      "visible_byvalue":"other",
+      "type":"str"
+    },
+    {
+      "name":"referral_who",
+      "label":"Who did you hear about the COVID-19 Ethiopia app from?",
+      "order":8,
+      "required":false,
+      "helper_text":"",
+      "collection":"referrals_who",
+      "type":"choices"
+    },
+    {
+      "name":"referral_who_other",
+      "label":"Other (please specify)",
+      "order":5,
+      "required":false,
+      "helper_text":"",
+      "visible_byfield":"referral_who",
+      "visible_byvalue":"other",
+      "type":"str"
     }
   ],
   "collections": [
@@ -206,15 +235,27 @@
       ]
     },
     {
-      "collection_name": "referrals",
+      "collection_name": "referrals_how",
       "items": [
+        {"id": "media", "value":"Media (e.g. news article, blog, television)"},
+        {"id": "sms", "value":"SMS"},
+        {"id": "social_media", "value":"Social media (e.g. Facebook, Twitter, LinkedIn)"},
+        {"id": "telegram", "value":"Telegram"},
+        {"id": "word_of_mouth", "value":"Word of mouth"},
+        {"id": "other", "value":"Other"}
+      ]
+    },
+    {
+      "collection_name": "referrals_who",
+      "items": [
+        {"id": "employer", "value":"Employer or instructor"},
         {"id": "ephi", "value":"Ethiopia Public Health Institute (EPHI)"},
+        {"id": "friend", "value":"Friend or colleague"},
+        {"id": "hakim", "value":"Hakim"},
         {"id": "lmh_cha", "value":"Last Mile Health / Community Health Academy"},
         {"id": "moh", "value":"Ministry of Health"},
-        {"id": "media", "value":"Media (e.g. news article, blog)"},
-        {"id": "social_media", "value":"Social media (e.g. Facebook, Twitter)"},
-        {"id": "rec_employer", "value":"Recommended by my employer or instructor"},
-        {"id": "rec_friend", "value":"Recommended by a friend or colleague"}
+        {"id": "tikvah_ethiopia", "value":"TIKVAH-Ethiopia"},
+        {"id": "other", "value":"Other"}
       ]
     }
   ],
@@ -262,7 +303,10 @@
         "place_of_work",
         "org_facility_name",
         "work_area",
-        "referral"
+        "referral_how",
+        "referral_how_other",
+        "referral_who",
+        "referral_who_other"
       ]
     }
   ]
