@@ -66,6 +66,7 @@ public class OppiaWebViewFragment extends Fragment{
 		super.onActivityCreated(savedInstanceState);
 
 		binding.webviewOppia.getSettings().setJavaScriptEnabled(true);
+		binding.webviewOppia.getSettings().setAllowFileAccess(true);
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		binding.webviewOppia.getSettings().setDefaultFontSize(defaultFontSize);
 		String url = getArguments().getString(OppiaWebViewFragment.TAG);
