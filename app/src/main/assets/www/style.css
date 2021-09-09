@@ -29,9 +29,9 @@ h1,h2,h3,h4,h5,h6{
     font-weight:lighter;
     text-transform:uppercase;
     padding: 0.7em 12px 0.3em;
-    border-left:15px solid #74B042;
+    border-left:15px solid #00366A;
     margin: 1.5em 0 15px -20px;
-    color:#020202;
+    color:#00366A;
 }
 h1 { font-size: 140%; }
 h2 { font-size: 120%; }
@@ -60,7 +60,7 @@ ul li:before {
       max-height: 0px;
       left: -28px;
       top: -0px;
-      color: #74B042;
+      color: #00366A;
       font-size: 30px;
  }
 
@@ -74,7 +74,7 @@ ol li{
 }
 
 a {
-	color: #495525;
+	color: #00366A;
 	text-decoration: underline;
 }
 

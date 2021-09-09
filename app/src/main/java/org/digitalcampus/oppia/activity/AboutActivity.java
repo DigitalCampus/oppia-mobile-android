@@ -49,10 +49,11 @@ public class AboutActivity extends AppActivity {
 	public static final String TITLE = "TITLE";
 	public static final String TAB_ACTIVE = "TAB_ACTIVE";
 	public static final int TAB_HELP = 1;
+	public static final int TAB_ABOUT_EE = 2;
 	public static final int TAB_PRIVACY_POLICY = 0;
 	//public static final int TAB_PRIVACY_TERMS = 1;
-	public static final int TAB_PRIVACY_WHAT = 2;
-	public static final int TAB_PRIVACY_HOW = 3;
+	public static final int TAB_PRIVACY_WHAT = 3;
+	public static final int TAB_PRIVACY_HOW = 4;
 
 
 	private String contents = ABOUT_MAIN;
@@ -89,9 +90,14 @@ public class AboutActivity extends AppActivity {
         List<String> titles = new ArrayList<>();
 
         if (contents.equals(ABOUT_MAIN)){
-			Fragment fAbout = AboutFragment.newInstance();
+			String urlAboutEE = Storage.getLocalizedFilePath(this, lang, "about_ee.html");
+			Fragment fAboutEE = OppiaWebViewFragment.newInstance(TAB_ABOUT_EE, urlAboutEE);
+			fragments.add(fAboutEE);
+			titles.add(this.getString(R.string.tab_title_about_ee));
+
+        	Fragment fAbout = AboutFragment.newInstance();
 			fragments.add(fAbout);
-			titles.add(this.getString(R.string.tab_title_about));
+			titles.add(this.getString(R.string.tab_title_about_oppia));
 
 			String urlHelp = Storage.getLocalizedFilePath(this, lang, "help.html");
 			Fragment fHelp = OppiaWebViewFragment.newInstance(TAB_HELP, urlHelp);
