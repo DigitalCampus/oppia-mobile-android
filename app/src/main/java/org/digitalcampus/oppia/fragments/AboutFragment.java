@@ -67,6 +67,7 @@ public class AboutFragment extends AppFragment {
 
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		binding.aboutWebview.getSettings().setDefaultFontSize(defaultFontSize);
+		binding.aboutWebview.getSettings().setAllowFileAccess(true);
 
 		binding.aboutWebview.loadUrl(url);
 
