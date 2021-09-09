@@ -44,7 +44,7 @@
     <string name="tab_title_activity">Activity</string>
     <string name="tab_title_welcome">Welcome</string>
 
-    <string name="title_about">About</string>
+    <string name="title_about">About and Help</string>
     <string name="title_baseline">Baseline</string>
     <string name="title_btn_reset_password">Reset password</string>
     <string name="title_btn_remember_username">Forgotten username</string>
