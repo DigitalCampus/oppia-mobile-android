@@ -44,6 +44,7 @@ public class GlobalQuizAttemptsFragment extends AppFragment {
             Bundle tb = new Bundle();
             QuizAttempt attempt = attempts.get(position);
             tb.putSerializable(QuizAttempt.TAG, attempt);
+            tb.putBoolean(QuizAttemptActivity.SHOW_ATTEMPT_BUTTON, true);
             i.putExtras(tb);
             startActivity(i);
         });

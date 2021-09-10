@@ -17,13 +17,13 @@
 
 package org.digitalcampus.oppia.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.widget.TextView;
+import android.view.View;
 
-import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityQuizAttemptBinding;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
@@ -50,11 +50,13 @@ import java.util.Locale;
 
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class QuizAttemptActivity extends AppActivity {
 
+	public static final String SHOW_ATTEMPT_BUTTON = "show_attempt_button";
 	private ActivityQuizAttemptBinding binding;
+	private QuizAttempt quizAttempt;
+	private Course course;
 
 	@Override
 	public void onStart() {
@@ -72,14 +74,18 @@ public class QuizAttemptActivity extends AppActivity {
 		String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         Bundle bundle = this.getIntent().getExtras();
 
-		QuizAttempt quizAttempt;
-
         if (bundle == null) {
         	return;
         }
 
 		quizAttempt = (QuizAttempt) bundle.getSerializable(QuizAttempt.TAG);
-		Course course = DbHelper.getInstance(this).getCourse(quizAttempt.getCourseId(), quizAttempt.getUserId());
+		course = DbHelper.getInstance(this).getCourse(quizAttempt.getCourseId(), quizAttempt.getUserId());
+
+		boolean showAttemptQuizButton = bundle.getBoolean(SHOW_ATTEMPT_BUTTON, false);
+		if (showAttemptQuizButton){
+			binding.retakeQuizBtn.setVisibility(View.VISIBLE);
+			binding.retakeQuizBtn.setOnClickListener(view -> retakeQuiz());
+		}
 
 		binding.courseTitle.setText(course.getTitle(prefLang));
 		binding.quizTitle.setText(quizAttempt.getDisplayTitle(this));
@@ -156,6 +162,16 @@ public class QuizAttemptActivity extends AppActivity {
 		} catch (JSONException e) {
 			Log.d(TAG,"Invalid json for quiz attempt response", e);
 		}
+	}
+
+	private void retakeQuiz(){
+		Intent i = new Intent(this, CourseIndexActivity.class);
+		Bundle tb = new Bundle();
+		tb.putSerializable(Course.TAG, course);
+		tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, quizAttempt.getActivityDigest());
+		i.putExtras(tb);
+		startActivity(i);
+		finish();
 	}
 	
 }
