@@ -87,11 +87,11 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Void, HashMap<Stri
                 String serverName = json.getString(SERVER_NAME);
 
                 prefs.edit()
-                    .putBoolean(PrefsActivity.PREF_SERVER_CHECKED, true)
-                    .putBoolean(PrefsActivity.PREF_SERVER_VALID, true)
-                    .putString(PrefsActivity.PREF_SERVER_NAME, serverName)
-                    .putString(PrefsActivity.PREF_SERVER_VERSION, serverVersion)
-                    .apply();
+                        .putBoolean(PrefsActivity.PREF_SERVER_CHECKED, true)
+                        .putBoolean(PrefsActivity.PREF_SERVER_VALID, true)
+                        .putString(PrefsActivity.PREF_SERVER_NAME, serverName)
+                        .putString(PrefsActivity.PREF_SERVER_VERSION, serverVersion)
+                        .apply();
 
                 result.put(RESULT_TAG, RESULT_SUCCESS);
                 result.put(SERVER_VERSION, serverVersion);
@@ -106,9 +106,9 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Void, HashMap<Stri
                     }
 
                     prefs.edit()
-                        .putString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, badgeCriteria)
-                        .putInt(PrefsActivity.PREF_BADGE_AWARD_CRITERIA_PERCENT, badgePercent)
-                        .apply();
+                            .putString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, badgeCriteria)
+                            .putInt(PrefsActivity.PREF_BADGE_AWARD_CRITERIA_PERCENT, badgePercent)
+                            .apply();
                 }
 
             }
@@ -136,9 +136,9 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Void, HashMap<Stri
 
         if (!validServer){
             prefs.edit()
-                .putBoolean(PrefsActivity.PREF_SERVER_CHECKED, true)
-                .putBoolean(PrefsActivity.PREF_SERVER_VALID, false)
-                .apply();
+                    .putBoolean(PrefsActivity.PREF_SERVER_CHECKED, true)
+                    .putBoolean(PrefsActivity.PREF_SERVER_VALID, false)
+                    .apply();
         }
 
         return result;

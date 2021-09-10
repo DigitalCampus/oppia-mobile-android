@@ -90,13 +90,13 @@ public class AboutActivity extends AppActivity {
         List<String> titles = new ArrayList<>();
 
         if (contents.equals(ABOUT_MAIN)){
-			String urlAboutEE = Storage.getLocalizedFilePath(this, lang, "about_ee.html");
-			Fragment fAboutEE = OppiaWebViewFragment.newInstance(TAB_ABOUT_EE, urlAboutEE);
-			fragments.add(fAboutEE);
+			Fragment fAbout = AboutFragment.newInstance();
+			fragments.add(fAbout);
 			titles.add(this.getString(R.string.tab_title_about_ee));
 
-        	Fragment fAbout = AboutFragment.newInstance();
-			fragments.add(fAbout);
+			String urlAboutOppia = Storage.getLocalizedFilePath(this, lang, "about.html");
+			Fragment fAboutEE = OppiaWebViewFragment.newInstance(TAB_ABOUT_EE, urlAboutOppia);
+			fragments.add(fAboutEE);
 			titles.add(this.getString(R.string.tab_title_about_oppia));
 
 			String urlHelp = Storage.getLocalizedFilePath(this, lang, "help.html");

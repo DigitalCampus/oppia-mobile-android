@@ -63,10 +63,11 @@ public class AboutFragment extends AppFragment {
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-		String url = Storage.getLocalizedFilePath(super.getActivity(), lang, "about.html");
+		String url = Storage.getLocalizedFilePath(super.getActivity(), lang, "about_ee.html");
 
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		binding.aboutWebview.getSettings().setDefaultFontSize(defaultFontSize);
+		binding.aboutWebview.getSettings().setAllowFileAccess(true);
 
 		binding.aboutWebview.loadUrl(url);
 
