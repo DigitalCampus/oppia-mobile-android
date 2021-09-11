@@ -19,7 +19,7 @@
             android:background="@drawable/bg_toolbar"
             android:drawableTop="@drawable/brand_icon"
             android:gravity="center"
-            android:paddingTop="@dimen/padding_large"
+            android:paddingTop="@dimen/course_icon_size"
             android:paddingBottom="@dimen/padding_large"
             android:text="@string/app_name"
             android:textAppearance="@style/SectionHeader"
