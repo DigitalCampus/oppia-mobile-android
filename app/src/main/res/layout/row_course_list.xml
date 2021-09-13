@@ -28,13 +28,14 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/list_card_horizontal_margin">
 
                 <ImageView
                     android:id="@+id/course_image"
                     android:layout_width="@dimen/course_icon_size"
                     android:layout_height="@dimen/course_icon_size"
-                    android:layout_marginRight="@dimen/list_card_icon_margin"
+                    android:layout_marginEnd="@dimen/list_card_icon_margin"
                     android:contentDescription="@string/app_logo_alt"
                     android:padding="8dp"
                     android:src="@drawable/course_icon_placeholder" />
@@ -60,7 +61,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginLeft="@dimen/list_card_icon_margin"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
