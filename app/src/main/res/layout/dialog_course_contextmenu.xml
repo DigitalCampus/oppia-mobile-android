@@ -33,6 +33,7 @@
             android:id="@+id/textView3"
             android:layout_gravity="center_vertical"
             android:textAppearance="@style/ContextMenuText"
+            android:textColor="@color/text_light"
             android:layout_marginLeft="@dimen/range_tick_label_font_size"/>
     </LinearLayout>
 
@@ -64,6 +65,7 @@
             android:id="@+id/textView4"
             android:layout_gravity="center_vertical"
             android:textAppearance="@style/ContextMenuText"
+            android:textColor="@color/text_light"
             android:layout_marginLeft="@dimen/range_tick_label_font_size"/>
     </LinearLayout>
 
@@ -89,12 +91,13 @@
             android:padding="@dimen/padding_medium"/>
 
         <TextView
+            android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/course_context_delete"
-            android:id="@+id/textView2"
             android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/range_tick_label_font_size"
+            android:text="@string/course_context_delete"
             android:textAppearance="@style/ContextMenuText"
-            android:layout_marginLeft="@dimen/range_tick_label_font_size"/>
+            android:textColor="@color/text_light" />
     </LinearLayout>
 </LinearLayout>
