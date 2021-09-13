@@ -19,12 +19,15 @@ package org.digitalcampus.oppia.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import org.digitalcampus.mobile.learning.R;
@@ -38,11 +41,12 @@ import org.digitalcampus.oppia.fragments.RegisterFragment;
 import org.digitalcampus.oppia.fragments.RememberUsernameFragment;
 import org.digitalcampus.oppia.fragments.ResetPasswordFragment;
 import org.digitalcampus.oppia.fragments.WelcomeFragment;
-import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WelcomeActivity extends AppActivity {
 
@@ -51,6 +55,15 @@ public class WelcomeActivity extends AppActivity {
     public static final int TAB_REGISTER = 2;
     public static final int TAB_RESET_PASSWORD = 3;
     public static final int TAB_REMEMBER_USERNAME = 4;
+
+    private static Map<Integer, Integer> menuOverflowIconColor = new HashMap<>();
+    static {
+        menuOverflowIconColor.put(TAB_WELCOME, R.color.text_dark);
+        menuOverflowIconColor.put(TAB_LOGIN, R.color.toolbar_icon_color);
+        menuOverflowIconColor.put(TAB_REGISTER, R.color.toolbar_icon_color);
+        menuOverflowIconColor.put(TAB_RESET_PASSWORD, R.color.text_dark);
+        menuOverflowIconColor.put(TAB_REMEMBER_USERNAME, R.color.text_dark);
+    }
 
     private int currentTab = TAB_WELCOME;
     private ActivityWelcomeBinding binding;
@@ -97,6 +110,8 @@ public class WelcomeActivity extends AppActivity {
         ActivityPagerAdapter apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, tabTitles);
         binding.activityWelcomePager.setAdapter(apAdapter);
         binding.activityWelcomePager.setCurrentItem(currentTab);
+
+        setMenuOverflowIconColor(currentTab);
     }
 
     @Override
@@ -130,6 +145,15 @@ public class WelcomeActivity extends AppActivity {
     public void switchTab(int tab) {
         binding.activityWelcomePager.setCurrentItem(tab);
         this.currentTab = tab;
+
+        setMenuOverflowIconColor(tab);
+    }
+
+    private void setMenuOverflowIconColor(int tab) {
+        // Change color of 3 dots icon to ensure contrast
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        int colorInt = ContextCompat.getColor(this, menuOverflowIconColor.get(tab));
+        toolbar.getOverflowIcon().setColorFilter(new PorterDuffColorFilter(colorInt, PorterDuff.Mode.SRC_IN));
     }
 
     @Override
