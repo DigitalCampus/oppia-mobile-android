@@ -71,6 +71,7 @@
                     android:layout_alignBottom="@id/ic_date"
                     android:layout_gravity="center_vertical"
                     android:layout_toEndOf="@id/ic_date"
+                    android:layout_toStartOf="@id/retake_quiz_btn"
                     android:textColor="@color/subtitle_bar_text_color"
                     android:ellipsize="end"
                     android:maxLines="1" />
@@ -83,6 +84,7 @@
                     android:layout_alignTop="@id/ic_time"
                     android:layout_alignBottom="@id/ic_time"
                     android:layout_gravity="center_vertical"
+                    android:layout_toStartOf="@id/retake_quiz_btn"
                     android:layout_toEndOf="@id/ic_time"
                     android:textColor="@color/subtitle_bar_text_color" />
 
@@ -119,6 +121,15 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
                     android:focusable="false" />
+
+                <Button
+                    android:id="@+id/retake_quiz_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="gone"
+                    android:text="@string/quiz_attempts.retake_quiz" />
 
             </RelativeLayout>
 
