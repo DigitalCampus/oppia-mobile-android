@@ -33,8 +33,8 @@
 
     <!-- Subtitle bar -->
     <color name="subtitle_bar_bg_color">@color/theme_secondary_light</color>
-    <color name="subtitle_bar_text_color">@color/text_dark</color>
-    <color name="subtitle_bar_icon_color">@color/text_dark</color>
+    <color name="subtitle_bar_text_color">@color/text_light</color>
+    <color name="subtitle_bar_icon_color">@color/text_light</color>
 
     <!-- Drawer -->
     <color name="drawer_bg">@color/background_light</color>
