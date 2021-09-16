@@ -202,6 +202,14 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             }
 
         }
+
+        // If there is only one language for this course, makes no sense to show the language menu
+        if (course.getLangs().size() <= 1){
+            MenuItem langMenuItem = menu.findItem(R.id.menu_language);
+            langMenuItem.setVisible(false);
+            langMenuItem.setEnabled(false);
+        }
+
         UIUtils.showUserData(menu, this, course);
         return true;
     }

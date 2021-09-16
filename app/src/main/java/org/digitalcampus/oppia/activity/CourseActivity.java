@@ -196,6 +196,14 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         } else {
             item.setTitle(R.string.menu_read_aloud);
         }
+
+        // If there is only one language for this course, makes no sense to show the language menu
+        if (course.getLangs().size() <= 1){
+            MenuItem langMenuItem = menu.findItem(R.id.menu_language);
+            langMenuItem.setVisible(false);
+            langMenuItem.setEnabled(false);
+        }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
