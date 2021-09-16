@@ -11,7 +11,6 @@ import org.digitalcampus.oppia.model.responses.CourseServer;
 import org.digitalcampus.oppia.model.responses.CoursesServerResponse;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CourseUtils {
@@ -60,7 +59,7 @@ public class CourseUtils {
 
     public static List<CourseServer> getNotInstalledCourses(SharedPreferences prefs, List<Course> coursesInstalled) {
 
-        List<CourseServer> coursesServer = null;
+        List<CourseServer> notInstalledCourses = null;
 
         String coursesCachedStr = prefs.getString(PrefsActivity.PREF_SERVER_COURSES_CACHE, null);
 
@@ -68,8 +67,8 @@ public class CourseUtils {
             CoursesServerResponse coursesServerResponse = new Gson().fromJson(
                     coursesCachedStr, CoursesServerResponse.class);
 
-            coursesServer = coursesServerResponse.getCourses();
-            List<CourseServer> notInstalledCourses = new ArrayList<>();
+            List<CourseServer> coursesServer = coursesServerResponse.getCourses();
+            notInstalledCourses = new ArrayList<>();
             for (CourseServer courseServer : coursesServer) {
                 if (!isCourseInstalled(courseServer, coursesInstalled)) {
                     notInstalledCourses.add(courseServer);
@@ -77,7 +76,7 @@ public class CourseUtils {
             }
         }
 
-        return coursesServer;
+        return notInstalledCourses;
     }
 
     private static boolean isCourseInstalled(CourseServer courseServer, List<Course> coursesInstalled) {

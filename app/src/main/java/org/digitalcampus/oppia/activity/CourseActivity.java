@@ -46,12 +46,12 @@ import org.digitalcampus.oppia.model.MultiLangInfoModel;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.widgets.BaseWidget;
 import org.digitalcampus.oppia.widgets.FeedbackWidget;
 import org.digitalcampus.oppia.widgets.PageWidget;
 import org.digitalcampus.oppia.widgets.QuizWidget;
 import org.digitalcampus.oppia.widgets.ResourceWidget;
 import org.digitalcampus.oppia.widgets.UrlWidget;
-import org.digitalcampus.oppia.widgets.BaseWidget;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,12 +61,12 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 public class CourseActivity extends AppActivity implements OnInitListener, TabLayout.OnTabSelectedListener {
 
     public static final String BASELINE_TAG = "BASELINE";
     public static final String NUM_ACTIVITY_TAG = "num_activity";
+    public static final int TTS_CHECK = 0;
 
     private Section section;
     private Course course;
@@ -77,7 +77,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     private boolean isBaseline = false;
     private long userID;
 
-    private static int ttsCheck = 0;
+
     private TextToSpeech myTTS;
     private boolean ttsRunning = false;
 
@@ -196,6 +196,14 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         } else {
             item.setTitle(R.string.menu_read_aloud);
         }
+
+        // If there is only one language for this course, makes no sense to show the language menu
+        if (course.getLangs().size() <= 1){
+            MenuItem langMenuItem = menu.findItem(R.id.menu_language);
+            langMenuItem.setVisible(false);
+            langMenuItem.setEnabled(false);
+        }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -254,7 +262,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         Intent checkTTSIntent = new Intent();
         checkTTSIntent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
         checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-        startActivityForResult(checkTTSIntent, ttsCheck);
+        startActivityForResult(checkTTSIntent, TTS_CHECK);
     }
 
     private boolean checkLanguageSelected() {
@@ -447,7 +455,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ttsCheck && resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+        if (requestCode == TTS_CHECK && resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
             // the user has the necessary data - create the TTS
             myTTS = new TextToSpeech(this, this);
         }
