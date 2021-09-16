@@ -163,18 +163,14 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
     private void showLanguageSelectDialog(ArrayList<Lang> langs) {
 
-        UIUtils.createLanguageDialog(this, langs, prefs, new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-
-                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_main);
-                if (fragment instanceof CoursesListFragment) {
-                    // Refresh courses list
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
-                }
-
-                return false;
+        UIUtils.createLanguageDialog(this, langs, prefs, () -> {
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_main);
+            if (fragment instanceof CoursesListFragment) {
+                // Refresh courses list
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
             }
+
+            return false;
         });
     }
 

@@ -29,13 +29,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.Constraints;
-import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityCourseIndexBinding;
 import org.digitalcampus.oppia.adapter.CourseIndexRecyclerViewAdapter;
@@ -49,7 +42,6 @@ import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.ui.MediaScanView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +49,12 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener, ParseCourseXMLTask.OnParseXmlListener {
 
