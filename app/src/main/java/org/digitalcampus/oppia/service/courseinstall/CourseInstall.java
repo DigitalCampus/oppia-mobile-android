@@ -30,6 +30,7 @@ import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.utils.CourseUtils;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -119,8 +120,6 @@ public class CourseInstall {
         String title = c.getTitle(prefs);
         listener.onInstallProgress(20);
 
-        boolean success = false;
-
         DbHelper db = DbHelper.getInstance(ctx);
         long courseId = db.addOrUpdateCourse(c);
         if (courseId != -1) {
@@ -145,7 +144,6 @@ public class CourseInstall {
             // move from temp to courses dir
             try {
                 org.apache.commons.io.FileUtils.copyDirectory(src, new File(dest, src.getName().toLowerCase(Locale.US)));
-                success = true;
             } catch (IOException e) {
                 Analytics.logException(e);
                 Log.d(TAG, "Error copying course: ", e);
@@ -162,16 +160,17 @@ public class CourseInstall {
         }
 
         listener.onInstallProgress(70);
-        if (success){
-            SearchUtils.indexAddCourse(ctx, c);
-            listener.onInstallProgress(80);
-            copyBackupCourse(ctx, tempdir, c);
-        }
+        CourseUtils.updateCourseActivitiesWordCount(ctx, c);
+        SearchUtils.indexAddCourse(ctx, c);
+
+        listener.onInstallProgress(80);
+
+        copyBackupCourse(ctx, tempdir, c);
+
         listener.onInstallProgress(90);
 
         //We reset the media scan
         Media.resetMediaScan(prefs);
-
         // delete temp directory
         FileUtils.deleteDir(tempdir);
         // delete zip file from download dir
@@ -179,17 +178,15 @@ public class CourseInstall {
 
         listener.onInstallProgress(95);
 
-        if (success){
-            // add event
-            c.setCourseId((int)courseId);
-            new GamificationServiceDelegate(ctx)
-                    .registerCourseDownloadEvent(c);
+        // add event
+        c.setCourseId((int)courseId);
+        new GamificationServiceDelegate(ctx)
+                .registerCourseDownloadEvent(c);
 
-            long estimatedTime = System.currentTimeMillis() - startTime;
-            Log.d(TAG, "MeasureTime - " + c.getShortname() + ": " + estimatedTime + "ms");
-            Log.d(TAG, shortname + " succesfully downloaded");
-            listener.onComplete();
-        }
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        Log.d(TAG, "MeasureTime - " + c.getShortname() + ": " + estimatedTime + "ms");
+        Log.d(TAG, shortname + " succesfully downloaded");
+        listener.onComplete();
 
     }
 

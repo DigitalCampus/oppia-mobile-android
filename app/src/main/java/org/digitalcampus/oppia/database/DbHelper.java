@@ -2037,6 +2037,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 a.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
                 a.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
                 a.setSectionId(c.getInt(c.getColumnIndex(ACTIVITY_C_SECTIONID)));
+                a.setWordCount(c.getColumnIndex(ACTIVITY_C_WORDCOUNT));
             }
             c.moveToNext();
         }
@@ -2543,5 +2544,15 @@ public class DbHelper extends SQLiteOpenHelper {
         int usages = c.getCount();
         c.close();
         return usages;
+    }
+
+    public void updateActivityWordCount(Activity act, int wordCount) {
+        ContentValues values = new ContentValues();
+        values.put(ACTIVITY_C_WORDCOUNT, wordCount);
+
+        String s = ACTIVITY_C_ACTIVITYDIGEST + "=? ";
+        String[] args = new String[]{String.valueOf(act.getDigest())};
+        db.update(ACTIVITY_TABLE, values, s, args);
+
     }
 }
