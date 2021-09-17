@@ -1,12 +1,17 @@
 package org.digitalcampus.oppia.utils;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.responses.CourseServer;
 import org.digitalcampus.oppia.model.responses.CoursesServerResponse;
 
@@ -87,4 +92,34 @@ public class CourseUtils {
         }
         return false;
     }
+
+    public static void updateCourseActivitiesWordCount(Context ctx, CompleteCourse course) {
+
+        DbHelper db = DbHelper.getInstance(ctx);
+        List<Activity> activities = course.getActivities(course.getCourseId());
+
+        for (Activity a : activities) {
+            ArrayList<Lang> langs = (ArrayList<Lang>) course.getLangs();
+            int wordCount = 0;
+
+            for (Lang l : langs) {
+                String langContents = a.getFileContents(course.getLocation(), l.getLanguage());
+                if (langContents == null) {
+                    continue;
+                }
+                // strip out all html tags from string (not needed for search nor wordcount)
+                langContents = langContents.replaceAll("\\<.*?\\>", "").trim();
+                int langWordCount = langContents.split("\\s+").length;
+                // We keep the highest wordcount among the different languages
+                wordCount = Math.max(wordCount, langWordCount);
+            }
+
+            Activity act = db.getActivityByDigest(a.getDigest());
+            if ((act != null) && (wordCount > 0)) {
+                db.updateActivityWordCount(act, wordCount);
+            }
+
+        }
+    }
+
 }

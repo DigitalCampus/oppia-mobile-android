@@ -28,10 +28,8 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,34 +46,32 @@ public class SearchUtils {
 		task.execute();
 	}
 
-    public static void indexAddCourse(Context ctx, Course course, CompleteCourse parsedCourse){
-        ArrayList<Activity> activities = (ArrayList<Activity>) parsedCourse.getActivities(course.getCourseId());
+    public static void indexAddCourse(Context ctx, CompleteCourse course){
+        ArrayList<Activity> activities = (ArrayList<Activity>) course.getActivities(course.getCourseId());
         DbHelper db = DbHelper.getInstance(ctx);
 
         db.beginTransaction();
         for( Activity a : activities) {
             ArrayList<Lang> langs = (ArrayList<Lang>) course.getLangs();
-            StringBuilder fileContent = new StringBuilder();
+            StringBuilder fileContents = new StringBuilder();
+
             for (Lang l : langs) {
-                if (a.getLocation(l.getLanguage()) != null && !a.getActType().equals("url")) {
-                    String url = course.getLocation() + a.getLocation(l.getLanguage());
-                    try {
-                        fileContent.append(" ");
-                        fileContent.append(FileUtils.readFile(url));
-                    } catch (IOException e) {
-                        Analytics.logException(e);
-                        Log.d(TAG, "IOException:", e);
-                    }
+                String langContents = a.getFileContents(course.getLocation(), l.getLanguage());
+                if (langContents == null){
+                    continue;
                 }
+                // strip out all html tags from string (not needed for search)
+                langContents = langContents.replaceAll("\\<.*?\\>", "").trim();
+                fileContents.append(langContents);
             }
 
-		Activity act = db.getActivityByDigest(a.getDigest());
-            if ((act != null) && !fileContent.toString().equals("")) {
+		    Activity act = db.getActivityByDigest(a.getDigest());
+            if ((act != null) && (fileContents.length() > 0)) {
                 db.insertActivityIntoSearchTable(course.getTitleJSONString(),
-                        parsedCourse.getSection(a.getSectionId()).getTitleJSONString(),
+                        course.getSection(a.getSectionId()).getTitleJSONString(),
                         a.getTitleJSONString(),
                         act.getDbId(),
-                        fileContent.toString());
+                        fileContents.toString());
             }
         }
         db.endTransaction(true);
@@ -85,7 +81,7 @@ public class SearchUtils {
         try {
             CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(),course.getCourseId(), ctx);
             cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
-            indexAddCourse(ctx, course, cxr.getParsedCourse());
+            indexAddCourse(ctx, cxr.getParsedCourse());
         } catch (InvalidXMLException e) {
             // Ignore course
             Analytics.logException(e);
@@ -108,8 +104,8 @@ public class SearchUtils {
 			db.deleteSearchIndex();
 			List<Course> courses  = db.getAllCourses();
 			for (Course c : courses){
-				Log.d(TAG,"indexing: "+ c.getTitle("en"));
-				SearchUtils.indexAddCourse(ctx,c);
+				Log.d(TAG,"indexing: " + c.getTitle("en"));
+				SearchUtils.indexAddCourse(ctx, c);
 			}
 
             return null;
