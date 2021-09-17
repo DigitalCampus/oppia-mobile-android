@@ -76,7 +76,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String TAG = DbHelper.class.getSimpleName();
     public static final String DB_NAME = "mobilelearning.db";
-    public static final int DB_VERSION = 47;
+    public static final int DB_VERSION = 48;
 
     private static DbHelper instance;
     private SQLiteDatabase db;
@@ -130,6 +130,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String ACTIVITY_C_STARTDATE = "startdate";
     private static final String ACTIVITY_C_ENDDATE = "enddate";
     private static final String ACTIVITY_C_TITLE = "title";
+    private static final String ACTIVITY_C_WORDCOUNT = "wordcount";
 
     private static final String ACTIVITY_GAME_TABLE = "ActivityGamification";
     private static final String ACTIVITY_GAME_C_ID = BaseColumns._ID;
@@ -322,6 +323,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 ACTIVITY_C_STARTDATE + " datetime null, " +
                 ACTIVITY_C_ENDDATE + " datetime null, " +
                 ACTIVITY_C_ACTIVITYDIGEST + STR_TEXT_COMMA +
+                ACTIVITY_C_WORDCOUNT + STR_INT_COMMA +
                 ACTIVITY_C_TITLE + " text)";
         db.execSQL(aSql);
     }
@@ -677,6 +679,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 47){
             createMediaTable(db);
+        }
+
+        if (oldVersion < 48){
+            db.execSQL(STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_WORDCOUNT + STR_INT_DEFAULT_O + ";");
         }
 
     }
@@ -2031,6 +2037,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 a.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
                 a.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
                 a.setSectionId(c.getInt(c.getColumnIndex(ACTIVITY_C_SECTIONID)));
+                a.setWordCount(c.getInt(c.getColumnIndex(ACTIVITY_C_WORDCOUNT)));
             }
             c.moveToNext();
         }
@@ -2053,12 +2060,9 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void insertActivityIntoSearchTable(String courseTitle, String sectionTitle, String activityTitle, int activityDbId, String fullText) {
-        // strip out all html tags from string (not needed for search)
-        String noHTMLString = fullText.replaceAll("\\<.*?\\>", " ");
-
         ContentValues values = new ContentValues();
         values.put("docid", activityDbId);
-        values.put(SEARCH_C_TEXT, noHTMLString);
+        values.put(SEARCH_C_TEXT, fullText);
         values.put(SEARCH_C_COURSETITLE, courseTitle);
         values.put(SEARCH_C_SECTIONTITLE, sectionTitle);
         values.put(SEARCH_C_ACTIVITYTITLE, activityTitle);
@@ -2540,5 +2544,15 @@ public class DbHelper extends SQLiteOpenHelper {
         int usages = c.getCount();
         c.close();
         return usages;
+    }
+
+    public void updateActivityWordCount(Activity act, int wordCount) {
+        ContentValues values = new ContentValues();
+        values.put(ACTIVITY_C_WORDCOUNT, wordCount);
+
+        String s = ACTIVITY_C_ACTIVITYDIGEST + "=? ";
+        String[] args = new String[]{String.valueOf(act.getDigest())};
+        db.update(ACTIVITY_TABLE, values, s, args);
+
     }
 }

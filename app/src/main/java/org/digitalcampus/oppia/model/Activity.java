@@ -17,13 +17,18 @@
 
 package org.digitalcampus.oppia.model;
 
+import android.util.Log;
+
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 
 
 public class Activity extends MultiLangInfoModel implements Serializable{
@@ -50,6 +55,7 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 	private boolean customImage = false;
 	private String mimeType;
 	private List<GamificationEvent> gamificationEvents = new ArrayList<>();
+	private int wordCount;
 
 	public Activity(){
 		// do nothing
@@ -168,6 +174,22 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 		}
 
 	}
+
+	public String getFileContents(String courseLocation, String lang){
+		StringBuilder fileContent = new StringBuilder();
+		if (getLocation(lang) != null && !getActType().equals("url")) {
+			String url = courseLocation + getLocation(lang);
+			try {
+				fileContent.append(" ");
+				fileContent.append(FileUtils.readFile(url));
+				return fileContent.toString().trim();
+			} catch (IOException e) {
+				Analytics.logException(e);
+				Log.d(TAG, "IOException:", e);
+			}
+		}
+		return null;
+	}
 	
 	public void setContents(List<Lang> contents) {
 		this.contents = contents;
@@ -221,4 +243,12 @@ public class Activity extends MultiLangInfoModel implements Serializable{
         }
         throw new GamificationEventNotFound(event);
     }
+
+	public int getWordCount() {
+		return wordCount;
+	}
+
+	public void setWordCount(int wordCount) {
+		this.wordCount = wordCount;
+	}
 }

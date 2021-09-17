@@ -119,6 +119,10 @@ android {
             buildConfigField "int", "ADMIN_PASSWORD_OVERRIDE_VERSION", runtimeProps['ADMIN_PASSWORD_OVERRIDE_VERSION']
             buildConfigField "String", "ADMIN_PROTECT_INITIAL_PASSWORD", "\"" + runtimeProps['ADMIN_PROTECT_INITIAL_PASSWORD'] + "\""
 
+            buildConfigField "String", "PAGE_COMPLETED_METHOD", "\"" + runtimeProps['PAGE_COMPLETED_METHOD'] + "\""
+            buildConfigField "int", "PAGE_COMPLETED_TIME_SPENT", runtimeProps['PAGE_COMPLETED_TIME_SPENT']
+            buildConfigField "int", "PAGE_COMPLETED_WPM", runtimeProps['PAGE_COMPLETED_WPM']
+
             buildConfigField "int", "LOAD_CUSTOMFIELDS_VERSION", runtimeProps['LOAD_CUSTOMFIELDS_VERSION']
 
             buildConfigField "boolean", "START_COURSEINDEX_COLLAPSED", runtimeProps['START_COURSEINDEX_COLLAPSED']
