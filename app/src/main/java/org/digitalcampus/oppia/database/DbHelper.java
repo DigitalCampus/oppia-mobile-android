@@ -2037,7 +2037,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 a.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
                 a.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
                 a.setSectionId(c.getInt(c.getColumnIndex(ACTIVITY_C_SECTIONID)));
-                a.setWordCount(c.getColumnIndex(ACTIVITY_C_WORDCOUNT));
+                a.setWordCount(c.getInt(c.getColumnIndex(ACTIVITY_C_WORDCOUNT)));
             }
             c.moveToNext();
         }
