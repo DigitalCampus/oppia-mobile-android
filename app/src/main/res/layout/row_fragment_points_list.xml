@@ -19,17 +19,16 @@
         style="@style/SmallTextDark"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="0.15"
-        android:layout_marginStart="10dp" />
+        android:layout_marginStart="10dp"
+        android:layout_weight="0.15" />
 
     <TextView
         android:id="@+id/points_points"
         style="@style/PointsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="10dp"
         android:minWidth="45dp"
         android:background="@drawable/points_background_frame"
         android:gravity="center|center_vertical"

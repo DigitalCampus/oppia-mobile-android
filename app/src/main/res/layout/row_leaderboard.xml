@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginRight="@dimen/padding_medium"
+    android:layout_marginEnd="@dimen/padding_medium"
     android:layout_marginTop="@dimen/padding_medium"
     android:gravity="center_vertical">
 
@@ -22,7 +22,7 @@
         android:id="@+id/user_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/padding_medium"
+        android:layout_marginStart="@dimen/padding_medium"
         android:layout_weight="1">
 
         <RelativeLayout
@@ -30,14 +30,14 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:padding="@dimen/padding_medium"
-            android:paddingRight="@dimen/activity_horizontal_margin">
+            android:paddingEnd="@dimen/activity_horizontal_margin">
 
             <TextView
                 android:id="@+id/leaderboard_fullname"
                 style="@style/NormalTextDark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="false"
                 android:text="User Fullname"/>
 
@@ -45,7 +45,7 @@
                 android:id="@+id/leaderboard_points"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:text="1290"
                 android:textColor="@color/text_grey"/>
@@ -54,7 +54,6 @@
                 android:id="@+id/leaderboard_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="false"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/leaderboard_fullname"
                 android:fitsSystemWindows="true"

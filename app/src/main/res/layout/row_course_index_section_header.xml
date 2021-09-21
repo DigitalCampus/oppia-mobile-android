@@ -8,19 +8,16 @@
     android:orientation="vertical"
     android:paddingTop="@dimen/padding_medium">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/expanded_indicator"
         android:layout_width="@dimen/expandable_iconSize"
         android:layout_height="@dimen/expandable_iconSize"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="@dimen/expandable_margin"
-        android:layout_marginLeft="@dimen/expandable_margin"
         android:layout_marginEnd="@dimen/expandable_margin"
-        android:layout_marginRight="@dimen/expandable_margin"
-        android:tint="#000000"
+        app:tint="#000000"
         app:srcCompat="@drawable/ic_expand" />
 
     <TextView
@@ -29,8 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
         android:layout_marginStart="@dimen/padding_medium"
-        android:layout_marginLeft="@dimen/padding_medium"
-        android:layout_marginRight="4sp"
+        android:layout_marginEnd="4sp"
         android:text="2/2"
         android:textSize="11sp" />
 

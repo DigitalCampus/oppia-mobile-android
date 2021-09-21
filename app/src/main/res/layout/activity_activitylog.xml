@@ -26,9 +26,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding_medium"
+                android:layout_marginStart="@dimen/padding_medium"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginRight="@dimen/padding_medium"
+                android:layout_marginEnd="@dimen/padding_medium"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:orientation="horizontal">
 
@@ -120,8 +120,8 @@
                 android:id="@+id/export_actions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding_medium"
-                android:layout_marginRight="@dimen/padding_medium"
+                android:layout_marginStart="@dimen/padding_medium"
+                android:layout_marginEnd="@dimen/padding_medium"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -147,8 +147,8 @@
                 android:id="@+id/progress_container"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginLeft="@dimen/padding_medium"
-                android:layout_marginRight="@dimen/padding_medium"
+                android:layout_marginStart="@dimen/padding_medium"
+                android:layout_marginEnd="@dimen/padding_medium"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -173,7 +173,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/padding_large"
+                    android:layout_marginStart="@dimen/padding_large"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="@string/export_activity.text" />

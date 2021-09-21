@@ -6,9 +6,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <include android:id="@+id/toolbar" layout="@layout/toolbar" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -59,8 +61,8 @@
             android:id="@+id/send_all_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/padding_medium"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/padding_medium"
             android:gravity="center_vertical|center"
             android:text="@string/bluetooth.send_all"
             android:textColor="@color/text_dark"
@@ -72,8 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/padding_large"
+            android:layout_marginStart="@dimen/padding_large"
             android:text="@string/bluetooth.title_not_connected"
             android:theme="@style/ButtonText" />
 
@@ -83,8 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/status_title"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/padding_large"
+            android:layout_marginStart="@dimen/padding_large"
             android:layout_marginBottom="@dimen/padding_medium"
             android:text="@string/bluetooth.no_device_connected"
             android:theme="@style/SubheaderText" />
@@ -110,9 +110,9 @@
                     android:id="@+id/tabs_filter"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     app:tabBackground="@drawable/bg_tab_text"
                     app:tabGravity="center"
                     app:tabIndicatorHeight="0dp"
@@ -160,12 +160,12 @@
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/padding_large">
 
-                    <ImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/bluetooth_ic"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:src="@drawable/ic_bluetooth"
-                        android:tint="@color/highlight_separator" />
+                        app:tint="@color/highlight_separator" />
 
                     <TextView
                         android:id="@+id/textView21"
@@ -191,7 +191,6 @@
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="@dimen/padding_large"
                     android:textSize="18sp"
@@ -238,7 +237,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="false"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"/>
+                    android:layout_centerVertical="true" />
 
                 <TextView
                     android:id="@+id/textView25"
@@ -247,19 +246,18 @@
                     android:layout_below="@+id/progressBar6"
                     android:layout_centerHorizontal="true"
                     android:text="@string/transfer_receiving_course"
-                    android:textColor="@color/text_light"/>
+                    android:textColor="@color/text_light" />
             </RelativeLayout>
 
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/permissions_explanation"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/permissions_explanation"
-            android:background="@android:color/white"
             android:layout_margin="@dimen/margin_medium"
-            android:visibility="gone">
-        </FrameLayout>
+            android:background="@android:color/white"
+            android:visibility="gone"></FrameLayout>
     </FrameLayout>
 
 
