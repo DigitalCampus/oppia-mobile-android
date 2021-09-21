@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.gamification;
 import android.content.Context;
 import android.util.Log;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -156,7 +157,7 @@ public class GamificationEngine {
         return new GamificationEvent(Gamification.EVENT_NAME_ACTIVITY_COMPLETED, totalPoints);
     }
 
-    public GamificationEvent processEventMediaPlayed(Course course, Activity activity, String mediaFileName, long timeTaken){
+    public GamificationEvent processEventMediaPlayed(Course course, Activity activity, String mediaFileName, long timeTaken, boolean mediaEndReached){
         int totalPoints = 0;
         boolean completed = false;
         DbHelper db = DbHelper.getInstance(this.ctx);
@@ -197,6 +198,11 @@ public class GamificationEngine {
                 Analytics.logException(genf);
             }
         }
+
+        if (BuildConfig.GAMIFICATION_MEDIA_SHOULD_REACH_END) {
+            completed = completed && mediaEndReached;
+        }
+
         return new GamificationEvent(Gamification.EVENT_NAME_MEDIA_PLAYED, totalPoints, completed);
     }
 

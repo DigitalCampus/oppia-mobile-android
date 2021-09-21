@@ -51,6 +51,7 @@ public class GamificationService  extends IntentService {
     public static final String EVENTDATA_QUIZID = "data_quiz_id";
     public static final String EVENTDATA_INSTANCEID = "data_instance_id";
     public static final String EVENTDATA_MEDIA_FILENAME = "data_media_filename";
+    public static final String EVENTDATA_MEDIA_END_REACHED = "data_end_reached";
 
     private static final String LOGDATA_LANG = "lang";
     private static final String LOGDATA_READALOUD = "readaloud";
@@ -58,6 +59,9 @@ public class GamificationService  extends IntentService {
     private static final String LOGDATA_QUIZ_ID = "quiz_id";
     private static final String LOGDATA_INSTANCE = "instance_id";
     private static final String LOGDATA_SCORE = "score";
+    private static final String LOGDATA_MEDIAFILE = "mediafile";
+    private static final String LOGDATA_MEDIA_EVENT = "media";
+    private static final String LOGDATA_MEDIA_ENDREACHED = "media_end_reached";
 
     private SharedPreferences prefs;
     private GamificationEngine gEngine;
@@ -176,11 +180,13 @@ public class GamificationService  extends IntentService {
                     c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
                     String filename = intent.getStringExtra(EVENTDATA_MEDIA_FILENAME);
                     long timetaken = intent.getLongExtra(EVENTDATA_TIMETAKEN, 0);
+                    boolean endReached = intent.getBooleanExtra(EVENTDATA_MEDIA_END_REACHED, false);
 
-                    event = gEngine.processEventMediaPlayed(c, act, filename, timetaken);
+                    event = gEngine.processEventMediaPlayed(c, act, filename, timetaken, endReached);
                     eventData.put(LOGDATA_TIMETAKEN, timetaken);
-                    eventData.put("mediafile", filename);
-                    eventData.put("media", "played");
+                    eventData.put(LOGDATA_MEDIAFILE, filename);
+                    eventData.put(LOGDATA_MEDIA_EVENT, "played");
+                    eventData.put(LOGDATA_MEDIA_ENDREACHED, endReached);
 
                     Media m = act.getMedia(filename);
                     trackerDigest = (m != null) ? m.getDigest() : act.getDigest();
