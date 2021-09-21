@@ -31,6 +31,7 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.WindowManager;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.databinding.ActivityVideoPlayerBinding;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
@@ -58,6 +59,8 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     private long ellapsedTime = 0;
     private Activity activity;
     private Course course;
+
+    private boolean videoEndReached = false;
 
     protected SharedPreferences prefs;
     private ActivityVideoPlayerBinding binding;
@@ -110,9 +113,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         super.onStart();
 
         binding.replayButton.setOnClickListener(v -> start());
-        binding.continueButton.setOnClickListener(view -> {
-            VideoPlayerActivity.this.finish();
-        });
+        binding.continueButton.setOnClickListener(view -> VideoPlayerActivity.this.finish());
 
         binding.videoSurface.setKeepScreenOn(true); //prevents player going into sleep mode
         SurfaceHolder videoHolder = binding.videoSurface.getHolder();
@@ -160,9 +161,12 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         if (media != null){
             Log.d(TAG, "saving tracker... " + media.getLength());
             boolean completed = (timeTaken >= media.getLength());
+            if (BuildConfig.GAMIFICATION_MEDIA_SHOULD_REACH_END){
+                completed = completed && videoEndReached;
+            }
             new GamificationServiceDelegate(this)
                     .createActivityIntent(course, activity, completed, false)
-                    .registerMediaPlaybackEvent(timeTaken, mediaFileName);
+                    .registerMediaPlaybackEvent(timeTaken, mediaFileName, videoEndReached);
 
             setResult(completed ? RESULT_OK : RESULT_CANCELED); // For testing purposes
         }
@@ -240,7 +244,6 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     public void toggleFullScreen() {
         // do nothing
     }
-    // End VideoMediaController.MediaPlayerControl
 
     // Implement SurfaceHolder.Callback
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -282,7 +285,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     public void onCompletion(MediaPlayer mp) {
         Log.d(TAG, "Video completed!");
         binding.endContainer.setVisibility(View.VISIBLE);
+        videoEndReached = true;
     }
-    // End SurfaceHolder.Callback
 
 }
