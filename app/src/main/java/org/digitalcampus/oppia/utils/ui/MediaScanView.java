@@ -100,7 +100,7 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
 
         binding.getRoot().measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ValueAnimator animator = ValueAnimator.ofInt(initialViewBelowPadding, binding.getRoot().getMeasuredHeight());
-        animator.addUpdateListener(valueAnimator -> viewBelow.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0));
+        animator.addUpdateListener(valueAnimator -> viewBelow.setPaddingRelative(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0));
         animator.setStartDelay(200);
         animator.setDuration(700);
         animator.start();
@@ -110,7 +110,7 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
 
     private void hideView() {
         setVisibility(View.GONE);
-        viewBelow.setPadding(0, initialViewBelowPadding, 0, 0);
+        viewBelow.setPaddingRelative(0, initialViewBelowPadding, 0, 0);
 
     }
 

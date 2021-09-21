@@ -400,7 +400,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         ValueAnimator animator = ValueAnimator.ofInt(0, binding.homeMessages.getMeasuredHeight());
         //@Override
         animator.addUpdateListener(
-                valueAnimator -> binding.missingMediaList.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0));
+                valueAnimator -> binding.missingMediaList.setPaddingRelative(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0));
         animator.setStartDelay(200);
         animator.setDuration(700);
         animator.start();
@@ -416,7 +416,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         ValueAnimator animator = ValueAnimator.ofInt(binding.homeMessages.getMeasuredHeight(), 0);
         //@Override
         animator.addUpdateListener(
-                valueAnimator -> binding.missingMediaList.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0));
+                valueAnimator -> binding.missingMediaList.setPaddingRelative(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0));
         animator.setStartDelay(0);
         animator.setDuration(700);
         animator.start();
