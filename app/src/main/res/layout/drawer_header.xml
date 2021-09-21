@@ -39,7 +39,7 @@
             android:id="@+id/drawer_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:text="User name"
             android:textColor="@color/subtitle_bar_text_color"
             android:textSize="15sp" />
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/drawer_username"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:text="User full name"
             android:textColor="@color/subtitle_bar_text_color"
             android:textSize="15sp" />
@@ -58,9 +58,9 @@
             android:id="@+id/btn_expand_profile_options"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             app:srcCompat="@drawable/ic_expand"
             android:background="@drawable/bg_pressable"
             app:tint="@color/white" />

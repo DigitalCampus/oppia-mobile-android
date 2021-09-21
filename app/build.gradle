@@ -114,6 +114,7 @@ android {
 
             buildConfigField "String", "GAMIFICATION_MEDIA_CRITERIA", "\"" + runtimeProps['GAMIFICATION_MEDIA_CRITERIA'] + "\""
             buildConfigField "int", "GAMIFICATION_DEFAULT_MEDIA_THRESHOLD", runtimeProps['GAMIFICATION_DEFAULT_MEDIA_THRESHOLD']
+            buildConfigField "boolean", "GAMIFICATION_MEDIA_SHOULD_REACH_END", runtimeProps['GAMIFICATION_MEDIA_SHOULD_REACH_END']
             buildConfigField "String", "GAMIFICATION_POINTS_ANIMATION", "\"" + runtimeProps['GAMIFICATION_POINTS_ANIMATION'] + "\""
             buildConfigField "int", "DURATION_GAMIFICATION_POINTS_VIEW", runtimeProps['DURATION_GAMIFICATION_POINTS_VIEW']
             buildConfigField "int", "ADMIN_PASSWORD_OVERRIDE_VERSION", runtimeProps['ADMIN_PASSWORD_OVERRIDE_VERSION']

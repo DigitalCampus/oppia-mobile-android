@@ -28,12 +28,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageButton;
 
-import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.databinding.ActivityVideoPlayerBinding;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
@@ -51,14 +49,18 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 
 	public static final String TAG = VideoPlayerActivity.class.getSimpleName();
 	public static final String MEDIA_TAG = "mediaFileName";
+	private static final long TIME_PAUSED = -1;
 
     MediaPlayer player;
     private VideoControllerView controller;
 
     private String mediaFileName;
     private long startTime = System.currentTimeMillis()/1000;
+    private long ellapsedTime = 0;
     private Activity activity;
     private Course course;
+
+    private boolean videoEndReached = false;
 
     protected SharedPreferences prefs;
     private ActivityVideoPlayerBinding binding;
@@ -111,7 +113,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         super.onStart();
 
         binding.replayButton.setOnClickListener(v -> start());
-        binding.continueButton.setOnClickListener(v -> VideoPlayerActivity.this.finish());
+        binding.continueButton.setOnClickListener(view -> VideoPlayerActivity.this.finish());
 
         binding.videoSurface.setKeepScreenOn(true); //prevents player going into sleep mode
         SurfaceHolder videoHolder = binding.videoSurface.getHolder();
@@ -140,9 +142,17 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         super.finish();
     }
 
-    private void saveTracker() {
+    private long getCurrentEllapsedTime(){
         long endTime = System.currentTimeMillis() / 1000;
-        long timeTaken = endTime - startTime;
+        return endTime - startTime;
+    }
+
+    private long getTotalEllapsedTime(){
+        return (startTime == TIME_PAUSED) ? ellapsedTime : ellapsedTime + getCurrentEllapsedTime();
+    }
+
+    private void saveTracker() {
+        long timeTaken = getTotalEllapsedTime();
 
         // digest should be that of the video not the page
         Log.d(TAG, "Attempting to save media tracker. Time: " + timeTaken);
@@ -151,9 +161,12 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         if (media != null){
             Log.d(TAG, "saving tracker... " + media.getLength());
             boolean completed = (timeTaken >= media.getLength());
+            if (BuildConfig.GAMIFICATION_MEDIA_SHOULD_REACH_END){
+                completed = completed && videoEndReached;
+            }
             new GamificationServiceDelegate(this)
                     .createActivityIntent(course, activity, completed, false)
-                    .registerMediaPlaybackEvent(timeTaken, mediaFileName);
+                    .registerMediaPlaybackEvent(timeTaken, mediaFileName, videoEndReached);
 
             setResult(completed ? RESULT_OK : RESULT_CANCELED); // For testing purposes
         }
@@ -174,8 +187,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     public void onPrepared(MediaPlayer mp) {
         controller.setMediaPlayer(this);
         controller.setAnchorView(binding.videoSurfaceContainer);
-        player.start();
-        player.setOnCompletionListener(this);
+        start();
     }
     // End MediaPlayer.OnPreparedListener
 
@@ -210,6 +222,8 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 
     public void pause() {
         player.pause();
+        ellapsedTime += getCurrentEllapsedTime();
+        startTime = TIME_PAUSED;
     }
 
     public void seekTo(int i) {
@@ -218,6 +232,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 
     public void start() {
         player.start();
+        startTime = System.currentTimeMillis()/1000;
         binding.endContainer.setVisibility(View.GONE);
         player.setOnCompletionListener(this);
     }
@@ -229,7 +244,6 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     public void toggleFullScreen() {
         // do nothing
     }
-    // End VideoMediaController.MediaPlayerControl
 
     // Implement SurfaceHolder.Callback
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -271,7 +285,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     public void onCompletion(MediaPlayer mp) {
         Log.d(TAG, "Video completed!");
         binding.endContainer.setVisibility(View.VISIBLE);
+        videoEndReached = true;
     }
-    // End SurfaceHolder.Callback
 
 }

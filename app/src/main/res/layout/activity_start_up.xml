@@ -31,13 +31,17 @@
             android:orientation="vertical"
             android:paddingBottom="5dip" >
 
-            <ImageView
-                android:id="@+id/imageView13"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:src="@drawable/brand_icon"/>
+            <TextView
+                android:id="@+id/userbadges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:drawableStart="@drawable/brand_icon"
+                android:drawablePadding="5dp"
+                android:text="@string/app_name"
+                android:textColor="@color/theme_dark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/start_up_progress"

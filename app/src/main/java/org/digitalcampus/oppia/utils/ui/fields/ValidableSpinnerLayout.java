@@ -51,7 +51,7 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
 
         errorText = new TextView(getContext());
         errorText.setLayoutParams(CustomFieldsUIManager.getLinearParams());
-        errorText.setPadding(input.getPaddingLeft(), 0, input.getPaddingRight(), 0);
+        errorText.setPaddingRelative(input.getPaddingLeft(), 0, input.getPaddingRight(), 0);
         errorText.setText(getResources().getString(R.string.field_required));
         errorText.setVisibility(GONE);
 
@@ -59,7 +59,7 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
         LayoutParams params = CustomFieldsUIManager.getLinearParams();
         params.setMargins(0, 10, 0, -20);
         labelText.setLayoutParams(params);
-        labelText.setPadding(input.getPaddingLeft(), 0,0, 0);
+        labelText.setPaddingRelative(input.getPaddingLeft(), 0,0, 0);
         updateLabelText();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -177,7 +177,7 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
             helperText = new TextView(getContext());
             helperText.setLayoutParams(CustomFieldsUIManager.getLinearParams());
             helperText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-            helperText.setPadding(input.getPaddingLeft(),0,input.getPaddingRight(),0);
+            helperText.setPaddingRelative(input.getPaddingLeft(),0,input.getPaddingRight(),0);
             this.addView(helperText);
         }
         helperText.setText(text);

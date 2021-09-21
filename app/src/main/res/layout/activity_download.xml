@@ -19,8 +19,8 @@
         android:gravity="center"
         android:layout_centerInParent="true"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
         android:visibility="gone" />
 
     <RelativeLayout
