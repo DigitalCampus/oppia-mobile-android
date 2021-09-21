@@ -146,7 +146,7 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             onView(withId(R.id.drawer))
-                    .check(matches(isClosed(Gravity.LEFT)))
+                    .check(matches(isClosed(Gravity.START)))
                     .perform(DrawerActions.open());
 
             onView(withText(R.string.menu_settings)).perform(click());
@@ -187,7 +187,7 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             onView(withId(R.id.drawer))
-                    .check(matches(isClosed(Gravity.LEFT)))
+                    .check(matches(isClosed(Gravity.START)))
                     .perform(DrawerActions.open());
 
             onView(withText(R.string.menu_settings)).perform(click());

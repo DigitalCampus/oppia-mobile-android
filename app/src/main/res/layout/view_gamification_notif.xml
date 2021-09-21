@@ -22,7 +22,7 @@
         android:layout_alignTop="@+id/view_gradient"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
         android:adjustViewBounds="true"
         app:srcCompat="@drawable/course_icon_placeholder" />
 
@@ -34,7 +34,7 @@
         android:layout_alignTop="@+id/view_gradient"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
         android:layout_toStartOf="@+id/tv_gamification_notif_points"
         android:layout_toEndOf="@+id/img_gamification_notif"
         android:text="Activity created!"
@@ -46,8 +46,8 @@
         android:id="@+id/tv_gamification_notif_points"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="15dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="15dp"
         android:layout_alignTop="@+id/view_gradient"
         android:layout_marginTop="-15dp"
         android:background="@drawable/bg_points_gamification_notif"

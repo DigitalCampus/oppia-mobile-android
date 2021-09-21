@@ -308,7 +308,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             tvGamificationPoints.setText(String.valueOf(points));
 
             //If the view is not covering the whole snackbar layout, add this line
-            layout.setPadding(0, 0, 0, 0);
+            layout.setPaddingRelative(0, 0, 0, 0);
 
             layout.addView(snackView, 0);
             layout.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));

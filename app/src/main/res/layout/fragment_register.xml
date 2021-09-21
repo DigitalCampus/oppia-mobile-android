@@ -35,8 +35,8 @@
             android:id="@+id/stepper_indicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
             app:stpi_circleColor="@color/register_steps_indicator_circleColor"
             app:stpi_circleRadius="8dp"
             app:stpi_indicatorColor="@color/register_steps_indicator_doneColor"
@@ -248,7 +248,7 @@
         android:orientation="horizontal"
         android:paddingStart="@dimen/padding_medium_2"
         android:paddingTop="@dimen/padding_medium"
-        android:paddingRight="@dimen/padding_medium_2"
+        android:paddingEnd="@dimen/padding_medium_2"
         android:paddingBottom="@dimen/padding_medium"
         android:weightSum="2">
 
@@ -256,7 +256,7 @@
             android:id="@+id/login_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:layout_weight="1"
             android:orientation="vertical"
             android:visibility="visible">
