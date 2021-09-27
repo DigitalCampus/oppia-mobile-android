@@ -1,12 +1,10 @@
 package androidTestFiles.UI;
 
-import android.app.UiAutomation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.Gravity;
+import android.widget.EditText;
 
-import androidx.preference.Preference;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
@@ -14,15 +12,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
-import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.utils.UIUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,22 +25,21 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
-
+import java.util.UUID;
 
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.TestUtils;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.Espresso.pressBackUnconditionally;
+import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
-import static androidx.test.espresso.matcher.PreferenceMatchers.withKey;
-import static androidx.test.espresso.matcher.PreferenceMatchers.withTitle;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -53,7 +47,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -148,10 +141,12 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
     public void goToMainActivityIfUserDontModifyServerUrl() throws InterruptedException {
 
         when(prefs.getString(eq(PrefsActivity.PREF_USER_NAME), anyString())).thenReturn("test_user");
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(false);
+        when(prefs.getString(eq(PrefsActivity.PREF_TEST_ACTION_PROTECTED), anyString())).thenReturn("false");
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             onView(withId(R.id.drawer))
-                    .check(matches(isClosed(Gravity.LEFT)))
+                    .check(matches(isClosed(Gravity.START)))
                     .perform(DrawerActions.open());
 
             onView(withText(R.string.menu_settings)).perform(click());
@@ -171,13 +166,8 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
                     .check(matches(isDisplayed()))
                     .perform(click());
 
-            onView(withText(R.string.cancel))
-                    .inRoot(isDialog())
-                    .check(matches(isDisplayed()))
-                    .perform(click());
-
-            pressBack();
-            pressBack();
+            pressBackUnconditionally();
+            pressBackUnconditionally();
 
             assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
 
@@ -192,11 +182,12 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
 
         when(prefs.getString(eq(PrefsActivity.PREF_USER_NAME), anyString())).thenReturn("test_user");
         when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(false);
+        when(prefs.getString(eq(PrefsActivity.PREF_TEST_ACTION_PROTECTED), anyString())).thenReturn("false");
         when(prefs.edit()).thenReturn(editor);
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             onView(withId(R.id.drawer))
-                    .check(matches(isClosed(Gravity.LEFT)))
+                    .check(matches(isClosed(Gravity.START)))
                     .perform(DrawerActions.open());
 
             onView(withText(R.string.menu_settings)).perform(click());
@@ -209,6 +200,10 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
                     .perform(RecyclerViewActions.actionOnItem(
                             hasDescendant(withText(R.string.prefServer)), click()));
 
+            onView(allOf(instanceOf(EditText.class)))
+                    .inRoot(isDialog())
+                    .perform(clearText(), typeText(String.format("https://some-url-%s.com", getRandomString())));
+
             closeSoftKeyboard();
 
             onView(withText("OK"))
@@ -216,17 +211,22 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
                     .check(matches(isDisplayed()))
                     .perform(click());
 
+
             onView(withText(R.string.accept))
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()))
                     .perform(click());
 
-            pressBack();
-            pressBack();
+            pressBackUnconditionally();
+            pressBackUnconditionally();
 
             assertEquals(WelcomeActivity.class, TestUtils.getCurrentActivity().getClass());
 
         }
 
+    }
+
+    private Object getRandomString() {
+        return UUID.randomUUID().toString();
     }
 }

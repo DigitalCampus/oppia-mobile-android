@@ -12,11 +12,9 @@
         android:layout_width="@dimen/listitem_icon_size"
         android:layout_height="@dimen/listitem_icon_size"
         android:layout_alignParentBottom="false"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerHorizontal="false"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:src="@drawable/ic_file_account"
         app:tint="@color/listitem_icon_tint"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
@@ -67,7 +65,6 @@
         android:layout_centerVertical="true"
         android:orientation="horizontal"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true">
 
         <ImageButton

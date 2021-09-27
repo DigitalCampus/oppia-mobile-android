@@ -33,6 +33,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
@@ -81,8 +82,15 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
 
+        saveServerBadgeAwardCriteria();
+
     }
 
+    private void saveServerBadgeAwardCriteria() {
+        if (getPrefs().getString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, null) == null) {
+            new FetchServerInfoTask(this).execute();
+        }
+    }
 
     private void configureBadgePointsView() {
 
@@ -145,14 +153,9 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
             }
         }
 
-        // Change language menu option only should be visible if there are more than one language
+        // Change language menu option only should be visible if there is more than one language
         if (langs.size() > 1) {
-            options.put(R.id.menu_language, new DrawerMenuManager.MenuOption() {
-                @Override
-                public void onOptionSelected() {
-                    showLanguageSelectDialog(langs);
-                }
-            });
+            options.put(R.id.menu_language, () -> showLanguageSelectDialog(langs));
         }
 
         return options;
@@ -160,18 +163,14 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
     private void showLanguageSelectDialog(ArrayList<Lang> langs) {
 
-        UIUtils.createLanguageDialog(this, langs, prefs, new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-
-                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_main);
-                if (fragment instanceof CoursesListFragment) {
-                    // Refresh courses list
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
-                }
-
-                return false;
+        UIUtils.createLanguageDialog(this, langs, prefs, () -> {
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_main);
+            if (fragment instanceof CoursesListFragment) {
+                // Refresh courses list
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
             }
+
+            return false;
         });
     }
 

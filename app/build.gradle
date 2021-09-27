@@ -10,8 +10,8 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-def version_code = 91
-def version_name = "7.3.0-et.2.int"
+def version_code = 92
+def version_name = "7.3.1-et.1.int"
 
 android {
     compileSdkVersion 30
@@ -23,7 +23,7 @@ android {
         applicationId "et.gov.moh.oppia.covid"
 
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The following argument makes the Android Test Orchestrator run its
@@ -116,10 +116,15 @@ android {
 
             buildConfigField "String", "GAMIFICATION_MEDIA_CRITERIA", "\"" + runtimeProps['GAMIFICATION_MEDIA_CRITERIA'] + "\""
             buildConfigField "int", "GAMIFICATION_DEFAULT_MEDIA_THRESHOLD", runtimeProps['GAMIFICATION_DEFAULT_MEDIA_THRESHOLD']
+            buildConfigField "boolean", "GAMIFICATION_MEDIA_SHOULD_REACH_END", runtimeProps['GAMIFICATION_MEDIA_SHOULD_REACH_END']
             buildConfigField "String", "GAMIFICATION_POINTS_ANIMATION", "\"" + runtimeProps['GAMIFICATION_POINTS_ANIMATION'] + "\""
             buildConfigField "int", "DURATION_GAMIFICATION_POINTS_VIEW", runtimeProps['DURATION_GAMIFICATION_POINTS_VIEW']
             buildConfigField "int", "ADMIN_PASSWORD_OVERRIDE_VERSION", runtimeProps['ADMIN_PASSWORD_OVERRIDE_VERSION']
             buildConfigField "String", "ADMIN_PROTECT_INITIAL_PASSWORD", "\"" + runtimeProps['ADMIN_PROTECT_INITIAL_PASSWORD'] + "\""
+
+            buildConfigField "String", "PAGE_COMPLETED_METHOD", "\"" + runtimeProps['PAGE_COMPLETED_METHOD'] + "\""
+            buildConfigField "int", "PAGE_COMPLETED_TIME_SPENT", runtimeProps['PAGE_COMPLETED_TIME_SPENT']
+            buildConfigField "int", "PAGE_COMPLETED_WPM", runtimeProps['PAGE_COMPLETED_WPM']
 
             buildConfigField "int", "LOAD_CUSTOMFIELDS_VERSION", runtimeProps['LOAD_CUSTOMFIELDS_VERSION']
 

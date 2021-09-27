@@ -74,9 +74,9 @@
                             style="@style/NormalTextDark"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:layout_marginTop="5dp"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginEnd="10dp"
                             android:layout_marginBottom="5dp"
                             android:gravity="left"
                             android:textSize="20sp" />
@@ -124,19 +124,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_weight=".5"
-                    android:drawableLeft="@drawable/ic_arrow_left"
-                    android:drawableTint="@color/quiz_navigation_button"
+                    android:drawableStart="@drawable/ic_arrow_left"
+                    app:drawableTint="@color/quiz_navigation_button"
                     android:text="@string/widget_quiz_prev"
                     android:textSize="15sp" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/mquiz_next_btn"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_weight=".5"
-                    android:drawableRight="@drawable/ic_arrow_right"
-                    android:drawableTint="@color/quiz_navigation_button"
+                    android:drawableEnd="@drawable/ic_arrow_right"
+                    app:drawableTint="@color/quiz_navigation_button"
                     android:text="@string/widget_quiz_next"
                     android:textSize="15sp" />
             </LinearLayout>

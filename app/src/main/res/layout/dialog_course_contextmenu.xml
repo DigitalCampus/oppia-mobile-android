@@ -1,100 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/course_context_reset"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:clickable="true"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:layout_marginEnd="@dimen/padding_medium"
         android:background="@drawable/dialog_selectable"
-        android:layout_marginLeft="@dimen/padding_medium"
-        android:layout_marginRight="@dimen/padding_medium"
-        android:padding="@dimen/padding_medium"
-        android:id="@+id/course_context_reset">
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_medium">
 
         <ImageView
-            android:layout_width="55dp"
-            android:layout_height="55dp"
             android:id="@+id/imageView2"
-            android:src="@drawable/dialog_ic_action_update"
-            android:scaleType="fitCenter"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:background="@drawable/dialog_rounded_button"
-            android:padding="@dimen/padding_medium"/>
+            android:padding="@dimen/padding_medium"
+            android:scaleType="fitCenter"
+            android:src="@drawable/dialog_ic_action_update" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/course_context_reset"
             android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/range_tick_label_font_size"
+            android:text="@string/course_context_reset"
             android:textAppearance="@style/ContextMenuText"
-            android:layout_marginLeft="@dimen/range_tick_label_font_size"/>
+            android:textColor="@color/text_light" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/course_context_update_activity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:clickable="true"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:layout_marginEnd="@dimen/padding_medium"
         android:background="@drawable/dialog_selectable"
-        android:padding="@dimen/padding_medium"
-        android:layout_marginLeft="@dimen/padding_medium"
-        android:layout_marginRight="@dimen/padding_medium"
-        android:id="@+id/course_context_update_activity">
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_medium">
 
         <ImageView
-            android:layout_width="55dp"
-            android:layout_height="55dp"
             android:id="@+id/imageView3"
-            android:src="@drawable/dialog_ic_action_download"
-            android:scaleType="fitCenter"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:background="@drawable/dialog_rounded_button"
-            android:padding="@dimen/padding_medium"/>
+            android:padding="@dimen/padding_medium"
+            android:scaleType="fitCenter"
+            android:src="@drawable/dialog_ic_action_download" />
 
         <TextView
+            android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/course_context_update_activity"
-            android:id="@+id/textView4"
             android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/range_tick_label_font_size"
+            android:text="@string/course_context_update_activity"
             android:textAppearance="@style/ContextMenuText"
-            android:layout_marginLeft="@dimen/range_tick_label_font_size"/>
+            android:textColor="@color/text_light" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/course_context_delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:clickable="true"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:layout_marginEnd="@dimen/padding_medium"
         android:background="@drawable/dialog_selectable"
-        android:layout_marginLeft="@dimen/padding_medium"
-        android:layout_marginRight="@dimen/padding_medium"
-        android:padding="@dimen/padding_medium"
-        android:id="@+id/course_context_delete">
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_medium">
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="55dp"
             android:layout_height="55dp"
-            android:id="@+id/imageView"
-            android:src="@drawable/dialog_ic_action_delete"
-            android:scaleType="fitCenter"
             android:background="@drawable/dialog_rounded_button"
-            android:padding="@dimen/padding_medium"/>
+            android:padding="@dimen/padding_medium"
+            android:scaleType="fitCenter"
+            android:src="@drawable/dialog_ic_action_delete" />
 
         <TextView
+            android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/course_context_delete"
-            android:id="@+id/textView2"
             android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/range_tick_label_font_size"
+            android:text="@string/course_context_delete"
             android:textAppearance="@style/ContextMenuText"
-            android:layout_marginLeft="@dimen/range_tick_label_font_size"/>
+            android:textColor="@color/text_light" />
     </LinearLayout>
 </LinearLayout>
