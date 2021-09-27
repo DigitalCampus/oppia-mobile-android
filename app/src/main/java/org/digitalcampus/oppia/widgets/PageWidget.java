@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -102,6 +103,7 @@ public class PageWidget extends BaseWidget {
 		
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		wv.getSettings().setDefaultFontSize(defaultFontSize);
+		wv.getSettings().setAllowFileAccess(true);
 
 		try {
 			wv.getSettings().setJavaScriptEnabled(true);
@@ -125,7 +127,7 @@ public class PageWidget extends BaseWidget {
             }
 
             // set up the page to intercept videos
-			/**      
+			/**
 			 * @deprecated (replace as soon as possible)
 			 */
 			@Override
@@ -160,8 +162,9 @@ public class PageWidget extends BaseWidget {
 	public void setIsBaseline(boolean isBaseline) {
 		this.isBaseline = isBaseline;
 	}
-	
-	public boolean getActivityCompleted() {
+
+
+	public boolean activityMediaCompleted() {
 		// only show as being complete if all the videos on this page have been played
 		if (this.activity.hasMedia()) {
 			ArrayList<Media> mediaList = (ArrayList<Media>) this.activity.getMedia();
@@ -179,10 +182,32 @@ public class PageWidget extends BaseWidget {
 		}
 	}
 
+	public boolean getActivityCompleted(){
+		if (!this.activityMediaCompleted()){
+			return false;
+		}
+
+		long timetaken = this.getSpentTime();
+		if (BuildConfig.PAGE_COMPLETED_METHOD.equals(App.PAGE_COMPLETED_METHOD_TIME_SPENT)){
+			Log.d(TAG, "Time spent: " + timetaken + " | Min time (fixed): " + BuildConfig.PAGE_COMPLETED_TIME_SPENT);
+			return timetaken > BuildConfig.PAGE_COMPLETED_TIME_SPENT;
+		}
+
+		if (BuildConfig.PAGE_COMPLETED_METHOD.equals(App.PAGE_COMPLETED_METHOD_WPM)){
+			Activity a = DbHelper.getInstance(getContext()).getActivityByDigest(activity.getDigest());
+			int minTimeToRead = (a.getWordCount() * 60) / BuildConfig.PAGE_COMPLETED_WPM;
+			Log.d(TAG, "Time spent: " + timetaken + " | Min time (WPM): " + minTimeToRead);
+			return timetaken > minTimeToRead;
+		}
+		return timetaken > App.PAGE_READ_TIME;
+
+	}
+
 	public void saveTracker() {
 		if (activity == null){
 			return;
 		}
+
 		long timetaken = this.getSpentTime();
 		// only save tracker if over the time
 		if (timetaken < App.PAGE_READ_TIME) {

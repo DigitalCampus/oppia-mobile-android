@@ -43,6 +43,7 @@ import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.utils.CourseUtils;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -162,8 +163,12 @@ public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
 			upgradeV82();
 			prefs.edit().putBoolean("upgradeV82", true).apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading, "v82"));
+		}
 
-
+		if (!prefs.getBoolean("upgradeV90", false)) {
+			upgradeV90();
+			prefs.edit().putBoolean("upgradeV90", true).apply();
+			publishProgress(this.ctx.getString(R.string.info_upgrading, "v90"));
 		}
 
 		DBDataMigration.newInstance(ctx).checkMigrationStatus();
@@ -557,6 +562,27 @@ public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
 					Log.d(TAG, "Removing unused media file " + mediaFile +
 							(success ? " successfully" : "failed"));
 				}
+			}
+		}
+
+	}
+
+	protected void upgradeV90() {
+		// Update wordcount for currently installed courses
+		DbHelper db = DbHelper.getInstance(ctx);
+		List<Course> courses = db.getAllCourses();
+
+		for (Course course : courses){
+			CourseXMLReader cxr;
+			try {
+				cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
+				cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
+				CompleteCourse c = cxr.getParsedCourse();
+				c.setShortname(course.getShortname());
+				CourseUtils.updateCourseActivitiesWordCount(ctx, c);
+			} catch (InvalidXMLException ixmle) {
+				Log.d(TAG,"Invalid course XML", ixmle);
+				Analytics.logException(ixmle);
 			}
 		}
 

@@ -24,17 +24,6 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.multidex.MultiDex;
-import androidx.preference.PreferenceManager;
-import androidx.room.Room;
-import androidx.work.Constraints;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.ExistingWorkPolicy;
-import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
-
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -47,19 +36,26 @@ import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
 import org.digitalcampus.oppia.service.CoursesChecksWorker;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorker;
-import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.service.TrackerWorker;
-import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 import org.digitalcampus.oppia.utils.storage.StorageUtils;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
-import java.util.Calendar;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import androidx.multidex.MultiDex;
+import androidx.preference.PreferenceManager;
+import androidx.room.Room;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
@@ -96,11 +92,13 @@ public class App extends Application {
     public static final String MINT_API_KEY = BuildConfig.MINT_API_KEY;
     public static final int DOWNLOAD_COURSES_DISPLAY = BuildConfig.DOWNLOAD_COURSES_DISPLAY; //this no of courses must be displayed for the 'download more courses' option to disappear
     public static final int USERNAME_MIN_CHARACTERS = 4;
-    public static final int PHONENO_MIN_LENGTH = 8;
     public static final int PASSWORD_MIN_LENGTH = 6;
     public static final int PAGE_READ_TIME = 3;
     public static final int RESOURCE_READ_TIME = 3;
     public static final int URL_READ_TIME = 5;
+
+    public static final String PAGE_COMPLETED_METHOD_TIME_SPENT = "TIME_SPENT";
+    public static final String PAGE_COMPLETED_METHOD_WPM = "WPM";
 
     public static final long SCORECARD_ANIM_DURATION = 800;
     public static final long MEDIA_SCAN_TIME_LIMIT = 3600;
@@ -178,17 +176,10 @@ public class App extends Application {
 
         OppiaNotificationUtils.initializeOreoNotificationChannels(this);
 
-        saveServerBadgeAwardCriteria();
-
 //        launchWorkerToTest();
 
     }
 
-    private void saveServerBadgeAwardCriteria() {
-        if (getPrefs(this).getString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, null) == null) {
-            new FetchServerInfoTask(this).execute();
-        }
-    }
 
 
     private void checkAppInstanceIdCreated(SharedPreferences prefs) {

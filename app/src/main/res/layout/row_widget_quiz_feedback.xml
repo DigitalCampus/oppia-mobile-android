@@ -16,10 +16,8 @@
                 android:layout_height="@dimen/listitem_icon_size"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/list_card_icon_margin"
-                android:layout_marginLeft="@dimen/list_card_icon_margin"
                 android:layout_marginTop="@dimen/list_card_icon_margin"
                 android:layout_marginEnd="@dimen/list_card_icon_margin"
-                android:layout_marginRight="@dimen/list_card_icon_margin"
                 android:layout_marginBottom="@dimen/list_card_icon_margin" />
 
             <TextView

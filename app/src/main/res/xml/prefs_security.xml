@@ -43,7 +43,6 @@
         app:iconSpaceReserved="false"
         android:defaultValue="false"
         android:key="prefAdminProtection"
-
         android:title="@string/prefAdminProtection" />
 
     <org.digitalcampus.oppia.utils.custom_prefs.AdminEditTextPreference

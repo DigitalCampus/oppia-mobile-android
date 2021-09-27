@@ -19,14 +19,12 @@ package org.digitalcampus.oppia.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.preference.PreferenceManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityStartUpBinding;
@@ -48,7 +46,6 @@ import java.io.File;
 public class StartUpActivity extends Activity implements UpgradeListener, InstallCourseListener {
 
     public static final String TAG = StartUpActivity.class.getSimpleName();
-    private SharedPreferences prefs;
     private ActivityStartUpBinding binding;
 
     @Override
@@ -56,8 +53,6 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
         super.onCreate(savedInstanceState);
         binding = ActivityStartUpBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
-
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         Analytics.startTrackingIfEnabled(this);
     }

@@ -1,17 +1,21 @@
 package org.digitalcampus.oppia.utils;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.responses.CourseServer;
 import org.digitalcampus.oppia.model.responses.CoursesServerResponse;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CourseUtils {
@@ -60,7 +64,7 @@ public class CourseUtils {
 
     public static List<CourseServer> getNotInstalledCourses(SharedPreferences prefs, List<Course> coursesInstalled) {
 
-        List<CourseServer> coursesServer = null;
+        List<CourseServer> notInstalledCourses = null;
 
         String coursesCachedStr = prefs.getString(PrefsActivity.PREF_SERVER_COURSES_CACHE, null);
 
@@ -68,8 +72,8 @@ public class CourseUtils {
             CoursesServerResponse coursesServerResponse = new Gson().fromJson(
                     coursesCachedStr, CoursesServerResponse.class);
 
-            coursesServer = coursesServerResponse.getCourses();
-            List<CourseServer> notInstalledCourses = new ArrayList<>();
+            List<CourseServer> coursesServer = coursesServerResponse.getCourses();
+            notInstalledCourses = new ArrayList<>();
             for (CourseServer courseServer : coursesServer) {
                 if (!isCourseInstalled(courseServer, coursesInstalled)) {
                     notInstalledCourses.add(courseServer);
@@ -77,7 +81,7 @@ public class CourseUtils {
             }
         }
 
-        return coursesServer;
+        return notInstalledCourses;
     }
 
     private static boolean isCourseInstalled(CourseServer courseServer, List<Course> coursesInstalled) {
@@ -88,4 +92,34 @@ public class CourseUtils {
         }
         return false;
     }
+
+    public static void updateCourseActivitiesWordCount(Context ctx, CompleteCourse course) {
+
+        DbHelper db = DbHelper.getInstance(ctx);
+        List<Activity> activities = course.getActivities(course.getCourseId());
+
+        for (Activity a : activities) {
+            ArrayList<Lang> langs = (ArrayList<Lang>) course.getLangs();
+            int wordCount = 0;
+
+            for (Lang l : langs) {
+                String langContents = a.getFileContents(course.getLocation(), l.getLanguage());
+                if (langContents == null) {
+                    continue;
+                }
+                // strip out all html tags from string (not needed for search nor wordcount)
+                langContents = langContents.replaceAll("\\<.*?\\>", "").trim();
+                int langWordCount = langContents.split("\\s+").length;
+                // We keep the highest wordcount among the different languages
+                wordCount = Math.max(wordCount, langWordCount);
+            }
+
+            Activity act = db.getActivityByDigest(a.getDigest());
+            if ((act != null) && (wordCount > 0)) {
+                db.updateActivityWordCount(act, wordCount);
+            }
+
+        }
+    }
+
 }

@@ -84,4 +84,10 @@
     <color name="chart_line_media_watched">@color/lmh_blue</color>
     <color name="chart_line_course_downloaded">@color/cha_orange</color>
     <color name="chart_line_quiz_attempt">@color/theme_primary_dark</color>
+
+    <!-- If the logo image in the Startup screen includes the app name, the visibility value should be "gone"  -->
+    <style name="StartupAppName">
+        <item name="android:visibility">visible</item>
+    </style>
 </resources>
+

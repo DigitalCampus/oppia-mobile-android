@@ -37,8 +37,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
@@ -51,8 +51,8 @@
                     android:id="@+id/login_username_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding_large"
-                    android:layout_marginRight="@dimen/padding_large"
+                    android:layout_marginStart="@dimen/padding_large"
+                    android:layout_marginEnd="@dimen/padding_large"
                     android:hint="@string/login_username_title"
                     android:inputType="text"
                     android:textSize="15sp" />
@@ -68,8 +68,8 @@
                     android:id="@+id/login_password_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding_large"
-                    android:layout_marginRight="@dimen/padding_large"
+                    android:layout_marginStart="@dimen/padding_large"
+                    android:layout_marginEnd="@dimen/padding_large"
                     android:hint="@string/login_password_title"
                     android:inputType="textPassword"
                     android:textSize="15sp" />
@@ -80,9 +80,9 @@
                 android:id="@+id/login_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding_large"
+                android:layout_marginStart="@dimen/padding_large"
                 android:layout_marginTop="@dimen/padding_medium"
-                android:layout_marginRight="@dimen/padding_large"
+                android:layout_marginEnd="@dimen/padding_large"
                 android:text="@string/title_login"
                 android:theme="@style/PrimaryButton" />
 
@@ -91,8 +91,8 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding_large"
-                android:layout_marginRight="@dimen/padding_large"
+                android:layout_marginStart="@dimen/padding_large"
+                android:layout_marginEnd="@dimen/padding_large"
                 android:text="@string/title_btn_reset_password" />
 
             <Button
@@ -100,8 +100,8 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding_large"
-                android:layout_marginRight="@dimen/padding_large"
+                android:layout_marginStart="@dimen/padding_large"
+                android:layout_marginEnd="@dimen/padding_large"
                 android:text="@string/title_btn_remember_username" />
 
             <TextView
@@ -109,9 +109,9 @@
                 style="@style/SubheaderText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/padding_large"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:gravity="center"
                 android:text="@string/login_dont_have_account" />
 
@@ -119,8 +119,8 @@
                 android:id="@+id/action_register_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding_large"
-                android:layout_marginRight="@dimen/padding_large"
+                android:layout_marginStart="@dimen/padding_large"
+                android:layout_marginEnd="@dimen/padding_large"
                 android:text="@string/title_register" />
         </LinearLayout>
 

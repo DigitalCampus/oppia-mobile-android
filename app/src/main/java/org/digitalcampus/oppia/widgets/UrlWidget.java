@@ -94,6 +94,7 @@ public class UrlWidget extends BaseWidget {
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		wv.getSettings().setDefaultFontSize(defaultFontSize);
 		wv.getSettings().setJavaScriptEnabled(true);
+		wv.getSettings().setAllowFileAccess(true);
 		wv.setWebViewClient(new WebViewClient() {
 			/**      
 			 * @deprecated (replace as soon as possible)
