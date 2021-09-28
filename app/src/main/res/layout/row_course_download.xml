@@ -15,8 +15,8 @@
         android:layout_marginBottom="7dp"
         android:foreground="@drawable/bg_selectable"
         app:contentPaddingBottom="@dimen/list_card_vertical_padding"
-        app:contentPaddingStart="@dimen/list_card_horizontal_padding"
-        app:contentPaddingEnd="@dimen/list_card_horizontal_padding"
+        app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
+        app:contentPaddingRight="@dimen/list_card_horizontal_padding"
         app:contentPaddingTop="@dimen/list_card_vertical_padding">
 
         <RelativeLayout
