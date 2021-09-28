@@ -36,8 +36,8 @@
             android:layout_marginBottom="7dp"
             android:foreground="?android:attr/selectableItemBackground"
             app:contentPaddingBottom="@dimen/padding_medium_2"
-            app:contentPaddingEnd="@dimen/padding_large"
-            app:contentPaddingStart="@dimen/padding_large"
+            app:contentPaddingRight="@dimen/padding_large"
+            app:contentPaddingLeft="@dimen/padding_large"
             app:contentPaddingTop="@dimen/padding_medium_2">
 
             <LinearLayout
@@ -177,8 +177,8 @@
             android:layout_marginBottom="7dp"
             android:foreground="?android:attr/selectableItemBackground"
             app:contentPaddingBottom="@dimen/padding_medium_2"
-            app:contentPaddingStart="@dimen/padding_large"
-            app:contentPaddingEnd="@dimen/padding_large"
+            app:contentPaddingLeft="@dimen/padding_large"
+            app:contentPaddingRight="@dimen/padding_large"
             app:contentPaddingTop="@dimen/padding_medium_2">
 
             <LinearLayout
@@ -240,8 +240,8 @@
                 android:layout_marginBottom="7dp"
                 android:foreground="?android:attr/selectableItemBackground"
                 app:contentPaddingBottom="@dimen/padding_medium_2"
-                app:contentPaddingStart="@dimen/list_card_horizontal_padding"
-                app:contentPaddingEnd="@dimen/list_card_horizontal_padding"
+                app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
+                app:contentPaddingRight="@dimen/list_card_horizontal_padding"
                 app:contentPaddingTop="@dimen/padding_medium_2">
 
                 <LinearLayout
