@@ -15,8 +15,8 @@
         android:layout_marginEnd="8dp"
         android:foreground="?android:attr/selectableItemBackground"
         app:contentPaddingBottom="5dp"
-        app:contentPaddingStart="10dp"
-        app:contentPaddingEnd="10dp"
+        app:contentPaddingLeft="10dp"
+        app:contentPaddingRight="10dp"
         app:contentPaddingTop="5dp">
 
         <LinearLayout

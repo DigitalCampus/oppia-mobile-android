@@ -35,8 +35,8 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:foreground="@drawable/bg_selectable"
         app:contentPaddingBottom="@dimen/list_card_vertical_padding"
-        app:contentPaddingStart="@dimen/list_card_horizontal_padding"
-        app:contentPaddingEnd="@dimen/list_card_horizontal_padding"
+        app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
+        app:contentPaddingRight="@dimen/list_card_horizontal_padding"
         app:contentPaddingTop="@dimen/list_card_vertical_padding">
 
         <LinearLayout
@@ -100,8 +100,8 @@
         android:layout_marginEnd="32dp"
         android:foreground="@drawable/bg_selectable"
         app:contentPaddingBottom="@dimen/list_card_vertical_padding"
-        app:contentPaddingStart="@dimen/list_card_horizontal_padding"
-        app:contentPaddingEnd="@dimen/list_card_horizontal_padding"
+        app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
+        app:contentPaddingRight="@dimen/list_card_horizontal_padding"
         app:contentPaddingTop="@dimen/list_card_vertical_padding">
 
         <TextView
