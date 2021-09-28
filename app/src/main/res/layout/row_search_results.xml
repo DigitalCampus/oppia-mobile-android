@@ -14,8 +14,8 @@
         android:layout_marginBottom="6dp"
         android:foreground="?android:attr/selectableItemBackground"
         app:contentPaddingBottom="@dimen/list_card_vertical_padding"
-        app:contentPaddingStart="@dimen/list_card_horizontal_padding"
-        app:contentPaddingEnd="@dimen/list_card_horizontal_padding"
+        app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
+        app:contentPaddingRight="@dimen/list_card_horizontal_padding"
         app:contentPaddingTop="@dimen/list_card_vertical_padding">
 
         <RelativeLayout
