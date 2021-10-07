@@ -18,6 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityMainBinding;
 import org.digitalcampus.mobile.learning.databinding.DrawerHeaderBinding;
@@ -103,7 +104,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     public void onResume() {
         super.onResume();
 
-        configureLogoutOption();
+        configureUserOptions();
         updateUserTotalPoints();
     }
 
@@ -193,12 +194,15 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     }
 
     // CONFIGURATIONS
-    private void configureLogoutOption() {
+    private void configureUserOptions() {
         boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, App.MENU_ALLOW_LOGOUT);
         bindingHeader.btnLogout.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
         if (!logoutVisible) {
             setupProfileOptionsView(false);
         }
+
+        bindingHeader.btnEditProfile.setVisibility(BuildConfig.MENU_ALLOW_EDIT_PROFILE ? View.VISIBLE : View.GONE);
+        bindingHeader.btnChangePassword.setVisibility(BuildConfig.MENU_ALLOW_CHANGE_PASSWORD ? View.VISIBLE : View.GONE);
     }
 
     private void setupProfileOptionsView(boolean visible) {
