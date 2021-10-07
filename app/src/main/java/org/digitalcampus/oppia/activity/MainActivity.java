@@ -72,6 +72,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         bindingHeader.btnExpandProfileOptions.setOnClickListener(this);
         bindingHeader.btnEditProfile.setOnClickListener(this);
+        bindingHeader.btnChangePassword.setOnClickListener(this);
         bindingHeader.btnLogout.setOnClickListener(this);
 
         binding.navBottomView.setOnNavigationItemSelectedListener(this);
@@ -253,14 +254,11 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
                 break;
 
             case R.id.btn_edit_profile:
-                if (ConnectionUtils.isNetworkConnected(this)) {
-                    startActivity(new Intent(this, EditProfileActivity.class));
-                } else {
-                    alert(R.string.edit_profile_available_online);
-                }
+                checkConnectionAndOpenActivity(EditProfileActivity.class);
+                break;
 
-                setupProfileOptionsView(false);
-                drawer.close();
+            case R.id.btn_change_password:
+                checkConnectionAndOpenActivity(ChangePasswordActivity.class);
                 break;
 
             case R.id.btn_logout:
@@ -270,6 +268,17 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
             default:
                 // do nothing
         }
+    }
+
+    private void checkConnectionAndOpenActivity(Class<? extends AppActivity> activityClass) {
+        if (ConnectionUtils.isNetworkConnected(this)) {
+            startActivity(new Intent(this, activityClass));
+        } else {
+            alert(R.string.edit_profile_available_online);
+        }
+
+        setupProfileOptionsView(false);
+        drawer.close();
     }
 
 
