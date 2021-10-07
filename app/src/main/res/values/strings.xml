@@ -584,6 +584,7 @@
     <string name="courses_reminder_default_day_time">Tuesday at 10:00</string>
     <string name="disabled">Disabled</string>
     <string name="change_password">Change password</string>
+    <string name="change_password_success">Your password has successfully been updated</string>
 
 </resources>
 

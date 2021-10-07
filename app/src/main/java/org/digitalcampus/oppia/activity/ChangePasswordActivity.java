@@ -1,24 +1,13 @@
 package org.digitalcampus.oppia.activity;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Patterns;
-import android.view.View;
-import android.widget.LinearLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityChangePasswordBinding;
-import org.digitalcampus.mobile.learning.databinding.ActivityEditProfileBinding;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.model.CustomField;
-import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.UpdateProfileTask;
-import org.digitalcampus.oppia.utils.ui.fields.CustomFieldsUIManager;
-import org.digitalcampus.oppia.utils.ui.fields.ValidableField;
-
-import java.util.HashMap;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -43,8 +32,17 @@ public class ChangePasswordActivity extends AppActivity implements UpdateProfile
 
         binding.btnSaveNewPassword.setOnClickListener(v -> {
 
+            showChangePasswordSuccessDialog();
         });
 
+    }
+
+    private void showChangePasswordSuccessDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.change_password_success)
+                .setPositiveButton(R.string.ok, (dialog, which) -> {
+                    finish();
+                }).show();
     }
 
     @Override
