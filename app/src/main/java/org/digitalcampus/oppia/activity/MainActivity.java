@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.StatFs;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -42,7 +39,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
@@ -274,7 +270,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         if (ConnectionUtils.isNetworkConnected(this)) {
             startActivity(new Intent(this, activityClass));
         } else {
-            alert(R.string.edit_profile_available_online);
+            alert(R.string.option_available_online);
         }
 
         setupProfileOptionsView(false);
