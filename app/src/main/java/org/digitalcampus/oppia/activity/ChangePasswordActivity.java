@@ -2,16 +2,18 @@ package org.digitalcampus.oppia.activity;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityChangePasswordBinding;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.ChangePasswordTask;
 import org.digitalcampus.oppia.task.UpdateProfileTask;
 
 import javax.inject.Inject;
 
-public class ChangePasswordActivity extends AppActivity implements UpdateProfileTask.ResponseListener {
+public class ChangePasswordActivity extends AppActivity implements ChangePasswordTask.ResponseListener {
 
     private ActivityChangePasswordBinding binding;
 
@@ -27,12 +29,10 @@ public class ChangePasswordActivity extends AppActivity implements UpdateProfile
         binding = ActivityChangePasswordBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
         getAppComponent().inject(this);
 
         binding.btnSaveNewPassword.setOnClickListener(v -> {
-
-            showChangePasswordSuccessDialog();
+            checkAndChangePasswords();
         });
 
     }
@@ -52,27 +52,34 @@ public class ChangePasswordActivity extends AppActivity implements UpdateProfile
     }
 
 
-    private void executeUpdateProfileTask(final User user) {
-        UpdateProfileTask task = new UpdateProfileTask(this, apiEndpoint);
+    private void checkAndChangePasswords() {
+
+        String pass1 = binding.fieldPassword.getEditText().getText().toString();
+        String pass2 = binding.fieldPasswordRepeat.getEditText().getText().toString();
+
+        if (!TextUtils.equals(pass1, pass2)) {
+            toast(R.string.error_register_password_no_match);
+            return;
+        }
+
+        showProgressDialog(getString(R.string.loading));
+
+        ChangePasswordTask task = new ChangePasswordTask(this, apiEndpoint);
         task.setResponseListener(this);
-        task.execute(user);
+        task.execute(pass1, pass2);
     }
 
 
     // Request responses
     @Override
-    public void onSubmitComplete(User u) {
-        toast(R.string.profile_updated_successfuly);
-        finish();
+    public void onSuccess() {
+        hideProgressDialog();
+        showChangePasswordSuccessDialog();
     }
 
     @Override
-    public void onSubmitError(String error) {
-        toast(error);
-    }
-
-    @Override
-    public void onConnectionError(String error, User u) {
-        toast(error);
+    public void onError(String error) {
+        hideProgressDialog();
+        alert(error);
     }
 }

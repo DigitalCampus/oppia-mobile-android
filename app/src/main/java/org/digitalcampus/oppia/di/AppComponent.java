@@ -2,6 +2,7 @@ package org.digitalcampus.oppia.di;
 
 import org.digitalcampus.oppia.activity.ActivityLogActivity;
 import org.digitalcampus.oppia.activity.AppActivity;
+import org.digitalcampus.oppia.activity.ChangePasswordActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
 import org.digitalcampus.oppia.activity.DownloadActivity;
@@ -62,6 +63,7 @@ public interface AppComponent {
     void inject(GlobalQuizAttemptsFragment fragment);
     void inject(RegisterFragment fragment);
     void inject(App app);
+    void inject(ChangePasswordActivity activity);
 
     void inject(AdvancedPrefsFragment advancedPrefsFragment);
 
