@@ -122,8 +122,12 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     }
 
     public void alert(int stringId) {
+        alert(getString(stringId));
+    }
+
+    public void alert(String message) {
         new AlertDialog.Builder(this)
-                .setMessage(stringId)
+                .setMessage(message)
                 .setNegativeButton(R.string.close, null)
                 .show();
     }

@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.StatFs;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,6 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityMainBinding;
 import org.digitalcampus.mobile.learning.databinding.DrawerHeaderBinding;
@@ -42,7 +40,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
@@ -72,6 +69,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         bindingHeader.btnExpandProfileOptions.setOnClickListener(this);
         bindingHeader.btnEditProfile.setOnClickListener(this);
+        bindingHeader.btnChangePassword.setOnClickListener(this);
         bindingHeader.btnLogout.setOnClickListener(this);
 
         binding.navBottomView.setOnNavigationItemSelectedListener(this);
@@ -106,7 +104,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     public void onResume() {
         super.onResume();
 
-        configureLogoutOption();
+        configureUserOptions();
         updateUserTotalPoints();
     }
 
@@ -196,12 +194,15 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     }
 
     // CONFIGURATIONS
-    private void configureLogoutOption() {
+    private void configureUserOptions() {
         boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, App.MENU_ALLOW_LOGOUT);
         bindingHeader.btnLogout.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
         if (!logoutVisible) {
             setupProfileOptionsView(false);
         }
+
+        bindingHeader.btnEditProfile.setVisibility(BuildConfig.MENU_ALLOW_EDIT_PROFILE ? View.VISIBLE : View.GONE);
+        bindingHeader.btnChangePassword.setVisibility(BuildConfig.MENU_ALLOW_CHANGE_PASSWORD ? View.VISIBLE : View.GONE);
     }
 
     private void setupProfileOptionsView(boolean visible) {
@@ -253,14 +254,11 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
                 break;
 
             case R.id.btn_edit_profile:
-                if (ConnectionUtils.isNetworkConnected(this)) {
-                    startActivity(new Intent(this, EditProfileActivity.class));
-                } else {
-                    alert(R.string.edit_profile_available_online);
-                }
+                checkConnectionAndOpenActivity(EditProfileActivity.class);
+                break;
 
-                setupProfileOptionsView(false);
-                drawer.close();
+            case R.id.btn_change_password:
+                checkConnectionAndOpenActivity(ChangePasswordActivity.class);
                 break;
 
             case R.id.btn_logout:
@@ -270,6 +268,17 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
             default:
                 // do nothing
         }
+    }
+
+    private void checkConnectionAndOpenActivity(Class<? extends AppActivity> activityClass) {
+        if (ConnectionUtils.isNetworkConnected(this)) {
+            startActivity(new Intent(this, activityClass));
+        } else {
+            alert(R.string.option_available_online);
+        }
+
+        setupProfileOptionsView(false);
+        drawer.close();
     }
 
 
