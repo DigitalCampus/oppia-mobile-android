@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityChangePasswordBinding;
 import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ChangePasswordTask;
 import org.digitalcampus.oppia.task.UpdateProfileTask;
@@ -54,11 +55,19 @@ public class ChangePasswordActivity extends AppActivity implements ChangePasswor
 
     private void checkAndChangePasswords() {
 
+        binding.fieldPassword.setError(null);
+        binding.fieldPasswordRepeat.setError(null);
+
         String pass1 = binding.fieldPassword.getEditText().getText().toString();
         String pass2 = binding.fieldPasswordRepeat.getEditText().getText().toString();
 
+        if (pass1.length() < App.PASSWORD_MIN_LENGTH) {
+            binding.fieldPassword.setError(getString(R.string.error_register_password,  App.PASSWORD_MIN_LENGTH ));
+            return;
+        }
+
         if (!TextUtils.equals(pass1, pass2)) {
-            toast(R.string.error_register_password_no_match);
+            binding.fieldPasswordRepeat.setError(getString(R.string.error_register_password_no_match));
             return;
         }
 
