@@ -585,6 +585,7 @@
     <string name="disabled">Disabled</string>
     <string name="change_password">Change password</string>
     <string name="change_password_success">Your password has successfully been updated</string>
+    <string name="change_password_intro">To change your password, please enter a new password below:</string>
 
 </resources>
 
