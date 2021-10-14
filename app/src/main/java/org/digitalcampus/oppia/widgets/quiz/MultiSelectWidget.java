@@ -26,6 +26,7 @@ import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -82,6 +83,7 @@ public class MultiSelectWidget extends QuestionWidget {
 			CheckBox cb = (CheckBox) responsesLL.getChildAt(i);
 			if(cb.isChecked()){
 				response.add(cb.getText().toString());
+				Log.d(TAG, "User selected: " + cb.getText().toString());
 			}
 		}
 

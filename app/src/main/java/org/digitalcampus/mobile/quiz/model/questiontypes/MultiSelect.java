@@ -44,15 +44,20 @@ public class MultiSelect extends QuizQuestion implements Serializable {
             for(String ur: userResponses){
                 if (r.getTitle(lang).equals(ur) && r.getScore() == 0){
                     total = 0;
+                    Log.d(TAG, "Marking as incorrect");
                 }
             }
         }
+        Log.d(TAG,"Score for question: " + total);
+
         int maxscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
+        Log.d(TAG,"Max score for question: " + maxscore);
         if (total > maxscore){
             userscore = maxscore;
         } else {
             userscore = total;
         }
+        Log.d(TAG, "User score for question: " + userscore);
     }
 
     private float setFeedback(String lang){
@@ -60,7 +65,10 @@ public class MultiSelect extends QuizQuestion implements Serializable {
         StringBuilder questionFeedback = new StringBuilder();
         for (Response r : responseOptions){
             for (String ur : userResponses) {
+                Log.d(TAG, "user selected: " + ur);
+                Log.d(TAG, "checking against response: " + r.getTitle(lang));
                 if (ur.equals(r.getTitle(lang))) {
+                    Log.d(TAG, "setting feedback for: " + r.getTitle(lang));
                     total += r.getScore();
                     if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
                         questionFeedback.append(ur);
