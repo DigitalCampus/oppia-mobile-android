@@ -36,6 +36,7 @@ import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
 import org.digitalcampus.oppia.service.CoursesChecksWorker;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorker;
+import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
@@ -231,6 +232,12 @@ public class App extends Application {
             cancelWorks(WORK_COURSES_CHECKS, WORK_TRACKER_SEND);
         }
 
+        scheduleCoursesReminderWork();
+
+    }
+
+    private void scheduleCoursesReminderWork() {
+        CoursesCompletionReminderWorkerManager.configureCoursesCompletionReminderWorker(this, ExistingPeriodicWorkPolicy.KEEP);
     }
 
 

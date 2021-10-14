@@ -149,17 +149,21 @@ public class CoursesCompletionReminderWorkerManager {
     }
 
     public static void configureCoursesCompletionReminderWorker(Context context) {
+        configureCoursesCompletionReminderWorker(context, ExistingPeriodicWorkPolicy.REPLACE);
+    }
+
+    public static void configureCoursesCompletionReminderWorker(Context context, ExistingPeriodicWorkPolicy policy) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String coursesReminderDayTimeMillis = prefs.getString(PrefsActivity.PREF_COURSES_REMINDER_DAY_TIME_MILLIS, DEFAULT_COURSES_REMINDER_TIME_MILLIS);
         if (!TextUtils.isEmpty(coursesReminderDayTimeMillis)) {
-            scheduleCoursesCompletionReminderWorker(context, coursesReminderDayTimeMillis);
+            scheduleCoursesCompletionReminderWorker(context, coursesReminderDayTimeMillis, policy);
         } else {
             ((App) context.getApplicationContext()).cancelWorks(App.WORK_COURSES_NOT_COMPLETED_REMINDER);
         }
     }
 
-    private static void scheduleCoursesCompletionReminderWorker(Context context, String coursesReminderDayTimeMillis) {
+    private static void scheduleCoursesCompletionReminderWorker(Context context, String coursesReminderDayTimeMillis, ExistingPeriodicWorkPolicy policy) {
 
         Calendar calendarDayTime = Calendar.getInstance();
         calendarDayTime.setTimeInMillis(Long.parseLong(coursesReminderDayTimeMillis));
@@ -182,7 +186,7 @@ public class CoursesCompletionReminderWorkerManager {
                 .build();
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(App.WORK_COURSES_NOT_COMPLETED_REMINDER,
-                ExistingPeriodicWorkPolicy.REPLACE, coursesCompletionReminder);
+                policy, coursesCompletionReminder);
 
     }
 }
