@@ -94,6 +94,8 @@ android {
             buildConfigField "boolean", "ADMIN_PROTECT_COURSE_UPDATE", runtimeProps['ADMIN_PROTECT_COURSE_UPDATE']
 
             buildConfigField "boolean", "MENU_ALLOW_LOGOUT", runtimeProps['MENU_ALLOW_LOGOUT']
+            buildConfigField "boolean", "MENU_ALLOW_EDIT_PROFILE", runtimeProps['MENU_ALLOW_EDIT_PROFILE']
+            buildConfigField "boolean", "MENU_ALLOW_CHANGE_PASSWORD", runtimeProps['MENU_ALLOW_CHANGE_PASSWORD']
             buildConfigField "boolean", "MENU_ALLOW_MONITOR", runtimeProps['MENU_ALLOW_MONITOR']
             buildConfigField "boolean", "MENU_ALLOW_SETTINGS", runtimeProps['MENU_ALLOW_SETTINGS']
             buildConfigField "boolean", "MENU_ALLOW_LANGUAGE", runtimeProps['MENU_ALLOW_LANGUAGE']

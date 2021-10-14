@@ -435,7 +435,7 @@
     <string name="info_override_password">Sobreescribiendo contraseña de admin…</string>
 
     <string name="archived_activities">Registros de actividad archivados (ya transferidos)</string>
-    <string name="edit_profile_available_online">La opción para editar perfil solo está disponible cuando el dispositivo está conectado a internet</string>
+    <string name="option_available_online">Esta opción solo está disponible cuando el dispositivo está conectado a internet</string>
     <string name="profile_updated_successfuly">Perfil actualizado correctamente</string>
 
     <string name="open_digest.errors.invalid_param">Falta el parámetro de identificación o está mal configurado. Por favor, compruebe que el enlace es válido.</string>
