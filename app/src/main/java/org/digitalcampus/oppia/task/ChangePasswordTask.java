@@ -25,6 +25,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomValue;
@@ -81,6 +82,7 @@ public class ChangePasswordTask extends APIRequestTask<String, String, BasicResu
             // make request
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
+                updateLocalPassword(password1);
                 result.setSuccess(true);
             } else if (response.code() == 400) {
                 String bodyResponse = response.body().string();
@@ -115,6 +117,12 @@ public class ChangePasswordTask extends APIRequestTask<String, String, BasicResu
         return result;
     }
 
+    private void updateLocalPassword(String password) {
+        long userId = SessionManager.getUserId(ctx);
+        User user = new User();
+        user.setPassword(password);
+        DbHelper.getInstance(ctx).changeUserPassword(userId, user.getPasswordEncrypted());
+    }
 
 
     @Override
