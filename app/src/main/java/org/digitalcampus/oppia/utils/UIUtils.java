@@ -53,6 +53,7 @@ import java.util.concurrent.Callable;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.BlendModeColorFilterCompat;
 import androidx.core.graphics.BlendModeCompat;
+import androidx.core.text.HtmlCompat;
 import androidx.preference.PreferenceManager;
 
 public class UIUtils {
@@ -338,6 +339,20 @@ public class UIUtils {
         } catch (Exception e) {
 
         }
+    }
+
+    public static CharSequence getFromHtmlAndTrim(String text) {
+        CharSequence html = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY);
+        int start = 0;
+        int end = html.length();
+
+        while (start < end && Character.isWhitespace(html.charAt(start))) {
+            start++;
+        }
+        while (end > start && Character.isWhitespace(html.charAt(end - 1))) {
+            end--;
+        }
+        return html.subSequence(start, end);
     }
 
 }
