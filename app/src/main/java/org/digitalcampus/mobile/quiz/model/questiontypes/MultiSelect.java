@@ -71,10 +71,10 @@ public class MultiSelect extends QuizQuestion implements Serializable {
                     Log.d(TAG, "setting feedback for: " + r.getTitle(lang));
                     total += r.getScore();
                     if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
-                        questionFeedback.append(ur);
-                        questionFeedback.append(": ");
+                        questionFeedback.append("<strong>" + ur);
+                        questionFeedback.append(":</strong> ");
                         questionFeedback.append(r.getFeedback(lang));
-                        questionFeedback.append("\n\n");
+                        questionFeedback.append("<br>");
                     }
                 }
             }
