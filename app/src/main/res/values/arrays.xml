@@ -38,6 +38,19 @@
         <item>3</item>
     </string-array>
 
+
+    <!-- Courses not completed REMINDERS -->
+
+    <string-array name="reminder_intervals">
+        <item>Weekly</item>
+        <item>Daily</item>
+    </string-array>
+
+    <string-array name="reminder_intervals_values">
+        <item>WEEKLY</item>
+        <item>DAILY</item>
+    </string-array>
+
     <string-array name="days_of_week">
         <item>Monday</item>
         <item>Tuesday</item>
@@ -48,7 +61,7 @@
         <item>Sunday</item>
     </string-array>
 
-    <integer-array name="days_of_week_values">
+    <string-array name="days_of_week_values">
         <item>2</item>
         <item>3</item>
         <item>4</item>
@@ -56,6 +69,14 @@
         <item>6</item>
         <item>7</item>
         <item>1</item>
-    </integer-array>
+    </string-array>
+
+    <string-array name="days_of_week_values_default">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
 
 </resources>

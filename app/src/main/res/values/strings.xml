@@ -145,6 +145,12 @@
     <string name="prefDurationAnimationTypeGamificationPointsView">Animation duration</string>
     <string name="prefDurationAnimation_summary">Time that the gamification points event animation stays on screen (in seconds)</string>
 
+    <string name="prefSectionReminder">Courses reminder</string>
+    <string name="prefCoursesReminderEnabled">Enable courses not completed reminders</string>
+    <string name="prefCoursesReminderIntervalTitle">Reminders interval</string>
+    <string name="prefCoursesReminderDaysTitle">Reminder days</string>
+    <string name="prefCoursesReminderTimeTitle">Reminder time</string>
+    
     <!-- Strings relative to Storage -->
     <string name="prefStorageLocation">Storage Location</string>
     <string name="prefStorageOptionInternal">Internal</string>
@@ -576,7 +582,6 @@
     <string name="courses_reminder_notif_text">You have not completed all your courses yet.\nGo to your courses</string>
     <string name="courses_reminder_notif_title">Courses reminder</string>
     <string name="courses_reminder_settings">Reminder settings</string>
-    <string name="prefSectionReminder">Courses reminder</string>
     <string name="day_of_week_and_time">Day of week and time</string>
     <string name="time">Time</string>
     <string name="disable_reminder">Disable reminder</string>

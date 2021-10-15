@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.fragment.app.DialogFragment;
+import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 
 import org.digitalcampus.mobile.learning.R;
@@ -13,11 +14,16 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.utils.custom_prefs.DayWeekTimePreference;
 import org.digitalcampus.oppia.utils.custom_prefs.DayWeekTimePreferenceDialogFragment;
+import org.digitalcampus.oppia.utils.custom_prefs.TimePreference;
+import org.digitalcampus.oppia.utils.custom_prefs.TimePreferenceDialogFragmentCompat;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 public class NotificationsPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback, SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -38,20 +44,42 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
         // Load the preferences from XML resources
         addPreferencesFromResource(R.xml.prefs_notifications);
 
-        final DayWeekTimePreference pref = findPreference(PrefsActivity.PREF_COURSES_REMINDER_DAY_TIME_MILLIS);
+        configurePreferencesSummary();
 
-        String coursesReminderDayTimeMillis = getPreferenceManager().getSharedPreferences().getString(
-                PrefsActivity.PREF_COURSES_REMINDER_DAY_TIME_MILLIS,
-                CoursesCompletionReminderWorkerManager.DEFAULT_COURSES_REMINDER_TIME_MILLIS);
 
-        pref.setSummary(getFormattedDayWeekTime(coursesReminderDayTimeMillis));
-        pref.setOnPreferenceChangeListener((preference, newValue) -> {
+        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    private void configurePreferencesSummary() {
+
+        final Preference prefReminderDays = findPreference(PrefsActivity.PREF_COURSES_REMINDER_DAYS);
+
+        Set<String> coursesReminderDayTimeMillis = getPreferenceManager().getSharedPreferences().getStringSet(
+                PrefsActivity.PREF_COURSES_REMINDER_DAYS,
+                null);
+
+        prefReminderDays.setSummary("MON, TUE, WED");
+        prefReminderDays.setOnPreferenceChangeListener((preference, newValue) -> {
             //your code to change values.
-            pref.setSummary(getFormattedDayWeekTime(newValue != null ? (String) newValue : null));
+            String days = "";
+            for (String dayNum : (Set<String>) newValue) {
+                days += dayNum + ", ";
+            }
+            preference.setSummary(days);
             return true;
         });
 
-        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        final Preference prefReminderTime = findPreference(PrefsActivity.PREF_COURSES_REMINDER_TIME);
+
+        String reminderTime = getPreferenceManager().getSharedPreferences().getString(
+                PrefsActivity.PREF_COURSES_REMINDER_TIME,
+                getString(R.string.prefCoursesReminderTimeDefault));
+
+        prefReminderTime.setSummary(reminderTime);
+        prefReminderTime.setOnPreferenceChangeListener((preference, newValue) -> {
+            preference.setSummary((String) newValue);
+            return true;
+        });
     }
 
     @Override
@@ -80,6 +108,13 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
     public void onDisplayPreferenceDialog(Preference preference) {
         if (preference instanceof DayWeekTimePreference) {
             DialogFragment f = DayWeekTimePreferenceDialogFragment.newInstance(preference.getKey());
+            f.setTargetFragment(this, 0);
+            f.show(getParentFragmentManager(), null);
+        } else if (preference instanceof TimePreference) {
+            DialogFragment f = new TimePreferenceDialogFragmentCompat();
+            Bundle bundle = new Bundle(1);
+            bundle.putString("key", preference.getKey());
+            f.setArguments(bundle);
             f.setTargetFragment(this, 0);
             f.show(getParentFragmentManager(), null);
         } else {
