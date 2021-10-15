@@ -31,15 +31,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.mobile.learning.databinding.WidgetQuizBinding;
 import org.digitalcampus.mobile.quiz.InvalidQuizException;
 import org.digitalcampus.mobile.quiz.Quiz;
@@ -56,6 +52,7 @@ import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAttemptRepository;
+import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
@@ -77,7 +74,6 @@ import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.FragmentActivity;
 
 public abstract class AnswerWidget extends BaseWidget {
@@ -232,7 +228,7 @@ public abstract class AnswerWidget extends BaseWidget {
         binding.questionText.setVisibility(View.VISIBLE);
         // convert in case has any html special chars
         String questionText = stripAudioFromText(q);
-        binding.questionText.setText(HtmlCompat.fromHtml(questionText, HtmlCompat.FROM_HTML_MODE_LEGACY));
+        binding.questionText.setText(UIUtils.getFromHtmlAndTrim(questionText));
 
         if (q.getProp("image") == null) {
             binding.questionImage.setVisibility(View.GONE);
@@ -425,7 +421,7 @@ public abstract class AnswerWidget extends BaseWidget {
     private void showFeedback(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Oppia_AlertDialogStyle);
         builder.setTitle(getContext().getString(R.string.feedback));
-        builder.setMessage(msg);
+        builder.setMessage(UIUtils.getFromHtmlAndTrim(msg));
         try {
             if(quiz.getCurrentQuestion().getScoreAsPercent() >= Quiz.QUIZ_QUESTION_PASS_THRESHOLD){
                 builder.setIcon(R.drawable.quiz_tick);
