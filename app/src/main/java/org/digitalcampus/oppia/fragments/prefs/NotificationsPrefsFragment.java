@@ -1,9 +1,9 @@
 package org.digitalcampus.oppia.fragments.prefs;
 
+import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.MultiSelectListPreference;
@@ -20,9 +20,8 @@ import org.digitalcampus.oppia.utils.custom_prefs.TimePreferenceDialogFragmentCo
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 public class NotificationsPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -30,12 +29,11 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
     public static final String TAG = PrefsActivity.class.getSimpleName();
 
 
-
     public static NotificationsPrefsFragment newInstance() {
         return new NotificationsPrefsFragment();
     }
 
-    public NotificationsPrefsFragment(){
+    public NotificationsPrefsFragment() {
         // Required empty public constructor
     }
 
@@ -53,24 +51,46 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
     private void configurePreferencesSummary() {
 
         findPreference(PrefsActivity.PREF_COURSES_REMINDER_INTERVAL).setOnPreferenceChangeListener((preference, newValue) -> {
+            String interval = (String) newValue;
+            if (TextUtils.equals(interval, getString(R.string.interval_weekly))) {
 
+                Set<String> days = getPreferenceManager().getSharedPreferences().getStringSet(
+                        PrefsActivity.PREF_COURSES_REMINDER_DAYS, getDefaultReminderDays());
+
+                if (days.size() > 1) {
+                    // Weekly interval can only have one day of week. Set to default:
+                    Set<String> firstDefaultDays = new HashSet<>(Arrays.asList(new String[]{getDefaultReminderDays().iterator().next()}));
+
+                    final MultiSelectListPreference prefReminderDays = findPreference(PrefsActivity.PREF_COURSES_REMINDER_DAYS);
+                    prefReminderDays.setValues(firstDefaultDays);
+
+                }
+
+            }
             return true;
         });
 
-        final Preference prefReminderDays = findPreference(PrefsActivity.PREF_COURSES_REMINDER_DAYS);
+        final MultiSelectListPreference prefReminderDays = findPreference(PrefsActivity.PREF_COURSES_REMINDER_DAYS);
 
-        Set<String> coursesReminderDayTimeMillis = getPreferenceManager().getSharedPreferences().getStringSet(
-                PrefsActivity.PREF_COURSES_REMINDER_DAYS,
-                null);
-
-        prefReminderDays.setSummary("MON, TUE, WED");
+        prefReminderDays.setSummary(getWeekDaysNames(prefReminderDays.getValues()));
         prefReminderDays.setOnPreferenceChangeListener((preference, newValue) -> {
-            //your code to change values.
-            String days = "";
-            for (String dayNum : (Set<String>) newValue) {
-                days += dayNum + ", ";
+
+            Set<String> values = (Set<String>) newValue;
+
+            if (values.isEmpty()) {
+                alert(R.string.warning_reminder_at_least_one_day);
+                return false;
             }
-            preference.setSummary(days);
+
+            String interval = getPreferenceManager().getSharedPreferences().getString(
+                    PrefsActivity.PREF_COURSES_REMINDER_INTERVAL, getString(R.string.prefCoursesReminderIntervalDefault));
+
+            if (TextUtils.equals(interval, getString(R.string.interval_weekly))
+                    && values.size() > 1) {
+                alert(R.string.warning_reminder_weekly_just_one_day);
+                return false;
+            }
+
             return true;
         });
 
@@ -85,6 +105,19 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
             preference.setSummary((String) newValue);
             return true;
         });
+    }
+
+    private void alert(int stringId) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.warning)
+                .setMessage(stringId)
+                .setNegativeButton(R.string.ok, null)
+                .show();
+    }
+
+    private Set<String> getDefaultReminderDays() {
+        return new HashSet<>(Arrays.asList(
+                getResources().getStringArray(R.array.days_of_week_values_default)));
     }
 
     @Override
@@ -137,7 +170,22 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
 
         if (key.equals(PrefsActivity.PREF_COURSES_REMINDER_DAY_TIME_MILLIS)) {
             CoursesCompletionReminderWorkerManager.configureCoursesCompletionReminderWorker(getActivity());
+        } else if (key.equals(PrefsActivity.PREF_COURSES_REMINDER_DAYS)) {
+            final MultiSelectListPreference preference = findPreference(key);
+            preference.setSummary(getWeekDaysNames(preference.getValues()));
         }
 
+    }
+
+    private String getWeekDaysNames(Set<String> dayCodes) {
+        String dayNames = "";
+
+        int i = 0;
+        for (String dayCode : dayCodes) {
+            int dayNameId = getResources().getIdentifier("week_day_" + dayCode, "string", getContext().getPackageName());
+            dayNames += getString(dayNameId) + (i < dayCodes.size() - 1 ? ", " : "");
+            i++;
+        }
+        return dayNames;
     }
 }

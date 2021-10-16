@@ -47,18 +47,21 @@
     </string-array>
 
     <string-array name="reminder_intervals_values">
-        <item>WEEKLY</item>
-        <item>DAILY</item>
+        <item>@string/interval_weekly</item>
+        <item>@string/interval_daily</item>
     </string-array>
 
+    <string name="interval_weekly">WEEKLY</string>
+    <string name="interval_daily">DAILY</string>
+
     <string-array name="days_of_week">
-        <item>@string/monday</item>
-        <item>@string/tuesday</item>
-        <item>@string/wednesday</item>
-        <item>@string/thursday</item>
-        <item>@string/friday</item>
-        <item>@string/saturday</item>
-        <item>@string/sunday</item>
+        <item>@string/week_day_2</item>
+        <item>@string/week_day_3</item>
+        <item>@string/week_day_4</item>
+        <item>@string/week_day_5</item>
+        <item>@string/week_day_6</item>
+        <item>@string/week_day_7</item>
+        <item>@string/week_day_1</item>
     </string-array>
 
     <string-array name="days_of_week_values">

@@ -598,12 +598,15 @@
     <string name="text_size_large">Large</string>
     <string name="text_size_largest">Largest</string>
 
-    <string name="monday">Monday</string>
-    <string name="tuesday">Tuesday</string>
-    <string name="wednesday">Wednesday</string>
-    <string name="thursday">Thursday</string>
-    <string name="friday">Friday</string>
-    <string name="saturday">Saturday</string>
-    <string name="sunday">Sunday</string>
+    <string name="week_day_1">Sunday</string>
+    <string name="week_day_2">Monday</string>
+    <string name="week_day_3">Tuesday</string>
+    <string name="week_day_4">Wednesday</string>
+    <string name="week_day_5">Thursday</string>
+    <string name="week_day_6">Friday</string>
+    <string name="week_day_7">Saturday</string>
+
+    <string name="warning_reminder_weekly_just_one_day">For weekly interval only one day must be set</string>
+    <string name="warning_reminder_at_least_one_day">You have to set at least one day</string>
 </resources>
 
