@@ -229,4 +229,21 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
     private Object getRandomString() {
         return UUID.randomUUID().toString();
     }
+
+    // COURSES NOT COMPLETED REMINDER SETTINGS
+
+    @Test
+    public void showWarningIfZeroDaysSelected() throws Exception {
+        // TODO
+    }
+
+    @Test
+    public void showWarningIfMoreThanOneDayInWeeklyInterval() throws Exception {
+        // TODO
+    }
+
+    @Test
+    public void checkDaysReducedToOneIfWeeklyIntervalIsSelected() throws Exception {
+        // TODO
+    }
 }
