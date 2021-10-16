@@ -75,7 +75,7 @@
 
         <MultiSelectListPreference
             android:key="prefCoursesReminderDays"
-            android:defaultValue="@array/days_of_week_values"
+            android:defaultValue="@array/days_of_week_values_default"
             android:dependency="prefCoursesReminderEnabled"
             android:entries="@array/days_of_week"
             android:entryValues="@array/days_of_week_values"
@@ -93,12 +93,5 @@
             app:allowDividerBelow="true"
             app:iconSpaceReserved="false" />
 
-        <org.digitalcampus.oppia.utils.custom_prefs.DayWeekTimePreference
-            android:key="prefCoursesReminderDayTimeMillis"
-            android:title="@string/weekly_reminder_day_time"
-            app:summary="@string/courses_reminder_default_day_time"
-            app:allowDividerAbove="true"
-            app:allowDividerBelow="true"
-            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

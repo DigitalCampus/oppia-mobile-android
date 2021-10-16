@@ -145,8 +145,8 @@
     <string name="prefDurationAnimationTypeGamificationPointsView">Animation duration</string>
     <string name="prefDurationAnimation_summary">Time that the gamification points event animation stays on screen (in seconds)</string>
 
-    <string name="prefSectionReminder">Courses reminder</string>
-    <string name="prefCoursesReminderEnabled">Enable courses not completed reminders</string>
+    <string name="prefSectionReminder">Courses not completed reminder</string>
+    <string name="prefCoursesReminderEnabled">Enable reminder notifications</string>
     <string name="prefCoursesReminderIntervalTitle">Reminders interval</string>
     <string name="prefCoursesReminderDaysTitle">Reminder days</string>
     <string name="prefCoursesReminderTimeTitle">Reminder time</string>
@@ -592,5 +592,18 @@
     <string name="change_password_success">Your password has successfully been updated</string>
     <string name="change_password_intro">To change your password, please enter a new password below:</string>
 
+    <string name="text_size_smallest">Smallest</string>
+    <string name="text_size_small">Small</string>
+    <string name="text_size_normal">Normal</string>
+    <string name="text_size_large">Large</string>
+    <string name="text_size_largest">Largest</string>
+
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
 </resources>
 

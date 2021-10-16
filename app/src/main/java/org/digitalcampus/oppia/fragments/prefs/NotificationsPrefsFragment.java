@@ -52,6 +52,11 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
 
     private void configurePreferencesSummary() {
 
+        findPreference(PrefsActivity.PREF_COURSES_REMINDER_INTERVAL).setOnPreferenceChangeListener((preference, newValue) -> {
+
+            return true;
+        });
+
         final Preference prefReminderDays = findPreference(PrefsActivity.PREF_COURSES_REMINDER_DAYS);
 
         Set<String> coursesReminderDayTimeMillis = getPreferenceManager().getSharedPreferences().getStringSet(

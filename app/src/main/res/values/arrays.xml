@@ -2,11 +2,11 @@
 <resources>
 
     <string-array name="TextSize">
-        <item name="12">Smallest</item>
-        <item name="14">Small</item>
-        <item name="16">Normal</item>
-        <item name="18">Large</item>
-        <item name="20">Largest</item>
+        <item name="12">@string/text_size_smallest</item>
+        <item name="14">@string/text_size_small</item>
+        <item name="16">@string/text_size_normal</item>
+        <item name="18">@string/text_size_large</item>
+        <item name="20">@string/text_size_largest</item>
     </string-array>
      <string-array name="TextSizeValues">
         <item name="12">12</item>
@@ -52,13 +52,13 @@
     </string-array>
 
     <string-array name="days_of_week">
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-        <item>Sunday</item>
+        <item>@string/monday</item>
+        <item>@string/tuesday</item>
+        <item>@string/wednesday</item>
+        <item>@string/thursday</item>
+        <item>@string/friday</item>
+        <item>@string/saturday</item>
+        <item>@string/sunday</item>
     </string-array>
 
     <string-array name="days_of_week_values">
