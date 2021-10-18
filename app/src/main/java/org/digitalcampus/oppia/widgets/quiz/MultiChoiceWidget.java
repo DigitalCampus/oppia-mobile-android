@@ -17,20 +17,21 @@
 
 package org.digitalcampus.oppia.widgets.quiz;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.quiz.model.QuizQuestion;
-import org.digitalcampus.mobile.quiz.model.Response;
-
 import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.quiz.model.QuizQuestion;
+import org.digitalcampus.mobile.quiz.model.Response;
+import org.digitalcampus.oppia.utils.UIUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MultiChoiceWidget extends QuestionWidget{
 
@@ -67,7 +68,7 @@ public class MultiChoiceWidget extends QuestionWidget{
 				ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
 			setResponseMarginInLayoutParams(params);
     		rb.setId(id);
-			rb.setText(r.getTitle(currentUserLang));
+			rb.setText(UIUtils.getFromHtmlAndTrim(r.getTitle(currentUserLang)));
 			responsesRG.addView(rb, params);
             for (String answer : currentAnswer) {
                 if (answer.equals(r.getTitle(currentUserLang))){

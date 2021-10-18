@@ -211,7 +211,7 @@ public class QuizWidget extends AnswerWidget {
     public boolean getActivityCompleted() {
         int passThreshold;
         Log.d(TAG, "Threshold:" + quiz.getPassThreshold() );
-        if (quiz.getPassThreshold() != 0){
+        if (quiz.getPassThreshold() >= 0){
             passThreshold = quiz.getPassThreshold();
         } else {
             passThreshold = Quiz.QUIZ_DEFAULT_PASS_THRESHOLD;

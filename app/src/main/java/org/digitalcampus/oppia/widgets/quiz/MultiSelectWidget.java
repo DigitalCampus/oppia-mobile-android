@@ -17,21 +17,21 @@
 
 package org.digitalcampus.oppia.widgets.quiz;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.quiz.model.QuizQuestion;
-import org.digitalcampus.mobile.quiz.model.Response;
-
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
-import androidx.core.text.HtmlCompat;
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.quiz.model.QuizQuestion;
+import org.digitalcampus.mobile.quiz.model.Response;
+import org.digitalcampus.oppia.utils.UIUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MultiSelectWidget extends QuestionWidget {
 
@@ -61,7 +61,7 @@ public class MultiSelectWidget extends QuestionWidget {
 
     	for (Response r : responses){
     		CheckBox chk= new CheckBox(ctx);
-			chk.setText(HtmlCompat.fromHtml(r.getTitle(currentUserLang), HtmlCompat.FROM_HTML_MODE_LEGACY));
+			chk.setText(UIUtils.getFromHtmlAndTrim(r.getTitle(currentUserLang)));
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 					ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
 			setResponseMarginInLayoutParams(params);
@@ -82,6 +82,7 @@ public class MultiSelectWidget extends QuestionWidget {
 			CheckBox cb = (CheckBox) responsesLL.getChildAt(i);
 			if(cb.isChecked()){
 				response.add(cb.getText().toString());
+				Log.d(TAG, "User selected: " + cb.getText().toString());
 			}
 		}
 
