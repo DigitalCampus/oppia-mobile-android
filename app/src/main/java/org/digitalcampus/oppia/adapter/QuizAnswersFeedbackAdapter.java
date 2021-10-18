@@ -6,18 +6,16 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.core.text.HtmlCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.RowWidgetQuizFeedbackBinding;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.model.QuizAnswerFeedback;
+import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswersFeedbackAdapter.QuizFeedbackViewHolder> {
 
@@ -55,7 +53,7 @@ public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswers
             }
         }
 
-        viewHolder.binding.quizQuestionText.setText(HtmlCompat.fromHtml(qf.getQuestionText(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+        viewHolder.binding.quizQuestionText.setText(UIUtils.getFromHtmlAndTrim(qf.getQuestionText()));
         if (qf.isSurvey() && TextUtils.isEmpty(userResponseText)){
             viewHolder.binding.quizQuestionUserResponseTitle.setText(R.string.widget_quiz_feedback_response_skipped);
             viewHolder.binding.quizQuestionUserResponseText.setVisibility(View.GONE);
@@ -63,7 +61,7 @@ public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswers
         else{
             viewHolder.binding.quizQuestionUserResponseTitle.setText(R.string.widget_quiz_feedback_response_title);
             viewHolder.binding.quizQuestionUserResponseText.setVisibility(View.VISIBLE);
-            viewHolder.binding.quizQuestionUserResponseText.setText(HtmlCompat.fromHtml(userResponseText.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+            viewHolder.binding.quizQuestionUserResponseText.setText(UIUtils.getFromHtmlAndTrim(userResponseText.toString()));
         }
 
 
@@ -71,7 +69,7 @@ public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswers
         if (qf.getFeedbackText() != null && !qf.getFeedbackText().equals("")){
             viewHolder.binding.quizQuestionUserFeedbackTitle.setVisibility(View.VISIBLE);
             viewHolder.binding.quizQuestionUserFeedbackText.setVisibility(View.VISIBLE);
-            viewHolder.binding.quizQuestionUserFeedbackText.setText(HtmlCompat.fromHtml(qf.getFeedbackText(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+            viewHolder.binding.quizQuestionUserFeedbackText.setText(UIUtils.getFromHtmlAndTrim(qf.getFeedbackText()));
 
         } else {
             //If there's no feedback to show, hide both text and title
