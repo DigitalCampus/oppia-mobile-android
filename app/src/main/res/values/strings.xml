@@ -527,7 +527,7 @@
     <string name="activitylog_delete_failed">Could not delete activity log file</string>
 
     <string name="title_activity_edit_profile">Edit profile</string>
-    <string name="edit_profile_available_online">Edit profile option is only available when the device is connected to the Internet</string>
+    <string name="option_available_online">This option is only available when the device is connected to the Internet</string>
     <string name="save_profile">Save profile</string>
     <string name="profile_updated_successfuly">Profile updated successfully</string>
     <string name="activitylog_submitted">submitted to server</string>
@@ -585,6 +585,9 @@
     <string name="weekly_reminder_day_time">Weekly reminder day / time</string>
     <string name="courses_reminder_default_day_time">Tuesday at 10:00</string>
     <string name="disabled">Disabled</string>
+    <string name="change_password">Change password</string>
+    <string name="change_password_success">Your password has successfully been updated</string>
+    <string name="change_password_intro">To change your password, please enter a new password below:</string>
 
 </resources>
 

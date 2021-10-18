@@ -55,6 +55,8 @@ public class BuildChecksOppiaCore {
         assertEquals(true, BuildConfig.MENU_ALLOW_COURSE_DOWNLOAD);
         assertEquals(true, BuildConfig.MENU_ALLOW_SYNC);
         assertEquals(true, BuildConfig.MENU_ALLOW_LOGOUT);
+        assertEquals(true, BuildConfig.MENU_ALLOW_EDIT_PROFILE);
+        assertEquals(true, BuildConfig.MENU_ALLOW_CHANGE_PASSWORD);
         assertEquals(true, BuildConfig.MENU_ALLOW_LANGUAGE);
         assertEquals(1, BuildConfig.DOWNLOAD_COURSES_DISPLAY);
 

@@ -129,6 +129,12 @@
             android:label="@string/title_activity_edit_profile"
             android:theme="@style/Oppia.ToolbarTheme"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+
+        <activity android:name="org.digitalcampus.oppia.activity.ChangePasswordActivity"
+            android:label="@string/change_password"
+            android:theme="@style/Oppia.ToolbarTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
         <activity
             android:name="org.digitalcampus.oppia.activity.ViewDigestActivity"
             android:theme="@style/Oppia.ToolbarTheme.Dark">

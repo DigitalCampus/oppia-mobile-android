@@ -91,6 +91,20 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/btn_change_password"
+            style="@style/MenuItemLayout">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                style="@style/MenuIcon"
+                app:srcCompat="@drawable/ic_change_pass" />
+
+            <TextView
+                style="@style/TextMenuItem"
+                android:text="@string/change_password" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/btn_logout"
             style="@style/MenuItemLayout">
 

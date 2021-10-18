@@ -313,5 +313,10 @@
 
     <style name="Oppia.CustomField.TextInputLayoutError" parent="TextAppearance.Design.Error" />
 
+    <style name="VerticalExpander">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
 
 </resources>
