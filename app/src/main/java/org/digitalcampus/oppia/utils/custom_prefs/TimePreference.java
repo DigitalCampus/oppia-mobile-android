@@ -56,6 +56,17 @@ public class TimePreference extends DialogPreference {
         minute = parseMinute(value);
     }
 
+    public void setValue(String value) {
+        hour = parseHour(value);
+        minute = parseMinute(value);
+        persistString(value);
+    }
+
+    public String getValue() {
+        return timeToString(hour, minute);
+    }
+
+
     public void persistStringValue(String value) {
         persistString(value);
     }

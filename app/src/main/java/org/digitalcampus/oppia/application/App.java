@@ -125,6 +125,7 @@ public class App extends Application {
     public static final String WORK_TRACKER_SEND = "tracker_send_work";
     public static final String WORK_COURSES_CHECKS = "no_course_worker";
     public static final String WORK_COURSES_NOT_COMPLETED_REMINDER = "courses_reminder";
+    public static final String WORK_COURSES_NOT_COMPLETED_REMINDER_ = "courses_reminder_";
 
 
     private AppComponent appComponent;
@@ -233,6 +234,8 @@ public class App extends Application {
         }
 
         scheduleCoursesReminderWork();
+
+        cancelWorks(WORK_COURSES_NOT_COMPLETED_REMINDER); // For retrocompatibility after reminder changes
 
     }
 
