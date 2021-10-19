@@ -85,6 +85,7 @@ android {
 
             buildConfigField "boolean", "ADMIN_PROTECT_SETTINGS", runtimeProps['ADMIN_PROTECT_SETTINGS']
             buildConfigField "boolean", "ADMIN_PROTECT_ADVANCED_SETTINGS", runtimeProps['ADMIN_PROTECT_ADVANCED_SETTINGS']
+            buildConfigField "boolean", "ADMIN_PROTECT_SECURITY_SETTINGS", runtimeProps['ADMIN_PROTECT_SECURITY_SETTINGS']
             buildConfigField "boolean", "ADMIN_PROTECT_SERVER", runtimeProps['ADMIN_PROTECT_SERVER']
             buildConfigField "boolean", "ADMIN_PROTECT_ACTIVITY_SYNC", runtimeProps['ADMIN_PROTECT_ACTIVITY_SYNC']
             buildConfigField "boolean", "ADMIN_PROTECT_ACTIVITY_EXPORT", runtimeProps['ADMIN_PROTECT_ACTIVITY_EXPORT']
