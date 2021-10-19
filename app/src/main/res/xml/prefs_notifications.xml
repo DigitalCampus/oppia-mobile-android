@@ -91,6 +91,12 @@
             android:dependency="prefCoursesReminderEnabled"
             app:allowDividerAbove="true"
             app:allowDividerBelow="true"
+            app:iconSpaceReserved="false"
+            android:defaultValue="@string/prefCoursesReminderTimeDefault"/>
+
+        <Preference
+            android:key="prefRemindersLog"
+            android:title="Reminders Log"
             app:iconSpaceReserved="false" />
 
     </PreferenceCategory>

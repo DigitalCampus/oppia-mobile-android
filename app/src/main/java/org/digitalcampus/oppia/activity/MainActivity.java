@@ -82,9 +82,6 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         saveServerBadgeAwardCriteria();
 
-        // TODO REMOVE
-//        startActivity(new Intent(this, PrefsActivity.class));
-
     }
 
     private void saveServerBadgeAwardCriteria() {

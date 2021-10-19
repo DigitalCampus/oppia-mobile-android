@@ -1,19 +1,23 @@
 package org.digitalcampus.oppia.fragments.prefs;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 
 import androidx.fragment.app.DialogFragment;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.ListPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
-import org.digitalcampus.oppia.utils.custom_prefs.DayWeekTimePreference;
-import org.digitalcampus.oppia.utils.custom_prefs.DayWeekTimePreferenceDialogFragment;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.custom_prefs.TimePreference;
 import org.digitalcampus.oppia.utils.custom_prefs.TimePreferenceDialogFragmentCompat;
 
@@ -44,8 +48,35 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
 
         configurePreferencesSummary();
 
+        configureRemindersLog();
 
-        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        getPrefs().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    private SharedPreferences getPrefs() {
+        return getPreferenceManager().getSharedPreferences();
+    }
+
+    private void configureRemindersLog() {
+        findPreference(PrefsActivity.PREF_REMINDERS_LOG).setOnPreferenceClickListener(preference -> {
+
+            String log = getPrefs().getString(PrefsActivity.PREF_REMINDERS_LOG, "");
+            String message = "CURRENT REMINDERS CONFIG:\n" + getCurrentReminderConfig() + "\n\nLOG:\n\n" + log;
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Reminders log")
+                    .setMessage(message)
+                    .setNegativeButton(R.string.back, null)
+                    .show();
+            return false;
+        });
+    }
+
+    private String getCurrentReminderConfig() {
+        boolean enabled = ((CheckBoxPreference) findPreference(PrefsActivity.PREF_COURSES_REMINDER_ENABLED)).isChecked();
+        String interval = ((ListPreference) findPreference(PrefsActivity.PREF_COURSES_REMINDER_INTERVAL)).getValue();
+        String time = getPrefs().getString(PrefsActivity.PREF_COURSES_REMINDER_TIME, getString(R.string.prefCoursesReminderTimeDefault));
+        Set<String> dayCodes = ((MultiSelectListPreference) findPreference(PrefsActivity.PREF_COURSES_REMINDER_DAYS)).getValues();
+        return String.format("Enabled: %s\nInterval: %s\nTime: %s\nDays: %s", enabled, interval, time, getWeekDaysNames(getActivity(), dayCodes));
     }
 
     private void configurePreferencesSummary() {
@@ -54,7 +85,7 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
             String interval = (String) newValue;
             if (TextUtils.equals(interval, getString(R.string.interval_weekly))) {
 
-                Set<String> days = getPreferenceManager().getSharedPreferences().getStringSet(
+                Set<String> days = getPrefs().getStringSet(
                         PrefsActivity.PREF_COURSES_REMINDER_DAYS, getDefaultReminderDays());
 
                 if (days.size() > 1) {
@@ -67,12 +98,13 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
                 }
 
             }
+            logNewConfig();
             return true;
         });
 
         final MultiSelectListPreference prefReminderDays = findPreference(PrefsActivity.PREF_COURSES_REMINDER_DAYS);
 
-        prefReminderDays.setSummary(getWeekDaysNames(prefReminderDays.getValues()));
+        prefReminderDays.setSummary(getWeekDaysNames(getActivity(), prefReminderDays.getValues()));
         prefReminderDays.setOnPreferenceChangeListener((preference, newValue) -> {
 
             Set<String> values = (Set<String>) newValue;
@@ -82,7 +114,7 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
                 return false;
             }
 
-            String interval = getPreferenceManager().getSharedPreferences().getString(
+            String interval = getPrefs().getString(
                     PrefsActivity.PREF_COURSES_REMINDER_INTERVAL, getString(R.string.prefCoursesReminderIntervalDefault));
 
             if (TextUtils.equals(interval, getString(R.string.interval_weekly))
@@ -91,26 +123,49 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
                 return false;
             }
 
+            logNewConfig();
             return true;
         });
 
-        final Preference prefReminderTime = findPreference(PrefsActivity.PREF_COURSES_REMINDER_TIME);
+        final TimePreference prefReminderTime = findPreference(PrefsActivity.PREF_COURSES_REMINDER_TIME);
 
-        String reminderTime = getPreferenceManager().getSharedPreferences().getString(
+        String reminderTime = getPrefs().getString(
                 PrefsActivity.PREF_COURSES_REMINDER_TIME,
                 getString(R.string.prefCoursesReminderTimeDefault));
 
         prefReminderTime.setSummary(reminderTime);
         prefReminderTime.setOnPreferenceChangeListener((preference, newValue) -> {
             preference.setSummary((String) newValue);
+            logNewConfig();
+            return true;
+        });
+
+        findPreference(PrefsActivity.PREF_COURSES_REMINDER_ENABLED).setOnPreferenceChangeListener((preference, newValue) -> {
+            logNewConfig();
             return true;
         });
     }
 
+    private void logNewConfig() {
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            // Add new reminders configuration to log. Delay needed to get the saved values
+            SharedPreferences prefs = getPrefs();
+            String previousLog = prefs.getString(PrefsActivity.PREF_REMINDERS_LOG, "");
+            String logEntry = DateUtils.DATETIME_FORMAT.print(System.currentTimeMillis()) + "\n" + getCurrentReminderConfig();
+            prefs.edit().putString(PrefsActivity.PREF_REMINDERS_LOG, logEntry + "\n\n--------------\n\n" + previousLog).apply();
+        }, 200);
+
+    }
+
     private void alert(int stringId) {
+        alert(getString(stringId));
+    }
+
+    private void alert(String message) {
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.warning)
-                .setMessage(stringId)
+                .setMessage(message)
                 .setNegativeButton(R.string.ok, null)
                 .show();
     }
@@ -123,17 +178,7 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-    private String getFormattedDayWeekTime(String dayWeekTimeMillis) {
-        if (TextUtils.isEmpty(dayWeekTimeMillis)) {
-            return getString(R.string.disabled);
-        }
-
-        DateFormat dateFormat = new SimpleDateFormat("EEEE 'at' HH:mm");
-        String dayWeekTime = dateFormat.format(new Date(Long.parseLong(dayWeekTimeMillis)));
-        return dayWeekTime;
+        getPrefs().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -144,11 +189,7 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
 
     @Override
     public void onDisplayPreferenceDialog(Preference preference) {
-        if (preference instanceof DayWeekTimePreference) {
-            DialogFragment f = DayWeekTimePreferenceDialogFragment.newInstance(preference.getKey());
-            f.setTargetFragment(this, 0);
-            f.show(getParentFragmentManager(), null);
-        } else if (preference instanceof TimePreference) {
+        if (preference instanceof TimePreference) {
             DialogFragment f = new TimePreferenceDialogFragmentCompat();
             Bundle bundle = new Bundle(1);
             bundle.putString("key", preference.getKey());
@@ -168,22 +209,27 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        if (key.equals(PrefsActivity.PREF_COURSES_REMINDER_DAY_TIME_MILLIS)) {
-            CoursesCompletionReminderWorkerManager.configureCoursesCompletionReminderWorker(getActivity());
-        } else if (key.equals(PrefsActivity.PREF_COURSES_REMINDER_DAYS)) {
+        if (key.equals(PrefsActivity.PREF_COURSES_REMINDER_DAYS)) {
             final MultiSelectListPreference preference = findPreference(key);
-            preference.setSummary(getWeekDaysNames(preference.getValues()));
+            preference.setSummary(getWeekDaysNames(getActivity(), preference.getValues()));
+            CoursesCompletionReminderWorkerManager.configureCoursesCompletionReminderWorker(getActivity());
+        } else if (key.equals(PrefsActivity.PREF_COURSES_REMINDER_TIME)) {
+            CoursesCompletionReminderWorkerManager.configureCoursesCompletionReminderWorker(getActivity());
+        } else if (key.equals(PrefsActivity.PREF_COURSES_REMINDER_ENABLED)) {
+            CoursesCompletionReminderWorkerManager.configureCoursesCompletionReminderWorker(getActivity());
+        } else if (key.equals(PrefsActivity.PREF_COURSES_REMINDER_INTERVAL)) {
+            CoursesCompletionReminderWorkerManager.configureCoursesCompletionReminderWorker(getActivity());
         }
 
     }
 
-    private String getWeekDaysNames(Set<String> dayCodes) {
+    public static String getWeekDaysNames(Context context, Set<String> dayCodes) {
         String dayNames = "";
 
         int i = 0;
         for (String dayCode : dayCodes) {
-            int dayNameId = getResources().getIdentifier("week_day_" + dayCode, "string", getContext().getPackageName());
-            dayNames += getString(dayNameId) + (i < dayCodes.size() - 1 ? ", " : "");
+            int dayNameId = context.getResources().getIdentifier("week_day_" + dayCode, "string", context.getPackageName());
+            dayNames += context.getString(dayNameId) + (i < dayCodes.size() - 1 ? ", " : "");
             i++;
         }
         return dayNames;

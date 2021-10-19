@@ -586,7 +586,6 @@
     <string name="time">Time</string>
     <string name="disable_reminder">Disable reminder</string>
     <string name="weekly_reminder_day_time">Weekly reminder day / time</string>
-    <string name="courses_reminder_default_day_time">Tuesday at 10:00</string>
     <string name="disabled">Disabled</string>
     <string name="change_password">Change password</string>
     <string name="change_password_success">Your password has successfully been updated</string>
