@@ -162,6 +162,9 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
             else if (NODE_META.equals(parentElements.peek())){
                 courseIcon = aAttributes.getValue(NODE_FILENAME);
             }
+            else if (NODE_SECTION.equals(parentElements.peek())){
+                currentSection.setImageFile(aAttributes.getValue(NODE_FILENAME));
+            }
         }
         else if (NODE_FILE.equals(aQName)) {
             Media m = new Media();
