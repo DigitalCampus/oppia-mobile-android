@@ -109,8 +109,6 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="vertical"
                 android:cacheColorHint="#00000000"
-                android:divider="@color/background_light"
-                android:dividerHeight="1dp"
                 tools:listitem="@layout/row_widget_quiz_feedback"/>
         </LinearLayout>
 

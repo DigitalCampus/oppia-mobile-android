@@ -19,6 +19,7 @@
     <color name="cardlist_badge">#6D6B6D</color>
     <color name="background_cover">#c6333333</color>
     <color name="transparent">#00ffffff</color>
+    <color name="feedback_box">#f3f1f1</color>
 
     <color name="white">#FFF</color>
     <color name="black">#000</color>
