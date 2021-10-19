@@ -17,6 +17,9 @@
 
 package org.digitalcampus.oppia.model;
 
+import android.text.TextUtils;
+
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +66,17 @@ public class Section extends MultiLangInfoModel implements Serializable  {
 	}
 	public void setActivities(List<Activity> activities) {
 		this.activities = (ArrayList<Activity>) activities;
+	}
+
+	public boolean hasCustomImage(){
+		return !TextUtils.isEmpty(imageFile);
+	}
+
+	public String getImageFilePath(String prefix){
+		if(!prefix.endsWith(File.separator)){
+			prefix += File.separator;
+		}
+		return prefix + this.imageFile;
 	}
 
 	public Activity getActivity(String digest){
