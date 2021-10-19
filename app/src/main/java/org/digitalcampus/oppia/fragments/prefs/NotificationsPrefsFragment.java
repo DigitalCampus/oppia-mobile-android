@@ -152,7 +152,7 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
             // Add new reminders configuration to log. Delay needed to get the saved values
             SharedPreferences prefs = getPrefs();
             String previousLog = prefs.getString(PrefsActivity.PREF_REMINDERS_LOG, "");
-            String logEntry = DateUtils.DATETIME_FORMAT.print(System.currentTimeMillis()) + "\n" + getCurrentReminderConfig();
+            String logEntry = "--- CONFIGURATION CHANGED ---\n" + DateUtils.DATETIME_FORMAT.print(System.currentTimeMillis()) + "\n" + getCurrentReminderConfig();
             prefs.edit().putString(PrefsActivity.PREF_REMINDERS_LOG, logEntry + "\n\n--------------\n\n" + previousLog).apply();
         }, 200);
 

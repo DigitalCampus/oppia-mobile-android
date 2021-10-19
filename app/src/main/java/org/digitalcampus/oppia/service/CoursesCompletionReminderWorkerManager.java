@@ -76,7 +76,7 @@ public class CoursesCompletionReminderWorkerManager {
         }
 
         String logEntry = DateUtils.DATETIME_FORMAT.print(System.currentTimeMillis()) + "\n";
-        logEntry += "Configuration: \n" + getConfiguration() + "\n\n";
+        logEntry += "--- WORKER STARTED ---\n" + "Configuration: \n" + getConfiguration() + "\n\n";
 
         try {
 
