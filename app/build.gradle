@@ -150,7 +150,7 @@ android {
             resValue "string", "SHOW_COURSE_DESCRIPTION", runtimeProps['SHOW_COURSE_DESCRIPTION']
             resValue "string", "prefCoursesReminderIntervalDefault", runtimeProps['DEFAULT_REMINDER_INTERVAL']
             resValue "string", "prefCoursesReminderTimeDefault", runtimeProps['DEFAULT_REMINDER_TIME']
-            resValue "string", "prefCoursesReminderDaysDefault", runtimeProps['DEFAULT_REMINDER_DAYS']
+            resValue "string", "prefCoursesReminderDaysDefaultSerialized", runtimeProps['DEFAULT_REMINDER_DAYS']
 
             resValue "string", "version_name", version_name
         }

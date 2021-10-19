@@ -129,11 +129,7 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
 
         final TimePreference prefReminderTime = findPreference(PrefsActivity.PREF_COURSES_REMINDER_TIME);
 
-        String reminderTime = getPrefs().getString(
-                PrefsActivity.PREF_COURSES_REMINDER_TIME,
-                getString(R.string.prefCoursesReminderTimeDefault));
-
-        prefReminderTime.setSummary(reminderTime);
+        prefReminderTime.setSummary(prefReminderTime.getValue());
         prefReminderTime.setOnPreferenceChangeListener((preference, newValue) -> {
             preference.setSummary((String) newValue);
             logNewConfig();
