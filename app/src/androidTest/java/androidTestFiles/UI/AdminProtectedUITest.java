@@ -44,6 +44,7 @@ import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.longClick;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -107,6 +108,8 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
         when(prefs.edit()).thenReturn(editor);
         when(user.getPoints()).thenReturn(0);
 
+        when(prefs.getString(eq(PrefsActivity.PREF_ADMIN_PASSWORD), anyString())).thenReturn("testpass");
+
         switch (adminProtectionOption) {
 
             case PROTECTION_OPTION_ADMIN_AND_ACTION:
@@ -144,6 +147,11 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
         when(editor.putLong(anyString(), anyLong())).thenReturn(editor);
         when(editor.putBoolean(anyString(), anyBoolean())).thenReturn(editor);
         when(editor.putInt(anyString(), anyInt())).thenReturn(editor);
+    }
+
+    private void fillPasswordDialog() {
+        onView(withId(R.id.admin_password_field)).perform(clearText(), typeText("testpass"));
+        onView(withText(R.string.ok)).perform(click());
     }
 
     private void givenThereAreSomeCourses(int numberOfCourses) {
@@ -218,6 +226,10 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
                 .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefSecurity_title)),
                         click()));
 
+        if (adminProtectionOption == PROTECTION_OPTION_ADMIN_AND_ACTION){
+            fillPasswordDialog();
+        }
+
         onView(withId(androidx.preference.R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdminProtection)),
                         click()));
@@ -245,6 +257,10 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
         onView(withId(androidx.preference.R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefSecurity_title)),
                         click()));
+
+        if (adminProtectionOption == PROTECTION_OPTION_ADMIN_AND_ACTION){
+            fillPasswordDialog();
+        }
 
         onView(withId(androidx.preference.R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdminPassword)),

@@ -4,4 +4,5 @@
     <item type="id" name="action_export_activity" />
     <item type="id" name="action_url_server" />
     <item type="id" name="action_advanced_settings" />
+    <item type="id" name="action_security_settings" />
 </resources>
