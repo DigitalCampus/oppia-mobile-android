@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/quiz_feedback_row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/padding_medium" >
+    android:padding="@dimen/padding_medium">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -31,40 +32,60 @@
                 android:textAppearance="@style/Oppia.Theme.CardTitle" />
         </RelativeLayout>
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/list_card_vertical_padding"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/padding_medium"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/quiz_question_user_response_title"
-                android:layout_width="wrap_content"
+                android:paddingStart="@dimen/list_card_horizontal_margin"
+                android:paddingTop="@dimen/list_card_vertical_padding"
+                android:paddingBottom="@dimen/list_card_vertical_padding"
+                android:background="@color/stroke"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/widget_quiz_feedback_response_title"
-                android:textStyle="bold|italic" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/quiz_question_user_response_text"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/list_card_horizontal_margin"
+                android:paddingTop="@dimen/list_card_vertical_padding"
+                android:paddingBottom="@dimen/activity_vertical_margin"
                 android:textColor="@color/text_dark"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
 
             <TextView
                 android:id="@+id/quiz_question_user_feedback_title"
-                android:layout_width="wrap_content"
+                android:paddingTop="@dimen/list_card_vertical_padding"
+                android:paddingBottom="@dimen/list_card_vertical_padding"
+                android:paddingStart="@dimen/list_card_horizontal_margin"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/feedback_box"
                 android:text="@string/widget_quiz_feedback_feedback_title"
-                android:textStyle="bold|italic" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/quiz_question_user_feedback_text"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/list_card_horizontal_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
                 android:textColor="@color/text_dark"
-                android:layout_width="wrap_content"
+                android:background="@color/feedback_box"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
-
-
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>
