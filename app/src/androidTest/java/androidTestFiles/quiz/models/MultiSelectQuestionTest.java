@@ -186,7 +186,7 @@ public class MultiSelectQuestionTest {
         userResponses.add("Red");
         userResponses.add("Orange");
         quizQuestion.setUserResponses(userResponses);
-        assertEquals("Red: correct\n\nOrange: correct\n\n", quizQuestion.getFeedback(DEFAULT_LANG));
+        assertEquals("<strong>Red:</strong> correct<br><strong>Orange:</strong> correct<br>", quizQuestion.getFeedback(DEFAULT_LANG));
         assertEquals((float) 1, quizQuestion.getUserscore());
         assertEquals(100, quizQuestion.getScoreAsPercent());
 
@@ -215,7 +215,7 @@ public class MultiSelectQuestionTest {
         ArrayList<String> userResponses = new ArrayList<>();
         userResponses.add("Orange");
         quizQuestion.setUserResponses(userResponses);
-        assertEquals("Orange: correct\n\n", quizQuestion.getFeedback(DEFAULT_LANG));
+        assertEquals("<strong>Orange:</strong> correct<br>", quizQuestion.getFeedback(DEFAULT_LANG));
         assertEquals((float) 0.5, quizQuestion.getUserscore());
         assertEquals(50, quizQuestion.getScoreAsPercent());
 
@@ -245,7 +245,7 @@ public class MultiSelectQuestionTest {
         userResponses.add("Red");
         userResponses.add("Black");
         quizQuestion.setUserResponses(userResponses);
-        assertEquals("Red: correct\n\nBlack: wrong\n\n", quizQuestion.getFeedback(DEFAULT_LANG));
+        assertEquals("<strong>Red:</strong> correct<br><strong>Black:</strong> wrong<br>", quizQuestion.getFeedback(DEFAULT_LANG));
         assertEquals((float) 0.0, quizQuestion.getUserscore());
         assertEquals(0, quizQuestion.getScoreAsPercent());
 
@@ -275,7 +275,7 @@ public class MultiSelectQuestionTest {
         userResponses.add("Grey");
         userResponses.add("Black");
         quizQuestion.setUserResponses(userResponses);
-        assertEquals("Black: wrong\n\nGrey: wrong\n\n", quizQuestion.getFeedback(DEFAULT_LANG));
+        assertEquals("<strong>Black:</strong> wrong<br><strong>Grey:</strong> wrong<br>", quizQuestion.getFeedback(DEFAULT_LANG));
         assertEquals((float) 0.0, quizQuestion.getUserscore());
         assertEquals(0, quizQuestion.getScoreAsPercent());
 
