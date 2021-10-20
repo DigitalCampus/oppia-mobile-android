@@ -18,11 +18,13 @@ import androidx.work.WorkManager;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.utils.DateUtils;
+import org.digitalcampus.oppia.utils.ReminderLogHelper;
 import org.digitalcampus.oppia.utils.custom_prefs.TimePreference;
 import org.digitalcampus.oppia.utils.custom_prefs.TimePreferenceDialogFragmentCompat;
 
@@ -38,6 +40,7 @@ import java.util.concurrent.ExecutionException;
 public class NotificationsPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback, SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String TAG = PrefsActivity.class.getSimpleName();
+    private ReminderLogHelper reminderLogHelper;
 
 
     public static NotificationsPrefsFragment newInstance() {
@@ -65,10 +68,14 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
     }
 
     private void configureRemindersLog() {
-        findPreference(PrefsActivity.PREF_REMINDERS_LOG).setOnPreferenceClickListener(preference -> {
 
-            String log = getPrefs().getString(PrefsActivity.PREF_REMINDERS_LOG, "");
-            String message = getCurrentReminderConfig() + getWorkerStatuses() + "\n\nLOG:\n\n" + log;
+        reminderLogHelper = new ReminderLogHelper(getActivity());
+
+        Preference prefReminderLog = findPreference(PrefsActivity.PREF_REMINDERS_LOG);
+        prefReminderLog.setVisible(BuildConfig.DEBUG);
+        prefReminderLog.setOnPreferenceClickListener(preference -> {
+
+            String message = "CURRENT REMINDERS CONFIG:\n" + getCurrentReminderConfig() + getWorkerStatuses() + "\n\nLOG:\n\n" + reminderLogHelper.getLog();
             new AlertDialog.Builder(getActivity())
                     .setTitle("Reminders log")
                     .setMessage(message)
@@ -110,7 +117,7 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
     }
 
     private String getCurrentReminderConfig() {
-        String configText = "CURRENT REMINDERS CONFIG:\n";
+        String configText = "";
         boolean enabled = ((CheckBoxPreference) findPreference(PrefsActivity.PREF_COURSES_REMINDER_ENABLED)).isChecked();
         String interval = ((ListPreference) findPreference(PrefsActivity.PREF_COURSES_REMINDER_INTERVAL)).getValue();
         String time = getPrefs().getString(PrefsActivity.PREF_COURSES_REMINDER_TIME, getString(R.string.prefCoursesReminderTimeDefault));
@@ -185,11 +192,7 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
     private void logNewConfig() {
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            // Add new reminders configuration to log. Delay needed to get the saved values
-            SharedPreferences prefs = getPrefs();
-            String previousLog = prefs.getString(PrefsActivity.PREF_REMINDERS_LOG, "");
-            String logEntry = "--- CONFIGURATION CHANGED ---\n" + DateUtils.DATETIME_FORMAT.print(System.currentTimeMillis()) + "\n" + getCurrentReminderConfig();
-            prefs.edit().putString(PrefsActivity.PREF_REMINDERS_LOG, logEntry + "\n\n--------------\n\n" + previousLog).apply();
+            reminderLogHelper.saveLogEntry("CONFIGURATION CHANGED", getCurrentReminderConfig());
         }, 200);
 
     }

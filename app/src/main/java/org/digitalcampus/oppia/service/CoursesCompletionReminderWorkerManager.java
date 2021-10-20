@@ -24,6 +24,7 @@ import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.TrackerLogRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.DateUtils;
+import org.digitalcampus.oppia.utils.ReminderLogHelper;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 import org.joda.time.DateTime;
 
@@ -72,12 +73,12 @@ public class CoursesCompletionReminderWorkerManager {
 
     public Result checkCompletionReminder() {
 
-        String logEntry = DateUtils.DATETIME_FORMAT.print(System.currentTimeMillis()) + "\n";
-//        logEntry += "--- WORKER STARTED ---\n" + "Configuration: \n" + getConfiguration() + "\n\n";
+        ReminderLogHelper reminderLogHelper = new ReminderLogHelper(context);
+        String logEntry = "";
 
         if (!isUserLoggedIn()) {
             logEntry += "User not logged in";
-            addLogEntry(logEntry);
+            reminderLogHelper.saveLogEntry("WORKER STARTED", "\nConfiguration: \n" + getConfiguration() + "\n\n" + logEntry);
             return Result.success();
         }
 
@@ -97,16 +98,11 @@ public class CoursesCompletionReminderWorkerManager {
             logEntry = "Error: " + e.getMessage();
             return Result.failure();
         } finally {
-            addLogEntry(logEntry);
+            reminderLogHelper.saveLogEntry("WORKER STARTED", "Configuration: \n" + getConfiguration() + "\n\n" + logEntry);
         }
 
 
         return Result.success();
-    }
-
-    private void addLogEntry(String logEntry) {
-        String previousLog = prefs.getString(PrefsActivity.PREF_REMINDERS_LOG, "");
-        prefs.edit().putString(PrefsActivity.PREF_REMINDERS_LOG, logEntry + "\n\n--------------\n\n" + previousLog).apply();
     }
 
     private String getConfiguration() {
