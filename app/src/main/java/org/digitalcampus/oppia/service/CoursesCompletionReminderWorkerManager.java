@@ -13,7 +13,9 @@ import androidx.work.ExistingPeriodicWorkPolicy;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.fragments.prefs.NotificationsPrefsFragment;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.TrackerLogRepository;
@@ -22,8 +24,14 @@ import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 import org.joda.time.DateTime;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import androidx.work.ListenableWorker.Result;
@@ -38,9 +46,7 @@ public class CoursesCompletionReminderWorkerManager {
     public static final String EXTRA_GO_TO_NOTIFICATIONS_SETTINGS = "extra_go_to_notifications_settings";
     private final Context context;
 
-    public static final String DEFAULT_COURSES_REMINDER_TIME_MILLIS = "1624348800254"; // Tuesday at 10:00
-
-    public static final int PERIOD_DAYS_REMINDER = 7;
+    public static final int WEEK_DAYS_NUM = 7;
 
     @Inject
     TrackerLogRepository trackerLogRepository;
@@ -69,18 +75,39 @@ public class CoursesCompletionReminderWorkerManager {
             return Result.success();
         }
 
+        String logEntry = DateUtils.DATETIME_FORMAT.print(System.currentTimeMillis()) + "\n";
+        logEntry += "--- WORKER STARTED ---\n" + "Configuration: \n" + getConfiguration() + "\n\n";
+
         try {
 
-            boolean anyActivityLastWeek = checkActivityLastWeek();
+            boolean anyActivityDone = checkActivityDone();
             boolean allCoursesCompleted = checkAllCoursesCompleted();
-            if (!anyActivityLastWeek && !allCoursesCompleted) {
+            boolean notify = !anyActivityDone && !allCoursesCompleted;
+            if (notify) {
                 showReminderNotification();
             }
+            logEntry += "Notification displayed: " + notify + "\n"
+                    + "anyActivityDone: " + anyActivityDone + "\n"
+                    + "allCoursesCompleted: " + allCoursesCompleted;
         } catch (Exception e) {
+            logEntry = "Error: " + e.getMessage();
             return Result.failure();
+        } finally {
+            String previousLog = prefs.getString(PrefsActivity.PREF_REMINDERS_LOG, "");
+            prefs.edit().putString(PrefsActivity.PREF_REMINDERS_LOG, logEntry + "\n\n--------------\n\n" + previousLog).apply();
         }
 
+
         return Result.success();
+    }
+
+    private String getConfiguration() {
+        boolean enabled = prefs.getBoolean(PrefsActivity.PREF_COURSES_REMINDER_ENABLED, true);
+        String interval = prefs.getString(PrefsActivity.PREF_COURSES_REMINDER_INTERVAL, context.getString(R.string.prefCoursesReminderIntervalDefault));
+        String time = prefs.getString(PrefsActivity.PREF_COURSES_REMINDER_TIME, context.getString(R.string.prefCoursesReminderTimeDefault));
+        Set<String> dayCodes = prefs.getStringSet(PrefsActivity.PREF_COURSES_REMINDER_DAYS,
+                new HashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.days_of_week_values_default))));
+        return String.format("Enabled: %s\nInterval: %s\nTime: %s\nDays: %s", enabled, interval, time, NotificationsPrefsFragment.getWeekDaysNames(context, dayCodes));
     }
 
     private boolean isUserLoggedIn() {
@@ -88,15 +115,19 @@ public class CoursesCompletionReminderWorkerManager {
     }
 
 
-    private boolean checkActivityLastWeek() throws Exception {
+    private boolean checkActivityDone() throws Exception {
 
         String datetimeString = trackerLogRepository.getLastTrackerDatetime(context);
 
         if (!TextUtils.isEmpty(datetimeString)) {
             DateTime datetime = DateUtils.DATETIME_FORMAT.parseDateTime(datetimeString);
 
+            String interval = prefs.getString(PrefsActivity.PREF_COURSES_REMINDER_INTERVAL, context.getString(R.string.prefCoursesReminderIntervalDefault));
+
+            int daysBefore = TextUtils.equals(interval, context.getString(R.string.interval_weekly)) ? 7 : 1;
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_MONTH, -PERIOD_DAYS_REMINDER);
+            calendar.add(Calendar.DAY_OF_MONTH, -daysBefore);
+            // Not necessary to set the time in this calendar. This worker will be launched at the time configured.
 
             Log.i(TAG, "checkActivityLastWeek: last Tuesday date: "
                     + DateUtils.DATE_FORMAT.print(calendar.getTimeInMillis()));
@@ -149,25 +180,66 @@ public class CoursesCompletionReminderWorkerManager {
     }
 
     public static void configureCoursesCompletionReminderWorker(Context context) {
+        configureCoursesCompletionReminderWorker(context, ExistingPeriodicWorkPolicy.REPLACE);
+    }
+
+    public static void configureCoursesCompletionReminderWorker(Context context, ExistingPeriodicWorkPolicy policy) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String coursesReminderDayTimeMillis = prefs.getString(PrefsActivity.PREF_COURSES_REMINDER_DAY_TIME_MILLIS, DEFAULT_COURSES_REMINDER_TIME_MILLIS);
-        if (!TextUtils.isEmpty(coursesReminderDayTimeMillis)) {
-            scheduleCoursesCompletionReminderWorker(context, coursesReminderDayTimeMillis);
+        boolean enabled = prefs.getBoolean(PrefsActivity.PREF_COURSES_REMINDER_ENABLED, true);
+        if (enabled) {
+            scheduleCoursesCompletionReminderWorker(context, policy);
         } else {
-            ((App) context.getApplicationContext()).cancelWorks(App.WORK_COURSES_NOT_COMPLETED_REMINDER);
+            cancelAllReminderWorers(context);
         }
     }
 
-    private static void scheduleCoursesCompletionReminderWorker(Context context, String coursesReminderDayTimeMillis) {
+    private static void cancelAllReminderWorers(Context context) {
 
-        Calendar calendarDayTime = Calendar.getInstance();
-        calendarDayTime.setTimeInMillis(Long.parseLong(coursesReminderDayTimeMillis));
+        String[] allDaysWeek = context.getResources().getStringArray(R.array.days_of_week_values);
+        for (String dayOfWeek : allDaysWeek) {
+            cancelWeeklyReminderWorker(context, dayOfWeek);
+        }
+    }
+
+    private static void scheduleCoursesCompletionReminderWorker(Context context, ExistingPeriodicWorkPolicy policy) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        Set<String> defaultReminderDays = new HashSet<>(Arrays.asList(
+                context.getResources().getStringArray(R.array.days_of_week_values_default)));
+        Set<String> daysReminder = prefs.getStringSet(PrefsActivity.PREF_COURSES_REMINDER_DAYS, defaultReminderDays);
+        String time = prefs.getString(PrefsActivity.PREF_COURSES_REMINDER_TIME, context.getString(R.string.prefCoursesReminderTimeDefault));
+
+        String[] allDaysWeek = context.getResources().getStringArray(R.array.days_of_week_values);
+        for (String dayOfWeek : allDaysWeek) {
+            if (daysReminder.contains(dayOfWeek)) {
+                scheduleWeeklyReminderWorker(context, dayOfWeek, time, policy);
+            } else {
+                cancelWeeklyReminderWorker(context, dayOfWeek);
+            }
+        }
+
+    }
+
+    /**
+     * Same process for weekly or daily intervals. The difference is inside the worker when reminder criteria is processed.
+     */
+    private static void scheduleWeeklyReminderWorker(Context context, String dayOfWeek, String time, ExistingPeriodicWorkPolicy policy) {
+
+        Calendar calendarTime = Calendar.getInstance();
+        try {
+            Date timeParsed = new SimpleDateFormat("HH:mm").parse(time);
+            calendarTime.setTime(timeParsed);
+        } catch (ParseException e) {
+            Analytics.logException(e);
+            return;
+        }
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_WEEK, calendarDayTime.get(Calendar.DAY_OF_WEEK));
-        calendar.set(Calendar.HOUR_OF_DAY, calendarDayTime.get(Calendar.HOUR_OF_DAY));
-        calendar.set(Calendar.MINUTE, calendarDayTime.get(Calendar.MINUTE));
+        calendar.set(Calendar.DAY_OF_WEEK, Integer.parseInt(dayOfWeek));
+        calendar.set(Calendar.HOUR_OF_DAY, calendarTime.get(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendarTime.get(Calendar.MINUTE));
         calendar.set(Calendar.SECOND, 0);
 
         if (calendar.before(Calendar.getInstance())) {
@@ -177,12 +249,16 @@ public class CoursesCompletionReminderWorkerManager {
         long delayFromNow = calendar.getTimeInMillis() - System.currentTimeMillis();
 
         PeriodicWorkRequest coursesCompletionReminder = new PeriodicWorkRequest.Builder(CoursesCompletionReminderWorker.class,
-                CoursesCompletionReminderWorkerManager.PERIOD_DAYS_REMINDER, TimeUnit.DAYS)
+                CoursesCompletionReminderWorkerManager.WEEK_DAYS_NUM, TimeUnit.DAYS)
                 .setInitialDelay(delayFromNow, TimeUnit.MILLISECONDS)
                 .build();
 
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(App.WORK_COURSES_NOT_COMPLETED_REMINDER,
-                ExistingPeriodicWorkPolicy.REPLACE, coursesCompletionReminder);
-
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(App.WORK_COURSES_NOT_COMPLETED_REMINDER_ + dayOfWeek,
+                policy, coursesCompletionReminder);
     }
+
+    private static void cancelWeeklyReminderWorker(Context context, String dayOfWeek) {
+        ((App) context.getApplicationContext()).cancelWorks(App.WORK_COURSES_NOT_COMPLETED_REMINDER_ + dayOfWeek);
+    }
+
 }

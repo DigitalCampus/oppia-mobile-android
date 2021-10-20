@@ -168,8 +168,8 @@ public class CourseCompletionReminderWorderTest {
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, lastWeekActivity
-                ? -(CoursesCompletionReminderWorkerManager.PERIOD_DAYS_REMINDER - 1)
-                : -(CoursesCompletionReminderWorkerManager.PERIOD_DAYS_REMINDER + 1));
+                ? -(CoursesCompletionReminderWorkerManager.WEEK_DAYS_NUM - 1)
+                : -(CoursesCompletionReminderWorkerManager.WEEK_DAYS_NUM + 1));
         when(trackerLogRepository.getLastTrackerDatetime(any()))
                 .thenReturn(DateUtils.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
     }
