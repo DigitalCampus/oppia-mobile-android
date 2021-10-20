@@ -13,9 +13,14 @@ import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.custom_prefs.TimePreference;
@@ -26,7 +31,9 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 public class NotificationsPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback, SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -61,7 +68,7 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
         findPreference(PrefsActivity.PREF_REMINDERS_LOG).setOnPreferenceClickListener(preference -> {
 
             String log = getPrefs().getString(PrefsActivity.PREF_REMINDERS_LOG, "");
-            String message = "CURRENT REMINDERS CONFIG:\n" + getCurrentReminderConfig() + "\n\nLOG:\n\n" + log;
+            String message = getCurrentReminderConfig() + getWorkerStatuses() + "\n\nLOG:\n\n" + log;
             new AlertDialog.Builder(getActivity())
                     .setTitle("Reminders log")
                     .setMessage(message)
@@ -71,12 +78,45 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
         });
     }
 
+    private String getWorkerStatuses() {
+
+        String statusesText = "WORKERS STATUSES:\n";
+        for (int i = 1; i <= 7; i++) {
+            statusesText += "Day " + i + " scheduled: " + isWorkScheduled(App.WORK_COURSES_NOT_COMPLETED_REMINDER_ + i) + "\n";
+        }
+
+        return statusesText + "\n";
+
+    }
+
+    private boolean isWorkScheduled(String tag) {
+        WorkManager instance = WorkManager.getInstance(getActivity());
+        ListenableFuture<List<WorkInfo>> statuses = instance.getWorkInfosForUniqueWork(tag);
+        try {
+            boolean running = false;
+            List<WorkInfo> workInfoList = statuses.get();
+            for (WorkInfo workInfo : workInfoList) {
+                WorkInfo.State state = workInfo.getState();
+                running = state == WorkInfo.State.RUNNING | state == WorkInfo.State.ENQUEUED;
+            }
+            return running;
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return false;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private String getCurrentReminderConfig() {
+        String configText = "CURRENT REMINDERS CONFIG:\n";
         boolean enabled = ((CheckBoxPreference) findPreference(PrefsActivity.PREF_COURSES_REMINDER_ENABLED)).isChecked();
         String interval = ((ListPreference) findPreference(PrefsActivity.PREF_COURSES_REMINDER_INTERVAL)).getValue();
         String time = getPrefs().getString(PrefsActivity.PREF_COURSES_REMINDER_TIME, getString(R.string.prefCoursesReminderTimeDefault));
         Set<String> dayCodes = ((MultiSelectListPreference) findPreference(PrefsActivity.PREF_COURSES_REMINDER_DAYS)).getValues();
-        return String.format("Enabled: %s\nInterval: %s\nTime: %s\nDays: %s", enabled, interval, time, getWeekDaysNames(getActivity(), dayCodes));
+        configText += String.format("Enabled: %s\nInterval: %s\nTime: %s\nDays: %s", enabled, interval, time, getWeekDaysNames(getActivity(), dayCodes));
+        return configText + "\n\n";
     }
 
     private void configurePreferencesSummary() {
