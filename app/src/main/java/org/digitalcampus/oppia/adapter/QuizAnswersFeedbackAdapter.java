@@ -49,7 +49,7 @@ public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswers
         for (int i=0; i<qf.getUserResponse().size();i++){
             userResponseText.append(qf.getUserResponse().get(i));
             if (i+1<qf.getUserResponse().size()){
-                userResponseText.append("\n");
+                userResponseText.append("<br>");
             }
         }
 
