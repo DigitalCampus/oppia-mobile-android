@@ -7,9 +7,7 @@
     <color name="theme_secondary">@color/oppia_secondary</color>
     <color name="theme_secondary_light">@color/oppia_secondary_light</color>
 
-
     <color name="default_text_color">@color/black</color>
-
 
     <!-- launcher icon drawable -->
     <item name="app_icon" type="drawable">@drawable/dc_logo</item>
@@ -68,6 +66,7 @@
     <!-- Course index -->
     <color name="course_index_section_title">@color/text_dark</color>
     <color name="course_index_highlight">@color/theme_secondary</color>
+    <dimen name="course_index_section_icon_size">48dp</dimen>
 
     <!-- Chart colors -->
     <color name="piechart_completed">@color/theme_secondary</color>
