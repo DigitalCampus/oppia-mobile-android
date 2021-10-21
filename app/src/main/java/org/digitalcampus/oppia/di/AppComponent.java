@@ -28,6 +28,7 @@ import org.digitalcampus.oppia.fragments.RegisterFragment;
 import org.digitalcampus.oppia.fragments.RememberUsernameFragment;
 import org.digitalcampus.oppia.fragments.ResetPasswordFragment;
 import org.digitalcampus.oppia.fragments.prefs.AdvancedPrefsFragment;
+import org.digitalcampus.oppia.fragments.prefs.NotificationsPrefsFragment;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.CoursesChecksWorkerManager;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
@@ -66,6 +67,7 @@ public interface AppComponent {
     void inject(ChangePasswordActivity activity);
 
     void inject(AdvancedPrefsFragment advancedPrefsFragment);
+    void inject(NotificationsPrefsFragment notificationsPrefsFragment);
 
     void inject(AnswerWidget fragment);
     void inject(EditProfileActivity activity);
@@ -79,4 +81,5 @@ public interface AppComponent {
     User getUser();
 
     void inject(DBDataMigration dbDataMigration);
+
 }
