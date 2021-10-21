@@ -16,6 +16,7 @@ import androidx.work.WorkManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.activity.StartUpActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -176,7 +177,7 @@ public class CoursesCompletionReminderWorkerManager {
         builder.setStyle(new NotificationCompat.BigTextStyle()
                 .bigText(context.getString(R.string.courses_reminder_notif_text)));
         builder.setContentText(context.getString(R.string.courses_reminder_notif_text));
-        builder.setContentIntent(OppiaNotificationUtils.getMainActivityPendingIntent(context));
+        builder.setContentIntent(OppiaNotificationUtils.getActivityPendingIntent(context, StartUpActivity.class, null));
 
         Bundle extras = new Bundle();
         extras.putBoolean(EXTRA_GO_TO_NOTIFICATIONS_SETTINGS, true);
