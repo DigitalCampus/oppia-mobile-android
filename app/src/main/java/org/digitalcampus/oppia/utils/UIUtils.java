@@ -100,8 +100,7 @@ public class UIUtils {
         App app = (App) ctx.getApplicationContext();
         User u = app.getComponent().getUser();
 
-        Log.d(TAG, "username: " + u.getUsername());
-        Log.d(TAG, "points: " + u.getPoints());
+        Log.d(TAG, "Username: " + u.getUsername() + " | Points:" + u.getPoints());
 
         if (pointsItem == null) {
             return;
