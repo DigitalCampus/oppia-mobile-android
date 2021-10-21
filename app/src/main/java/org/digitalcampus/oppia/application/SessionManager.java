@@ -131,7 +131,7 @@ public class SessionManager {
         Analytics.setUserId(username);
         editor.commit();
 
-        CoursesCompletionReminderWorkerManager.configureCoursesCompletionReminderWorker(ctx);
+//        CoursesCompletionReminderWorkerManager.configureCoursesCompletionReminderWorker(ctx); #reminders-multi-user
     }
 
     public static void logoutCurrentUser(Context ctx) {
@@ -144,7 +144,8 @@ public class SessionManager {
             saveUserPrefs(username, prefs);
         }
 
-        OppiaNotificationUtils.cancelAllUserNotifications(ctx);
+//        OppiaNotificationUtils.cancelAllUserNotifications(ctx); #reminders-multi-user
+        // Cancel also reminders #reminders-multi-user
 
         //Logout the user (unregister from Preferences)
         editor.putString(PrefsActivity.PREF_USER_NAME, "");

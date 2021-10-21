@@ -18,6 +18,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.fragments.prefs.NotificationsPrefsFragment;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
@@ -55,8 +56,8 @@ public class CoursesCompletionReminderWorkerManager {
     @Inject
     CoursesRepository coursesRepository;
 
-    @Inject
-    User user;
+//    @Inject
+//    User user; #reminders-multi-user
 
     @Inject
     SharedPreferences prefs;
@@ -76,11 +77,11 @@ public class CoursesCompletionReminderWorkerManager {
         ReminderLogHelper reminderLogHelper = new ReminderLogHelper(context);
         String logEntry = "";
 
-        if (!isUserLoggedIn()) {
-            logEntry += "User not logged in";
-            reminderLogHelper.saveLogEntry("WORKER STARTED", "\nConfiguration: \n" + getConfiguration() + "\n\n" + logEntry);
-            return Result.success();
-        }
+//        if (!isUserLoggedIn()) { #reminders-multi-user
+//            logEntry += "User not logged in";
+//            reminderLogHelper.saveLogEntry("WORKER STARTED", "\nConfiguration: \n" + getConfiguration() + "\n\n" + logEntry);
+//            return Result.success();
+//        }
 
 
         try {
@@ -114,9 +115,9 @@ public class CoursesCompletionReminderWorkerManager {
         return String.format("Enabled: %s\nInterval: %s\nTime: %s\nDays: %s", enabled, interval, time, NotificationsPrefsFragment.getWeekDaysNames(context, dayCodes));
     }
 
-    private boolean isUserLoggedIn() {
-        return user != null && !TextUtils.isEmpty(user.getUsername());
-    }
+//    private boolean isUserLoggedIn() { #reminders-multi-user
+//        return user != null && !TextUtils.isEmpty(user.getUsername());
+//    }
 
 
     private boolean checkActivityDone() throws Exception {
@@ -148,17 +149,21 @@ public class CoursesCompletionReminderWorkerManager {
         String criteria = prefs.getString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, null);
         int percent = prefs.getInt(PrefsActivity.PREF_BADGE_AWARD_CRITERIA_PERCENT, 0);
 
-        if (criteria == null || user == null) {
+        if (criteria == null/* || user == null*/) { // #reminders-multi-user
             // This should not happen
             throw new IllegalStateException("Wrong data");
         }
 
         List<Course> courses = coursesRepository.getCourses(context);
 
-        for (Course courseDB : courses) {
-            Course course = coursesRepository.getCourse(context, courseDB.getCourseId(), user.getUserId());
-            if (!course.isComplete(context, user, criteria, percent)) {
-                return false;
+        List<User> users = DbHelper.getInstance(context).getAllUsers(); // #reminders-multi-user
+
+        for (User user : users) {
+            for (Course courseDB : courses) {
+                Course course = coursesRepository.getCourse(context, courseDB.getCourseId(), user.getUserId());
+                if (!course.isComplete(context, user, criteria, percent)) {
+                    return false;
+                }
             }
         }
 
