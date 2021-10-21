@@ -37,11 +37,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
+import javax.inject.Inject;
+
 public class NotificationsPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback, SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String TAG = PrefsActivity.class.getSimpleName();
     private ReminderLogHelper reminderLogHelper;
 
+    @Inject
+    SharedPreferences prefs;
 
     public static NotificationsPrefsFragment newInstance() {
         return new NotificationsPrefsFragment();
@@ -56,15 +60,36 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
         // Load the preferences from XML resources
         addPreferencesFromResource(R.xml.prefs_notifications);
 
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstance) {
+        super.onCreate(savedInstance);
+        initializeDagger();
+
         configurePreferencesSummary();
 
         configureRemindersLog();
 
+        liveUpdateSummary(PrefsActivity.PREF_GAMIFICATION_POINTS_ANIMATION);
+
         getPrefs().registerOnSharedPreferenceChangeListener(this);
     }
 
+    private void initializeDagger() {
+        App app = (App) getActivity().getApplication();
+        app.getComponent().inject(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getPrefs().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+
     private SharedPreferences getPrefs() {
-        return getPreferenceManager().getSharedPreferences();
+        return prefs;
     }
 
     private void configureRemindersLog() {
@@ -214,17 +239,6 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
                 getResources().getStringArray(R.array.days_of_week_values_default)));
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getPrefs().unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstance) {
-        super.onCreate(savedInstance);
-        liveUpdateSummary(PrefsActivity.PREF_GAMIFICATION_POINTS_ANIMATION);
-    }
 
     @Override
     public void onDisplayPreferenceDialog(Preference preference) {

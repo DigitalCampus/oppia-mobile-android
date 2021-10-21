@@ -241,7 +241,7 @@ public class QuizWidget extends AnswerWidget {
                 qf.setQuestionText(q.getTitle(prefLang));
                 qf.setUserResponse(q.getUserResponses());
                 String feedbackText = q.getFeedback(prefLang);
-                qf.setFeedbackText(feedbackText);
+                qf.setFeedbackText(feedbackText.replaceAll("&amp;gt;","<"));
                 quizAnswersFeedback.add(qf);
             }
         }

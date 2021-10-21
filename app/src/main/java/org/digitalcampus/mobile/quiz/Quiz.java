@@ -435,7 +435,7 @@ public class Quiz implements Serializable {
             JSONObject json = new JSONObject(propsSerialized);
             return json.getInt(key);
         } catch (JSONException jsone) {
-            Log.d(TAG, "Error getting int from propsSerialized", jsone);
+            Log.d(TAG, "Error getting int from propsSerialized " + key);
         }
         return defaultValue;
     }
