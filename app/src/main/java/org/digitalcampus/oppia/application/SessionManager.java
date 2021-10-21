@@ -145,7 +145,7 @@ public class SessionManager {
         }
 
 //        OppiaNotificationUtils.cancelAllUserNotifications(ctx); #reminders-multi-user
-        // Cancel also reminders #reminders-multi-user
+//        CoursesCompletionReminderWorkerManager.cancelAllReminderWorkers(ctx);  #reminders-multi-user
 
         //Logout the user (unregister from Preferences)
         editor.putString(PrefsActivity.PREF_USER_NAME, "");

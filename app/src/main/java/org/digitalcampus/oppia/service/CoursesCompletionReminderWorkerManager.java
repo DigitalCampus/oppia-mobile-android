@@ -199,11 +199,11 @@ public class CoursesCompletionReminderWorkerManager {
         if (enabled) {
             scheduleCoursesCompletionReminderWorker(context, policy);
         } else {
-            cancelAllReminderWorers(context);
+            cancelAllReminderWorkers(context);
         }
     }
 
-    private static void cancelAllReminderWorers(Context context) {
+    public static void cancelAllReminderWorkers(Context context) {
 
         String[] allDaysWeek = context.getResources().getStringArray(R.array.days_of_week_values);
         for (String dayOfWeek : allDaysWeek) {
