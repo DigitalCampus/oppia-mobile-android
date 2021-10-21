@@ -3,9 +3,13 @@ package androidTestFiles.UI;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.Checkable;
 import android.widget.EditText;
 
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -18,7 +22,10 @@ import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +43,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBackUnconditionally;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -45,6 +53,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.isA;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -161,7 +170,7 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
 
             closeSoftKeyboard();
 
-            onView(withText("OK"))
+            onView(withText(android.R.string.ok))
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()))
                     .perform(click());
@@ -206,11 +215,10 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
 
             closeSoftKeyboard();
 
-            onView(withText("OK"))
+            onView(withText(android.R.string.ok))
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()))
                     .perform(click());
-
 
             onView(withText(R.string.accept))
                     .inRoot(isDialog())
@@ -232,9 +240,40 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
 
     // COURSES NOT COMPLETED REMINDER SETTINGS
 
+    @Ignore
     @Test
     public void showWarningIfZeroDaysSelected() throws Exception {
-        // TODO
+
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            onView(withId(R.id.drawer))
+                    .check(matches(isClosed(Gravity.START)))
+                    .perform(DrawerActions.open());
+
+            onView(withText(R.string.menu_settings)).perform(click());
+
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(
+                            hasDescendant(withText(R.string.prefNotifications_title)), click()));
+
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(
+                            hasDescendant(withText(R.string.prefCoursesReminderDaysTitle)), click()));
+
+            onView(withText(R.string.week_day_1)).perform(setChecked(false));
+            onView(withText(R.string.week_day_2)).perform(setChecked(false));
+            onView(withText(R.string.week_day_3)).perform(setChecked(false));
+            onView(withText(R.string.week_day_4)).perform(setChecked(false));
+            onView(withText(R.string.week_day_5)).perform(setChecked(false));
+            onView(withText(R.string.week_day_6)).perform(setChecked(false));
+            onView(withText(R.string.week_day_7)).perform(setChecked(false));
+
+            onView(withText(android.R.string.ok))
+                    .inRoot(isDialog())
+                    .check(matches(isDisplayed()))
+                    .perform(click());
+
+            onView(withText(R.string.warning_reminder_at_least_one_day)).check(matches(isDisplayed()));
+        }
     }
 
     @Test
@@ -245,5 +284,36 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
     @Test
     public void checkDaysReducedToOneIfWeeklyIntervalIsSelected() throws Exception {
         // TODO
+    }
+
+    public static ViewAction setChecked(final boolean checked) {
+        return new ViewAction() {
+            @Override
+            public BaseMatcher<View> getConstraints() {
+                return new BaseMatcher<View>() {
+                    @Override
+                    public boolean matches(Object item) {
+                        return isA(Checkable.class).matches(item);
+                    }
+
+                    @Override
+                    public void describeMismatch(Object item, Description mismatchDescription) {}
+
+                    @Override
+                    public void describeTo(Description description) {}
+                };
+            }
+
+            @Override
+            public String getDescription() {
+                return null;
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                Checkable checkableView = (Checkable) view;
+                checkableView.setChecked(checked);
+            }
+        };
     }
 }
