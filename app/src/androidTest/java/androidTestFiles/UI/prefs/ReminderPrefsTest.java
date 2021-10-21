@@ -25,11 +25,13 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.fragments.prefs.NotificationsPrefsFragment;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ReminderPrefsTest {
 
 
+    @Ignore
     @Test
     public void showWarningIfZeroDaysSelected() throws Exception {
 
