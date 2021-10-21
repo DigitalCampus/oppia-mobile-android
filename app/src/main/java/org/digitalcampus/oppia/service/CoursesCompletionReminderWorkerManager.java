@@ -10,6 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ListenableWorker.Result;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -21,6 +24,7 @@ import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.TrackerLogRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.DateUtils;
+import org.digitalcampus.oppia.utils.ReminderLogHelper;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 import org.joda.time.DateTime;
 
@@ -34,10 +38,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import androidx.work.ListenableWorker.Result;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
-
 import javax.inject.Inject;
 
 public class CoursesCompletionReminderWorkerManager {
@@ -47,6 +47,7 @@ public class CoursesCompletionReminderWorkerManager {
     private final Context context;
 
     public static final int WEEK_DAYS_NUM = 7;
+    public static final int ONE_DAY_NUM = 1;
 
     @Inject
     TrackerLogRepository trackerLogRepository;
@@ -71,12 +72,16 @@ public class CoursesCompletionReminderWorkerManager {
     }
 
     public Result checkCompletionReminder() {
+
+        ReminderLogHelper reminderLogHelper = new ReminderLogHelper(context);
+        String logEntry = "";
+
         if (!isUserLoggedIn()) {
+            logEntry += "User not logged in";
+            reminderLogHelper.saveLogEntry("WORKER STARTED", "\nConfiguration: \n" + getConfiguration() + "\n\n" + logEntry);
             return Result.success();
         }
 
-        String logEntry = DateUtils.DATETIME_FORMAT.print(System.currentTimeMillis()) + "\n";
-        logEntry += "--- WORKER STARTED ---\n" + "Configuration: \n" + getConfiguration() + "\n\n";
 
         try {
 
@@ -93,8 +98,7 @@ public class CoursesCompletionReminderWorkerManager {
             logEntry = "Error: " + e.getMessage();
             return Result.failure();
         } finally {
-            String previousLog = prefs.getString(PrefsActivity.PREF_REMINDERS_LOG, "");
-            prefs.edit().putString(PrefsActivity.PREF_REMINDERS_LOG, logEntry + "\n\n--------------\n\n" + previousLog).apply();
+            reminderLogHelper.saveLogEntry("WORKER STARTED", "Configuration: \n" + getConfiguration() + "\n\n" + logEntry);
         }
 
 
@@ -124,7 +128,7 @@ public class CoursesCompletionReminderWorkerManager {
 
             String interval = prefs.getString(PrefsActivity.PREF_COURSES_REMINDER_INTERVAL, context.getString(R.string.prefCoursesReminderIntervalDefault));
 
-            int daysBefore = TextUtils.equals(interval, context.getString(R.string.interval_weekly)) ? 7 : 1;
+            int daysBefore = TextUtils.equals(interval, context.getString(R.string.interval_weekly)) ? WEEK_DAYS_NUM : ONE_DAY_NUM;
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_MONTH, -daysBefore);
             // Not necessary to set the time in this calendar. This worker will be launched at the time configured.
@@ -253,8 +257,9 @@ public class CoursesCompletionReminderWorkerManager {
                 .setInitialDelay(delayFromNow, TimeUnit.MILLISECONDS)
                 .build();
 
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(App.WORK_COURSES_NOT_COMPLETED_REMINDER_ + dayOfWeek,
-                policy, coursesCompletionReminder);
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+                App.WORK_COURSES_NOT_COMPLETED_REMINDER_ + dayOfWeek, policy, coursesCompletionReminder);
+
     }
 
     private static void cancelWeeklyReminderWorker(Context context, String dayOfWeek) {

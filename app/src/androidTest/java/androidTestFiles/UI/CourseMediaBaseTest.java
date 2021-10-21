@@ -5,9 +5,7 @@ import android.content.Context;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
