@@ -1,4 +1,4 @@
-package androidTestFiles.UI.quiz;
+package androidTestFiles.org.digitalcampus.oppia.widgets.quiz;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -22,17 +22,18 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class ShortAnswerNoFeedbackTest extends BaseQuizTest {
+public class NumericExactNoFeedbackTest extends BaseQuizTest {
 
-    private static final String SHORTANSWER_NO_FEEDBACK_JSON =
-            "quizzes/shortanswer_no_feedback.json";
-    private static final String FIRST_QUESTION_TITLE = "What is the capital of Spain?";
-    private static final String CORRECT_ANSWER = "Madrid";
-    private static final String INCORRECT_ANSWER = "Lisbon";
+    private static final String NUMERIC_EXACT_NO_FEEDBACK_JSON =
+            "quizzes/numeric_exact_no_feedback.json";
+    private static final String FIRST_QUESTION_TITLE = "How high is Everest?";
+    private static final String CORRECT_ANSWER = "8848";
+    private static final String INCORRECT_ANSWER = "8847";
+    private static final String STRING_ANSWER = "eight thousand";
 
     @Override
     protected String getQuizContentFile() {
-        return SHORTANSWER_NO_FEEDBACK_JSON;
+        return NUMERIC_EXACT_NO_FEEDBACK_JSON;
     }
 
     @Test
@@ -91,4 +92,18 @@ public class ShortAnswerNoFeedbackTest extends BaseQuizTest {
                 .check(matches(withDrawable(R.drawable.quiz_cross)));
     }
 
+    @Test
+    public void incorrectStringAnswer() {
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        onView(withId(R.id.take_quiz_btn)).perform(click());
+
+        onView(withId(R.id.question_text))
+                .check(matches(withText(FIRST_QUESTION_TITLE)));
+
+        onView(withId(R.id.responsetext))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText(STRING_ANSWER));
+        onView(withId(R.id.mquiz_next_btn)).perform(click());
+
+        // TODO check what message is displayed
+    }
 }
