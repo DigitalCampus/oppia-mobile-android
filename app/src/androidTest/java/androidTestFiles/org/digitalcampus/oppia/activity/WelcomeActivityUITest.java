@@ -1,4 +1,4 @@
-package androidTestFiles.UI;
+package androidTestFiles.org.digitalcampus.oppia.activity;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -21,7 +21,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class WelcomeUITest extends MockedApiEndpointTest {
+public class WelcomeActivityUITest extends MockedApiEndpointTest {
 
     @Rule
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =

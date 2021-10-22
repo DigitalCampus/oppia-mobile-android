@@ -1,4 +1,4 @@
-package androidTestFiles.UI.quiz;
+package androidTestFiles.org.digitalcampus.oppia.widgets.quiz;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 

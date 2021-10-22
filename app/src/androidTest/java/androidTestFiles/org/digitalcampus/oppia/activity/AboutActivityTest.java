@@ -1,11 +1,4 @@
-package androidTestFiles.UI;
-
-import android.content.Intent;
-import android.os.Bundle;
-
-import androidx.test.espresso.matcher.ViewMatchers;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
+package androidTestFiles.org.digitalcampus.oppia.activity;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -13,6 +6,10 @@ import org.digitalcampus.oppia.activity.AboutActivity;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -25,7 +22,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.AllOf.allOf;
 
 @RunWith(AndroidJUnit4.class)
-public class AboutUITest {
+public class AboutActivityTest {
 
     @Rule
     public ActivityTestRule<AboutActivity> aboutActivityTestRule =
