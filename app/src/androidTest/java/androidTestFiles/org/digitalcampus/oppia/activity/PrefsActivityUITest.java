@@ -1,4 +1,4 @@
-package androidTestFiles.UI;
+package androidTestFiles.org.digitalcampus.oppia.activity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,14 +6,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Checkable;
 import android.widget.EditText;
-
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.UiController;
-import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
@@ -37,13 +29,19 @@ import java.util.UUID;
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.TestUtils;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBackUnconditionally;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -53,9 +51,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.isA;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.isA;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -105,12 +103,6 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
         when(coursesRepository.getCourses((Context) any())).thenReturn(courses);
 
     }
-
-    private int getCoursesCount() {
-        return coursesRepository.getCourses((Context) any()).size();
-    }
-
-
 
     @Test
     public void showsChangeLanguageOptionIfThereAreCoursesWithManyLanguages() throws Exception {

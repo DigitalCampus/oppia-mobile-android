@@ -1,4 +1,4 @@
-package androidTestFiles.UI.quiz;
+package androidTestFiles.org.digitalcampus.oppia.widgets.quiz;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -22,19 +22,20 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class ShortAnswerWithFeedbackTest extends BaseQuizTest {
+public class NumericWithFeedbackTest extends BaseQuizTest {
 
-    private static final String SHORTANSWER_WITH_FEEDBACK_JSON =
-            "quizzes/shortanswer_with_feedback.json";
-    private static final String FIRST_QUESTION_TITLE = "What is the capital of Italy?";
-    private static final String CORRECT_ANSWER = "Rome";
-    private static final String INCORRECT_ANSWER = "milan";
+    private static final String NUMERIC_WITH_FEEDBACK_JSON =
+            "quizzes/numeric_with_feedback.json";
+    private static final String FIRST_QUESTION_TITLE = "How many sides does a hexagon have?";
+    private static final String CORRECT_ANSWER = "6";
+    private static final String INCORRECT_ANSWER = "7";
     private static final String CORRECT_ANSWER_FEEDBACK = "correct";
     private static final String INCORRECT_ANSWER_FEEDBACK = "wrong";
 
+
     @Override
     protected String getQuizContentFile() {
-        return SHORTANSWER_WITH_FEEDBACK_JSON;
+        return NUMERIC_WITH_FEEDBACK_JSON;
     }
 
     @Test

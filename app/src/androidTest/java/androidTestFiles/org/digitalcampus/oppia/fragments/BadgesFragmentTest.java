@@ -1,4 +1,4 @@
-package androidTestFiles.UI;
+package androidTestFiles.org.digitalcampus.oppia.fragments;
 
 
 import android.os.Bundle;
@@ -25,7 +25,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class BadgesUITest extends MockedApiEndpointTest {
+public class BadgesFragmentTest extends MockedApiEndpointTest {
 
     private static final String VALID_BADGES_RESPONSE_NOT_EMPTY = "responses/response_200_badges_not_empty.json";
     private static final String VALID_BADGES_RESPONSE_EMPTY = "responses/response_200_badges_empty.json";

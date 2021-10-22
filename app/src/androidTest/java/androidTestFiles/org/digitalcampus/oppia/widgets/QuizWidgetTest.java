@@ -1,4 +1,4 @@
-package androidTestFiles.UI;
+package androidTestFiles.org.digitalcampus.oppia.widgets;
 
 
 import android.content.Context;
@@ -40,7 +40,7 @@ import static org.mockito.Matchers.any;
 
 
 @RunWith(AndroidJUnit4.class)
-public class QuizUITest extends DaggerInjectMockUITest {
+public class QuizWidgetTest extends DaggerInjectMockUITest {
 
     private static final String SIMPLE_QUIZ_JSON = "quizzes/simple_quiz.json";
     private static final String WITH_MAX_ATTEMPTS_JSON = "quizzes/with_max_attempts_quiz.json";
