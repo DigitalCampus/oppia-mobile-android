@@ -7,6 +7,7 @@ import android.view.View;
 
 import androidx.fragment.app.FragmentManager;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityPrivacyBinding;
 import org.digitalcampus.oppia.analytics.Analytics;
@@ -61,6 +62,10 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
         if (!SessionManager.isLoggedIn(this)){
             binding.privacyUserSection.setVisibility(View.GONE);
             return;
+        }
+        else if (!BuildConfig.DELETE_ACCOUNT_ENABLED){
+            binding.deleteDataSection.setVisibility(View.GONE);
+            binding.manageDataSeparator.setVisibility(View.GONE);
         }
 
         binding.btnDeleteAccount.setOnClickListener(v -> showDeleteAccountWarning());
