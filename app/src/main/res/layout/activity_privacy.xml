@@ -254,7 +254,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center">
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:gravity="start">
 
                         <TextView
                             android:id="@+id/download_data_title"
@@ -278,15 +279,18 @@
                     </RelativeLayout>
 
                     <View
+                        android:id="@+id/manage_data_separator"
                         style="@style/Highlight.Separator"
                         android:layout_width="1dp"
                         android:layout_height="match_parent" />
 
                     <RelativeLayout
+                        android:id="@+id/delete_data_section"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center">
+                        android:gravity="end"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin">
 
                         <TextView
                             android:id="@+id/delete_data_title"
