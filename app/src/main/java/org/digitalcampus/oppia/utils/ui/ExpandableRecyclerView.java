@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -255,7 +254,7 @@ public class ExpandableRecyclerView extends RecyclerView {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int i) {
+        public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
             if (headerVisible) {
                 if (i == 0) {
                     onBindHeaderViewHolder((HVH) holder);
@@ -289,9 +288,9 @@ public class ExpandableRecyclerView extends RecyclerView {
             throw new IndexOutOfBoundsException();
         }
 
+        @NonNull
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            Log.d(TAG, "type:" + viewType);
             switch (viewType) {
                 case TYPE_HEADER:
                     return onCreateHeaderViewHolder(parent);
@@ -314,10 +313,8 @@ public class ExpandableRecyclerView extends RecyclerView {
 
         @Override
         public int getItemViewType(int i) {
-            Log.d(TAG, "Init:" + i);
             if (headerVisible) {
                 if (i == 0) {
-                    Log.d(TAG, "Header:" + i);
                     return TYPE_HEADER;
                 } else {
                     i--;

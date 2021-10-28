@@ -4,34 +4,25 @@ import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.isA;
 
-import android.view.Gravity;
-import android.view.View;
-import android.widget.Checkable;
-
-import androidx.test.espresso.UiController;
-import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
+
+import junit.framework.AssertionFailedError;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.fragments.prefs.NotificationsPrefsFragment;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ReminderPrefsTest {
 
 
-    @Ignore
     @Test
     public void showWarningIfZeroDaysSelected() throws Exception {
 
@@ -41,13 +32,13 @@ public class ReminderPrefsTest {
                 .perform(RecyclerViewActions.actionOnItem(
                         hasDescendant(withText(R.string.prefCoursesReminderDaysTitle)), click()));
 
-        onView(withText(R.string.week_day_1)).perform(setChecked(false));
-        onView(withText(R.string.week_day_2)).perform(setChecked(false));
-        onView(withText(R.string.week_day_3)).perform(setChecked(false));
-        onView(withText(R.string.week_day_4)).perform(setChecked(false));
-        onView(withText(R.string.week_day_5)).perform(setChecked(false));
-        onView(withText(R.string.week_day_6)).perform(setChecked(false));
-        onView(withText(R.string.week_day_7)).perform(setChecked(false));
+        uncheckViewWithText(R.string.week_day_2);
+        uncheckViewWithText(R.string.week_day_3);
+        uncheckViewWithText(R.string.week_day_4);
+        uncheckViewWithText(R.string.week_day_5);
+        uncheckViewWithText(R.string.week_day_6);
+        uncheckViewWithText(R.string.week_day_7);
+        uncheckViewWithText(R.string.week_day_1);
 
         onView(withText(android.R.string.ok))
                 .inRoot(isDialog())
@@ -59,47 +50,54 @@ public class ReminderPrefsTest {
 
     }
 
+
     @Test
     public void showWarningIfMoreThanOneDayInWeeklyInterval() throws Exception {
-        // TODO
+
+        launchInContainer(NotificationsPrefsFragment.class, null, R.style.Oppia_ToolbarTheme, null);
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(
+                        hasDescendant(withText(R.string.prefCoursesReminderIntervalTitle)), click()));
+
+        onView(withText(R.string.interval_weekly)).perform(click());
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(
+                        hasDescendant(withText(R.string.prefCoursesReminderDaysTitle)), click()));
+
+        checkViewWithText(R.string.week_day_1);
+        checkViewWithText(R.string.week_day_3);
+
+        onView(withText(android.R.string.ok))
+                .inRoot(isDialog())
+                .check(matches(isDisplayed()))
+                .perform(click());
+
+        onView(withText(R.string.warning_reminder_weekly_just_one_day)).check(matches(isDisplayed()));
     }
 
-    @Test
-    public void checkDaysReducedToOneIfWeeklyIntervalIsSelected() throws Exception {
-        // TODO
+
+    /**
+     * Little hack to achieve uncheck if view it is already checked without throwing an error
+     * @param stringId
+     */
+    private void uncheckViewWithText(int stringId) {
+        try {
+            onView(withText(stringId)).check(matches(isChecked()));
+            onView(withText(stringId)).perform(click());
+        } catch (AssertionFailedError e) {
+            // It is already unchecked
+        }
     }
 
-    public static ViewAction setChecked(final boolean checked) {
-        return new ViewAction() {
-            @Override
-            public BaseMatcher<View> getConstraints() {
-                return new BaseMatcher<View>() {
-                    @Override
-                    public boolean matches(Object item) {
-                        return isA(Checkable.class).matches(item);
-                    }
-
-                    @Override
-                    public void describeMismatch(Object item, Description mismatchDescription) {
-                    }
-
-                    @Override
-                    public void describeTo(Description description) {
-                    }
-                };
-            }
-
-            @Override
-            public String getDescription() {
-                return null;
-            }
-
-            @Override
-            public void perform(UiController uiController, View view) {
-                Checkable checkableView = (Checkable) view;
-                checkableView.setChecked(checked);
-            }
-        };
+    private void checkViewWithText(int stringId) {
+        try {
+            onView(withText(stringId)).check(matches(isNotChecked()));
+            onView(withText(stringId)).perform(click());
+        } catch (AssertionFailedError e) {
+            // It is already unchecked
+        }
     }
 
 }

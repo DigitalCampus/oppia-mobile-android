@@ -1,6 +1,4 @@
-package androidTestFiles.UI.quiz;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+package androidTestFiles.org.digitalcampus.oppia.widgets.quiz;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.widgets.QuizWidget;
@@ -8,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.Utils.TestUtils;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
 import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
@@ -17,7 +16,6 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.mockito.Matchers.any;
 
 @RunWith(AndroidJUnit4.class)
 public class MultichoiceWithFeedbackTest extends BaseQuizTest {
