@@ -592,6 +592,9 @@
     <string name="text_size_large">Large</string>
     <string name="text_size_largest">Largest</string>
 
+    <string name="interval_weekly">Weekly</string>
+    <string name="interval_daily">Daily</string>
+
     <string name="week_day_1">Sunday</string>
     <string name="week_day_2">Monday</string>
     <string name="week_day_3">Tuesday</string>

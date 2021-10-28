@@ -476,6 +476,9 @@
     <string name="text_size_large">Grande</string>
     <string name="text_size_largest">Muy grande</string>
 
+    <string name="interval_weekly">Semanal</string>
+    <string name="interval_daily">Diario</string>
+
     <string name="week_day_1">Domingo</string>
     <string name="week_day_2">Lunes</string>
     <string name="week_day_3">Martes</string>

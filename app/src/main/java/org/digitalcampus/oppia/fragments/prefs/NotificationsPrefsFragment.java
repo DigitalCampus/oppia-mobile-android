@@ -155,7 +155,7 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
 
         findPreference(PrefsActivity.PREF_COURSES_REMINDER_INTERVAL).setOnPreferenceChangeListener((preference, newValue) -> {
             String interval = (String) newValue;
-            if (TextUtils.equals(interval, getString(R.string.interval_weekly))) {
+            if (TextUtils.equals(interval, getString(R.string.interval_weekly_value))) {
 
                 Set<String> days = getPrefs().getStringSet(
                         PrefsActivity.PREF_COURSES_REMINDER_DAYS, getDefaultReminderDays());
@@ -189,7 +189,7 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
             String interval = getPrefs().getString(
                     PrefsActivity.PREF_COURSES_REMINDER_INTERVAL, getString(R.string.prefCoursesReminderIntervalDefault));
 
-            if (TextUtils.equals(interval, getString(R.string.interval_weekly))
+            if (TextUtils.equals(interval, getString(R.string.interval_weekly_value))
                     && values.size() > 1) {
                 alert(R.string.warning_reminder_weekly_just_one_day);
                 return false;

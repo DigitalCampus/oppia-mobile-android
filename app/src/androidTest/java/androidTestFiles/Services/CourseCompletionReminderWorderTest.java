@@ -84,8 +84,8 @@ public class CourseCompletionReminderWorderTest {
     @Parameterized.Parameters
     public static ReminderDataTestParameter[] storageStrategies() {
         return new ReminderDataTestParameter[]{
-                new ReminderDataTestParameter(R.string.interval_weekly, CoursesCompletionReminderWorkerManager.WEEK_DAYS_NUM),
-                new ReminderDataTestParameter(R.string.interval_daily, CoursesCompletionReminderWorkerManager.ONE_DAY_NUM)
+                new ReminderDataTestParameter(R.string.interval_weekly_value, CoursesCompletionReminderWorkerManager.WEEK_DAYS_NUM),
+                new ReminderDataTestParameter(R.string.interval_daily_value, CoursesCompletionReminderWorkerManager.ONE_DAY_NUM)
         };
     }
 
