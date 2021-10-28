@@ -1,4 +1,4 @@
-package androidTestFiles.UI;
+package androidTestFiles.org.digitalcampus.oppia.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
@@ -21,6 +22,7 @@ import org.hamcrest.core.AllOf;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
@@ -52,6 +54,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
+@RunWith(AndroidJUnit4.class)
 public class CourseActivityUITest extends DaggerInjectMockUITest {
 
     public static String COURSE_TITLE = "Test course";
@@ -171,7 +174,7 @@ public class CourseActivityUITest extends DaggerInjectMockUITest {
         Intent i = getIntentParams(c, section, 0, false);
         courseActivityTestRule.launchActivity(i);
 
-        onView(AllOf.allOf(withText("Test2"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+        onView(AllOf.allOf(withText("Test1"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 isDescendantOfA(withId(R.id.tabs_toolbar))))
                 .perform(click());
 

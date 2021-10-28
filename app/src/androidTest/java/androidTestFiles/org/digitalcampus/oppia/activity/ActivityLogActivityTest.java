@@ -1,4 +1,4 @@
-package androidTestFiles.UI;
+package androidTestFiles.org.digitalcampus.oppia.activity;
 
 import android.content.Context;
 
@@ -27,7 +27,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 
 @RunWith(AndroidJUnit4.class)
-public class ActivityLogUITest extends DaggerInjectMockUITest {
+public class ActivityLogActivityTest extends DaggerInjectMockUITest {
 
     @Rule
     public ActivityTestRule<ActivityLogActivity> activityLogActivityTestRule =

@@ -1,4 +1,4 @@
-package androidTestFiles.UI;
+package androidTestFiles.org.digitalcampus.oppia.activity;
 
 import android.content.Context;
 
@@ -43,7 +43,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
-public class EditProfileUITest extends MockedApiEndpointTest {
+public class EditProfileActivityTest extends MockedApiEndpointTest {
 
     private static final String VALID_EMAIL = "test2@oppia.org";
     private static final String VALID_FIRST_NAME = "First Name";

@@ -43,7 +43,7 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
 
-public class StartUpActivity extends Activity implements UpgradeListener, InstallCourseListener {
+public class StartUpActivity extends AppActivity implements UpgradeListener, InstallCourseListener {
 
     public static final String TAG = StartUpActivity.class.getSimpleName();
     private ActivityStartUpBinding binding;
