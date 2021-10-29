@@ -3,6 +3,8 @@ package org.digitalcampus.oppia.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
+
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -132,6 +134,12 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
         String title = showSectionNumbers ? section.getOrder() + ". " : "";
         title += section.getTitle(prefLang);
         holder.binding.title.setText(title);
+        holder.binding.sectionIcon.setVisibility(section.hasCustomImage() ? View.VISIBLE : View.GONE);
+        if (section.hasCustomImage()){
+            String image = section.getImageFilePath(courseLocation);
+            Picasso.get().load(new File(image)).into(holder.binding.sectionIcon);
+        }
+
         holder.binding.activitiesCompleted.setText(section.getCompletedActivities() + "/" + section.getActivities().size());
 
     }

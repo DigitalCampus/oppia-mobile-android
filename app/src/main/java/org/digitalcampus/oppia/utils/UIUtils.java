@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.utils;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -26,7 +27,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.Layout;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.BulletSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -92,8 +100,7 @@ public class UIUtils {
         App app = (App) ctx.getApplicationContext();
         User u = app.getComponent().getUser();
 
-        Log.d(TAG, "username: " + u.getUsername());
-        Log.d(TAG, "points: " + u.getPoints());
+        Log.d(TAG, "Username: " + u.getUsername() + " | Points:" + u.getPoints());
 
         if (pointsItem == null) {
             return;
@@ -341,17 +348,34 @@ public class UIUtils {
         }
     }
 
+    private static final int BULLET_SPAN_GAP_WIDTH = 20;
+
     public static CharSequence getFromHtmlAndTrim(String text) {
-        CharSequence html = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY);
+        SpannableStringBuilder html = new SpannableStringBuilder(HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT));
+        BulletSpan[] spans = html.getSpans(0, html.length(), BulletSpan.class);
+        for (BulletSpan span : spans) {
+            int spanStart = html.getSpanStart(span);
+            int spanEnd = html.getSpanEnd(span);
+            html.removeSpan(span);
+            html.setSpan(new BulletSpan(BULLET_SPAN_GAP_WIDTH) {
+                @Override
+                public int getLeadingMargin(boolean first) { return BULLET_SPAN_GAP_WIDTH * 3; }
+
+                @Override
+                public void drawLeadingMargin(Canvas canvas, Paint paint, int x, int dir, int top, int baseline, int bottom, CharSequence text, int start, int end, boolean first, Layout layout) {
+                    if (first) {
+                        final float yPosition = ((top + bottom) / 1.9f);
+                        final float xPosition = x + dir * BULLET_SPAN_GAP_WIDTH;
+                        canvas.drawCircle(xPosition, yPosition, 8, paint);
+                    }
+                }
+            }, spanStart, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
         int start = 0;
         int end = html.length();
 
-        while (start < end && Character.isWhitespace(html.charAt(start))) {
-            start++;
-        }
-        while (end > start && Character.isWhitespace(html.charAt(end - 1))) {
-            end--;
-        }
+        while (start < end && Character.isWhitespace(html.charAt(start))) { start++; }
+        while (end > start && Character.isWhitespace(html.charAt(end - 1))) { end--; }
         return html.subSequence(start, end);
     }
 

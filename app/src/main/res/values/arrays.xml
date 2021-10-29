@@ -2,11 +2,11 @@
 <resources>
 
     <string-array name="TextSize">
-        <item name="12">Smallest</item>
-        <item name="14">Small</item>
-        <item name="16">Normal</item>
-        <item name="18">Large</item>
-        <item name="20">Largest</item>
+        <item name="12">@string/text_size_smallest</item>
+        <item name="14">@string/text_size_small</item>
+        <item name="16">@string/text_size_normal</item>
+        <item name="18">@string/text_size_large</item>
+        <item name="20">@string/text_size_largest</item>
     </string-array>
      <string-array name="TextSizeValues">
         <item name="12">12</item>
@@ -38,17 +38,33 @@
         <item>3</item>
     </string-array>
 
-    <string-array name="days_of_week">
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-        <item>Sunday</item>
+
+    <!-- Courses not completed REMINDERS -->
+
+    <string-array name="reminder_intervals">
+        <item>@string/interval_weekly</item>
+        <item>@string/interval_daily</item>
     </string-array>
 
-    <integer-array name="days_of_week_values">
+    <string-array name="reminder_intervals_values">
+        <item>@string/interval_weekly_value</item>
+        <item>@string/interval_daily_value</item>
+    </string-array>
+
+    <string name="interval_weekly_value">WEEKLY</string>
+    <string name="interval_daily_value">DAILY</string>
+
+    <string-array name="days_of_week">
+        <item>@string/week_day_2</item>
+        <item>@string/week_day_3</item>
+        <item>@string/week_day_4</item>
+        <item>@string/week_day_5</item>
+        <item>@string/week_day_6</item>
+        <item>@string/week_day_7</item>
+        <item>@string/week_day_1</item>
+    </string-array>
+
+    <string-array name="days_of_week_values">
         <item>2</item>
         <item>3</item>
         <item>4</item>
@@ -56,6 +72,14 @@
         <item>6</item>
         <item>7</item>
         <item>1</item>
-    </integer-array>
+    </string-array>
+
+    <string-array name="days_of_week_values_default">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
 
 </resources>

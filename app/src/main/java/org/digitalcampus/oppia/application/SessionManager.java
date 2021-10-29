@@ -56,8 +56,7 @@ public class SessionManager {
             PrefsActivity.PREF_NO_SCHEDULE_REMINDERS,
             PrefsActivity.PREF_TEXT_SIZE,
             PrefsActivity.PREF_GAMIFICATION_POINTS_ANIMATION,
-            PrefsActivity.PREF_DURATION_GAMIFICATION_POINTS_VIEW,
-            PrefsActivity.PREF_COURSES_REMINDER_DAY_TIME_MILLIS);
+            PrefsActivity.PREF_DURATION_GAMIFICATION_POINTS_VIEW); // todo persist reminder prefs
 
     private static final List<String> USER_BOOLEAN_PREFS = Arrays.asList(
             PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS,
@@ -132,7 +131,7 @@ public class SessionManager {
         Analytics.setUserId(username);
         editor.commit();
 
-        CoursesCompletionReminderWorkerManager.configureCoursesCompletionReminderWorker(ctx);
+//        CoursesCompletionReminderWorkerManager.configureCoursesCompletionReminderWorker(ctx); #reminders-multi-user
     }
 
     public static void logoutCurrentUser(Context ctx) {
@@ -145,7 +144,8 @@ public class SessionManager {
             saveUserPrefs(username, prefs);
         }
 
-        OppiaNotificationUtils.cancelAllUserNotifications(ctx);
+//        OppiaNotificationUtils.cancelAllUserNotifications(ctx); #reminders-multi-user
+//        CoursesCompletionReminderWorkerManager.cancelAllReminderWorkers(ctx);  #reminders-multi-user
 
         //Logout the user (unregister from Preferences)
         editor.putString(PrefsActivity.PREF_USER_NAME, "");

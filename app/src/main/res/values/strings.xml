@@ -147,6 +147,12 @@
     <string name="prefDurationAnimationTypeGamificationPointsView">Animation duration</string>
     <string name="prefDurationAnimation_summary">Time that the gamification points event animation stays on screen (in seconds)</string>
 
+    <string name="prefSectionReminder">Courses not completed reminder</string>
+    <string name="prefCoursesReminderEnabled">Enable reminder notifications</string>
+    <string name="prefCoursesReminderIntervalTitle">Reminders interval</string>
+    <string name="prefCoursesReminderDaysTitle">Reminder days</string>
+    <string name="prefCoursesReminderTimeTitle">Reminder time</string>
+    
     <!-- Strings relative to Storage -->
     <string name="prefStorageLocation">Storage Location</string>
     <string name="prefStorageOptionInternal">Internal</string>
@@ -578,16 +584,28 @@
     <string name="courses_reminder_notif_text">You have not completed all your courses yet.\nGo to your courses</string>
     <string name="courses_reminder_notif_title">Courses reminder</string>
     <string name="courses_reminder_settings">Reminder settings</string>
-    <string name="prefSectionReminder">Courses reminder</string>
-    <string name="day_of_week_and_time">Day of week and time</string>
-    <string name="time">Time</string>
-    <string name="disable_reminder">Disable reminder</string>
-    <string name="weekly_reminder_day_time">Weekly reminder day / time</string>
-    <string name="courses_reminder_default_day_time">Tuesday at 10:00</string>
-    <string name="disabled">Disabled</string>
     <string name="change_password">Change password</string>
     <string name="change_password_success">Your password has successfully been updated</string>
     <string name="change_password_intro">To change your password, please enter a new password below:</string>
 
+    <string name="text_size_smallest">Smallest</string>
+    <string name="text_size_small">Small</string>
+    <string name="text_size_normal">Normal</string>
+    <string name="text_size_large">Large</string>
+    <string name="text_size_largest">Largest</string>
+
+    <string name="interval_weekly">Weekly</string>
+    <string name="interval_daily">Daily</string>
+
+    <string name="week_day_1">Sunday</string>
+    <string name="week_day_2">Monday</string>
+    <string name="week_day_3">Tuesday</string>
+    <string name="week_day_4">Wednesday</string>
+    <string name="week_day_5">Thursday</string>
+    <string name="week_day_6">Friday</string>
+    <string name="week_day_7">Saturday</string>
+
+    <string name="warning_reminder_weekly_just_one_day">For weekly interval only one day must be set</string>
+    <string name="warning_reminder_at_least_one_day">You have to set at least one day</string>
 </resources>
 

@@ -152,7 +152,11 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_ANALYTICS_INITIAL_PROMPT = "prefAnalyticsInitialPrompt";
     public static final String PREF_BUG_REPORT_ENABLED = "prefBugReportEnabled";
     public static final String PREF_ANALYTICS_ENABLED = "prefAnalyticsEnabled";
-    public static final String PREF_COURSES_REMINDER_DAY_TIME_MILLIS = "prefCoursesReminderDayTimeMillis";
+    public static final String PREF_COURSES_REMINDER_ENABLED = "prefCoursesReminderEnabled";
+    public static final String PREF_COURSES_REMINDER_INTERVAL = "prefCoursesReminderInterval";
+    public static final String PREF_COURSES_REMINDER_DAYS = "prefCoursesReminderDays";
+    public static final String PREF_COURSES_REMINDER_TIME = "prefCoursesReminderTime";
+    public static final String PREF_REMINDERS_LOG = "prefRemindersLog";
 
     private PreferenceChangedCallback currentPrefScreen;
 

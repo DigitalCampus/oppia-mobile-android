@@ -24,6 +24,7 @@ import java.io.Serializable;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
+import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -66,8 +67,9 @@ public class MultiSelect extends QuizQuestion implements Serializable {
         for (Response r : responseOptions){
             for (String ur : userResponses) {
                 Log.d(TAG, "user selected: " + ur);
-                Log.d(TAG, "checking against response: " + r.getTitle(lang));
-                if (ur.equals(r.getTitle(lang))) {
+                String cleanResponse = UIUtils.getFromHtmlAndTrim(r.getTitle(lang)).toString();
+                Log.d(TAG, "checking against response: " + cleanResponse);
+                if (ur.equals(cleanResponse)) {
                     Log.d(TAG, "setting feedback for: " + r.getTitle(lang));
                     total += r.getScore();
                     if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){

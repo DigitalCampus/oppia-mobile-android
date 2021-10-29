@@ -69,6 +69,7 @@
     <!-- Course index -->
     <color name="course_index_section_title">@color/text_dark</color>
     <color name="course_index_highlight">@color/theme_secondary</color>
+    <dimen name="course_index_section_icon_size">48dp</dimen>
 
     <!-- Chart colors -->
     <color name="piechart_completed">@color/theme_secondary</color>

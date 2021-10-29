@@ -166,16 +166,19 @@ public class GamificationEngine {
         if (m != null) {
             try {
                 String criteria = getMediaCompletionCriteriaFromHierarchy();
-                int threshold = getMediaCompletionThresholdFromHierarchy();
                 Log.d(TAG, "Video criteria: " + criteria);
-                if (criteria.equals(Gamification.MEDIA_CRITERIA_THRESHOLD) && ((timeTaken * 100 / m.getLength()) > threshold)){
 
-                    Log.d(TAG, "Threshold: " + threshold);
-                    completed = true;
-                    Log.d(TAG, "Threshold passed!");
-                    if (!db.isMediaPlayed(activity.getDigest())){
-                        Log.d(TAG, "First view --> giving points");
-                        totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_THRESHOLD_PASSED).getPoints();
+                if (criteria.equals(Gamification.MEDIA_CRITERIA_THRESHOLD)){
+                    int threshold = getMediaCompletionThresholdFromHierarchy();
+                    long percentViewed = timeTaken * 100 / m.getLength();
+                    Log.d(TAG, percentViewed + "% viewed, " + threshold + " threshold");
+                    if (percentViewed > threshold) {
+                        completed = true;
+                        Log.d(TAG, "Threshold passed!");
+                        if (!db.isMediaPlayed(activity.getDigest())) {
+                            Log.d(TAG, "First view --> giving points");
+                            totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_THRESHOLD_PASSED).getPoints();
+                        }
                     }
                 }
                 else{

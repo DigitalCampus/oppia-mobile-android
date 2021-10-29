@@ -20,41 +20,65 @@
         app:tint="#000000"
         app:srcCompat="@drawable/ic_expand" />
 
-    <TextView
-        android:id="@+id/activities_completed"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/section_icon"
+        android:layout_width="@dimen/expandable_section_iconSize"
+        android:layout_height="@dimen/expandable_section_iconSize"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/expandable_margin"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        tools:srcCompat="@drawable/default_course"
+        tools:visibility="visible" />
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:layout_marginStart="@dimen/padding_medium"
-        android:layout_marginEnd="4sp"
-        android:text="2/2"
-        android:textSize="11sp" />
-
-    <TextView
-        android:id="@+id/textView26"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:layout_toEndOf="@id/activities_completed"
-        android:text="@string/scorecard_activities_completed"
-        android:textSize="11sp" />
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/padding_medium"
         android:layout_toStartOf="@id/expanded_indicator"
-        android:text="Introduction blablabla"
-        android:textColor="@color/course_index_section_title"
-        android:textStyle="bold" />
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/section_icon">
+        <TextView
+            android:id="@+id/activities_completed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_marginStart="@dimen/padding_medium"
+            android:layout_marginEnd="4sp"
+            android:layout_marginBottom="@dimen/padding_medium"
+            android:text="2/2"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/textView26"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_toEndOf="@id/activities_completed"
+            android:text="@string/scorecard_activities_completed"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_medium"
+
+            android:text="Introduction blablabla"
+            android:textColor="@color/course_index_section_title"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/activities_completed"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="@dimen/padding_medium"
+
         android:background="@color/background_light" />
 
 </RelativeLayout>

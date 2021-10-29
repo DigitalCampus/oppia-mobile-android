@@ -87,6 +87,7 @@ android {
 
             buildConfigField "boolean", "ADMIN_PROTECT_SETTINGS", runtimeProps['ADMIN_PROTECT_SETTINGS']
             buildConfigField "boolean", "ADMIN_PROTECT_ADVANCED_SETTINGS", runtimeProps['ADMIN_PROTECT_ADVANCED_SETTINGS']
+            buildConfigField "boolean", "ADMIN_PROTECT_SECURITY_SETTINGS", runtimeProps['ADMIN_PROTECT_SECURITY_SETTINGS']
             buildConfigField "boolean", "ADMIN_PROTECT_SERVER", runtimeProps['ADMIN_PROTECT_SERVER']
             buildConfigField "boolean", "ADMIN_PROTECT_ACTIVITY_SYNC", runtimeProps['ADMIN_PROTECT_ACTIVITY_SYNC']
             buildConfigField "boolean", "ADMIN_PROTECT_ACTIVITY_EXPORT", runtimeProps['ADMIN_PROTECT_ACTIVITY_EXPORT']
@@ -105,6 +106,7 @@ android {
             buildConfigField "boolean", "MENU_ALLOW_COURSE_DOWNLOAD", runtimeProps['MENU_ALLOW_COURSE_DOWNLOAD']
             buildConfigField "boolean", "SESSION_EXPIRATION_ENABLED", runtimeProps['SESSION_EXPIRATION_ENABLED']
             buildConfigField "boolean", "OFFLINE_REGISTER_ENABLED", runtimeProps['OFFLINE_REGISTER_ENABLED']
+            buildConfigField "boolean", "DELETE_ACCOUNT_ENABLED", runtimeProps['DELETE_ACCOUNT_ENABLED']
             buildConfigField "int", "SESSION_EXPIRATION_TIMEOUT", runtimeProps['SESSION_EXPIRATION_TIMEOUT']
             buildConfigField "int", "DOWNLOAD_COURSES_DISPLAY", runtimeProps['DOWNLOAD_COURSES_DISPLAY']
             buildConfigField "boolean", "SHOW_COURSE_DESCRIPTION", runtimeProps['SHOW_COURSE_DESCRIPTION']
@@ -131,6 +133,13 @@ android {
             buildConfigField "int", "LOAD_CUSTOMFIELDS_VERSION", runtimeProps['LOAD_CUSTOMFIELDS_VERSION']
 
             buildConfigField "boolean", "START_COURSEINDEX_COLLAPSED", runtimeProps['START_COURSEINDEX_COLLAPSED']
+
+            buildConfigField "String", "DEFAULT_REMINDER_INTERVAL", "\"" + runtimeProps['DEFAULT_REMINDER_INTERVAL'] + "\""
+            buildConfigField "String", "DEFAULT_REMINDER_TIME", "\"" + runtimeProps['DEFAULT_REMINDER_TIME'] + "\""
+            buildConfigField "String", "DEFAULT_REMINDER_DAYS", "\"" + runtimeProps['DEFAULT_REMINDER_DAYS'] + "\""
+
+
+
             resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
             resValue "string", "MENU_ALLOW_COURSE_DOWNLOAD_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_COURSE_DOWNLOAD']
             resValue "string", "MENU_ALLOW_LANGUAGE_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LANGUAGE']
@@ -142,6 +151,9 @@ android {
             resValue "string", "prefGamificationPointsAnimationDefault", runtimeProps['GAMIFICATION_POINTS_ANIMATION']
             resValue "string", "prefDurationGamificationPointsViewDefault", runtimeProps['DURATION_GAMIFICATION_POINTS_VIEW']
             resValue "string", "SHOW_COURSE_DESCRIPTION", runtimeProps['SHOW_COURSE_DESCRIPTION']
+            resValue "string", "prefCoursesReminderIntervalDefault", runtimeProps['DEFAULT_REMINDER_INTERVAL']
+            resValue "string", "prefCoursesReminderTimeDefault", runtimeProps['DEFAULT_REMINDER_TIME']
+            resValue "string", "prefCoursesReminderDaysDefaultSerialized", runtimeProps['DEFAULT_REMINDER_DAYS']
 
             resValue "string", "version_name", version_name
         }
