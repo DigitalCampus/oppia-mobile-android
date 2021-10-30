@@ -68,8 +68,8 @@ public class CourseCompletionReminderWorderTest {
     CoursesRepository coursesRepository;
     @Mock
     TrackerLogRepository trackerLogRepository;
-    @Mock
-    User user;
+//    @Mock
+//    User user; #reminders-multi-user
     @Mock
     SharedPreferences prefs;
     @Mock
@@ -84,8 +84,8 @@ public class CourseCompletionReminderWorderTest {
     @Parameterized.Parameters
     public static ReminderDataTestParameter[] storageStrategies() {
         return new ReminderDataTestParameter[]{
-                new ReminderDataTestParameter(R.string.interval_weekly, CoursesCompletionReminderWorkerManager.WEEK_DAYS_NUM),
-                new ReminderDataTestParameter(R.string.interval_daily, CoursesCompletionReminderWorkerManager.ONE_DAY_NUM)
+                new ReminderDataTestParameter(R.string.interval_weekly_value, CoursesCompletionReminderWorkerManager.WEEK_DAYS_NUM),
+                new ReminderDataTestParameter(R.string.interval_daily_value, CoursesCompletionReminderWorkerManager.ONE_DAY_NUM)
         };
     }
 
@@ -115,22 +115,22 @@ public class CourseCompletionReminderWorderTest {
         when(editor.putInt(anyString(), anyInt())).thenReturn(editor);
     }
 
-    @Test
-    public void doesNotshowNotificationIfNoUserIsLoggedIn() throws Exception {
-
-        when(user.getUsername()).thenReturn(null);
-
-        ListenableWorker.Result result = coursesCompletionReminderWorkerManager.checkCompletionReminder();
-
-        assertEquals(result, ListenableWorker.Result.success());
-        checkNotificatonVisibility(false);
-
-    }
+//    @Test
+//    public void doesNotshowNotificationIfNoUserIsLoggedIn() throws Exception { #reminders-multi-user
+//
+//        when(user.getUsername()).thenReturn(null);
+//
+//        ListenableWorker.Result result = coursesCompletionReminderWorkerManager.checkCompletionReminder();
+//
+//        assertEquals(result, ListenableWorker.Result.success());
+//        checkNotificatonVisibility(false);
+//
+//    }
 
     @Test
     public void doesNotShowNotificationIfCoursesCompleted() throws Exception {
 
-        when(user.getUsername()).thenReturn("test_user");
+//        when(user.getUsername()).thenReturn("test_user"); #reminders-multi-user
 
         setHasAnyActivtyInPreviousDays(reminderDataTestParameter.getDaysNum(), false);
         setCompletedCourses(true);
@@ -145,7 +145,7 @@ public class CourseCompletionReminderWorderTest {
     @Test
     public void doesNotShowNotificationIfActivityDone() throws Exception {
 
-        when(user.getUsername()).thenReturn("test_user");
+//        when(user.getUsername()).thenReturn("test_user"); #reminders-multi-user
 
         setHasAnyActivtyInPreviousDays(reminderDataTestParameter.getDaysNum(), true);
         setCompletedCourses(false);
@@ -159,7 +159,7 @@ public class CourseCompletionReminderWorderTest {
     @Test
     public void doesShowNotificationIfNoActivityDoneAndAnyCourseNotCompleted() throws Exception {
 
-        when(user.getUsername()).thenReturn("test_user");
+//        when(user.getUsername()).thenReturn("test_user"); #reminders-multi-user
 
         setHasAnyActivtyInPreviousDays(reminderDataTestParameter.getDaysNum(), false);
         setCompletedCourses(false);

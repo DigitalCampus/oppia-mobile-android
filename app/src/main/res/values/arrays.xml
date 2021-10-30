@@ -42,17 +42,17 @@
     <!-- Courses not completed REMINDERS -->
 
     <string-array name="reminder_intervals">
-        <item>Weekly</item>
-        <item>Daily</item>
-    </string-array>
-
-    <string-array name="reminder_intervals_values">
         <item>@string/interval_weekly</item>
         <item>@string/interval_daily</item>
     </string-array>
 
-    <string name="interval_weekly">WEEKLY</string>
-    <string name="interval_daily">DAILY</string>
+    <string-array name="reminder_intervals_values">
+        <item>@string/interval_weekly_value</item>
+        <item>@string/interval_daily_value</item>
+    </string-array>
+
+    <string name="interval_weekly_value">WEEKLY</string>
+    <string name="interval_daily_value">DAILY</string>
 
     <string-array name="days_of_week">
         <item>@string/week_day_2</item>
