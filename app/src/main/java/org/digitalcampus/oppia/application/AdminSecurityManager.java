@@ -91,6 +91,7 @@ public class AdminSecurityManager {
             case R.id.action_export_activity: return App.ADMIN_PROTECT_ACTIVITY_EXPORT;
             case R.id.action_url_server: return App.ADMIN_PROTECT_SERVER;
             case R.id.action_advanced_settings: return App.ADMIN_PROTECT_ADVANCED_SETTINGS;
+            case R.id.action_security_settings: return App.ADMIN_PROTECT_SECURITY_SETTINGS;
             default: return false;
         }
     }

@@ -35,6 +35,7 @@
 
     <dimen name="expandable_margin">16dp</dimen>
     <dimen name="expandable_iconSize">28dp</dimen>
+    <dimen name="expandable_section_iconSize">@dimen/course_index_section_icon_size</dimen>
 
     <dimen name="list_card_vertical_padding">7dp</dimen>
     <dimen name="list_card_horizontal_padding">9dp</dimen>

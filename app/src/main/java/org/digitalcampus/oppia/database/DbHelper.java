@@ -1927,8 +1927,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public String getLastTrackerDatetime(long userId) {
 
-        String selection = TRACKER_LOG_C_USERID + "=?";
-        String[] selectionArgs = new String[]{String.valueOf(userId)};
+        String selection = userId > -1 ? TRACKER_LOG_C_USERID + "=?" : null;
+        String[] selectionArgs = userId > -1 ? new String[]{String.valueOf(userId)} : null;
         String[] columns = new String[]{TRACKER_LOG_C_DATETIME};
         String order = TRACKER_LOG_C_DATETIME + " DESC";
         String limit = "1";

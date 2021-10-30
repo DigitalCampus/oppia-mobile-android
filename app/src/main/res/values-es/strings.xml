@@ -470,4 +470,21 @@
     <string name="prefDisplay_description">Control sobre cómo se muestran los cursos y los contenidos en la app</string>
     <string name="prefCurrentVersion">Versión actual: %1$s</string>
 
+    <string name="text_size_smallest">Muy pequeño</string>
+    <string name="text_size_small">Pequeño</string>
+    <string name="text_size_normal">Normal</string>
+    <string name="text_size_large">Grande</string>
+    <string name="text_size_largest">Muy grande</string>
+
+    <string name="interval_weekly">Semanal</string>
+    <string name="interval_daily">Diario</string>
+
+    <string name="week_day_1">Domingo</string>
+    <string name="week_day_2">Lunes</string>
+    <string name="week_day_3">Martes</string>
+    <string name="week_day_4">Miércoles</string>
+    <string name="week_day_5">Jueves</string>
+    <string name="week_day_6">Viernes</string>
+    <string name="week_day_7">Sábado</string>
+
 </resources>

@@ -54,12 +54,50 @@
         android:title="@string/prefSectionReminder"
         app:iconSpaceReserved="false">
 
-        <org.digitalcampus.oppia.utils.custom_prefs.DayWeekTimePreference
-            android:key="prefCoursesReminderDayTimeMillis"
-            android:title="@string/weekly_reminder_day_time"
-            app:summary="@string/courses_reminder_default_day_time"
-            app:allowDividerAbove="true"
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="prefCoursesReminderEnabled"
+            android:title="@string/prefCoursesReminderEnabled"
             app:allowDividerBelow="true"
             app:iconSpaceReserved="false" />
+
+        <ListPreference
+            android:key="prefCoursesReminderInterval"
+            android:defaultValue="@string/prefCoursesReminderIntervalDefault"
+            android:entries="@array/reminder_intervals"
+            android:entryValues="@array/reminder_intervals_values"
+            android:dependency="prefCoursesReminderEnabled"
+            android:title="@string/prefCoursesReminderIntervalTitle"
+            app:allowDividerAbove="true"
+            app:allowDividerBelow="true"
+            app:iconSpaceReserved="false"
+            app:useSimpleSummaryProvider="true"/>
+
+        <MultiSelectListPreference
+            android:key="prefCoursesReminderDays"
+            android:defaultValue="@array/days_of_week_values_default"
+            android:dependency="prefCoursesReminderEnabled"
+            android:entries="@array/days_of_week"
+            android:entryValues="@array/days_of_week_values"
+            android:title="@string/prefCoursesReminderDaysTitle"
+            app:allowDividerAbove="true"
+            app:allowDividerBelow="true"
+            app:iconSpaceReserved="false"
+            app:useSimpleSummaryProvider="true" />
+
+        <org.digitalcampus.oppia.utils.custom_prefs.TimePreference
+            android:key="prefCoursesReminderTime"
+            android:title="@string/prefCoursesReminderTimeTitle"
+            android:dependency="prefCoursesReminderEnabled"
+            app:allowDividerAbove="true"
+            app:allowDividerBelow="true"
+            app:iconSpaceReserved="false"
+            android:defaultValue="@string/prefCoursesReminderTimeDefault"/>
+
+        <Preference
+            android:key="prefRemindersLog"
+            android:title="Reminders Log"
+            app:iconSpaceReserved="false" />
+
     </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

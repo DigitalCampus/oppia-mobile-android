@@ -3,6 +3,8 @@ package org.digitalcampus.oppia.gamification;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import org.digitalcampus.mobile.quiz.Quiz;
@@ -92,21 +94,20 @@ public class GamificationService  extends IntentService {
                 eventData.put(LOGDATA_LANG, lang);
 
                 GamificationEvent event = null;
-                Course c = null;
+                Course course = null;
                 Activity act = null;
                 String trackerDigest = "";
 
-
                 if (SERVICE_EVENT_DOWNLOAD.equals(eventName)){
-                    c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
-                    event = gEngine.processEventCourseDownloaded(c);
+                    course = (Course) intent.getSerializableExtra(SERVICE_COURSE);
+                    event = gEngine.processEventCourseDownloaded(course);
                     isCompleted = true;
                 }
                 else if (SERVICE_EVENT_ACTIVITY.equals(eventName)){
                     if (isCompleted){
                         act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
-                        c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
-                        event = gEngine.processEventActivityCompleted(c, act);
+                        course = (Course) intent.getSerializableExtra(SERVICE_COURSE);
+                        event = gEngine.processEventActivityCompleted(course, act);
 
                         eventData.put(LOGDATA_TIMETAKEN, intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
                         eventData.put(LOGDATA_READALOUD, intent.getBooleanExtra(EVENTDATA_READALOUD, false));
@@ -116,7 +117,7 @@ public class GamificationService  extends IntentService {
                 }
                 else if (SERVICE_EVENT_QUIZ.equals(eventName) || SERVICE_EVENT_FEEDBACK.equals(eventName)){
                     act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
-                    c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
+                    course = (Course) intent.getSerializableExtra(SERVICE_COURSE);
                     Quiz quiz = (Quiz) intent.getSerializableExtra(SERVICE_QUIZ);
                     QuizAttempt qa = new QuizAttempt();
                     DbHelper db = DbHelper.getInstance(this);
@@ -124,7 +125,7 @@ public class GamificationService  extends IntentService {
                     long timetaken = intent.getLongExtra(EVENTDATA_TIMETAKEN, 0);
                     long userId = db.getUserId(SessionManager.getUsername(this));
 
-                    qa.setCourseId(c.getCourseId());
+                    qa.setCourseId(course.getCourseId());
                     qa.setUserId(userId);
                     qa.setActivityDigest(act.getDigest());
                     qa.setPassed(isCompleted);
@@ -132,14 +133,14 @@ public class GamificationService  extends IntentService {
 
                     if (SERVICE_EVENT_QUIZ.equals(eventName)){
                         float score = intent.getFloatExtra(SERVICE_QUIZ_SCORE, 0f);
-                        event = gEngine.processEventQuizAttempt(c, act, score);
+                        event = gEngine.processEventQuizAttempt(course, act, score);
                         eventData.put(LOGDATA_SCORE, score);
                         qa.setType(QuizAttempt.TYPE_QUIZ);
                         qa.setScore(quiz.getUserscore());
                         qa.setMaxscore(quiz.getMaxscore());
                     }
                     else { // FEEDBACK
-                        event = gEngine.processEventFeedbackActivity(c, act);
+                        event = gEngine.processEventFeedbackActivity(course, act);
                         qa.setType(QuizAttempt.TYPE_FEEDBACK);
                     }
 
@@ -167,8 +168,8 @@ public class GamificationService  extends IntentService {
                 else if (SERVICE_EVENT_RESOURCE.equals(eventName)){
                     if (isCompleted){
                         act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
-                        c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
-                        event = gEngine.processEventResourceActivity(c, act);
+                        course = (Course) intent.getSerializableExtra(SERVICE_COURSE);
+                        event = gEngine.processEventResourceActivity(course, act);
 
                         eventData.put(LOGDATA_TIMETAKEN, intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
 
@@ -177,12 +178,12 @@ public class GamificationService  extends IntentService {
                 }
                 else if (SERVICE_EVENT_MEDIAPLAYBACK.equals(eventName)){
                     act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
-                    c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
+                    course = (Course) intent.getSerializableExtra(SERVICE_COURSE);
                     String filename = intent.getStringExtra(EVENTDATA_MEDIA_FILENAME);
                     long timetaken = intent.getLongExtra(EVENTDATA_TIMETAKEN, 0);
                     boolean endReached = intent.getBooleanExtra(EVENTDATA_MEDIA_END_REACHED, false);
 
-                    event = gEngine.processEventMediaPlayed(c, act, filename, timetaken, endReached);
+                    event = gEngine.processEventMediaPlayed(course, act, filename, timetaken, endReached);
                     eventData.put(LOGDATA_TIMETAKEN, timetaken);
                     eventData.put(LOGDATA_MEDIAFILE, filename);
                     eventData.put(LOGDATA_MEDIA_EVENT, "played");
@@ -196,10 +197,23 @@ public class GamificationService  extends IntentService {
                     return;
 
                 Tracker t = new Tracker(this);
-                t.saveTracker(c.getCourseId(), trackerDigest, eventData, event.isCompleted() || isCompleted || isBaseline, event);
+                t.saveTracker(course.getCourseId(), trackerDigest, eventData, event.isCompleted() || isCompleted || isBaseline, event);
 
                 if (event.getPoints() > 0){
-                    broadcastEvent(event, act, c);
+
+                    if (SERVICE_EVENT_MEDIAPLAYBACK.equals(eventName)){
+                        // We add some delay to broadcast the media event as it can get lost while destroying the VideoPlayer activity
+                        final GamificationEvent e = event;
+                        final Activity a = act;
+                        final Course c = course;
+                        new Handler(Looper.getMainLooper()).postDelayed((Runnable) () -> {
+                            broadcastEvent(e, a, c);
+                        }, 500);
+                    }
+                    else{
+                        broadcastEvent(event, act, course);
+                    }
+                    
                 }
             }
         } catch (JSONException e) {
