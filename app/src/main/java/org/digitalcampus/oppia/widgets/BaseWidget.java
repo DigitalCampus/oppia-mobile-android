@@ -17,8 +17,10 @@
 
 package org.digitalcampus.oppia.widgets;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,9 +28,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import androidx.preference.PreferenceManager;
+
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
@@ -47,6 +52,8 @@ public abstract class BaseWidget extends Fragment {
 	public static final String TAG = BaseWidget.class.getSimpleName();
 
 	protected static final String QUIZ_EXCEPTION_MESSAGE = "Invalid Quiz Error: ";
+
+    public static final String ACTION_TEXT_SIZE_CHANGED = BuildConfig.APPLICATION_ID + ".ACTION_TEXT_SIZE_CHANGED";
 
     protected static final String WIDGET_CONFIG = "widget_config";
     protected static final String PROPERTY_QUIZ = "quiz";
@@ -75,6 +82,16 @@ public abstract class BaseWidget extends Fragment {
 	public abstract HashMap<String,Object> getWidgetConfig();
 	public abstract void setWidgetConfig(HashMap<String,Object> config);
 
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (TextUtils.equals(intent.getAction(), ACTION_TEXT_SIZE_CHANGED)) {
+                int fontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
+                onTextSizeChanged(fontSize);
+            }
+        }
+    };
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +99,15 @@ public abstract class BaseWidget extends Fragment {
 
         prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
         prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+
+        getActivity().registerReceiver(receiver, new IntentFilter(ACTION_TEXT_SIZE_CHANGED));
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(receiver);
     }
 
     public void setReadAloud(boolean readAloud){
@@ -171,5 +197,10 @@ public abstract class BaseWidget extends Fragment {
         tb.putSerializable(Course.TAG, course);
         intent.putExtras(tb);
         startActivity(intent);
+    }
+
+
+    protected void onTextSizeChanged(int fontSize) {
+        // pages that need this can override
     }
 }
