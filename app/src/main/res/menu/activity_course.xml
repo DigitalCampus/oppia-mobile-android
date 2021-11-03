@@ -11,6 +11,10 @@
         android:icon="@drawable/ic_menu_start_conversation"
         android:title="@string/menu_language"/>
     <item
+        android:id="@+id/menu_text_size"
+        android:icon="@drawable/ic_menu_start_conversation"
+        android:title="@string/menu_change_text_size"/>
+    <item
         android:id="@+id/menu_help"
         android:icon="@android:drawable/ic_menu_help"
         android:title="@string/menu_help"/>

@@ -56,6 +56,7 @@ import androidx.core.text.HtmlCompat;
 public class PageWidget extends BaseWidget {
 
 	public static final String TAG = PageWidget.class.getSimpleName();
+	private WebView webview;
 
 	public static PageWidget newInstance(Activity activity, Course course, boolean isBaseline) {
 		PageWidget myFragment = new PageWidget();
@@ -97,28 +98,28 @@ public class PageWidget extends BaseWidget {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		WebView wv = super.getActivity().findViewById(activity.getActId());
+		webview = super.getActivity().findViewById(activity.getActId());
 		// get the location data
 		String url = course.getLocation() + activity.getLocation(prefLang);
 		
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
-		wv.getSettings().setDefaultFontSize(defaultFontSize);
-		wv.getSettings().setAllowFileAccess(true);
+		webview.getSettings().setDefaultFontSize(defaultFontSize);
+		webview.getSettings().setAllowFileAccess(true);
 
 		try {
-			wv.getSettings().setJavaScriptEnabled(true);
+			webview.getSettings().setJavaScriptEnabled(true);
             //We inject the interface to launch intents from the HTML
-            wv.addJavascriptInterface(
+            webview.addJavascriptInterface(
                     new JSInterfaceForResourceImages(this.getActivity(), course.getLocation()),
                     JSInterfaceForResourceImages.INTERFACE_EXPOSED_NAME);
 
-			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, FileUtils.readFile(url), "text/html", "utf-8", null);
+			webview.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, FileUtils.readFile(url), "text/html", "utf-8", null);
 		} catch (IOException e) {
-			wv.loadUrl("file://" + url);
+			webview.loadUrl("file://" + url);
 		}
 
 
-		wv.setWebViewClient(new WebViewClient() {
+		webview.setWebViewClient(new WebViewClient() {
 
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -163,6 +164,10 @@ public class PageWidget extends BaseWidget {
 		this.isBaseline = isBaseline;
 	}
 
+	@Override
+	protected void onTextSizeChanged(int fontSize) {
+		webview.getSettings().setDefaultFontSize(fontSize);
+	}
 
 	public boolean activityMediaCompleted() {
 		// only show as being complete if all the videos on this page have been played

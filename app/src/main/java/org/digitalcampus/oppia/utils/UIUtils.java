@@ -19,7 +19,6 @@ package org.digitalcampus.oppia.utils;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -31,9 +30,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Layout;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.BulletSpan;
 import android.util.Log;
 import android.view.Menu;
@@ -43,6 +42,12 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.BlendModeColorFilterCompat;
+import androidx.core.graphics.BlendModeCompat;
+import androidx.core.text.HtmlCompat;
+import androidx.preference.PreferenceManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -57,12 +62,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
-
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.BlendModeColorFilterCompat;
-import androidx.core.graphics.BlendModeCompat;
-import androidx.core.text.HtmlCompat;
-import androidx.preference.PreferenceManager;
 
 public class UIUtils {
 
@@ -359,7 +358,9 @@ public class UIUtils {
             html.removeSpan(span);
             html.setSpan(new BulletSpan(BULLET_SPAN_GAP_WIDTH) {
                 @Override
-                public int getLeadingMargin(boolean first) { return BULLET_SPAN_GAP_WIDTH * 3; }
+                public int getLeadingMargin(boolean first) {
+                    return BULLET_SPAN_GAP_WIDTH * 3;
+                }
 
                 @Override
                 public void drawLeadingMargin(Canvas canvas, Paint paint, int x, int dir, int top, int baseline, int bottom, CharSequence text, int start, int end, boolean first, Layout layout) {
@@ -374,9 +375,50 @@ public class UIUtils {
         int start = 0;
         int end = html.length();
 
-        while (start < end && Character.isWhitespace(html.charAt(start))) { start++; }
-        while (end > start && Character.isWhitespace(html.charAt(end - 1))) { end--; }
+        while (start < end && Character.isWhitespace(html.charAt(start))) {
+            start++;
+        }
+        while (end > start && Character.isWhitespace(html.charAt(end - 1))) {
+            end--;
+        }
         return html.subSequence(start, end);
     }
 
+    public static void showChangeTextSizeDialog(Context context, final Runnable callback) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        String[] textSizeValues = context.getResources().getStringArray(R.array.TextSizeValues);
+        String selectedFontSize = prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16");
+        int checkedPosition = 0;
+        for (int i = 0; i < textSizeValues.length; i++) {
+            String textSizeValue = textSizeValues[i];
+            if (TextUtils.equals(textSizeValue, selectedFontSize)) {
+                checkedPosition = i;
+                break;
+            }
+        }
+
+        new AlertDialog.Builder(context)
+                .setSingleChoiceItems(R.array.TextSize, checkedPosition, (dialog, whichButton) -> {
+
+                    String newTextSize = textSizeValues[whichButton];
+                    prefs.edit().putString(PrefsActivity.PREF_TEXT_SIZE, newTextSize).commit();
+
+                    try {
+                        if (callback != null) {
+                            callback.run();
+                        }
+                    } catch (Exception e) {
+                        Analytics.logException(e);
+                        Log.d(TAG, "Exception:", e);
+                    }
+
+                    dialog.dismiss();
+
+                }).setTitle(context.getString(R.string.menu_change_text_size))
+                .setNegativeButton(context.getString(R.string.cancel), null)
+                .show();
+
+    }
 }
