@@ -410,6 +410,14 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         currentWidget.resetTimeTracking();
     }
 
+    public void onQuizFinished() {
+        int currentActivityPosition = binding.activityWidgetPager.getCurrentItem();
+        if (currentActivityPosition < activities.size() - 1) {
+            binding.activityWidgetPager.setCurrentItem(currentActivityPosition + 1, true);
+        } else {
+            finish();
+        }
+    }
 
     private boolean canNavigateTo(int newTab) {
         //If the course does not have a sequencing mode, we can navigate freely
