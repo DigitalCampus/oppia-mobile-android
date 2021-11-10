@@ -367,12 +367,7 @@ public abstract class AnswerWidget extends BaseWidget {
     }
 
     private View.OnClickListener getCloseBtnListener(){
-        return v -> {
-            FragmentActivity act = getActivity();
-            if (act != null){
-                getActivity().finish();
-            }
-        };
+        return v -> ((CourseActivity)getActivity()).onQuizFinished();
     }
 
     private void nextStep(){
