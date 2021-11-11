@@ -51,6 +51,7 @@ public class Quiz implements Serializable {
     public static final String RESPONSE_SEPARATOR = "||";
     public static final String MATCHING_SEPARATOR = "|";
     public static final String MATCHING_REGEX = "\\|";
+    public static final String RESPONSE_REGEX = "\\|\\|";
 
     public static final int AVAILABILITY_ALWAYS = 0;
     public static final int AVAILABILITY_SECTION = 1;
