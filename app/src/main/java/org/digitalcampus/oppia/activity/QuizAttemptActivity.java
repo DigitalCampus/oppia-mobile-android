@@ -150,7 +150,8 @@ public class QuizAttemptActivity extends AppActivity {
 					String r = response.getString(Quiz.JSON_PROPERTY_TEXT);
 					List<String> userResponses = new ArrayList<>();
 					if (r.contains(Quiz.RESPONSE_SEPARATOR)){
-						userResponses = Arrays.asList(r.split(Quiz.RESPONSE_SEPARATOR));
+						String[] resps = r.split(Quiz.RESPONSE_REGEX);
+						userResponses = Arrays.asList(resps);
 					}
 					else{
 						userResponses.add(r);
