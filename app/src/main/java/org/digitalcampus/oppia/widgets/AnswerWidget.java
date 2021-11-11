@@ -346,9 +346,7 @@ public abstract class AnswerWidget extends BaseWidget {
                     if (!feedback.equals("") &&
                             quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS
                             && !quiz.getCurrentQuestion().getFeedbackDisplayed()) {
-                        //We hide the keyboard before showing the dialog
-                        InputMethodManager imm =  (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        UIUtils.hideSoftKeyboard(v);
                         showFeedback(feedback);
                     } else {
                         nextStep();
