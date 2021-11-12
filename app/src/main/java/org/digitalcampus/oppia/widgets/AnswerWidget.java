@@ -78,7 +78,7 @@ import androidx.fragment.app.FragmentActivity;
 
 public abstract class AnswerWidget extends BaseWidget {
 
-    public static final String TAG = QuizWidget.class.getSimpleName();
+    public static final String TAG = AnswerWidget.class.getSimpleName();
     static final int QUIZ_AVAILABLE = -1;
     private static final int PROGRESS_ANIM_DURATION = 600;
     protected Quiz quiz;
