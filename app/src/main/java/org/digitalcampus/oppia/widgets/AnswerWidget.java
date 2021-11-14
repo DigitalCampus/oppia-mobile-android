@@ -102,7 +102,7 @@ public abstract class AnswerWidget extends BaseWidget {
         // Required empty public constructor
     }
 
-    abstract int getContentAvailability();
+    abstract int getContentAvailability(boolean afterAttempt);
     abstract void showContentUnavailableRationale(int unavailabilityReasonStringResId);
     abstract String getFinishButtonLabel();
     abstract void showBaselineResultMessage();
@@ -178,7 +178,7 @@ public abstract class AnswerWidget extends BaseWidget {
             return;
         }
 
-        int contentAvailability = getContentAvailability();
+        int contentAvailability = getContentAvailability(false);
         if (contentAvailability != QUIZ_AVAILABLE){
             showContentUnavailableRationale(contentAvailability);
             return;
@@ -466,8 +466,8 @@ public abstract class AnswerWidget extends BaseWidget {
             showAnswersFeedback();
         }
 
-        int quizAvailabilityMessage = getContentAvailability();
-        boolean contentAvailable = getContentAvailability() == QUIZ_AVAILABLE;
+        int quizAvailabilityMessage = getContentAvailability(true);
+        boolean contentAvailable = quizAvailabilityMessage == QUIZ_AVAILABLE;
         if (!contentAvailable){
             TextView availabilityMsg = getView().findViewById(R.id.quiz_availability_message);
             availabilityMsg.setText(quizAvailabilityMessage);
