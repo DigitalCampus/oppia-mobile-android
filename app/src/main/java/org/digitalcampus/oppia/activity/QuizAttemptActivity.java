@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,12 +51,10 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 
 public class QuizAttemptActivity extends AppActivity {
 
-	public static final String SHOW_ATTEMPT_BUTTON = "show_attempt_button";
 	private ActivityQuizAttemptBinding binding;
 	private QuizAttempt quizAttempt;
 	private Course course;
@@ -78,8 +75,6 @@ public class QuizAttemptActivity extends AppActivity {
         setContentView(binding.getRoot());
 		getAppComponent().inject(this);
 
-
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         Bundle bundle = this.getIntent().getExtras();
 
@@ -90,7 +85,7 @@ public class QuizAttemptActivity extends AppActivity {
 		quizAttempt = (QuizAttempt) bundle.getSerializable(QuizAttempt.TAG);
 		course = DbHelper.getInstance(this).getCourse(quizAttempt.getCourseId(), quizAttempt.getUserId());
 
-		boolean showAttemptQuizButton = bundle.getBoolean(SHOW_ATTEMPT_BUTTON, false);
+		boolean showAttemptQuizButton = bundle.getBoolean(CourseQuizAttemptsActivity.SHOW_ATTEMPT_BUTTON, false);
 		if (showAttemptQuizButton){
 			binding.retakeQuizBtn.setVisibility(View.VISIBLE);
 			binding.retakeQuizBtn.setOnClickListener(view -> retakeQuiz());

@@ -128,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignBottom="@id/score"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:text="@string/quiz_attempts.retake_quiz" />
 
             </RelativeLayout>

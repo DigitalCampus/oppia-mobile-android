@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CourseQuizAttemptsActivity extends AppActivity {
 
+    public static final String SHOW_ATTEMPT_BUTTON = "show_attempt_button";
+
     private QuizStats stats;
 
     @Inject
@@ -64,7 +66,15 @@ public class CourseQuizAttemptsActivity extends AppActivity {
         else{
             binding.viewQuizStats.highlightAverage.setText(stats.getAveragePercent() + "%");
             binding.viewQuizStats.highlightBest.setText(stats.getPercent() + "%");
-            binding.retakeQuizBtn.setOnClickListener(view -> takeQuiz());
+
+            boolean showAttemptQuizButton = bundle.getBoolean(SHOW_ATTEMPT_BUTTON, true);
+            if (!showAttemptQuizButton){
+                binding.retakeQuizBtn.setVisibility(View.GONE);
+            }
+            else{
+                binding.retakeQuizBtn.setVisibility(View.VISIBLE);
+                binding.retakeQuizBtn.setOnClickListener(view -> takeQuiz());
+            }
         }
 
         final List<QuizAttempt> attempts = attemptsRepository.getQuizAttempts(this, stats);
@@ -76,6 +86,7 @@ public class CourseQuizAttemptsActivity extends AppActivity {
             attempt.setSectionTitle(stats.getSectionTitle());
             attempt.setQuizTitle(stats.getQuizTitle());
             tb.putSerializable(QuizAttempt.TAG, attempt);
+            tb.putBoolean(SHOW_ATTEMPT_BUTTON, false);
             i.putExtras(tb);
             startActivity(i);
         });
