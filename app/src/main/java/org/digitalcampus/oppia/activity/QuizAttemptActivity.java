@@ -37,6 +37,8 @@ import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAnswerFeedback;
 import org.digitalcampus.oppia.model.QuizAttempt;
+import org.digitalcampus.oppia.model.QuizAttemptRepository;
+import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.json.JSONArray;
@@ -48,6 +50,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 
@@ -57,6 +61,9 @@ public class QuizAttemptActivity extends AppActivity {
 	private ActivityQuizAttemptBinding binding;
 	private QuizAttempt quizAttempt;
 	private Course course;
+
+	@Inject
+	QuizAttemptRepository attemptsRepository;
 
 	@Override
 	public void onStart() {
@@ -69,6 +76,8 @@ public class QuizAttemptActivity extends AppActivity {
         super.onCreate(savedInstanceState);
 		binding = ActivityQuizAttemptBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
+		getAppComponent().inject(this);
+
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
@@ -138,7 +147,14 @@ public class QuizAttemptActivity extends AppActivity {
 
 		QuizAnswersFeedbackAdapter adapterQuizFeedback = new QuizAnswersFeedbackAdapter(this, quizAnswerFeedback);
 		binding.recyclerQuizResultsFeedback.setAdapter(adapterQuizFeedback);
-	    
+
+		if (quiz.limitAttempts()){
+			//Check if the user has attempted the quiz the max allowed
+			QuizStats qs = attemptsRepository.getQuizAttemptStats(this, quizAttempt.getActivityDigest());
+			if (qs.getNumAttempts() >= quiz.getMaxAttempts()){
+				binding.retakeQuizBtn.setVisibility(View.GONE);
+			}
+		}
 	}
 
 	private void updateQuizResponse(QuizQuestion q, JSONObject data){
