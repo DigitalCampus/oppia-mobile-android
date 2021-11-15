@@ -53,7 +53,7 @@
         android:title="@string/prefDisableNotifications" />
 
     <CheckBoxPreference
-        android:defaultValue="true"
+        android:defaultValue="@string/prefShowGamificationEventsDefault"
         android:key="prefShowGamificationEvents"
         android:title="@string/prefShowGamificationEvents" />
 

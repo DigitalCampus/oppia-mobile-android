@@ -25,14 +25,12 @@
     </string-array>
 
     <string-array name="GamificationPointsAnimation">
-        <!--<item>@string/prefGamificationPointsViewTypeNone</item>-->
         <item>@string/prefGamificationPointsViewTypeSimpleAnimation</item>
         <item>@string/prefGamificationPointsViewTypeFullAnimation</item>
         <item>@string/prefGamificationPointsViewTypeFullAnimationSound</item>
     </string-array>
 
     <string-array name="GamificationPointsAnimationValues">
-        <!--<item>0</item>-->
         <item>1</item>
         <item>2</item>
         <item>3</item>
