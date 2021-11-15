@@ -49,6 +49,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
@@ -290,7 +291,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     @Override
     public void onGamificationEvent(String message, int points) {
-        boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
+        boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, BuildConfig.SHOW_GAMIFICATION_EVENTS);
         boolean scoringEnabled = prefs.getBoolean(PrefsActivity.PREF_SCORING_ENABLED, true);
 
         Log.d(TAG, "gamifEvent:" + message);

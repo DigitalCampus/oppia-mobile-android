@@ -21,7 +21,7 @@
         app:iconSpaceReserved="false">
 
         <CheckBoxPreference
-            android:defaultValue="true"
+            app:defaultValue="@string/prefShowGamificationEventsDefault"
             android:key="prefShowGamificationEvents"
             android:title="@string/prefShowGamificationEvents"
             app:allowDividerBelow="true"
