@@ -85,12 +85,11 @@ public class MultiChoiceWidget extends QuestionWidget{
 		int resp = responsesRG.getCheckedRadioButtonId();
     	View rb = responsesRG.findViewById(resp);
     	int idx = responsesRG.indexOfChild(rb);
+		List<String> response = new ArrayList<>();
     	if (idx >= 0){
-    		List<String> response = new ArrayList<>();
 			response.add(responses.get(idx).getTitle(currentUserLang));
-    		return response;
     	}
-		return new ArrayList<>();
+		return response;
 	}
 
 	@Override

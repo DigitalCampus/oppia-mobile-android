@@ -58,7 +58,7 @@ public class FeedbackWidget extends AnswerWidget {
 	}
 
 	@Override
-	int getContentAvailability() {
+	int getContentAvailability(boolean afterAttempt) {
 		// Feedback widget always available?
 		return QUIZ_AVAILABLE;
 	}

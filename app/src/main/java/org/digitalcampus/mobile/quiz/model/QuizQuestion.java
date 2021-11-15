@@ -17,6 +17,7 @@
 
 package org.digitalcampus.mobile.quiz.model;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.mobile.quiz.Quiz;
@@ -71,8 +72,9 @@ public class QuizQuestion implements Serializable {
             for (String a : userResponses) {
                 if (r.getTitle(lang).equals(a)) {
                     total += r.getScore();
-                    if (r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))) {
-                        feedback = r.getFeedback(lang);
+                    String feedbackLang = r.getFeedback(lang);
+                    if (!TextUtils.isEmpty(feedbackLang)) {
+                        feedback = feedbackLang;
                     }
                 }
             }

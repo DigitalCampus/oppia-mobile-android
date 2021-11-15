@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.mobile.learning.databinding.FragmentGlobalQuizAttemptsBinding;
+import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
 import org.digitalcampus.oppia.activity.QuizAttemptActivity;
 import org.digitalcampus.oppia.adapter.GlobalQuizAttemptsAdapter;
 import org.digitalcampus.oppia.model.QuizAttempt;
@@ -44,7 +45,7 @@ public class GlobalQuizAttemptsFragment extends AppFragment {
             Bundle tb = new Bundle();
             QuizAttempt attempt = attempts.get(position);
             tb.putSerializable(QuizAttempt.TAG, attempt);
-            tb.putBoolean(QuizAttemptActivity.SHOW_ATTEMPT_BUTTON, true);
+            tb.putBoolean(CourseQuizAttemptsActivity.SHOW_ATTEMPT_BUTTON, true);
             i.putExtras(tb);
             startActivity(i);
         });
