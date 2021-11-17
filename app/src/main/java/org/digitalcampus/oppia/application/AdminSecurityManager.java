@@ -102,6 +102,21 @@ public class AdminSecurityManager {
         }
     }
 
+    public boolean isActionProtected(String actionKey) {
+
+        if (!isAdminProtectionEnabled()) return false;
+
+        // Only for automated testing. Only way I could "mock" BuildConfig fields
+        if(testForzeActionProtected()) return getTestActionProtectedValue();
+
+        switch (actionKey){
+            case PrefsActivity.PREF_COURSES_REMINDER_ENABLED: return App.ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS;
+            case PrefsActivity.PREF_SERVER: return App.ADMIN_PROTECT_SERVER;
+
+            default: return false;
+        }
+    }
+
 
     public boolean testForzeActionProtected(){
         return prefs.getString(PrefsActivity.PREF_TEST_ACTION_PROTECTED, null) != null;

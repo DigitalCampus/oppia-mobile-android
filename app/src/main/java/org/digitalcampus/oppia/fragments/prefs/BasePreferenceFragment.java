@@ -8,12 +8,16 @@ import androidx.annotation.Nullable;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceGroup;
+import androidx.preference.PreferenceScreen;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.utils.custom_prefs.AdminEditTextPreference;
+import org.digitalcampus.oppia.utils.custom_prefs.AdminPreference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
     protected List<String> adminProtectedEditTextPrefs = new ArrayList<>();
     protected SharedPreferences parentPrefs;
+    private AdminSecurityManager adminSecurityManager;
 
     public void setPrefs(SharedPreferences prefs) {
         this.parentPrefs = prefs;
@@ -32,8 +37,28 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        protectAdminEditTextPreferences();
+        adminSecurityManager = AdminSecurityManager.with(getActivity());
 
+        protectAdminPreferences(getPreferenceScreen());
+
+    }
+
+    private void protectAdminPreferences(PreferenceGroup preferenceGroup) {
+        for (int i = 0; i < preferenceGroup.getPreferenceCount(); i++) {
+            Preference preference = preferenceGroup.getPreference(i);
+            if (preference instanceof PreferenceCategory || preference instanceof PreferenceScreen) {
+                protectAdminPreferences((PreferenceGroup) preference);
+            }
+
+            if (preference instanceof AdminPreference && adminSecurityManager.isActionProtected(preference.getKey())) {
+                AdminPreference adminPreference = (AdminPreference) preference;
+                adminPreference.setOnAdminPreferenceClickListener(adminPref -> {
+                    adminSecurityManager.promptAdminPassword(() -> adminPreference.onAccessGranted());
+                    return true;
+                });
+
+            }
+        }
     }
 
     void protectAdminEditTextPreferences() {

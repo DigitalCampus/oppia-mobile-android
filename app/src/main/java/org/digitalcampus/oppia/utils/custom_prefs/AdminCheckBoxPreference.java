@@ -3,21 +3,22 @@ package org.digitalcampus.oppia.utils.custom_prefs;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 
-public class AdminEditTextPreference extends EditTextPreference implements AdminPreference {
+public class AdminCheckBoxPreference extends CheckBoxPreference implements AdminPreference {
 
     private OnPreferenceClickListener customOnPreferenceClickListener;
 
-    public AdminEditTextPreference(Context context) {
+    public AdminCheckBoxPreference(Context context) {
         super(context);
     }
 
-    public AdminEditTextPreference(Context context, AttributeSet attrs) {
+    public AdminCheckBoxPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public AdminEditTextPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AdminCheckBoxPreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

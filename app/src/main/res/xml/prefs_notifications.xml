@@ -54,7 +54,7 @@
         android:title="@string/prefSectionReminder"
         app:iconSpaceReserved="false">
 
-        <CheckBoxPreference
+        <org.digitalcampus.oppia.utils.custom_prefs.AdminCheckBoxPreference
             android:defaultValue="true"
             android:key="prefCoursesReminderEnabled"
             android:title="@string/prefCoursesReminderEnabled"
