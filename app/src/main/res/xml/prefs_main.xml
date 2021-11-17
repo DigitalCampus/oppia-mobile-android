@@ -27,7 +27,7 @@
             app:summary="@string/prefNotifications_description"
             app:title="@string/prefNotifications_title" />
 
-        <Preference
+        <org.digitalcampus.oppia.utils.custom_prefs.AdminSimplePreference
             android:key="prefSecurity"
             app:allowDividerAbove="true"
             app:allowDividerBelow="true"
@@ -37,7 +37,7 @@
             app:summary="@string/prefSecurity_description"
             app:title="@string/prefSecurity_title" />
 
-        <Preference
+        <org.digitalcampus.oppia.utils.custom_prefs.AdminSimplePreference
             app:allowDividerAbove="true"
             app:allowDividerBelow="true"
             app:fragment="org.digitalcampus.oppia.fragments.prefs.AdvancedPrefsFragment"

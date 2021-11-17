@@ -36,7 +36,7 @@ public class AdminEditTextPreference extends EditTextPreference implements Admin
     }
 
     @Override
-    public void setOnAdminPreferenceClickListener(OnPreferenceClickListener onPreferenceClickListener) {
+    public void setOnPreferenceClickListener(OnPreferenceClickListener onPreferenceClickListener) {
         customOnPreferenceClickListener = onPreferenceClickListener;
     }
 

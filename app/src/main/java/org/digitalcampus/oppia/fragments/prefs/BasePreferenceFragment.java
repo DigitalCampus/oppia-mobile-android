@@ -36,9 +36,8 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
             }
 
             if (preference instanceof AdminPreference && adminSecurityManager.isActionProtected(preference.getKey())) {
-                AdminPreference adminPreference = (AdminPreference) preference;
-                adminPreference.setOnAdminPreferenceClickListener(adminPref -> {
-                    adminSecurityManager.promptAdminPassword(() -> adminPreference.onAccessGranted());
+                preference.setOnPreferenceClickListener(adminPref -> {
+                    adminSecurityManager.promptAdminPassword(() -> ((AdminPreference) preference).onAccessGranted());
                     return true;
                 });
 

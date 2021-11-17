@@ -107,24 +107,30 @@ public class AdminSecurityManager {
         if (!isAdminProtectionEnabled()) return false;
 
         // Only for automated testing. Only way I could "mock" BuildConfig fields
-        if(testForzeActionProtected()) return getTestActionProtectedValue();
+        if(testForzeActionProtected()) {
+            return getTestActionProtectedValue();
+        }
 
         switch (actionKey){
             case PrefsActivity.PREF_COURSES_REMINDER_ENABLED: return App.ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS;
             case PrefsActivity.PREF_SERVER: return App.ADMIN_PROTECT_SERVER;
             case PrefsActivity.PREF_ADMIN_PASSWORD: return true;
+            case PrefsActivity.PREF_ADVANCED_SCREEN: return App.ADMIN_PROTECT_ADVANCED_SETTINGS;
+            case PrefsActivity.PREF_SECURITY_SCREEN: return App.ADMIN_PROTECT_SECURITY_SETTINGS;
 
             default: return false;
         }
     }
 
 
-    public boolean testForzeActionProtected(){
-        return prefs.getString(PrefsActivity.PREF_TEST_ACTION_PROTECTED, null) != null;
+    public boolean testForzeActionProtected() {
+        String actionProtected = prefs.getString(PrefsActivity.PREF_TEST_ACTION_PROTECTED, null);
+        return  actionProtected != null && Boolean.parseBoolean(actionProtected);
     }
 
     private boolean getTestActionProtectedValue() {
-        return Boolean.parseBoolean(prefs.getString(PrefsActivity.PREF_TEST_ACTION_PROTECTED, null));
+        boolean actionProtected = Boolean.parseBoolean(prefs.getString(PrefsActivity.PREF_TEST_ACTION_PROTECTED, null));
+        return actionProtected;
     }
 
     public boolean checkAdminPassword(String pass) {

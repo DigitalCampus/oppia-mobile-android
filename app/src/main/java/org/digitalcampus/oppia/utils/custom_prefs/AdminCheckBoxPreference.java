@@ -37,7 +37,7 @@ public class AdminCheckBoxPreference extends CheckBoxPreference implements Admin
     }
 
     @Override
-    public void setOnAdminPreferenceClickListener(OnPreferenceClickListener onPreferenceClickListener) {
+    public void setOnPreferenceClickListener(OnPreferenceClickListener onPreferenceClickListener) {
         customOnPreferenceClickListener = onPreferenceClickListener;
     }
 

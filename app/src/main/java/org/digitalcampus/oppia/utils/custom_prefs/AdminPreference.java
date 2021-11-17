@@ -4,7 +4,5 @@ import androidx.preference.Preference;
 
 public interface AdminPreference {
 
-    void setOnAdminPreferenceClickListener(Preference.OnPreferenceClickListener onPreferenceClickListener);
-
     void onAccessGranted();
 }
