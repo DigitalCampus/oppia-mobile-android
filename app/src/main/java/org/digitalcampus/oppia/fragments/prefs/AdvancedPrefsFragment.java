@@ -63,11 +63,6 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         super.onCreate(savedInstance);
         initializeDagger();
 
-        AdminSecurityManager adminSecurityManager = AdminSecurityManager.with(getActivity());
-        if (adminSecurityManager.isActionProtected(R.id.action_url_server)) {
-            this.adminProtectedEditTextPrefs = Arrays.asList(PrefsActivity.PREF_SERVER);
-        }
-
         loadPrefs();
     }
 

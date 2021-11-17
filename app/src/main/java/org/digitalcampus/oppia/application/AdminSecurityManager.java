@@ -112,6 +112,7 @@ public class AdminSecurityManager {
         switch (actionKey){
             case PrefsActivity.PREF_COURSES_REMINDER_ENABLED: return App.ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS;
             case PrefsActivity.PREF_SERVER: return App.ADMIN_PROTECT_SERVER;
+            case PrefsActivity.PREF_ADMIN_PASSWORD: return true;
 
             default: return false;
         }

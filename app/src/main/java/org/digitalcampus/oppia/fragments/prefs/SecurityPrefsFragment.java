@@ -34,8 +34,6 @@ public class SecurityPrefsFragment extends BasePreferenceFragment implements Pre
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
 
-        this.adminProtectedEditTextPrefs = Arrays.asList(PrefsActivity.PREF_ADMIN_PASSWORD);
-
         protectAdminPreferences();
 
         EditTextPreference adminPassPref = findPreference(PrefsActivity.PREF_ADMIN_PASSWORD);

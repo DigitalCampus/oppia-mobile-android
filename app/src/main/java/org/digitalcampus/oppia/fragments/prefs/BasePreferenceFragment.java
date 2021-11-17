@@ -1,7 +1,5 @@
 package org.digitalcampus.oppia.fragments.prefs;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -13,25 +11,12 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.utils.custom_prefs.AdminEditTextPreference;
 import org.digitalcampus.oppia.utils.custom_prefs.AdminPreference;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
-    protected List<String> adminProtectedEditTextPrefs = new ArrayList<>();
-    protected SharedPreferences parentPrefs;
     private AdminSecurityManager adminSecurityManager;
-
-    public void setPrefs(SharedPreferences prefs) {
-        this.parentPrefs = prefs;
-    }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -61,33 +46,6 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
         }
     }
 
-    void protectAdminEditTextPreferences() {
-        for (String prefKey : adminProtectedEditTextPrefs) {
-
-            final EditTextPreference editTextPreference = findPreference(prefKey);
-            if (editTextPreference == null) {
-                continue;
-            }
-
-            if (editTextPreference instanceof AdminEditTextPreference) {
-                editTextPreference.setOnPreferenceClickListener(preference -> {
-
-                    if (parentPrefs == null) {
-                        parentPrefs = App.getPrefs(getActivity());
-                    }
-
-                    if (parentPrefs.getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false)) {
-                        AdminSecurityManager.with((Activity) getContext()).promptAdminPassword(() -> {
-                            getPreferenceManager().showDialog(editTextPreference);
-                        });
-                        return true;
-                    }
-
-                    return false;
-                });
-            }
-        }
-    }
 
     protected boolean onPreferenceChangedDelegate(Preference preference, Object newValue) {
         return true;
