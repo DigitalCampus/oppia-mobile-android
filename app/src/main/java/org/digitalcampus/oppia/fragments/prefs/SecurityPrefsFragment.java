@@ -6,7 +6,6 @@ import android.text.InputType;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.application.App;
 
 import java.util.Arrays;
 
@@ -35,7 +34,7 @@ public class SecurityPrefsFragment extends BasePreferenceFragment implements Pre
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
 
-        this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_ADMIN_PASSWORD);
+        this.adminProtectedEditTextPrefs = Arrays.asList(PrefsActivity.PREF_ADMIN_PASSWORD);
 
         protectAdminPreferences();
 

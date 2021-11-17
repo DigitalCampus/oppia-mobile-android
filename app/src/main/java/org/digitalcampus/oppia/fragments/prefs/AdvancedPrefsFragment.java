@@ -2,7 +2,6 @@ package org.digitalcampus.oppia.fragments.prefs;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -66,7 +65,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
 
         AdminSecurityManager adminSecurityManager = AdminSecurityManager.with(getActivity());
         if (adminSecurityManager.isActionProtected(R.id.action_url_server)) {
-            this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_SERVER);
+            this.adminProtectedEditTextPrefs = Arrays.asList(PrefsActivity.PREF_SERVER);
         }
 
         loadPrefs();

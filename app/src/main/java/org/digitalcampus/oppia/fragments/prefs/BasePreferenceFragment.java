@@ -20,7 +20,7 @@ import java.util.List;
 
 public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
-    protected List<String> adminProtectedValues = new ArrayList<>();
+    protected List<String> adminProtectedEditTextPrefs = new ArrayList<>();
     protected SharedPreferences parentPrefs;
 
     public void setPrefs(SharedPreferences prefs) {
@@ -37,7 +37,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
     }
 
     void protectAdminEditTextPreferences() {
-        for (String prefKey : adminProtectedValues) {
+        for (String prefKey : adminProtectedEditTextPrefs) {
 
             final EditTextPreference editTextPreference = findPreference(prefKey);
             if (editTextPreference == null) {

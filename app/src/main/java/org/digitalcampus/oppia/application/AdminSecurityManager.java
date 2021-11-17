@@ -92,6 +92,12 @@ public class AdminSecurityManager {
             case R.id.action_url_server: return App.ADMIN_PROTECT_SERVER;
             case R.id.action_advanced_settings: return App.ADMIN_PROTECT_ADVANCED_SETTINGS;
             case R.id.action_security_settings: return App.ADMIN_PROTECT_SECURITY_SETTINGS;
+            case R.id.action_protect_notifications: return App.ADMIN_PROTECT_NOTIFICATIONS;
+            case R.id.action_protect_enable_reminder_notificatons: return App.ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS;
+            case R.id.action_protect_reminder_interval: return App.ADMIN_PROTECT_REMINDER_INTERVAL;
+            case R.id.action_protect_reminder_days: return App.ADMIN_PROTECT_REMINDER_DAYS;
+            case R.id.action_protect_reminder_time: return App.ADMIN_PROTECT_REMINDER_TIME;
+
             default: return false;
         }
     }
