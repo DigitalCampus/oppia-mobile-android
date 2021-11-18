@@ -89,20 +89,12 @@ public class AdminSecurityManager {
             case R.id.menu_settings: return App.ADMIN_PROTECT_SETTINGS;
             case R.id.menu_sync: return App.ADMIN_PROTECT_ACTIVITY_SYNC;
             case R.id.action_export_activity: return App.ADMIN_PROTECT_ACTIVITY_EXPORT;
-            case R.id.action_url_server: return App.ADMIN_PROTECT_SERVER;
-            case R.id.action_advanced_settings: return App.ADMIN_PROTECT_ADVANCED_SETTINGS;
-            case R.id.action_security_settings: return App.ADMIN_PROTECT_SECURITY_SETTINGS;
-            case R.id.action_protect_notifications: return App.ADMIN_PROTECT_NOTIFICATIONS;
-            case R.id.action_protect_enable_reminder_notificatons: return App.ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS;
-            case R.id.action_protect_reminder_interval: return App.ADMIN_PROTECT_REMINDER_INTERVAL;
-            case R.id.action_protect_reminder_days: return App.ADMIN_PROTECT_REMINDER_DAYS;
-            case R.id.action_protect_reminder_time: return App.ADMIN_PROTECT_REMINDER_TIME;
 
             default: return false;
         }
     }
 
-    public boolean isActionProtected(String actionKey) {
+    public boolean isPreferenceProtected(String preferenceKey) {
 
         if (!isAdminProtectionEnabled()) return false;
 
@@ -111,12 +103,19 @@ public class AdminSecurityManager {
             return getTestActionProtectedValue();
         }
 
-        switch (actionKey){
-            case PrefsActivity.PREF_COURSES_REMINDER_ENABLED: return App.ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS;
-            case PrefsActivity.PREF_SERVER: return App.ADMIN_PROTECT_SERVER;
+        switch (preferenceKey){
+
             case PrefsActivity.PREF_ADMIN_PASSWORD: return true;
+
+            case PrefsActivity.PREF_SERVER: return App.ADMIN_PROTECT_SERVER;
             case PrefsActivity.PREF_ADVANCED_SCREEN: return App.ADMIN_PROTECT_ADVANCED_SETTINGS;
             case PrefsActivity.PREF_SECURITY_SCREEN: return App.ADMIN_PROTECT_SECURITY_SETTINGS;
+
+            case PrefsActivity.PREF_DISABLE_NOTIFICATIONS: return App.ADMIN_PROTECT_NOTIFICATIONS;
+            case PrefsActivity.PREF_COURSES_REMINDER_ENABLED: return App.ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS;
+            case PrefsActivity.PREF_COURSES_REMINDER_INTERVAL: return App.ADMIN_PROTECT_REMINDER_INTERVAL;
+            case PrefsActivity.PREF_COURSES_REMINDER_DAYS: return App.ADMIN_PROTECT_REMINDER_DAYS;
+            case PrefsActivity.PREF_COURSES_REMINDER_TIME: return App.ADMIN_PROTECT_REMINDER_TIME;
 
             default: return false;
         }
