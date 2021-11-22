@@ -8,6 +8,12 @@ import androidx.preference.EditTextPreference;
 
 public class AdminCheckBoxPreference extends CheckBoxPreference implements AdminPreference {
 
+    public enum PromptAdminDialogMode {
+        ON_CHECK, ON_UNCHECK, ON_BOTH
+    }
+
+    private PromptAdminDialogMode mode = PromptAdminDialogMode.ON_BOTH;
+
     private OnPreferenceClickListener customOnPreferenceClickListener;
 
     public AdminCheckBoxPreference(Context context) {
@@ -25,10 +31,17 @@ public class AdminCheckBoxPreference extends CheckBoxPreference implements Admin
     @Override
     protected void onClick() {
 
+
         if (customOnPreferenceClickListener != null) {
-            boolean handled = customOnPreferenceClickListener.onPreferenceClick(this);
-            if (handled) {
-                return;
+
+            if ((!isChecked() && mode == PromptAdminDialogMode.ON_CHECK)
+                    || (isChecked() && mode == PromptAdminDialogMode.ON_UNCHECK)
+                    || mode == PromptAdminDialogMode.ON_BOTH) {
+
+                boolean handled = customOnPreferenceClickListener.onPreferenceClick(this);
+                if (handled) {
+                    return;
+                }
             }
         }
 
@@ -39,6 +52,10 @@ public class AdminCheckBoxPreference extends CheckBoxPreference implements Admin
     @Override
     public void setOnPreferenceClickListener(OnPreferenceClickListener onPreferenceClickListener) {
         customOnPreferenceClickListener = onPreferenceClickListener;
+    }
+
+    public void setPromptAdminDialogMode(PromptAdminDialogMode mode) {
+        this.mode = mode;
     }
 
     @Override

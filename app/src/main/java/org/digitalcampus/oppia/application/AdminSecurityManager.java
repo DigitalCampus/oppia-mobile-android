@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.application;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -95,6 +96,10 @@ public class AdminSecurityManager {
     }
 
     public boolean isPreferenceProtected(String preferenceKey) {
+
+        if (TextUtils.equals(preferenceKey, PrefsActivity.PREF_ADMIN_PROTECTION)) {
+            return true;
+        }
 
         if (!isAdminProtectionEnabled()) return false;
 
