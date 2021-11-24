@@ -1668,8 +1668,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public List<TrackerLog> getUnsentTrackers(long userId) {
         String s = TRACKER_LOG_C_SUBMITTED + STR_EQUALS_AND + TRACKER_LOG_C_USERID + "=? ";
+        String query = "SELECT * FROM " + TRACKER_LOG_TABLE + " LEFT JOIN " + COURSE_TABLE +
+                " ON " + TRACKER_LOG_C_COURSEID + " = " + COURSE_TABLE + "." + COURSE_C_ID +
+                " WHERE " + s;
         String[] args = new String[]{"0", String.valueOf(userId)};
-        Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
+
+        Cursor c = db.rawQuery(query, args);
+        //Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
 
         List<TrackerLog> trackerLogList = new ArrayList<>();
@@ -1687,10 +1692,18 @@ public class DbHelper extends SQLiteOpenHelper {
                 json.put(TRACKER_LOG_C_ACTIVITYDIGEST, (digest != null) ? digest : "");
                 json.put(TRACKER_LOG_C_EVENT, c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT)));
                 json.put(TRACKER_LOG_C_POINTS, c.getInt(c.getColumnIndex(TRACKER_LOG_C_POINTS)));
-                Course m = this.getCourse(c.getLong(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
-                if (m != null) {
+
+                //Course m = this.getCourse(c.getLong(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
+                /*if (m != null) {
                     json.put("course", m.getShortname());
+                    json.put("courseversion", Math.round(m.getVersionId()));
+                }*/
+                String shortname = c.getString(c.getColumnIndex(COURSE_C_SHORTNAME));
+                if (shortname != null){
+                    json.put("course", shortname);
+                    json.put("course_version", c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
                 }
+
                 String trackerType = c.getString(c.getColumnIndex(TRACKER_LOG_C_TYPE));
                 if (trackerType != null) {
                     json.put("type", trackerType);
