@@ -6,7 +6,6 @@
 
     <EditTextPreference
         android:key="prefInfo"
-        android:title="@string/version_name"
         app:icon="@drawable/ic_settings_info"
         android:selectable="false" />
 
