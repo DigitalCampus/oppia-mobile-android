@@ -156,7 +156,6 @@ android {
             resValue "string", "prefCoursesReminderDaysDefaultSerialized", runtimeProps['DEFAULT_REMINDER_DAYS']
             resValue "string", "prefShowGamificationEventsDefault", runtimeProps['SHOW_GAMIFICATION_EVENTS']
 
-            resValue "string", "version_name", version_name
         }
 
         debug {
