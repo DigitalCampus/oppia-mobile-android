@@ -82,6 +82,12 @@ public class App extends Application {
     public static final boolean ADMIN_PROTECT_ACTIVITY_SYNC = BuildConfig.ADMIN_PROTECT_ACTIVITY_SYNC;
     public static final boolean ADMIN_PROTECT_ACTIVITY_EXPORT = BuildConfig.ADMIN_PROTECT_ACTIVITY_EXPORT;
 
+    public static final boolean ADMIN_PROTECT_NOTIFICATIONS = BuildConfig.ADMIN_PROTECT_NOTIFICATIONS;
+    public static final boolean ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS = BuildConfig.ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS;
+    public static final boolean ADMIN_PROTECT_REMINDER_INTERVAL = BuildConfig.ADMIN_PROTECT_REMINDER_INTERVAL;
+    public static final boolean ADMIN_PROTECT_REMINDER_DAYS = BuildConfig.ADMIN_PROTECT_REMINDER_DAYS;
+    public static final boolean ADMIN_PROTECT_REMINDER_TIME = BuildConfig.ADMIN_PROTECT_REMINDER_TIME;
+
     // tracker metadata settings
     public static final boolean METADATA_INCLUDE_NETWORK = BuildConfig.METADATA_INCLUDE_NETWORK;
     public static final boolean METADATA_INCLUDE_APP_INSTANCE_ID = BuildConfig.METADATA_INCLUDE_APP_INSTANCE_ID;
