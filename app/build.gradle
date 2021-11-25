@@ -93,6 +93,12 @@ android {
             buildConfigField "boolean", "ADMIN_PROTECT_COURSE_RESET", runtimeProps['ADMIN_PROTECT_COURSE_RESET']
             buildConfigField "boolean", "ADMIN_PROTECT_COURSE_INSTALL", runtimeProps['ADMIN_PROTECT_COURSE_INSTALL']
             buildConfigField "boolean", "ADMIN_PROTECT_COURSE_UPDATE", runtimeProps['ADMIN_PROTECT_COURSE_UPDATE']
+            
+            buildConfigField "boolean", "ADMIN_PROTECT_NOTIFICATIONS", runtimeProps['ADMIN_PROTECT_NOTIFICATIONS']
+            buildConfigField "boolean", "ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS", runtimeProps['ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS']
+            buildConfigField "boolean", "ADMIN_PROTECT_REMINDER_INTERVAL", runtimeProps['ADMIN_PROTECT_REMINDER_INTERVAL']
+            buildConfigField "boolean", "ADMIN_PROTECT_REMINDER_DAYS", runtimeProps['ADMIN_PROTECT_REMINDER_DAYS']
+            buildConfigField "boolean", "ADMIN_PROTECT_REMINDER_TIME", runtimeProps['ADMIN_PROTECT_REMINDER_TIME']
 
             buildConfigField "boolean", "MENU_ALLOW_LOGOUT", runtimeProps['MENU_ALLOW_LOGOUT']
             buildConfigField "boolean", "MENU_ALLOW_EDIT_PROFILE", runtimeProps['MENU_ALLOW_EDIT_PROFILE']
