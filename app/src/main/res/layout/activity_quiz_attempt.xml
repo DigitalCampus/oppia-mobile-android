@@ -70,11 +70,11 @@
                     android:layout_alignTop="@id/ic_date"
                     android:layout_alignBottom="@id/ic_date"
                     android:layout_gravity="center_vertical"
-                    android:layout_toEndOf="@id/ic_date"
                     android:layout_toStartOf="@id/retake_quiz_btn"
-                    android:textColor="@color/subtitle_bar_text_color"
+                    android:layout_toEndOf="@id/ic_date"
                     android:ellipsize="end"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:textColor="@color/subtitle_bar_text_color" />
 
                 <TextView
                     android:id="@+id/attempt_timetaken"
@@ -113,21 +113,21 @@
                     android:id="@+id/score"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/scorecard_quiz_item_highlight"
-                    android:gravity="center"
-                    android:textSize="15sp"
-                    android:layout_marginEnd="@dimen/margin_medium"
-                    android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
-                    android:focusable="false" />
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:background="@drawable/scorecard_quiz_item_highlight"
+                    android:focusable="false"
+                    android:gravity="center"
+                    android:textSize="15sp" />
 
                 <Button
                     android:id="@+id/retake_quiz_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
+                    android:layout_alignBottom="@id/score"
                     android:visibility="gone"
                     android:text="@string/quiz_attempts.retake_quiz" />
 

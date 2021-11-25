@@ -35,23 +35,8 @@ public class MainPreferencesFragment extends BasePreferenceFragment {
         info.setTitle(getString(R.string.prefCurrentVersion, BuildConfig.VERSION_NAME));
         info.setSummary(BuildConfig.APPLICATION_ID);
 
-        protectPrefScreen(PrefsActivity.PREF_ADVANCED_SCREEN, R.id.action_advanced_settings);
-        protectPrefScreen(PrefsActivity.PREF_SECURITY_SCREEN, R.id.action_security_settings);
     }
 
-    public void protectPrefScreen(String prefScreen, int actionId){
-        findPreference(prefScreen).setOnPreferenceClickListener(preference -> {
-            AdminSecurityManager adminSecurityManager = AdminSecurityManager.with(getActivity());
-            if (adminSecurityManager.isActionProtected(actionId)) {
-                adminSecurityManager.promptAdminPassword(() -> {
-                    preference.setOnPreferenceClickListener(null);
-                    preference.performClick();
-                });
-                return true;
-            }
-            return false;
-        });
-    }
 
     @Override
     public void onResume() {

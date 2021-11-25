@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,6 +36,8 @@ import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAnswerFeedback;
 import org.digitalcampus.oppia.model.QuizAttempt;
+import org.digitalcampus.oppia.model.QuizAttemptRepository;
+import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.json.JSONArray;
@@ -48,15 +49,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.preference.PreferenceManager;
+import javax.inject.Inject;
+
 import androidx.recyclerview.widget.DividerItemDecoration;
 
 public class QuizAttemptActivity extends AppActivity {
 
-	public static final String SHOW_ATTEMPT_BUTTON = "show_attempt_button";
 	private ActivityQuizAttemptBinding binding;
 	private QuizAttempt quizAttempt;
 	private Course course;
+
+	@Inject
+	QuizAttemptRepository attemptsRepository;
 
 	@Override
 	public void onStart() {
@@ -69,8 +73,8 @@ public class QuizAttemptActivity extends AppActivity {
         super.onCreate(savedInstanceState);
 		binding = ActivityQuizAttemptBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
+		getAppComponent().inject(this);
 
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         Bundle bundle = this.getIntent().getExtras();
 
@@ -81,7 +85,7 @@ public class QuizAttemptActivity extends AppActivity {
 		quizAttempt = (QuizAttempt) bundle.getSerializable(QuizAttempt.TAG);
 		course = DbHelper.getInstance(this).getCourse(quizAttempt.getCourseId(), quizAttempt.getUserId());
 
-		boolean showAttemptQuizButton = bundle.getBoolean(SHOW_ATTEMPT_BUTTON, false);
+		boolean showAttemptQuizButton = bundle.getBoolean(CourseQuizAttemptsActivity.SHOW_ATTEMPT_BUTTON, false);
 		if (showAttemptQuizButton){
 			binding.retakeQuizBtn.setVisibility(View.VISIBLE);
 			binding.retakeQuizBtn.setOnClickListener(view -> retakeQuiz());
@@ -138,7 +142,14 @@ public class QuizAttemptActivity extends AppActivity {
 
 		QuizAnswersFeedbackAdapter adapterQuizFeedback = new QuizAnswersFeedbackAdapter(this, quizAnswerFeedback);
 		binding.recyclerQuizResultsFeedback.setAdapter(adapterQuizFeedback);
-	    
+
+		if (quiz.limitAttempts()){
+			//Check if the user has attempted the quiz the max allowed
+			QuizStats qs = attemptsRepository.getQuizAttemptStats(this, quizAttempt.getActivityDigest());
+			if (qs.getNumAttempts() >= quiz.getMaxAttempts()){
+				binding.retakeQuizBtn.setVisibility(View.GONE);
+			}
+		}
 	}
 
 	private void updateQuizResponse(QuizQuestion q, JSONObject data){
@@ -150,7 +161,8 @@ public class QuizAttemptActivity extends AppActivity {
 					String r = response.getString(Quiz.JSON_PROPERTY_TEXT);
 					List<String> userResponses = new ArrayList<>();
 					if (r.contains(Quiz.RESPONSE_SEPARATOR)){
-						userResponses = Arrays.asList(r.split(Quiz.RESPONSE_SEPARATOR));
+						String[] resps = r.split(Quiz.RESPONSE_REGEX);
+						userResponses = Arrays.asList(resps);
 					}
 					else{
 						userResponses.add(r);

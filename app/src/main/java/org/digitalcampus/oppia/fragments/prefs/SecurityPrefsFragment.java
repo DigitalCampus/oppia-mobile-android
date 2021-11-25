@@ -5,10 +5,7 @@ import android.text.InputType;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.application.App;
-
-import java.util.Arrays;
+import org.digitalcampus.oppia.utils.custom_prefs.AdminCheckBoxPreference;
 
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
@@ -35,9 +32,7 @@ public class SecurityPrefsFragment extends BasePreferenceFragment implements Pre
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
 
-        this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_ADMIN_PASSWORD);
-
-        protectAdminPreferences();
+        configureAdminPreferences();
 
         EditTextPreference adminPassPref = findPreference(PrefsActivity.PREF_ADMIN_PASSWORD);
         adminPassPref.setOnBindEditTextListener(editText -> {
@@ -45,20 +40,9 @@ public class SecurityPrefsFragment extends BasePreferenceFragment implements Pre
         });
     }
 
-    private void protectAdminPreferences() {
-        final CheckBoxPreference adminEnabled = findPreference(PrefsActivity.PREF_ADMIN_PROTECTION);
-        adminEnabled.setOnPreferenceChangeListener((preference, newValue) -> {
-            final Boolean enableProtection = (Boolean) newValue;
-            if (Boolean.TRUE.equals(enableProtection)) {
-                //If we are going to re-enable the preference, there is no need to prompt for the previous password
-                return true;
-            }
-            AdminSecurityManager.with(getActivity()).promptAdminPassword(() -> {
-                adminEnabled.setChecked(enableProtection);
-                preference.getSharedPreferences().edit().putBoolean(preference.getKey(), enableProtection).apply();
-            });
-            return false;
-        });
+    private void configureAdminPreferences() {
+        final AdminCheckBoxPreference adminEnabled = findPreference(PrefsActivity.PREF_ADMIN_PROTECTION);
+        adminEnabled.setPromptAdminDialogMode(AdminCheckBoxPreference.PromptAdminDialogMode.ON_UNCHECK);
 
     }
 

@@ -7,6 +7,7 @@
 
     <string name="menu_download">Download Courses</string>
     <string name="menu_language">Change language</string>
+    <string name="menu_change_text_size">Change text size</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_privacy">Privacy and Your Data</string>
     <string name="menu_about">About and Help</string>

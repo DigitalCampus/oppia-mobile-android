@@ -31,6 +31,7 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.mobile.learning.databinding.FragmentScorecardBinding;
+import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
 import org.digitalcampus.oppia.adapter.CourseQuizzesAdapter;
@@ -52,10 +53,12 @@ import androidx.recyclerview.widget.RecyclerView;
 public class CourseScorecardFragment extends AppFragment implements ParseCourseXMLTask.OnParseXmlListener {
 
 	private Course course = null;
+	private CompleteCourse parsedCourse = null;
     private ArrayList<QuizStats> quizStats = new ArrayList<>();
     private CourseQuizzesAdapter quizzesAdapter;
     private ParseCourseXMLTask xmlTask;
     private FragmentScorecardBinding binding;
+    private String prefLang;
 
     public static CourseScorecardFragment newInstance(Course course) {
 		CourseScorecardFragment myFragment = new CourseScorecardFragment();
@@ -104,10 +107,19 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         binding.scorecardGridQuizzes.setAdapter(quizzesAdapter);
         binding.scorecardGridQuizzes.setNestedScrollingEnabled(false);
         quizzesAdapter.setOnItemClickListener((v, position)->{
-            QuizStats quiz = quizzesAdapter.getItemAtPosition(position);
+            QuizStats quizStats = quizzesAdapter.getItemAtPosition(position);
             Intent i = new Intent(getActivity(), CourseQuizAttemptsActivity.class);
             Bundle tb = new Bundle();
-            tb.putSerializable(QuizStats.TAG, quiz);
+
+            // We load the quiz to parse it and extract if it has limited attempts
+            Activity act = parsedCourse.getActivityByDigest(quizStats.getDigest());
+            Quiz quiz = new Quiz();
+            boolean loadSuccess = quiz.load(act.getContents(prefLang), prefLang);
+            if (loadSuccess && quiz.limitAttempts() && quiz.getMaxAttempts() <= quizStats.getNumAttempts()){
+                tb.putBoolean(CourseQuizAttemptsActivity.SHOW_ATTEMPT_BUTTON, false);
+            }
+
+            tb.putSerializable(QuizStats.TAG, quizStats);
             i.putExtras(tb);
             startActivityForResult(i, 1);
         });
@@ -115,7 +127,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
 
     @Override
     public void onParseComplete(CompleteCourse parsedCourse) {
-
+        this.parsedCourse = parsedCourse;
         ArrayList<Activity> baseline = (ArrayList<Activity>) parsedCourse.getBaselineActivities();
         
     	DbHelper db = DbHelper.getInstance(super.getActivity());
@@ -123,7 +135,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         ArrayList<Activity> quizActs = (ArrayList<Activity>) db.getCourseQuizzes(course.getCourseId());
         ArrayList<QuizStats> quizzes = new ArrayList<>();
 
-        String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 
         for (Activity a: quizActs){
         	// get the max score for the quiz for the user

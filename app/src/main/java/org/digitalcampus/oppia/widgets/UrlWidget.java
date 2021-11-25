@@ -44,8 +44,9 @@ import java.util.HashMap;
 
 public class UrlWidget extends BaseWidget {
 
-	public static final String TAG = UrlWidget.class.getSimpleName();	
-	
+	public static final String TAG = UrlWidget.class.getSimpleName();
+	private WebView webview;
+
 	public static UrlWidget newInstance(Activity activity, Course course, boolean isBaseline) {
 		UrlWidget myFragment = new UrlWidget();
 
@@ -90,12 +91,12 @@ public class UrlWidget extends BaseWidget {
 			descTV.setVisibility(View.GONE);
 		}
 		
-		WebView wv = getView().findViewById(R.id.widget_url_webview);
+		webview = getView().findViewById(R.id.widget_url_webview);
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
-		wv.getSettings().setDefaultFontSize(defaultFontSize);
-		wv.getSettings().setJavaScriptEnabled(true);
-		wv.getSettings().setAllowFileAccess(true);
-		wv.setWebViewClient(new WebViewClient() {
+		webview.getSettings().setDefaultFontSize(defaultFontSize);
+		webview.getSettings().setJavaScriptEnabled(true);
+		webview.getSettings().setAllowFileAccess(true);
+		webview.setWebViewClient(new WebViewClient() {
 			/**      
 			 * @deprecated (replace as soon as possible)
 			 */
@@ -106,10 +107,14 @@ public class UrlWidget extends BaseWidget {
 	            return false;
 	        }
 	    });
-		wv.loadUrl(activity.getLocation(prefLang));
+		webview.loadUrl(activity.getLocation(prefLang));
 
 	}
-	
+
+	@Override
+	protected void onTextSizeChanged(int fontSize) {
+		webview.getSettings().setDefaultFontSize(fontSize);
+	}
 	
 	@Override
 	public boolean getActivityCompleted() {

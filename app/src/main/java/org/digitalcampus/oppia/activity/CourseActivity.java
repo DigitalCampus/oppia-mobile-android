@@ -212,32 +212,42 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         // Handle item selection
         Bundle tb = new Bundle();
         Intent i;
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_language) {
-            createLanguageDialog();
-            return true;
-        } else if (itemId == R.id.menu_help) {
-            i = new Intent(this, AboutActivity.class);
-            tb.putSerializable(AboutActivity.TAB_ACTIVE, AboutActivity.TAB_HELP);
-            i.putExtras(tb);
-            startActivity(i);
-            return true;
-        } else if (itemId == android.R.id.home) {
-            this.finish();
-            return true;
-        } else if (itemId == R.id.menu_scorecard) {
-            i = new Intent(this, ScorecardActivity.class);
-            tb.putSerializable(Course.TAG, course);
-            i.putExtras(tb);
-            startActivity(i);
-            return true;
-        } else if (itemId == R.id.menu_tts) {
-            manageTTS();
-            supportInvalidateOptionsMenu();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()) {
+
+            case R.id.menu_language:
+                createLanguageDialog();
+                return true;
+
+            case R.id.menu_text_size:
+                UIUtils.showChangeTextSizeDialog(this,
+                        () -> sendBroadcast(new Intent(BaseWidget.ACTION_TEXT_SIZE_CHANGED)));
+                return true;
+
+            case R.id.menu_help:
+                i = new Intent(this, AboutActivity.class);
+                tb.putSerializable(AboutActivity.TAB_ACTIVE, AboutActivity.TAB_HELP);
+                i.putExtras(tb);
+                startActivity(i);
+                return true;
+
+            case R.id.menu_scorecard:
+                i = new Intent(this, ScorecardActivity.class);
+                tb.putSerializable(Course.TAG, course);
+                i.putExtras(tb);
+                startActivity(i);
+                return true;
+
+            case R.id.menu_tts:
+                manageTTS();
+                supportInvalidateOptionsMenu();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
         }
+
     }
 
     private void manageTTS() {
@@ -400,6 +410,14 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         currentWidget.resetTimeTracking();
     }
 
+    public void onQuizFinished() {
+        int currentActivityPosition = binding.activityWidgetPager.getCurrentItem();
+        if (currentActivityPosition < activities.size() - 1) {
+            binding.activityWidgetPager.setCurrentItem(currentActivityPosition + 1, true);
+        } else {
+            finish();
+        }
+    }
 
     private boolean canNavigateTo(int newTab) {
         //If the course does not have a sequencing mode, we can navigate freely

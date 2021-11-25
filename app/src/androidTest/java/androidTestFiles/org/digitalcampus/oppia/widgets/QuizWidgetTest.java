@@ -108,7 +108,7 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
         onView(withId(R.id.quiz_results_button))
                 .check(matches(isDisplayed()));
         onView(withId(R.id.quiz_results_button))
-                .check(matches(withText(R.string.quiz_attempts_retake_quiz)));
+                .check(matches(withText(R.string.widget_quiz_results_restart)));
     }
 
     @Test
