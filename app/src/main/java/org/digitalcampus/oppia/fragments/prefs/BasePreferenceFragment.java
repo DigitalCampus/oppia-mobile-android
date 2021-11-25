@@ -1,68 +1,50 @@
 package org.digitalcampus.oppia.fragments.prefs;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceGroup;
+import androidx.preference.PreferenceScreen;
 
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.utils.custom_prefs.AdminEditTextPreference;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.digitalcampus.oppia.utils.custom_prefs.AdminPreference;
 
 public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
-    protected List<String> adminProtectedValues = new ArrayList<>();
-    protected SharedPreferences parentPrefs;
-
-    public void setPrefs(SharedPreferences prefs) {
-        this.parentPrefs = prefs;
-    }
-
+    private AdminSecurityManager adminSecurityManager;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        protectAdminEditTextPreferences();
+        adminSecurityManager = AdminSecurityManager.with(getActivity());
+
+        protectAdminPreferences(getPreferenceScreen());
 
     }
 
-    void protectAdminEditTextPreferences() {
-        for (String prefKey : adminProtectedValues) {
-
-            final EditTextPreference editTextPreference = findPreference(prefKey);
-            if (editTextPreference == null) {
-                continue;
+    private void protectAdminPreferences(PreferenceGroup preferenceGroup) {
+        for (int i = 0; i < preferenceGroup.getPreferenceCount(); i++) {
+            Preference preference = preferenceGroup.getPreference(i);
+            if (preference instanceof PreferenceCategory || preference instanceof PreferenceScreen) {
+                protectAdminPreferences((PreferenceGroup) preference);
             }
 
-            if (editTextPreference instanceof AdminEditTextPreference) {
-                editTextPreference.setOnPreferenceClickListener(preference -> {
-
-                    if (parentPrefs == null) {
-                        parentPrefs = App.getPrefs(getActivity());
-                    }
-
-                    if (parentPrefs.getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false)) {
-                        AdminSecurityManager.with((Activity) getContext()).promptAdminPassword(() -> {
-                            getPreferenceManager().showDialog(editTextPreference);
-                        });
-                        return true;
-                    }
-
-                    return false;
+            if (preference instanceof AdminPreference && adminSecurityManager.isPreferenceProtected(preference.getKey())) {
+                preference.setOnPreferenceClickListener(adminPref -> {
+                    adminSecurityManager.promptAdminPassword(() -> ((AdminPreference) preference).onAccessGranted());
+                    return true;
                 });
+
             }
         }
     }
+
 
     protected boolean onPreferenceChangedDelegate(Preference preference, Object newValue) {
         return true;

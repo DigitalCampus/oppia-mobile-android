@@ -37,7 +37,7 @@
         android:key="prefDeleteCourseEnabled"
         android:title="@string/prefDeleteCourseEnabled" />
 
-    <CheckBoxPreference
+    <org.digitalcampus.oppia.utils.custom_prefs.AdminCheckBoxPreference
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
         app:iconSpaceReserved="false"

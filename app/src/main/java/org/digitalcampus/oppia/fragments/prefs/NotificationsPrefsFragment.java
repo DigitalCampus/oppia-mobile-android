@@ -25,6 +25,7 @@ import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.ReminderLogHelper;
+import org.digitalcampus.oppia.utils.custom_prefs.AdminCheckBoxPreference;
 import org.digitalcampus.oppia.utils.custom_prefs.TimePreference;
 import org.digitalcampus.oppia.utils.custom_prefs.TimePreferenceDialogFragmentCompat;
 
@@ -67,8 +68,8 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
         super.onCreate(savedInstance);
         initializeDagger();
 
+        configureAdminPreferences();
         configurePreferencesSummary();
-
         configureRemindersLog();
 
         liveUpdateSummary(PrefsActivity.PREF_GAMIFICATION_POINTS_ANIMATION);
@@ -90,6 +91,15 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
 
     private SharedPreferences getPrefs() {
         return prefs;
+    }
+
+    private void configureAdminPreferences() {
+        final AdminCheckBoxPreference disableNotifs = findPreference(PrefsActivity.PREF_DISABLE_NOTIFICATIONS);
+        disableNotifs.setPromptAdminDialogMode(AdminCheckBoxPreference.PromptAdminDialogMode.ON_CHECK);
+
+        final AdminCheckBoxPreference reminderNotifs = findPreference(PrefsActivity.PREF_COURSES_REMINDER_ENABLED);
+        reminderNotifs.setPromptAdminDialogMode(AdminCheckBoxPreference.PromptAdminDialogMode.ON_UNCHECK);
+
     }
 
     private void configureRemindersLog() {

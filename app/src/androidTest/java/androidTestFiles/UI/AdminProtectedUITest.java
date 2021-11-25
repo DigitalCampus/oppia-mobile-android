@@ -22,6 +22,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.User;
 import org.hamcrest.Matchers;
+import org.hamcrest.core.AllOf;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -38,6 +39,7 @@ import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.TestUtils;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.clearText;
@@ -49,10 +51,18 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
+import static androidx.test.espresso.matcher.PreferenceMatchers.withKey;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
+import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
+import static androidx.test.espresso.matcher.ViewMatchers.withChild;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
+import static androidx.test.espresso.matcher.ViewMatchers.withTagKey;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -61,6 +71,8 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+
+import junit.framework.AssertionFailedError;
 
 @RunWith(Parameterized.class)
 public class AdminProtectedUITest extends DaggerInjectMockUITest {
@@ -130,6 +142,7 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
                 setPrefAdminProtectionValue(true);
                 break;
         }
+
     }
 
     /**
@@ -429,6 +442,157 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
         onView(withId(R.id.btn_download_courses))
                 .perform(click());
+
+        switch (adminProtectionOption) {
+
+            case PROTECTION_OPTION_ADMIN_AND_ACTION:
+                checkAdminPasswordDialogIsDisplayed();
+                break;
+            case PROTECTION_OPTION_ONLY_ACTION:
+                checkAdminPasswordDialogIsNOTDisplayed();
+                break;
+            case PROTECTION_OPTION_ONLY_ADMIN:
+                checkAdminPasswordDialogIsNOTDisplayed();
+                break;
+        }
+    }
+
+
+    private void setCheckBoxPreferenceInitialValue(String key, boolean value) {
+        PreferenceManager.getDefaultSharedPreferences(
+                InstrumentationRegistry.getInstrumentation().getTargetContext())
+                .edit().putBoolean(key, value).commit();
+    }
+
+    @Test
+    public void checkAdminProtectionOnDisableNotifications() throws Exception {
+
+        prefsActivityTestRule.launchActivity(null);
+
+        setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_DISABLE_NOTIFICATIONS, false);
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
+                        click()));
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefDisableNotifications)),
+                        click()));
+
+        checkStandardAdminPrompt();
+    }
+
+    @Test
+    public void checkAdminProtectionOnEnableNotifications() throws Exception {
+
+        prefsActivityTestRule.launchActivity(null);
+
+        setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_DISABLE_NOTIFICATIONS, true);
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
+                        click()));
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefDisableNotifications)),
+                        click()));
+
+        switch (adminProtectionOption) {
+
+            case PROTECTION_OPTION_ADMIN_AND_ACTION:
+                checkAdminPasswordDialogIsNOTDisplayed();
+                break;
+            case PROTECTION_OPTION_ONLY_ACTION:
+                checkAdminPasswordDialogIsNOTDisplayed();
+                break;
+            case PROTECTION_OPTION_ONLY_ADMIN:
+                checkAdminPasswordDialogIsNOTDisplayed();
+                break;
+        }
+    }
+
+
+    @Test
+    public void checkAdminProtectionOnDisableReminderNotifications() throws Exception {
+
+        prefsActivityTestRule.launchActivity(null);
+
+        setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_COURSES_REMINDER_ENABLED, true);
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
+                        click()));
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefCoursesReminderEnabled)),
+                        click()));
+
+        checkStandardAdminPrompt();
+    }
+
+    @Test
+    public void checkAdminProtectionOnEnableReminderNotifications() throws Exception {
+
+        prefsActivityTestRule.launchActivity(null);
+
+        setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_COURSES_REMINDER_ENABLED, false);
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
+                        click()));
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefCoursesReminderEnabled)),
+                        click()));
+
+        switch (adminProtectionOption) {
+
+            case PROTECTION_OPTION_ADMIN_AND_ACTION:
+                checkAdminPasswordDialogIsNOTDisplayed();
+                break;
+            case PROTECTION_OPTION_ONLY_ACTION:
+                checkAdminPasswordDialogIsNOTDisplayed();
+                break;
+            case PROTECTION_OPTION_ONLY_ADMIN:
+                checkAdminPasswordDialogIsNOTDisplayed();
+                break;
+        }
+    }
+
+
+
+    @Test
+    public void checkAdminProtectionReminderInterval() throws Exception {
+        checkAdminProtectionReminderItem(R.string.prefCoursesReminderIntervalTitle);
+    }
+
+    @Test
+    public void checkAdminProtectionReminderDays() throws Exception {
+        checkAdminProtectionReminderItem(R.string.prefCoursesReminderDaysTitle);
+    }
+
+    @Test
+    public void checkAdminProtectionReminderTime() throws Exception {
+        checkAdminProtectionReminderItem(R.string.prefCoursesReminderTimeTitle);
+    }
+
+    public void checkAdminProtectionReminderItem(int titleStringId) throws Exception {
+
+        prefsActivityTestRule.launchActivity(null);
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
+                        click()));
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(titleStringId)),
+                        click()));
+
+        checkStandardAdminPrompt();
+
+    }
+
+    private void checkStandardAdminPrompt() {
 
         switch (adminProtectionOption) {
 

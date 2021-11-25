@@ -47,13 +47,15 @@
         android:key="prefStartCourseIndexCollapsed"
         android:title="@string/prefStartCourseIndexCollapsed" />
 
+
+    <!-- NOTIFICATIONS -->
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="prefDisableNotifications"
         android:title="@string/prefDisableNotifications" />
 
     <CheckBoxPreference
-        android:defaultValue="true"
+        android:defaultValue="@string/prefShowGamificationEventsDefault"
         android:key="prefShowGamificationEvents"
         android:title="@string/prefShowGamificationEvents" />
 
@@ -71,6 +73,25 @@
         android:title="@string/prefDurationAnimationTypeGamificationPointsView"
         android:defaultValue="@string/prefDurationGamificationPointsViewDefault"
         android:inputType="number" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="prefCoursesReminderEnabled" />
+
+    <org.digitalcampus.oppia.utils.custom_prefs.AdminListPreference
+        android:key="prefCoursesReminderInterval"
+        android:defaultValue="@string/prefCoursesReminderIntervalDefault"/>
+
+    <org.digitalcampus.oppia.utils.custom_prefs.AdminMultiSelectListPreference
+        android:key="prefCoursesReminderDays"
+        android:defaultValue="@array/days_of_week_values_default" />
+
+    <org.digitalcampus.oppia.utils.custom_prefs.AdminTimePreference
+        android:key="prefCoursesReminderTime"
+        android:defaultValue="@string/prefCoursesReminderTimeDefault"/>
+
+
+    <!-- SECURITY -->
 
     <CheckBoxPreference
         android:defaultValue="false"

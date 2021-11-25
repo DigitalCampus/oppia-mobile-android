@@ -29,6 +29,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityCourseIndexBinding;
 import org.digitalcampus.oppia.adapter.CourseIndexRecyclerViewAdapter;
@@ -49,12 +55,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.work.Constraints;
-import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener, ParseCourseXMLTask.OnParseXmlListener {
 
@@ -221,6 +221,10 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         switch (item.getItemId()) {
             case R.id.menu_language:
                 createLanguageDialog();
+                return true;
+
+            case R.id.menu_text_size:
+                UIUtils.showChangeTextSizeDialog(this, null);
                 return true;
 
             case R.id.menu_help:

@@ -72,6 +72,8 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Void, Integer, Ent
         EntityListResult<String> result = new EntityListResult<>();
 
         boolean submitAttempted = false;
+        long startTime = System.currentTimeMillis();
+        Log.d(TAG, "Sending trackers...");
 
         try {
             DbHelper db = DbHelper.getInstance(ctx);
@@ -120,6 +122,9 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Void, Integer, Ent
         Editor editor = prefs.edit();
         long now = System.currentTimeMillis()/1000;
         editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
+
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        Log.d(TAG, "Trackers time: " + estimatedTime + "ms");
 
         if (!submitAttempted){
             result.setResultMessage("Trackers from offline registered users could not be sent");

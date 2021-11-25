@@ -67,9 +67,9 @@ public class MultiSelect extends QuizQuestion implements Serializable {
         for (Response r : responseOptions){
             for (String ur : userResponses) {
                 Log.d(TAG, "user selected: " + ur);
-                String cleanResponse = UIUtils.getFromHtmlAndTrim(r.getTitle(lang)).toString();
-                Log.d(TAG, "checking against response: " + cleanResponse);
-                if (ur.equals(cleanResponse)) {
+                String response = r.getTitle(lang);
+                Log.d(TAG, "checking against response: " + response);
+                if (ur.equals(response)) {
                     Log.d(TAG, "setting feedback for: " + r.getTitle(lang));
                     total += r.getScore();
                     if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){

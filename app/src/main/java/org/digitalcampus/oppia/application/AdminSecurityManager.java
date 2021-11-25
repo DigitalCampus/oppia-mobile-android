@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.application;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -89,20 +90,51 @@ public class AdminSecurityManager {
             case R.id.menu_settings: return App.ADMIN_PROTECT_SETTINGS;
             case R.id.menu_sync: return App.ADMIN_PROTECT_ACTIVITY_SYNC;
             case R.id.action_export_activity: return App.ADMIN_PROTECT_ACTIVITY_EXPORT;
-            case R.id.action_url_server: return App.ADMIN_PROTECT_SERVER;
-            case R.id.action_advanced_settings: return App.ADMIN_PROTECT_ADVANCED_SETTINGS;
-            case R.id.action_security_settings: return App.ADMIN_PROTECT_SECURITY_SETTINGS;
+
+            default: return false;
+        }
+    }
+
+    public boolean isPreferenceProtected(String preferenceKey) {
+
+        if (TextUtils.equals(preferenceKey, PrefsActivity.PREF_ADMIN_PROTECTION)) {
+            return true;
+        }
+
+        if (!isAdminProtectionEnabled()) return false;
+
+        // Only for automated testing. Only way I could "mock" BuildConfig fields
+        if(testForzeActionProtected()) {
+            return getTestActionProtectedValue();
+        }
+
+        switch (preferenceKey){
+
+            case PrefsActivity.PREF_ADMIN_PASSWORD: return true;
+
+            case PrefsActivity.PREF_SERVER: return App.ADMIN_PROTECT_SERVER;
+            case PrefsActivity.PREF_ADVANCED_SCREEN: return App.ADMIN_PROTECT_ADVANCED_SETTINGS;
+            case PrefsActivity.PREF_SECURITY_SCREEN: return App.ADMIN_PROTECT_SECURITY_SETTINGS;
+
+            case PrefsActivity.PREF_DISABLE_NOTIFICATIONS: return App.ADMIN_PROTECT_NOTIFICATIONS;
+            case PrefsActivity.PREF_COURSES_REMINDER_ENABLED: return App.ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS;
+            case PrefsActivity.PREF_COURSES_REMINDER_INTERVAL: return App.ADMIN_PROTECT_REMINDER_INTERVAL;
+            case PrefsActivity.PREF_COURSES_REMINDER_DAYS: return App.ADMIN_PROTECT_REMINDER_DAYS;
+            case PrefsActivity.PREF_COURSES_REMINDER_TIME: return App.ADMIN_PROTECT_REMINDER_TIME;
+
             default: return false;
         }
     }
 
 
-    public boolean testForzeActionProtected(){
-        return prefs.getString(PrefsActivity.PREF_TEST_ACTION_PROTECTED, null) != null;
+    public boolean testForzeActionProtected() {
+        String actionProtected = prefs.getString(PrefsActivity.PREF_TEST_ACTION_PROTECTED, null);
+        return  actionProtected != null && Boolean.parseBoolean(actionProtected);
     }
 
     private boolean getTestActionProtectedValue() {
-        return Boolean.parseBoolean(prefs.getString(PrefsActivity.PREF_TEST_ACTION_PROTECTED, null));
+        boolean actionProtected = Boolean.parseBoolean(prefs.getString(PrefsActivity.PREF_TEST_ACTION_PROTECTED, null));
+        return actionProtected;
     }
 
     public boolean checkAdminPassword(String pass) {

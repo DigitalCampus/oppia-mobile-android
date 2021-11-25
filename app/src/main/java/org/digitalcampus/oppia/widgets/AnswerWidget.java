@@ -78,7 +78,7 @@ import androidx.fragment.app.FragmentActivity;
 
 public abstract class AnswerWidget extends BaseWidget {
 
-    public static final String TAG = QuizWidget.class.getSimpleName();
+    public static final String TAG = AnswerWidget.class.getSimpleName();
     static final int QUIZ_AVAILABLE = -1;
     private static final int PROGRESS_ANIM_DURATION = 600;
     protected Quiz quiz;
@@ -102,7 +102,7 @@ public abstract class AnswerWidget extends BaseWidget {
         // Required empty public constructor
     }
 
-    abstract int getContentAvailability();
+    abstract int getContentAvailability(boolean afterAttempt);
     abstract void showContentUnavailableRationale(int unavailabilityReasonStringResId);
     abstract String getFinishButtonLabel();
     abstract void showBaselineResultMessage();
@@ -178,7 +178,7 @@ public abstract class AnswerWidget extends BaseWidget {
             return;
         }
 
-        int contentAvailability = getContentAvailability();
+        int contentAvailability = getContentAvailability(false);
         if (contentAvailability != QUIZ_AVAILABLE){
             showContentUnavailableRationale(contentAvailability);
             return;
@@ -346,9 +346,7 @@ public abstract class AnswerWidget extends BaseWidget {
                     if (!feedback.equals("") &&
                             quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS
                             && !quiz.getCurrentQuestion().getFeedbackDisplayed()) {
-                        //We hide the keyboard before showing the dialog
-                        InputMethodManager imm =  (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        UIUtils.hideSoftKeyboard(v);
                         showFeedback(feedback);
                     } else {
                         nextStep();
@@ -367,12 +365,7 @@ public abstract class AnswerWidget extends BaseWidget {
     }
 
     private View.OnClickListener getCloseBtnListener(){
-        return v -> {
-            FragmentActivity act = getActivity();
-            if (act != null){
-                getActivity().finish();
-            }
-        };
+        return v -> ((CourseActivity)getActivity()).onQuizFinished();
     }
 
     private void nextStep(){
@@ -473,8 +466,8 @@ public abstract class AnswerWidget extends BaseWidget {
             showAnswersFeedback();
         }
 
-        int quizAvailabilityMessage = getContentAvailability();
-        boolean contentAvailable = getContentAvailability() == QUIZ_AVAILABLE;
+        int quizAvailabilityMessage = getContentAvailability(true);
+        boolean contentAvailable = quizAvailabilityMessage == QUIZ_AVAILABLE;
         if (!contentAvailable){
             TextView availabilityMsg = getView().findViewById(R.id.quiz_availability_message);
             availabilityMsg.setText(quizAvailabilityMessage);

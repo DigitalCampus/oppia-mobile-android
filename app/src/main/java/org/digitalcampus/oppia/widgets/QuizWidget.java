@@ -65,9 +65,9 @@ public class QuizWidget extends AnswerWidget {
     }
 
     @Override
-    int getContentAvailability() {
+    int getContentAvailability(boolean afterAttempt) {
 
-        if (isUserOverLimitedAttempts()){
+        if (isUserOverLimitedAttempts(afterAttempt)){
             return R.string.widget_quiz_unavailable_attempts;
         }
         // determine availability
@@ -96,10 +96,14 @@ public class QuizWidget extends AnswerWidget {
         return QUIZ_AVAILABLE;
     }
 
-    private boolean isUserOverLimitedAttempts(){
+    private boolean isUserOverLimitedAttempts(boolean afterAttempt){
         if (this.quiz.limitAttempts()){
             //Check if the user has attempted the quiz the max allowed
             QuizStats qs = attemptsRepository.getQuizAttemptStats(this.getActivity(), activity.getDigest());
+            if (afterAttempt){
+                //If the quiz was just attempted, it is not saved yet, so we added
+                qs.setNumAttempts(qs.getNumAttempts() + 1);
+            }
             return qs.getNumAttempts() >= quiz.getMaxAttempts();
         }
         return false;
@@ -162,7 +166,7 @@ public class QuizWidget extends AnswerWidget {
         threshold.setText(getString(R.string.widget_quiz_pass_threshold, quiz.getPassThreshold()));
 
         if (quiz.limitAttempts()){
-            int attemptsLeft = quiz.getMaxAttempts() - stats.getNumAttempts();
+            int attemptsLeft = Math.max(quiz.getMaxAttempts() - stats.getNumAttempts(), 0);
             infoAttempts.setText(getString(R.string.quiz_attempts_left, quiz.getMaxAttempts(), attemptsLeft));
         }
         else{

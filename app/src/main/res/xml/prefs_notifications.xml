@@ -7,7 +7,7 @@
         android:title="@string/prefSectionSystemNotifs"
         app:iconSpaceReserved="false">
 
-        <CheckBoxPreference
+        <org.digitalcampus.oppia.utils.custom_prefs.AdminCheckBoxPreference
             android:defaultValue="false"
             android:key="prefDisableNotifications"
             android:title="@string/prefDisableNotifications"
@@ -21,7 +21,7 @@
         app:iconSpaceReserved="false">
 
         <CheckBoxPreference
-            android:defaultValue="true"
+            app:defaultValue="@string/prefShowGamificationEventsDefault"
             android:key="prefShowGamificationEvents"
             android:title="@string/prefShowGamificationEvents"
             app:allowDividerBelow="true"
@@ -54,14 +54,14 @@
         android:title="@string/prefSectionReminder"
         app:iconSpaceReserved="false">
 
-        <CheckBoxPreference
+        <org.digitalcampus.oppia.utils.custom_prefs.AdminCheckBoxPreference
             android:defaultValue="true"
             android:key="prefCoursesReminderEnabled"
             android:title="@string/prefCoursesReminderEnabled"
             app:allowDividerBelow="true"
             app:iconSpaceReserved="false" />
 
-        <ListPreference
+        <org.digitalcampus.oppia.utils.custom_prefs.AdminListPreference
             android:key="prefCoursesReminderInterval"
             android:defaultValue="@string/prefCoursesReminderIntervalDefault"
             android:entries="@array/reminder_intervals"
@@ -73,7 +73,7 @@
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true"/>
 
-        <MultiSelectListPreference
+        <org.digitalcampus.oppia.utils.custom_prefs.AdminMultiSelectListPreference
             android:key="prefCoursesReminderDays"
             android:defaultValue="@array/days_of_week_values_default"
             android:dependency="prefCoursesReminderEnabled"
@@ -85,7 +85,7 @@
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
 
-        <org.digitalcampus.oppia.utils.custom_prefs.TimePreference
+        <org.digitalcampus.oppia.utils.custom_prefs.AdminTimePreference
             android:key="prefCoursesReminderTime"
             android:title="@string/prefCoursesReminderTimeTitle"
             android:dependency="prefCoursesReminderEnabled"
