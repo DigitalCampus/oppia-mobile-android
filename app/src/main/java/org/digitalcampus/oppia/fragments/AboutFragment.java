@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -71,12 +72,7 @@ public class AboutFragment extends AppFragment {
 
 		binding.aboutWebview.loadUrl(url);
 
-		try {
-			String no = super.getActivity().getPackageManager().getPackageInfo(super.getActivity().getPackageName(), 0).versionName;
-			binding.aboutVersionno.setText(getString(R.string.version,no));
-		} catch (NameNotFoundException e) {
-			Analytics.logException(e);
-			Log.d(TAG, "Error getting version name: ", e);
-		}
+		binding.aboutVersionno.setText(getString(R.string.version, BuildConfig.VERSION_NAME));
+
 	}
 }

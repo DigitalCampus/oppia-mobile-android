@@ -1,54 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:key="main_prefs_fragment">
 
     <EditTextPreference
         android:key="prefInfo"
-        android:title="@string/version_name"
         app:icon="@drawable/ic_settings_info"
         android:selectable="false" />
 
-<PreferenceCategory>
-    <Preference
-        app:allowDividerBelow="true"
-        app:fragment="org.digitalcampus.oppia.fragments.prefs.DisplayPrefsFragment"
-        app:title="@string/prefDisplay_title"
-        app:key="prefDisplay"
-        app:icon="@drawable/ic_settings_display"
-        app:summary="@string/prefDisplay_description"
-        />
+    <PreferenceCategory>
+        <Preference
+            app:allowDividerBelow="true"
+            app:fragment="org.digitalcampus.oppia.fragments.prefs.DisplayPrefsFragment"
+            app:icon="@drawable/ic_settings_display"
+            app:key="prefDisplay"
+            app:summary="@string/prefDisplay_description"
+            app:title="@string/prefDisplay_title" />
 
-    <Preference
-        app:allowDividerAbove="true"
-        app:allowDividerBelow="true"
-        app:fragment="org.digitalcampus.oppia.fragments.prefs.NotificationsPrefsFragment"
-        app:title="@string/prefNotifications_title"
-        app:key="prefNotifications"
-        app:icon="@drawable/ic_settings_notif"
-        app:summary="@string/prefNotifications_description"
-    />
+        <Preference
+            app:allowDividerAbove="true"
+            app:allowDividerBelow="true"
+            app:fragment="org.digitalcampus.oppia.fragments.prefs.NotificationsPrefsFragment"
+            app:icon="@drawable/ic_settings_notif"
+            app:key="prefNotifications"
+            app:summary="@string/prefNotifications_description"
+            app:title="@string/prefNotifications_title" />
 
-    <Preference
-        app:allowDividerAbove="true"
-        app:allowDividerBelow="true"
-        app:fragment="org.digitalcampus.oppia.fragments.prefs.SecurityPrefsFragment"
-        app:title="@string/prefSecurity_title"
-        app:key="prefSecurity"
-        android:key="prefSecurity"
-        app:icon="@drawable/ic_settings_security"
-        app:summary="@string/prefSecurity_description"
-        />
+        <org.digitalcampus.oppia.utils.custom_prefs.AdminSimplePreference
+            android:key="prefSecurity"
+            app:allowDividerAbove="true"
+            app:allowDividerBelow="true"
+            app:fragment="org.digitalcampus.oppia.fragments.prefs.SecurityPrefsFragment"
+            app:icon="@drawable/ic_settings_security"
+            app:key="prefSecurity"
+            app:summary="@string/prefSecurity_description"
+            app:title="@string/prefSecurity_title" />
 
-    <Preference
-        app:allowDividerAbove="true"
-        app:allowDividerBelow="true"
-        app:fragment="org.digitalcampus.oppia.fragments.prefs.AdvancedPrefsFragment"
-        app:title="@string/prefAdvanced_title"
-        app:key="prefAdvanced"
-        app:icon="@drawable/ic_settings_advanced"
-        app:summary="@string/prefAdvanced_description"
-        />
-</PreferenceCategory>
+        <org.digitalcampus.oppia.utils.custom_prefs.AdminSimplePreference
+            app:allowDividerAbove="true"
+            app:allowDividerBelow="true"
+            app:fragment="org.digitalcampus.oppia.fragments.prefs.AdvancedPrefsFragment"
+            app:icon="@drawable/ic_settings_advanced"
+            app:key="prefAdvanced"
+            app:summary="@string/prefAdvanced_description"
+            app:title="@string/prefAdvanced_title" />
+    </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

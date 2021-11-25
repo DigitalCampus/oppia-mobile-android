@@ -3,22 +3,14 @@ package org.digitalcampus.oppia.utils.custom_prefs;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import androidx.preference.EditTextPreference;
+import androidx.preference.MultiSelectListPreference;
 
-public class AdminEditTextPreference extends EditTextPreference implements AdminPreference {
+public class AdminTimePreference extends TimePreference implements AdminPreference {
 
     private OnPreferenceClickListener customOnPreferenceClickListener;
 
-    public AdminEditTextPreference(Context context) {
-        super(context);
-    }
-
-    public AdminEditTextPreference(Context context, AttributeSet attrs) {
+    public AdminTimePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    public AdminEditTextPreference(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
     }
 
     @Override
