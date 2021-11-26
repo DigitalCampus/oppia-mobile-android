@@ -44,7 +44,7 @@ public class BuildChecksOppiaLMH {
         assertEquals(false, BuildConfig.ADMIN_PROTECT_COURSE_RESET);
         assertEquals(false, BuildConfig.ADMIN_PROTECT_COURSE_INSTALL);
         assertEquals(false, BuildConfig.ADMIN_PROTECT_COURSE_UPDATE);
-        assertEquals("1234", BuildConfig.ADMIN_PROTECT_INITIAL_PASSWORD);
+//        assertEquals("", BuildConfig.ADMIN_PROTECT_INITIAL_PASSWORD);
         assertEquals(86, BuildConfig.ADMIN_PASSWORD_OVERRIDE_VERSION);
 
 
