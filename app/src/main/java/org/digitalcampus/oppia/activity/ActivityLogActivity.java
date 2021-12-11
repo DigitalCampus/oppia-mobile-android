@@ -175,6 +175,8 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
 
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
         updateActions(true);
+
+        omSubmitTrackerMultipleTask = null;
     }
 
     @Override
