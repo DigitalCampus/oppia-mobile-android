@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 public abstract class MockedApiEndpointTest extends DaggerInjectMockUITest {
 
     public static final String ERROR_MESSAGE_BODY = "responses/response_body_error_message.txt";
-    private static final String EMPTY_JSON = "{}";
+    protected static final String EMPTY_JSON = "{}";
 
     @Mock
     protected ApiEndpoint apiEndpoint;

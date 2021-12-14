@@ -1,0 +1,24 @@
+{
+  "points": 280,
+  "badges": 0,
+  "scoring": true,
+  "badging": true,
+  "metadata": {
+    "NETWORK": false,
+    "DEVICE_ID": false,
+    "SIM_SERIAL": false,
+    "WIFI_ON": true,
+    "NETWORK_CONNECTED": true,
+    "BATTERY_LEVEL": false
+  },
+  "course_points": [
+    {
+      "course__shortname": "ayrh-all",
+      "total_points": 50
+    },
+    {
+      "course__shortname": "anc1-all",
+      "total_points": 130
+    }
+  ]
+}
