@@ -418,6 +418,8 @@ public abstract class AnswerWidget extends BaseWidget {
         try {
             if(quiz.getCurrentQuestion().getScoreAsPercent() >= Quiz.QUIZ_QUESTION_PASS_THRESHOLD){
                 builder.setIcon(R.drawable.quiz_tick);
+            } else if (quiz.getCurrentQuestion().getScoreAsPercent() > 0){
+                builder.setIcon(R.drawable.quiz_partially_correct);
             } else {
                 builder.setIcon(R.drawable.quiz_cross);
             }
