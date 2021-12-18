@@ -2,6 +2,7 @@ package androidTestFiles.UI;
 
 import android.content.SharedPreferences;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.matcher.RootMatchers;
@@ -10,6 +11,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
@@ -37,10 +39,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class GamificationUITest extends DaggerInjectMockUITest {
-
-    @Rule
-    public ActivityTestRule<MainActivity> mainActivityTestRule =
-            new ActivityTestRule<>(MainActivity.class, false, false);
 
     @Mock
     CoursesRepository coursesRepository;
@@ -87,19 +85,18 @@ public class GamificationUITest extends DaggerInjectMockUITest {
         }
 
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
-                .inRoot(RootMatchers.withDecorView(
-                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+            Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        Espresso.onView(ViewMatchers.withId(R.id.recycler_course_sections))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+            Espresso.onView(ViewMatchers.withId(R.id.recycler_course_sections))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        Espresso.onView(ViewMatchers.withId(R.id.recycler_course_sections))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+            Espresso.onView(ViewMatchers.withId(R.id.recycler_course_sections))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
 
+        }
     }
 
 }

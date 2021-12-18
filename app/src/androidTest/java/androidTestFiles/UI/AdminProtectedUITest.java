@@ -1,31 +1,46 @@
 package androidTestFiles.UI;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.action.ViewActions.clearText;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.longClick;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
-import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
-import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.User;
-import org.hamcrest.Matchers;
-import org.hamcrest.core.AllOf;
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -39,41 +54,6 @@ import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.TestUtils;
 
-import static androidx.test.espresso.Espresso.onData;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.pressBack;
-import static androidx.test.espresso.action.ViewActions.clearText;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.longClick;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
-import static androidx.test.espresso.matcher.PreferenceMatchers.withKey;
-import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
-import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
-import static androidx.test.espresso.matcher.ViewMatchers.withChild;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withParent;
-import static androidx.test.espresso.matcher.ViewMatchers.withTagKey;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
-
-import junit.framework.AssertionFailedError;
-
 @RunWith(Parameterized.class)
 public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
@@ -82,13 +62,6 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
     public static final int PROTECTION_OPTION_ONLY_ADMIN = 2;
 
     private final int adminProtectionOption;
-
-
-    @Rule
-    public ActivityTestRule<MainActivity> mainActivityTestRule =
-            new ActivityTestRule<>(MainActivity.class, false, false);
-    @Rule
-    public ActivityTestRule<PrefsActivity> prefsActivityTestRule = new ActivityTestRule<>(PrefsActivity.class, false, false);
 
     @Mock
     CoursesRepository coursesRepository;
@@ -209,23 +182,24 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
     @Test
     public void checkAdminProtectionToEnterSettingsScreen() throws Exception {
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        openDrawer();
+            openDrawer();
 
-        performClickDrawerItem(R.id.menu_settings);
+            performClickDrawerItem(R.id.menu_settings);
 
-        switch (adminProtectionOption) {
+            switch (adminProtectionOption) {
 
-            case PROTECTION_OPTION_ADMIN_AND_ACTION:
-                checkAdminPasswordDialogIsDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ACTION:
-                checkCorrectActivity(PrefsActivity.class);
-                break;
-            case PROTECTION_OPTION_ONLY_ADMIN:
-                checkCorrectActivity(PrefsActivity.class);
-                break;
+                case PROTECTION_OPTION_ADMIN_AND_ACTION:
+                    checkAdminPasswordDialogIsDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ACTION:
+                    checkCorrectActivity(PrefsActivity.class);
+                    break;
+                case PROTECTION_OPTION_ONLY_ADMIN:
+                    checkCorrectActivity(PrefsActivity.class);
+                    break;
+            }
         }
 
     }
@@ -233,142 +207,145 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
     @Test
     public void checkAdminProtectionOnPrefsCheckboxAdminProtectionClick() throws Exception {
 
-        prefsActivityTestRule.launchActivity(null);
+        try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefSecurity_title)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefSecurity_title)),
+                            click()));
 
-        if (adminProtectionOption == PROTECTION_OPTION_ADMIN_AND_ACTION){
-            fillPasswordDialog();
-        }
+            if (adminProtectionOption == PROTECTION_OPTION_ADMIN_AND_ACTION) {
+                fillPasswordDialog();
+            }
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdminProtection)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdminProtection)),
+                            click()));
 
-        switch (adminProtectionOption) {
+            switch (adminProtectionOption) {
 
-            case PROTECTION_OPTION_ADMIN_AND_ACTION:
-                checkAdminPasswordDialogIsDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ACTION:
-                checkAdminPasswordDialogIsNOTDisplayed();
-                pressBack();
-                break;
-            case PROTECTION_OPTION_ONLY_ADMIN:
-                checkAdminPasswordDialogIsDisplayed();
-                break;
+                case PROTECTION_OPTION_ADMIN_AND_ACTION:
+                    checkAdminPasswordDialogIsDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ACTION:
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    pressBack();
+                    break;
+                case PROTECTION_OPTION_ONLY_ADMIN:
+                    checkAdminPasswordDialogIsDisplayed();
+                    break;
+            }
         }
     }
 
     @Test
     public void checkAdminProtectionOnPrefsEditTextChangeAdminPassClick() throws Exception {
 
-        prefsActivityTestRule.launchActivity(null);
+        try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefSecurity_title)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefSecurity_title)),
+                            click()));
 
-        if (adminProtectionOption == PROTECTION_OPTION_ADMIN_AND_ACTION){
-            fillPasswordDialog();
-        }
+            if (adminProtectionOption == PROTECTION_OPTION_ADMIN_AND_ACTION) {
+                fillPasswordDialog();
+            }
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdminPassword)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdminPassword)),
+                            click()));
 
-        switch (adminProtectionOption) {
+            switch (adminProtectionOption) {
 
-            case PROTECTION_OPTION_ADMIN_AND_ACTION:
-                checkAdminPasswordDialogIsDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ACTION:
-                onView(withId(android.R.id.edit)).check(doesNotExist());
-                break;
-            case PROTECTION_OPTION_ONLY_ADMIN:
-                checkAdminPasswordDialogIsDisplayed();
-                break;
+                case PROTECTION_OPTION_ADMIN_AND_ACTION:
+                    checkAdminPasswordDialogIsDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ACTION:
+                    onView(withId(android.R.id.edit)).check(doesNotExist());
+                    break;
+                case PROTECTION_OPTION_ONLY_ADMIN:
+                    checkAdminPasswordDialogIsDisplayed();
+                    break;
+            }
         }
     }
 
     @Test
     public void checkAdminProtectionOnPrefsEditTextChangeServerEndpointClick() throws Exception {
 
-        prefsActivityTestRule.launchActivity(null);
+        try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdvanced_title)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdvanced_title)),
+                            click()));
 
-        if (adminProtectionOption == PROTECTION_OPTION_ADMIN_AND_ACTION) {
-            checkAdminPasswordDialogIsDisplayed();
-            // Advances settings admin pass
-            return;
+            if (adminProtectionOption == PROTECTION_OPTION_ADMIN_AND_ACTION) {
+                checkAdminPasswordDialogIsDisplayed();
+                // Advances settings admin pass
+                return;
+            }
+
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefServer)),
+                            click()));
+
+            switch (adminProtectionOption) {
+
+                case PROTECTION_OPTION_ONLY_ACTION:
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ADMIN:
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+            }
         }
-
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefServer)),
-                        click()));
-
-        switch (adminProtectionOption) {
-
-            case PROTECTION_OPTION_ONLY_ACTION:
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ADMIN:
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
-        }
-
     }
 
 
     @Test
     public void checkAdminProtectionOnAdvancedSettingsClick() throws Exception {
 
-        prefsActivityTestRule.launchActivity(null);
+        try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdvanced_title)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdvanced_title)),
+                            click()));
 
-        switch (adminProtectionOption) {
+            switch (adminProtectionOption) {
 
-            case PROTECTION_OPTION_ADMIN_AND_ACTION:
-                checkAdminPasswordDialogIsDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ACTION:
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ADMIN:
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
+                case PROTECTION_OPTION_ADMIN_AND_ACTION:
+                    checkAdminPasswordDialogIsDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ACTION:
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ADMIN:
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+            }
         }
-
     }
 
     @Test
     public void checkAdminProtectionOnManageCoursesClick() throws Exception {
         givenThereAreSomeCourses(0);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        onView(withId(R.id.manage_courses_btn))
-                .perform(click());
+            onView(withId(R.id.manage_courses_btn))
+                    .perform(click());
 
-        switch (adminProtectionOption) {
+            switch (adminProtectionOption) {
 
-            case PROTECTION_OPTION_ADMIN_AND_ACTION:
-                checkAdminPasswordDialogIsDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ACTION:
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ADMIN:
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
+                case PROTECTION_OPTION_ADMIN_AND_ACTION:
+                    checkAdminPasswordDialogIsDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ACTION:
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ADMIN:
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+            }
         }
     }
 
@@ -379,51 +356,50 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(3);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
+            switch (adminProtectionOption) {
 
-        switch (adminProtectionOption) {
-
-            case PROTECTION_OPTION_ADMIN_AND_ACTION:
-                clickOptionInCourseContextMenu(R.id.course_context_reset);
-                checkAdminPasswordDialogIsDisplayed();
-                pressBack();
-                clickOptionInCourseContextMenu(R.id.course_context_delete);
-                checkAdminPasswordDialogIsDisplayed();
-                pressBack();
-                clickOptionInCourseContextMenu(R.id.course_context_update_activity);
-                checkAdminPasswordDialogIsDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ACTION:
-                clickOptionInCourseContextMenu(R.id.course_context_reset);
-                checkAdminPasswordDialogIsNOTDisplayed();
-                pressBack();
-                clickOptionInCourseContextMenu(R.id.course_context_delete);
-                checkAdminPasswordDialogIsNOTDisplayed();
+                case PROTECTION_OPTION_ADMIN_AND_ACTION:
+                    clickOptionInCourseContextMenu(R.id.course_context_reset);
+                    checkAdminPasswordDialogIsDisplayed();
+                    pressBack();
+                    clickOptionInCourseContextMenu(R.id.course_context_delete);
+                    checkAdminPasswordDialogIsDisplayed();
+                    pressBack();
+                    clickOptionInCourseContextMenu(R.id.course_context_update_activity);
+                    checkAdminPasswordDialogIsDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ACTION:
+                    clickOptionInCourseContextMenu(R.id.course_context_reset);
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    pressBack();
+                    clickOptionInCourseContextMenu(R.id.course_context_delete);
+                    checkAdminPasswordDialogIsNOTDisplayed();
 //                pressBack();
-                clickOptionInCourseContextMenu(R.id.course_context_update_activity);
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ADMIN:
-                clickOptionInCourseContextMenu(R.id.course_context_reset);
-                checkAdminPasswordDialogIsNOTDisplayed();
-                pressBack();
-                clickOptionInCourseContextMenu(R.id.course_context_delete);
-                checkAdminPasswordDialogIsNOTDisplayed();
+                    clickOptionInCourseContextMenu(R.id.course_context_update_activity);
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ADMIN:
+                    clickOptionInCourseContextMenu(R.id.course_context_reset);
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    pressBack();
+                    clickOptionInCourseContextMenu(R.id.course_context_delete);
+                    checkAdminPasswordDialogIsNOTDisplayed();
 //                pressBack();
-                clickOptionInCourseContextMenu(R.id.course_context_update_activity);
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
+                    clickOptionInCourseContextMenu(R.id.course_context_update_activity);
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+            }
+
         }
-
-
     }
 
     private void clickOptionInCourseContextMenu(int optionId) {
 
         Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
-                .inRoot(RootMatchers.withDecorView(
-                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+//                .inRoot(RootMatchers.withDecorView(
+//                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
         onView(withId(optionId))
@@ -436,24 +412,25 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
     public void checkAdminProtectionOnGlobalScorecardManageCoursesClick() throws Exception {
         givenThereAreSomeCourses(0);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        onView(withId(R.id.nav_bottom_scorecard)).perform(click());
+            onView(withId(R.id.nav_bottom_scorecard)).perform(click());
 
-        onView(withId(R.id.btn_download_courses))
-                .perform(click());
+            onView(withId(R.id.btn_download_courses))
+                    .perform(click());
 
-        switch (adminProtectionOption) {
+            switch (adminProtectionOption) {
 
-            case PROTECTION_OPTION_ADMIN_AND_ACTION:
-                checkAdminPasswordDialogIsDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ACTION:
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ADMIN:
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
+                case PROTECTION_OPTION_ADMIN_AND_ACTION:
+                    checkAdminPasswordDialogIsDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ACTION:
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ADMIN:
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+            }
         }
     }
 
@@ -467,47 +444,49 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
     @Test
     public void checkAdminProtectionOnDisableNotifications() throws Exception {
 
-        prefsActivityTestRule.launchActivity(null);
+        try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-        setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_DISABLE_NOTIFICATIONS, false);
+            setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_DISABLE_NOTIFICATIONS, false);
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
+                            click()));
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefDisableNotifications)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefDisableNotifications)),
+                            click()));
 
-        checkStandardAdminPrompt();
+            checkStandardAdminPrompt();
+        }
     }
 
     @Test
     public void checkAdminProtectionOnEnableNotifications() throws Exception {
 
-        prefsActivityTestRule.launchActivity(null);
+        try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-        setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_DISABLE_NOTIFICATIONS, true);
+            setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_DISABLE_NOTIFICATIONS, true);
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
+                            click()));
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefDisableNotifications)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefDisableNotifications)),
+                            click()));
 
-        switch (adminProtectionOption) {
+            switch (adminProtectionOption) {
 
-            case PROTECTION_OPTION_ADMIN_AND_ACTION:
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ACTION:
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ADMIN:
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
+                case PROTECTION_OPTION_ADMIN_AND_ACTION:
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ACTION:
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ADMIN:
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+            }
         }
     }
 
@@ -515,47 +494,49 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
     @Test
     public void checkAdminProtectionOnDisableReminderNotifications() throws Exception {
 
-        prefsActivityTestRule.launchActivity(null);
+        try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-        setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_COURSES_REMINDER_ENABLED, true);
+            setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_COURSES_REMINDER_ENABLED, true);
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
+                            click()));
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefCoursesReminderEnabled)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefCoursesReminderEnabled)),
+                            click()));
 
-        checkStandardAdminPrompt();
+            checkStandardAdminPrompt();
+        }
     }
 
     @Test
     public void checkAdminProtectionOnEnableReminderNotifications() throws Exception {
 
-        prefsActivityTestRule.launchActivity(null);
+        try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-        setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_COURSES_REMINDER_ENABLED, false);
+            setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_COURSES_REMINDER_ENABLED, false);
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
+                            click()));
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefCoursesReminderEnabled)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefCoursesReminderEnabled)),
+                            click()));
 
-        switch (adminProtectionOption) {
+            switch (adminProtectionOption) {
 
-            case PROTECTION_OPTION_ADMIN_AND_ACTION:
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ACTION:
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
-            case PROTECTION_OPTION_ONLY_ADMIN:
-                checkAdminPasswordDialogIsNOTDisplayed();
-                break;
+                case PROTECTION_OPTION_ADMIN_AND_ACTION:
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ACTION:
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+                case PROTECTION_OPTION_ONLY_ADMIN:
+                    checkAdminPasswordDialogIsNOTDisplayed();
+                    break;
+            }
         }
     }
 
@@ -578,17 +559,18 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
     public void checkAdminProtectionReminderItem(int titleStringId) throws Exception {
 
-        prefsActivityTestRule.launchActivity(null);
+        try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
+                            click()));
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(titleStringId)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(titleStringId)),
+                            click()));
 
-        checkStandardAdminPrompt();
+            checkStandardAdminPrompt();
+        }
 
     }
 

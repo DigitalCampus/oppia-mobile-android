@@ -2,11 +2,13 @@ package androidTestFiles.UI;
 
 import android.widget.Spinner;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.CustomField;
@@ -56,10 +58,6 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
     @Mock
     protected CustomFieldsRepository customFieldsRepo;
 
-    @Rule
-    public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
-            new ActivityTestRule<>(WelcomeActivity.class, false, false);
-
     @Before
     public void setUp() throws Exception {
 
@@ -77,8 +75,9 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
     }
 
     private void openRegisterScreen(){
-        welcomeActivityTestRule.launchActivity(null);
-        onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
+            onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+        }
     }
 
     @Test

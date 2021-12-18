@@ -1,5 +1,6 @@
 package androidTestFiles.UI;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -33,67 +34,66 @@ public class LoginUITest extends MockedApiEndpointTest {
     private static final String VALID_LOGIN_RESPONSE = "responses/response_201_login.json";
     private static final String WRONG_CREDENTIALS_RESPONSE = "responses/response_400_login.json";
 
-    @Rule
-    public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
-            new ActivityTestRule<>(WelcomeActivity.class, false, false);
-
 
     @Test
     public void showsErrorMessageWhenThereIsNoUsername() throws Exception{
-        welcomeActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.welcome_login))
-                .perform(scrollTo(), click());
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onView(withId(R.id.login_btn))
-                .perform(scrollTo(), click());
+            onView(withId(R.id.welcome_login))
+                    .perform(scrollTo(), click());
 
-        onView(withText(R.string.error_no_username))
-                .check(matches(isDisplayed()));
+            onView(withId(R.id.login_btn))
+                    .perform(scrollTo(), click());
+
+            onView(withText(R.string.error_no_username))
+                    .check(matches(isDisplayed()));
+        }
     }
 
     @Test
     public void showsErrorMessageWhenTheUsernameOrPasswordAreWrong() throws Exception{
 
         startServer(400, WRONG_CREDENTIALS_RESPONSE, 0);
-        welcomeActivityTestRule.launchActivity(null);
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onView(withId(R.id.welcome_login))
-                .perform(scrollTo(), click());
+            onView(withId(R.id.welcome_login))
+                    .perform(scrollTo(), click());
 
-        onView(withId(R.id.login_username_field))
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongUsername"));
+            onView(withId(R.id.login_username_field))
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongUsername"));
 
-        onView(withId(R.id.login_password_field))
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongPassword"));
+            onView(withId(R.id.login_password_field))
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongPassword"));
 
-        onView(withId(R.id.login_btn))
-                .perform(scrollTo(), click());
+            onView(withId(R.id.login_btn))
+                    .perform(scrollTo(), click());
 
-        onView(withText(R.string.error_login))
-                .check(matches(isDisplayed()));
+            onView(withText(R.string.error_login))
+                    .check(matches(isDisplayed()));
+        }
     }
 
     @Test
     public void changeActivityWhenTheCredentialsAreCorrect() throws Exception {
 
         startServer(200, VALID_LOGIN_RESPONSE, 0);
-        welcomeActivityTestRule.launchActivity(null);
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onView(withId(R.id.welcome_login))
-               .perform(scrollTo(), click());
+            onView(withId(R.id.welcome_login))
+                    .perform(scrollTo(), click());
 
-        onView(withId(R.id.login_username_field))
-               .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_username"));
+            onView(withId(R.id.login_username_field))
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_username"));
 
-        onView(withId(R.id.login_password_field))
-               .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_password"));
+            onView(withId(R.id.login_password_field))
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_password"));
 
-        onView(withId(R.id.login_btn))
-               .perform(scrollTo(), click());
+            onView(withId(R.id.login_btn))
+                    .perform(scrollTo(), click());
 
-        assertNotEquals(WelcomeActivity.class, TestUtils.getCurrentActivity().getClass());
+            assertNotEquals(WelcomeActivity.class, TestUtils.getCurrentActivity().getClass());
+        }
     }
-
 
 }
