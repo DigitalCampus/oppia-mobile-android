@@ -1,5 +1,6 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -24,8 +25,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 public class WelcomeActivityUITest extends MockedApiEndpointTest {
 
     @Rule
-    public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
-            new ActivityTestRule<>(WelcomeActivity.class);
+    public ActivityScenarioRule<WelcomeActivity> welcomeActivityTestRule =
+            new ActivityScenarioRule<>(WelcomeActivity.class);
 
     @Test
     public void showsLoginFragmentOnLoginButtonClick(){

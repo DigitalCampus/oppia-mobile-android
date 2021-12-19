@@ -1,7 +1,9 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
 import android.content.Context;
+import android.view.View;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -57,9 +59,6 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
     @Mock
     protected CustomFieldsRepository customFieldsRepo;
 
-    @Rule
-    public ActivityTestRule<EditProfileActivity> editProfileActivityTestRule =
-            new ActivityTestRule<>(EditProfileActivity.class, false, false);
     private TestDBHelper testDBHelper;
 
     @Before
@@ -98,38 +97,38 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
     @Test
     public void checkErrorLabelsOnEmptyFields() throws Exception {
 
-        editProfileActivityTestRule.launchActivity(null);
+        try (ActivityScenario<EditProfileActivity> scenario = ActivityScenario.launch(EditProfileActivity.class)) {
 
-        onEditTextWithinTextInputLayoutWithId(R.id.field_email)
-                .perform(scrollTo(), clearText());
-        onEditTextWithinTextInputLayoutWithId(R.id.field_firstname)
-                .perform(scrollTo(), clearText());
-        onEditTextWithinTextInputLayoutWithId(R.id.field_lastname)
-                .perform(scrollTo(), clearText(), closeSoftKeyboard());
+            onEditTextWithinTextInputLayoutWithId(R.id.field_email)
+                    .perform(scrollTo(), clearText());
+            onEditTextWithinTextInputLayoutWithId(R.id.field_firstname)
+                    .perform(scrollTo(), clearText());
+            onEditTextWithinTextInputLayoutWithId(R.id.field_lastname)
+                    .perform(scrollTo(), clearText(), closeSoftKeyboard());
 
-        onView(withId(R.id.btn_save_profile)).perform(click());
+            onView(withId(R.id.btn_save_profile)).perform(click());
 
-        onErrorViewWithinTextInputLayoutWithId(R.id.field_firstname)
-                .check(matches(withText(R.string.field_required)));
+            onErrorViewWithinTextInputLayoutWithId(R.id.field_firstname)
+                    .check(matches(withText(R.string.field_required)));
 
-        onErrorViewWithinTextInputLayoutWithId(R.id.field_lastname)
-                .check(matches(withText(R.string.field_required)));
-
+            onErrorViewWithinTextInputLayoutWithId(R.id.field_lastname)
+                    .check(matches(withText(R.string.field_required)));
+        }
     }
 
     @Test
     public void checkErrorLabelOnInvalidEmailFormat() throws Exception {
 
-        editProfileActivityTestRule.launchActivity(null);
+        try (ActivityScenario<EditProfileActivity> scenario = ActivityScenario.launch(EditProfileActivity.class)) {
 
-        onEditTextWithinTextInputLayoutWithId(R.id.field_email)
-                .perform(scrollTo(), clearText(), typeText("wrong-email-format"), closeSoftKeyboard());
+            onEditTextWithinTextInputLayoutWithId(R.id.field_email)
+                    .perform(scrollTo(), clearText(), typeText("wrong-email-format"), closeSoftKeyboard());
 
-        onView(withId(R.id.btn_save_profile)).perform(click());
+            onView(withId(R.id.btn_save_profile)).perform(click());
 
-        onErrorViewWithinTextInputLayoutWithId(R.id.field_email)
-                .check(matches(withText(R.string.error_register_email)));
-
+            onErrorViewWithinTextInputLayoutWithId(R.id.field_email)
+                    .check(matches(withText(R.string.error_register_email)));
+        }
     }
 
     @Test
@@ -137,16 +136,23 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
 
         startServer(400, ERROR_MESSAGE_BODY, 0);
 
-        editProfileActivityTestRule.launchActivity(null);
+        try (ActivityScenario<EditProfileActivity> scenario = ActivityScenario.launch(EditProfileActivity.class)) {
 
-        enterValidData();
 
-        onView(withId(R.id.btn_save_profile)).perform(click());
+            final View[] decorView = new View[1];
+            scenario.onActivity(activity -> {
+                decorView[0] = activity.getWindow().getDecorView();
+            });
 
-        onView(withText("Error message"))
-                .inRoot(withDecorView(not(editProfileActivityTestRule.getActivity().getWindow().getDecorView())))
-                .check(matches(isDisplayed()));
+            enterValidData();
 
+            onView(withId(R.id.btn_save_profile)).perform(click());
+
+            onView(withText("Error message"))
+                    .inRoot(withDecorView(not(decorView[0])))
+                    .check(matches(isDisplayed()));
+
+        }
     }
 
     @Test
@@ -154,27 +160,26 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
 
         startServer(200, null, 0);
 
-        editProfileActivityTestRule.launchActivity(null);
+        try (ActivityScenario<EditProfileActivity> scenario = ActivityScenario.launch(EditProfileActivity.class)) {
 
-        enterValidData();
-        closeSoftKeyboard();
-        onView(withId(R.id.btn_save_profile)).perform(click());
+            enterValidData();
+            closeSoftKeyboard();
+            onView(withId(R.id.btn_save_profile)).perform(click());
 
-        Context context = InstrumentationRegistry.getInstrumentation().getContext();
+            Context context = InstrumentationRegistry.getInstrumentation().getContext();
 
-        try {
-            User user1 = testDBHelper.getDbHelper().getUser(SessionManager.getUsername(context));
-            assertEquals(VALID_EMAIL, user1.getEmail());
-            assertEquals(VALID_FIRST_NAME, user1.getFirstname());
-            assertEquals(VALID_LAST_NAME, user1.getLastname());
-            assertEquals(VALID_ORGANIZATION, user1.getOrganisation());
-            assertEquals(VALID_JOB_TITLE, user1.getJobTitle());
-        } catch (UserNotFoundException e) {
-            e.printStackTrace();
+            try {
+                User user1 = testDBHelper.getDbHelper().getUser(SessionManager.getUsername(context));
+                assertEquals(VALID_EMAIL, user1.getEmail());
+                assertEquals(VALID_FIRST_NAME, user1.getFirstname());
+                assertEquals(VALID_LAST_NAME, user1.getLastname());
+                assertEquals(VALID_ORGANIZATION, user1.getOrganisation());
+                assertEquals(VALID_JOB_TITLE, user1.getJobTitle());
+            } catch (UserNotFoundException e) {
+                e.printStackTrace();
+            }
         }
-
     }
-
 
 
     @Test
@@ -182,17 +187,21 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
 
         startServer(500, ERROR_MESSAGE_BODY, 0);
 
-        editProfileActivityTestRule.launchActivity(null);
+        try (ActivityScenario<EditProfileActivity> scenario = ActivityScenario.launch(EditProfileActivity.class)) {
 
-        enterValidData();
+            final View[] decorView = new View[1];
+            scenario.onActivity(activity -> {
+                decorView[0] = activity.getWindow().getDecorView();
+            });
 
-        onView(withId(R.id.btn_save_profile)).perform(click());
+            enterValidData();
 
-        onView(withText(R.string.error_connection))
-                .inRoot(withDecorView(not(editProfileActivityTestRule.getActivity().getWindow().getDecorView())))
-                .check(matches(isDisplayed()));
+            onView(withId(R.id.btn_save_profile)).perform(click());
 
+            onView(withText(R.string.error_connection))
+                    .inRoot(withDecorView(not(decorView[0])))
+                    .check(matches(isDisplayed()));
+        }
     }
 
-    // TODO test with real server that the request and its parameters are ok?
 }

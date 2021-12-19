@@ -2,16 +2,19 @@ package androidTestFiles.UI;
 
 import android.widget.Spinner;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -55,14 +58,20 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
 
     @Mock
     protected CustomFieldsRepository customFieldsRepo;
-
-    @Rule
-    public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
-            new ActivityTestRule<>(WelcomeActivity.class, false, false);
+    private ActivityScenario<WelcomeActivity> scenario;
 
     @Before
     public void setUp() throws Exception {
 
+    }
+
+    @After
+    public void  cleanup() {
+        try {
+            scenario.close();
+        } catch (Exception e) {
+            // ignore
+        }
     }
 
     private void setRegisterSteps(String JsonDeclarationPath) throws Exception {
@@ -77,8 +86,9 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
     }
 
     private void openRegisterScreen(){
-        welcomeActivityTestRule.launchActivity(null);
+        scenario = ActivityScenario.launch(WelcomeActivity.class);
         onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+
     }
 
     @Test

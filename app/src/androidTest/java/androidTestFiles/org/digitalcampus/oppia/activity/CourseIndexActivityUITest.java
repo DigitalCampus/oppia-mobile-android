@@ -8,6 +8,7 @@ import android.os.Bundle;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
+import org.digitalcampus.oppia.activity.DeviceListActivity;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
@@ -24,8 +25,11 @@ import java.util.ArrayList;
 
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.TestUtils;
+
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -60,10 +64,6 @@ public class CourseIndexActivityUITest extends DaggerInjectMockUITest {
     SharedPreferences.Editor editor;
     @Mock
     CompleteCourseProvider courseProvider;
-
-    @Rule
-    public ActivityTestRule<CourseIndexActivity> courseIndexActivityTestRule =
-            new ActivityTestRule<>(CourseIndexActivity.class, false, false);
 
     private void initMockEditor() {
         when(editor.putString(anyString(), anyString())).thenReturn(editor);
@@ -125,7 +125,7 @@ public class CourseIndexActivityUITest extends DaggerInjectMockUITest {
     }
 
     private Intent getIntentParams(Course course, String jumpToDigest){
-        Intent i = new Intent();
+        Intent i = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), CourseIndexActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(Course.TAG, course);
         if (jumpToDigest != null){
@@ -140,9 +140,10 @@ public class CourseIndexActivityUITest extends DaggerInjectMockUITest {
         Course c = getMockCourse();
         givenACorruptedCourse();
         Intent i = getIntentParams(c, null);
-        courseIndexActivityTestRule.launchActivity(i);
 
-        onView(withText(R.string.error_reading_xml)).check(matches(isDisplayed()));
+        try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
+            onView(withText(R.string.error_reading_xml)).check(matches(isDisplayed()));
+        }
     }
 
     @Test
@@ -151,10 +152,11 @@ public class CourseIndexActivityUITest extends DaggerInjectMockUITest {
         Intent i = getIntentParams(c, null);
         givenACorrectCourse(c);
 
-        courseIndexActivityTestRule.launchActivity(i);
+        try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
 
-        onView(withText("Activity1.4")).check(matches(isDisplayed())).perform(click());
-        assertEquals(CourseActivity.class, TestUtils.getCurrentActivity().getClass());
+            onView(withText("Activity1.4")).check(matches(isDisplayed())).perform(click());
+            assertEquals(CourseActivity.class, TestUtils.getCurrentActivity().getClass());
+        }
     }
 
     @Test
@@ -163,10 +165,11 @@ public class CourseIndexActivityUITest extends DaggerInjectMockUITest {
         Intent i = getIntentParams(c, null);
         givenACorrectCourse(c);
 
-        courseIndexActivityTestRule.launchActivity(i);
+        try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
 
-        onView(allOf(withId(R.id.section_icon), hasSibling(withChild(withText(("First section"))))))
-                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+            onView(allOf(withId(R.id.section_icon), hasSibling(withChild(withText(("First section"))))))
+                    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        }
     }
 
     @Test
@@ -176,10 +179,11 @@ public class CourseIndexActivityUITest extends DaggerInjectMockUITest {
         givenACorrectCourse(c);
         c.getSections().get(0).setImageFile("test.png");
 
-        courseIndexActivityTestRule.launchActivity(i);
+        try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
 
-        onView(allOf(withId(R.id.section_icon), hasSibling(withChild(withText(("First section"))))))
-                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            onView(allOf(withId(R.id.section_icon), hasSibling(withChild(withText(("First section"))))))
+                    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        }
     }
 
 
@@ -189,8 +193,9 @@ public class CourseIndexActivityUITest extends DaggerInjectMockUITest {
         Intent i = getIntentParams(c, "bbb2");
         givenACorrectCourse(c);
 
-        courseIndexActivityTestRule.launchActivity(i);
-        assertEquals(CourseActivity.class, TestUtils.getCurrentActivity().getClass());
+        try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
+            assertEquals(CourseActivity.class, TestUtils.getCurrentActivity().getClass());
+        }
     }
 
     @Test
@@ -199,8 +204,9 @@ public class CourseIndexActivityUITest extends DaggerInjectMockUITest {
         Intent i = getIntentParams(c, "nonexistent_digest");
         givenACorrectCourse(c);
 
-        courseIndexActivityTestRule.launchActivity(i);
-        assertEquals(CourseIndexActivity.class, TestUtils.getCurrentActivity().getClass());
+        try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
+            assertEquals(CourseIndexActivity.class, TestUtils.getCurrentActivity().getClass());
+        }
     }
 
 

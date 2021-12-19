@@ -8,6 +8,7 @@ import android.widget.Checkable;
 import android.widget.EditText;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
@@ -66,10 +67,6 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class)
 public class PrefsActivityUITest extends DaggerInjectMockUITest {
 
-    @Rule
-    public ActivityTestRule<PrefsActivity> prefsActivityTestRule =
-            new ActivityTestRule<>(PrefsActivity.class, false, false);
-
     @Mock
     CoursesRepository coursesRepository;
     @Mock
@@ -114,13 +111,14 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
             add(new Lang("es", "Spanish"));
         }});
 
-        prefsActivityTestRule.launchActivity(null);
+        try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefDisplay_title)),
-                        click()));
+            onView(withId(androidx.preference.R.id.recycler_view))
+                    .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefDisplay_title)),
+                            click()));
 
-        onView(withText(R.string.prefLanguage)).check(matches(isDisplayed()));
+            onView(withText(R.string.prefLanguage)).check(matches(isDisplayed()));
+        }
     }
 
     @Test
@@ -132,9 +130,10 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
             add(new Lang("en", "English"));
         }});
 
-        prefsActivityTestRule.launchActivity(null);
+        try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-        onView(withText(R.string.prefLanguage)).check(doesNotExist());
+            onView(withText(R.string.prefLanguage)).check(doesNotExist());
+        }
     }
 
 
