@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -25,8 +26,8 @@ import static org.hamcrest.core.AllOf.allOf;
 public class AboutActivityTest {
 
     @Rule
-    public ActivityTestRule<AboutActivity> aboutActivityTestRule =
-            new ActivityTestRule<>(AboutActivity.class);
+    public ActivityScenarioRule<AboutActivity> aboutActivityTestRule =
+            new ActivityScenarioRule<>(AboutActivity.class);
 
     @Test
     public void clickHelpTab() {

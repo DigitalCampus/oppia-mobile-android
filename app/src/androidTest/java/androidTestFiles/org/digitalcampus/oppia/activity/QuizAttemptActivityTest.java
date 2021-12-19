@@ -23,14 +23,6 @@ public class QuizAttemptActivityTest {
 
     }
 
-    @Rule
-    public ActivityTestRule<QuizAttemptActivity> quizAttemptActivityTestRule =
-            new ActivityTestRule<>(QuizAttemptActivity.class, false, false);
-
-    @Test
-    public void testActivityOpenNoBundle() {
-        quizAttemptActivityTestRule.launchActivity(null);
-    }
 
     @Test
     public void testActivityOpenWithBundle() {

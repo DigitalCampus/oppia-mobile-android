@@ -1,9 +1,11 @@
 package androidTestFiles.UI;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,48 +29,47 @@ public class ResetUITest extends MockedApiEndpointTest {
     private static final String ERROR_RESET_RESPONSE = "responses/response_400_reset.json";
 
 
-    @Rule
-    public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
-            new ActivityTestRule<>(WelcomeActivity.class, false, false);
-
-
     @Test
-    public void  showsErrorMessageWhenThereIsNoUsername() throws  Exception {
-        welcomeActivityTestRule.launchActivity(null);
+    public void showsErrorMessageWhenThereIsNoUsername() throws Exception {
 
-        onView(withId(R.id.welcome_login))
-                .perform(scrollTo(), click());
-        onView(withId(R.id.btn_reset_password))
-                .perform(click());
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onView(withId(R.id.reset_username_field))
-                .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
+            onView(withId(R.id.welcome_login))
+                    .perform(scrollTo(), click());
+            onView(withId(R.id.btn_reset_password))
+                    .perform(click());
 
-        onView(withId(R.id.reset_btn))
-                .perform(scrollTo(), click());
+            onView(withId(R.id.reset_username_field))
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
-        onView(withText(R.string.error_register_no_username))
-                .check(matches(isDisplayed()));
+            onView(withId(R.id.reset_btn))
+                    .perform(scrollTo(), click());
+
+            onView(withText(R.string.error_register_no_username))
+                    .check(matches(isDisplayed()));
+        }
     }
 
     @Test
-    public void clickResetButton_WrongUsername() throws  Exception {
+    public void clickResetButton_WrongUsername() throws Exception {
 
         startServer(400, ERROR_RESET_RESPONSE, 0);
-        welcomeActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.welcome_login))
-                .perform(scrollTo(), click());
-        onView(withId(R.id.btn_reset_password))
-                .perform(click());
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onView(withId(R.id.reset_username_field))
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongUsername"));
+            onView(withId(R.id.welcome_login))
+                    .perform(scrollTo(), click());
+            onView(withId(R.id.btn_reset_password))
+                    .perform(click());
 
-        onView(withId(R.id.reset_btn))
-                .perform(scrollTo(), click());
+            onView(withId(R.id.reset_username_field))
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongUsername"));
 
-        onView(withText(R.string.error_reset_password))
-                .check(matches(isDisplayed()));
+            onView(withId(R.id.reset_btn))
+                    .perform(scrollTo(), click());
+
+            onView(withText(R.string.error_reset_password))
+                    .check(matches(isDisplayed()));
+        }
     }
 }

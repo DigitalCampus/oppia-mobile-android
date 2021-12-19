@@ -15,6 +15,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.SearchActivity;
 import org.digitalcampus.oppia.activity.StartUpActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
+import org.digitalcampus.oppia.activity.ViewDigestActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -43,6 +44,7 @@ import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.TestUtils;
 import androidx.annotation.NonNull;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.UiController;
@@ -87,10 +89,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityUITest extends DaggerInjectMockUITest {
-
-    @Rule
-    public ActivityTestRule<MainActivity> mainActivityTestRule =
-            new ActivityTestRule<>(MainActivity.class, false, false);
 
     @Mock
     CoursesRepository coursesRepository;
@@ -144,20 +142,22 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
     public void showsManageCoursesButtonIfThereAreNoCourses() throws Exception {
         givenThereAreSomeCourses(0);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        onView(withId(R.id.manage_courses_btn))
-                .check(matches(isDisplayed()));
+            onView(withId(R.id.manage_courses_btn))
+                    .check(matches(isDisplayed()));
+        }
     }
 
     @Test
     public void doesNotShowManageCoursesButtonIfThereAreCourses() throws Exception {
         givenThereAreSomeCourses(2);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        onView(withId(R.id.manage_courses_btn))
-                .check(matches(not(isDisplayed())));
+            onView(withId(R.id.manage_courses_btn))
+                    .check(matches(not(isDisplayed())));
+        }
     }
 
     @Test
@@ -174,13 +174,13 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(0);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        onView(withId(R.id.manage_courses_btn))
-                .perform(click());
+            onView(withId(R.id.manage_courses_btn))
+                    .perform(click());
 
-        checkCorrectActivity(TagSelectActivity.class);
-
+            checkCorrectActivity(TagSelectActivity.class);
+        }
     }
 
     @Test
@@ -197,12 +197,13 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(0);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        onView(withId(R.id.empty_state_img))
-                .perform(click());
+            onView(withId(R.id.empty_state_img))
+                    .perform(click());
 
-        checkCorrectActivity(TagSelectActivity.class);
+            checkCorrectActivity(TagSelectActivity.class);
+        }
 
     }
 
@@ -220,37 +221,38 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(1);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        onView(withId(R.id.recycler_courses))
-                .inRoot(RootMatchers.withDecorView(
-                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+            onView(withId(R.id.recycler_courses))
+//                    .inRoot(RootMatchers.withDecorView(
+//                            Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
 
-        checkCorrectActivity(CourseIndexActivity.class);
+            checkCorrectActivity(CourseIndexActivity.class);
+        }
     }
 
     @Test
     public void showsContextMenuOnCourseLongClick() throws Exception {
         givenThereAreSomeCourses(1);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
-                .inRoot(RootMatchers.withDecorView(
-                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+            Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+//                    .inRoot(RootMatchers.withDecorView(
+//                            Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
-        onView(withChild(withId(R.id.course_context_reset)))
-                .check(matches(isDisplayed()));
+            onView(withChild(withId(R.id.course_context_reset)))
+                    .check(matches(isDisplayed()));
 
-        onView(withChild(withId(R.id.course_context_update_activity)))
-                .check(matches(isDisplayed()));
+            onView(withChild(withId(R.id.course_context_update_activity)))
+                    .check(matches(isDisplayed()));
 
-        onView(withChild(withId(R.id.course_context_delete)))
-                .check(matches(isDisplayed()));
-
+            onView(withChild(withId(R.id.course_context_delete)))
+                    .check(matches(isDisplayed()));
+        }
     }
 
     @Test
@@ -259,18 +261,18 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        openDrawer();
+            openDrawer();
 
-        onView(withId(R.id.btn_expand_profile_options)).perform(click());
+            onView(withId(R.id.btn_expand_profile_options)).perform(click());
 
-        onView(withText(R.string.menu_logout)).perform(click());
+            onView(withText(R.string.menu_logout)).perform(click());
 
-        onView(withText(R.string.no)).perform(click());
+            onView(withText(R.string.no)).perform(click());
 
-        checkCorrectActivity(MainActivity.class);
-
+            checkCorrectActivity(MainActivity.class);
+        }
     }
 
     @Test
@@ -278,20 +280,20 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        openDrawer();
+            openDrawer();
 
-        onView(withId(R.id.btn_expand_profile_options)).perform(click());
+            onView(withId(R.id.btn_expand_profile_options)).perform(click());
 
-        onView(withText(R.string.menu_logout))
-                .perform(click());
+            onView(withText(R.string.menu_logout))
+                    .perform(click());
 
-        onView(withText(R.string.yes))
-                .perform(click());
+            onView(withText(R.string.yes))
+                    .perform(click());
 
-        checkCorrectActivities(WelcomeActivity.class, StartUpActivity.class);
-
+            checkCorrectActivities(WelcomeActivity.class, StartUpActivity.class);
+        }
     }
 
     @Test
@@ -299,12 +301,13 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(false);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        openDrawer();
+            openDrawer();
 
-        onView(withId(R.id.btn_expand_profile_options)).perform(click());
-        onView(withText(R.string.logout)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.btn_expand_profile_options)).perform(click());
+            onView(withText(R.string.logout)).check(matches(not(isDisplayed())));
+        }
     }
 
     @Test
@@ -312,13 +315,14 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        openDrawer();
+            openDrawer();
 
-        onView(withId(R.id.btn_expand_profile_options)).perform(click());
+            onView(withId(R.id.btn_expand_profile_options)).perform(click());
 
-        onView(withText(R.string.logout)).check(matches(isDisplayed()));
+            onView(withText(R.string.logout)).check(matches(isDisplayed()));
+        }
     }
 
     @Test
@@ -328,12 +332,12 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         doReturn(true).when(pointList).add((Points) any());
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        onView(withId(R.id.nav_bottom_points)).perform(click());
+            onView(withId(R.id.nav_bottom_points)).perform(click());
 
-        assertEquals(0, pointList.size());
-
+            assertEquals(0, pointList.size());
+        }
     }
 
     @Test
@@ -343,13 +347,13 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         doReturn(true).when(badgeList).add((Badge) any());
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        onView(withId(R.id.nav_bottom_points)).perform(click());
-        onView(withId(R.id.tabs)).perform(selectTabAtPosition(2));
+            onView(withId(R.id.nav_bottom_points)).perform(click());
+            onView(withId(R.id.tabs)).perform(selectTabAtPosition(2));
 
-        assertEquals(0, badgeList.size());
-
+            assertEquals(0, badgeList.size());
+        }
     }
 
     @NonNull
@@ -385,22 +389,22 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         when(prefs.getBoolean(eq(PrefsActivity.PREF_DELETE_COURSE_ENABLED), anyBoolean())).thenReturn(true);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
-                .inRoot(RootMatchers.withDecorView(
-                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+            Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+//                    .inRoot(RootMatchers.withDecorView(
+//                            Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
-        onView(withId(R.id.course_context_delete))
-                .perform(click());
+            onView(withId(R.id.course_context_delete))
+                    .perform(click());
 
-        onView(withText(R.string.no))
-                .check(matches(isDisplayed()))
-                .perform(click());
+            onView(withText(R.string.no))
+                    .check(matches(isDisplayed()))
+                    .perform(click());
 
-        //TODO: Check
-
+            //TODO: Check
+        }
     }
 
     @Test
@@ -409,22 +413,22 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         when(prefs.getBoolean(eq(PrefsActivity.PREF_DELETE_COURSE_ENABLED), anyBoolean())).thenReturn(true);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
+            Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+//                    .inRoot(RootMatchers.withDecorView(
+//                            Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
-        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
-                .inRoot(RootMatchers.withDecorView(
-                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+            onView(withId(R.id.course_context_delete))
+                    .perform(click());
 
-        onView(withId(R.id.course_context_delete))
-                .perform(click());
+            onView(withText(R.string.yes))
+                    .check(matches(isDisplayed()))
+                    .perform(click());
 
-        onView(withText(R.string.yes))
-                .check(matches(isDisplayed()))
-                .perform(click());
-
-        //TODO: Check
+            //TODO: Check
+        }
     }
 
     @Test
@@ -433,81 +437,81 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         when(prefs.getBoolean(eq(PrefsActivity.PREF_DELETE_COURSE_ENABLED), anyBoolean())).thenReturn(false);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
-                .inRoot(RootMatchers.withDecorView(
-                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+            Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+//                .inRoot(RootMatchers.withDecorView(
+//                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
-        onView(withId(R.id.course_context_delete))
-                .perform(click());
+            onView(withId(R.id.course_context_delete))
+                    .perform(click());
 
-        onView(withText(R.string.course_context_delete))
-                .check(doesNotExist());
-
+            onView(withText(R.string.course_context_delete))
+                    .check(doesNotExist());
+        }
     }
 
     @Test
     public void resetCourseOnContextMenuResetClickYes() throws Exception {
         givenThereAreSomeCourses(3);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
-                .inRoot(RootMatchers.withDecorView(
-                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+            Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+//                .inRoot(RootMatchers.withDecorView(
+//                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
-        onView(withId(R.id.course_context_reset))
-                .perform(click());
+            onView(withId(R.id.course_context_reset))
+                    .perform(click());
 
-        onView(withText(R.string.yes))
-                .check(matches(isDisplayed()))
-                .perform(click());
+            onView(withText(R.string.yes))
+                    .check(matches(isDisplayed()))
+                    .perform(click());
 
-        //TODO: Check
-
+            //TODO: Check
+        }
     }
 
     @Test
     public void resetCourseOnContextMenuResetClickNo() throws Exception {
         givenThereAreSomeCourses(3);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
-                .inRoot(RootMatchers.withDecorView(
-                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+            Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+//                .inRoot(RootMatchers.withDecorView(
+//                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
-        onView(withId(R.id.course_context_reset))
-                .perform(click());
+            onView(withId(R.id.course_context_reset))
+                    .perform(click());
 
-        onView(withText(R.string.no))
-                .check(matches(isDisplayed()))
-                .perform(click());
+            onView(withText(R.string.no))
+                    .check(matches(isDisplayed()))
+                    .perform(click());
 
-        //TODO: Check
-
+            //TODO: Check
+        }
     }
 
     @Test
     public void updateCourseActivityOnContextMenu() throws Exception {
         givenThereAreSomeCourses(1);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
-                .inRoot(RootMatchers.withDecorView(
-                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+            Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+//                .inRoot(RootMatchers.withDecorView(
+//                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
-        onView(withChild(withId(R.id.course_context_update_activity)))
-                .perform(click());
+            onView(withChild(withId(R.id.course_context_update_activity)))
+                    .perform(click());
 
-        onView(withText(containsString(InstrumentationRegistry.getInstrumentation().getTargetContext().getString(R.string.course_updating_success))));
-
+            onView(withText(containsString(InstrumentationRegistry.getInstrumentation().getTargetContext().getString(R.string.course_updating_success))));
+        }
     }
 
 
@@ -536,28 +540,28 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
     @Test
     public void showsTagSelectActivityOnDrawerClickDownloadCourses() throws Exception {
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        openDrawer();
-        performClickDrawerItem(R.id.menu_download);
-        checkCorrectActivity(TagSelectActivity.class);
-
+            openDrawer();
+            performClickDrawerItem(R.id.menu_download);
+            checkCorrectActivity(TagSelectActivity.class);
+        }
     }
 
     @Test
     public void showsSearchActivityOnMenuClickSearch() throws Exception {
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        try {
-            onView(withId(R.id.menu_search)).perform(click());
-        } catch (NoMatchingViewException e) {
-            openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
-            onView(withText(R.string.menu_search)).perform(click());
+            try {
+                onView(withId(R.id.menu_search)).perform(click());
+            } catch (NoMatchingViewException e) {
+                openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
+                onView(withText(R.string.menu_search)).perform(click());
+            }
+
+            checkCorrectActivity(SearchActivity.class);
         }
-
-        checkCorrectActivity(SearchActivity.class);
-
     }
 
     @Test
@@ -572,10 +576,11 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
             add(new Lang("es", "Spanish"));
         }});
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        openDrawer();
-        onView(withText(R.string.menu_language)).check(matches(isDisplayed()));
+            openDrawer();
+            onView(withText(R.string.menu_language)).check(matches(isDisplayed()));
+        }
     }
 
     @Test
@@ -588,10 +593,11 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
             add(new Lang("en", "English"));
         }});
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        openDrawer();
-        onView(withText(R.string.change_language)).check(doesNotExist());
+            openDrawer();
+            onView(withText(R.string.change_language)).check(doesNotExist());
+        }
     }
 
     @Test
@@ -601,12 +607,13 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(1);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        openDrawer();
-        performClickDrawerItem(R.id.menu_language);
+            openDrawer();
+            performClickDrawerItem(R.id.menu_language);
 
-        onView(withText(R.string.change_language)).check(doesNotExist());
+            onView(withText(R.string.change_language)).check(doesNotExist());
+        }
     }
 
 
@@ -622,75 +629,79 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
             add(new Lang("es", "Spanish"));
         }});
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        openDrawer();
-        onView(withText(R.string.change_language)).check(doesNotExist());
+            openDrawer();
+            onView(withText(R.string.change_language)).check(doesNotExist());
+        }
     }
 
     @Test
     public void showsScorecardsOnBottomNavClickScorecard() throws Exception {
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        onView(withId(R.id.nav_bottom_scorecard)).perform(click());
+            onView(withId(R.id.nav_bottom_scorecard)).perform(click());
 
-        onView(allOf(
-                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                withId(R.id.tabs)))
-                .check(matches(isDisplayed()));
+            onView(allOf(
+                    withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                    withId(R.id.tabs)))
+                    .check(matches(isDisplayed()));
+        }
     }
 
     @Test
     public void showsPrefsActivityOnDrawerClickSettings() throws Exception {
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        openDrawer();
-        performClickDrawerItem(R.id.menu_settings);
-        checkCorrectActivity(PrefsActivity.class);
+            openDrawer();
+            performClickDrawerItem(R.id.menu_settings);
+            checkCorrectActivity(PrefsActivity.class);
+        }
 
     }
 
     @Test
     public void showsAboutActivityOnDrawerClickAbout() throws Exception {
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        openDrawer();
-        performClickDrawerItem(R.id.menu_about);
-        checkCorrectActivity(AboutActivity.class);
+            openDrawer();
+            performClickDrawerItem(R.id.menu_about);
+            checkCorrectActivity(AboutActivity.class);
 
-        onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                withId(R.id.about_versionno))).check(matches(isDisplayed()));
+            onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                    withId(R.id.about_versionno))).check(matches(isDisplayed()));
+        }
     }
 
     @Test
     public void showsSearchCoursesActionButtonCoursesListScreen() throws Exception {
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        onView(withId(R.id.menu_search)).check(matches(isDisplayed()));
-        openDrawer();
-        performClickDrawerItem(R.id.menu_settings);
-        TestUtils.getCurrentActivity().finish();
-        TestUtils.getCurrentActivity().invalidateOptionsMenu();
-        onView(withId(R.id.menu_search)).check(matches(isDisplayed()));
-
+            onView(withId(R.id.menu_search)).check(matches(isDisplayed()));
+            openDrawer();
+            performClickDrawerItem(R.id.menu_settings);
+            TestUtils.getCurrentActivity().finish();
+            TestUtils.getCurrentActivity().invalidateOptionsMenu();
+            onView(withId(R.id.menu_search)).check(matches(isDisplayed()));
+        }
     }
 
     @Test
     public void hidesSearchCoursesActionButtonOutsideCoursesListScreen() throws Exception {
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        onView(withId(R.id.nav_bottom_scorecard)).perform(click());
-        onView(withId(R.id.menu_search)).check(doesNotExist());
-        openDrawer();
-        performClickDrawerItem(R.id.menu_settings);
-        TestUtils.getCurrentActivity().finish();
-        onView(withId(R.id.menu_search)).check(doesNotExist());
-
+            onView(withId(R.id.nav_bottom_scorecard)).perform(click());
+            onView(withId(R.id.menu_search)).check(doesNotExist());
+            openDrawer();
+            performClickDrawerItem(R.id.menu_settings);
+            TestUtils.getCurrentActivity().finish();
+            onView(withId(R.id.menu_search)).check(doesNotExist());
+        }
     }
 
     @Test
@@ -708,31 +719,31 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
         givenThereAreSomeCourses(1);
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        onView(withId(R.id.recycler_courses))
-                .inRoot(RootMatchers.withDecorView(
-                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+            onView(withId(R.id.recycler_courses))
+//                    .inRoot(RootMatchers.withDecorView(
+//                            Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
 
-        checkCorrectActivity(CourseIndexActivity.class);
+            checkCorrectActivity(CourseIndexActivity.class);
 
-        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
+            onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
 
-        checkCorrectActivity(MainActivity.class);
-
+            checkCorrectActivity(MainActivity.class);
+        }
     }
 
     @Test
     public void showsEditProfileActivityOnMenuItemClick() throws Exception {
 
-        mainActivityTestRule.launchActivity(null);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-        openDrawer();
-        onView(withId(R.id.btn_expand_profile_options)).perform(click());
-        onView(withText(R.string.edit_profile)).perform(click());
-        checkCorrectActivity(EditProfileActivity.class);
-
+            openDrawer();
+            onView(withId(R.id.btn_expand_profile_options)).perform(click());
+            onView(withText(R.string.edit_profile)).perform(click());
+            checkCorrectActivity(EditProfileActivity.class);
+        }
     }
 }
