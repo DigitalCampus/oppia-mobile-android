@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
@@ -40,10 +43,6 @@ import static org.mockito.Matchers.any;
 @RunWith(AndroidJUnit4.class)
 public class BaselineUITest extends DaggerInjectMockUITest {
 
-    @Rule
-    public ActivityTestRule<CourseIndexActivity> activityTestRule =
-            new ActivityTestRule<>(CourseIndexActivity.class, false, false);
-
     @Mock
     CompleteCourseProvider completeCourseProvider;
 
@@ -64,7 +63,7 @@ public class BaselineUITest extends DaggerInjectMockUITest {
         }
 
 
-        Intent i = new Intent();
+        Intent i = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), CourseIndexActivity.class);
         i.putExtras(args);
         return i;
     }
@@ -93,11 +92,11 @@ public class BaselineUITest extends DaggerInjectMockUITest {
         Intent i = getIntentWithPretest(completeCourse, false, null);
         configureMockProviderResponse(completeCourse);
 
-        activityTestRule.launchActivity(i);
+        try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(i)) {
 
-        onView(withText(R.string.alert_pretest))
-                .check(matches(isDisplayed()));
-
+            onView(withText(R.string.alert_pretest))
+                    .check(matches(isDisplayed()));
+        }
     }
 
     @Test
@@ -109,11 +108,11 @@ public class BaselineUITest extends DaggerInjectMockUITest {
 
         configureMockProviderResponse(completeCourse);
 
-        activityTestRule.launchActivity(i);
+        try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(i)) {
 
-        onView(withText(R.string.alert_pretest))
-                .check(matches(isDisplayed()));
-
+            onView(withText(R.string.alert_pretest))
+                    .check(matches(isDisplayed()));
+        }
     }
 
     @Test
@@ -125,10 +124,10 @@ public class BaselineUITest extends DaggerInjectMockUITest {
         Intent i = getIntentWithPretest(completeCourse, true, "actdigest");
         configureMockProviderResponse(completeCourse);
 
-        activityTestRule.launchActivity(i);
+        try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(i)) {
 
-        assertEquals(CourseActivity.class, TestUtils.getCurrentActivity().getClass());
-
+            assertEquals(CourseActivity.class, TestUtils.getCurrentActivity().getClass());
+        }
     }
 
     @Test
@@ -138,9 +137,9 @@ public class BaselineUITest extends DaggerInjectMockUITest {
         Intent i = getIntentWithPretest(completeCourse, true, null);
         configureMockProviderResponse(completeCourse);
 
-        activityTestRule.launchActivity(i);
-        onView(withText(R.string.alert_pretest))
-                .check(doesNotExist());
-
+        try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(i)) {
+            onView(withText(R.string.alert_pretest))
+                    .check(doesNotExist());
+        }
     }
 }

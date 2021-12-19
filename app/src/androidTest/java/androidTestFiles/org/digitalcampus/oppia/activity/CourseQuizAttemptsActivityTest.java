@@ -3,11 +3,13 @@ package androidTestFiles.org.digitalcampus.oppia.activity;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
+import org.digitalcampus.oppia.activity.EditProfileActivity;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,14 +31,6 @@ public class CourseQuizAttemptsActivityTest extends BaseTestDB {
 
     }
 
-    @Rule
-    public ActivityTestRule<CourseQuizAttemptsActivity> courseQuizAttemptsActivityTestRule =
-            new ActivityTestRule<>(CourseQuizAttemptsActivity.class, false, false);
-
-    @Test
-    public void testActivityOpenNoBundle() {
-        courseQuizAttemptsActivityTestRule.launchActivity(null);
-    }
 
     @Test
     public void testActivityOpenWithAttempts() {
@@ -52,9 +46,11 @@ public class CourseQuizAttemptsActivityTest extends BaseTestDB {
         qs.setAverageScore(7);
         Intent intent = new Intent();
         intent.putExtra(QuizStats.TAG, qs);
-        courseQuizAttemptsActivityTestRule.launchActivity(intent);
 
-        // TODO assertions
+        try (ActivityScenario<CourseQuizAttemptsActivity> scenario = ActivityScenario.launch(CourseQuizAttemptsActivity.class)) {
+            // TODO assertions
+        }
+
     }
 
     @Test
@@ -71,9 +67,9 @@ public class CourseQuizAttemptsActivityTest extends BaseTestDB {
         qs.setAverageScore(0);
         Intent intent = new Intent();
         intent.putExtra(QuizStats.TAG, qs);
-        courseQuizAttemptsActivityTestRule.launchActivity(intent);
-
-        // TODO assertions
+        try (ActivityScenario<CourseQuizAttemptsActivity> scenario = ActivityScenario.launch(CourseQuizAttemptsActivity.class)) {
+            // TODO assertions
+        }
     }
 
 }

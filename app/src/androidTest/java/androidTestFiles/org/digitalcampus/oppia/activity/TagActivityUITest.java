@@ -2,10 +2,12 @@ package androidTestFiles.org.digitalcampus.oppia.activity;
 
 import android.content.Context;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
@@ -30,10 +32,6 @@ import static org.mockito.Mockito.doAnswer;
 @RunWith(AndroidJUnit4.class)
 public class TagActivityUITest extends DaggerInjectMockUITest {
 
-    @Rule
-    public ActivityTestRule<TagSelectActivity> tagSelectActivityTestRule =
-            new ActivityTestRule<>(TagSelectActivity.class, false, false);
-
     @Mock TagRepository tagRepository;
 
     @Test
@@ -57,12 +55,12 @@ public class TagActivityUITest extends DaggerInjectMockUITest {
             return null;
         }).when(tagRepository).refreshTagList(any(), any());
 
-        tagSelectActivityTestRule.launchActivity(null);
+        try (ActivityScenario<TagSelectActivity> scenario = ActivityScenario.launch(TagSelectActivity.class)) {
 
-        onView(withRecyclerView(R.id.recycler_tags)
-                .atPositionOnView(0, R.id.tag_name))
-                .check(matches(withText(startsWith("Mocked Course Name"))));
-
+            onView(withRecyclerView(R.id.recycler_tags)
+                    .atPositionOnView(0, R.id.tag_name))
+                    .check(matches(withText(startsWith("Mocked Course Name"))));
+        }
     }
 
 }
