@@ -140,7 +140,7 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
     public void checkAnalyticsOptinScreenAppearsAfterNewUserRegistration() throws Exception {
 
         startServer(200, VALID_LOGIN_REGISTER_RESPONSE, 0);
-        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
             onView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());

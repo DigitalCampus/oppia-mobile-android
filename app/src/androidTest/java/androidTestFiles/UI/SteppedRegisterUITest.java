@@ -14,6 +14,7 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -57,10 +58,20 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
 
     @Mock
     protected CustomFieldsRepository customFieldsRepo;
+    private ActivityScenario<WelcomeActivity> scenario;
 
     @Before
     public void setUp() throws Exception {
 
+    }
+
+    @After
+    public void  cleanup() {
+        try {
+            scenario.close();
+        } catch (Exception e) {
+            // ignore
+        }
     }
 
     private void setRegisterSteps(String JsonDeclarationPath) throws Exception {
@@ -75,9 +86,9 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
     }
 
     private void openRegisterScreen(){
-        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
-            onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
-        }
+        scenario = ActivityScenario.launch(WelcomeActivity.class);
+        onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+
     }
 
     @Test
