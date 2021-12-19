@@ -81,11 +81,15 @@ public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswers
             viewHolder.binding.quizQuestionFeedbackImage.setVisibility(View.GONE);
         }else {
             viewHolder.binding.quizQuestionFeedbackImage.setVisibility(View.VISIBLE);
-            viewHolder.binding.quizQuestionFeedbackImage.setImageResource(
-                    (qf.getScore() >= Quiz.QUIZ_QUESTION_PASS_THRESHOLD)?
-                            R.drawable.quiz_tick:
-                            R.drawable.quiz_cross
-            );
+            int icon;
+            if (qf.getScore() >= Quiz.QUIZ_QUESTION_PASS_THRESHOLD) {
+                icon = R.drawable.quiz_tick;
+            } else if (qf.getScore() > 0) {
+                icon = R.drawable.quiz_partially_correct;
+            } else {
+                icon = R.drawable.quiz_cross;
+            }
+            viewHolder.binding.quizQuestionFeedbackImage.setImageResource(icon);
         }
 
 

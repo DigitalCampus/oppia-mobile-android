@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadMediaActivity;
+import org.digitalcampus.oppia.activity.ScorecardActivity;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.service.DownloadService;
 import org.digitalcampus.oppia.service.DownloadServiceDelegate;
@@ -30,10 +33,6 @@ import static org.mockito.Mockito.doAnswer;
 
 public class DownloadMediaActivityUITest extends DaggerInjectMockUITest {
 
-    @Rule
-    public ActivityTestRule<DownloadMediaActivity> downloadActivityTestRule =
-            new ActivityTestRule<>(DownloadMediaActivity.class, false, false);
-
     @Mock DownloadServiceDelegate downloadServiceDelegate;
 
     private Intent getIntentParams(int numFiles){
@@ -47,7 +46,7 @@ public class DownloadMediaActivityUITest extends DaggerInjectMockUITest {
             mediaFiles.add(m);
         }
 
-        Intent i = new Intent();
+        Intent i = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), DownloadMediaActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(DownloadMediaActivity.MISSING_MEDIA, mediaFiles);
         i.putExtras(bundle);
@@ -65,9 +64,9 @@ public class DownloadMediaActivityUITest extends DaggerInjectMockUITest {
     @Test
     public void showEmptyStateWhenEmptyList() throws Exception {
 
-        downloadActivityTestRule.launchActivity(getIntentParams(0));
-
-        onView(withId(R.id.empty_state)).check(matches(isDisplayed()));
+        try (ActivityScenario<ScorecardActivity> scenario = ActivityScenario.launch(getIntentParams(0))) {
+            onView(withId(R.id.empty_state)).check(matches(isDisplayed()));
+        }
     }
 
     @Test
@@ -80,14 +79,15 @@ public class DownloadMediaActivityUITest extends DaggerInjectMockUITest {
             return null;
         }).when(downloadServiceDelegate).startDownload(any(), any());
 
-        downloadActivityTestRule.launchActivity(getIntentParams(4));
+        try (ActivityScenario<ScorecardActivity> scenario = ActivityScenario.launch(getIntentParams(4))) {
 
-        onView(withRecyclerView(R.id.missing_media_list)
-                .atPositionOnView(0, R.id.action_btn))
-                .perform(click());
+            onView(withRecyclerView(R.id.missing_media_list)
+                    .atPositionOnView(0, R.id.action_btn))
+                    .perform(click());
 
-        onView(withRecyclerView(R.id.missing_media_list)
-                .atPositionOnView(0, R.id.download_error))
-                .check(matches(isDisplayed()));
+            onView(withRecyclerView(R.id.missing_media_list)
+                    .atPositionOnView(0, R.id.download_error))
+                    .check(matches(isDisplayed()));
+        }
     }
 }

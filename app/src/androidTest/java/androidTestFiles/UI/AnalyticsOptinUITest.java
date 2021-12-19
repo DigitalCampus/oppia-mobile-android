@@ -3,6 +3,7 @@ package androidTestFiles.UI;
 import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -56,10 +57,6 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
     @Mock
     protected CustomFieldsRepository customFieldsRepo;
 
-    @Rule
-    public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
-            new ActivityTestRule<>(WelcomeActivity.class, false, false);
-
     @Before
     public void setUp() throws Exception {
 
@@ -74,37 +71,37 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
     @Test
     public void checkAnalyticsOptinScreenAndValuesAreCorrectOnPerUserBasis() throws Exception {
 
-        welcomeActivityTestRule.launchActivity(null);
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        performValidLogin("username-1");
-        assertEquals(AnalyticsOptinActivity.class, TestUtils.getCurrentActivity().getClass());
-        selectAnalyticsOptions(R.id.analytics_checkbox);
-        assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
+            performValidLogin("username-1");
+            assertEquals(AnalyticsOptinActivity.class, TestUtils.getCurrentActivity().getClass());
+            selectAnalyticsOptions(R.id.analytics_checkbox);
+            assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
 
-        performLogout();
+            performLogout();
 
-        performValidLogin("username-2");
-        assertEquals(AnalyticsOptinActivity.class, TestUtils.getCurrentActivity().getClass());
-        selectAnalyticsOptions(R.id.analytics_checkbox, R.id.bugreport_checkbox);
-        assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
+            performValidLogin("username-2");
+            assertEquals(AnalyticsOptinActivity.class, TestUtils.getCurrentActivity().getClass());
+            selectAnalyticsOptions(R.id.analytics_checkbox, R.id.bugreport_checkbox);
+            assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
 
-        performLogout();
+            performLogout();
 
-        performValidLogin("username-1");
-        assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
-        openPrivacyScreen();
-        onView(withId(R.id.analytics_checkbox)).perform(scrollTo()).check(matches(isChecked()));
-        onView(withId(R.id.bugreport_checkbox)).perform(scrollTo()).check(matches(isNotChecked()));
+            performValidLogin("username-1");
+            assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
+            openPrivacyScreen();
+            onView(withId(R.id.analytics_checkbox)).perform(scrollTo()).check(matches(isChecked()));
+            onView(withId(R.id.bugreport_checkbox)).perform(scrollTo()).check(matches(isNotChecked()));
 
-        pressBack();
-        performLogout();
+            pressBack();
+            performLogout();
 
-        performValidLogin("username-2");
-        assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
-        openPrivacyScreen();
-        onView(withId(R.id.analytics_checkbox)).perform(scrollTo()).check(matches(isChecked()));
-        onView(withId(R.id.bugreport_checkbox)).perform(scrollTo()).check(matches(isChecked()));
-
+            performValidLogin("username-2");
+            assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
+            openPrivacyScreen();
+            onView(withId(R.id.analytics_checkbox)).perform(scrollTo()).check(matches(isChecked()));
+            onView(withId(R.id.bugreport_checkbox)).perform(scrollTo()).check(matches(isChecked()));
+        }
     }
 
     private void openPrivacyScreen() {
@@ -143,39 +140,39 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
     public void checkAnalyticsOptinScreenAppearsAfterNewUserRegistration() throws Exception {
 
         startServer(200, VALID_LOGIN_REGISTER_RESPONSE, 0);
-        welcomeActivityTestRule.launchActivity(null);
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email@email.com"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Email@email.com"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
 
-        onView(withId(R.id.register_btn))
-                .perform(click());
+            onView(withId(R.id.register_btn))
+                    .perform(click());
 
-        try {
-            assertEquals(AnalyticsOptinActivity.class, TestUtils.getCurrentActivity().getClass());
-        } catch (AssertionFailedError afe) {
-            // If server returns any error:
-            onView(withText(R.string.error)).check(matches(isDisplayed()));
+            try {
+                assertEquals(AnalyticsOptinActivity.class, TestUtils.getCurrentActivity().getClass());
+            } catch (AssertionFailedError afe) {
+                // If server returns any error:
+                onView(withText(R.string.error)).check(matches(isDisplayed()));
+            }
         }
-
     }
 
 }
