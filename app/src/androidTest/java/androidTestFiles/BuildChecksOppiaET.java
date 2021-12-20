@@ -17,8 +17,8 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-public class BuildChecksOppiaCore {
-    /*
+public class BuildChecksOppiaET {
+
     private Context context;
     private SharedPreferences prefs;
 
@@ -33,11 +33,11 @@ public class BuildChecksOppiaCore {
     @Test
     public void checkDefaultSettingsParameters() {
 
-        String oppiaServerDefault = context.getString(R.string.prefServerDefault);
+        String oppiaServerDefault = prefs.getString("prefServer", context.getString(R.string.prefServerDefault));
         String oppiaServerHost = context.getString(R.string.oppiaServerHost);
 
-        assertEquals("https://demo.oppia-mobile.org/", oppiaServerDefault);
-        assertEquals("demo.oppia-mobile.org", oppiaServerHost);
+        assertEquals("https://covid.oppia-mobile.org/", oppiaServerDefault);
+        assertEquals("covid.oppia-mobile.org", oppiaServerHost);
 
         assertEquals(false, BuildConfig.ADMIN_PROTECT_SETTINGS);
         assertEquals(false, BuildConfig.ADMIN_PROTECT_ACTIVITY_SYNC);
@@ -54,13 +54,11 @@ public class BuildChecksOppiaCore {
         assertEquals(true, BuildConfig.MENU_ALLOW_SETTINGS);
         assertEquals(true, BuildConfig.MENU_ALLOW_COURSE_DOWNLOAD);
         assertEquals(true, BuildConfig.MENU_ALLOW_SYNC);
-        assertEquals(true, BuildConfig.MENU_ALLOW_LOGOUT);
-        assertEquals(true, BuildConfig.MENU_ALLOW_EDIT_PROFILE);
-        assertEquals(true, BuildConfig.MENU_ALLOW_CHANGE_PASSWORD);
+        assertEquals(false, BuildConfig.MENU_ALLOW_LOGOUT);
         assertEquals(true, BuildConfig.MENU_ALLOW_LANGUAGE);
-        assertEquals(1, BuildConfig.DOWNLOAD_COURSES_DISPLAY);
+        assertEquals(2, BuildConfig.DOWNLOAD_COURSES_DISPLAY);
 
-        assertEquals(false, BuildConfig.START_COURSEINDEX_COLLAPSED);
+        assertEquals(true, BuildConfig.START_COURSEINDEX_COLLAPSED);
 
         assertEquals(true, BuildConfig.METADATA_INCLUDE_NETWORK);
         assertEquals(true, BuildConfig.METADATA_INCLUDE_APP_INSTANCE_ID);
@@ -74,19 +72,19 @@ public class BuildChecksOppiaCore {
         assertEquals(600, BuildConfig.SESSION_EXPIRATION_TIMEOUT);
 
         assertEquals(false, BuildConfig.SHOW_COURSE_DESCRIPTION);
-        assertEquals(true, BuildConfig.SHOW_GAMIFICATION_EVENTS);
 
 
         assertEquals("threshold", BuildConfig.GAMIFICATION_MEDIA_CRITERIA);
-
         assertEquals(80, BuildConfig.GAMIFICATION_DEFAULT_MEDIA_THRESHOLD);
+        assertEquals(false, BuildConfig.GAMIFICATION_MEDIA_SHOULD_REACH_END);
 
-
+        assertEquals("TIME_SPENT", BuildConfig.PAGE_COMPLETED_METHOD);
+        assertEquals(3, BuildConfig.PAGE_COMPLETED_TIME_SPENT);
+        assertEquals(125, BuildConfig.PAGE_COMPLETED_WPM);
         assertEquals("3", BuildConfig.GAMIFICATION_POINTS_ANIMATION);
         assertEquals(2, BuildConfig.DURATION_GAMIFICATION_POINTS_VIEW);
 
-
+        assertEquals("WEEKLY", BuildConfig.DEFAULT_REMINDER_INTERVAL);
+        assertEquals("10:30", BuildConfig.DEFAULT_REMINDER_TIME);
     }
-
-     */
 }

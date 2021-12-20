@@ -44,10 +44,6 @@ public class LoginTest extends BaseTestDB {
     private EntityResult<User> resultUser;
     private boolean registerOK;
 
-   /* @Rule
-    public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
-            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class);*/
-
     @Before
     public void setUp() throws Exception {
         super.setUp();

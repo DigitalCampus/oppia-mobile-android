@@ -1,5 +1,6 @@
 package androidTestFiles.UI;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -8,6 +9,7 @@ import junit.framework.AssertionFailedError;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
+import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
@@ -47,10 +49,6 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
     @Mock
     protected CustomFieldsRepository customFieldsRepo;
 
-    @Rule
-    public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
-            new ActivityTestRule<>(WelcomeActivity.class, false, false);
-
     @Before
     public void setUp() throws Exception {
         when(customFieldsRepo.getAll(any())).thenReturn(new ArrayList<>());
@@ -58,320 +56,333 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
     @Test
     public void showsErrorMessageWhenThereIsNoUsername() throws  Exception {
-        welcomeActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), replaceText(""));
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
 
-        onView(withId(R.id.register_btn))
-                .perform(click());
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), replaceText(""));
 
-        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .check(matches(withText(R.string.field_required)));
+            onView(withId(R.id.register_btn))
+                    .perform(click());
 
+            onErrorViewWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .check(matches(withText(R.string.field_required)));
+        }
     }
 
     @Test
     public void showsErrorMessageWhenTheUsernameIsTooShort() throws  Exception {
-        welcomeActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Us"));
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
 
-        onView(withId(R.id.register_btn))
-                .perform(click());
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Us"));
 
-        String usernameLengthError = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().getString(
-                R.string.error_register_username_length, App.USERNAME_MIN_CHARACTERS);
+            onView(withId(R.id.register_btn))
+                    .perform(click());
 
-        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .check(matches(withText(usernameLengthError)));
+            String usernameLengthError = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().getString(
+                    R.string.error_register_username_length, App.USERNAME_MIN_CHARACTERS);
 
+            onErrorViewWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .check(matches(withText(usernameLengthError)));
+        }
     }
 
     @Test
     public void showsErrorMessageWhenTheUsernameContainsSpaces() throws  Exception {
-        welcomeActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username With Spaces"));
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
 
-        onView(withId(R.id.register_btn))
-                .perform(click());
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Username With Spaces"));
 
-        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .check(matches(withText(R.string.field_spaces_error)));
+            onView(withId(R.id.register_btn))
+                    .perform(click());
 
+            onErrorViewWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .check(matches(withText(R.string.field_spaces_error)));
+        }
     }
 
     @Test
     public void showErrorMessageWhenTheEmailIsWrong() throws Exception {
 
-        welcomeActivityTestRule.launchActivity(null);
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("NoValidEmail"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("NoValidEmail"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
 
-        onView(withId(R.id.register_btn))
-                .perform(click());
+            onView(withId(R.id.register_btn))
+                    .perform(click());
 
-        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .check(matches(withText(R.string.error_register_email)));
+            onErrorViewWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                    .check(matches(withText(R.string.error_register_email)));
+        }
     }
 
     @Test
     public void showErrorMessageWhenTheEmailContainsSpaces() throws Exception {
 
-        welcomeActivityTestRule.launchActivity(null);
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("email with spaces@gmail.com"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("email with spaces@gmail.com"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
 
-        onView(withId(R.id.register_btn))
-                .perform(click());
+            onView(withId(R.id.register_btn))
+                    .perform(click());
 
-        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .check(matches(withText(R.string.field_spaces_error)));
+            onErrorViewWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                    .check(matches(withText(R.string.field_spaces_error)));
+        }
     }
 
     @Test
     public void showsErrorMessageWhenThePasswordIsTooShort() throws Exception {
-        welcomeActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("123"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
 
-        onView(withId(R.id.register_btn))
-                .perform(click());
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("123"));
 
-        String passwordError = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().getString(
-                R.string.error_register_password, App.PASSWORD_MIN_LENGTH);
+            onView(withId(R.id.register_btn))
+                    .perform(click());
 
-        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_password_field)
-                .check(matches(withText(passwordError)));
+            String passwordError = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().getString(
+                    R.string.error_register_password, App.PASSWORD_MIN_LENGTH);
+
+            onErrorViewWithinTextInputLayoutWithId(R.id.register_form_password_field)
+                    .check(matches(withText(passwordError)));
+        }
     }
 
     @Test
-    public void showsErrorMessageWhenThePasswordsDoNotMatch() throws Exception{
-        welcomeActivityTestRule.launchActivity(null);
+    public void showsErrorMessageWhenThePasswordsDoNotMatch() throws Exception {
 
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password2"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-        onView(withId(R.id.register_btn))
-                .perform(click());
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password2"));
 
-        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_password_field)
-                .check(matches(withText(R.string.error_register_password_no_match)));
+            onView(withId(R.id.register_btn))
+                    .perform(click());
+
+            onErrorViewWithinTextInputLayoutWithId(R.id.register_form_password_field)
+                    .check(matches(withText(R.string.error_register_password_no_match)));
+        }
     }
 
     @Test
     public void showsErrorMessageWhenThereIsNoFirstName() throws Exception {
-        welcomeActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-        onView(withId(R.id.register_btn))
-                .perform(click());
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
-        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
-                .check(matches(withText(R.string.field_required)));
+            onView(withId(R.id.register_btn))
+                    .perform(click());
+
+            onErrorViewWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
+                    .check(matches(withText(R.string.field_required)));
+        }
     }
 
     @Test
     public void showsErrorMessageWhenThereIsNoLastName() throws Exception {
 
-        welcomeActivityTestRule.launchActivity(null);
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
-        onView(withId(R.id.register_btn))
-                .perform(click());
+            onView(withId(R.id.register_btn))
+                    .perform(click());
 
-        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
-                .check(matches(withText(R.string.field_required)));
+            onErrorViewWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
+                    .check(matches(withText(R.string.field_required)));
+        }
     }
 
     @Test
     public void showsErrorMessageWhenThePhoneNumberIsNotValid() throws Exception {
-        welcomeActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("1234"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
 
-        onView(withId(R.id.register_btn))
-                .perform(click(), closeSoftKeyboard());
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("1234"));
 
-        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-                .check(matches(withText(R.string.error_register_no_phoneno)));
+            onView(withId(R.id.register_btn))
+                    .perform(click(), closeSoftKeyboard());
 
+            onErrorViewWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
+                    .check(matches(withText(R.string.error_register_no_phoneno)));
+        }
     }
 
     @Test
     public void changeActivityWhenAllTheFieldsAreCorrect() throws Exception {
 
         startServer(200, VALID_REGISTER_RESPONSE, 0);
-        welcomeActivityTestRule.launchActivity(null);
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email@email.com"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Email@email.com"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
 
-        onView(withId(R.id.register_btn))
-                .perform( click());
+            onView(withId(R.id.register_btn))
+                    .perform(click());
 
-        try {
-            assertNotEquals(WelcomeActivity.class, TestUtils.getCurrentActivity().getClass());
-        } catch (AssertionFailedError afe) {
-            // If server returns any error:
-            onView(withText(R.string.error)).check(matches(isDisplayed()));
+            try {
+                assertNotEquals(WelcomeActivity.class, TestUtils.getCurrentActivity().getClass());
+            } catch (AssertionFailedError afe) {
+                // If server returns any error:
+                onView(withText(R.string.error)).check(matches(isDisplayed()));
+            }
         }
-
     }
 
 }

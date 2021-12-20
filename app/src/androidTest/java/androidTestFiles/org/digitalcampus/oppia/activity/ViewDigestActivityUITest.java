@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
+import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.ViewDigestActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
@@ -53,11 +56,6 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
 
     private static final String VALID_COURSE_INFO_RESPONSE = "responses/response_200_course_info.json";
 
-    @Rule
-    public ActivityTestRule<ViewDigestActivity> viewDigestActivityTestRule =
-            new ActivityTestRule<>(ViewDigestActivity.class, false, false);
-
-
     @Mock
     CoursesRepository coursesRepository;
     @Mock
@@ -72,16 +70,26 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
                 .appendPath("view");
     }
 
-    private Uri getUriForDigest(String digest) {
-        return getBaseUriBuilder()
+    private Intent getIntentForDigest(String digest) {
+
+        Uri uri = getBaseUriBuilder()
                 .appendQueryParameter("digest", digest)
                 .build();
+
+        Intent startIntent = new Intent(Intent.ACTION_VIEW, uri);
+        startIntent.setPackage(BuildConfig.APPLICATION_ID);
+        return startIntent;
     }
 
-    private Uri getUriForCourse(String courseShortname) {
-        return getBaseUriBuilder()
+    private Intent getIntentForCourse(String courseShortname) {
+
+        Uri uri = getBaseUriBuilder()
                 .appendQueryParameter("course", courseShortname)
                 .build();
+
+        Intent startIntent = new Intent(Intent.ACTION_VIEW, uri);
+        startIntent.setPackage(BuildConfig.APPLICATION_ID);
+        return startIntent;
     }
 
 
@@ -102,10 +110,12 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
         InstrumentationRegistry.getInstrumentation().addMonitor(am);
 
         String digest = "XXXXX";
-        Intent startIntent = new Intent(Intent.ACTION_VIEW, getUriForDigest(digest));
-        viewDigestActivityTestRule.launchActivity(startIntent);
+        Intent startIntent = getIntentForDigest(digest);
 
-        assertTrue(InstrumentationRegistry.getInstrumentation().checkMonitorHit(am, 1));
+        try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
+            assertTrue(InstrumentationRegistry.getInstrumentation().checkMonitorHit(am, 1));
+        }
+
 
     }
 
@@ -115,24 +125,25 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
         doAnswer(invocationOnMock -> null).when(coursesRepository).getActivityByDigest(any(), anyString());
 
         String digest = "XXXXX";
-        Intent startIntent = new Intent(Intent.ACTION_VIEW, getUriForDigest(digest));
-        viewDigestActivityTestRule.launchActivity(startIntent);
+        Intent startIntent = getIntentForDigest(digest);
+        try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
-        onView(withId(R.id.course_card))
-                .check(matches(not(isDisplayed())));
+            onView(withId(R.id.course_card))
+                    .check(matches(not(isDisplayed())));
+        }
     }
 
     @Test
     public void showErrorWhenNoDigest() throws Exception {
 
-        viewDigestActivityTestRule.launchActivity(null);
+        try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(ViewDigestActivity.class)) {
 
-        onView(withId(R.id.course_card))
-                .check(matches(not(isDisplayed())));
+            onView(withId(R.id.course_card))
+                    .check(matches(not(isDisplayed())));
 
-        onView(withId(R.id.error_text))
-                .check(matches(isDisplayed()));
-
+            onView(withId(R.id.error_text))
+                    .check(matches(isDisplayed()));
+        }
     }
 
 
@@ -141,17 +152,18 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
 
         doAnswer(invocation -> null).when(user).getUsername();
 
-        Intent startIntent = new Intent(Intent.ACTION_VIEW, getUriForCourse("xx"));
-        viewDigestActivityTestRule.launchActivity(startIntent);
+        Intent startIntent = getIntentForCourse("xx");
+        try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
-        onView(withId(R.id.course_card))
-                .check(matches(not(isDisplayed())));
+            onView(withId(R.id.course_card))
+                    .check(matches(not(isDisplayed())));
 
-        onView(withId(R.id.error_text))
-                .check(matches(isDisplayed()));
+            onView(withId(R.id.error_text))
+                    .check(matches(isDisplayed()));
 
-        onView(withId(R.id.btn_login_register))
-                .check(matches(isDisplayed()));
+            onView(withId(R.id.btn_login_register))
+                    .check(matches(isDisplayed()));
+        }
     }
 
     @Test
@@ -163,27 +175,27 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
 
         doAnswer(invocation -> null).when(user).getUsername();
 
-        Intent startIntent = new Intent(Intent.ACTION_VIEW, getUriForCourse("xx"));
-        viewDigestActivityTestRule.launchActivity(startIntent);
+        Intent startIntent = getIntentForCourse("xx");
+        try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
-        onView(withId(R.id.btn_login_register)).perform(click());
+            onView(withId(R.id.btn_login_register)).perform(click());
 
-        android.app.Activity welcomeActivity = TestUtils.getCurrentActivity();
+            android.app.Activity welcomeActivity = TestUtils.getCurrentActivity();
 
-        assertEquals(WelcomeActivity.class, welcomeActivity.getClass());
+            assertEquals(WelcomeActivity.class, welcomeActivity.getClass());
 
-        doAnswer(invocation -> "any_username").when(user).getUsername();
-        welcomeActivity.setResult(android.app.Activity.RESULT_OK);
-        welcomeActivity.finish();
+            doAnswer(invocation -> "any_username").when(user).getUsername();
+            welcomeActivity.setResult(android.app.Activity.RESULT_OK);
+            welcomeActivity.finish();
 
-        android.app.Activity activity = TestUtils.getCurrentActivity();
+            android.app.Activity activity = TestUtils.getCurrentActivity();
 
-        assertEquals(ViewDigestActivity.class, activity.getClass());
+            assertEquals(ViewDigestActivity.class, activity.getClass());
 
-        onView(withId(R.id.btn_login_register))
-                .check(matches(not(isDisplayed())));
+            onView(withId(R.id.btn_login_register))
+                    .check(matches(not(isDisplayed())));
 
-
+        }
     }
 
 
@@ -202,10 +214,11 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
         InstrumentationRegistry.getInstrumentation().addMonitor(am);
 
         String course = "XXXXX";
-        Intent startIntent = new Intent(Intent.ACTION_VIEW, getUriForCourse(course));
-        viewDigestActivityTestRule.launchActivity(startIntent);
+        Intent startIntent = getIntentForCourse(course);
+        try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
-        assertTrue(InstrumentationRegistry.getInstrumentation().checkMonitorHit(am, 1));
+            assertTrue(InstrumentationRegistry.getInstrumentation().checkMonitorHit(am, 1));
+        }
     }
 
     @Test
@@ -217,12 +230,12 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
 
         doAnswer(invocation -> "test").when(user).getUsername();
 
-        Intent startIntent = new Intent(Intent.ACTION_VIEW, getUriForCourse("xx"));
-        viewDigestActivityTestRule.launchActivity(startIntent);
+        Intent startIntent = getIntentForCourse("xx");
+        try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
-        onView(withId(R.id.download_course_btn))
-                .check(matches(isDisplayed()));
-
+            onView(withId(R.id.download_course_btn))
+                    .check(matches(isDisplayed()));
+        }
     }
 
     @Test
@@ -234,15 +247,15 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
 
         doAnswer(invocation -> "test").when(user).getUsername();
 
-        Intent startIntent = new Intent(Intent.ACTION_VIEW, getUriForCourse("xx"));
-        viewDigestActivityTestRule.launchActivity(startIntent);
+        Intent startIntent = getIntentForCourse("xx");
+        try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
-        onView(withId(R.id.download_course_btn))
-                .check(matches(not(isDisplayed())));
+            onView(withId(R.id.download_course_btn))
+                    .check(matches(not(isDisplayed())));
 
-        onView(withId(R.id.error_text))
-                .check(matches(isDisplayed()));
-
+            onView(withId(R.id.error_text))
+                    .check(matches(isDisplayed()));
+        }
     }
 
 
@@ -263,15 +276,16 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
         doAnswer(invocation -> "test").when(user).getUsername();
 
         String course = completeCourse.getShortname();
-        Intent startIntent = new Intent(Intent.ACTION_VIEW, getUriForCourse(course));
-        viewDigestActivityTestRule.launchActivity(startIntent);
+        Intent startIntent = getIntentForCourse(course);
+        try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
-        android.app.Activity courseIndexActivity = TestUtils.getCurrentActivity();
-        assertEquals(CourseIndexActivity.class, courseIndexActivity.getClass());
+            android.app.Activity courseIndexActivity = TestUtils.getCurrentActivity();
+            assertEquals(CourseIndexActivity.class, courseIndexActivity.getClass());
 
-        pressBackUnconditionally();
+            pressBackUnconditionally();
 
-        assertTrue(courseIndexActivity.isDestroyed());
+            assertTrue(courseIndexActivity.isDestroyed());
+        }
     }
 
 
@@ -293,14 +307,15 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
         doAnswer(invocation -> "test").when(user).getUsername();
 
         String course = completeCourse.getShortname();
-        Intent startIntent = new Intent(Intent.ACTION_VIEW, getUriForCourse(course));
-        viewDigestActivityTestRule.launchActivity(startIntent);
+        Intent startIntent = getIntentForCourse(course);
+        try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
-        assertEquals(CourseIndexActivity.class, TestUtils.getCurrentActivity().getClass());
+            assertEquals(CourseIndexActivity.class, TestUtils.getCurrentActivity().getClass());
 
-        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
+            onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
 
-        assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
+            assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
+        }
     }
 
 }

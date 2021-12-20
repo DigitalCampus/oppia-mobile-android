@@ -1,10 +1,12 @@
 package androidTestFiles.UI;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
@@ -44,10 +46,6 @@ public class CustomFieldsUITest extends MockedApiEndpointTest {
     @Mock
     protected CustomFieldsRepository customFieldsRepo;
 
-    @Rule
-    public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
-            new ActivityTestRule<>(WelcomeActivity.class, false, false);
-
     @Test
     public void checkFieldsAreShownAndValidated() throws  Exception {
 
@@ -69,35 +67,36 @@ public class CustomFieldsUITest extends MockedApiEndpointTest {
 
         when(customFieldsRepo.getAll(any())).thenReturn(fields);
 
-        welcomeActivityTestRule.launchActivity(null);
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
 
-        onView(withId(R.id.register_form_jobtitle_field)).perform(scrollTo());
-        onView(withText("Helper text")).perform(scrollTo()).check(matches(isDisplayed()));
-        onView(withText("Custom int")).perform(scrollTo()).check(matches(isDisplayed()));
+            onView(withId(R.id.register_form_jobtitle_field)).perform(scrollTo());
+            onView(withText("Helper text")).perform(scrollTo()).check(matches(isDisplayed()));
+            onView(withText("Custom int")).perform(scrollTo()).check(matches(isDisplayed()));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("user"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("user"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("email@email.com"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("email@email.com"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Name"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Name"));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Surname"));
+            onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Surname"));
 
-        onView(withId(R.id.register_btn)).perform(click());
-        onView(withText(R.string.field_required)).perform(scrollTo()).check(matches(isDisplayed()));
+            onView(withId(R.id.register_btn)).perform(click());
+            onView(withText(R.string.field_required)).perform(scrollTo()).check(matches(isDisplayed()));
+        }
     }
 
     @Test
@@ -121,20 +120,20 @@ public class CustomFieldsUITest extends MockedApiEndpointTest {
 
         when(customFieldsRepo.getAll(any())).thenReturn(fields);
 
-        welcomeActivityTestRule.launchActivity(null);
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
 
-        onView(withId(R.id.register_form_jobtitle_field)).perform(scrollTo());
+            onView(withId(R.id.register_form_jobtitle_field)).perform(scrollTo());
 
-        onView(withHint("Custom bool")).perform(scrollTo(), click());
+            onView(withHint("Custom bool")).perform(scrollTo(), click());
 
-        // When we check the switch, the field is displayed
-        onView(withText("Dependant field")).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
+            // When we check the switch, the field is displayed
+            onView(withText("Dependant field")).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
 
-        onView(withHint(containsString("Custom bool"))).perform(scrollTo(), click());
-
+            onView(withHint(containsString("Custom bool"))).perform(scrollTo(), click());
+        }
     }
 
     @Test
@@ -164,24 +163,24 @@ public class CustomFieldsUITest extends MockedApiEndpointTest {
 
         when(customFieldsRepo.getAll(any())).thenReturn(fields);
 
-        welcomeActivityTestRule.launchActivity(null);
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
 
-        onView(withId(R.id.register_form_jobtitle_field)).perform(scrollTo());
+            onView(withId(R.id.register_form_jobtitle_field)).perform(scrollTo());
 
-        onView(withSpinnerText(containsString("Custom select 1"))).perform(scrollTo(), click());
-        onData(anything()).atPosition(1).perform(click());
+            onView(withSpinnerText(containsString("Custom select 1"))).perform(scrollTo(), click());
+            onData(anything()).atPosition(1).perform(click());
 
-        // When we select the specific value, the field is displayed
-        onView(withText("Dependant field")).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
+            // When we select the specific value, the field is displayed
+            onView(withText("Dependant field")).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
 
-        onView(withSpinnerText(containsString("value 1"))).perform(scrollTo(), click());
-        onData(anything()).atPosition(1).perform(click());
+            onView(withSpinnerText(containsString("value 1"))).perform(scrollTo(), click());
+            onData(anything()).atPosition(1).perform(click());
 
-        onView(withText("Dependant field")).check(matches(not(isDisplayed())));
+            onView(withText("Dependant field")).check(matches(not(isDisplayed())));
+        }
     }
-
 
 }

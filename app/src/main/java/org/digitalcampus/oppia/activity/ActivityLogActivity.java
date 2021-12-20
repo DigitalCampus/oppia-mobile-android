@@ -14,6 +14,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityActivitylogBinding;
 import org.digitalcampus.mobile.learning.databinding.DialogDeleteAccountBinding;
 import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
@@ -38,6 +39,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ActivityLogActivity extends AppActivity implements TrackerServiceListener, ExportActivityListener, ExportedTrackersFileAdapter.OnItemClickListener {
 
+
+    @Inject
+    ApiEndpoint apiEndpoint;
 
     @Inject
     ActivityLogRepository logsRepository;
@@ -72,7 +76,7 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
             if (omSubmitTrackerMultipleTask == null) {
                 Log.d(TAG, "Sumitting trackers multiple task");
                 updateActions(false);
-                omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(ActivityLogActivity.this);
+                omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(ActivityLogActivity.this, apiEndpoint);
                 omSubmitTrackerMultipleTask.setTrackerServiceListener(ActivityLogActivity.this);
                 omSubmitTrackerMultipleTask.execute();
             }
@@ -175,6 +179,8 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
 
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
         updateActions(true);
+
+        omSubmitTrackerMultipleTask = null;
     }
 
     @Override

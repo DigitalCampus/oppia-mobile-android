@@ -90,7 +90,7 @@ public class NumericInexactNoFeedbackTest extends BaseQuizTest {
 
         onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
                 .atPositionOnView(0, R.id.quiz_question_feedback_image))
-                .check(matches(withDrawable(R.drawable.quiz_cross)));
+                .check(matches(withDrawable(R.drawable.quiz_partially_correct)));
     }
 
     @Test
