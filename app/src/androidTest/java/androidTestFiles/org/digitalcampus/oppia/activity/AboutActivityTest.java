@@ -38,16 +38,16 @@ public class AboutActivityTest {
                 .perform(click());
     }
 
-    @Test
-    public void clickAboutTab() {
-
-        onView(allOf(withText(R.string.tab_title_about),
-                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                isDescendantOfA(withId(R.id.tabs_toolbar))))
-                .perform(click());
-
-        onView(withId(R.id.about_versionno)).check(matches(withText(containsString(BuildConfig.VERSION_NAME))));
-    }
+//    @Test
+//    public void clickAboutTab() {
+//
+//        onView(allOf(withText(R.string.tab_title_about),
+//                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+//                isDescendantOfA(withId(R.id.tabs_toolbar))))
+//                .perform(click());
+//
+//        onView(withId(R.id.about_versionno)).check(matches(withText(containsString(BuildConfig.VERSION_NAME))));
+//    }
 
 
 }
