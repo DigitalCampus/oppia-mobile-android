@@ -3,6 +3,7 @@ package androidTestFiles.org.digitalcampus.oppia.widgets;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.widget.EditText;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -27,14 +28,22 @@ import java.util.ArrayList;
 
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.Utils.ViewsUtils;
+import androidTestFiles.quiz.models.QuizModelGeneralTest;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.any;
 
@@ -149,4 +158,70 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
                 .check(matches(not(isDisplayed())));
     }
 
+
+    // Password protect
+
+    @Test
+    public void dontShowPasswordDialogIfPasswordPropDoesNotExist() throws Exception {
+        checkPasswordDialogDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NO_PASSWORD_FIELD, false);
+    }
+
+    @Test
+    public void dontShowPasswordDialogIfPasswordPropIsNull() throws Exception {
+        checkPasswordDialogDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NULL_PASSWORD, false);
+    }
+
+    @Test
+    public void dontShowPasswordDialogIfPasswordPropIsEmpty() throws Exception {
+        checkPasswordDialogDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_EMPTY_PASSWORD, false);
+    }
+
+    @Test
+    public void showPasswordDialogIfPasswordPropIsNotEmpty() throws Exception {
+        checkPasswordDialogDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NON_EMPTY_PASSWORD, true);
+    }
+
+    private void checkPasswordDialogDisplayed(String quizJson, boolean mustBeDisplayed) throws Exception {
+
+        loadQuizAndSetArgs(quizJson);
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+
+        onView(withId(R.id.take_quiz_btn)).perform(click());
+
+        if (mustBeDisplayed) {
+            onView(withText(R.string.quiz_protected))
+                    .check(matches(isDisplayed()));
+        } else {
+            onView(withText(R.string.quiz_protected))
+                    .check(doesNotExist());
+            onView(withText("Is it snowing today?")).check(matches(isDisplayed()));
+        }
+    }
+
+
+    @Test
+    public void enterQuizWhenValidPassword() throws Exception {
+        checkPasswordDialogDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NON_EMPTY_PASSWORD, true);
+        onView(instanceOf(EditText.class))
+                .inRoot(isDialog())
+                .perform(typeText("letmein"));
+        onView(withText(R.string.ok)).perform(click());
+        onView(withText("Is it snowing today?")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void dontEnterQuizWhenInvalidPassword() throws Exception {
+        checkPasswordDialogDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NON_EMPTY_PASSWORD, true);
+        onView(instanceOf(EditText.class))
+                .inRoot(isDialog())
+                .perform(typeText("wrong_pass"));
+        onView(withText(R.string.ok)).perform(click());
+
+        onView(withText(R.string.invalid_password))
+                .inRoot(ViewsUtils.isToast())
+                .check(matches(isDisplayed()));
+
+        onView(withText("Is it snowing today?")).check(doesNotExist());
+
+    }
 }
