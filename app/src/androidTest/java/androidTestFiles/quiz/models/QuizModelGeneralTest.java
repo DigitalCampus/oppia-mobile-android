@@ -39,6 +39,11 @@ public class QuizModelGeneralTest {
     private static final String UNSUPPORTED_QUESTION_TYPE = "quizzes/unsupported_question_type.json";
     private static final String ESSAY_QUESTION_TYPE = "quizzes/essay_question_type.json";
 
+    public static final String PASSWORD_PROTECT_NO_PASSWORD_FIELD = "quizzes/password_protect/no_password_field.json";
+    public static final String PASSWORD_PROTECT_NULL_PASSWORD = "quizzes/password_protect/null_password.json";
+    public static final String PASSWORD_PROTECT_EMPTY_PASSWORD = "quizzes/password_protect/empty_password.json";
+    public static final String PASSWORD_PROTECT_NON_EMPTY_PASSWORD = "quizzes/password_protect/non_empty_password.json";
+
     private Quiz quiz;
 
     @Before
@@ -260,4 +265,41 @@ public class QuizModelGeneralTest {
         }
     }
 
+    // Password protect
+
+    @Test
+    public void quizNoPasswordField() throws Exception {
+        quiz = new Quiz();
+        String quizContent = FileUtils.getStringFromFile(
+                InstrumentationRegistry.getInstrumentation().getContext(), PASSWORD_PROTECT_NO_PASSWORD_FIELD);
+        quiz.load(quizContent, DEFAULT_LANG);
+        assertEquals(null, quiz.getPassword());
+    }
+
+    @Test
+    public void quizNullPassword() throws Exception {
+        quiz = new Quiz();
+        String quizContent = FileUtils.getStringFromFile(
+                InstrumentationRegistry.getInstrumentation().getContext(), PASSWORD_PROTECT_NULL_PASSWORD);
+        quiz.load(quizContent, DEFAULT_LANG);
+        assertEquals(null, quiz.getPassword());
+    }
+
+    @Test
+    public void quizEmptyPassword() throws Exception {
+        quiz = new Quiz();
+        String quizContent = FileUtils.getStringFromFile(
+                InstrumentationRegistry.getInstrumentation().getContext(), PASSWORD_PROTECT_EMPTY_PASSWORD);
+        quiz.load(quizContent, DEFAULT_LANG);
+        assertEquals("", quiz.getPassword());
+    }
+
+    @Test
+    public void quizNonEmptyPassword() throws Exception {
+        quiz = new Quiz();
+        String quizContent = FileUtils.getStringFromFile(
+                InstrumentationRegistry.getInstrumentation().getContext(), PASSWORD_PROTECT_NON_EMPTY_PASSWORD);
+        quiz.load(quizContent, DEFAULT_LANG);
+        assertEquals("letmein", quiz.getPassword());
+    }
 }

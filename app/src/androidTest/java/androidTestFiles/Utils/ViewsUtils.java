@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.IdRes;
+import androidx.test.espresso.Root;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.matcher.BoundedMatcher;
 
@@ -20,6 +21,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.is;
+
+import androidTestFiles.Matchers.ToastMatcher;
 
 public class ViewsUtils {
 
@@ -75,4 +78,7 @@ public class ViewsUtils {
         return withHintInInputLayout(is(string));
     }
 
+    public static Matcher<Root> isToast() {
+        return new ToastMatcher();
+    }
 }
