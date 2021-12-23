@@ -83,7 +83,7 @@ public class CourseTransferableFile implements Serializable {
     }
 
     public String getDisplayDateTimeFromFilename(){
-        DateTimeFormatter f = DateTimeFormat.forPattern("yyyyMMddHHmm");
+        DateTimeFormatter f = DateTimeFormat.forPattern("yyyyMMddHHmmss");
         DateTime dateTime = f.parseDateTime(filename.substring(filename.lastIndexOf('_')+1, filename.lastIndexOf('.')));
         return DateUtils.DISPLAY_DATETIME_FORMAT.print(dateTime);
     }

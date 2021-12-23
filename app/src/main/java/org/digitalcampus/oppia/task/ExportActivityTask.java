@@ -125,7 +125,7 @@ public class ExportActivityTask extends AsyncTask<Integer, Integer, String> {
         }
 
         String filename = (users.size() > 1) ? "activity" : users.get(0).getUsername();
-        filename += "_" + new SimpleDateFormat("yyyyMMddhhmm").format(new Date()) + ".json";
+        filename += "_" + new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()) + ".json";
 
         File file = new File(destDir, filename);
         FileOutputStream f = null;
@@ -157,7 +157,9 @@ public class ExportActivityTask extends AsyncTask<Integer, Integer, String> {
             }
         }
 
-        db.markLogsAndQuizzesExported();
+        if (typeActivity == UNEXPORTED_ACTIVITY) {
+            db.markLogsAndQuizzesExported();
+        }
 
         return filename;
     }
