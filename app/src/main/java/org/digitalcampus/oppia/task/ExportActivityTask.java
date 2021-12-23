@@ -31,12 +31,15 @@ import java.util.List;
 
 import androidx.preference.PreferenceManager;
 
-public class ExportActivityTask extends AsyncTask<Void, Integer, String> {
+public class ExportActivityTask extends AsyncTask<Integer, Integer, String> {
 
     private static final String TAG = ExportActivityTask.class.getSimpleName();
     protected Context ctx;
     private SharedPreferences prefs;
     private ExportActivityListener listener;
+
+    public static final int UNEXPORTED_ACTIVITY = 0;
+    public static final int FULL_ACTIVTY = 1;
 
     public ExportActivityTask(Context ctx) {
         this.ctx = ctx;
@@ -49,17 +52,35 @@ public class ExportActivityTask extends AsyncTask<Void, Integer, String> {
 
 
     @Override
-    protected String doInBackground(Void... params) {
+    protected String doInBackground(Integer... params) {
 
         DbHelper db = DbHelper.getInstance(ctx);
         List<User> users = db.getAllUsers();
+
+        int typeActivity = params[0];
 
         int trackersCount = 0;
         int offlineUsersCount = 0;
         ArrayList<String> userResults = new ArrayList<>();
         for (User u: users) {
-            Collection<TrackerLog> userTrackers = db.getUnexportedTrackers(u.getUserId());
-            Collection<QuizAttempt> userQuizzes = db.getUnexportedQuizAttempts(u.getUserId());
+
+            Collection<TrackerLog> userTrackers;
+            Collection<QuizAttempt> userQuizzes;
+
+            switch (typeActivity) {
+                case UNEXPORTED_ACTIVITY:
+                    userTrackers = db.getUnexportedTrackers(u.getUserId());
+                    userQuizzes = db.getUnexportedQuizAttempts(u.getUserId());
+                    break;
+
+                case FULL_ACTIVTY:
+                    userTrackers = db.getTrackers(u.getUserId(), false);
+                    userQuizzes = db.getQuizAttempts(u.getUserId(), false);
+                    break;
+
+                default:
+                    throw new IllegalArgumentException("Missing activity type");
+            }
 
             trackersCount+= userTrackers.size();
             trackersCount+= userQuizzes.size();

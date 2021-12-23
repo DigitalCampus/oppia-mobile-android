@@ -13,23 +13,23 @@ import android.text.style.StyleSpan;
 import android.util.Patterns;
 import android.webkit.URLUtil;
 
+import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
-import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.task.ExportActivityTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.StorageLocationInfo;
 import org.digitalcampus.oppia.utils.storage.StorageUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import androidx.preference.EditTextPreference;
-import androidx.preference.ListPreference;
-import androidx.preference.Preference;
 
 import javax.inject.Inject;
 
@@ -100,6 +100,27 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
             return true;
         });
 
+        findPreference(PrefsActivity.PREF_FULL_ACTIVITY_EXPORT).setOnPreferenceClickListener(preference -> {
+            showCreateExportDataDialog();
+            return true;
+        });
+
+    }
+
+    private void showCreateExportDataDialog() {
+
+        getAppActivity().showProgressDialog(getString(R.string.loading));
+
+        ExportActivityTask task = new ExportActivityTask(getActivity());
+        task.setListener(filename -> {
+            getAppActivity().hideProgressDialog();
+            getAppActivity().alert(R.string.full_activity_exported_success);
+        });
+        task.execute(ExportActivityTask.FULL_ACTIVTY);
+    }
+
+    private AppActivity getAppActivity() {
+        return ((AppActivity) getActivity());
     }
 
     @Override

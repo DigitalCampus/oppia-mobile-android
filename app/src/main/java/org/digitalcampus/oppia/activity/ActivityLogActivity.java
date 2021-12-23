@@ -117,7 +117,7 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
             ExportActivityTask task = new ExportActivityTask(ActivityLogActivity.this);
             task.setListener(ActivityLogActivity.this);
             updateActions(false);
-            task.execute();
+            task.execute(ExportActivityTask.UNEXPORTED_ACTIVITY);
         });
     }
 

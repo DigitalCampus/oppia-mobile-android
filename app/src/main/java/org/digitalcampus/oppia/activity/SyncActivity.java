@@ -139,7 +139,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             updateStatus(true);
             refreshFileList(false);
         });
-        task.execute();
+        task.execute(ExportActivityTask.UNEXPORTED_ACTIVITY);
         binding.sendTransferProgress.setVisibility(View.VISIBLE);
 
     }
