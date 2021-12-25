@@ -5,7 +5,9 @@ import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
@@ -30,23 +32,22 @@ import androidTestFiles.database.BaseTestDB;
 @RunWith(AndroidJUnit4.class)
 public class ExportFullActivityUITest extends BaseTestDB {
 
-    private static final int NUM_QUIZ_ATTEMPTS_TEST = 2;
     private static final int NUM_TRACKER_TEST = 3;
 
     @After
     public void cleanActivityFiles() throws Exception {
 
         File activityPath = new File(Storage.getActivityPath(getContext()));
-        for (String filename : activityPath.list()) {
-            File file = new File(activityPath, filename);
-            file.delete();
+        if (activityPath.listFiles() != null) {
+            for (File file : activityPath.listFiles()) {
+                file.delete();
+            }
         }
     }
 
     @Test
     public void checkExportActivityCompleteUIFlow() throws Exception {
 
-        getTestDataManager().addQuizAttempts(NUM_QUIZ_ATTEMPTS_TEST);
         getTestDataManager().addTrackers(NUM_TRACKER_TEST);
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
@@ -54,6 +55,9 @@ public class ExportFullActivityUITest extends BaseTestDB {
             performClickDrawerItem(R.id.menu_settings);
             clickPrefWithText(R.string.prefAdvanced_title);
             clickPrefWithText(R.string.pref_export_full_activity_title);
+            onView(withText(R.string.full_activity_exported_success))
+                    .inRoot(isDialog())
+                    .check(matches(isDisplayed()));
             pressBack();
             pressBack();
             pressBack();
@@ -67,6 +71,21 @@ public class ExportFullActivityUITest extends BaseTestDB {
 
             onView(withId(R.id.exported_files_list)).check(new RecyclerViewItemCountAssertion(2));
             onView(withId(R.id.highlight_to_export)).check(matches(withText(String.valueOf(0))));
+
+        }
+    }
+
+    @Test
+    public void showNoFilesToExportMessageWhenThereIsNoActivity() throws Exception {
+
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            openDrawer();
+            performClickDrawerItem(R.id.menu_settings);
+            clickPrefWithText(R.string.prefAdvanced_title);
+            clickPrefWithText(R.string.pref_export_full_activity_title);
+            onView(withText(R.string.no_data_to_export))
+                    .inRoot(isDialog())
+                    .check(matches(isDisplayed()));
 
         }
     }

@@ -98,7 +98,7 @@ public class ExportActivityTaskTest extends BaseTestDB {
             exportedFilename[0] = filename;
             signal.countDown();
         });
-        task.execute(ExportActivityTask.FULL_ACTIVTY);
+        task.execute(ExportActivityTask.FULL_EXPORT_ACTIVTY);
 
         try {
             signal.await();
@@ -146,7 +146,7 @@ public class ExportActivityTaskTest extends BaseTestDB {
             exportedFilename[0] = filename;
             signal.countDown();
         });
-        task.execute(ExportActivityTask.FULL_ACTIVTY);
+        task.execute(ExportActivityTask.FULL_EXPORT_ACTIVTY);
 
         try {
             signal.await();
