@@ -37,10 +37,18 @@ public class ExportFullActivityUITest extends BaseTestDB {
     @After
     public void cleanActivityFiles() throws Exception {
 
-        File activityPath = new File(Storage.getActivityPath(getContext()));
-        if (activityPath.listFiles() != null) {
+        cleanDir(Storage.getActivityPath(getContext()));
+        cleanDir(Storage.getActivityFullExportPath(getContext()));
+
+    }
+
+    private void cleanDir(String path) {
+        File activityPath = new File(path);
+        if (activityPath.exists() && activityPath.isDirectory()) {
             for (File file : activityPath.listFiles()) {
-                file.delete();
+                if (file.isFile()) {
+                    file.delete();
+                }
             }
         }
     }
@@ -58,19 +66,6 @@ public class ExportFullActivityUITest extends BaseTestDB {
             onView(withText(R.string.full_activity_exported_success))
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()));
-            pressBack();
-            pressBack();
-            pressBack();
-            openDrawer();
-            performClickDrawerItem(R.id.menu_activitylog);
-            onView(withId(R.id.exported_files_list)).check(new RecyclerViewItemCountAssertion(1));
-            onView(withId(R.id.highlight_to_export)).check(matches(withText(String.valueOf(NUM_TRACKER_TEST))));
-
-            onView(withId(R.id.export_btn)).perform(click());
-            pressBack();
-
-            onView(withId(R.id.exported_files_list)).check(new RecyclerViewItemCountAssertion(2));
-            onView(withId(R.id.highlight_to_export)).check(matches(withText(String.valueOf(0))));
 
         }
     }
@@ -83,7 +78,7 @@ public class ExportFullActivityUITest extends BaseTestDB {
             performClickDrawerItem(R.id.menu_settings);
             clickPrefWithText(R.string.prefAdvanced_title);
             clickPrefWithText(R.string.pref_export_full_activity_title);
-            onView(withText(R.string.no_data_to_export))
+            onView(withText(R.string.export_task_no_activities))
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()));
 

@@ -30,10 +30,19 @@ public class ExportActivityTaskTest extends BaseTestDB {
     @After
     public void cleanActivityFiles() throws Exception {
 
-        File activityPath = new File(Storage.getActivityPath(getContext()));
-        for (String filename : activityPath.list()) {
-            File file = new File(activityPath, filename);
-            file.delete();
+        cleanDir(Storage.getActivityPath(getContext()));
+        cleanDir(Storage.getActivityFullExportPath(getContext()));
+
+    }
+
+    private void cleanDir(String path) {
+        File activityPath = new File(path);
+        if (activityPath.exists() && activityPath.isDirectory()) {
+            for (File file : activityPath.listFiles()) {
+                if (file.isFile()) {
+                    file.delete();
+                }
+            }
         }
     }
 
@@ -55,8 +64,9 @@ public class ExportActivityTaskTest extends BaseTestDB {
         final String[] exportedFilename = new String[1];
 
         ExportActivityTask task = new ExportActivityTask(getContext());
-        task.setListener(filename -> {
-            exportedFilename[0] = filename;
+        task.setListener(result -> {
+            assertTrue(result.isSuccess());
+            exportedFilename[0] = result.getResultMessage();
             signal.countDown();
         });
         task.execute(ExportActivityTask.UNEXPORTED_ACTIVITY);
@@ -67,7 +77,7 @@ public class ExportActivityTaskTest extends BaseTestDB {
             e.printStackTrace();
         }
 
-        checkJsonFile(exportedFilename[0]);
+        checkJsonFile(Storage.getActivityPath(getContext()), exportedFilename[0]);
 
         List<QuizAttempt> quizAttemptsAfter = getDbHelper().getUnexportedQuizAttempts(1);
         assertEquals(0, quizAttemptsAfter.size());
@@ -94,8 +104,9 @@ public class ExportActivityTaskTest extends BaseTestDB {
         final String[] exportedFilename = new String[1];
 
         ExportActivityTask task = new ExportActivityTask(getContext());
-        task.setListener(filename -> {
-            exportedFilename[0] = filename;
+        task.setListener(result -> {
+            assertTrue(result.isSuccess());
+            exportedFilename[0] = result.getResultMessage();
             signal.countDown();
         });
         task.execute(ExportActivityTask.FULL_EXPORT_ACTIVTY);
@@ -106,7 +117,7 @@ public class ExportActivityTaskTest extends BaseTestDB {
             e.printStackTrace();
         }
 
-        checkJsonFile(exportedFilename[0]);
+        checkJsonFile(Storage.getActivityFullExportPath(getContext()), exportedFilename[0]);
 
         List<QuizAttempt> quizAttemptsAfter = getDbHelper().getUnexportedQuizAttempts(1);
         assertEquals(NUM_QUIZ_ATTEMPTS_TEST, quizAttemptsAfter.size());
@@ -142,8 +153,9 @@ public class ExportActivityTaskTest extends BaseTestDB {
         final String[] exportedFilename = new String[1];
 
         ExportActivityTask task = new ExportActivityTask(getContext());
-        task.setListener(filename -> {
-            exportedFilename[0] = filename;
+        task.setListener(result -> {
+            assertTrue(result.isSuccess());
+            exportedFilename[0] = result.getResultMessage();
             signal.countDown();
         });
         task.execute(ExportActivityTask.FULL_EXPORT_ACTIVTY);
@@ -154,7 +166,7 @@ public class ExportActivityTaskTest extends BaseTestDB {
             e.printStackTrace();
         }
 
-        checkJsonFile(exportedFilename[0]);
+        checkJsonFile(Storage.getActivityFullExportPath(getContext()), exportedFilename[0]);
 
         List<QuizAttempt> quizAttemptsAfter = getDbHelper().getUnexportedQuizAttempts(1);
         assertEquals(0, quizAttemptsAfter.size());
@@ -164,9 +176,9 @@ public class ExportActivityTaskTest extends BaseTestDB {
 
     }
 
-    private void checkJsonFile(String exportedFilename) throws Exception {
+    private void checkJsonFile(String path, String exportedFilename) throws Exception {
 
-        File activityPath = new File(Storage.getActivityPath(getContext()));
+        File activityPath = new File(path);
         File exportedActivityFile = new File(activityPath, exportedFilename);
         assertTrue(exportedActivityFile.exists());
         String contentJson = FileUtils.readFile(exportedActivityFile);
