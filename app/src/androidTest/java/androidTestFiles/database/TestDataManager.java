@@ -91,6 +91,21 @@ public class TestDataManager {
             QuizAttempt qa = new QuizAttempt();
             qa.setCourseId(1);
             qa.setUserId(1);
+            qa.setData("[{\"some\": \"data\"}]");
+            dbHelper.insertQuizAttempt(qa);
+        }
+
+    }
+
+    public void addQuizAttemptsWithNullData(int num) {
+
+        addUsers();
+        addCourses();
+
+        for (int i = 0; i < num; i++) {
+            QuizAttempt qa = new QuizAttempt();
+            qa.setCourseId(1);
+            qa.setUserId(1);
             dbHelper.insertQuizAttempt(qa);
         }
 

@@ -128,10 +128,12 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
     }
 
     private void showFullExportShareDialog(String filename) {
+
+        final File fileToShare = new File(Storage.getActivityFullExportPath(getActivity()), filename);
         new AlertDialog.Builder(getActivity())
-                .setMessage(R.string.full_activity_exported_success)
+                .setMessage(getString(R.string.full_activity_exported_success)
+                        + getString(R.string.full_activity_export_path, fileToShare.getPath()))
                 .setPositiveButton(R.string.share, (dialog, which) -> {
-                    File fileToShare = new File(Storage.getActivityFullExportPath(getActivity()), filename);
                     ExternalResourceOpener.shareFile(getActivity(), fileToShare, "text/json");
                 })
                 .setNegativeButton(R.string.cancel, null)

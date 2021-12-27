@@ -11,6 +11,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.hamcrest.CoreMatchers.containsString;
+
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
@@ -63,7 +65,7 @@ public class ExportFullActivityUITest extends BaseTestDB {
             performClickDrawerItem(R.id.menu_settings);
             clickPrefWithText(R.string.prefAdvanced_title);
             clickPrefWithText(R.string.pref_export_full_activity_title);
-            onView(withText(R.string.full_activity_exported_success))
+            onView(withText(containsString(getContext().getString(R.string.full_activity_exported_success))))
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()));
 
