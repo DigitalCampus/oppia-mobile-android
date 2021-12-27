@@ -147,6 +147,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_NEW_COURSES_LIST_NOTIFIED = "prefNewCoursesListNotified";
     public static final String PREF_LAST_NEW_COURSE_SEEN_TIMESTAMP = "prefNewCourseTimestamp";
 
+    public static final String PREF_FULL_ACTIVITY_EXPORT = "prefFullActivityExport";
 
     //Privacy tracking preferences
     public static final String PREF_ANALYTICS_INITIAL_PROMPT = "prefAnalyticsInitialPrompt";

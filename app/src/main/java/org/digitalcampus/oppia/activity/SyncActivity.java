@@ -135,11 +135,15 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         binding.sendAllButton.setOnClickListener(v -> sendAll());
 
         ExportActivityTask task = new ExportActivityTask(this);
-        task.setListener(filename -> {
+        task.setListener(result -> {
             updateStatus(true);
             refreshFileList(false);
+
+            if (!result.isSuccess()) {
+                toast(result.getResultMessage());
+            }
         });
-        task.execute();
+        task.execute(ExportActivityTask.UNEXPORTED_ACTIVITY);
         binding.sendTransferProgress.setVisibility(View.VISIBLE);
 
     }
