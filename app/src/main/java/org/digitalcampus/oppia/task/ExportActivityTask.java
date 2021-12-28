@@ -44,7 +44,7 @@ public class ExportActivityTask extends AsyncTask<Integer, Integer, BasicResult>
     public static final int UNEXPORTED_ACTIVITY = 0;
     public static final int FULL_EXPORT_ACTIVTY = 1;
 
-    public static String activityTimestampFormat = "yyyyMMddhhmmss";
+    public static String activityTimestampFormat = "yyyyMMddHHmmss";
 
     public ExportActivityTask(Context ctx) {
         this.ctx = ctx;

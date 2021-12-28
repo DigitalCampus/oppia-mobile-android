@@ -41,7 +41,7 @@ public class ActivityLogActivityTest extends DaggerInjectMockUITest {
 
         doAnswer(invocationOnMock -> {
             ArrayList<File> files = new ArrayList<>();
-            files.add(new File("username_202001251800.json"));
+            files.add(new File("username_20200125180000.json"));
             return files;
         }).when(logsRepository).getExportedActivityLogs((Context) any());
 
