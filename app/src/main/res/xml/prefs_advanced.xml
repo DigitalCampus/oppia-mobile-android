@@ -67,4 +67,10 @@
         android:title="@string/prefServerTimeoutResponse"
         android:inputType="number" />
 
+    <Preference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:icon="@drawable/ic_full_activity_export"
+        app:key="prefFullActivityExport"
+        app:title="@string/pref_export_full_activity_title" />
 </androidx.preference.PreferenceScreen>

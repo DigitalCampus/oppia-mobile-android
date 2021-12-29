@@ -45,10 +45,10 @@ public class CourseTransferableFileModelTest {
         ctf.setType(CourseTransferableFile.TYPE_ACTIVITY_LOG);
         assertEquals("activity", ctf.getType());
 
-        ctf.setFilename("myfile_202009301532.txt");
+        ctf.setFilename("myfile_20200930153200.txt");
         assertEquals("2020/09/30 15:32", ctf.getDisplayDateTimeFromFilename());
 
-        assertEquals(1878414046, ctf.hashCode());
+        assertEquals(1261892062, ctf.hashCode());
         ctf.setFilename(null);
         assertEquals(0, ctf.hashCode());
 

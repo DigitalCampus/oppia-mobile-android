@@ -4,6 +4,7 @@ package androidTestFiles.Utils;
 import android.widget.EditText;
 
 import androidx.annotation.IdRes;
+import androidx.test.espresso.Root;
 import androidx.test.espresso.ViewInteraction;
 
 import org.digitalcampus.mobile.learning.R;
@@ -28,6 +29,8 @@ import static org.hamcrest.CoreMatchers.allOf;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.is;
+
+import androidTestFiles.Matchers.ToastMatcher;
 
 public class ViewsUtils {
 
@@ -83,4 +86,7 @@ public class ViewsUtils {
         return withHintInInputLayout(is(string));
     }
 
+    public static Matcher<Root> isToast() {
+        return new ToastMatcher();
+    }
 }

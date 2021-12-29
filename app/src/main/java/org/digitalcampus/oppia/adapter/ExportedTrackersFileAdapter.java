@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.RowActivitylogBinding;
+import org.digitalcampus.oppia.task.ExportActivityTask;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -28,11 +29,12 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
 
     public interface OnItemClickListener {
         void onItemShareClick(File fileToShare);
+
         void onItemToDelete(File fileToDelete);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        
+
         private final RowActivitylogBinding binding;
 
         public ViewHolder(View v) {
@@ -40,19 +42,18 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
             binding = RowActivitylogBinding.bind(v);
 
             binding.shareBtn.setOnClickListener(v1 -> {
-                if (listener != null){
+                if (listener != null) {
                     listener.onItemShareClick(fileList.get(getAdapterPosition()));
                 }
             });
 
-            if (showDeleteButton){
+            if (showDeleteButton) {
                 binding.deleteBtn.setOnClickListener(view -> {
-                    if (listener != null){
+                    if (listener != null) {
                         listener.onItemToDelete(fileList.get(getAdapterPosition()));
                     }
                 });
-            }
-            else{
+            } else {
                 binding.deleteBtn.setVisibility(View.GONE);
             }
 
@@ -60,11 +61,11 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
     }
 
 
-    public ExportedTrackersFileAdapter(List<File> fileList, OnItemClickListener listener){
+    public ExportedTrackersFileAdapter(List<File> fileList, OnItemClickListener listener) {
         this(fileList, listener, false);
     }
 
-    public ExportedTrackersFileAdapter(List<File> fileList, OnItemClickListener listener, boolean showDeleteButton){
+    public ExportedTrackersFileAdapter(List<File> fileList, OnItemClickListener listener, boolean showDeleteButton) {
         this.fileList = fileList;
         this.listener = listener;
         this.showDeleteButton = showDeleteButton;
@@ -84,15 +85,15 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
         File current = fileList.get(position);
         String filename = current.getName();
         String username = filename.substring(0, filename.indexOf('_'));
-        if (username.equals("activity")){
+        if (username.equals("activity")) {
             username = "Multiple users";
         }
-        DateTimeFormatter f = DateTimeFormat.forPattern("yyyyMMddHHmm");
-        DateTime dateTime = f.parseDateTime(filename.substring(filename.lastIndexOf('_')+1, filename.lastIndexOf('.')));
+        DateTimeFormatter f = DateTimeFormat.forPattern(ExportActivityTask.activityTimestampFormat);
+        DateTime dateTime = f.parseDateTime(filename.substring(filename.lastIndexOf('_') + 1, filename.lastIndexOf('.')));
         String date = DateUtils.DISPLAY_DATETIME_FORMAT.print(dateTime);
 
         holder.binding.fileName.setText(username);
-        holder.binding.fileSize.setText( org.apache.commons.io.FileUtils.byteCountToDisplaySize(current.length()));
+        holder.binding.fileSize.setText(org.apache.commons.io.FileUtils.byteCountToDisplaySize(current.length()));
         holder.binding.fileDate.setText(date);
     }
 
