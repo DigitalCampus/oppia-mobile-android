@@ -14,10 +14,11 @@ public class ActivityLogRepository {
         List<File> files = new ArrayList<>();
         File activityFolder = new File(Storage.getActivityPath(ctx));
         if (activityFolder.exists()) {
-            String[] children = activityFolder.list();
-            for (String dirFiles : children) {
-                File exportedActivity = new File(activityFolder, dirFiles);
-                files.add(exportedActivity);
+            File[] children = activityFolder.listFiles();
+            for (File dirFile : children) {
+                if (dirFile.isFile()) {
+                    files.add(dirFile);
+                }
             }
         }
         return files;
@@ -30,7 +31,9 @@ public class ActivityLogRepository {
             String[] children = archivedFolder.list();
             for (String dirFiles : children) {
                 File exportedActivity = new File(archivedFolder, dirFiles);
-                files.add(exportedActivity);
+                if (exportedActivity.isFile()) {
+                    files.add(exportedActivity);
+                }
             }
         }
         return files;

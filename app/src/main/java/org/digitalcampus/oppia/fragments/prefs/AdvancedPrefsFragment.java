@@ -2,6 +2,7 @@ package org.digitalcampus.oppia.fragments.prefs;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -13,23 +14,26 @@ import android.text.style.StyleSpan;
 import android.util.Patterns;
 import android.webkit.URLUtil;
 
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.api.RemoteApiEndpoint;
-import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.storage.StorageLocationInfo;
-import org.digitalcampus.oppia.utils.storage.StorageUtils;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.AppActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.api.RemoteApiEndpoint;
+import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.task.ExportActivityTask;
+import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
+import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.storage.StorageLocationInfo;
+import org.digitalcampus.oppia.utils.storage.StorageUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -100,6 +104,44 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
             return true;
         });
 
+        findPreference(PrefsActivity.PREF_FULL_ACTIVITY_EXPORT).setOnPreferenceClickListener(preference -> {
+            showCreateExportDataDialog();
+            return true;
+        });
+
+    }
+
+    private void showCreateExportDataDialog() {
+
+        getAppActivity().showProgressDialog(getString(R.string.loading));
+
+        ExportActivityTask task = new ExportActivityTask(getActivity());
+        task.setListener(result -> {
+            getAppActivity().hideProgressDialog();
+            if (result.isSuccess()) {
+                showFullExportShareDialog(result.getResultMessage());
+            } else {
+                getAppActivity().alert(result.getResultMessage());
+            }
+        });
+        task.execute(ExportActivityTask.FULL_EXPORT_ACTIVTY);
+    }
+
+    private void showFullExportShareDialog(String filename) {
+
+        final File fileToShare = new File(Storage.getActivityFullExportPath(getActivity()), filename);
+        new AlertDialog.Builder(getActivity())
+                .setMessage(getString(R.string.full_activity_exported_success)
+                        + getString(R.string.full_activity_export_path, fileToShare.getPath()))
+                .setPositiveButton(R.string.share, (dialog, which) -> {
+                    ExternalResourceOpener.shareFile(getActivity(), fileToShare, "text/json");
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private AppActivity getAppActivity() {
+        return ((AppActivity) getActivity());
     }
 
     @Override

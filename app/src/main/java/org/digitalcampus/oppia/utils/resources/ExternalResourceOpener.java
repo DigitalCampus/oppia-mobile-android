@@ -1,14 +1,17 @@
 package org.digitalcampus.oppia.utils.resources;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
 import java.io.File;
@@ -42,16 +45,25 @@ public class ExternalResourceOpener {
 
     }
 
-    public static Intent constructShareFileIntent(Context ctx, File filteToShare){
+    public static Intent constructShareFileIntent(Context ctx, File filteToShare, String type){
 
         Intent share = new Intent(Intent.ACTION_SEND);
         share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         share.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        share.setType("audio/*");
+        share.setType(type);
 
         Uri targetUri = FileProvider.getUriForFile(ctx, FILEPROVIDER_AUTHORITY, filteToShare);
         share.putExtra(Intent.EXTRA_STREAM, targetUri);
 
         return share;
+    }
+
+    public static void shareFile(Context context, File fileToShare, String type) {
+        Intent intentShare = constructShareFileIntent(context, fileToShare, type);
+        try {
+            context.startActivity(intentShare);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(context, R.string.no_app_to_share, Toast.LENGTH_SHORT).show();
+        }
     }
 }

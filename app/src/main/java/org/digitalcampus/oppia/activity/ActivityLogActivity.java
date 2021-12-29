@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.activity;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,6 +23,7 @@ import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.model.ActivityLogRepository;
 import org.digitalcampus.oppia.task.ExportActivityTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 
@@ -107,8 +109,7 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
     }
 
     private void shareFile(File toShare){
-        Intent share = ExternalResourceOpener.constructShareFileIntent(this, toShare);
-        startActivity(share);
+        ExternalResourceOpener.shareFile(this, toShare, "text/json");
     }
 
     private void exportActivities() {
@@ -117,7 +118,7 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
             ExportActivityTask task = new ExportActivityTask(ActivityLogActivity.this);
             task.setListener(ActivityLogActivity.this);
             updateActions(false);
-            task.execute();
+            task.execute(ExportActivityTask.UNEXPORTED_ACTIVITY);
         });
     }
 
@@ -189,19 +190,17 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
     }
 
     @Override
-    public void onExportComplete(String filename) {
+    public void onExportComplete(BasicResult result) {
 
         if (showCompleteExportMessage) {
 
-            if (filename != null) {
+            if (result.isSuccess()) {
                 UIUtils.showAlert(this,
                         R.string.export_task_completed,
-                        getString(R.string.export_task_completed_text, filename)
+                        getString(R.string.export_task_completed_text, result.getResultMessage())
                 );
             } else {
-                Toast.makeText(this,
-                        R.string.export_task_no_activities,
-                        Toast.LENGTH_LONG).show();
+                toast(result.getResultMessage());
             }
 
         }
