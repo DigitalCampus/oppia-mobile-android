@@ -607,5 +607,14 @@
 
     <string name="warning_reminder_weekly_just_one_day">For weekly interval only one day must be set</string>
     <string name="warning_reminder_at_least_one_day">You have to set at least one day</string>
+
+    <string name="quiz_protected">Quiz protected</string>
+    <string name="please_enter_quiz_password">Please, enter password to access this quiz</string>
+    <string name="invalid_password">Invalid password</string>
+    <string name="pref_export_full_activity_title">Export full activity data</string>
+    <string name="full_activity_exported_success">Full activity exported successfuly.\n\nYou can send it to external apps clicking "Share" button</string>
+    <string name="full_activity_export_path">\n\nPath: %s.</string>
+    <string name="share">Share</string>
+    <string name="no_app_to_share">Error. There is no installed app to share this file</string>
 </resources>
 

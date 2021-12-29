@@ -4,6 +4,8 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.QuizAttempt;
+import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
 
 import java.util.ArrayList;
@@ -80,10 +82,57 @@ public class TestDataManager {
         dbHelper.insertCourseGamification(1234, gamificationEvents);
     }
 
+    public void addQuizAttempts(int num) {
+
+        addUsers();
+        addCourses();
+
+        for (int i = 0; i < num; i++) {
+            QuizAttempt qa = new QuizAttempt();
+            qa.setCourseId(1);
+            qa.setUserId(1);
+            qa.setData("[{\"some\": \"data\"}]");
+            dbHelper.insertQuizAttempt(qa);
+        }
+
+    }
+
+    public void addQuizAttemptsWithNullData(int num) {
+
+        addUsers();
+        addCourses();
+
+        for (int i = 0; i < num; i++) {
+            QuizAttempt qa = new QuizAttempt();
+            qa.setCourseId(1);
+            qa.setUserId(1);
+            dbHelper.insertQuizAttempt(qa);
+        }
+
+    }
+
+    public void addTrackers(int num) {
+
+        addUsers();
+        addCourses();
+
+        List<TrackerLog> trackerList = new ArrayList<>();
+
+        for (int i = 0; i < num; i++) {
+            TrackerLog trackerLog = new TrackerLog();
+            trackerLog.setCompleted(true);
+            trackerLog.setCourseId(1);
+            trackerLog.setUserId(1);
+            trackerLog.setDigest("test_digest");
+
+            trackerList.add(trackerLog);
+        }
+
+        dbHelper.insertTrackers(trackerList);
+    }
+
     // quizzes
 
-    // trackers
 
 
-    // quiz attempts
 }

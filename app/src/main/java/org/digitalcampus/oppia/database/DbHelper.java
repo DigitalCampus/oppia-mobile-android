@@ -97,6 +97,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String STR_EQUALS_NUMBER = " = %d ";
     private static final String STR_TEXT_DEFAULT = " text default '";
     private static final String STR_EQUALS_AND = "=? AND ";
+    private static final String STR_EQUALS = "=?";
     private static final String STR_INNERJOIN_FULLTEXT = " INNER JOIN %s a ON a.%s = ft.docid";
     private static final String STR_INNERJOIN_COURSE = " INNER JOIN %s c ON a.%s = c.%s ";
     private static final String STR_WHERE_MATCH = " WHERE %s MATCH '%s' ";
@@ -1717,8 +1718,22 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<TrackerLog> getUnexportedTrackers(long userId) {
-        String s = TRACKER_LOG_C_SUBMITTED + STR_EQUALS_AND + TRACKER_LOG_C_USERID + STR_EQUALS_AND + TRACKER_LOG_C_EXPORTED + "=? ";
-        String[] args = new String[]{"0", String.valueOf(userId), "0"};
+        return getTrackers(userId, true);
+    }
+
+    public List<TrackerLog> getTrackers(long userId, boolean onlyUnexported) {
+
+        String s;
+        String[] args;
+
+        if (onlyUnexported) {
+            s = TRACKER_LOG_C_SUBMITTED + STR_EQUALS_AND + TRACKER_LOG_C_USERID + STR_EQUALS_AND + TRACKER_LOG_C_EXPORTED + "=? ";
+            args = new String[]{"0", String.valueOf(userId), "0"};
+        } else {
+            s = TRACKER_LOG_C_USERID + STR_EQUALS;
+            args = new String[]{String.valueOf(userId)};
+        }
+
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
 
@@ -1767,6 +1782,16 @@ public class DbHelper extends SQLiteOpenHelper {
 
         ContentValues quizValues = new ContentValues();
         quizValues.put(QUIZATTEMPTS_C_EXPORTED, 1);
+        db.update(QUIZATTEMPTS_TABLE, quizValues, null, null);
+    }
+
+    public void markLogsAndQuizzesSubmitted() {
+        ContentValues trackerValues = new ContentValues();
+        trackerValues.put(TRACKER_LOG_C_SUBMITTED, 1);
+        db.update(TRACKER_LOG_TABLE, trackerValues, null, null);
+
+        ContentValues quizValues = new ContentValues();
+        quizValues.put(QUIZATTEMPTS_C_SENT, 1);
         db.update(QUIZATTEMPTS_TABLE, quizValues, null, null);
     }
 
@@ -1847,8 +1872,22 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<QuizAttempt> getUnexportedQuizAttempts(long userId) {
-        String s = QUIZATTEMPTS_C_SENT + STR_EQUALS_AND + QUIZATTEMPTS_C_EXPORTED + STR_EQUALS_AND + QUIZATTEMPTS_C_USERID + "=? ";
-        String[] args = new String[]{"0", "0", String.valueOf(userId)};
+        return getQuizAttempts(userId, true);
+    }
+
+    public List<QuizAttempt> getQuizAttempts(long userId, boolean onlyUnexported) {
+
+        String s;
+        String[] args;
+
+        if (onlyUnexported) {
+            s = QUIZATTEMPTS_C_SENT + STR_EQUALS_AND + QUIZATTEMPTS_C_EXPORTED + STR_EQUALS_AND + QUIZATTEMPTS_C_USERID + "=? ";
+            args = new String[]{"0", "0", String.valueOf(userId)};
+        } else {
+            s = QUIZATTEMPTS_C_USERID + STR_EQUALS;
+            args = new String[]{String.valueOf(userId)};
+        }
+
         Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
         ArrayList<QuizAttempt> quizAttempts = new ArrayList<>();
