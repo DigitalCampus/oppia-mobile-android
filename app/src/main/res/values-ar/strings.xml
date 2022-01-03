@@ -104,7 +104,6 @@
 <string name="prefUserHint">للقراءة فقط</string>
 <string name="prefLogoutEnabled">السماح بتسجيل الخروج من الصفحة الرئيسة</string>
 <string name="prefDeleteCourseEnabled">السماح بإلغاء الدرس</string>
-<string name="prefDownloadViaCellularEnabled">تنزيل ملفات الوسائط عبر شبكة الهاتف الخليوي</string>
 
     <!-- Strings relative to Storage -->
 <string name="prefStorageLocation">مساحة التخزين</string>

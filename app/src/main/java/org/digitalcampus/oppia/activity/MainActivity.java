@@ -44,7 +44,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class MainActivity extends AppActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
-        SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener {
+         View.OnClickListener {
 
     private DrawerMenuManager drawer;
     private MenuItem searchMenuItem;
@@ -290,15 +290,6 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
             drawer.launchIntentForActivity(SearchActivity.class);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-        if(key.equalsIgnoreCase(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED)){
-            boolean newPref = sharedPreferences.getBoolean(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED, false);
-            Log.d(TAG, PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED + ": " + newPref);
-        }
     }
 
 }

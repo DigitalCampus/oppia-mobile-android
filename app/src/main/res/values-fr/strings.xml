@@ -103,7 +103,6 @@
     <string name="prefUserHint">(Lecture seule)</string>
     <string name="prefLogoutEnabled">Permettre la déconnexion depuis la page d\'accueil</string>
     <string name="prefDeleteCourseEnabled">Permettre la supression de cours</string>
-    <string name="prefDownloadViaCellularEnabled">Téléchargement de médias via le réseau cellulaire</string>
 
     <!-- Strings relative to Storage -->
     <string name="prefStorageLocation">Emplacement de stockage</string>

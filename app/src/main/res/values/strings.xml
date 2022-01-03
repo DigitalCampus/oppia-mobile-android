@@ -117,9 +117,7 @@
     <string name="prefUserHint">(read only)</string>
     <string name="prefLogoutEnabled">Enable logout from homepage</string>
     <string name="prefDeleteCourseEnabled">Enable deleting of courses</string>
-    <string name="prefDownloadViaCellularEnabled">Download media via cellular network</string>
     <string name="prefDisableNotifications">Disable notifications</string>
-
     <string name="prefNotifications_title">Notifications</string>
     <string name="prefSecurity_title">Security</string>
     <string name="prefAdvanced_title">Advanced</string>
@@ -307,7 +305,6 @@
     <string name="error_tts_start">Text To Speech failed. Please check your phone to ensure have Text to Speech installed and enabled</string>
     <string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files via your PC.</string>
     <string name="warning_delete_disabled">Sorry, deleting a course is currently disabled - please update your settings to allow deleting of courses.</string>
-    <string name="warning_download_via_cellular_enabled">Warning! Allowing media files to be downloaded via your mobile (cellular) network may incur high charges for data download.\n\n It is not recommended to enable this if you are on a slow mobile network.</string>
 
     <string name="login_process">Logging in</string>
     <string name="login_complete">Logged in</string>
