@@ -78,8 +78,8 @@
 	<string name="prefAdvanced">Configuración avanzada</string>
 	<string name="prefServerTimeoutConnection">Tiempo de espera de conexión superado</string>
 	<string name="prefServerTimeoutResponse">Tiempo de espera de respuesta superado</string>
-	<string name="prefBackgroudDataConnect">Seguimiento de actividad</string>
-	<string name="prefBackgroudDataConnect_summary">Enviar registros de actividad, incluso cuando la aplicación no se esté ejecutando.</string>
+	<string name="prefBackgroundDataConnect">Seguimiento de actividad</string>
+	<string name="prefBackgroundDataConnect_summary">Enviar registros de actividad, incluso cuando la aplicación no se esté ejecutando.</string>
     <string name="prefTextSize">Tamaño del texto</string>
     <string name="prefUser">Usuario</string>
 	<string name="prefHighlightCompleted">Resaltar actividades completadas</string>

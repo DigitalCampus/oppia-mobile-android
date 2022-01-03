@@ -133,8 +133,8 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="prefBackgroundDataConnect"
-            android:summary="@string/prefBackgroudDataConnect_summary"
-            android:title="@string/prefBackgroudDataConnect" />
+            android:summary="@string/prefBackgroundDataConnect_summary"
+            android:title="@string/prefBackgroundDataConnect" />
 
         <CheckBoxPreference
             android:defaultValue="@string/MENU_ALLOW_LOGOUT_DEFAULT_VALUE"

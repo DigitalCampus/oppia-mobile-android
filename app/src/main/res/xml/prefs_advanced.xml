@@ -37,8 +37,8 @@
         android:defaultValue="true"
         app:iconSpaceReserved="false"
         android:key="prefBackgroundDataConnect"
-        android:summary="@string/prefBackgroudDataConnect_summary"
-        android:title="@string/prefBackgroudDataConnect" />
+        android:summary="@string/prefBackgroundDataConnect_summary"
+        android:title="@string/prefBackgroundDataConnect" />
 
     <EditTextPreference
         app:allowDividerAbove="true"
