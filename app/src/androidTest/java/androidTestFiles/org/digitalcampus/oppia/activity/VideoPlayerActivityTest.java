@@ -37,7 +37,7 @@ public class VideoPlayerActivityTest extends CourseMediaBaseTest {
         copyMediaFromAssets(MEDIA_FILE_VIDEO_TEST_1);
 
         Course course = new Course("");
-        course.setShortname("Mock Course");
+        course.setShortname("mock-course");
 
         Activity activity = new Activity();
         List<Media> mediaList = new ArrayList<>();
