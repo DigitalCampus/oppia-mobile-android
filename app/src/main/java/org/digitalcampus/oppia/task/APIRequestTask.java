@@ -51,6 +51,8 @@ public abstract class APIRequestTask<P, G, R> extends AsyncTask<P, G, R> {
         try {
             User u = db.getUser(SessionManager.getUsername(ctx));
 
+            Log.i(TAG, "user api key: " + u.getApiKey());
+
             requestBuilder = new Request.Builder()
                     .url(HTTPClientUtils.getUrlWithCredentials(url, u.getUsername(), u.getApiKey()));
 
