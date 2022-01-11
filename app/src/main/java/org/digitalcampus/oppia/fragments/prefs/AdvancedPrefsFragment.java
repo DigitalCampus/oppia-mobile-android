@@ -21,10 +21,16 @@ import androidx.preference.Preference;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.listener.APIRequestListener;
+import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.ExportActivityTask;
+import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
+import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -108,6 +114,47 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
             showCreateExportDataDialog();
             return true;
         });
+
+        findPreference(PrefsActivity.PREF_FLUSH_COURSE_LISTING_CACHE).setOnPreferenceClickListener(preference -> {
+            flushCourseListingCache();
+            return true;
+        });
+
+    }
+
+    private void flushCourseListingCache() {
+        prefs.edit()
+                .remove(PrefsActivity.PREF_LAST_COURSES_CHECKS_SUCCESSFUL_TIME)
+                .remove(PrefsActivity.PREF_SERVER_COURSES_CACHE)
+                .commit();
+
+        ((AppActivity)getActivity()).toast(R.string.cache_flushed_successfuly);
+
+        if (ConnectionUtils.isNetworkConnected(getActivity())) {
+            updateCourseCache();
+        }
+    }
+
+    private void updateCourseCache() {
+
+        APIUserRequestTask task = new APIUserRequestTask(getActivity());
+        String url = Paths.SERVER_COURSES_PATH;
+        task.setAPIRequestListener(new APIRequestListener() {
+            @Override
+            public void apiRequestComplete(BasicResult result) {
+
+                prefs.edit()
+                        .putLong(PrefsActivity.PREF_LAST_COURSES_CHECKS_SUCCESSFUL_TIME, System.currentTimeMillis())
+                        .putString(PrefsActivity.PREF_SERVER_COURSES_CACHE, result.getResultMessage())
+                        .commit();
+            }
+
+            @Override
+            public void apiKeyInvalidated() {
+
+            }
+        });
+        task.execute(url);
 
     }
 
