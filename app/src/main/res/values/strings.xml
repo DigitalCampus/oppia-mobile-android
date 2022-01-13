@@ -531,7 +531,7 @@
     <string name="title_activity_edit_profile">Edit profile</string>
     <string name="option_available_online">This option is only available when the device is connected to the Internet</string>
     <string name="save_profile">Save profile</string>
-    <string name="profile_updated_successfuly">Profile updated successfully</string>
+    <string name="profile_updated_successfully">Profile updated successfully</string>
     <string name="activitylog_submitted">submitted to server</string>
     <string name="activitylog_tosubmit">to submit</string>
     <string name="activitylog_toexport">to export</string>
