@@ -37,6 +37,11 @@ public class CourseUtils {
                 checkUpdateOrDeleteStatus(course, coursesServerResponse.getCourses(), fromTimestamp);
             }
 
+        } else {
+            for (Course course : courses) {
+                course.setToUpdate(false);
+                course.setToDelete(false);
+            }
         }
     }
 

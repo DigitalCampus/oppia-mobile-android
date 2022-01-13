@@ -161,16 +161,6 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
     }
 
 
-    private void openDrawer() {
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
-
-        onView(withId(R.id.drawer)).check(matches(isOpen()));
-    }
-
-    private void performClickDrawerItem(int itemId) {
-        onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(itemId));
-    }
 
     private void checkCorrectActivity(Class activity) {
         assertEquals(activity, TestUtils.getCurrentActivity().getClass());

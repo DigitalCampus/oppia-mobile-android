@@ -190,16 +190,18 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 
 	private void updateCourseCache() {
 
-		APIUserRequestTask task = new APIUserRequestTask(this);
+		APIUserRequestTask task = new APIUserRequestTask(this, apiEndpoint);
 		String url = Paths.SERVER_COURSES_PATH;
 		task.setAPIRequestListener(new APIRequestListener() {
 			@Override
 			public void apiRequestComplete(BasicResult result) {
 
-				prefs.edit()
-						.putLong(PrefsActivity.PREF_LAST_COURSES_CHECKS_SUCCESSFUL_TIME, System.currentTimeMillis())
-						.putString(PrefsActivity.PREF_SERVER_COURSES_CACHE, result.getResultMessage())
-						.commit();
+				if (result.isSuccess()) {
+					prefs.edit()
+							.putLong(PrefsActivity.PREF_LAST_COURSES_CHECKS_SUCCESSFUL_TIME, System.currentTimeMillis())
+							.putString(PrefsActivity.PREF_SERVER_COURSES_CACHE, result.getResultMessage())
+							.commit();
+				}
 			}
 
 			@Override

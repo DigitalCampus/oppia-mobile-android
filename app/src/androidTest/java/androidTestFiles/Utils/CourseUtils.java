@@ -66,6 +66,7 @@ public class CourseUtils {
     public static Course createMockCourse(String shortname){
 
         Course mockCourse = new Course("");
+        mockCourse.setVersionId(0d);
 
         mockCourse.setShortname(shortname);
 
