@@ -1,70 +1,11 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.view.View;
-
-import com.google.android.material.tabs.TabLayout;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.AboutActivity;
-import org.digitalcampus.oppia.activity.CourseIndexActivity;
-import org.digitalcampus.oppia.activity.EditProfileActivity;
-import org.digitalcampus.oppia.activity.MainActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.activity.SearchActivity;
-import org.digitalcampus.oppia.activity.StartUpActivity;
-import org.digitalcampus.oppia.activity.TagSelectActivity;
-import org.digitalcampus.oppia.activity.ViewDigestActivity;
-import org.digitalcampus.oppia.activity.WelcomeActivity;
-import org.digitalcampus.oppia.model.Badge;
-import org.digitalcampus.oppia.model.CompleteCourse;
-import org.digitalcampus.oppia.model.CompleteCourseProvider;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.CoursesRepository;
-import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.model.Points;
-import org.digitalcampus.oppia.model.TagRepository;
-import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.task.ParseCourseXMLTask;
-import org.digitalcampus.oppia.task.result.BasicResult;
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
-
-import java.util.ArrayList;
-
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.TestUtils;
-import androidx.annotation.NonNull;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.Espresso;
-import androidx.test.espresso.NoMatchingViewException;
-import androidx.test.espresso.UiController;
-import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.NavigationViewActions;
-import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.espresso.matcher.RootMatchers;
-import androidx.test.espresso.matcher.ViewMatchers;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
-
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withChild;
@@ -87,8 +28,61 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.Espresso;
+import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import com.google.android.material.tabs.TabLayout;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.AboutActivity;
+import org.digitalcampus.oppia.activity.CourseIndexActivity;
+import org.digitalcampus.oppia.activity.EditProfileActivity;
+import org.digitalcampus.oppia.activity.MainActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.activity.SearchActivity;
+import org.digitalcampus.oppia.activity.StartUpActivity;
+import org.digitalcampus.oppia.activity.TagSelectActivity;
+import org.digitalcampus.oppia.activity.WelcomeActivity;
+import org.digitalcampus.oppia.model.Badge;
+import org.digitalcampus.oppia.model.CompleteCourse;
+import org.digitalcampus.oppia.model.CompleteCourseProvider;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.Points;
+import org.digitalcampus.oppia.model.TagRepository;
+import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.ParseCourseXMLTask;
+import org.digitalcampus.oppia.task.result.BasicResult;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
+
+import java.util.ArrayList;
+
+import androidTestFiles.Utils.CourseUtils;
+import androidTestFiles.Utils.MockedApiEndpointTest;
+import androidTestFiles.Utils.TestUtils;
+
 @RunWith(AndroidJUnit4.class)
-public class MainActivityUITest extends DaggerInjectMockUITest {
+public class MainActivityUITest extends MockedApiEndpointTest {
 
     @Mock
     CoursesRepository coursesRepository;
@@ -517,16 +511,7 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
     //Drawer Tests
 
-    private void openDrawer() {
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
 
-        onView(withId(R.id.drawer)).check(matches(isOpen()));
-    }
-
-    private void performClickDrawerItem(int itemId) {
-        onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(itemId));
-    }
 
     private void checkCorrectActivity(Class activity) {
         assertEquals(activity, TestUtils.getCurrentActivity().getClass());

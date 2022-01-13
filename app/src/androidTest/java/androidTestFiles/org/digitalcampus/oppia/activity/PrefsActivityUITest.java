@@ -1,43 +1,5 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.Checkable;
-import android.widget.EditText;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.DownloadActivity;
-import org.digitalcampus.oppia.activity.MainActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.activity.WelcomeActivity;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.CoursesRepository;
-import org.digitalcampus.oppia.model.Lang;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-
-import java.util.ArrayList;
-import java.util.UUID;
-
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.TestUtils;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.UiController;
-import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
-
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBackUnconditionally;
@@ -54,7 +16,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.isA;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -63,6 +24,35 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.view.Gravity;
+import android.widget.EditText;
+
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.MainActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.activity.WelcomeActivity;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.Lang;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+
+import java.util.ArrayList;
+import java.util.UUID;
+
+import androidTestFiles.TestRules.DaggerInjectMockUITest;
+import androidTestFiles.Utils.CourseUtils;
+import androidTestFiles.Utils.TestUtils;
 
 @RunWith(AndroidJUnit4.class)
 public class PrefsActivityUITest extends DaggerInjectMockUITest {

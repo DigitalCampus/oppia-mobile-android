@@ -74,13 +74,15 @@ public class TagActivityUITest extends MockedApiEndpointTest {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefs.edit().remove(PrefsActivity.PREF_SERVER_COURSES_CACHE).commit();
 
-        String responseAsset = "responses/response_200_courses_list.json";
+        String responseAsset = "responses/course/response_200_courses_list.json";
         startServer(200, responseAsset, 0);
 
         try (ActivityScenario<TagSelectActivity> scenario = ActivityScenario.launch(TagSelectActivity.class)) {
 
             String responseBody = FileUtils.getStringFromFile(
                     InstrumentationRegistry.getInstrumentation().getContext(), responseAsset);
+
+            Thread.sleep(200); // Manual waiting for Asynctask. Espresso only waits if there is a view interaction at the end.
 
             String cachedCourses = prefs.getString(PrefsActivity.PREF_SERVER_COURSES_CACHE, "");
 
