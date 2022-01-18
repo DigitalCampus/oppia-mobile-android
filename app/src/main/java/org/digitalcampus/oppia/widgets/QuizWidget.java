@@ -152,6 +152,10 @@ public class QuizWidget extends AnswerWidget {
             stats.setAverageScore(average);
             showStats(info, stats);
         }
+
+        if (!quiz.mustShowQuizResultsAtEnd()) {
+            getView().findViewById(R.id.recycler_quiz_results_feedback).setVisibility(View.GONE);
+        }
     }
 
     @Override
