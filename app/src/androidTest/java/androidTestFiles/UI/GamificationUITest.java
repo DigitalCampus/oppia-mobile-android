@@ -79,7 +79,7 @@ public class GamificationUITest extends DaggerInjectMockUITest {
         givenThereAreSomeCourses(1);
 
         if (true) {
-            //Working on this test
+            // todo Working on this test
             Assert.assertEquals(1, coursesRepository.getCourses(any()).size());
             return;
         }

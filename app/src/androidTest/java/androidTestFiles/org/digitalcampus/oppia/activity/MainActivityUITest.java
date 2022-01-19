@@ -80,6 +80,7 @@ import java.util.ArrayList;
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.MockedApiEndpointTest;
 import androidTestFiles.Utils.TestUtils;
+import androidTestFiles.Utils.UITestActionsUtils;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityUITest extends MockedApiEndpointTest {
@@ -344,38 +345,12 @@ public class MainActivityUITest extends MockedApiEndpointTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
             onView(withId(R.id.nav_bottom_points)).perform(click());
-            onView(withId(R.id.tabs)).perform(selectTabAtPosition(2));
+            onView(withId(R.id.tabs)).perform(UITestActionsUtils.selectTabAtPosition(2));
 
             assertEquals(0, badgeList.size());
         }
     }
 
-    @NonNull
-    private static ViewAction selectTabAtPosition(final int position) {
-        return new ViewAction() {
-            @Override
-            public Matcher<View> getConstraints() {
-                return allOf(isDisplayed(), isAssignableFrom(TabLayout.class));
-            }
-
-            @Override
-            public String getDescription() {
-                return "with tab at index" + position;
-            }
-
-            @Override
-            public void perform(UiController uiController, View view) {
-                if (view instanceof TabLayout) {
-                    TabLayout tabLayout = (TabLayout) view;
-                    TabLayout.Tab tab = tabLayout.getTabAt(position);
-
-                    if (tab != null) {
-                        tab.select();
-                    }
-                }
-            }
-        };
-    }
 
     @Test
     public void deleteCourseOnContextMenuDeleteClickNo() throws Exception {
