@@ -140,8 +140,13 @@ public class QuizAttemptActivity extends AppActivity {
 			}
 		}
 
-		QuizAnswersFeedbackAdapter adapterQuizFeedback = new QuizAnswersFeedbackAdapter(this, quizAnswerFeedback);
-		binding.recyclerQuizResultsFeedback.setAdapter(adapterQuizFeedback);
+		if (quiz.mustShowQuizResultsLater()) {
+			QuizAnswersFeedbackAdapter adapterQuizFeedback = new QuizAnswersFeedbackAdapter(this, quizAnswerFeedback);
+			binding.recyclerQuizResultsFeedback.setAdapter(adapterQuizFeedback);
+		} else {
+			binding.recyclerQuizResultsFeedback.setVisibility(View.GONE);
+		}
+
 
 		if (quiz.limitAttempts()){
 			//Check if the user has attempted the quiz the max allowed

@@ -424,7 +424,7 @@ public class Quiz implements Serializable {
     }
 
     public int getShowFeedback(){
-        return propsSerializedGetInt("showfeedback",SHOW_FEEDBACK_ALWAYS);
+        return propsSerializedGetInt("showfeedback", SHOW_FEEDBACK_ALWAYS);
     }
 
     public String getPassword(){
@@ -432,7 +432,15 @@ public class Quiz implements Serializable {
     }
 
     public int getAvailability(){
-        return propsSerializedGetInt("availability",AVAILABILITY_ALWAYS);
+        return propsSerializedGetInt("availability", AVAILABILITY_ALWAYS);
+    }
+
+    public boolean mustShowQuizResultsAtEnd(){
+        return propsSerializedGetBoolean("immediate_whether_correct", true);
+    }
+
+    public boolean mustShowQuizResultsLater(){
+        return propsSerializedGetBoolean("later_whether_correct", true);
     }
 
     private int propsSerializedGetInt(String key, int defaultValue){
@@ -441,6 +449,16 @@ public class Quiz implements Serializable {
             return json.getInt(key);
         } catch (JSONException jsone) {
             Log.d(TAG, "Error getting int from propsSerialized " + key);
+        }
+        return defaultValue;
+    }
+
+    private boolean propsSerializedGetBoolean(String key, boolean defaultValue){
+        try {
+            JSONObject json = new JSONObject(propsSerialized);
+            return json.getBoolean(key);
+        } catch (JSONException jsone) {
+            Log.d(TAG, "Error getting boolean from propsSerialized " + key);
         }
         return defaultValue;
     }
