@@ -183,9 +183,13 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 	}
 
 	private void nextStep(){
+
+		UIUtils.hideSoftKeyboard(getActivity());
+
 		if (stepsManager.nextStep()){
 			binding.prevBtn.setVisibility(View.VISIBLE);
 		}
+
 		if (stepsManager.isLastStep()){
 			binding.nextBtn.setVisibility(View.GONE);
 			binding.registerBtn.setVisibility(View.VISIBLE);
@@ -194,9 +198,13 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 	}
 
 	private void prevStep(){
+
+		UIUtils.hideSoftKeyboard(getActivity());
+
 		if (stepsManager.prevStep()){
 			binding.prevBtn.setVisibility(View.INVISIBLE);
 		}
+
 		binding.registerBtn.setVisibility(View.GONE);
 		binding.nextBtn.setVisibility(View.VISIBLE);
 	}
