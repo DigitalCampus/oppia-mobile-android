@@ -1299,12 +1299,17 @@ public class DbHelper extends SQLiteOpenHelper {
         db.delete(ACTIVITY_TABLE, s, args);
 
         // delete media
-        s = MEDIA_COURSE + "=?";
-        db.delete(MEDIA_TABLE, s, args);
+        deleteCourseMedia(courseId);
 
         // delete course
         s = COURSE_C_ID + "=?";
         db.delete(COURSE_TABLE, s, args);
+    }
+
+    public void deleteCourseMedia(int courseId){
+        String[] args = new String[]{String.valueOf(courseId)};
+        String s = MEDIA_COURSE + "=?";
+        db.delete(MEDIA_TABLE, s, args);
     }
 
 
@@ -2543,6 +2548,10 @@ public class DbHelper extends SQLiteOpenHelper {
     public void insertCourseMedia(long courseID, List<Media> media) {
 
         beginTransaction();
+
+        // We remove previous media first
+        deleteCourseMedia((int) courseID);
+
         for (Media m : media) {
             ContentValues values = new ContentValues();
             values.put(MEDIA_COURSE, courseID);
