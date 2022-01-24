@@ -22,6 +22,7 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -89,6 +90,11 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
+
+            if (BuildConfig.START_COURSEINDEX_COLLAPSED) {
+                UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 1);
+            }
+
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 2);
             UITestActionsUtils.clickViewWithText(R.string.quiz_attempts_take_quiz);
             UITestActionsUtils.clickViewWithText("Cardiff");

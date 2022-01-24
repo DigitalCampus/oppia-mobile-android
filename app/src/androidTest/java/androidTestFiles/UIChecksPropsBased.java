@@ -24,6 +24,7 @@ import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.activity.PrivacyActivity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
@@ -152,4 +153,16 @@ public class UIChecksPropsBased extends DaggerInjectMockUITest {
         }
     }
 
+    @Test
+    public void checkDeleteAccountButtonVisibility() throws Exception {
+
+        try (ActivityScenario<PrivacyActivity> scenario = ActivityScenario.launch(PrivacyActivity.class)) {
+
+            if (BuildConfig.DELETE_ACCOUNT_ENABLED) {
+                onView(withId(R.id.delete_data_section)).check(matches(isDisplayed()));
+            } else {
+                onView(withId(R.id.delete_data_section)).check(matches(not(isDisplayed())));
+            }
+        }
+    }
 }
