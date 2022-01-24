@@ -35,28 +35,10 @@ import androidTestFiles.Utils.MockedApiEndpointTest;
 @RunWith(AndroidJUnit4.class)
 public class TagActivityUITest extends MockedApiEndpointTest {
 
-    @Mock TagRepository tagRepository;
-
     @Test
     public void showCorrectCategory() throws Exception {
-        doAnswer(invocationOnMock -> {
-            Context ctx = (Context) invocationOnMock.getArguments()[0];
-            BasicResult result = new BasicResult();
-            result.setSuccess(true);
-            result.setResultMessage("{}");
-            ((TagSelectActivity) ctx).apiRequestComplete(result);
-            return null;
-        }).when(tagRepository).getTagList(any(), any());
 
-
-        doAnswer(invocationOnMock -> {
-            ArrayList<Tag> tags = (ArrayList<Tag>) invocationOnMock.getArguments()[0];
-            tags.add(new Tag() {{
-                setName("Mocked Course Name");
-                setDescription("Mocked Course Description");
-            }});
-            return null;
-        }).when(tagRepository).refreshTagList(any(), any());
+        startServer(200, "tags/tags.json", 0);
 
         try (ActivityScenario<TagSelectActivity> scenario = ActivityScenario.launch(TagSelectActivity.class)) {
 

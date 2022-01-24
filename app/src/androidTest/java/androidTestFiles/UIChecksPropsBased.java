@@ -2,6 +2,7 @@ package androidTestFiles;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -11,6 +12,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.not;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -28,6 +30,7 @@ import org.digitalcampus.oppia.activity.PrivacyActivity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -74,6 +77,9 @@ public class UIChecksPropsBased extends DaggerInjectMockUITest {
 
     @Test
     public void checkCourseDownloadMenuItemVisibility() throws Exception {
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_DOWNLOAD_ENABLED), anyBoolean()))
+                .thenReturn(BuildConfig.MENU_ALLOW_COURSE_DOWNLOAD);
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             openDrawer();
@@ -156,10 +162,12 @@ public class UIChecksPropsBased extends DaggerInjectMockUITest {
     @Test
     public void checkDeleteAccountButtonVisibility() throws Exception {
 
+        when(prefs.getString(eq(PrefsActivity.PREF_USER_NAME), anyString())).thenReturn("test_user");
+
         try (ActivityScenario<PrivacyActivity> scenario = ActivityScenario.launch(PrivacyActivity.class)) {
 
             if (BuildConfig.DELETE_ACCOUNT_ENABLED) {
-                onView(withId(R.id.delete_data_section)).check(matches(isDisplayed()));
+                onView(withId(R.id.delete_data_section)).perform(scrollTo()).check(matches(isDisplayed()));
             } else {
                 onView(withId(R.id.delete_data_section)).check(matches(not(isDisplayed())));
             }

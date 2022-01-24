@@ -158,14 +158,7 @@ public class MainActivityUITest extends MockedApiEndpointTest {
     @Test
     public void showsTagSelectActivityOnClickManageCourses() throws Exception {
 
-        doAnswer(invocationOnMock -> {
-            Context ctx = (Context) invocationOnMock.getArguments()[0];
-            BasicResult result = new BasicResult();
-            result.setSuccess(true);
-            result.setResultMessage("{}");
-            ((TagSelectActivity) ctx).apiRequestComplete(result);
-            return null;
-        }).when(tagRepository).getTagList(any(), any());
+        startServer(200, EMPTY_JSON, 0);
 
         givenThereAreSomeCourses(0);
 
@@ -181,14 +174,7 @@ public class MainActivityUITest extends MockedApiEndpointTest {
     @Test
     public void showsTagSelectActivityOnClickManageCoursesImage() throws Exception {
 
-        doAnswer(invocationOnMock -> {
-            Context ctx = (Context) invocationOnMock.getArguments()[0];
-            BasicResult result = new BasicResult();
-            result.setSuccess(true);
-            result.setResultMessage("{}");
-            ((TagSelectActivity) ctx).apiRequestComplete(result);
-            return null;
-        }).when(tagRepository).getTagList(any(), any());
+        startServer(200, EMPTY_JSON, 0);
 
         givenThereAreSomeCourses(0);
 
@@ -499,6 +485,8 @@ public class MainActivityUITest extends MockedApiEndpointTest {
 
     @Test
     public void showsTagSelectActivityOnDrawerClickDownloadCourses() throws Exception {
+
+        startServer(200, EMPTY_JSON, 0);
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
