@@ -29,16 +29,37 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
+import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.Utils.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
-public class TagActivityUITest extends MockedApiEndpointTest {
+public class TagActivityUITest extends DaggerInjectMockUITest {
+
+    @Mock
+    TagRepository tagRepository;
 
     @Test
     public void showCorrectCategory() throws Exception {
 
-        startServer(200, "tags/tags.json", 0);
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            BasicResult result = new BasicResult();
+            result.setSuccess(true);
+            result.setResultMessage("{}");
+            ((TagSelectActivity) ctx).apiRequestComplete(result);
+            return null;
+        }).when(tagRepository).getTagList(any(), any());
+
+
+        doAnswer(invocationOnMock -> {
+            ArrayList<Tag> tags = (ArrayList<Tag>) invocationOnMock.getArguments()[0];
+            tags.add(new Tag() {{
+                setName("Mocked Course Name");
+                setDescription("Mocked Course Description");
+            }});
+            return null;
+        }).when(tagRepository).refreshTagList(any(), any());
 
         try (ActivityScenario<TagSelectActivity> scenario = ActivityScenario.launch(TagSelectActivity.class)) {
 
@@ -48,29 +69,6 @@ public class TagActivityUITest extends MockedApiEndpointTest {
         }
     }
 
-
-    @Test
-    public void refreshCachedCourses() throws Exception {
-
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        prefs.edit().remove(PrefsActivity.PREF_SERVER_COURSES_CACHE).commit();
-
-        String responseAsset = "responses/course/response_200_courses_list.json";
-        startServer(200, responseAsset, 0);
-
-        try (ActivityScenario<TagSelectActivity> scenario = ActivityScenario.launch(TagSelectActivity.class)) {
-
-            String responseBody = FileUtils.getStringFromFile(
-                    InstrumentationRegistry.getInstrumentation().getContext(), responseAsset);
-
-            Thread.sleep(200); // Manual waiting for Asynctask. Espresso only waits if there is a view interaction at the end.
-
-            String cachedCourses = prefs.getString(PrefsActivity.PREF_SERVER_COURSES_CACHE, "");
-
-            assertEquals(responseBody, cachedCourses);
-        }
-    }
 
 
 }
