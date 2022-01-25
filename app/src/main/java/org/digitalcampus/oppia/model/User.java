@@ -180,11 +180,11 @@ public class User {
 	}
 
 	public String getEmployeeID() {
-		return (String) getCustomField(CUSTOM_FIELD_EMPLOYEE_ID).getValue();
+		return getCustomField(CUSTOM_FIELD_EMPLOYEE_ID) != null ? (String) getCustomField(CUSTOM_FIELD_EMPLOYEE_ID).getValue() : null;
 	}
 
 	public String getRole(){
-		return (String) getCustomField(CUSTOM_FIELD_ROLE).getValue();
+		return getCustomField(CUSTOM_FIELD_ROLE) != null ? (String) getCustomField(CUSTOM_FIELD_ROLE).getValue() :  null;
 	}
 	public void autogenerateUsername() {
 		this.username = (getFirstname() + getLastname() + getEmployeeID()).replace(" ", "").toLowerCase();
