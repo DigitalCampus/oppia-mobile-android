@@ -9,6 +9,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
@@ -18,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.File;
+import java.util.List;
 import java.util.Locale;
 
 import androidTestFiles.Utils.CourseUtils;
@@ -41,7 +43,7 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
 
     private final String CORRECT_COURSE = "Correct_Course.zip";
     private final String EXISTING_COURSE = "Existing_Course.zip";
-    private final String ALREADY_INSTALLED_COURSE = "";
+    private final String UPDATED_COURSE = "Updated_Course.zip";
     private final String INCORRECT_COURSE = "Incorrect_Course.zip";
     private final String NOXML_COURSE = "NoXML_Course.zip";
     private final String MALFORMEDXML_COURSE = "MalformedXML_Course.zip";
@@ -100,9 +102,41 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
         Course c = CourseUtils.getCourseFromDatabase(context, shortName);
         assertNotNull(c);   //Check that the course exists in the database
 
-        String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+        List<Media> media = getDbHelper().getCourseMedia(c.getCourseId());
+        assertEquals(2, media.size());
 
     }
+
+    @Test
+    public void installCourse_updateCourse()throws Exception{
+
+        CourseUtils.cleanUp();
+        copyCourseFromAssets(CORRECT_COURSE);
+        response = runInstallCourseTask(context);//Run test task
+
+        //Check if result is true
+        assertTrue(response.isSuccess());
+
+        copyCourseFromAssets(UPDATED_COURSE);
+        response = runInstallCourseTask(context);//Run test task
+
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
+        assertTrue(modulesPath.exists());
+        String[] children = modulesPath.list();
+        assertEquals(1, children.length);  //Check that the course exists in the "modules" directory
+
+        File downloadPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
+        assertEquals(0, downloadPath.list().length);    //Check that the course does not exists in the "downloads" directory
+
+        String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
+        Course c = CourseUtils.getCourseFromDatabase(context, shortName);
+        assertNotNull(c);   //Check that the course exists in the database
+        assertEquals(c.getVersionId(), 20180704171235.0); //Check version updated
+
+        List<Media> media = getDbHelper().getCourseMedia(c.getCourseId());
+        assertEquals(2, media.size());
+    }
+
 
     @Test
     public void installCourse_existingCourse()throws Exception{
