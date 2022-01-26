@@ -42,13 +42,13 @@ public class Lang implements Serializable {
 
 
     public String getLanguage() {
-        String[] langCountry = this.language.split("_|-");
+        String[] langCountry = this.language.split("[_-]");
         return langCountry[0];
     }
 
     public void setLanguage(String lang) {
         // only set the first part of the lang - not the full localisation
-        String[] langCountry = lang.split("_|-");
+        String[] langCountry = lang.split("[_-]");
         this.language = langCountry[0];
     }
 

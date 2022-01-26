@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class MetadataUtilsTest {
@@ -94,7 +95,7 @@ public class MetadataUtilsTest {
         }};
 
         assertCorrectValues(eventData, expectedValues);
-        assertFalse("initial_value".equals(eventData.get("network")));
+        assertNotEquals("initial_value", eventData.get("network"));
     }
 
     @Test

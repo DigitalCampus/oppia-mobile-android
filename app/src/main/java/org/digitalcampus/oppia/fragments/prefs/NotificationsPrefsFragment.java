@@ -8,14 +8,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import androidx.fragment.app.DialogFragment;
-import androidx.preference.CheckBoxPreference;
-import androidx.preference.ListPreference;
-import androidx.preference.MultiSelectListPreference;
-import androidx.preference.Preference;
-import androidx.work.WorkInfo;
-import androidx.work.WorkManager;
-
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
@@ -23,22 +15,26 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
-import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.ReminderLogHelper;
 import org.digitalcampus.oppia.utils.custom_prefs.AdminCheckBoxPreference;
 import org.digitalcampus.oppia.utils.custom_prefs.TimePreference;
 import org.digitalcampus.oppia.utils.custom_prefs.TimePreferenceDialogFragmentCompat;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
+
+import androidx.fragment.app.DialogFragment;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.MultiSelectListPreference;
+import androidx.preference.Preference;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 public class NotificationsPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback, SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -139,13 +135,10 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
             List<WorkInfo> workInfoList = statuses.get();
             for (WorkInfo workInfo : workInfoList) {
                 WorkInfo.State state = workInfo.getState();
-                running = state == WorkInfo.State.RUNNING | state == WorkInfo.State.ENQUEUED;
+                running = state == WorkInfo.State.RUNNING || state == WorkInfo.State.ENQUEUED;
             }
             return running;
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            return false;
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             return false;
         }
@@ -226,9 +219,8 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
 
     private void logNewConfig() {
 
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            reminderLogHelper.saveLogEntry("CONFIGURATION CHANGED", getCurrentReminderConfig());
-        }, 200);
+        new Handler(Looper.getMainLooper()).postDelayed(() ->
+            reminderLogHelper.saveLogEntry("CONFIGURATION CHANGED", getCurrentReminderConfig()), 200);
 
     }
 
@@ -287,14 +279,14 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
     }
 
     public static String getWeekDaysNames(Context context, Set<String> dayCodes) {
-        String dayNames = "";
+        StringBuilder dayNames = new StringBuilder();
 
         int i = 0;
         for (String dayCode : dayCodes) {
             int dayNameId = context.getResources().getIdentifier("week_day_" + dayCode, "string", context.getPackageName());
-            dayNames += context.getString(dayNameId) + (i < dayCodes.size() - 1 ? ", " : "");
+            dayNames.append(context.getString(dayNameId)).append(i < dayCodes.size() - 1 ? ", " : "");
             i++;
         }
-        return dayNames;
+        return dayNames.toString();
     }
 }

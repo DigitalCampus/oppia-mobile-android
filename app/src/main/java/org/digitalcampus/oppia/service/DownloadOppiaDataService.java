@@ -131,19 +131,17 @@ public class DownloadOppiaDataService {
                     }
                     break;
             }
+        }
 
+        private void showDownloadSuccessDialog() {
+            new AlertDialog.Builder(context)
+                    .setTitle(R.string.download_complete)
+                    .setMessage(R.string.user_data_download_success)
+                    .setPositiveButton(R.string.open_download_folder, (dialog, which) -> context.startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS)))
+                    .setNeutralButton(R.string.back, null)
+                    .show();
         }
     };
-
-    private void showDownloadSuccessDialog() {
-        new AlertDialog.Builder(context)
-                .setTitle(R.string.download_complete)
-                .setMessage(R.string.user_data_download_success)
-                .setPositiveButton(R.string.open_download_folder, (dialog, which) -> context.startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS)))
-                .setNeutralButton(R.string.back, null)
-                .show();
-
-    }
 
     public void onResume() {
         context.registerReceiver(onDownloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));

@@ -47,10 +47,10 @@ public class Course extends MultiLangInfoModel implements Serializable {
 
     public static final String TAG = Course.class.getSimpleName();
 
-    public final static String COURSE_COMPLETE_ALL_ACTIVITIES = "all_activities";
-    public final static String COURSE_COMPLETE_ALL_QUIZZES = "all_quizzes";
-    public final static String COURSE_COMPLETE_FINAL_QUIZ = "final_quiz";
-    public final static String COURSE_COMPLETE_ALL_QUIZZES_PLUS_PERCENT = "all_quizzes_plus_percent";
+    public static final String COURSE_COMPLETE_ALL_ACTIVITIES = "all_activities";
+    public static final String COURSE_COMPLETE_ALL_QUIZZES = "all_quizzes";
+    public static final String COURSE_COMPLETE_FINAL_QUIZ = "final_quiz";
+    public static final String COURSE_COMPLETE_ALL_QUIZZES_PLUS_PERCENT = "all_quizzes_plus_percent";
 
     private int courseId;
     private String shortname;

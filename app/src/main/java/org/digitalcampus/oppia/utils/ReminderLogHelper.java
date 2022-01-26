@@ -13,11 +13,9 @@ public class ReminderLogHelper {
     private final static int MAX_LOG_ENTRIES = 30;
     private static final String SEPARATOR_LOG_ENTRIES = "\n\n--------------\n\n";
 
-    private Context context;
-    private SharedPreferences prefs;
+    private final SharedPreferences prefs;
 
     public ReminderLogHelper(Context context) {
-        this.context = context;
         this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 

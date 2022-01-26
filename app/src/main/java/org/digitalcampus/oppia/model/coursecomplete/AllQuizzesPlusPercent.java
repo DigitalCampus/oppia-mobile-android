@@ -1,7 +1,6 @@
 package org.digitalcampus.oppia.model.coursecomplete;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Activity;
@@ -43,11 +42,10 @@ public class AllQuizzesPlusPercent {
             }
         }
 
-        int percentComplete = activitiesNonQuizCompleted * 100/totalNonQuizActivities;
-        if(totalNonQuizActivities > 0 && percentComplete >= percent){
+        if (totalNonQuizActivities == 0){
             return true;
-        } else {
-            return false;
         }
+        int percentComplete = activitiesNonQuizCompleted * 100 / totalNonQuizActivities;
+        return percentComplete >= percent;
     }
 }

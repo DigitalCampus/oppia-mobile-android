@@ -206,9 +206,8 @@ public class GamificationService  extends IntentService {
                         final GamificationEvent e = event;
                         final Activity a = act;
                         final Course c = course;
-                        new Handler(Looper.getMainLooper()).postDelayed((Runnable) () -> {
-                            broadcastEvent(e, a, c);
-                        }, 500);
+                        new Handler(Looper.getMainLooper()).postDelayed(() ->
+                                broadcastEvent(e, a, c), 500);
                     }
                     else{
                         broadcastEvent(event, act, course);
