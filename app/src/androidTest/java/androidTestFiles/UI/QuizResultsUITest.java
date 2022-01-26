@@ -22,7 +22,9 @@ import android.content.SharedPreferences;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.uiautomator.UiDevice;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -88,9 +90,12 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
 
     private void checkShowResults(boolean atEnd, boolean later) throws Exception {
 
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_START_COURSEINDEX_COLLAPSED), anyBoolean())).thenReturn(false);
+
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
+
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 2);
             UITestActionsUtils.clickViewWithText(R.string.quiz_attempts_take_quiz);
             UITestActionsUtils.clickViewWithText("Cardiff");
@@ -102,8 +107,10 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
                 onView(withId(R.id.recycler_quiz_results_feedback)).check(matches(not(isDisplayed())));
             }
 
-            pressBack();
-            pressBack();
+            UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+
+            device.pressBack();
+            device.pressBack();
 
             onView(withId(R.id.nav_bottom_scorecard)).perform(click());
             onView(withId(R.id.tabs)).perform(UITestActionsUtils.selectTabAtPosition(2));

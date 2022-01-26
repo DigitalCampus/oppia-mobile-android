@@ -44,6 +44,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -56,6 +58,9 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
     @Mock
     protected CustomFieldsRepository customFieldsRepo;
 
+    @Mock
+    private SharedPreferences prefsMock;
+
     @Before
     public void setUp() throws Exception {
 
@@ -65,6 +70,8 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
         prefs.edit().remove(PrefsActivity.PREF_ANALYTICS_INITIAL_PROMPT).commit();
 
         when(customFieldsRepo.getAll(any())).thenReturn(new ArrayList<>());
+
+        when(prefsMock.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
     }
 
     @Test

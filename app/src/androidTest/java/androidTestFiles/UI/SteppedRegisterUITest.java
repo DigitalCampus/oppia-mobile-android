@@ -162,7 +162,7 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    public void ShowDependantFieldOnSameStep() throws  Exception {
+    public void showDependantFieldOnSameStep() throws  Exception {
 
         setRegisterSteps(BASIC_DEPENDANT_STEPS);
         openRegisterScreen();

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
@@ -154,14 +155,7 @@ public class MainActivityUITest extends MockedApiEndpointTest {
     /*@Test
     public void showsTagSelectActivityOnClickManageCourses() throws Exception {
 
-        doAnswer(invocationOnMock -> {
-            Context ctx = (Context) invocationOnMock.getArguments()[0];
-            BasicResult result = new BasicResult();
-            result.setSuccess(true);
-            result.setResultMessage("{}");
-            ((TagSelectActivity) ctx).apiRequestComplete(result);
-            return null;
-        }).when(tagRepository).getTagList(any(), any());
+        startServer(200, EMPTY_JSON, 0);
 
         givenThereAreSomeCourses(0);
 
@@ -177,14 +171,7 @@ public class MainActivityUITest extends MockedApiEndpointTest {
     @Test
     public void showsTagSelectActivityOnClickManageCoursesImage() throws Exception {
 
-        doAnswer(invocationOnMock -> {
-            Context ctx = (Context) invocationOnMock.getArguments()[0];
-            BasicResult result = new BasicResult();
-            result.setSuccess(true);
-            result.setResultMessage("{}");
-            ((TagSelectActivity) ctx).apiRequestComplete(result);
-            return null;
-        }).when(tagRepository).getTagList(any(), any());
+        startServer(200, EMPTY_JSON, 0);
 
         givenThereAreSomeCourses(0);
 
@@ -496,6 +483,8 @@ public class MainActivityUITest extends MockedApiEndpointTest {
     /*@Test
     public void showsTagSelectActivityOnDrawerClickDownloadCourses() throws Exception {
 
+        startServer(200, EMPTY_JSON, 0);
+
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
             openDrawer();
@@ -693,6 +682,10 @@ public class MainActivityUITest extends MockedApiEndpointTest {
 
     @Test
     public void showsEditProfileActivityOnMenuItemClick() throws Exception {
+
+        if (!BuildConfig.MENU_ALLOW_EDIT_PROFILE) {
+            return;
+        }
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 

@@ -41,6 +41,8 @@ public class ResetUITest extends MockedApiEndpointTest {
             onView(withId(R.id.btn_reset_password))
                     .perform(click());
 
+            Thread.sleep(100);
+
             onView(withId(R.id.reset_username_field))
                     .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
@@ -63,6 +65,8 @@ public class ResetUITest extends MockedApiEndpointTest {
                     .perform(scrollTo(), click());
             onView(withId(R.id.btn_reset_password))
                     .perform(click());
+
+            Thread.sleep(100);
 
             onView(withId(R.id.reset_username_field))
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongUsername"));

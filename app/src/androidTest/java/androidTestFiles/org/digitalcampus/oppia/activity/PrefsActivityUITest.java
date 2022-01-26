@@ -36,6 +36,7 @@ import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -135,6 +136,10 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
     @Test
     public void goToMainActivityIfUserDontModifyServerUrl() throws InterruptedException {
 
+        if (!BuildConfig.MENU_ALLOW_SETTINGS) {
+            return;
+        }
+
         when(prefs.getString(eq(PrefsActivity.PREF_USER_NAME), anyString())).thenReturn("test_user");
         when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(false);
         when(prefs.getString(eq(PrefsActivity.PREF_TEST_ACTION_PROTECTED), anyString())).thenReturn("false");
@@ -174,6 +179,10 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
 
     @Test
     public void goToWelcomeActivityIfUserModifyServerUrl() throws InterruptedException {
+
+        if (!BuildConfig.MENU_ALLOW_SETTINGS) {
+            return;
+        }
 
         when(prefs.getString(eq(PrefsActivity.PREF_USER_NAME), anyString())).thenReturn("test_user");
         when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(false);
