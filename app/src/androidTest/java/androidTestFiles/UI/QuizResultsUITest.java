@@ -87,13 +87,11 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
 
     private void checkShowResults(boolean atEnd, boolean later) throws Exception {
 
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_START_COURSEINDEX_COLLAPSED), anyBoolean())).thenReturn(false);
+
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
-
-            if (BuildConfig.START_COURSEINDEX_COLLAPSED) {
-                UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 1);
-            }
 
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 2);
             UITestActionsUtils.clickViewWithText(R.string.quiz_attempts_take_quiz);

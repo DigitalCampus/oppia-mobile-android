@@ -1,17 +1,5 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.WelcomeActivity;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import androidTestFiles.Utils.MockedApiEndpointTest;
-
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -20,6 +8,17 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.WelcomeActivity;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import androidTestFiles.Utils.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
 public class WelcomeActivityUITest extends MockedApiEndpointTest {
@@ -48,13 +47,15 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    public void showsResetFragmentOnResetTabClicked() {
+    public void showsResetFragmentOnResetTabClicked() throws InterruptedException {
 
         onView(withId(R.id.welcome_login))
                 .perform(scrollTo(), click());
 
         onView(withId(R.id.btn_reset_password))
                 .perform(scrollTo(), click());
+
+        Thread.sleep(100);
 
         onView(withId(R.id.reset_btn))
                 .perform(scrollTo())
@@ -106,7 +107,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    public void rememberUsername_goToLoginScreenAfterSuccess() {
+    public void rememberUsername_goToLoginScreenAfterSuccess() throws InterruptedException {
 
         startServer(200, null, 0);
 
@@ -115,6 +116,8 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
 
         onView(withId(R.id.btn_remember_username))
                 .perform(scrollTo(), click());
+
+        Thread.sleep(100);
 
         onView(withId(R.id.edit_email)).perform(typeText("valid@email.is"));
 
@@ -128,7 +131,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    public void rememberUsername_showsErrorIfEmailPatterInvalid() {
+    public void rememberUsername_showsErrorIfEmailPatterInvalid() throws InterruptedException {
 
         startServer(200, null, 0);
 
@@ -137,6 +140,8 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
 
         onView(withId(R.id.btn_remember_username))
                 .perform(scrollTo(), click());
+
+        Thread.sleep(100);
 
         onView(withId(R.id.edit_email)).perform(typeText("wrong-email"));
 
@@ -147,7 +152,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    public void rememberUsername_goToLoginScreenAfterError() {
+    public void rememberUsername_goToLoginScreenAfterError() throws InterruptedException {
 
         startServer(400, null, 0);
 
@@ -156,6 +161,8 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
 
         onView(withId(R.id.btn_remember_username))
                 .perform(scrollTo(), click());
+
+        Thread.sleep(100);
 
         onView(withId(R.id.edit_email)).perform(typeText("valid@email.is"));
 

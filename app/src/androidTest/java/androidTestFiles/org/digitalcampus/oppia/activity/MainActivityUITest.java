@@ -45,6 +45,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.google.android.material.tabs.TabLayout;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
@@ -685,6 +686,10 @@ public class MainActivityUITest extends MockedApiEndpointTest {
 
     @Test
     public void showsEditProfileActivityOnMenuItemClick() throws Exception {
+
+        if (!BuildConfig.MENU_ALLOW_EDIT_PROFILE) {
+            return;
+        }
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
