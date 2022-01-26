@@ -1,5 +1,6 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
+import android.Manifest;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +36,7 @@ import org.mockito.stubbing.Answer;
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.MockedApiEndpointTest;
 import androidTestFiles.Utils.TestUtils;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBackUnconditionally;
@@ -53,6 +55,8 @@ import static org.mockito.Mockito.doAnswer;
 
 @RunWith(AndroidJUnit4.class)
 public class ViewDigestActivityUITest extends MockedApiEndpointTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String VALID_COURSE_INFO_RESPONSE = "responses/response_200_course_info.json";
 

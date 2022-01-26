@@ -1,12 +1,15 @@
 package androidTestFiles.org.digitalcampus.oppia.fragments;
 
+import android.Manifest;
 import android.os.Bundle;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -16,6 +19,8 @@ import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
 public class CourseScorecardFragmentTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private Bundle args;
     @Before

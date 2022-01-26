@@ -1,5 +1,6 @@
 package androidTestFiles.org.digitalcampus.oppia.model;
 
+import android.Manifest;
 import android.content.Context;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -9,6 +10,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -16,12 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidTestFiles.database.BaseTestDB;
+import androidx.test.rule.GrantPermissionRule;
 
 import static org.junit.Assert.assertEquals;
 
 
 @RunWith(AndroidJUnit4.class)
 public class CoursesRepositoryModelTest extends BaseTestDB {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
     private Context context;
 
     @Before

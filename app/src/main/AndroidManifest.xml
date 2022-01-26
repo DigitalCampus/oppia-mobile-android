@@ -30,6 +30,7 @@
         android:label="@string/app_name"
         android:theme="@style/Oppia.Theme"
         android:supportsRtl="true"
+        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
         <activity
             android:name="org.digitalcampus.oppia.activity.StartUpActivity"
