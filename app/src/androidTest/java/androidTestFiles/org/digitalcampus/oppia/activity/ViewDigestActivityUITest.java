@@ -1,41 +1,5 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
-import android.app.Instrumentation;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
-
-import org.digitalcampus.mobile.learning.BuildConfig;
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.CourseIndexActivity;
-import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
-import org.digitalcampus.oppia.activity.MainActivity;
-import org.digitalcampus.oppia.activity.ViewDigestActivity;
-import org.digitalcampus.oppia.activity.WelcomeActivity;
-import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.CompleteCourse;
-import org.digitalcampus.oppia.model.CompleteCourseProvider;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.CoursesRepository;
-import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.task.ParseCourseXMLTask;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
-
-
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.MockedApiEndpointTest;
-import androidTestFiles.Utils.TestUtils;
-
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBackUnconditionally;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -50,6 +14,38 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
+
+import android.app.Instrumentation;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import org.digitalcampus.mobile.learning.BuildConfig;
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.CourseIndexActivity;
+import org.digitalcampus.oppia.activity.MainActivity;
+import org.digitalcampus.oppia.activity.ViewDigestActivity;
+import org.digitalcampus.oppia.activity.WelcomeActivity;
+import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.CompleteCourse;
+import org.digitalcampus.oppia.model.CompleteCourseProvider;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.ParseCourseXMLTask;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
+
+import androidTestFiles.Utils.CourseUtils;
+import androidTestFiles.Utils.MockedApiEndpointTest;
+import androidTestFiles.Utils.TestUtils;
 
 @RunWith(AndroidJUnit4.class)
 public class ViewDigestActivityUITest extends MockedApiEndpointTest {

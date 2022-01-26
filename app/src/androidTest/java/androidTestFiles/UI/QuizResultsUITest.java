@@ -21,6 +21,7 @@ import android.content.SharedPreferences;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.uiautomator.UiDevice;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -104,8 +105,10 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
                 onView(withId(R.id.recycler_quiz_results_feedback)).check(matches(not(isDisplayed())));
             }
 
-            pressBack();
-            pressBack();
+            UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+
+            device.pressBack();
+            device.pressBack();
 
             onView(withId(R.id.nav_bottom_scorecard)).perform(click());
             onView(withId(R.id.tabs)).perform(UITestActionsUtils.selectTabAtPosition(2));

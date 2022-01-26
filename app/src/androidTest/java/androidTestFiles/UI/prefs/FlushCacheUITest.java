@@ -6,6 +6,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
 import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
@@ -24,6 +25,9 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.Tag;
+import org.digitalcampus.oppia.model.TagRepository;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +44,9 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
 
     @Mock
     CoursesRepository coursesRepository;
+
+    @Mock
+    TagRepository tagRepository;
 
     private void givenThereAreSomeCourses(int numberOfCourses) {
 
@@ -91,6 +98,25 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
     @Test
     public void refreshCachedCoursesInTagSelectScreen() throws Exception {
 
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            BasicResult result = new BasicResult();
+            result.setSuccess(true);
+            result.setResultMessage("{}");
+            ((TagSelectActivity) ctx).apiRequestComplete(result);
+            return null;
+        }).when(tagRepository).getTagList(any(), any());
+
+
+        doAnswer(invocationOnMock -> {
+            ArrayList<Tag> tags = (ArrayList<Tag>) invocationOnMock.getArguments()[0];
+            tags.add(new Tag() {{
+                setName("Mocked Course Name");
+                setDescription("Mocked Course Description");
+            }});
+            return null;
+        }).when(tagRepository).refreshTagList(any(), any());
+
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefs.edit().remove(PrefsActivity.PREF_SERVER_COURSES_CACHE).commit();
@@ -103,7 +129,7 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
             String responseBody = FileUtils.getStringFromFile(
                     InstrumentationRegistry.getInstrumentation().getContext(), responseAsset);
 
-            Thread.sleep(200); // Manual waiting for Asynctask. Espresso only waits if there is a view interaction at the end.
+            Thread.sleep(3000); // Manual waiting for Asynctask. Espresso only waits if there is a view interaction at the end.
 
             String cachedCourses = prefs.getString(PrefsActivity.PREF_SERVER_COURSES_CACHE, "");
 
