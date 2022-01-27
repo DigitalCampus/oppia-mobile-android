@@ -63,15 +63,14 @@ public class CourseUtils {
         }
     }
 
-    public static Course createMockCourse(){
+    public static Course createMockCourse(String shortname){
 
         Course mockCourse = new Course("");
+        mockCourse.setVersionId(0d);
 
-        mockCourse.setShortname("Mock Course");
-
+        mockCourse.setShortname(shortname);
 
         Section mockSection = mock(Section.class);
-
 
         Activity mockActivity = mock(Activity.class);
         when(mockActivity.getCourseId()).thenReturn((long) 999);
@@ -83,6 +82,10 @@ public class CourseUtils {
 
         return mockCourse;
 
+    }
+
+    public static Course createMockCourse(){
+        return createMockCourse("mock-course");
     }
 
     public static CompleteCourse createMockCompleteCourse(int numberOfSections, int numberOfActivities){
@@ -112,7 +115,7 @@ public class CourseUtils {
         }
 
         CompleteCourse completeCourse = new CompleteCourse();
-        completeCourse.setShortname("Mock Course");
+        completeCourse.setShortname("mock-course");
         completeCourse.setTitles(new ArrayList<Lang>(){{ add(new Lang("en", "Mock Course")); }});
         completeCourse.setSections(sections);
 

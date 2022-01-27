@@ -1,6 +1,7 @@
 package androidTestFiles.UI;
 
 
+import android.Manifest;
 import android.os.Bundle;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -13,12 +14,14 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.widgets.FeedbackWidget;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
 import androidTestFiles.Utils.FileUtils;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;
@@ -32,6 +35,9 @@ import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class FeedbackUITest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
 
     private static final String SIMPLE_FEEDBACK_JSON = "quizzes/simple_feedback.json";
 

@@ -219,7 +219,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     public void onResume() {
         super.onResume();
         //Check if the apiKey of the current user is valid
-        boolean apiKeyValid = SessionManager.isUserApiKeyValid(this);
+        boolean apiKeyValid = SessionManager.isUserApiKeyValid(prefs);
         if (!apiKeyValid) {
             apiKeyInvalidated();
         }
@@ -277,7 +277,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     @Override
     public void apiKeyInvalidated() {
-        if (SessionManager.isLoggedIn(this)){
+        if (SessionManager.isLoggedIn(prefs)){
             UIUtils.showAlert(this, R.string.error, R.string.error_apikey_expired, () -> {
                 logoutAndRestartApp();
                 return true;

@@ -79,8 +79,8 @@
  	<string name="more_courses">अन्य कोर्से डाउनलोड करें</string>
  
 	<string name="prefAdvanced">उन्नत सेटिंग </string>
-	<string name="prefBackgroudDataConnect">Background activity tracker</string>
-	<string name="prefBackgroudDataConnect_summary">Send activity logs even when this application isn\'t running</string>
+	<string name="prefBackgroundDataConnect">Background activity tracker</string>
+	<string name="prefBackgroundDataConnect_summary">Send activity logs even when this application isn\'t running</string>
 	<string name="prefLanguage">पसंदीदा भाषा </string>
 	<string name="prefHighlightCompleted">Highlight completed activities</string>
 	<string name="prefServer">सर्वर </string>

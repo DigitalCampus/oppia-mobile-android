@@ -15,18 +15,18 @@ public class Analytics {
     public static final String ANALYTICS_LIBRARY_MINT = "MINT";
     public static final String ANALYTICS_LIBRARY_COUNTLY = "COUNTLY";
 
-    private static volatile BaseAnalytics analytics;
+    private static volatile BaseAnalytics analyticsEngine;
 
     public static void initializeAnalytics(Context ctx){
-        if (analytics == null) {
+        if (analyticsEngine == null) {
             if (BuildConfig.ANALYTICS_LIBRARY.equals(ANALYTICS_LIBRARY_MINT)){
-                analytics = new MintAnalytics(ctx);
+                analyticsEngine = new MintAnalytics(ctx);
             }
             else if (BuildConfig.ANALYTICS_LIBRARY.equals(ANALYTICS_LIBRARY_COUNTLY)){
-                analytics = new CountlyAnalytics(ctx);
+                analyticsEngine = new CountlyAnalytics(ctx);
             }
             else{
-                analytics = new DefaultNoOpAnalytics(ctx);
+                analyticsEngine = new DefaultNoOpAnalytics(ctx);
             }
         }
     }
@@ -45,59 +45,59 @@ public class Analytics {
 
     public static void startTrackingIfEnabled(Context ctx){
         if (isBugReportEnabled(ctx) || isTrackingEnabled(ctx)){
-            analytics.startTrackingSession();
+            analyticsEngine.startTrackingSession();
             String username = SessionManager.getUsername(ctx);
             Analytics.setUserId(username);
         }
     }
 
     public static void setUserId(String username){
-        analytics.setUserIdentifier(username.equals("") ? "anon" : username);
+        analyticsEngine.setUserIdentifier(username.equals("") ? "anon" : username);
     }
 
     public static void enableTracking(Context ctx){
         getPrefs(ctx).edit().putBoolean(PrefsActivity.PREF_ANALYTICS_ENABLED, true).apply();
         if (!isBugReportEnabled(ctx)){
-            analytics.startTrackingSession();
+            analyticsEngine.startTrackingSession();
         }
         else{
-            analytics.trackingConfigChanged();
+            analyticsEngine.trackingConfigChanged();
         }
     }
 
     public static void enableBugReport(Context ctx){
         getPrefs(ctx).edit().putBoolean(PrefsActivity.PREF_BUG_REPORT_ENABLED, true).apply();
         if (!isTrackingEnabled(ctx)){
-            analytics.startTrackingSession();
+            analyticsEngine.startTrackingSession();
         }
         else{
-            analytics.trackingConfigChanged();
+            analyticsEngine.trackingConfigChanged();
         }
     }
 
     public static void disableTracking(Context ctx){
         getPrefs(ctx).edit().putBoolean(PrefsActivity.PREF_ANALYTICS_ENABLED, false).apply();
         if (!isBugReportEnabled(ctx)){
-            analytics.stopTrackingSession();
+            analyticsEngine.stopTrackingSession();
         }
         else{
-            analytics.trackingConfigChanged();
+            analyticsEngine.trackingConfigChanged();
         }
     }
 
     public static void disableBugReport(Context ctx){
         getPrefs(ctx).edit().putBoolean(PrefsActivity.PREF_BUG_REPORT_ENABLED, false).apply();
         if (!isTrackingEnabled(ctx)){
-            analytics.stopTrackingSession();
+            analyticsEngine.stopTrackingSession();
         }
         else{
-            analytics.trackingConfigChanged();
+            analyticsEngine.trackingConfigChanged();
         }
     }
 
     public static void logException(Exception e){
-        if (analytics.isBugReportEnabled()){
-            analytics.logHandledException(e);
+        if (analyticsEngine.isBugReportEnabled()){
+            analyticsEngine.logHandledException(e);
         }
     }
 
@@ -110,14 +110,14 @@ public class Analytics {
     }
 
     public static void trackViewOnStart(Activity a){
-        if (analytics.isAnalyticsEnabled()){
-            analytics.trackViewOnStart(a);
+        if (analyticsEngine.isAnalyticsEnabled()){
+            analyticsEngine.trackViewOnStart(a);
         }
     }
 
     public static void trackViewOnStop(Activity a){
-        if (analytics.isAnalyticsEnabled()){
-            analytics.trackViewOnStop(a);
+        if (analyticsEngine.isAnalyticsEnabled()){
+            analyticsEngine.trackViewOnStop(a);
         }
     }
 

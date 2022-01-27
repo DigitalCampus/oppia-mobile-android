@@ -55,7 +55,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 
 public class QuizAttemptActivity extends AppActivity {
 
-	private ActivityQuizAttemptBinding binding;
 	private QuizAttempt quizAttempt;
 	private Course course;
 
@@ -71,7 +70,7 @@ public class QuizAttemptActivity extends AppActivity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		binding = ActivityQuizAttemptBinding.inflate(LayoutInflater.from(this));
+		ActivityQuizAttemptBinding binding = ActivityQuizAttemptBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
 		getAppComponent().inject(this);
 
@@ -140,8 +139,13 @@ public class QuizAttemptActivity extends AppActivity {
 			}
 		}
 
-		QuizAnswersFeedbackAdapter adapterQuizFeedback = new QuizAnswersFeedbackAdapter(this, quizAnswerFeedback);
-		binding.recyclerQuizResultsFeedback.setAdapter(adapterQuizFeedback);
+		if (quiz.mustShowQuizResultsLater()) {
+			QuizAnswersFeedbackAdapter adapterQuizFeedback = new QuizAnswersFeedbackAdapter(this, quizAnswerFeedback);
+			binding.recyclerQuizResultsFeedback.setAdapter(adapterQuizFeedback);
+		} else {
+			binding.recyclerQuizResultsFeedback.setVisibility(View.GONE);
+		}
+
 
 		if (quiz.limitAttempts()){
 			//Check if the user has attempted the quiz the max allowed

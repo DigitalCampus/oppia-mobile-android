@@ -1,5 +1,7 @@
 package androidTestFiles.quiz.models;
 
+import android.Manifest;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -10,6 +12,7 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -18,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import androidTestFiles.Utils.FileUtils;
+import androidx.test.rule.GrantPermissionRule;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -25,6 +29,8 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class QuizModelGeneralTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String DEFAULT_LANG = "en";
     private static final String MULTICHOICE_QUIZ_JSON = "quizzes/multichoice_no_feedback.json";

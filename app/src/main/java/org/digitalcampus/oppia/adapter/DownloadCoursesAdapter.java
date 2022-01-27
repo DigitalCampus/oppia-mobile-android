@@ -29,10 +29,10 @@ public class DownloadCoursesAdapter extends MultiChoiceRecyclerViewAdapter<Downl
     private OnItemClickListener itemClickListener;
     private String prefLang;
 
-    private String updateDescription;
-    private String installDescription;
-    private String installedDescription;
-    private String cancelDescription;
+    private final String updateDescription;
+    private final String installDescription;
+    private final String installedDescription;
+    private final String cancelDescription;
 
 
     public DownloadCoursesAdapter(Context context, List<CourseInstallViewAdapter> courses) {
@@ -56,23 +56,29 @@ public class DownloadCoursesAdapter extends MultiChoiceRecyclerViewAdapter<Downl
     }
 
 
+
+
     @Override
     public void onBindViewHolder(@NonNull final DownloadCoursesViewHolder viewHolder, final int position) {
 
         updateViewHolder(viewHolder, position);
         final CourseInstallViewAdapter c = getItemAtPosition(position);
 
-        viewHolder.binding.courseTitle.setText(c.getTitle(prefLang));
         viewHolder.binding.downloadCourseBtn.setVisibility(isMultiChoiceMode ? View.INVISIBLE : View.VISIBLE);
+        updateCourseDescription(viewHolder, c);
+        updateActionButton(viewHolder, c);
+    }
 
-        if (c.isDraft()){
+    private void updateCourseDescription(DownloadCoursesViewHolder viewHolder, CourseInstallViewAdapter course){
+        viewHolder.binding.courseTitle.setText(course.getTitle(prefLang));
+        if (course.isDraft()){
             viewHolder.binding.courseDraft.setVisibility(View.VISIBLE);
             viewHolder.binding.courseDraft.setText(context.getString(R.string.course_draft));
         } else {
             viewHolder.binding.courseDraft.setVisibility(View.GONE);
         }
 
-        String desc = c.getDescription(prefLang);
+        String desc = course.getDescription(prefLang);
         if (desc != null){
             viewHolder.binding.courseDescription.setVisibility(View.VISIBLE);
             viewHolder.binding.courseDescription.setText(desc);
@@ -80,8 +86,8 @@ public class DownloadCoursesAdapter extends MultiChoiceRecyclerViewAdapter<Downl
             viewHolder.binding.courseDescription.setVisibility(View.GONE);
         }
 
-        String organisation = c.getOrganisationName();
-        if (!TextUtils.isEmpty(organisation) && !(c.isDownloading() || c.isInstalling())){
+        String organisation = course.getOrganisationName();
+        if (!TextUtils.isEmpty(organisation) && !(course.isDownloading() || course.isInstalling())){
             viewHolder.binding.labelAuthor.setVisibility(View.VISIBLE);
             viewHolder.binding.courseAuthor.setVisibility(View.VISIBLE);
             viewHolder.binding.courseAuthor.setText(organisation);
@@ -90,18 +96,19 @@ public class DownloadCoursesAdapter extends MultiChoiceRecyclerViewAdapter<Downl
             viewHolder.binding.labelAuthor.setVisibility(View.GONE);
             viewHolder.binding.courseAuthor.setVisibility(View.GONE);
         }
+    }
 
-
+    private void updateActionButton(DownloadCoursesViewHolder viewHolder, CourseInstallViewAdapter course){
         int actionBtnImageRes;
-        if (c.isDownloading() || c.isInstalling()){
+        if (course.isDownloading() || course.isInstalling()){
             actionBtnImageRes =  R.drawable.ic_action_cancel;
             viewHolder.binding.downloadCourseBtn.setContentDescription(cancelDescription);
-            viewHolder.binding.downloadCourseBtn.setEnabled(!c.isInstalling());
+            viewHolder.binding.downloadCourseBtn.setEnabled(!course.isInstalling());
 
             viewHolder.binding.downloadProgress.setVisibility(View.VISIBLE);
-            if (c.getProgress()>0){
+            if (course.getProgress()>0){
                 viewHolder.binding.downloadProgress.setIndeterminate(false);
-                viewHolder.binding.downloadProgress.setProgress(c.getProgress());
+                viewHolder.binding.downloadProgress.setProgress(course.getProgress());
             }
             else {
                 viewHolder.binding.downloadProgress.setIndeterminate(true);
@@ -110,8 +117,8 @@ public class DownloadCoursesAdapter extends MultiChoiceRecyclerViewAdapter<Downl
         else{
             viewHolder.binding.downloadProgress.setVisibility(View.GONE);
 
-            if(c.isInstalled()){
-                if(c.isToUpdate()){
+            if(course.isInstalled()){
+                if(course.isToUpdate()){
                     actionBtnImageRes = R.drawable.ic_action_refresh;
                     viewHolder.binding.downloadCourseBtn.setContentDescription(updateDescription);
                     viewHolder.binding.downloadCourseBtn.setEnabled(true);

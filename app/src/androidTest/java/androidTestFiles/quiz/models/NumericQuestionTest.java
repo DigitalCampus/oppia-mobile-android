@@ -1,5 +1,7 @@
 package androidTestFiles.quiz.models;
 
+import android.Manifest;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -8,6 +10,7 @@ import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -15,6 +18,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import androidTestFiles.Utils.FileUtils;
+import androidx.test.rule.GrantPermissionRule;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -22,6 +26,8 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class NumericQuestionTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String NUMERIC_CLOSE_NOFEEDBACK_JSON = "quizzes/numeric_close_no_feedback.json";
     private static final String NUMERIC_EXACT_NOFEEDBACK_JSON = "quizzes/numeric_exact_no_feedback.json";

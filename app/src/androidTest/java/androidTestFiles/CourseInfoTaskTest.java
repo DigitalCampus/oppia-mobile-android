@@ -1,5 +1,6 @@
 package androidTestFiles;
 
+import android.Manifest;
 import android.content.Context;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -9,6 +10,7 @@ import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.task.CourseInfoTask;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -17,11 +19,14 @@ import java.util.concurrent.CountDownLatch;
 import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.org.digitalcampus.oppia.api.MockApiEndpoint;
 import androidTestFiles.org.digitalcampus.oppia.api.MockedApiEndpointTaskTest;
+import androidx.test.rule.GrantPermissionRule;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 
 public class CourseInfoTaskTest  extends MockedApiEndpointTaskTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String NOT_JSON_RESPONSE = "responses/response_body_error_message.json";
     private static final String VALID_COURSEINFO_RESPONSE = "responses/course/response_200_course_info.json";

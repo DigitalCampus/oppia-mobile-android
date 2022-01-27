@@ -176,23 +176,23 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Void, Integer, Ent
 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
-
                 if (!isRaw){
-                    JSONObject jsonResp = new JSONObject(response.body().string());
-                    db.updateUserBadges(user.getUserId(), jsonResp.getInt("badges"));
-
-                    Editor editor = prefs.edit();
                     try {
+                        JSONObject jsonResp = new JSONObject(response.body().string());
+                        db.updateUserBadges(user.getUserId(), jsonResp.getInt("badges"));
+
+                        Editor editor = prefs.edit();
                         editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, jsonResp.getBoolean("scoring"));
                         editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));
+                        editor.apply();
+
+                        saveMetadata(jsonResp);
+
                     } catch (JSONException e) {
                         Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
+                        Analytics.logException(e);
                     }
-                    editor.apply();
-
-                    saveMetadata(jsonResp);
                 }
-
                 return true;
 
             } else {
@@ -200,16 +200,18 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Void, Integer, Ent
                     // submitted but invalid digest - returned 400 Bad Request -
                     // so record as submitted so doesn't keep trying
                     return true; // OPPIA-217
-                } else{
-                    Log.d(TAG, "Error sending trackers:" + response.code());
-                    Log.d(TAG, "Msg:" + response.body().string());
-                    if (response.code() == 401) {
-                        //The apiKey of this user is invalid
-                        SessionManager.setUserApiKeyValid(user, false);
-                        //We don't process more of this user trackers
-                    }
-                    return false;
                 }
+
+                Log.d(TAG, "Error sending trackers:" + response.code());
+                Log.d(TAG, "Msg:" + response.body().string());
+
+                if (response.code() == 401) {
+                    //The apiKey of this user is invalid
+                    SessionManager.setUserApiKeyValid(user, false);
+                    //We don't process more of this user trackers
+                }
+                return false;
+
             }
         } catch (UnsupportedEncodingException e) {
             Analytics.logException(e);
@@ -220,10 +222,6 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Void, Integer, Ent
         } catch (IOException e) {
             Analytics.logException(e);
             result.setResultMessage(ctx.getString(R.string.error_connection));
-            return false;
-        } catch (JSONException e) {
-            Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
-            Analytics.logException(e);
             return false;
         }
     }

@@ -133,8 +133,8 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="prefBackgroundDataConnect"
-            android:summary="@string/prefBackgroudDataConnect_summary"
-            android:title="@string/prefBackgroudDataConnect" />
+            android:summary="@string/prefBackgroundDataConnect_summary"
+            android:title="@string/prefBackgroundDataConnect" />
 
         <CheckBoxPreference
             android:defaultValue="@string/MENU_ALLOW_LOGOUT_DEFAULT_VALUE"
@@ -156,11 +156,6 @@
             android:key="prefDeleteCourseEnabled"
             android:title="@string/prefDeleteCourseEnabled" />
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="prefDownloadViaCellularEnabled"
-            android:title="@string/prefDownloadViaCellularEnabled"
-            android:summary="@string/warning_download_via_cellular_enabled" />
     </PreferenceCategory>
 
 </PreferenceScreen>

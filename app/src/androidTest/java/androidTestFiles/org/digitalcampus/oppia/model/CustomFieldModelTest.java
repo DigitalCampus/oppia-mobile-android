@@ -1,5 +1,6 @@
 package androidTestFiles.org.digitalcampus.oppia.model;
 
+import android.Manifest;
 import android.content.Context;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -8,6 +9,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -16,9 +18,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import androidTestFiles.Utils.FileUtils;
+import androidx.test.rule.GrantPermissionRule;
 
 @RunWith(AndroidJUnit4.class)
 public class CustomFieldModelTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private Context context;
     private static final String ASSETS_FOLDER = "customfields";

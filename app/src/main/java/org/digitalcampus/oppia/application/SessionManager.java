@@ -79,7 +79,13 @@ public class SessionManager {
     }
     public static boolean isLoggedIn(Context ctx) {
         String username = getUsername(ctx);
-        return !username.trim().equals("");
+        return !TextUtils.isEmpty(username);
+    }
+
+    // For testing, to be able to pass mocked prefs
+    public static boolean isLoggedIn(SharedPreferences prefs) {
+        String username = getUsernameFromPrefs(prefs);
+        return !TextUtils.isEmpty(username);
     }
 
     private static String getUsernameFromPrefs(SharedPreferences prefs) {
@@ -217,9 +223,9 @@ public class SessionManager {
         }
     }
 
-    public static boolean isUserApiKeyValid(Context ctx) {
-        if (isLoggedIn(ctx)) {
-            String user = getUsername(ctx);
+    public static boolean isUserApiKeyValid(SharedPreferences prefs) {
+        if (isLoggedIn(prefs)) {
+            String user = getUsernameFromPrefs(prefs);
             return isUserApiKeyValid(user);
         }
         return true;

@@ -1,5 +1,6 @@
 package androidTestFiles.database;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -16,6 +17,7 @@ import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import androidx.test.rule.GrantPermissionRule;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static org.mockito.Matchers.anyBoolean;
@@ -33,6 +35,9 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(AndroidJUnit4.class)
 public abstract class BaseTestDB {
+
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
 
     private TestDBHelper testDBHelper;

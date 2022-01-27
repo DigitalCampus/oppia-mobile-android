@@ -342,9 +342,7 @@ public class UIUtils {
             if (view != null) {
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
-        } catch (Exception e) {
-
-        }
+        } catch (Exception ignored) { }
     }
 
     private static final int BULLET_SPAN_GAP_WIDTH = 20;

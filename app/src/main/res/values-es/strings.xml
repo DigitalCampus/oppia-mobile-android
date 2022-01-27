@@ -78,8 +78,8 @@
 	<string name="prefAdvanced">Configuración avanzada</string>
 	<string name="prefServerTimeoutConnection">Tiempo de espera de conexión superado</string>
 	<string name="prefServerTimeoutResponse">Tiempo de espera de respuesta superado</string>
-	<string name="prefBackgroudDataConnect">Seguimiento de actividad</string>
-	<string name="prefBackgroudDataConnect_summary">Enviar registros de actividad, incluso cuando la aplicación no se esté ejecutando.</string>
+	<string name="prefBackgroundDataConnect">Seguimiento de actividad</string>
+	<string name="prefBackgroundDataConnect_summary">Enviar registros de actividad, incluso cuando la aplicación no se esté ejecutando.</string>
     <string name="prefTextSize">Tamaño del texto</string>
     <string name="prefUser">Usuario</string>
 	<string name="prefHighlightCompleted">Resaltar actividades completadas</string>
@@ -306,7 +306,6 @@
     <string name="permissions.location.title">acceder a la ubicación</string>
     <string name="permissions.location.description">En las últimas versiones de Android se necesita este permiso para poder enlazar otros dispositivos con Bluetooth</string>
 
-    <string name="prefDownloadViaCellularEnabled">Descargar multimedia usando los datos del teléfono</string>
     <string name="prefLogoutEnabled">Permitir cierre de sesión desde el menú principal</string>
     <string name="register_alert_title">Registro</string>
     <string name="reset_password_field">Usuario o Email</string>
@@ -438,7 +437,7 @@
 
     <string name="archived_activities">Registros de actividad archivados (ya transferidos)</string>
     <string name="option_available_online">Esta opción solo está disponible cuando el dispositivo está conectado a internet</string>
-    <string name="profile_updated_successfuly">Perfil actualizado correctamente</string>
+    <string name="profile_updated_successfully">Perfil actualizado correctamente</string>
 
     <string name="open_digest.errors.invalid_param">Falta el parámetro de identificación o está mal configurado. Por favor, compruebe que el enlace es válido.</string>
     <string name="open_digest.errors.activity_not_found">Actividad no encontrada. ¿Está seguro de que tiene instalado el curso que contiene esta actividad?</string>

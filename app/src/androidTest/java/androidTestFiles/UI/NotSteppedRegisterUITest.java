@@ -1,15 +1,10 @@
 package androidTestFiles.UI;
 
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
+import android.Manifest;
 
 import junit.framework.AssertionFailedError;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.MainActivity;
-import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
@@ -23,6 +18,10 @@ import java.util.ArrayList;
 
 import androidTestFiles.Utils.MockedApiEndpointTest;
 import androidTestFiles.Utils.TestUtils;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidTestFiles.Utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
 import static androidTestFiles.Utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
@@ -36,13 +35,14 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String VALID_REGISTER_RESPONSE = "responses/response_200_register.json";
 

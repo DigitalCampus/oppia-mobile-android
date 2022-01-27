@@ -215,9 +215,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
                     i.putExtras(tb);
                     startActivity(i);
                 })
-                .setNegativeButton(R.string.continue_to_course, (dialog, which) -> {
-                    openCourse(selectedCourse);
-                })
+                .setNegativeButton(R.string.continue_to_course, (dialog, which) -> openCourse(selectedCourse))
                 .setNeutralButton(R.string.back, null)
                 .show();
     }
@@ -261,9 +259,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
         builder.setTitle(R.string.course_context_delete);
         builder.setMessage(R.string.course_context_delete_confirm);
-        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-            deleteCourse(course);
-        });
+        builder.setPositiveButton(R.string.yes, (dialog, which) -> deleteCourse(course));
         builder.setNegativeButton(R.string.no, null);
         builder.show();
     }

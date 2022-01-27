@@ -89,8 +89,8 @@
 <string name="more_courses">تحميل المزيد من الدروس</string>
 
 <string name="prefAdvanced">الإعدادات المتقدمة</string>
-<string name="prefBackgroudDataConnect">رصد مراقبة الأنشطة في الخلفية</string>
-<string name="prefBackgroudDataConnect_summary">أرسل سجل الأنشطة حتى إذا كان التطبيق في وضع توقف مؤقت</string>
+<string name="prefBackgroundDataConnect">رصد مراقبة الأنشطة في الخلفية</string>
+<string name="prefBackgroundDataConnect_summary">أرسل سجل الأنشطة حتى إذا كان التطبيق في وضع توقف مؤقت</string>
 <string name="prefLanguage">اللغة المفضلة</string>
 <string name="prefHighlightCompleted">إبراز الأنشطة المنتهية</string>
 <string name="prefServer">الخادم</string>
@@ -104,7 +104,6 @@
 <string name="prefUserHint">للقراءة فقط</string>
 <string name="prefLogoutEnabled">السماح بتسجيل الخروج من الصفحة الرئيسة</string>
 <string name="prefDeleteCourseEnabled">السماح بإلغاء الدرس</string>
-<string name="prefDownloadViaCellularEnabled">تنزيل ملفات الوسائط عبر شبكة الهاتف الخليوي</string>
 
     <!-- Strings relative to Storage -->
 <string name="prefStorageLocation">مساحة التخزين</string>
