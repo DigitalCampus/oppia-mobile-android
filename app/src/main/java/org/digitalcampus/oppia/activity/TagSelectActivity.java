@@ -144,7 +144,6 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	}
 	
 	private void getTagList() {
-		showProgressDialog(getString(R.string.loading));
 
 		tagRepository.getTagList(this, apiEndpoint);
 	}

@@ -1,8 +1,17 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
@@ -12,15 +21,6 @@ import org.junit.runner.RunWith;
 
 import androidTestFiles.Utils.MockedApiEndpointTest;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
 @RunWith(AndroidJUnit4.class)
 public class WelcomeActivityUITest extends MockedApiEndpointTest {
 
@@ -29,9 +29,11 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
             new ActivityScenarioRule<>(WelcomeActivity.class);
 
     @Test
-    public void showsLoginFragmentOnLoginButtonClick(){
+    public void showsLoginFragmentOnLoginButtonClick() throws InterruptedException {
         onView(withId(R.id.welcome_login))
                 .perform(scrollTo(), click());
+
+        Thread.sleep(200); // Wait for viewpager transition
 
         onView(withId(R.id.login_btn))
                 .perform(scrollTo())
@@ -39,16 +41,18 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    public void showsRegisterFragmentOnRegisterButtonClick() {
+    public void showsRegisterFragmentOnRegisterButtonClick() throws InterruptedException {
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
+
+        Thread.sleep(200);
 
         onView(withId(R.id.register_title))
                 .check(matches(isDisplayed()));
     }
 
     @Test
-    public void showsResetFragmentOnResetTabClicked() {
+    public void showsResetFragmentOnResetTabClicked() throws InterruptedException {
 
         onView(withId(R.id.welcome_login))
                 .perform(scrollTo(), click());
@@ -56,13 +60,15 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_reset_password))
                 .perform(scrollTo(), click());
 
+        Thread.sleep(200);
+
         onView(withId(R.id.reset_btn))
                 .perform(scrollTo())
                 .check(matches(isDisplayed()));
     }
 
     @Test
-    public void resetPassword_goToLoginScreenAfterSuccess() {
+    public void resetPassword_goToLoginScreenAfterSuccess() throws InterruptedException {
 
         startServer(200, null, 0);
 
@@ -72,7 +78,9 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_reset_password))
                 .perform(scrollTo(), click());
 
-        onView(withId(R.id.reset_username_field)).perform(typeText("username"));
+        Thread.sleep(200);
+
+        onView(withId(R.id.reset_username_field)).perform(typeText("username"), closeSoftKeyboard());
 
         onView(withId(R.id.reset_btn)).perform(click());
 
@@ -84,7 +92,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    public void resetPassword_goToLoginScreenAfterError() {
+    public void resetPassword_goToLoginScreenAfterError() throws InterruptedException {
 
         startServer(400, null, 0);
 
@@ -94,7 +102,9 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_reset_password))
                 .perform(scrollTo(), click());
 
-        onView(withId(R.id.reset_username_field)).perform(typeText("username"));
+        Thread.sleep(200);
+
+        onView(withId(R.id.reset_username_field)).perform(typeText("username"), closeSoftKeyboard());
 
         onView(withId(R.id.reset_btn)).perform(click());
 
@@ -106,7 +116,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    public void rememberUsername_goToLoginScreenAfterSuccess() {
+    public void rememberUsername_goToLoginScreenAfterSuccess() throws InterruptedException {
 
         startServer(200, null, 0);
 
@@ -116,7 +126,9 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_remember_username))
                 .perform(scrollTo(), click());
 
-        onView(withId(R.id.edit_email)).perform(typeText("valid@email.is"));
+        Thread.sleep(200);
+
+        onView(withId(R.id.edit_email)).perform(typeText("valid@email.is"), closeSoftKeyboard());
 
         onView(withId(R.id.btn_remember_username)).perform(click());
 
@@ -128,7 +140,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    public void rememberUsername_showsErrorIfEmailPatterInvalid() {
+    public void rememberUsername_showsErrorIfEmailPatterInvalid() throws InterruptedException {
 
         startServer(200, null, 0);
 
@@ -138,7 +150,9 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_remember_username))
                 .perform(scrollTo(), click());
 
-        onView(withId(R.id.edit_email)).perform(typeText("wrong-email"));
+        Thread.sleep(200);
+
+        onView(withId(R.id.edit_email)).perform(typeText("wrong-email"), closeSoftKeyboard());
 
         onView(withId(R.id.btn_remember_username)).perform(click());
 
@@ -147,7 +161,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    public void rememberUsername_goToLoginScreenAfterError() {
+    public void rememberUsername_goToLoginScreenAfterError() throws InterruptedException {
 
         startServer(400, null, 0);
 
@@ -157,7 +171,9 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_remember_username))
                 .perform(scrollTo(), click());
 
-        onView(withId(R.id.edit_email)).perform(typeText("valid@email.is"));
+        Thread.sleep(200);
+
+        onView(withId(R.id.edit_email)).perform(typeText("valid@email.is"), closeSoftKeyboard());
 
         onView(withId(R.id.btn_remember_username)).perform(click());
 
