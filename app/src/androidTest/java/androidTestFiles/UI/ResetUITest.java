@@ -1,17 +1,17 @@
 package androidTestFiles.UI;
 
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
+import android.Manifest;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.Utils.MockedApiEndpointTest;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -26,8 +26,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class ResetUITest extends MockedApiEndpointTest {
 
-    private static final String ERROR_RESET_RESPONSE = "responses/response_400_reset.json";
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
+    private static final String ERROR_RESET_RESPONSE = "responses/response_400_reset.json";
 
     @Test
     public void showsErrorMessageWhenThereIsNoUsername() throws Exception {
@@ -38,6 +40,8 @@ public class ResetUITest extends MockedApiEndpointTest {
                     .perform(scrollTo(), click());
             onView(withId(R.id.btn_reset_password))
                     .perform(click());
+
+            Thread.sleep(100);
 
             onView(withId(R.id.reset_username_field))
                     .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
@@ -61,6 +65,8 @@ public class ResetUITest extends MockedApiEndpointTest {
                     .perform(scrollTo(), click());
             onView(withId(R.id.btn_reset_password))
                     .perform(click());
+
+            Thread.sleep(100);
 
             onView(withId(R.id.reset_username_field))
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongUsername"));

@@ -1,11 +1,10 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.view.View;
 
-import com.google.android.material.tabs.TabLayout;
-
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
@@ -15,7 +14,6 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.SearchActivity;
 import org.digitalcampus.oppia.activity.StartUpActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
-import org.digitalcampus.oppia.activity.ViewDigestActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -28,7 +26,6 @@ import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
@@ -40,23 +37,18 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.CourseUtils;
+import androidTestFiles.Utils.MockedApiEndpointTest;
 import androidTestFiles.Utils.TestUtils;
-import androidx.annotation.NonNull;
+import androidTestFiles.Utils.UITestActionsUtils;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoMatchingViewException;
-import androidx.test.espresso.UiController;
-import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
@@ -64,8 +56,6 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
-import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withChild;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -88,7 +78,9 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityUITest extends DaggerInjectMockUITest {
+public class MainActivityUITest extends MockedApiEndpointTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Mock
     CoursesRepository coursesRepository;
@@ -160,17 +152,10 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
         }
     }
 
-    @Test
+    /*@Test
     public void showsTagSelectActivityOnClickManageCourses() throws Exception {
 
-        doAnswer(invocationOnMock -> {
-            Context ctx = (Context) invocationOnMock.getArguments()[0];
-            BasicResult result = new BasicResult();
-            result.setSuccess(true);
-            result.setResultMessage("{}");
-            ((TagSelectActivity) ctx).apiRequestComplete(result);
-            return null;
-        }).when(tagRepository).getTagList(any(), any());
+        startServer(200, EMPTY_JSON, 0);
 
         givenThereAreSomeCourses(0);
 
@@ -186,14 +171,7 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
     @Test
     public void showsTagSelectActivityOnClickManageCoursesImage() throws Exception {
 
-        doAnswer(invocationOnMock -> {
-            Context ctx = (Context) invocationOnMock.getArguments()[0];
-            BasicResult result = new BasicResult();
-            result.setSuccess(true);
-            result.setResultMessage("{}");
-            ((TagSelectActivity) ctx).apiRequestComplete(result);
-            return null;
-        }).when(tagRepository).getTagList(any(), any());
+        startServer(200, EMPTY_JSON, 0);
 
         givenThereAreSomeCourses(0);
 
@@ -205,7 +183,7 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
             checkCorrectActivity(TagSelectActivity.class);
         }
 
-    }
+    }*/
 
     @Test
     public void showsCourseIndexOnCourseClick() throws Exception {
@@ -350,38 +328,12 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
             onView(withId(R.id.nav_bottom_points)).perform(click());
-            onView(withId(R.id.tabs)).perform(selectTabAtPosition(2));
+            onView(withId(R.id.tabs)).perform(UITestActionsUtils.selectTabAtPosition(2));
 
             assertEquals(0, badgeList.size());
         }
     }
 
-    @NonNull
-    private static ViewAction selectTabAtPosition(final int position) {
-        return new ViewAction() {
-            @Override
-            public Matcher<View> getConstraints() {
-                return allOf(isDisplayed(), isAssignableFrom(TabLayout.class));
-            }
-
-            @Override
-            public String getDescription() {
-                return "with tab at index" + position;
-            }
-
-            @Override
-            public void perform(UiController uiController, View view) {
-                if (view instanceof TabLayout) {
-                    TabLayout tabLayout = (TabLayout) view;
-                    TabLayout.Tab tab = tabLayout.getTabAt(position);
-
-                    if (tab != null) {
-                        tab.select();
-                    }
-                }
-            }
-        };
-    }
 
     @Test
     public void deleteCourseOnContextMenuDeleteClickNo() throws Exception {
@@ -517,16 +469,7 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
     //Drawer Tests
 
-    private void openDrawer() {
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
 
-        onView(withId(R.id.drawer)).check(matches(isOpen()));
-    }
-
-    private void performClickDrawerItem(int itemId) {
-        onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(itemId));
-    }
 
     private void checkCorrectActivity(Class activity) {
         assertEquals(activity, TestUtils.getCurrentActivity().getClass());
@@ -537,8 +480,10 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
     }
 
 
-    @Test
+    /*@Test
     public void showsTagSelectActivityOnDrawerClickDownloadCourses() throws Exception {
+
+        startServer(200, EMPTY_JSON, 0);
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
@@ -546,7 +491,7 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
             performClickDrawerItem(R.id.menu_download);
             checkCorrectActivity(TagSelectActivity.class);
         }
-    }
+    }*/
 
     @Test
     public void showsSearchActivityOnMenuClickSearch() throws Exception {
@@ -737,6 +682,10 @@ public class MainActivityUITest extends DaggerInjectMockUITest {
 
     @Test
     public void showsEditProfileActivityOnMenuItemClick() throws Exception {
+
+        if (!BuildConfig.MENU_ALLOW_EDIT_PROFILE) {
+            return;
+        }
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 

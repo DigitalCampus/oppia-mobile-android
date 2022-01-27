@@ -30,6 +30,7 @@
         android:label="@string/app_name"
         android:theme="@style/Oppia.Theme"
         android:supportsRtl="true"
+        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
         <activity
             android:name="org.digitalcampus.oppia.activity.StartUpActivity"
@@ -42,35 +43,41 @@
         <activity
             android:name="org.digitalcampus.oppia.activity.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/Oppia.ToolbarTheme" />
+            android:theme="@style/Oppia.ToolbarTheme"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseIndexActivity"
             android:label="@string/title_activity_course_index"
-            android:theme="@style/Oppia.ToolbarTheme" />
+            android:theme="@style/Oppia.ToolbarTheme"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseActivity"
             android:label="@string/title_activity_course"
             android:theme="@style/Oppia.ToolbarTheme"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name="org.digitalcampus.oppia.activity.DownloadActivity"
             android:label="@string/title_download_activity"
             android:theme="@style/Oppia.ToolbarTheme"
-            android:parentActivityName="org.digitalcampus.oppia.activity.MainActivity" />
+            android:parentActivityName="org.digitalcampus.oppia.activity.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.digitalcampus.oppia.activity.TagSelectActivity"
             android:label="@string/title_tag_select_activity"
             android:theme="@style/Oppia.ToolbarTheme"
-            android:parentActivityName="org.digitalcampus.oppia.activity.MainActivity" />
+            android:parentActivityName="org.digitalcampus.oppia.activity.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.digitalcampus.oppia.activity.PrefsActivity"
             android:label="@string/title_prefs"
             android:theme="@style/Oppia.ToolbarTheme"
-            android:parentActivityName="org.digitalcampus.oppia.activity.MainActivity" />
+            android:parentActivityName="org.digitalcampus.oppia.activity.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.digitalcampus.oppia.activity.AboutActivity"
             android:label="@string/title_about"
-            android:theme="@style/Oppia.ToolbarTheme" />
+            android:theme="@style/Oppia.ToolbarTheme"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.digitalcampus.oppia.activity.WelcomeActivity"
             android:label="@string/app_name"
@@ -115,26 +122,29 @@
         <activity
             android:name="org.digitalcampus.oppia.activity.SyncActivity"
             android:label="@string/title_sync"
-            android:theme="@style/Oppia.ToolbarTheme" />
+            android:theme="@style/Oppia.ToolbarTheme"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.digitalcampus.oppia.activity.ActivityLogActivity"
             android:label="@string/title_activitylog"
-            android:theme="@style/Oppia.ToolbarTheme" />
+            android:theme="@style/Oppia.ToolbarTheme"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.digitalcampus.oppia.activity.DeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="adjustResize"
             android:label="@string/bluetooth.select_device"
             android:theme="@style/Oppia.Dialog" />
 
         <activity android:name="org.digitalcampus.oppia.activity.EditProfileActivity"
             android:label="@string/title_activity_edit_profile"
             android:theme="@style/Oppia.ToolbarTheme"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
 
         <activity android:name="org.digitalcampus.oppia.activity.ChangePasswordActivity"
             android:label="@string/change_password"
             android:theme="@style/Oppia.ToolbarTheme"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
 
         <activity
             android:name="org.digitalcampus.oppia.activity.ViewDigestActivity"
@@ -158,7 +168,8 @@
 
         <activity android:name="org.digitalcampus.oppia.activity.AnalyticsOptinActivity"
             android:label="@string/analytics.optin.title"
-            android:theme="@style/Oppia.ToolbarTheme"/>
+            android:theme="@style/Oppia.ToolbarTheme"
+            android:windowSoftInputMode="adjustResize"/>
 
 
         <service

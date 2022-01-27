@@ -1,12 +1,10 @@
 package androidTestFiles.org.digitalcampus.oppia.widgets;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.EditText;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
@@ -17,6 +15,7 @@ import org.digitalcampus.oppia.model.QuizAttemptRepository;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.widgets.QuizWidget;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,11 +24,13 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
-
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.Utils.ViewsUtils;
 import androidTestFiles.quiz.models.QuizModelGeneralTest;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;
@@ -38,11 +39,9 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.any;
@@ -50,6 +49,8 @@ import static org.mockito.Matchers.any;
 
 @RunWith(AndroidJUnit4.class)
 public class QuizWidgetTest extends DaggerInjectMockUITest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String SIMPLE_QUIZ_JSON = "quizzes/simple_quiz.json";
     private static final String WITH_MAX_ATTEMPTS_JSON = "quizzes/with_max_attempts_quiz.json";

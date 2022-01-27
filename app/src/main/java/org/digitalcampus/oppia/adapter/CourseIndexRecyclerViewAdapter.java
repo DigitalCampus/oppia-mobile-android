@@ -46,11 +46,10 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
     private int normalColor;
 
 
-    public CourseIndexRecyclerViewAdapter(Context ctx, List<Section> sectionList, Course course) {
+    public CourseIndexRecyclerViewAdapter(Context ctx, SharedPreferences prefs, List<Section> sectionList, Course course) {
         super();
         this.sectionList = sectionList;
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         showSectionNumbers = prefs.getBoolean(PrefsActivity.PREF_SHOW_SECTION_NOS, false);
         highlightCompleted = prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, App.DEFAULT_DISPLAY_COMPLETED);

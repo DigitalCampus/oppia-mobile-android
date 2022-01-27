@@ -1,15 +1,10 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
-
 import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
-import org.digitalcampus.oppia.activity.EditProfileActivity;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.junit.Before;
 import org.junit.Rule;
@@ -17,10 +12,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.database.BaseTestDB;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 @RunWith(AndroidJUnit4.class)
 public class CourseQuizAttemptsActivityTest extends BaseTestDB {
-
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private Context context;
 

@@ -84,8 +84,8 @@
  	<string name="more_courses">دیگر كورسے ڈاؤن لوڈ کریں</string>
  
 	<string name="prefAdvanced">اعلیٰ درجے کی ترتیبات</string>
-	<string name="prefBackgroudDataConnect">Background activity tracker</string>
-	<string name="prefBackgroudDataConnect_summary">Send activity logs even when this application isn\'t running</string>
+	<string name="prefBackgroundDataConnect">Background activity tracker</string>
+	<string name="prefBackgroundDataConnect_summary">Send activity logs even when this application isn\'t running</string>
 	<string name="prefLanguage">پسندیدہ زبان</string>
 	<string name="prefHighlightCompleted">Highlight completed activities</string>
 	<string name="prefServer">سرور</string>

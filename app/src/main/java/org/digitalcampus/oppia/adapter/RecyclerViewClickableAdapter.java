@@ -18,7 +18,7 @@ public abstract class RecyclerViewClickableAdapter<H extends RecyclerViewClickab
 
     public abstract class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ViewHolder(View itemView) {
+        protected ViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(v -> {

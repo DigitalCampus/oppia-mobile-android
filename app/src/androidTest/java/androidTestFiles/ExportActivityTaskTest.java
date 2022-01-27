@@ -1,5 +1,7 @@
 package androidTestFiles;
 
+import android.Manifest;
+
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
@@ -12,6 +14,7 @@ import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.json.JSONObject;
 import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -20,9 +23,12 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import androidTestFiles.database.BaseTestDB;
+import androidx.test.rule.GrantPermissionRule;
 
 @RunWith(AndroidJUnit4.class)
 public class ExportActivityTaskTest extends BaseTestDB {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final int NUM_QUIZ_ATTEMPTS_TEST = 2;
     private static final int NUM_TRACKER_TEST = 3;

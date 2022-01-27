@@ -1,14 +1,7 @@
 package androidTestFiles.UI;
 
+import android.Manifest;
 import android.content.SharedPreferences;
-
-import androidx.preference.PreferenceManager;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.NavigationViewActions;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
 import junit.framework.AssertionFailedError;
 
@@ -16,7 +9,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AnalyticsOptinActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.activity.PrivacyActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.junit.Before;
@@ -29,6 +21,13 @@ import java.util.ArrayList;
 
 import androidTestFiles.Utils.MockedApiEndpointTest;
 import androidTestFiles.Utils.TestUtils;
+import androidx.preference.PreferenceManager;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.NavigationViewActions;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidTestFiles.Utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
 import static androidx.test.espresso.Espresso.onView;
@@ -38,24 +37,29 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
 import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class AnalyticsOptinUITest extends MockedApiEndpointTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String VALID_LOGIN_REGISTER_RESPONSE = "responses/response_200_register.json";
 
     @Mock
     protected CustomFieldsRepository customFieldsRepo;
+
+    @Mock
+    private SharedPreferences prefsMock;
 
     @Before
     public void setUp() throws Exception {
@@ -66,6 +70,8 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
         prefs.edit().remove(PrefsActivity.PREF_ANALYTICS_INITIAL_PROMPT).commit();
 
         when(customFieldsRepo.getAll(any())).thenReturn(new ArrayList<>());
+
+        when(prefsMock.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
     }
 
     @Test

@@ -15,6 +15,7 @@ import org.digitalcampus.oppia.adapter.GlobalQuizAttemptsAdapter;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizAttemptRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -27,6 +28,8 @@ public class GlobalQuizAttemptsFragment extends AppFragment {
     @Inject
     QuizAttemptRepository attemptsRepository;
     private FragmentGlobalQuizAttemptsBinding binding;
+    private List<QuizAttempt> attempts = new ArrayList<>();
+    private GlobalQuizAttemptsAdapter adapter;
 
     public static GlobalQuizAttemptsFragment newInstance() {
         return new GlobalQuizAttemptsFragment();
@@ -37,8 +40,7 @@ public class GlobalQuizAttemptsFragment extends AppFragment {
         binding = FragmentGlobalQuizAttemptsBinding.inflate(inflater, container, false);
         getAppComponent().inject(this);
 
-        List<QuizAttempt> attempts = attemptsRepository.getGlobalQuizAttempts(this.getContext());
-        GlobalQuizAttemptsAdapter adapter = new GlobalQuizAttemptsAdapter(this.getContext(), attempts);
+        adapter = new GlobalQuizAttemptsAdapter(this.getContext(), attempts);
         binding.attemptsList.setAdapter(adapter);
         adapter.setOnItemClickListener((v, position) -> {
             Intent i = new Intent(getActivity(), QuizAttemptActivity.class);
@@ -50,9 +52,17 @@ public class GlobalQuizAttemptsFragment extends AppFragment {
             startActivity(i);
         });
 
-        binding.emptyState.setVisibility(attempts.isEmpty() ? View.VISIBLE : View.GONE);
-
         return binding.getRoot();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        attempts.clear();
+        attempts.addAll(attemptsRepository.getGlobalQuizAttempts(this.getContext()));
+        adapter.notifyDataSetChanged();
+
+        binding.emptyState.setVisibility(attempts.isEmpty() ? View.VISIBLE : View.GONE);
+    }
 }

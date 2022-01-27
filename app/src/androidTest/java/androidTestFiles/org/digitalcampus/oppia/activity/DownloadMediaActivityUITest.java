@@ -1,12 +1,9 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadMediaActivity;
@@ -21,6 +18,9 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidx.test.espresso.Espresso.onView;
@@ -32,6 +32,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 
 public class DownloadMediaActivityUITest extends DaggerInjectMockUITest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Mock DownloadServiceDelegate downloadServiceDelegate;
 

@@ -1,18 +1,18 @@
 package androidTestFiles.UI;
 
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
+import android.Manifest;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
-import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
@@ -26,6 +26,8 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class MissingMediaUITest extends CourseMediaBaseTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Test
     public void main_mediaViewHiddenWhenThereAreNoCourses(){

@@ -1,17 +1,20 @@
 package androidTestFiles;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -20,9 +23,12 @@ import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class MetadataUtilsTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private Context context;
     private SharedPreferences prefs;
@@ -89,7 +95,7 @@ public class MetadataUtilsTest {
         }};
 
         assertCorrectValues(eventData, expectedValues);
-        assertFalse("initial_value".equals(eventData.get("network")));
+        assertNotEquals("initial_value", eventData.get("network"));
     }
 
     @Test

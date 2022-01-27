@@ -46,8 +46,6 @@ import javax.inject.Inject;
 
 public class LoginFragment extends AppFragment implements SubmitEntityListener<User> {
 
-    private Context appContext;
-
     @Inject
     ApiEndpoint apiEndpoint;
 
@@ -69,7 +67,6 @@ public class LoginFragment extends AppFragment implements SubmitEntityListener<U
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        appContext = super.getActivity().getApplicationContext();
         getAppComponent().inject(this);
 
         binding.loginBtn.setOnClickListener(v -> onLoginClick());

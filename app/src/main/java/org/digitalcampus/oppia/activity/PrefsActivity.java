@@ -119,7 +119,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_DOWNLOAD_ENABLED = "prefDownloadEnabled";
     public static final String PREF_CHANGE_LANGUAGE_ENABLED = "prefChangeLanguageEnabled";
     public static final String PREF_DELETE_COURSE_ENABLED = "prefDeleteCourseEnabled";
-    public static final String PREF_DOWNLOAD_VIA_CELLULAR_ENABLED = "prefDownloadViaCellularEnabled";
 
     public static final String PREF_LAST_LEADERBOARD_FETCH = "prefLastLeaderboardFetch";
 
@@ -148,6 +147,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_LAST_NEW_COURSE_SEEN_TIMESTAMP = "prefNewCourseTimestamp";
 
     public static final String PREF_FULL_ACTIVITY_EXPORT = "prefFullActivityExport";
+    public static final String PREF_FLUSH_COURSE_LISTING_CACHE = "prefFlushCourseListingCache";
 
     //Privacy tracking preferences
     public static final String PREF_ANALYTICS_INITIAL_PROMPT = "prefAnalyticsInitialPrompt";
@@ -165,7 +165,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     CoursesRepository coursesRepository;
     private FetchServerInfoTask fetchServerInfoTask;
     private boolean forzeGoToLoginScreen;
-    private ActivityPreferencesBinding binding;
 
     @Override
     public void onStart() {
@@ -176,7 +175,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPreferencesBinding.inflate(LayoutInflater.from(this));
+        org.digitalcampus.mobile.learning.databinding.ActivityPreferencesBinding binding = ActivityPreferencesBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
         getAppComponent().inject(this);
 
@@ -347,15 +346,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
         Log.d(TAG, "Storage option selected: " + storageOption);
 
-        if (storageOption.equals(Storage.getStorageStrategy().getStorageType())) {
-            // Same option. No need to move files
-            return;
-        } else {
+        if (!storageOption.equals(Storage.getStorageStrategy().getStorageType())) {
             executeChangeStorageTask(storageOption);
         }
-
-
-
     }
 
     private void checkAdminProtection(SharedPreferences sharedPreferences) {

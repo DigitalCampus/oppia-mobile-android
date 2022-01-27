@@ -368,11 +368,13 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
         String[] eventTypes = new String[]{Gamification.EVENT_NAME_ACTIVITY_COMPLETED, Gamification.EVENT_NAME_MEDIA_PLAYED,
                 Gamification.EVENT_NAME_COURSE_DOWNLOADED, Gamification.EVENT_NAME_QUIZ_ATTEMPT};
 
+        Random rand = new Random();
+
         for (int i = 0; i < 366; i++) {
 
             Points mockPoint = new Points();
             mockPoint.setDateTime(DateUtils.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
-            int random = new Random().nextInt(70);
+            int random = rand.nextInt(70);
             mockPoint.setPointsAwarded(random);
             mockPoint.setEvent(eventTypes[random % eventTypes.length]); // random event type
             mockPoint.setDescription("Description mock " + i);
@@ -388,7 +390,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
                 // to add some days with more than one number of points
                 Points mockPointExtra = new Points();
                 mockPointExtra.setDateTime(DateUtils.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
-                mockPointExtra.setPointsAwarded(new Random().nextInt(70));
+                mockPointExtra.setPointsAwarded(rand.nextInt(70));
                 mockPointExtra.setEvent("Event extra " + i);
                 mockPointExtra.setDescription("Description extra " + i);
                 pointsMock.add(mockPointExtra);

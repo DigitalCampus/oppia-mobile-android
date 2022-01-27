@@ -88,8 +88,8 @@
     <string name="more_courses">Download more courses</string>
 
     <string name="prefAdvanced">Paramètres avancés</string>
-    <string name="prefBackgroudDataConnect">Suivi d\'activité en arrière-plan</string>
-    <string name="prefBackgroudDataConnect_summary">Envoyer le journal d\'activités même lorsque l\'application est en mode de veille</string>
+    <string name="prefBackgroundDataConnect">Suivi d\'activité en arrière-plan</string>
+    <string name="prefBackgroundDataConnect_summary">Envoyer le journal d\'activités même lorsque l\'application est en mode de veille</string>
     <string name="prefLanguage">Langue préférée</string>
     <string name="prefHighlightCompleted">Mettre en surbrillance les activités terminées</string>
     <string name="prefServer">Serveur</string>
@@ -103,7 +103,6 @@
     <string name="prefUserHint">(Lecture seule)</string>
     <string name="prefLogoutEnabled">Permettre la déconnexion depuis la page d\'accueil</string>
     <string name="prefDeleteCourseEnabled">Permettre la supression de cours</string>
-    <string name="prefDownloadViaCellularEnabled">Téléchargement de médias via le réseau cellulaire</string>
 
     <!-- Strings relative to Storage -->
     <string name="prefStorageLocation">Emplacement de stockage</string>

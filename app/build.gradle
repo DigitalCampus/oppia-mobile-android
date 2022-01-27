@@ -1,9 +1,6 @@
-plugins {
-    id "org.sonarqube" version "2.8"
-}
-
 apply plugin: 'com.android.application'
-apply plugin: "com.hiya.jacoco-android"
+apply from: '../jacoco.gradle'
+apply from: '../sonarqube.gradle'
 
 repositories {
     maven { url "https://mint.splunk.com/gradle/" }
@@ -30,6 +27,8 @@ android {
         // "pm clear" command after each test invocation. This command ensures
         // that the app's state is completely cleared between tests.
         testInstrumentationRunnerArguments clearPackageData: 'true'
+        testInstrumentationRunnerArguments coverage: 'true'
+        testInstrumentationRunnerArguments coverageFilePath: '/sdcard/coverage/'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -147,7 +146,6 @@ android {
             buildConfigField "boolean", "SHOW_GAMIFICATION_EVENTS", runtimeProps['SHOW_GAMIFICATION_EVENTS']
 
 
-
             resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
             resValue "string", "MENU_ALLOW_COURSE_DOWNLOAD_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_COURSE_DOWNLOAD']
             resValue "string", "MENU_ALLOW_LANGUAGE_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LANGUAGE']
@@ -163,7 +161,6 @@ android {
             resValue "string", "prefCoursesReminderTimeDefault", runtimeProps['DEFAULT_REMINDER_TIME']
             resValue "string", "prefCoursesReminderDaysDefaultSerialized", runtimeProps['DEFAULT_REMINDER_DAYS']
             resValue "string", "prefShowGamificationEventsDefault", runtimeProps['SHOW_GAMIFICATION_EVENTS']
-
         }
 
         debug {
@@ -203,12 +200,6 @@ android {
 
     android.buildFeatures.viewBinding = true
 }
-
-// Setup Jacoco version. It's recommended way to exclude conflicts between components
-jacoco {
-    toolVersion = "0.8.3"
-}
-
 
 dependencies {
     def workVersion = '2.5.0'
@@ -262,14 +253,14 @@ dependencies {
     implementation "com.squareup.inject:assisted-inject-annotations-dagger2:0.3.3"
 
     //JUnit Dependencies
-    testImplementation 'androidx.test.ext:junit:1.1.2'
+    testImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'com.squareup.okhttp3:mockwebserver:4.4.0'
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestImplementation 'androidx.test:rules:1.3.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.annotation:annotation:1.1.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
-    androidTestUtil 'androidx.test:orchestrator:1.3.0'
+    androidTestUtil 'androidx.test:orchestrator:1.4.1'
 
     //Espresso Dependencies
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -295,10 +286,6 @@ dependencies {
     implementation "androidx.multidex:multidex:$multidex_version"
     androidTestImplementation 'com.google.dexmaker:dexmaker:1.2'
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.2'
-
-
-//    debugImplementation 'im.dino:dbinspector:3.4.1@aar'
-    implementation 'com.android.support:multidex:1.0.3'
 }
 
 
@@ -324,35 +311,3 @@ tasks.whenTaskAdded { task ->
         task.dependsOn grantPermissions
     }
 }
-
-sonarqube {
-    properties {
-        property "sonar.projectVersion", android.defaultConfig.versionName
-        property "sonar.projectName", "Oppia Core app"
-        property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.sources", "src/main/java"
-        property "sonar.binaries", "build/intermediates/app_classes/normalDebug"
-        property "sonar.java.binaries", "build/intermediates/app_classes/normalDebug"
-        property "sonar.tests", "src/test/java, src/androidTest/java"
-        property "sonar.java.test.binaries", "build/intermediates/app_classes/normalDebug"
-        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/coverage/normal/debug/report.xml"
-        property "sonar.exclusions", "app/src/test/java/**/*, app/src/androidTest/java/**/*, " +
-                "src/test/java/**/*, src/androidTest/**/*, src/test/java, src/androidTest/java"
-        property "sonar.test.exclusions", "app/src/test/java/**/*, app/src/androidTest/java/**/*, " +
-                "src/test/java/**/*, src/androidTest/**/*, src/test/java, src/androidTest/java"
-        property "sonar.coverage.exclusions", "app/src/test/java/**/*, app/src/androidTest/java/**/*, " +
-                "src/test/java/**/*, src/androidTest/**/*, src/test/java, src/androidTest/java"
-
-        def sonarqubePropsFile = rootProject.file('sonarqube.properties')
-        if (sonarqubePropsFile.canRead()) {
-            def sonarqubeProps = new Properties()
-            sonarqubeProps.load(new FileInputStream(sonarqubePropsFile))
-
-            property "sonar.projectKey", sonarqubeProps["sonar.projectKey"]
-            property "sonar.organization", sonarqubeProps["sonar.organization"]
-            property "sonar.login", sonarqubeProps["sonar.login"]
-        }
-    }
-}
-tasks.sonarqube.dependsOn connectedCheck
-tasks.sonarqube.dependsOn jacocoTestReport

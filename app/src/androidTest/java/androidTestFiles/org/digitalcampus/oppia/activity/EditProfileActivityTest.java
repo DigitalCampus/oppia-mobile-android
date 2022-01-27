@@ -1,12 +1,8 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.view.View;
-
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.EditProfileActivity;
@@ -25,6 +21,10 @@ import java.util.ArrayList;
 
 import androidTestFiles.Utils.MockedApiEndpointTest;
 import androidTestFiles.database.TestDBHelper;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidTestFiles.Utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
 import static androidTestFiles.Utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
@@ -46,6 +46,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class EditProfileActivityTest extends MockedApiEndpointTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String VALID_EMAIL = "test2@oppia.org";
     private static final String VALID_FIRST_NAME = "First Name";

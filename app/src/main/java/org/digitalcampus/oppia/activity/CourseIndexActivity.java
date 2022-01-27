@@ -283,7 +283,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     private void initializeCourseIndex(boolean animate) {
 
-        adapter = new CourseIndexRecyclerViewAdapter(this, sections, course);
+        adapter = new CourseIndexRecyclerViewAdapter(this, prefs, sections, course);
         adapter.setOnChildItemClickedListener((section, position) -> {
             Activity act = sections.get(section).getActivities().get(position);
             startCourseActivityByDigest(act.getDigest());
