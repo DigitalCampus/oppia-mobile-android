@@ -9,6 +9,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -23,22 +24,27 @@ import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.task.result.BasicResult;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
 
+import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.Utils.MockedApiEndpointTest;
+import androidx.test.rule.GrantPermissionRule;
 
 @RunWith(AndroidJUnit4.class)
-public class TagActivityUITest extends MockedApiEndpointTest {
+public class TagActivityUITest extends DaggerInjectMockUITest {
 
-    @Mock TagRepository tagRepository;
+    @Mock
+    TagRepository tagRepository;
 
     @Test
     public void showCorrectCategory() throws Exception {
+
         doAnswer(invocationOnMock -> {
             Context ctx = (Context) invocationOnMock.getArguments()[0];
             BasicResult result = new BasicResult();
@@ -66,29 +72,6 @@ public class TagActivityUITest extends MockedApiEndpointTest {
         }
     }
 
-
-    @Test
-    public void refreshCachedCourses() throws Exception {
-
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        prefs.edit().remove(PrefsActivity.PREF_SERVER_COURSES_CACHE).commit();
-
-        String responseAsset = "responses/course/response_200_courses_list.json";
-        startServer(200, responseAsset, 0);
-
-        try (ActivityScenario<TagSelectActivity> scenario = ActivityScenario.launch(TagSelectActivity.class)) {
-
-            String responseBody = FileUtils.getStringFromFile(
-                    InstrumentationRegistry.getInstrumentation().getContext(), responseAsset);
-
-            Thread.sleep(200); // Manual waiting for Asynctask. Espresso only waits if there is a view interaction at the end.
-
-            String cachedCourses = prefs.getString(PrefsActivity.PREF_SERVER_COURSES_CACHE, "");
-
-            assertEquals(responseBody, cachedCourses);
-        }
-    }
 
 
 }

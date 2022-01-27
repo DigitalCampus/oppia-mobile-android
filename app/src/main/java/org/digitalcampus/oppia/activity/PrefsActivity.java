@@ -165,7 +165,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     CoursesRepository coursesRepository;
     private FetchServerInfoTask fetchServerInfoTask;
     private boolean forzeGoToLoginScreen;
-    private ActivityPreferencesBinding binding;
 
     @Override
     public void onStart() {
@@ -176,7 +175,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPreferencesBinding.inflate(LayoutInflater.from(this));
+        org.digitalcampus.mobile.learning.databinding.ActivityPreferencesBinding binding = ActivityPreferencesBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
         getAppComponent().inject(this);
 
@@ -347,15 +346,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
         Log.d(TAG, "Storage option selected: " + storageOption);
 
-        if (storageOption.equals(Storage.getStorageStrategy().getStorageType())) {
-            // Same option. No need to move files
-            return;
-        } else {
+        if (!storageOption.equals(Storage.getStorageStrategy().getStorageType())) {
             executeChangeStorageTask(storageOption);
         }
-
-
-
     }
 
     private void checkAdminProtection(SharedPreferences sharedPreferences) {

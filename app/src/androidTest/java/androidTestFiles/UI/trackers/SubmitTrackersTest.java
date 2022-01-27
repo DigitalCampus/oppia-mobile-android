@@ -5,6 +5,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
+import android.Manifest;
 import android.content.Context;
 
 import androidx.test.core.app.ActivityScenario;
@@ -16,6 +17,7 @@ import org.digitalcampus.oppia.activity.ActivityLogActivity;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -25,9 +27,12 @@ import static org.hamcrest.CoreMatchers.equalTo;
 
 import androidTestFiles.Utils.MockedApiEndpointTest;
 import androidTestFiles.database.sampledata.UserData;
+import androidx.test.rule.GrantPermissionRule;
 
 @RunWith(AndroidJUnit4.class)
 public class SubmitTrackersTest extends MockedApiEndpointTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String VALID_RESPONSE = "responses/response_200_trackers.json";
 

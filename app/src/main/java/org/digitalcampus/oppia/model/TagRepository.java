@@ -20,6 +20,8 @@ package org.digitalcampus.oppia.model;
 
 import android.content.Context;
 
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.listener.APIRequestListener;
@@ -42,14 +44,17 @@ public class TagRepository {
     private static final String JSON_PROPERTY_HIGHLIGHT = "highlight";
     private static final String JSON_PROPERTY_ORDER_PRIORITY = "order_priority";
 
-    public void getTagList(Context ctx,  ApiEndpoint api){
+    public void getTagList(Context ctx, ApiEndpoint api) {
+
+        ((AppActivity) ctx).showProgressDialog(ctx.getString(R.string.loading));
+
         APIUserRequestTask task = new APIUserRequestTask(ctx, api);
         String url = Paths.SERVER_TAG_PATH;
         task.setAPIRequestListener((APIRequestListener) ctx);
         task.execute(url);
     }
 
-    public void refreshTagList(List<Tag> tags, JSONObject json) throws JSONException{
+    public void refreshTagList(List<Tag> tags, JSONObject json) throws JSONException {
 
         for (int i = 0; i < (json.getJSONArray(JSON_PROPERTY_TAGS).length()); i++) {
             JSONObject jsonObj = (JSONObject) json.getJSONArray(JSON_PROPERTY_TAGS).get(i);
@@ -58,19 +63,19 @@ public class TagRepository {
             t.setId(jsonObj.getInt(JSON_PROPERTY_ID));
             t.setCount(jsonObj.getInt(JSON_PROPERTY_COUNT));
             // Description
-            if (jsonObj.has(JSON_PROPERTY_DESCRIPTION) && !jsonObj.isNull(JSON_PROPERTY_DESCRIPTION)){
+            if (jsonObj.has(JSON_PROPERTY_DESCRIPTION) && !jsonObj.isNull(JSON_PROPERTY_DESCRIPTION)) {
                 t.setDescription(jsonObj.getString(JSON_PROPERTY_DESCRIPTION));
             }
             // icon
-            if (jsonObj.has(JSON_PROPERTY_ICON) && !jsonObj.isNull(JSON_PROPERTY_ICON)){
+            if (jsonObj.has(JSON_PROPERTY_ICON) && !jsonObj.isNull(JSON_PROPERTY_ICON)) {
                 t.setIcon(jsonObj.getString(JSON_PROPERTY_ICON));
             }
             // highlight
-            if (jsonObj.has(JSON_PROPERTY_HIGHLIGHT) && !jsonObj.isNull(JSON_PROPERTY_HIGHLIGHT)){
+            if (jsonObj.has(JSON_PROPERTY_HIGHLIGHT) && !jsonObj.isNull(JSON_PROPERTY_HIGHLIGHT)) {
                 t.setHighlight(jsonObj.getBoolean(JSON_PROPERTY_HIGHLIGHT));
             }
             // order priority
-            if (jsonObj.has(JSON_PROPERTY_ORDER_PRIORITY) && !jsonObj.isNull(JSON_PROPERTY_ORDER_PRIORITY)){
+            if (jsonObj.has(JSON_PROPERTY_ORDER_PRIORITY) && !jsonObj.isNull(JSON_PROPERTY_ORDER_PRIORITY)) {
                 t.setOrderPriority(jsonObj.getInt(JSON_PROPERTY_ORDER_PRIORITY));
             }
             tags.add(t);

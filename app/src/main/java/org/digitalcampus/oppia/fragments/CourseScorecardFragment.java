@@ -23,21 +23,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.mikhaellopez.circularprogressbar.CircularProgressBar;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.mobile.learning.databinding.FragmentScorecardBinding;
 import org.digitalcampus.mobile.quiz.Quiz;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.adapter.CourseQuizzesAdapter;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
@@ -47,8 +41,6 @@ import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 
 import java.util.ArrayList;
 import java.util.Locale;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 public class CourseScorecardFragment extends AppFragment implements ParseCourseXMLTask.OnParseXmlListener {
 
@@ -107,19 +99,19 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         binding.scorecardGridQuizzes.setAdapter(quizzesAdapter);
         binding.scorecardGridQuizzes.setNestedScrollingEnabled(false);
         quizzesAdapter.setOnItemClickListener((v, position)->{
-            QuizStats quizStats = quizzesAdapter.getItemAtPosition(position);
+            QuizStats stats = quizzesAdapter.getItemAtPosition(position);
             Intent i = new Intent(getActivity(), CourseQuizAttemptsActivity.class);
             Bundle tb = new Bundle();
 
             // We load the quiz to parse it and extract if it has limited attempts
-            Activity act = parsedCourse.getActivityByDigest(quizStats.getDigest());
+            Activity act = parsedCourse.getActivityByDigest(stats.getDigest());
             Quiz quiz = new Quiz();
             boolean loadSuccess = quiz.load(act.getContents(prefLang), prefLang);
-            if (loadSuccess && quiz.limitAttempts() && quiz.getMaxAttempts() <= quizStats.getNumAttempts()){
+            if (loadSuccess && quiz.limitAttempts() && quiz.getMaxAttempts() <= stats.getNumAttempts()){
                 tb.putBoolean(CourseQuizAttemptsActivity.SHOW_ATTEMPT_BUTTON, false);
             }
 
-            tb.putSerializable(QuizStats.TAG, quizStats);
+            tb.putSerializable(QuizStats.TAG, stats);
             i.putExtras(tb);
             startActivityForResult(i, 1);
         });

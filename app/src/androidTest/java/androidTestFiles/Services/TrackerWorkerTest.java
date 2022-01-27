@@ -1,10 +1,12 @@
 package androidTestFiles.Services;
 
+import android.Manifest;
 import android.content.Context;
 import android.util.Log;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 import androidx.work.Configuration;
 import androidx.work.ListenableWorker;
 import androidx.work.testing.SynchronousExecutor;
@@ -13,6 +15,7 @@ import androidx.work.testing.WorkManagerTestInitHelper;
 
 import org.digitalcampus.oppia.service.TrackerWorker;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -24,6 +27,8 @@ import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class TrackerWorkerTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private Context context;
 

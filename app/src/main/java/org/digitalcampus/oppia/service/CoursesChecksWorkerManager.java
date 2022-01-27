@@ -1,6 +1,5 @@
 package org.digitalcampus.oppia.service;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,14 +7,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.core.app.NotificationCompat;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
-import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
@@ -40,6 +36,8 @@ import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
+
+import androidx.core.app.NotificationCompat;
 
 /**
  * Class isolated for unit testing purposes
@@ -249,7 +247,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
             Log.i(TAG, "checkNewCoursesAndNotify: notInstalledAndNotNotifiedCourses: " + notInstalledAndNotNotifiedCourses);
 
-            if (notInstalledAndNotNotifiedCourses.size() > 0) {
+            if (!notInstalledAndNotNotifiedCourses.isEmpty()) {
                 showNewCoursesNotification(notInstalledAndNotNotifiedCourses.size());
             }
 
@@ -306,13 +304,10 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
     public void onRequestFinish(String idRequest) {
 
         pendingChecks--;
-
         Log.i(TAG, "onRequestFinish: pendingChecks: " + pendingChecks);
 
-        if (pendingChecks == 0) {
-            if (onFinishListener != null) {
-                onFinishListener.onFinish(null);
-            }
+        if ((pendingChecks == 0) && (onFinishListener != null)){
+            onFinishListener.onFinish(null);
         }
     }
 

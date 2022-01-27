@@ -1,0 +1,37 @@
+apply plugin: "org.sonarqube"
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "Oppia Core app"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.projectVersion", android.defaultConfig.versionName
+        property "sonar.tests", "src/test/java, src/androidTest/java"
+        property "sonar.test.inclusions", "**/*Test*/**"
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.sources", "src/main/java"
+        property "sonar.binaries", "build/intermediates/app_classes/normalDebug"
+        property "sonar.java.binaries", "build/intermediates/app_classes/normalDebug"
+        property "sonar.exclusions", '**/*Test*/**,' +
+                'build/**' +
+                '*.json,' +
+                '**/*test*/**,' +
+                '**/.gradle/**,' +
+                '**/R.class'
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.junit.reportPaths", "**/test-results/**/*.xml"
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/coverage/androidTest/normal/debug/report.xml"
+        property "sonar.coverage.exclusions", "${coverageExclusions.join(', ')}"
+
+        def sonarqubePropsFile = rootProject.file('sonarqube.properties')
+        if (sonarqubePropsFile.canRead()) {
+            def sonarqubeProps = new Properties()
+            sonarqubeProps.load(new FileInputStream(sonarqubePropsFile))
+
+            property "sonar.projectKey", sonarqubeProps["sonar.projectKey"]
+            property "sonar.organization", sonarqubeProps["sonar.organization"]
+            property "sonar.login", sonarqubeProps["sonar.login"]
+        }
+    }
+}
+
+tasks.sonarqube.dependsOn jacocoTestReport

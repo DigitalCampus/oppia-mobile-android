@@ -1,12 +1,8 @@
 package androidTestFiles.UI;
 
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.action.ViewActions;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
+import android.Manifest;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
@@ -20,6 +16,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidTestFiles.Utils.MockedApiEndpointTest;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidTestFiles.Utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
 import static androidx.test.espresso.Espresso.onData;
@@ -42,6 +42,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class CustomFieldsUITest extends MockedApiEndpointTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Mock
     protected CustomFieldsRepository customFieldsRepo;

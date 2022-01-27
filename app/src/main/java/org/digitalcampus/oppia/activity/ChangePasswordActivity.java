@@ -32,18 +32,14 @@ public class ChangePasswordActivity extends AppActivity implements ChangePasswor
 
         getAppComponent().inject(this);
 
-        binding.btnSaveNewPassword.setOnClickListener(v -> {
-            checkAndChangePasswords();
-        });
+        binding.btnSaveNewPassword.setOnClickListener(v -> checkAndChangePasswords());
 
     }
 
     private void showChangePasswordSuccessDialog() {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.change_password_success)
-                .setPositiveButton(R.string.ok, (dialog, which) -> {
-                    finish();
-                }).show();
+                .setPositiveButton(R.string.ok, (dialog, which) -> finish()).show();
     }
 
     @Override

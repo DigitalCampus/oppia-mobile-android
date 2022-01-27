@@ -20,7 +20,7 @@ public abstract class BaseAnalytics {
     public abstract void trackViewOnStart(Activity activity);
     public abstract void trackViewOnStop(Activity activity);
 
-    public BaseAnalytics(Context ctx){
+    protected BaseAnalytics(Context ctx){
         this.ctx = ctx;
     }
 

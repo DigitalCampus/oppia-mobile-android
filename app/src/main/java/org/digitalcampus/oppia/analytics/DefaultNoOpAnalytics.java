@@ -27,12 +27,23 @@ public class DefaultNoOpAnalytics extends BaseAnalytics {
         Log.d(TAG, "Set tracking session user: " + username);
     }
 
-    @Override //no-op, does nothing
-    protected void trackingConfigChanged() { }
-    @Override //no-op, does nothing
-    public void trackViewOnStart(Activity activity) { }
-    @Override //no-op, does nothing
-    public void trackViewOnStop(Activity activity) { }
-    @Override //no-op, does nothing
-    protected void logHandledException(Exception e) { }
+    @Override
+    protected void trackingConfigChanged() {
+        //no-op, does nothing
+    }
+
+    @Override
+    public void trackViewOnStart(Activity activity) {
+        //no-op, does nothing
+    }
+
+    @Override
+    public void trackViewOnStop(Activity activity) {
+        //no-op, does nothing
+    }
+
+    @Override
+    protected void logHandledException(Exception e) {
+        //no-op, does nothing
+    }
 }

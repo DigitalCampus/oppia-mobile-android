@@ -17,8 +17,8 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="@dimen/expandable_margin"
         android:layout_marginEnd="@dimen/expandable_margin"
-        app:tint="#000000"
-        app:srcCompat="@drawable/ic_expand" />
+        app:srcCompat="@drawable/ic_expand"
+        app:tint="#000000" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/section_icon"

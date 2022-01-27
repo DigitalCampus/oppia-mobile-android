@@ -466,8 +466,7 @@ public class Quiz implements Serializable {
     private String propsSerializedGetString(String key, String defaultValue){
         try {
             JSONObject json = new JSONObject(propsSerialized);
-            String value = json.isNull(key) ? null : json.getString(key);
-            return value;
+            return json.isNull(key) ? null : json.getString(key);
         } catch (JSONException jsone) {
             Log.d(TAG, "Error getting int from propsSerialized " + key);
         }
