@@ -10,15 +10,15 @@ import java.util.List;
 
 public class AllActivities {
 
-    public static boolean isComplete(Context ctx, int course_id, User user){
+    public static boolean isComplete(Context ctx, int courseId, User user){
 
         DbHelper db = DbHelper.getInstance(ctx);
         // Get all the digests for this course
-        List<Activity> activities = db.getCourseActivities(course_id);
+        List<Activity> activities = db.getCourseActivities(courseId);
 
         // check that the user has completed every activity
         for (Activity activity: activities){
-            if (!db.activityCompleted(course_id, activity.getDigest(), user.getUserId())){
+            if (!db.activityCompleted(courseId, activity.getDigest(), user.getUserId())){
                 return false;
             }
         }

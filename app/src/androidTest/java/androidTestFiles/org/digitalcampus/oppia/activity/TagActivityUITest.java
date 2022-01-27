@@ -9,6 +9,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -23,6 +24,7 @@ import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.task.result.BasicResult;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.Utils.MockedApiEndpointTest;
+import androidx.test.rule.GrantPermissionRule;
 
 @RunWith(AndroidJUnit4.class)
 public class TagActivityUITest extends DaggerInjectMockUITest {

@@ -15,6 +15,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -30,6 +31,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -38,18 +40,18 @@ import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.Utils.UITestActionsUtils;
+import androidx.test.rule.GrantPermissionRule;
 
 @RunWith(AndroidJUnit4.class)
 public class QuizResultsUITest extends DaggerInjectMockUITest {
+
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     public static final String COURSE_QUIZ_SHOW_ALL = "show_all.zip";
     public static final String COURSE_QUIZ_HIDE_LATER = "hide_later.zip";
     public static final String COURSE_QUIZ_HIDE_AT_END = "hide_at_end.zip";
     public static final String COURSE_QUIZ_HIDE_AT_END_AND_LATER = "hide_at_end_and_later.zip";
-
-
-
-    private Context context;
 
     @Mock
     SharedPreferences prefs;
@@ -78,7 +80,7 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
 
     private void installCourse(String course) {
 
-        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
         CourseUtils.cleanUp();
         FileUtils.copyZipFromAssetsPath(context, "courses_quiz_results", course);

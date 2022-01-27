@@ -1,5 +1,6 @@
 package androidTestFiles;
 
+import android.Manifest;
 import android.content.Context;
 import android.util.Log;
 
@@ -14,6 +15,7 @@ import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -25,6 +27,7 @@ import java.util.Locale;
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.database.BaseTestDB;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
 import static junit.framework.Assert.assertEquals;
@@ -38,8 +41,10 @@ import static org.mockito.Mockito.when;
 
 @RunWith(Parameterized.class)
 public class InstallDownloadedCoursesTest extends BaseTestDB {
-    public static final String TAG = InstallDownloadedCoursesTest.class.getSimpleName();
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
+    public static final String TAG = InstallDownloadedCoursesTest.class.getSimpleName();
 
     private final String CORRECT_COURSE = "Correct_Course.zip";
     private final String EXISTING_COURSE = "Existing_Course.zip";

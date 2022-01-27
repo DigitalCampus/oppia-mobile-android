@@ -1,5 +1,6 @@
 package androidTestFiles;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -14,6 +15,7 @@ import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -23,6 +25,7 @@ import java.util.concurrent.CountDownLatch;
 import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.org.digitalcampus.oppia.api.MockApiEndpoint;
 import androidTestFiles.org.digitalcampus.oppia.api.MockedApiEndpointTaskTest;
+import androidx.test.rule.GrantPermissionRule;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -30,6 +33,8 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class FetchServerInfoTest extends MockedApiEndpointTaskTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String VALID_SERVERINFO_RESPONSE = "responses/response_200_serverinfo.json";
 

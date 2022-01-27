@@ -67,9 +67,12 @@ public class StorageUtils {
         DeviceFile internalStorage = getInternalMemoryDrive(ctx);
         DeviceFile externalStorage = getExternalMemoryDrive(ctx);
 
-        StorageLocationInfo internal = new StorageLocationInfo(PrefsActivity.STORAGE_OPTION_INTERNAL,
-                internalStorage.getPath(), false, false, 1);
-        list.add(internal);
+        if (internalStorage != null){
+            StorageLocationInfo internal = new StorageLocationInfo(PrefsActivity.STORAGE_OPTION_INTERNAL,
+                    internalStorage.getPath(), false, false, 1);
+            list.add(internal);
+
+        }
 
         if (externalStorage != null && externalStorage.canWrite()) {
             StorageLocationInfo external = new StorageLocationInfo(PrefsActivity.STORAGE_OPTION_EXTERNAL,
@@ -87,8 +90,7 @@ public class StorageUtils {
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
-            String content = new String(buffer, StandardCharsets.UTF_8);
-            return content;
+            return new String(buffer, StandardCharsets.UTF_8);
         } catch (IOException e) {
             Analytics.logException(e);
             return null;

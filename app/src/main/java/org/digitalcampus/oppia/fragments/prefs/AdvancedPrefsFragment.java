@@ -183,9 +183,8 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         new AlertDialog.Builder(getActivity())
                 .setMessage(getString(R.string.full_activity_exported_success)
                         + getString(R.string.full_activity_export_path, fileToShare.getPath()))
-                .setPositiveButton(R.string.share, (dialog, which) -> {
-                    ExternalResourceOpener.shareFile(getActivity(), fileToShare, "text/json");
-                })
+                .setPositiveButton(R.string.share, (dialog, which) ->
+                        ExternalResourceOpener.shareFile(getActivity(), fileToShare, "text/json"))
                 .setNegativeButton(R.string.cancel, null)
                 .show();
     }
@@ -243,9 +242,8 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                     ((PrefsActivity)getActivity()).forzeGoToLoginScreen();
                     App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, newUrl).apply();
                 })
-                .setNegativeButton(R.string.cancel, (dialog, which) ->{
-                    App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, currentUrl).apply();
-                })
+                .setNegativeButton(R.string.cancel, (dialog, which) ->
+                    App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, currentUrl).apply())
                 .show();
     }
 

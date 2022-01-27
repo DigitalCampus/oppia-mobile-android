@@ -1,5 +1,6 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,6 +33,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -56,6 +58,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class CourseIndexActivityUITest extends DaggerInjectMockUITest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     public static String COURSE_TITLE = "Test course";
     public static String MULTILANG_TITLE = "[{\"en\":\"English title\", \"fi\":\"Suomi title\"}]";

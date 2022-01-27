@@ -1,28 +1,10 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.pressBackUnconditionally;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.Matchers.not;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doAnswer;
-
+import android.Manifest;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -37,18 +19,39 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.MockedApiEndpointTest;
 import androidTestFiles.Utils.TestUtils;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBackUnconditionally;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static junit.framework.TestCase.assertEquals;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doAnswer;
 
 @RunWith(AndroidJUnit4.class)
 public class ViewDigestActivityUITest extends MockedApiEndpointTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String VALID_COURSE_INFO_RESPONSE = "responses/response_200_course_info.json";
 
@@ -259,7 +262,7 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
     public void goBackToWeblinkSourceWhenBackButtonPressed() throws Exception {
 
         final CompleteCourse completeCourse = CourseUtils.createMockCompleteCourse(5, 7);
-        Mockito.doAnswer((Answer<Void>) invocation -> {
+        doAnswer((Answer<Void>) invocation -> {
             Context ctx = (Context) invocation.getArguments()[0];
             ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(completeCourse);
 
@@ -289,7 +292,7 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
     public void goToMainActivityWhenHomeButtonPressed() throws Exception {
 
         final CompleteCourse completeCourse = CourseUtils.createMockCompleteCourse(5, 7);
-        Mockito.doAnswer((Answer<Void>) invocation -> {
+        doAnswer((Answer<Void>) invocation -> {
             Context ctx = (Context) invocation.getArguments()[0];
             ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(completeCourse);
 

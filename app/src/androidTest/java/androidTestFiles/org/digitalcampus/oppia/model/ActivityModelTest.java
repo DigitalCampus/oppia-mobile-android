@@ -1,6 +1,9 @@
 package androidTestFiles.org.digitalcampus.oppia.model;
 
+import android.Manifest;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
@@ -8,6 +11,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Media;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -20,6 +24,8 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class ActivityModelTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Test
     public void getImageFilePathTest(){

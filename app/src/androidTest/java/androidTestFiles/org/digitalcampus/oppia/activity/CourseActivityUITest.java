@@ -1,16 +1,10 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.matcher.ViewMatchers;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
@@ -32,6 +26,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
+import androidx.appcompat.widget.Toolbar;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
@@ -58,6 +58,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class CourseActivityUITest extends DaggerInjectMockUITest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     public static String COURSE_TITLE = "Test course";
     public static String MULTILANG_TITLE = "[{\"en\":\"English title\", \"fi\":\"Suomi title\"}]";

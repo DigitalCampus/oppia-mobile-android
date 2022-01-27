@@ -1,39 +1,18 @@
 package androidTestFiles.UI;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.not;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.notNull;
-import static org.mockito.Mockito.when;
-
-import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
-import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
-
+import android.Manifest;
 import android.content.SharedPreferences;
-
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
-import org.digitalcampus.oppia.model.MultiLangInfoModel;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -44,10 +23,28 @@ import java.util.Map;
 
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.CourseUtils;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
+
+import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
+import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static org.hamcrest.CoreMatchers.not;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class CoursesUpdateDeleteTest extends DaggerInjectMockUITest {
-
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Mock
     CoursesRepository coursesRepository;

@@ -25,6 +25,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.Gravity;
@@ -44,6 +45,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -54,9 +56,12 @@ import java.util.UUID;
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.TestUtils;
+import androidx.test.rule.GrantPermissionRule;
 
 @RunWith(AndroidJUnit4.class)
 public class PrefsActivityUITest extends DaggerInjectMockUITest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Mock
     CoursesRepository coursesRepository;

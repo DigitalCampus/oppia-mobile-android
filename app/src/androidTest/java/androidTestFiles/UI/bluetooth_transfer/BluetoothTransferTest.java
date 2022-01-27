@@ -1,10 +1,12 @@
 package androidTestFiles.UI.bluetooth_transfer;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 import androidx.test.rule.ServiceTestRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
@@ -20,6 +22,8 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class BluetoothTransferTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Rule
     public final ServiceTestRule serviceRule = new ServiceTestRule();

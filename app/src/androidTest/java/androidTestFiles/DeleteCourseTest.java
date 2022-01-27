@@ -1,5 +1,6 @@
 package androidTestFiles;
 
+import android.Manifest;
 import android.content.Context;
 import android.util.Log;
 
@@ -42,16 +43,13 @@ import static org.mockito.Mockito.when;
 @RunWith(Parameterized.class)
 public class DeleteCourseTest extends BaseTestDB {
     public static final String TAG = DeleteCourseTest.class.getSimpleName();
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private final String CORRECT_COURSE = "Correct_Course.zip";
 
     private Context context;
     private StorageAccessStrategy storageStrategy;
-
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
-//            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-    );
 
 
     public DeleteCourseTest(StorageAccessStrategy storageStrategy) {
