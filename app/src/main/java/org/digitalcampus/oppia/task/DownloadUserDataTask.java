@@ -59,9 +59,6 @@ public class DownloadUserDataTask extends APIUserRequestTask{
                 throw new IOException("Failed to create new MediaStore record.");
 
             f = resolver.openOutputStream(uri);
-            if (f == null)
-                throw new IOException("Failed to open output stream.");
-
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
                 InputStream in = response.body().byteStream();

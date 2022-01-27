@@ -41,7 +41,7 @@ import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.CourseUtils;
 
 @RunWith(AndroidJUnit4.class)
-public class UIChecksPropsBased extends DaggerInjectMockUITest {
+public class UIChecksPropsBasedTest extends DaggerInjectMockUITest {
 
 
     @Mock

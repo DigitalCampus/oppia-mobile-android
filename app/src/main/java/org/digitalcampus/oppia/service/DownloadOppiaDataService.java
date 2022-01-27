@@ -12,22 +12,17 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
-import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
-import org.digitalcampus.oppia.utils.UIUtils;
 
+import androidx.annotation.Nullable;
 import okhttp3.HttpUrl;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
@@ -36,7 +31,6 @@ import static android.content.Context.DOWNLOAD_SERVICE;
  * This class wraps system DOWNLOAD_SERVICE with Oppia customizations
  */
 public class DownloadOppiaDataService {
-
 
     private final Context context;
     private DownloadManager downloadManager;
@@ -98,7 +92,7 @@ public class DownloadOppiaDataService {
         downloadManager.enqueue(request);
     }
 
-    private BroadcastReceiver onDownloadComplete = new BroadcastReceiver() {
+    private final BroadcastReceiver onDownloadComplete = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
 
@@ -111,25 +105,20 @@ public class DownloadOppiaDataService {
 
             int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 
-            switch (status) {
-
-                case DownloadManager.STATUS_SUCCESSFUL:
-                    if (listener != null) {
-                        listener.onDownloadFinished(true, null);
-                    }
-
-                    if (showDialog) {
-                        showDownloadSuccessDialog();
-                    }
-                    break;
-
-                case DownloadManager.STATUS_FAILED:
-                    downloadManager.remove(id);
-                    String reason = c.getString(c.getColumnIndex(DownloadManager.COLUMN_REASON));
-                    if (listener != null) {
-                        listener.onDownloadFinished(false, reason);
-                    }
-                    break;
+            if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                if (listener != null) {
+                    listener.onDownloadFinished(true, null);
+                }
+                if (showDialog) {
+                    showDownloadSuccessDialog();
+                }
+            }
+            else if (status == DownloadManager.STATUS_FAILED) {
+                downloadManager.remove(id);
+                String reason = c.getString(c.getColumnIndex(DownloadManager.COLUMN_REASON));
+                if (listener != null) {
+                    listener.onDownloadFinished(false, reason);
+                }
             }
         }
 

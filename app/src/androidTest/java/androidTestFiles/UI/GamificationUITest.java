@@ -38,7 +38,6 @@ public class GamificationUITest extends DaggerInjectMockUITest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-
     @Mock
     CoursesRepository coursesRepository;
     @Mock
