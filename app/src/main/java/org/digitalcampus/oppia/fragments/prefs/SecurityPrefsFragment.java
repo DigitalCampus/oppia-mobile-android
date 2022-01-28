@@ -35,9 +35,8 @@ public class SecurityPrefsFragment extends BasePreferenceFragment implements Pre
         configureAdminPreferences();
 
         EditTextPreference adminPassPref = findPreference(PrefsActivity.PREF_ADMIN_PASSWORD);
-        adminPassPref.setOnBindEditTextListener(editText -> {
-            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        });
+        adminPassPref.setOnBindEditTextListener(editText ->
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
     }
 
     private void configureAdminPreferences() {

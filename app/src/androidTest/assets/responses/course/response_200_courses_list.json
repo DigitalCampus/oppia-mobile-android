@@ -1,0 +1,29 @@
+{
+  "courses": [
+    {
+      "author": "Mr. X",
+      "description": {
+        "en": "A mock course"
+      },
+      "id": 126,
+      "is_draft": false,
+      "organisation": "DC",
+      "priority": 8,
+      "resource_uri": "/api/v2/course/126/",
+      "shortname": "mock-course",
+      "title": {
+        "en": "I am mock"
+      },
+      "url": "https://staging.oppia-mobile.org/api/v2/course/126/download/",
+      "username": "mrx",
+      "version": 1
+    }
+  ],
+  "meta": {
+    "limit": 1000,
+    "next": null,
+    "offset": 0,
+    "previous": null,
+    "total_count": 1
+  }
+}

@@ -1,5 +1,6 @@
 package androidTestFiles;
 
+import android.Manifest;
 import android.content.Context;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -13,6 +14,7 @@ import org.digitalcampus.oppia.task.RegisterTask;
 import org.digitalcampus.oppia.task.result.EntityResult;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -22,6 +24,7 @@ import java.util.concurrent.CountDownLatch;
 import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.database.BaseTestDB;
 import androidTestFiles.org.digitalcampus.oppia.api.MockApiEndpoint;
+import androidx.test.rule.GrantPermissionRule;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
@@ -32,10 +35,11 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginTest extends BaseTestDB {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     // adb  shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE
     // https://product.reverb.com/disabling-animations-in-espresso-for-android-testing-de17f7cf236f
-
 
 
     private CountDownLatch signal;

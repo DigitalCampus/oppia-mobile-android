@@ -1,21 +1,12 @@
 package androidTestFiles.UI;
 
+import android.Manifest;
 import android.content.SharedPreferences;
 
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.Espresso;
-import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.espresso.matcher.RootMatchers;
-import androidx.test.espresso.matcher.ViewMatchers;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
-
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
-import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -25,9 +16,14 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.CourseUtils;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.Espresso;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidx.test.espresso.action.ViewActions.click;
 import static org.mockito.Matchers.any;
@@ -39,6 +35,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class GamificationUITest extends DaggerInjectMockUITest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Mock
     CoursesRepository coursesRepository;
@@ -79,7 +77,7 @@ public class GamificationUITest extends DaggerInjectMockUITest {
         givenThereAreSomeCourses(1);
 
         if (true) {
-            //Working on this test
+            // todo Working on this test
             Assert.assertEquals(1, coursesRepository.getCourses(any()).size());
             return;
         }

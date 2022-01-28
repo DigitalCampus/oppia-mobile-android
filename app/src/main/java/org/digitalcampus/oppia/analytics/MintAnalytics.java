@@ -29,7 +29,7 @@ public class MintAnalytics extends BaseAnalytics {
 
     @Override
     protected void trackingConfigChanged() {
-
+        //Configuration is changed on the run, so we don't need to do anything
     }
 
     @Override
@@ -39,12 +39,12 @@ public class MintAnalytics extends BaseAnalytics {
 
     @Override
     public void trackViewOnStart(Activity activity) {
-
+        // We are not using view tracking in Mint
     }
 
     @Override
     public void trackViewOnStop(Activity activity) {
-
+        // We are not using view tracking in Mint
     }
 
     @Override

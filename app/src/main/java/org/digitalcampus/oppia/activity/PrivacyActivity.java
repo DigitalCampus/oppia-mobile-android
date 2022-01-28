@@ -59,7 +59,7 @@ public class PrivacyActivity extends AppActivity implements DeleteAccountDialogF
         });
 
 
-        if (!SessionManager.isLoggedIn(this)){
+        if (!SessionManager.isLoggedIn(prefs)){
             binding.privacyUserSection.setVisibility(View.GONE);
             return;
         }

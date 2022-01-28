@@ -24,8 +24,6 @@ public class CourseServer {
     private boolean isDraft = false;
     private int priority = 0;
 
-    public CourseServer(){}
-
     public int getId() {
         return id;
     }

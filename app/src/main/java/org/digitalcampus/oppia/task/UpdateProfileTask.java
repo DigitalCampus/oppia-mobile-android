@@ -79,7 +79,7 @@ public class UpdateProfileTask extends APIRequestTask<User, String, EntityResult
 
             db.addOrUpdateUser(user);
             result.setSuccess(true);
-            result.setResultMessage(ctx.getString(R.string.profile_updated_successfuly));
+            result.setResultMessage(ctx.getString(R.string.profile_updated_successfully));
 
         }
 

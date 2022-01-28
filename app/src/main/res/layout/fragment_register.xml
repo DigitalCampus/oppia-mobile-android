@@ -242,7 +242,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/padding_medium"
         android:background="@color/background_light"
         android:orientation="horizontal"
@@ -281,7 +280,7 @@
         </LinearLayout>
 
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/prev_btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -291,7 +290,7 @@
             android:text="@string/widget_quiz_prev"
             android:visibility="gone" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/register_btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -301,17 +300,17 @@
             android:theme="@style/PrimaryButton"
             android:visibility="visible" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/next_btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_weight="1"
             android:drawableEnd="@drawable/ic_arrow_right"
-            android:drawableTint="@color/white"
             android:text="@string/widget_quiz_next"
             android:theme="@style/PrimaryButton"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:drawableTint="@color/white" />
 
     </LinearLayout>
 

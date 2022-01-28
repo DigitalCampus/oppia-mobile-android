@@ -87,7 +87,7 @@ public class StartUpActivity extends AppActivity implements UpgradeListener, Ins
     private void endStartUpScreen() {
         // launch new activity and close splash screen
 
-        if (SessionManager.isLoggedIn(this)) {
+        if (SessionManager.isLoggedIn(prefs)) {
 
             startActivity(new Intent(this, MainActivity.class));
 

@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "limit": 1000,
+    "next": null,
+    "offset": 0,
+    "previous": null,
+    "total_count": 1
+  },
+  "tags": [
+    {
+      "count": 21,
+      "description": "Mocked Course description",
+      "highlight": true,
+      "icon": null,
+      "id": 94,
+      "name": "Mocked Course Name",
+      "order_priority": 100
+    }
+  ]
+}

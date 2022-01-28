@@ -8,6 +8,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.equalTo;
 
+import android.Manifest;
 import android.content.Context;
 
 import androidx.test.core.app.ActivityScenario;
@@ -19,6 +20,7 @@ import org.digitalcampus.oppia.activity.ActivityLogActivity;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -26,9 +28,12 @@ import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
 import androidTestFiles.Utils.MockedApiEndpointTest;
 import androidTestFiles.database.sampledata.UserData;
+import androidx.test.rule.GrantPermissionRule;
 
 @RunWith(AndroidJUnit4.class)
 public class ExportTrackersTest extends DaggerInjectMockUITest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private Context context;
     private DbHelper db;

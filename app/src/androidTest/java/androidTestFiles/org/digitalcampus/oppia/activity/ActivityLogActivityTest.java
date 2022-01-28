@@ -1,16 +1,10 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
+import android.Manifest;
 import android.content.Context;
-
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.ActivityLogActivity;
-import org.digitalcampus.oppia.activity.MainActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.ActivityLogRepository;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,6 +15,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidx.test.espresso.Espresso.onView;
@@ -32,9 +29,10 @@ import static org.mockito.Mockito.doAnswer;
 
 @RunWith(AndroidJUnit4.class)
 public class ActivityLogActivityTest extends DaggerInjectMockUITest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Mock ActivityLogRepository logsRepository;
-
 
     @Test
     public void showActivityLogListIfAny() throws Exception {

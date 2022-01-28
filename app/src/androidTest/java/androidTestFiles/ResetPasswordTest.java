@@ -1,5 +1,6 @@
 package androidTestFiles;
 
+import android.Manifest;
 import android.content.Context;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -13,6 +14,7 @@ import org.digitalcampus.oppia.task.ResetPasswordTask;
 import org.digitalcampus.oppia.task.result.EntityResult;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -21,6 +23,7 @@ import java.util.concurrent.CountDownLatch;
 
 import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.org.digitalcampus.oppia.api.MockApiEndpoint;
+import androidx.test.rule.GrantPermissionRule;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
@@ -32,6 +35,8 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class ResetPasswordTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
 
     private CountDownLatch signal;

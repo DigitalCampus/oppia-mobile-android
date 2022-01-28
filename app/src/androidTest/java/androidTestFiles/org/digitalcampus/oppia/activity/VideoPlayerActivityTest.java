@@ -1,5 +1,6 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -7,12 +8,14 @@ import androidTestFiles.UI.CourseMediaBaseTest;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -27,6 +30,8 @@ import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class VideoPlayerActivityTest extends CourseMediaBaseTest {
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String MEDIA_TEST_FILENAME = "video-test-1.mp4";
     private static final int MEDIA_TEST_LENGHT_SECONDS = 4;
@@ -37,7 +42,7 @@ public class VideoPlayerActivityTest extends CourseMediaBaseTest {
         copyMediaFromAssets(MEDIA_FILE_VIDEO_TEST_1);
 
         Course course = new Course("");
-        course.setShortname("Mock Course");
+        course.setShortname("mock-course");
 
         Activity activity = new Activity();
         List<Media> mediaList = new ArrayList<>();

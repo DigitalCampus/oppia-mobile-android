@@ -152,6 +152,10 @@ public class QuizWidget extends AnswerWidget {
             stats.setAverageScore(average);
             showStats(info, stats);
         }
+
+        if (!quiz.mustShowQuizResultsAtEnd()) {
+            getView().findViewById(R.id.recycler_quiz_results_feedback).setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -271,7 +275,7 @@ public class QuizWidget extends AnswerWidget {
                 qf.setQuestionText(q.getTitle(prefLang));
                 qf.setUserResponse(q.getUserResponses());
                 String feedbackText = q.getFeedback(prefLang);
-                qf.setFeedbackText(feedbackText.replaceAll("&amp;gt;","<"));
+                qf.setFeedbackText(feedbackText.replace("&amp;gt;","<"));
                 quizAnswersFeedback.add(qf);
             }
         }

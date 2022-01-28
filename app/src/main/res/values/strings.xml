@@ -96,8 +96,8 @@
 
     <string name="prefCurrentVersion">Current version: %1$s</string>
     <string name="prefAdvanced">Advanced settings</string>
-    <string name="prefBackgroudDataConnect">Background activity tracker</string>
-    <string name="prefBackgroudDataConnect_summary">Send activity logs even when this application isn\'t running</string>
+    <string name="prefBackgroundDataConnect">Background activity tracker</string>
+    <string name="prefBackgroundDataConnect_summary">Send activity logs even when this application isn\'t running</string>
     <string name="prefLanguage">Preferred Language</string>
     <string name="prefHighlightCompleted">Highlight completed activities</string>
     <string name="prefServer">Server</string>
@@ -118,9 +118,7 @@
     <string name="prefUserHint">(read only)</string>
     <string name="prefLogoutEnabled">Enable logout from homepage</string>
     <string name="prefDeleteCourseEnabled">Enable deleting of courses</string>
-    <string name="prefDownloadViaCellularEnabled">Download media via cellular network</string>
     <string name="prefDisableNotifications">Disable notifications</string>
-
     <string name="prefNotifications_title">Notifications</string>
     <string name="prefSecurity_title">Security</string>
     <string name="prefAdvanced_title">Advanced</string>
@@ -308,7 +306,6 @@
     <string name="error_tts_start">Text To Speech failed. Please check your phone to ensure have Text to Speech installed and enabled</string>
     <string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files via your PC.</string>
     <string name="warning_delete_disabled">Sorry, deleting a course is currently disabled - please update your settings to allow deleting of courses.</string>
-    <string name="warning_download_via_cellular_enabled">Warning! Allowing media files to be downloaded via your mobile (cellular) network may incur high charges for data download.\n\n It is not recommended to enable this if you are on a slow mobile network.</string>
 
     <string name="login_process">Logging in</string>
     <string name="login_complete">Logged in</string>
@@ -535,7 +532,7 @@
     <string name="title_activity_edit_profile">Edit profile</string>
     <string name="option_available_online">This option is only available when the device is connected to the Internet</string>
     <string name="save_profile">Save profile</string>
-    <string name="profile_updated_successfuly">Profile updated successfully</string>
+    <string name="profile_updated_successfully">Profile updated successfully</string>
     <string name="activitylog_submitted">submitted to server</string>
     <string name="activitylog_tosubmit">to submit</string>
     <string name="activitylog_toexport">to export</string>
@@ -576,7 +573,7 @@
     <string name="back">Back</string>
     <string name="continue_to_course">Continue to course</string>
     <string name="processing">Processing...</string>
-    <string name="user_data_download_success">Your data was downloaded successfuly.\nYou can access it in the Downloads system folder.</string>
+    <string name="user_data_download_success">Your data was downloaded successfully.\nYou can access it in the Downloads system folder.</string>
     <string name="open_download_folder">Open download folder</string>
     <string name="error_download_failure_reason_format">Download failure. Reason: %s</string>
     <string name="download_certificate">Download certificate</string>
@@ -612,9 +609,11 @@
     <string name="please_enter_quiz_password">Please, enter password to access this quiz</string>
     <string name="invalid_password">Invalid password</string>
     <string name="pref_export_full_activity_title">Export full activity data</string>
-    <string name="full_activity_exported_success">Full activity exported successfuly.\n\nYou can send it to external apps clicking "Share" button</string>
+    <string name="full_activity_exported_success">Full activity exported successfully.\n\nYou can send it to external apps clicking "Share" button</string>
     <string name="full_activity_export_path">\n\nPath: %s.</string>
     <string name="share">Share</string>
     <string name="no_app_to_share">Error. There is no installed app to share this file</string>
+    <string name="pref_flush_course_listing_cache">Flush course listing cache</string>
+    <string name="cache_flushed_successfuly">Cache flushed successfuly</string>
 </resources>
 

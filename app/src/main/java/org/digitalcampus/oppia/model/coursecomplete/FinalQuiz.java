@@ -9,13 +9,13 @@ import org.digitalcampus.oppia.model.User;
 
 public class FinalQuiz {
 
-    public static boolean isComplete(Context ctx, int course_id, User user) {
+    public static boolean isComplete(Context ctx, int courseId, User user) {
 
         DbHelper db = DbHelper.getInstance(ctx);
         // Get final quiz digest
         try {
-            String digest = db.getCourseFinalQuizDigest(course_id);
-            return db.activityCompleted(course_id, digest, user.getUserId());
+            String digest = db.getCourseFinalQuizDigest(courseId);
+            return db.activityCompleted(courseId, digest, user.getUserId());
         } catch (ActivityNotFoundException anfe) {
             return false;
         }

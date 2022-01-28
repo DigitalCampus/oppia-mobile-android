@@ -83,7 +83,6 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:adjustViewBounds="true"
-                app:srcCompat="@drawable/ic_action_refresh"
                 app:tint="@color/text_dark"/>
 
         </LinearLayout>

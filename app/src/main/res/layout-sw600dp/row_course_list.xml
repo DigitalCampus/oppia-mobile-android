@@ -62,7 +62,6 @@
                     android:layout_height="40dp"
                     android:adjustViewBounds="true"
                     android:layout_alignParentEnd="true"
-                    app:srcCompat="@drawable/ic_action_refresh"
                     app:tint="@color/text_dark"/>
 
             </RelativeLayout>
