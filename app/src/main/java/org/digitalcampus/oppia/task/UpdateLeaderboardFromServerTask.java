@@ -74,7 +74,6 @@ public class UpdateLeaderboardFromServerTask extends APIRequestTask<Void, Object
             }
 
         } catch (IOException e) {
-            Analytics.logException(e);
             Log.d(TAG, "IOException:", e);
             result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_connection_required));

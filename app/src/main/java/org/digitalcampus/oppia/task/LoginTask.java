@@ -114,7 +114,6 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
             }
 
 		} catch(javax.net.ssl.SSLHandshakeException e) {
-            Analytics.logException(e);
             Log.d(TAG, "SSLHandshakeException: ", e);
             result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_connection_ssl));
