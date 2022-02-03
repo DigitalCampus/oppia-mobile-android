@@ -47,6 +47,7 @@ import org.digitalcampus.oppia.model.MultiLangInfoModel;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 import org.digitalcampus.oppia.widgets.BaseWidget;
 import org.digitalcampus.oppia.widgets.FeedbackWidget;
 import org.digitalcampus.oppia.widgets.PageWidget;
@@ -118,9 +119,18 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 topicLocked = true;
                 binding.unlockTopicForm.setVisibility(View.VISIBLE);
                 binding.submitPassword.setOnClickListener(view -> {
-                    binding.unlockTopicForm.setVisibility(View.GONE);
-                    topicLocked = false;
-                    loadActivities();
+
+                    if (section.checkPassword(binding.sectionPasswordField.getText().toString())){
+                        binding.unlockTopicForm.setVisibility(View.GONE);
+                        topicLocked = false;
+                        loadActivities();
+                    }
+                    else{
+                        binding.sectionPasswordError.setVisibility(View.VISIBLE);
+                        SimpleAnimator.fade(binding.sectionPasswordError, SimpleAnimator.FADE_IN);
+                        binding.sectionPasswordField.setText("");
+                    }
+
                 });
             }
             else{
@@ -128,8 +138,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             }
 
         }
-
-
     }
 
     @Override
@@ -156,7 +164,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     public void onPause() {
         super.onPause();
 
-        if (!ttsRunning) {
+        if (!ttsRunning && !topicLocked) {
             BaseWidget currentWidget = (BaseWidget) apAdapter.getItem(currentActivityNo);
             currentWidget.pauseTimeTracking();
             currentWidget.saveTracker();
@@ -266,7 +274,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private void manageTTS() {
-        if (myTTS == null && !ttsRunning) {
+        if (myTTS == null && !ttsRunning && !topicLocked) {
             if (checkLanguageSelected()) {
                 launchTTS();
             } else {

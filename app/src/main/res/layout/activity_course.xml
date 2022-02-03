@@ -88,7 +88,7 @@
             app:passwordToggleEnabled="true">
 
             <EditText
-                android:id="@+id/admin_password_field"
+                android:id="@+id/section_password_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/login_password_title"
@@ -100,7 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/admin_password_error_incorrect_password"
-            android:id="@+id/admin_password_error"
+            android:id="@+id/section_password_error"
             style="@style/Oppia.Theme.InputError"
             android:visibility="gone"
             tools:visibility="visible"/>
