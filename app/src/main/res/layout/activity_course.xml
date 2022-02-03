@@ -44,11 +44,11 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical"
+        android:layout_marginTop="40dp"
         android:paddingEnd="@dimen/padding_large"
         android:paddingStart="@dimen/padding_large"
         android:visibility="gone"
-        tools:visibility="visible"
-        >
+        tools:visibility="visible">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/lock_indicator"
