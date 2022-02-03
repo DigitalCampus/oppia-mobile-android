@@ -36,6 +36,8 @@ public class Section extends MultiLangInfoModel implements Serializable  {
 	private int order;
 	private ArrayList<Activity> activities;
 	private String imageFile;
+	private String password;
+	private boolean unlocked = false;
 	
 	public String getImageFile() {
 		return imageFile;
@@ -66,6 +68,26 @@ public class Section extends MultiLangInfoModel implements Serializable  {
 	}
 	public void setActivities(List<Activity> activities) {
 		this.activities = (ArrayList<Activity>) activities;
+	}
+
+	public boolean isProtectedByPassword() {
+		return !TextUtils.isEmpty(password);
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public boolean checkPassword(String inputPassword){
+		return TextUtils.equals(password, inputPassword);
+	}
+
+	public boolean isUnlocked() {
+		return unlocked;
+	}
+
+	public void setUnlocked(boolean unlocked) {
+		this.unlocked = unlocked;
 	}
 
 	public boolean hasCustomImage(){

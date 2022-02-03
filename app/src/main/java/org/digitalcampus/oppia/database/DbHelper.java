@@ -232,6 +232,8 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String CF_VALUE_BOOL = "value_bool";
     private static final String CF_VALUE_FLOAT = "value_float";
 
+
+
     // Constructor
     private DbHelper(Context ctx, String dbName) { //
         super(ctx, dbName, null, DB_VERSION);

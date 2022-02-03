@@ -29,6 +29,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -73,10 +74,10 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     private int currentActivityNo = 0;
 
-    private ArrayList<Activity> activities;
+    private List<Activity> activities;
     private boolean isBaseline = false;
     private long userID;
-
+    private boolean topicLocked = false;
 
     private TextToSpeech myTTS;
     private boolean ttsRunning = false;
@@ -99,7 +100,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             section = (Section) bundle.getSerializable(Section.TAG);
             course = (Course) bundle.getSerializable(Course.TAG);
 
-            activities = (ArrayList<Activity>) section.getActivities();
+            activities = section.getActivities();
             currentActivityNo = bundle.getInt(NUM_ACTIVITY_TAG);
             if (bundle.getSerializable(CourseActivity.BASELINE_TAG) != null) {
                 this.isBaseline = bundle.getBoolean(CourseActivity.BASELINE_TAG);
@@ -112,9 +113,23 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 actionBar.setDisplayShowTitleEnabled(true);
             }
+
+            if (section.isProtectedByPassword() && !section.isUnlocked()){
+                topicLocked = true;
+                binding.unlockTopicForm.setVisibility(View.VISIBLE);
+                binding.submitPassword.setOnClickListener(view -> {
+                    binding.unlockTopicForm.setVisibility(View.GONE);
+                    topicLocked = false;
+                    loadActivities();
+                });
+            }
+            else{
+                loadActivities();
+            }
+
         }
 
-        loadActivities();
+
     }
 
     @Override
@@ -152,7 +167,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     public void onResume() {
         super.onResume();
 
-        if (!ttsRunning) {
+        if (!ttsRunning && !topicLocked) {
             BaseWidget currentWidget = (BaseWidget) apAdapter.getItem(currentActivityNo);
             currentWidget.resumeTimeTracking();
         }
@@ -295,7 +310,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         if (actionBarTitle != null && !actionBarTitle.equals(MultiLangInfoModel.DEFAULT_NOTITLE)) {
             setTitle(actionBarTitle);
         } else {
-            ArrayList<Activity> sectionActivities = (ArrayList<Activity>) section.getActivities();
+            List<Activity> sectionActivities = section.getActivities();
             String preTestTitle = getString(R.string.alert_pretest);
             String actBaselineTitle = isBaseline ? getString(R.string.title_baseline) : "";
             setTitle(!sectionActivities.isEmpty() && sectionActivities.get(0).getTitle(currentLang).equalsIgnoreCase(preTestTitle) ?
