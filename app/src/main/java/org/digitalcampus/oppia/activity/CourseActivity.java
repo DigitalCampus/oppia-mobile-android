@@ -117,6 +117,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
             if (section.isProtectedByPassword() && !section.isUnlocked()){
                 topicLocked = true;
+                supportInvalidateOptionsMenu();
                 binding.unlockTopicForm.setVisibility(View.VISIBLE);
                 binding.submitPassword.setOnClickListener(view -> {
                     String password = binding.sectionPasswordField.getText().toString();
@@ -125,6 +126,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                         binding.unlockTopicForm.setVisibility(View.GONE);
                         topicLocked = false;
                         loadActivities();
+                        supportInvalidateOptionsMenu();
                     }
                     else{
                         binding.sectionPasswordError.setVisibility(View.VISIBLE);
@@ -214,12 +216,11 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.menu_tts);
-        if (ttsRunning) {
-            item.setTitle(R.string.menu_stop_read_aloud);
-        } else {
-            item.setTitle(R.string.menu_read_aloud);
-        }
+        // Hide all the menu items if the topic is locked
+        menu.setGroupVisible(0, !topicLocked);
+
+        MenuItem ttsMenuItem = menu.findItem(R.id.menu_tts);
+        ttsMenuItem.setTitle(ttsRunning ? R.string.menu_stop_read_aloud : R.string.menu_read_aloud);
 
         // If there is only one language for this course, makes no sense to show the language menu
         if (course.getLangs().size() <= 1){

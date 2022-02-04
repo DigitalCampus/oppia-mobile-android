@@ -78,6 +78,10 @@ public class Section extends MultiLangInfoModel implements Serializable  {
 		this.password = password;
 	}
 
+	public String getPassword(){
+		return password;
+	}
+
 	public boolean checkPassword(String inputPassword){
 		return TextUtils.equals(password, inputPassword);
 	}

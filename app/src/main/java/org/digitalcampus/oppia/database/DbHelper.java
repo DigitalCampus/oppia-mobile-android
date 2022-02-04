@@ -2663,4 +2663,24 @@ public class DbHelper extends SQLiteOpenHelper {
         c.close();
         return exists;
     }
+
+    public void clearUnlockedSectionsWithUpdatedPasswords(long courseId, List<Section> sections){
+        for (Section section : sections){
+            if (!section.isProtectedByPassword()){
+                // We delete possible passwords (in case previously it was password protected
+                String s = UNLOCKED_SECTION_C_COURSEID + STR_EQUALS_AND + UNLOCKED_SECTION_C_SECTION_NO + "=?";
+                String[] args = new String[]{ String.valueOf(courseId), String.valueOf(section.getOrder())};
+                int deleted = db.delete(UNLOCKED_SECTION_TABLE, s, args);
+                Log.d(TAG, UNLOCKED_SECTION_TABLE + ": Deleted " + deleted + " rows");
+            }
+            else{
+                // We delete possible section unlocks with different password (password change)
+                String s = UNLOCKED_SECTION_C_COURSEID + STR_EQUALS_AND + UNLOCKED_SECTION_C_SECTION_NO + STR_EQUALS_AND
+                        + UNLOCKED_SECTION_C_PASSWORD + "!=?";
+                String[] args = new String[]{ String.valueOf(courseId), String.valueOf(section.getOrder()), section.getPassword()};
+                int deleted = db.delete(UNLOCKED_SECTION_TABLE, s, args);
+                Log.d(TAG, UNLOCKED_SECTION_TABLE + ": Deleted " + deleted + " rows");
+            }
+        }
+    }
 }
