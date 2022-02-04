@@ -88,6 +88,9 @@ public class CompleteCourse extends Course implements IMediaXMLHandler{
         long userId = db.getUserId(SessionManager.getUsername(ctx));
 
         for (Section section : sections){
+            if (section.isProtectedByPassword()){
+                section.setUnlocked(db.sectionUnlocked(getCourseId(), section.getOrder(), userId));
+            }
             for (Activity activity : section.getActivities()){
                 activity.setCompleted(db.activityCompleted(getCourseId(), activity.getDigest(), userId));
             }

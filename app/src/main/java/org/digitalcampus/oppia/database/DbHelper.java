@@ -51,6 +51,7 @@ import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.model.SearchResult;
+import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.model.db_model.Leaderboard;
@@ -1324,6 +1325,10 @@ public class DbHelper extends SQLiteOpenHelper {
         // delete course
         s = COURSE_C_ID + "=?";
         db.delete(COURSE_TABLE, s, args);
+
+        // delete unlocked sections
+        s = UNLOCKED_SECTION_C_COURSEID + "=?";
+        db.delete(UNLOCKED_SECTION_TABLE, s, args);
     }
 
     public void deleteCourseMedia(int courseId){
@@ -2626,5 +2631,36 @@ public class DbHelper extends SQLiteOpenHelper {
         String[] args = new String[]{String.valueOf(userId)};
         db.update(USER_TABLE, values, s, args);
 
+    }
+
+    public void saveSectionUnlockedByUser(Course course, Section section, long userId, String password){
+
+        ContentValues values = new ContentValues();
+        values.put(UNLOCKED_SECTION_C_COURSEID, course.getCourseId());
+        values.put(UNLOCKED_SECTION_C_USERID, userId);
+        values.put(UNLOCKED_SECTION_C_SECTION_NO, section.getOrder());
+        values.put(UNLOCKED_SECTION_C_PASSWORD, password);
+
+        String s = UNLOCKED_SECTION_C_COURSEID + STR_EQUALS_AND + UNLOCKED_SECTION_C_USERID + STR_EQUALS_AND + UNLOCKED_SECTION_C_SECTION_NO + "=?";
+        String[] args = new String[]{ String.valueOf(course.getCourseId()), String.valueOf(userId), String.valueOf(section.getOrder())};
+        Cursor c = db.query(UNLOCKED_SECTION_TABLE, null, s, args, null, null, null);
+        boolean exists = c.getCount() > 0;
+        c.close();
+
+        if (exists) {
+            db.update(UNLOCKED_SECTION_TABLE, values, s, args);
+        } else {
+            db.insertOrThrow(UNLOCKED_SECTION_TABLE, null, values);
+        }
+
+    }
+
+    public boolean sectionUnlocked(long courseId, int sectionNo, long userId){
+        String s = UNLOCKED_SECTION_C_COURSEID + STR_EQUALS_AND + UNLOCKED_SECTION_C_USERID + STR_EQUALS_AND + UNLOCKED_SECTION_C_SECTION_NO + "=?";
+        String[] args = new String[]{ String.valueOf(courseId), String.valueOf(userId), String.valueOf(sectionNo)};
+        Cursor c = db.query(UNLOCKED_SECTION_TABLE, null, s, args, null, null, null);
+        boolean exists = c.getCount() > 0;
+        c.close();
+        return exists;
     }
 }

@@ -212,6 +212,9 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
 
         if (NODE_SECTION.equals(aQName)){
             currentSection.setTitles(sectTitles);
+            if (currentSection.isProtectedByPassword()){
+                currentSection.setUnlocked(db.sectionUnlocked(courseId, currentSection.getOrder(), userId));
+            }
             sections.add(currentSection);
             parentElements.pop();
         }

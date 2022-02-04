@@ -119,8 +119,9 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 topicLocked = true;
                 binding.unlockTopicForm.setVisibility(View.VISIBLE);
                 binding.submitPassword.setOnClickListener(view -> {
-
-                    if (section.checkPassword(binding.sectionPasswordField.getText().toString())){
+                    String password = binding.sectionPasswordField.getText().toString();
+                    if (section.checkPassword(password)){
+                        DbHelper.getInstance(this).saveSectionUnlockedByUser(course, section, userID, password);
                         binding.unlockTopicForm.setVisibility(View.GONE);
                         topicLocked = false;
                         loadActivities();
