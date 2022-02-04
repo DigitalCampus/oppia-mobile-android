@@ -1308,6 +1308,7 @@ public class DbHelper extends SQLiteOpenHelper {
         // delete quiz results
         this.deleteQuizAttempts(courseId, userId);
         this.deleteTrackers(courseId, userId);
+        this.deleteUnlockedSections(courseId, userId);
     }
 
     public void deleteCourse(int courseId) {
@@ -2058,6 +2059,13 @@ public class DbHelper extends SQLiteOpenHelper {
         db.delete(TRACKER_LOG_TABLE, s, args);
     }
 
+    public void deleteUnlockedSections(long courseId, long userId) {
+        // delete any trackers
+        String s = UNLOCKED_SECTION_C_COURSEID + STR_EQUALS_AND + UNLOCKED_SECTION_C_USERID + "=? ";
+        String[] args = new String[]{String.valueOf(courseId), String.valueOf(userId)};
+        db.delete(UNLOCKED_SECTION_TABLE, s, args);
+    }
+
     public boolean activityAttempted(long courseId, String digest, long userId) {
         String s = TRACKER_LOG_C_ACTIVITYDIGEST + STR_EQUALS_AND +
                 TRACKER_LOG_C_USERID + STR_EQUALS_AND +
@@ -2207,16 +2215,22 @@ public class DbHelper extends SQLiteOpenHelper {
                         cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
                         parsed = cxr.getParsedCourse();
                         fetchedXMLCourses.put(courseId, parsed);
-                        result.setSection(parsed.getSection(sectionOrderId));
-                        result.setActivity(parsed.getSection(sectionOrderId).getActivity(activity.getDigest()));
-                        results.add(result);
+                        Section s = parsed.getSection(sectionOrderId);
+                        if (!s.isProtectedByPassword() || s.isUnlocked()){
+                            result.setSection(s);
+                            result.setActivity(parsed.getSection(sectionOrderId).getActivity(activity.getDigest()));
+                            results.add(result);
+                        }
                     } catch (InvalidXMLException ixmle) {
                         Log.d(TAG, "Invalid course xml file", ixmle);
                         Analytics.logException(ixmle);
                     }
                 } else {
-                    result.setSection(parsed.getSection(sectionOrderId));
-                    results.add(result);
+                    Section s = parsed.getSection(sectionOrderId);
+                    if (!s.isProtectedByPassword() || s.isUnlocked()){
+                        result.setSection(parsed.getSection(sectionOrderId));
+                        results.add(result);
+                    }
                 }
 
                 c.moveToNext();
