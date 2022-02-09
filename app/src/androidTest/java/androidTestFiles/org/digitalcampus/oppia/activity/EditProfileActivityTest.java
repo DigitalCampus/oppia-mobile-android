@@ -1,8 +1,31 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static androidTestFiles.Utils.ViewsUtils.isToast;
+import static androidTestFiles.Utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
+import static androidTestFiles.Utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
+
 import android.Manifest;
 import android.content.Context;
-import android.view.View;
+
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.EditProfileActivity;
@@ -21,28 +44,6 @@ import java.util.ArrayList;
 
 import androidTestFiles.Utils.MockedApiEndpointTest;
 import androidTestFiles.database.TestDBHelper;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.GrantPermissionRule;
-
-import static androidTestFiles.Utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
-import static androidTestFiles.Utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.clearText;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class EditProfileActivityTest extends MockedApiEndpointTest {
@@ -92,7 +93,7 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
                 .perform(scrollTo(), clearText(), typeText(VALID_ORGANIZATION));
 
         onEditTextWithinTextInputLayoutWithId(R.id.field_jobtitle)
-                .perform(scrollTo(), clearText(), typeText(VALID_JOB_TITLE));
+                .perform(scrollTo(), clearText(), typeText(VALID_JOB_TITLE), closeSoftKeyboard());
 
     }
 
@@ -140,18 +141,14 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
 
         try (ActivityScenario<EditProfileActivity> scenario = ActivityScenario.launch(EditProfileActivity.class)) {
 
-
-            final View[] decorView = new View[1];
-            scenario.onActivity(activity -> {
-                decorView[0] = activity.getWindow().getDecorView();
-            });
-
             enterValidData();
 
             onView(withId(R.id.btn_save_profile)).perform(click());
 
+            Thread.sleep(2000);
+
             onView(withText("Error message"))
-                    .inRoot(withDecorView(not(decorView[0])))
+                    .inRoot(isToast())
                     .check(matches(isDisplayed()));
 
         }
@@ -191,9 +188,9 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
 
         try (ActivityScenario<EditProfileActivity> scenario = ActivityScenario.launch(EditProfileActivity.class)) {
 
-            final View[] decorView = new View[1];
+            final android.app.Activity[] activities = new android.app.Activity[1];
             scenario.onActivity(activity -> {
-                decorView[0] = activity.getWindow().getDecorView();
+                activities[0] = activity;
             });
 
             enterValidData();
@@ -201,7 +198,7 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
             onView(withId(R.id.btn_save_profile)).perform(click());
 
             onView(withText(R.string.error_connection))
-                    .inRoot(withDecorView(not(decorView[0])))
+                    .inRoot(withDecorView(not(activities[0].getWindow().getDecorView())))
                     .check(matches(isDisplayed()));
         }
     }

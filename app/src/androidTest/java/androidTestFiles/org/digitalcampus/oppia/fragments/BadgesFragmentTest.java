@@ -16,12 +16,16 @@ import org.junit.runner.RunWith;
 
 import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
 import androidTestFiles.Utils.MockedApiEndpointTest;
+
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.UiDevice;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -61,9 +65,13 @@ public class BadgesFragmentTest extends MockedApiEndpointTest {
 
         launchInContainer(BadgesFragment.class, args, R.style.Oppia_ToolbarTheme, null);
 
-        onView(withText(R.string.error_connection)).check(matches(isDisplayed()));
+        onView(withText(R.string.error_connection))
+                .inRoot(isDialog())
+                .check(matches(isDisplayed()));
 
-        onView(withText(R.string.close)).perform(click());
+        onView(withText(R.string.close))
+                .inRoot(isDialog())
+                .perform(click());
 
         onView(withId(R.id.error_state)).check(matches(isDisplayed()));
         onView(withId(R.id.empty_state)).check(matches(not(isDisplayed())));
