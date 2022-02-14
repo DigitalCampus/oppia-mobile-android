@@ -135,11 +135,8 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
 
         if (result.hasItems()) {
 
-            binding.btnMediaDownload.setTag(result.getEntityList());
-
             binding.btnMediaDownload.setOnClickListener(view -> {
-                @SuppressWarnings("unchecked")
-                ArrayList<Media> m = (ArrayList<Media>) view.getTag();
+
                 Intent i = new Intent(getContext(), DownloadMediaActivity.class);
 
                 if (mediaCourseFilter != null) {
@@ -159,7 +156,6 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
         } else {
             hideView();
             binding.btnMediaDownload.setOnClickListener(null);
-            binding.btnMediaDownload.setTag(null);
 
             if (updateMediaScan) {
                 Media.updateMediaScan(prefs);
