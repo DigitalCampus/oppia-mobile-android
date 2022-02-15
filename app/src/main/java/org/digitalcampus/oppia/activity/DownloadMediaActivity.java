@@ -56,7 +56,7 @@ import androidx.annotation.NonNull;
 
 public class DownloadMediaActivity extends AppActivity implements DownloadMediaListener, ScanMediaListener {
 
-    public static final String MISSING_MEDIA_COURSE_FILTER = "missing_media_course";
+    public static final String MISSING_MEDIA_COURSE_FILTER = "missing_media_course_filter";
 
     private ArrayList<Media> missingMedia;
     private DownloadBroadcastReceiver receiver;
@@ -467,6 +467,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     public void scanComplete(EntityListResult<Media> result) {
 
         binding.progressMedia.setVisibility(View.GONE);
+
+        binding.emptyState.setVisibility(result.getEntityList().isEmpty() ? View.VISIBLE : View.GONE);
 
         missingMedia.clear();
         missingMedia.addAll(result.getEntityList());
