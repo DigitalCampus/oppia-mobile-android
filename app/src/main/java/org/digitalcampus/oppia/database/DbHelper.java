@@ -297,6 +297,7 @@ public class DbHelper extends SQLiteOpenHelper {
         createUserCustomFieldsTable(db);
         createCustomFieldTable(db);
         createCustomFieldsCollectionTable(db);
+        createUnlockedSectionsTable(db);
 
     }
 
