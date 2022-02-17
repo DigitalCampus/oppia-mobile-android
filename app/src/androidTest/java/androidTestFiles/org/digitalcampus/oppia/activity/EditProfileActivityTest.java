@@ -7,11 +7,9 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -145,11 +143,12 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
 
             onView(withId(R.id.btn_save_profile)).perform(click());
 
-            Thread.sleep(2000);
+//            Thread.sleep(2000);
 
             onView(withText("Error message"))
                     .inRoot(isToast())
                     .check(matches(isDisplayed()));
+
 
         }
     }
@@ -188,17 +187,12 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
 
         try (ActivityScenario<EditProfileActivity> scenario = ActivityScenario.launch(EditProfileActivity.class)) {
 
-            final android.app.Activity[] activities = new android.app.Activity[1];
-            scenario.onActivity(activity -> {
-                activities[0] = activity;
-            });
-
             enterValidData();
 
             onView(withId(R.id.btn_save_profile)).perform(click());
 
             onView(withText(R.string.error_connection))
-                    .inRoot(withDecorView(not(activities[0].getWindow().getDecorView())))
+                    .inRoot(isToast())
                     .check(matches(isDisplayed()));
         }
     }

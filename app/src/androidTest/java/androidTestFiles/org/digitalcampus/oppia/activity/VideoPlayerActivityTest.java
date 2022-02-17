@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -69,7 +70,7 @@ public class VideoPlayerActivityTest extends CourseMediaBaseTest {
 
         try (ActivityScenario<VideoPlayerActivity> scenario = ActivityScenario.launch(videoActivityIntent)) {
 
-            Thread.sleep((MEDIA_TEST_LENGHT_SECONDS - 1) * 1000);
+            Thread.sleep(TimeUnit.SECONDS.toMillis(MEDIA_TEST_LENGHT_SECONDS - 2));
 
             Espresso.pressBackUnconditionally();
 
@@ -86,7 +87,7 @@ public class VideoPlayerActivityTest extends CourseMediaBaseTest {
 
         try (ActivityScenario<VideoPlayerActivity> scenario = ActivityScenario.launch(videoActivityIntent)) {
 
-            Thread.sleep((MEDIA_TEST_LENGHT_SECONDS + 1) * 1000);
+            Thread.sleep(TimeUnit.SECONDS.toMillis(MEDIA_TEST_LENGHT_SECONDS + 2));
 
             onView(withId(R.id.continue_button)).perform(click());
 
