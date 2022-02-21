@@ -2,6 +2,7 @@ package androidTestFiles.UI;
 
 import android.Manifest;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.model.CustomField;
@@ -50,6 +51,10 @@ public class CustomFieldsUITest extends MockedApiEndpointTest {
 
     @Test
     public void checkFieldsAreShownAndValidated() throws  Exception {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
 
         List<CustomField> fields = new ArrayList<>();
         CustomField customString = new CustomField();
@@ -104,6 +109,10 @@ public class CustomFieldsUITest extends MockedApiEndpointTest {
     @Test
     public void checkFieldsDisplayedWithBooleanDependentField() throws  Exception {
 
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
+
         List<CustomField> fields = new ArrayList<>();
         CustomField customSelect = new CustomField();
         customSelect.setType("bool");
@@ -140,6 +149,10 @@ public class CustomFieldsUITest extends MockedApiEndpointTest {
 
     @Test
     public void checkFieldsDisplayedWithCollectionDependentField() throws  Exception {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
 
         List<CustomField> fields = new ArrayList<>();
         CustomField customSelect = new CustomField();
