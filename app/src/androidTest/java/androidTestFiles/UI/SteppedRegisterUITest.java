@@ -3,6 +3,7 @@ package androidTestFiles.UI;
 import android.Manifest;
 import android.widget.Spinner;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -96,6 +97,10 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
     @Test
     public void showsStepperIfSteppedRegistration() throws  Exception {
 
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
+
         setRegisterSteps(REGISTER_STEPS_NORMAL);
         openRegisterScreen();
 
@@ -105,6 +110,10 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
 
     @Test
     public void dontAdvanceStepIfFieldErrors() throws  Exception {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
 
         setRegisterSteps(REGISTER_STEPS_NORMAL);
         openRegisterScreen();
@@ -123,6 +132,10 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
 
     @Test
     public void advanceNextStepIfAllFieldsCorrect() throws  Exception {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
 
         setRegisterSteps(REGISTER_STEPS_NORMAL);
         openRegisterScreen();
@@ -143,6 +156,11 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
 
     @Test
     public void keepValuesGoingStepsBack() throws  Exception {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
+
         setRegisterSteps(REGISTER_STEPS_NORMAL);
         openRegisterScreen();
 
@@ -164,6 +182,10 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
     @Test
     public void showDependantFieldOnSameStep() throws  Exception {
 
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
+
         setRegisterSteps(BASIC_DEPENDANT_STEPS);
         openRegisterScreen();
 
@@ -180,6 +202,10 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
 
     @Test
     public void UpdateDependantCollection() throws  Exception {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
 
         setRegisterSteps(ADVANCED_SCENARIOS);
         openRegisterScreen();
@@ -212,6 +238,10 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
     @Test
     public void ShowDependantFieldOnDifferentStep() throws  Exception {
 
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
+
         setRegisterSteps(ADVANCED_SCENARIOS);
         openRegisterScreen();
 
@@ -239,6 +269,10 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
     @Test
     public void showDependantStepWithValue() throws  Exception {
 
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
+
         setRegisterSteps(BASIC_DEPENDANT_STEPS);
         openRegisterScreen();
 
@@ -261,6 +295,10 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
     @Test
     public void showDependantStepWithNegatedValue() throws  Exception {
 
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
+
         setRegisterSteps(BASIC_DEPENDANT_STEPS);
         openRegisterScreen();
 
@@ -279,6 +317,10 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
 
     @Test
     public void ShowRegisterButtonOnLastStep() throws  Exception {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
 
         setRegisterSteps(REGISTER_STEPS_NORMAL);
         openRegisterScreen();
@@ -312,6 +354,10 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
 
     @Test
     public void showErrorOnLastStepBeforeSubmit() throws  Exception {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
 
         setRegisterSteps(REGISTER_STEPS_NORMAL);
         openRegisterScreen();

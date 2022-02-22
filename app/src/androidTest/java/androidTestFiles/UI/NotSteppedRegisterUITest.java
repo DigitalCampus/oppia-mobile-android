@@ -4,6 +4,7 @@ import android.Manifest;
 
 import junit.framework.AssertionFailedError;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.App;
@@ -57,6 +58,10 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
     @Test
     public void showsErrorMessageWhenThereIsNoUsername() throws  Exception {
 
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
+
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
             onView(withId(R.id.welcome_register))
@@ -75,6 +80,10 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
     @Test
     public void showsErrorMessageWhenTheUsernameIsTooShort() throws  Exception {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
@@ -98,6 +107,10 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
     @Test
     public void showsErrorMessageWhenTheUsernameContainsSpaces() throws  Exception {
 
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
+
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
             onView(withId(R.id.welcome_register))
@@ -116,6 +129,10 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
     @Test
     public void showErrorMessageWhenTheEmailIsWrong() throws Exception {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
@@ -154,6 +171,10 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
     @Test
     public void showErrorMessageWhenTheEmailContainsSpaces() throws Exception {
 
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
+
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
             onView(withId(R.id.welcome_register))
@@ -191,6 +212,10 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
     @Test
     public void showsErrorMessageWhenThePasswordIsTooShort() throws Exception {
 
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
+
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
             onView(withId(R.id.welcome_register))
@@ -219,6 +244,10 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
     @Test
     public void showsErrorMessageWhenThePasswordsDoNotMatch() throws Exception {
 
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
+
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
             onView(withId(R.id.welcome_register))
@@ -246,6 +275,10 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
     @Test
     public void showsErrorMessageWhenThereIsNoFirstName() throws Exception {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
@@ -277,6 +310,10 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
     @Test
     public void showsErrorMessageWhenThereIsNoLastName() throws Exception {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
@@ -311,6 +348,10 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
     @Test
     public void showsErrorMessageWhenThePhoneNumberIsNotValid() throws Exception {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
@@ -348,6 +389,10 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
     @Test
     public void changeActivityWhenAllTheFieldsAreCorrect() throws Exception {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
 
         startServer(200, VALID_REGISTER_RESPONSE, 0);
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
