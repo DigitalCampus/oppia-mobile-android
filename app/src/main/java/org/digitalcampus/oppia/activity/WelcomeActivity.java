@@ -74,15 +74,9 @@ public class WelcomeActivity extends AppActivity {
         binding = ActivityWelcomeBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
         getAppComponent().inject(this);
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        binding.toolbar.getMenu().clear();
-        binding.toolbar.inflateMenu(R.menu.activity_welcome);
-        binding.toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
+        setSupportActionBar(binding.toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         List<Fragment> fragments = new ArrayList<>();
         List<String> tabTitles = new ArrayList<>();
@@ -113,6 +107,7 @@ public class WelcomeActivity extends AppActivity {
 
         setMenuOverflowIconColor(currentTab);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
