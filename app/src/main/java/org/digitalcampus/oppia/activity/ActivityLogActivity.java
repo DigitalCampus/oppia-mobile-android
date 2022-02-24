@@ -138,7 +138,7 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
         int unexported = db.getUnexportedTrackersCount();
         binding.highlightToExport.setText(NumberFormat.getNumberInstance().format(unexported));
         binding.highlightToSubmit.setText(NumberFormat.getNumberInstance().format(unsent));
-        binding.highlightSubmitted.setText(NumberFormat.getNumberInstance().format(db.getSentTrackersCount()));
+        binding.highlightSubmitted.setText(NumberFormat.getNumberInstance().format(db.getSentActivityCount()));
 
         Log.d(TAG, "files " + files.size());
         binding.submitBtn.setEnabled((unsent > 0) || !files.isEmpty());

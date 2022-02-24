@@ -1663,12 +1663,19 @@ public class DbHelper extends SQLiteOpenHelper {
         db.update(USER_TABLE, values, s, args);
     }
 
-    public int getSentTrackersCount() {
+    public int getSentActivityCount() {
+        // Get both trackers and quiz attempts already sent to the server
         String s = TRACKER_LOG_C_SUBMITTED + "=? ";
         String[] args = new String[]{"1"};
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         int count = c.getCount();
         c.close();
+
+        s = QUIZATTEMPTS_C_SENT + "=? ";
+        c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
+        count += c.getCount();
+        c.close();
+
         return count;
     }
 
