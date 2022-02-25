@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityViewDigestBinding;
 import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -181,7 +182,8 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
             } else {
                 Intent i = new Intent(this, CourseIndexActivity.class);
                 Bundle tb = new Bundle();
-                tb.putSerializable(Course.TAG, course);
+                Course c = DbHelper.getInstance(this).getCourse(activity.getCourseId(), user.getUserId());
+                tb.putSerializable(Course.TAG, c);
                 tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, activity.getDigest());
                 i.putExtras(tb);
                 startActivity(i);
@@ -243,7 +245,6 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
 
 
     }
-
 
     // COURSE INFO LISTENERS
     @Override

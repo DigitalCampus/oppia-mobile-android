@@ -176,7 +176,7 @@ public class CourseInstallViewAdapter extends Course {
             course.setToUpdate(db.toUpdate(course.getShortname(), course.getVersionId()));
 
             if (jsonObj.has(JSON_PROPERTY_ORGANISATION) && !jsonObj.isNull(JSON_PROPERTY_ORGANISATION)) {
-                course.setOrganisationName(json.getString(JSON_PROPERTY_ORGANISATION));
+                course.setOrganisationName(jsonObj.getString(JSON_PROPERTY_ORGANISATION));
             }
 
             if (downloadingCourses != null && downloadingCourses.contains(course.getDownloadUrl())) {

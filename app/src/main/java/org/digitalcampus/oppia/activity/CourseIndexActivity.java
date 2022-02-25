@@ -109,6 +109,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             } else {
                 completeCourseProvider.getCompleteCourseAsync(this, course);
             }
+
+            binding.viewMediaScan.setMediaCourseFilter(course);
         }
 
         binding.viewMediaScan.setMessage(getString(R.string.info_scan_course_media_missing));

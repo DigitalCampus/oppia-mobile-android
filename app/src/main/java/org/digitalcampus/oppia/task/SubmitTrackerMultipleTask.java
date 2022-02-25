@@ -220,7 +220,6 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Void, Integer, Ent
             result.setResultMessage(ctx.getString(R.string.error_connection_timeout));
             return false;
         } catch (IOException e) {
-            Analytics.logException(e);
             result.setResultMessage(ctx.getString(R.string.error_connection));
             return false;
         }

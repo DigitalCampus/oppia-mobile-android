@@ -82,6 +82,7 @@ public class BuildChecksOppiaET {
         assertEquals(600, BuildConfig.SESSION_EXPIRATION_TIMEOUT);
 
         assertEquals(false, BuildConfig.SHOW_COURSE_DESCRIPTION);
+        assertEquals(true, BuildConfig.ALLOW_REGISTER_USER);
         assertEquals(true, BuildConfig.SHOW_GAMIFICATION_EVENTS);
 
         assertEquals("threshold", BuildConfig.GAMIFICATION_MEDIA_CRITERIA);

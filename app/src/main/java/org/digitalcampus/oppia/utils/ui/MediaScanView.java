@@ -35,6 +35,7 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
     private View viewBelow;
     private int initialViewBelowPadding = 0;
     private boolean updateMediaScan;
+    private Course mediaCourseFilter;
 
     public MediaScanView(@NonNull Context context) {
         super(context);
@@ -68,6 +69,10 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
     public void setViewBelow(View viewBelow) {
         this.viewBelow = viewBelow;
         initialViewBelowPadding = viewBelow.getPaddingTop();
+    }
+
+    public void setMediaCourseFilter(Course course) {
+        this.mediaCourseFilter = course;
     }
 
     public void setMessage(String message) {
@@ -130,15 +135,16 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
 
         if (result.hasItems()) {
 
-            binding.btnMediaDownload.setTag(result.getEntityList());
-
             binding.btnMediaDownload.setOnClickListener(view -> {
-                @SuppressWarnings("unchecked")
-                ArrayList<Media> m = (ArrayList<Media>) view.getTag();
+
                 Intent i = new Intent(getContext(), DownloadMediaActivity.class);
-                Bundle tb = new Bundle();
-                tb.putSerializable(DownloadMediaActivity.MISSING_MEDIA, m);
-                i.putExtras(tb);
+
+                if (mediaCourseFilter != null) {
+                    Bundle tb = new Bundle();
+                    tb.putSerializable(DownloadMediaActivity.MISSING_MEDIA_COURSE_FILTER, mediaCourseFilter);
+                    i.putExtras(tb);
+                }
+
                 getContext().startActivity(i);
             });
 
@@ -150,7 +156,6 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
         } else {
             hideView();
             binding.btnMediaDownload.setOnClickListener(null);
-            binding.btnMediaDownload.setTag(null);
 
             if (updateMediaScan) {
                 Media.updateMediaScan(prefs);

@@ -100,17 +100,14 @@ public class UpdateCourseActivityTask extends APIRequestTask<Course, DownloadPro
             }
 
         } catch(javax.net.ssl.SSLHandshakeException e) {
-            Analytics.logException(e);
             Log.d(TAG, "InvalidXMLException:", e);
             result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_connection_ssl));
 		} catch (SocketTimeoutException cpe) {
-			Analytics.logException(cpe);
             Log.d(TAG, "SocketTimeoutException:", cpe);
 			result.setSuccess(false);
 			result.setResultMessage(ctx.getString(R.string.error_connection));
 		} catch (IOException ioe) {
-			Analytics.logException(ioe);
             Log.d(TAG, "IOException:", ioe);
 			result.setSuccess(false);
 			result.setResultMessage(ctx.getString(R.string.error_connection));

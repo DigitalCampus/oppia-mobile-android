@@ -246,7 +246,6 @@ public class DownloadService extends FileIntentService {
             Analytics.logException(e);
             logAndNotifyError(fileUrl, e);
         } catch (IOException e) {
-            Analytics.logException(e);
             this.deleteFile(downloadedFile);
             logAndNotifyError(fileUrl, e);
         } finally {
