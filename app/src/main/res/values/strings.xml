@@ -614,5 +614,8 @@
     <string name="no_app_to_share">Error. There is no installed app to share this file</string>
     <string name="pref_flush_course_listing_cache">Flush course listing cache</string>
     <string name="cache_flushed_successfuly">Cache flushed successfuly</string>
+
+    <string name="incorrect_password_topic">Incorrect topic password. Try again</string>
+
 </resources>
 
