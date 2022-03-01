@@ -132,7 +132,9 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
         holder.binding.sectionIcon.setVisibility(section.hasCustomImage() ? View.VISIBLE : View.GONE);
         if (section.isProtectedByPassword()){
             holder.binding.lockIndicator.setVisibility(View.VISIBLE);
-            holder.binding.lockIndicator.setImageResource(section.isUnlocked() ? R.drawable.ic_unlock : R.drawable.ic_lock);
+            int iconId = section.isUnlocked() ? R.drawable.ic_unlock : R.drawable.ic_lock;
+            holder.binding.lockIndicator.setTag(iconId); // Needed for tests
+            holder.binding.lockIndicator.setImageResource(iconId);
         }
         else{
             holder.binding.lockIndicator.setVisibility(View.GONE);
