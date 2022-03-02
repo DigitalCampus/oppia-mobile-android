@@ -1,6 +1,7 @@
 package androidTestFiles;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -11,12 +12,20 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
 import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.contrib.DrawerActions;
@@ -25,8 +34,10 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
+import org.digitalcampus.oppia.activity.MainActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
-import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.analytics.AnalyticsProvider;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.task.result.BasicResult;
@@ -34,8 +45,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.Utils.MockedApiEndpointTest;
@@ -60,6 +71,21 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
     private Context context;
     private TestDBHelper testDBHelper;
 
+    @Mock
+    AnalyticsProvider analyticsProvider;
+    @Mock
+    SharedPreferences prefs;
+    @Mock
+    SharedPreferences.Editor editor;
+
+    private void initMockEditor() {
+        when(prefs.edit()).thenReturn(editor);
+        when(editor.putString(anyString(), anyString())).thenReturn(editor);
+        when(editor.putLong(anyString(), anyLong())).thenReturn(editor);
+        when(editor.putBoolean(anyString(), anyBoolean())).thenReturn(editor);
+        when(editor.putInt(anyString(), anyInt())).thenReturn(editor);
+    }
+
     @Before
     public void setUp() throws Exception {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
@@ -67,6 +93,8 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
         // First ensure to use in-memory database
         testDBHelper = new TestDBHelper(InstrumentationRegistry.getInstrumentation().getTargetContext());
         testDBHelper.setUp();
+
+        initMockEditor();
 
         CourseUtils.cleanUp();
     }
@@ -189,17 +217,156 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
         onView(withId(R.id.login_btn)).perform(scrollTo(), click());
     }
 
+
     @Test
-    public void checkTopicLockedWhenLogoutLoginSameUser() throws Exception {
+    public void showPasswordScreenIfUpdatePasswordHasChanged() throws Exception {
 
         installCourse(COURSE_PASSWORD_PROTECT);
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS), anyBoolean())).thenReturn(false);
+
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 4);
+            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+            onView(withId(R.id.section_password_field)).perform(typeText(PASSWORD_INITIAL), closeSoftKeyboard());
+            onView(withId(R.id.submit_password)).perform(click());
+            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+
+            pressBack();
+            pressBack();
+            installCourse(COURSE_PASSWORD_PROTECT_UPDATE);
+
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 4);
+            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+
+        }
+    }
+
+    // todo: está fallando
+    @Test
+    public void dontShowPasswordScreenIfUpdatePasswordHasNotChanged() throws Exception {
+
+        installCourse(COURSE_PASSWORD_PROTECT);
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS), anyBoolean())).thenReturn(false);
+
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 7);
+            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+            onView(withId(R.id.section_password_field)).perform(typeText(PASSWORD_INITIAL), closeSoftKeyboard());
+            onView(withId(R.id.submit_password)).perform(click());
+            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+
+            pressBack();
+            pressBack();
+            installCourse(COURSE_PASSWORD_PROTECT_UPDATE);
+
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 7);
+            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+
+        }
+    }
+
+    @Test
+    public void showPasswordScreenIfUpdatePasswordIsAdded() throws Exception {
+
+        installCourse(COURSE_PASSWORD_PROTECT);
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS), anyBoolean())).thenReturn(false);
+
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 9);
+            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+
+            pressBack();
+            pressBack();
+            installCourse(COURSE_PASSWORD_PROTECT_UPDATE);
+
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 9);
+            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+
+        }
+    }
+
+    @Test
+    public void showPasswordScreenIfUpdatePasswordIsRemoved() throws Exception {
+
+        installCourse(COURSE_PASSWORD_PROTECT);
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS), anyBoolean())).thenReturn(false);
+
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 11);
+            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+
+            pressBack();
+            pressBack();
+            installCourse(COURSE_PASSWORD_PROTECT_UPDATE);
+
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 11);
+            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+
+        }
+    }
+
+    // PARA JOSEBA
+
+    @Test
+    public void checkTopicUnlockedWhenLogoutLoginSameUser() throws Exception {
+
+        installCourse(COURSE_PASSWORD_PROTECT);
+        when(analyticsProvider.shouldShowOptOutRationale(any())).thenReturn(false);
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS), anyBoolean())).thenReturn(false);
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
             performValidLogin("username-1");
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 4);
+            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+            onView(withId(R.id.section_password_field)).perform(typeText(PASSWORD_INITIAL), closeSoftKeyboard());
+            onView(withId(R.id.submit_password)).perform(click());
+            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+
+            pressBack();
+            pressBack();
+            installCourse(COURSE_PASSWORD_PROTECT_UPDATE);
+            performLogout(); // NO FUNCIONA! AL HACER LOGOUT PARECE QUE SE BORRA EL CURSO DE LA MEMORIA
+
+            performValidLogin("username-1");
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
+            UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 4);
+            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+
         }
     }
 
+    @Test
+    public void checkTopicLockedWhenLogoutLoginDifferentUser() throws Exception {
 
+    }
+
+    @Test
+    public void dontShowLockedTopicsInSearchResults() throws Exception {
+
+    }
+
+    @Test
+    public void showPasswordScreenWhenRetakingQuizAndUpdatePasswordChanged() {
+
+    }
+
+    @Test
+    public void showPasswordScreenEnteringThroughWeblink() {
+
+    }
 }
