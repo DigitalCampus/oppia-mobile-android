@@ -2686,6 +2686,15 @@ public class DbHelper extends SQLiteOpenHelper {
         return exists;
     }
 
+    public int unlockedsectionsCount(long courseId, long userId){
+        String s = UNLOCKED_SECTION_C_COURSEID + STR_EQUALS_AND + UNLOCKED_SECTION_C_USERID + "=?";
+        String[] args = new String[]{ String.valueOf(courseId), String.valueOf(userId)};
+        Cursor c = db.query(UNLOCKED_SECTION_TABLE, null, null, null, null, null, null);
+        int exists = c.getCount();
+        c.close();
+        return exists;
+    }
+
     public void clearUnlockedSectionsWithUpdatedPasswords(long courseId, List<Section> sections){
         for (Section section : sections){
             if (!section.isProtectedByPassword()){
