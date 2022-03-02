@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.preference.PreferenceManager;
 
+import org.digitalcampus.oppia.analytics.AnalyticsProvider;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -137,4 +138,9 @@ public class AppModule {
         return new CustomFieldsRepository();
     }
 
+    @Provides
+    @Singleton
+    public AnalyticsProvider provideAnalyticsProvider(){
+        return new AnalyticsProvider();
+    }
 }

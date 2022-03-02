@@ -29,6 +29,7 @@ import androidx.appcompat.app.AlertDialog;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityStartUpBinding;
 import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.analytics.AnalyticsProvider;
 import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
@@ -43,16 +44,22 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
 public class StartUpActivity extends AppActivity implements UpgradeListener, InstallCourseListener {
 
     public static final String TAG = StartUpActivity.class.getSimpleName();
     private ActivityStartUpBinding binding;
+
+    @Inject
+    AnalyticsProvider analyticsProvider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityStartUpBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
+        getAppComponent().inject(this);
 
         Analytics.startTrackingIfEnabled(this);
     }
@@ -91,7 +98,7 @@ public class StartUpActivity extends AppActivity implements UpgradeListener, Ins
 
             startActivity(new Intent(this, MainActivity.class));
 
-            if (Analytics.shouldShowOptOutRationale(this)) {
+            if (analyticsProvider.shouldShowOptOutRationale(this)) {
                 overridePendingTransition(0, 0);
                 startActivity(new Intent(this, AnalyticsOptinActivity.class));
             }

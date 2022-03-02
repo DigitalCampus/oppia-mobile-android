@@ -34,6 +34,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityWelcomeBinding;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.analytics.AnalyticsProvider;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.fragments.LoginFragment;
@@ -47,6 +48,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 public class WelcomeActivity extends AppActivity {
 
@@ -67,6 +70,9 @@ public class WelcomeActivity extends AppActivity {
 
     private int currentTab = TAB_WELCOME;
     private ActivityWelcomeBinding binding;
+
+    @Inject
+    AnalyticsProvider analyticsProvider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -172,7 +178,7 @@ public class WelcomeActivity extends AppActivity {
             startActivity(new Intent(this, MainActivity.class));
         }
 
-		if (Analytics.shouldShowOptOutRationale(this)){
+		if (analyticsProvider.shouldShowOptOutRationale(this)){
             overridePendingTransition(0, 0);
             startActivity(new Intent(this, AnalyticsOptinActivity.class));
         }
