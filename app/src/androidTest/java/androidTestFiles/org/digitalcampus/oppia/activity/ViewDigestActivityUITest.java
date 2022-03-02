@@ -62,36 +62,6 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
     @Mock
     User user;
 
-    private Uri.Builder getBaseUriBuilder() {
-        return new Uri.Builder()
-                .scheme("https")
-                .authority("demo.oppia-mobile.org")
-                .appendPath("view");
-    }
-
-    private Intent getIntentForDigest(String digest) {
-
-        Uri uri = getBaseUriBuilder()
-                .appendQueryParameter("digest", digest)
-                .build();
-
-        Intent startIntent = new Intent(Intent.ACTION_VIEW, uri);
-        startIntent.setPackage(BuildConfig.APPLICATION_ID);
-        return startIntent;
-    }
-
-    private Intent getIntentForCourse(String courseShortname) {
-
-        Uri uri = getBaseUriBuilder()
-                .appendQueryParameter("course", courseShortname)
-                .build();
-
-        Intent startIntent = new Intent(Intent.ACTION_VIEW, uri);
-        startIntent.setPackage(BuildConfig.APPLICATION_ID);
-        return startIntent;
-    }
-
-
     @Test
     public void showActivityWhenCorrectDigest() throws Exception {
 
@@ -109,7 +79,7 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
         InstrumentationRegistry.getInstrumentation().addMonitor(am);
 
         String digest = "XXXXX";
-        Intent startIntent = getIntentForDigest(digest);
+        Intent startIntent = CourseUtils.getIntentForDigest(digest);
 
         try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
             assertTrue(InstrumentationRegistry.getInstrumentation().checkMonitorHit(am, 1));
@@ -124,7 +94,7 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
         doAnswer(invocationOnMock -> null).when(coursesRepository).getActivityByDigest(any(), anyString());
 
         String digest = "XXXXX";
-        Intent startIntent = getIntentForDigest(digest);
+        Intent startIntent = CourseUtils.getIntentForDigest(digest);
         try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
             onView(withId(R.id.course_card))
@@ -151,7 +121,7 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
 
         doAnswer(invocation -> null).when(user).getUsername();
 
-        Intent startIntent = getIntentForCourse("xx");
+        Intent startIntent = CourseUtils.getIntentForCourse("xx");
         try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
             onView(withId(R.id.course_card))
@@ -174,7 +144,7 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
 
         doAnswer(invocation -> null).when(user).getUsername();
 
-        Intent startIntent = getIntentForCourse("xx");
+        Intent startIntent = CourseUtils.getIntentForCourse("xx");
         try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
             onView(withId(R.id.btn_login_register)).perform(click());
@@ -213,7 +183,7 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
         InstrumentationRegistry.getInstrumentation().addMonitor(am);
 
         String course = "XXXXX";
-        Intent startIntent = getIntentForCourse(course);
+        Intent startIntent = CourseUtils.getIntentForCourse(course);
         try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
             assertTrue(InstrumentationRegistry.getInstrumentation().checkMonitorHit(am, 1));
@@ -229,7 +199,7 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
 
         doAnswer(invocation -> "test").when(user).getUsername();
 
-        Intent startIntent = getIntentForCourse("xx");
+        Intent startIntent = CourseUtils.getIntentForCourse("xx");
         try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
             onView(withId(R.id.download_course_btn))
@@ -246,7 +216,7 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
 
         doAnswer(invocation -> "test").when(user).getUsername();
 
-        Intent startIntent = getIntentForCourse("xx");
+        Intent startIntent = CourseUtils.getIntentForCourse("xx");
         try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
             onView(withId(R.id.download_course_btn))
@@ -275,7 +245,7 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
         doAnswer(invocation -> "test").when(user).getUsername();
 
         String course = completeCourse.getShortname();
-        Intent startIntent = getIntentForCourse(course);
+        Intent startIntent = CourseUtils.getIntentForCourse(course);
         try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
             android.app.Activity courseIndexActivity = TestUtils.getCurrentActivity();
@@ -306,7 +276,7 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
         doAnswer(invocation -> "test").when(user).getUsername();
 
         String course = completeCourse.getShortname();
-        Intent startIntent = getIntentForCourse(course);
+        Intent startIntent = CourseUtils.getIntentForCourse(course);
         try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
             assertEquals(CourseIndexActivity.class, TestUtils.getCurrentActivity().getClass());
