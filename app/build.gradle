@@ -144,6 +144,7 @@ android {
             buildConfigField "String", "DEFAULT_REMINDER_DAYS", "\"" + runtimeProps['DEFAULT_REMINDER_DAYS'] + "\""
 
             buildConfigField "boolean", "SHOW_GAMIFICATION_EVENTS", runtimeProps['SHOW_GAMIFICATION_EVENTS']
+            buildConfigField "boolean", "ALLOW_REGISTER_USER", runtimeProps['ALLOW_REGISTER_USER']
 
 
             resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
@@ -286,6 +287,10 @@ dependencies {
     implementation "androidx.multidex:multidex:$multidex_version"
     androidTestImplementation 'com.google.dexmaker:dexmaker:1.2'
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.2'
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/master
 }
 
 

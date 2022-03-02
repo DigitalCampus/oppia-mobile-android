@@ -84,7 +84,6 @@ public class APIUserRequestTask extends APIRequestTask<String, Object, BasicResu
             }
 
         } catch (IOException e) {
-            Analytics.logException(e);
             Log.d(TAG, "IO exception", e);
             result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_connection));

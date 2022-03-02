@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidTestFiles.UI.CourseMediaBaseTest;
+
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.UiDevice;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Activity;
@@ -21,6 +24,7 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -66,7 +70,7 @@ public class VideoPlayerActivityTest extends CourseMediaBaseTest {
 
         try (ActivityScenario<VideoPlayerActivity> scenario = ActivityScenario.launch(videoActivityIntent)) {
 
-            Thread.sleep((MEDIA_TEST_LENGHT_SECONDS - 1) * 1000);
+            Thread.sleep(TimeUnit.SECONDS.toMillis(MEDIA_TEST_LENGHT_SECONDS - 2));
 
             Espresso.pressBackUnconditionally();
 
@@ -83,7 +87,7 @@ public class VideoPlayerActivityTest extends CourseMediaBaseTest {
 
         try (ActivityScenario<VideoPlayerActivity> scenario = ActivityScenario.launch(videoActivityIntent)) {
 
-            Thread.sleep((MEDIA_TEST_LENGHT_SECONDS + 1) * 1000);
+            Thread.sleep(TimeUnit.SECONDS.toMillis(MEDIA_TEST_LENGHT_SECONDS + 2));
 
             onView(withId(R.id.continue_button)).perform(click());
 

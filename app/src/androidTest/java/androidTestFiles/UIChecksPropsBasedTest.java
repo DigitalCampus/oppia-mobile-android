@@ -27,6 +27,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.PrivacyActivity;
+import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
@@ -170,6 +171,20 @@ public class UIChecksPropsBasedTest extends DaggerInjectMockUITest {
                 onView(withId(R.id.delete_data_section)).perform(scrollTo()).check(matches(isDisplayed()));
             } else {
                 onView(withId(R.id.delete_data_section)).check(matches(not(isDisplayed())));
+            }
+        }
+    }
+
+
+    @Test
+    public void checkRegisterButtonVisibility() throws Exception {
+
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
+
+            if (BuildConfig.ALLOW_REGISTER_USER) {
+                onView(withId(R.id.welcome_register)).check(matches(isDisplayed()));
+            } else {
+                onView(withId(R.id.welcome_register)).check(matches(not(isDisplayed())));
             }
         }
     }

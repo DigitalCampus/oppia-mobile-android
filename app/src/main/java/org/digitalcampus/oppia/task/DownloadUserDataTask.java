@@ -83,7 +83,6 @@ public class DownloadUserDataTask extends APIUserRequestTask{
 
         } catch (IOException e) {
             Log.d(TAG, e.getMessage());
-            Analytics.logException(e);
             result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_download_failure));
         } finally {

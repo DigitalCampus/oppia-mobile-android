@@ -2,6 +2,7 @@ package androidTestFiles.org.digitalcampus.oppia.activity;
 
 import android.Manifest;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.junit.Rule;
@@ -46,6 +47,11 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
 
     @Test
     public void showsRegisterFragmentOnRegisterButtonClick() throws InterruptedException {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
+
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
 

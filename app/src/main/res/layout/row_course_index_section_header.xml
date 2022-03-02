@@ -21,6 +21,19 @@
         app:tint="#000000" />
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/lock_indicator"
+        android:layout_width="@dimen/expandable_iconSize"
+        android:layout_height="@dimen/expandable_iconSize"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/list_card_horizontal_margin"
+        android:layout_marginEnd="-16dp"
+        android:layout_toStartOf="@id/expanded_indicator"
+        app:srcCompat="@drawable/ic_lock"
+        app:tint="@color/grey_dark"
+        android:visibility="gone"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/section_icon"
         android:layout_width="@dimen/expandable_section_iconSize"
         android:layout_height="@dimen/expandable_section_iconSize"
@@ -39,9 +52,10 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@id/expanded_indicator"
         android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/lock_indicator"
         android:layout_toEndOf="@+id/section_icon">
+
         <TextView
             android:id="@+id/activities_completed"
             android:layout_width="wrap_content"

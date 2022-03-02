@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import junit.framework.AssertionFailedError;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AnalyticsOptinActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
@@ -144,6 +145,10 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
 
     @Test
     public void checkAnalyticsOptinScreenAppearsAfterNewUserRegistration() throws Exception {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
 
         startServer(200, VALID_LOGIN_REGISTER_RESPONSE, 0);
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {

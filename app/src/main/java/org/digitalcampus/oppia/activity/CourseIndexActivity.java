@@ -51,6 +51,7 @@ import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -64,7 +65,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     private Course course;
     private CompleteCourse parsedCourse;
-    private ArrayList<Section> sections;
+    private List<Section> sections;
     @Inject SharedPreferences prefs;
     private CourseIndexRecyclerViewAdapter adapter;
     private String digestJumpTo;
@@ -109,6 +110,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             } else {
                 completeCourseProvider.getCompleteCourseAsync(this, course);
             }
+
+            binding.viewMediaScan.setMediaCourseFilter(course);
         }
 
         binding.viewMediaScan.setMessage(getString(R.string.info_scan_course_media_missing));
@@ -405,7 +408,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         }
     }
 
-    //@Override
+    @Override
     public void onParseComplete(CompleteCourse parsed) {
         binding.loadingCourse.setVisibility(View.GONE);
         parsedCourse = parsed;
@@ -421,7 +424,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         initializeCourseIndex(true);
     }
 
-    //@Override
+    @Override
     public void onParseError() {
         binding.loadingCourse.setVisibility(View.GONE);
         showErrorMessage();
