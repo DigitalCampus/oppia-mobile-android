@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.activity;
 
 import android.animation.ValueAnimator;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,31 +27,36 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityDownloadMediaBinding;
 import org.digitalcampus.oppia.adapter.DownloadMediaAdapter;
 import org.digitalcampus.oppia.listener.DownloadMediaListener;
+import org.digitalcampus.oppia.listener.ScanMediaListener;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.service.DownloadBroadcastReceiver;
 import org.digitalcampus.oppia.service.DownloadService;
 import org.digitalcampus.oppia.service.DownloadServiceDelegate;
+import org.digitalcampus.oppia.task.ScanMediaTask;
+import org.digitalcampus.oppia.task.result.EntityListResult;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.MultiChoiceHelper;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
-public class DownloadMediaActivity extends AppActivity implements DownloadMediaListener {
+public class DownloadMediaActivity extends AppActivity implements DownloadMediaListener, ScanMediaListener {
 
-    public static final String MISSING_MEDIA = "missing_media";
+    public static final String MISSING_MEDIA_COURSE_FILTER = "missing_media_course_filter";
 
     private ArrayList<Media> missingMedia;
     private DownloadBroadcastReceiver receiver;
@@ -66,6 +70,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
     @Inject
     DownloadServiceDelegate downloadServiceDelegate;
+    @Inject
+    CoursesRepository coursesRepository;
 
     @Override
     public void onStart() {
@@ -81,14 +87,18 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         setContentView(binding.getRoot());
         getAppComponent().inject(this);
 
-        Bundle bundle = this.getIntent().getExtras();
-        if (bundle != null) {
-            missingMedia = (ArrayList<Media>) bundle.getSerializable(MISSING_MEDIA);
-        } else {
-            missingMedia = new ArrayList<>();
-        }
-
+        missingMedia = new ArrayList<>();
         mediaSelected = new ArrayList<>();
+
+        configureAdapterMedia();
+        binding.missingMediaList.setAdapter(adapterMedia);
+
+        Media.resetMediaScan(prefs);
+
+        scanMissingMedia();
+    }
+
+    private void configureAdapterMedia() {
 
         adapterMedia = new DownloadMediaAdapter(this, missingMedia);
         multiChoiceHelper = new MultiChoiceHelper(this, adapterMedia);
@@ -188,7 +198,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         adapterMedia.setMultiChoiceHelper(multiChoiceHelper);
         adapterMedia.sortByFilename();
-        binding.missingMediaList.setAdapter(adapterMedia);
 
         adapterMedia.setOnItemClickListener(position -> {
             Log.d(TAG, "Clicked " + position);
@@ -196,23 +205,41 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
             downloadMedia(mediaToDownload, DownloadMode.INDIVIDUALLY);
         });
+    }
 
-        Media.resetMediaScan(prefs);
+    private void scanMissingMedia() {
 
+        binding.progressMedia.setVisibility(View.VISIBLE);
+
+        List<Course> courses;
+        Bundle bundle = this.getIntent().getExtras();
+        if (bundle != null) {
+            Course course = (Course) bundle.getSerializable(MISSING_MEDIA_COURSE_FILTER);
+            courses = Arrays.asList(course);
+        } else {
+            courses = coursesRepository.getCourses(this);
+        }
+
+        ScanMediaTask task = new ScanMediaTask(this);
+        task.setScanMediaListener(this);
+        task.execute(courses);
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        if ((missingMedia != null) && !missingMedia.isEmpty()) {
+        if (missingMedia != null && !missingMedia.isEmpty()) {
             // We already have loaded media (coming from orientation change)
             isSortByCourse = false;
             adapterMedia.notifyDataSetChanged();
             binding.emptyState.setVisibility(View.GONE);
         } else {
-            binding.emptyState.setVisibility(View.VISIBLE);
+            if (binding.progressMedia.getVisibility() == View.GONE) {
+                binding.emptyState.setVisibility(View.VISIBLE);
+            }
         }
+
         receiver = new DownloadBroadcastReceiver();
         receiver.setMediaListener(this);
         IntentFilter broadcastFilter = new IntentFilter(DownloadService.BROADCAST_ACTION);
@@ -425,4 +452,26 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         binding.homeMessages.setVisibility(View.GONE);
     }
 
+
+    // MISSING MEDIA SCAN
+    @Override
+    public void scanStart() {
+    }
+
+    @Override
+    public void scanProgressUpdate(String msg) {
+
+    }
+
+    @Override
+    public void scanComplete(EntityListResult<Media> result) {
+
+        binding.progressMedia.setVisibility(View.GONE);
+
+        binding.emptyState.setVisibility(result.getEntityList().isEmpty() ? View.VISIBLE : View.GONE);
+
+        missingMedia.clear();
+        missingMedia.addAll(result.getEntityList());
+        adapterMedia.notifyDataSetChanged();
+    }
 }

@@ -82,7 +82,8 @@
             android:name="org.digitalcampus.oppia.activity.WelcomeActivity"
             android:label="@string/app_name"
             android:theme="@style/Oppia.ToolbarTheme"
-            android:windowSoftInputMode="adjustResize" />
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseMetaPageActivity"
             android:theme="@style/Oppia.ToolbarTheme"
@@ -131,7 +132,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.digitalcampus.oppia.activity.DeviceListActivity"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize"
             android:label="@string/bluetooth.select_device"
             android:theme="@style/Oppia.Dialog" />

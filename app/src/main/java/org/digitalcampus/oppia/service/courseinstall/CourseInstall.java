@@ -128,6 +128,7 @@ public class CourseInstall {
 
             db.insertActivities(c.getActivities(courseId));
             db.insertCourseMedia(courseId, c.getCourseMedia());
+            db.clearUnlockedSectionsWithUpdatedPasswords(courseId, c.getSections());
             listener.onInstallProgress(40);
 
             long userId = db.getUserId(SessionManager.getUsername(ctx));

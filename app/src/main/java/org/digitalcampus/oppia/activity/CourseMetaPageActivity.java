@@ -64,9 +64,6 @@ public class CourseMetaPageActivity extends AppActivity {
             int pageID = bundle.getInt(CourseMetaPage.TAG);
             cmp = course.getMetaPage(pageID);
         }
-		
-        
-        
         
 		String title = cmp.getLang(prefLang).getContent();
 		binding.courseTitle.setText(title);

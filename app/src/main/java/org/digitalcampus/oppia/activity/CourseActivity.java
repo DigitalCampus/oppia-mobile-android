@@ -29,6 +29,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ import org.digitalcampus.oppia.model.MultiLangInfoModel;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 import org.digitalcampus.oppia.widgets.BaseWidget;
 import org.digitalcampus.oppia.widgets.FeedbackWidget;
 import org.digitalcampus.oppia.widgets.PageWidget;
@@ -73,10 +75,10 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     private int currentActivityNo = 0;
 
-    private ArrayList<Activity> activities;
+    private List<Activity> activities;
     private boolean isBaseline = false;
     private long userID;
-
+    private boolean topicLocked = false;
 
     private TextToSpeech myTTS;
     private boolean ttsRunning = false;
@@ -99,7 +101,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             section = (Section) bundle.getSerializable(Section.TAG);
             course = (Course) bundle.getSerializable(Course.TAG);
 
-            activities = (ArrayList<Activity>) section.getActivities();
+            activities = section.getActivities();
             currentActivityNo = bundle.getInt(NUM_ACTIVITY_TAG);
             if (bundle.getSerializable(CourseActivity.BASELINE_TAG) != null) {
                 this.isBaseline = bundle.getBoolean(CourseActivity.BASELINE_TAG);
@@ -112,9 +114,33 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 actionBar.setDisplayShowTitleEnabled(true);
             }
-        }
 
-        loadActivities();
+            if (section.isProtectedByPassword() && !section.isUnlocked()){
+                topicLocked = true;
+                supportInvalidateOptionsMenu();
+                binding.unlockTopicForm.setVisibility(View.VISIBLE);
+                binding.submitPassword.setOnClickListener(view -> {
+                    String password = binding.sectionPasswordField.getText().toString();
+                    if (section.checkPassword(password)){
+                        DbHelper.getInstance(this).saveSectionUnlockedByUser(course, section, userID, password);
+                        binding.unlockTopicForm.setVisibility(View.GONE);
+                        topicLocked = false;
+                        loadActivities();
+                        supportInvalidateOptionsMenu();
+                    }
+                    else{
+                        binding.sectionPasswordError.setVisibility(View.VISIBLE);
+                        SimpleAnimator.fade(binding.sectionPasswordError, SimpleAnimator.FADE_IN);
+                        binding.sectionPasswordField.setText("");
+                    }
+
+                });
+            }
+            else{
+                loadActivities();
+            }
+
+        }
     }
 
     @Override
@@ -141,7 +167,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     public void onPause() {
         super.onPause();
 
-        if (!ttsRunning) {
+        if (!ttsRunning && !topicLocked) {
             BaseWidget currentWidget = (BaseWidget) apAdapter.getItem(currentActivityNo);
             currentWidget.pauseTimeTracking();
             currentWidget.saveTracker();
@@ -152,7 +178,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     public void onResume() {
         super.onResume();
 
-        if (!ttsRunning) {
+        if (!ttsRunning && !topicLocked) {
             BaseWidget currentWidget = (BaseWidget) apAdapter.getItem(currentActivityNo);
             currentWidget.resumeTimeTracking();
         }
@@ -190,12 +216,11 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.menu_tts);
-        if (ttsRunning) {
-            item.setTitle(R.string.menu_stop_read_aloud);
-        } else {
-            item.setTitle(R.string.menu_read_aloud);
-        }
+        // Hide all the menu items if the topic is locked
+        menu.setGroupVisible(0, !topicLocked);
+
+        MenuItem ttsMenuItem = menu.findItem(R.id.menu_tts);
+        ttsMenuItem.setTitle(ttsRunning ? R.string.menu_stop_read_aloud : R.string.menu_read_aloud);
 
         // If there is only one language for this course, makes no sense to show the language menu
         if (course.getLangs().size() <= 1){
@@ -251,7 +276,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private void manageTTS() {
-        if (myTTS == null && !ttsRunning) {
+        if (myTTS == null && !ttsRunning && !topicLocked) {
             if (checkLanguageSelected()) {
                 launchTTS();
             } else {
@@ -295,7 +320,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         if (actionBarTitle != null && !actionBarTitle.equals(MultiLangInfoModel.DEFAULT_NOTITLE)) {
             setTitle(actionBarTitle);
         } else {
-            ArrayList<Activity> sectionActivities = (ArrayList<Activity>) section.getActivities();
+            List<Activity> sectionActivities = section.getActivities();
             String preTestTitle = getString(R.string.alert_pretest);
             String actBaselineTitle = isBaseline ? getString(R.string.title_baseline) : "";
             setTitle(!sectionActivities.isEmpty() && sectionActivities.get(0).getTitle(currentLang).equalsIgnoreCase(preTestTitle) ?

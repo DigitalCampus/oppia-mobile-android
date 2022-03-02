@@ -132,12 +132,10 @@ public class UpdateProfileTask extends APIRequestTask<User, String, EntityResult
 
         } catch (javax.net.ssl.SSLHandshakeException e) {
             Log.d(TAG, "SSLHandshakeException:", e);
-            Analytics.logException(e);
             result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_connection_ssl));
         } catch (UnsupportedEncodingException e) {
             result.setSuccess(false);
-
             result.setResultMessage(ctx.getString(R.string.error_connection));
         } catch (IOException e) {
             result.setSuccess(false);
