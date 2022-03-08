@@ -17,6 +17,7 @@
 
 package org.digitalcampus.mobile.quiz;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
@@ -299,14 +300,43 @@ public class Quiz implements Serializable {
     }
 
     public void moveNext() {
-        if (currentq + 1 < questions.size()) {
+        if (currentq < questions.size() - 1) {
+
+            checkQuestionsSkipped();
+
             currentq++;
+
+            QuizQuestion nextQuestion = questions.get(currentq);
+            if (nextQuestion.isSkipped()) {
+                moveNext();
+            }
         }
+    }
+
+    private void checkQuestionsSkipped() {
+
+        QuizQuestion currentQuestion = questions.get(currentq);
+        String firstUserResponse = currentQuestion.getUserResponses().isEmpty() ? null : currentQuestion.getUserResponses().get(0);
+        for (QuizQuestion question : questions) {
+            if (TextUtils.equals(currentQuestion.getLabel(), question.getDependItemLabel())) {
+                if (currentQuestion.isSkipped() || !TextUtils.equals(firstUserResponse, question.getDependValue())) {
+                    question.setSkipped(true);
+                }
+            }
+        }
+
     }
 
     public void movePrevious() {
         if (currentq > 0) {
             currentq--;
+
+            QuizQuestion previousQuestion = questions.get(currentq);
+            if (previousQuestion.isSkipped()) {
+                previousQuestion.setSkipped(false);
+                previousQuestion.clearUserResponses();
+                movePrevious();
+            }
         }
     }
 

@@ -50,6 +50,7 @@ public class QuizQuestion implements Serializable {
     protected List<Response> responseOptions = new ArrayList<>();
     protected List<String> userResponses = new ArrayList<>();
     protected String feedback = "";
+    private boolean skipped;
 
     public void addResponseOption(Response r) {
         responseOptions.add(r);
@@ -68,6 +69,10 @@ public class QuizQuestion implements Serializable {
 
     public List<String> getUserResponses() {
         return this.userResponses;
+    }
+
+    public void clearUserResponses() {
+        this.userResponses.clear();
     }
 
     public void mark(String lang) {
@@ -200,4 +205,11 @@ public class QuizQuestion implements Serializable {
         return feedbackDisplayed;
     }
 
+    public void setSkipped(boolean skipped) {
+        this.skipped = skipped;
+    }
+
+    public boolean isSkipped() {
+        return skipped;
+    }
 }
