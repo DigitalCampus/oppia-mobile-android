@@ -36,6 +36,12 @@ public class QuizQuestion implements Serializable {
     public static final String TAG = QuizQuestion.class.getSimpleName();
     private static final long serialVersionUID = 852385823168202643L;
 
+    public static final String JSON_KEY_QUESTION_PROP_LABEL = "label";
+    public static final String JSON_KEY_QUESTION_PROP_DEPEND_ITEM_LABEL = "dependitemlabel";
+    public static final String JSON_KEY_QUESTION_PROP_DEPEND_VALUE = "dependvalue";
+
+
+
     protected int id;
     protected float userscore = 0;
     private Map<String, String> title = new HashMap<>();
@@ -162,6 +168,19 @@ public class QuizQuestion implements Serializable {
             return Boolean.parseBoolean(this.getProp(Quiz.JSON_PROPERTY_REQUIRED));
         }
         return true;
+    }
+
+
+    public String getLabel() {
+        return getProp(JSON_KEY_QUESTION_PROP_LABEL);
+    }
+
+    public String getDependItemLabel() {
+        return getProp(JSON_KEY_QUESTION_PROP_DEPEND_ITEM_LABEL);
+    }
+
+    public String getDependValue() {
+        return getProp(JSON_KEY_QUESTION_PROP_DEPEND_VALUE);
     }
 
     public int getScoreAsPercent() {

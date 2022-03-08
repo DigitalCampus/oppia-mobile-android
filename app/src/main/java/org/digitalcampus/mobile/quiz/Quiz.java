@@ -85,6 +85,7 @@ public class Quiz implements Serializable {
     public static final String JSON_PROPERTY_MAXATTEMPTS = "maxattempts";
     public static final String JSON_PROPERTY_RANDOMSELECT = "randomselect";
 
+
     private static final long serialVersionUID = -2416034891439585524L;
     private int id;
     private HashMap<String,String> title = new HashMap<>();
@@ -441,18 +442,6 @@ public class Quiz implements Serializable {
 
     public boolean mustShowQuizResultsLater(){
         return propsSerializedGetBoolean("later_whether_correct", true);
-    }
-
-    public String getLabel() {
-        return propsSerializedGetString("label", null);
-    }
-
-    public String getDependItemLabel() {
-        return propsSerializedGetString("dependitemlabel", null);
-    }
-
-    public String getDependValue() {
-        return propsSerializedGetString("dependvalue", null);
     }
 
     private int propsSerializedGetInt(String key, int defaultValue){
