@@ -443,6 +443,18 @@ public class Quiz implements Serializable {
         return propsSerializedGetBoolean("later_whether_correct", true);
     }
 
+    public String getLabel() {
+        return propsSerializedGetString("label", null);
+    }
+
+    public String getDependItemLabel() {
+        return propsSerializedGetString("dependitemlabel", null);
+    }
+
+    public String getDependValue() {
+        return propsSerializedGetString("dependvalue", null);
+    }
+
     private int propsSerializedGetInt(String key, int defaultValue){
         try {
             JSONObject json = new JSONObject(propsSerialized);
