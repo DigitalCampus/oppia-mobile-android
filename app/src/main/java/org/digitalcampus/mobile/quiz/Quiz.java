@@ -316,11 +316,22 @@ public class Quiz implements Serializable {
     private void checkQuestionsSkipped() {
 
         QuizQuestion currentQuestion = questions.get(currentq);
-        String firstUserResponse = currentQuestion.getUserResponses().isEmpty() ? null : currentQuestion.getUserResponses().get(0);
         for (QuizQuestion question : questions) {
+            if (TextUtils.isEmpty(question.getDependItemLabel())) {
+                continue;
+            }
             if (TextUtils.equals(currentQuestion.getLabel(), question.getDependItemLabel())) {
-                if (currentQuestion.isSkipped() || !TextUtils.equals(firstUserResponse, question.getDependValue())) {
+                if (currentQuestion.isSkipped() || currentQuestion.getUserResponses().isEmpty()) {
                     question.setSkipped(true);
+                    continue;
+                }
+                for (String userResponse : currentQuestion.getUserResponses()) {
+                    if (TextUtils.equals(userResponse, question.getDependValue())) {
+                        question.setSkipped(false);
+                        break;
+                    } else {
+                        question.setSkipped(true);
+                    }
                 }
             }
         }
