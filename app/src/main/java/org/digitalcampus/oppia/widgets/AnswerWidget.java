@@ -397,13 +397,13 @@ public abstract class AnswerWidget extends BaseWidget {
     private boolean saveAnswer() {
         try {
             List<String> answers = currentQuestion.getQuestionResponses(quiz.getCurrentQuestion().getResponseOptions());
-            if ( (answers != null) && (!answers.isEmpty())) {
-                quiz.getCurrentQuestion().setUserResponses(answers);
-                return true;
+            if (quiz.getCurrentQuestion().responseExpected() && (answers == null || answers.isEmpty())) {
+                return false;
             }
-            if (!quiz.getCurrentQuestion().responseExpected()) {
-                return true;
-            }
+
+            quiz.getCurrentQuestion().setUserResponses(answers);
+            return true;
+
         } catch (InvalidQuizException e) {
             Analytics.logException(e);
             Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);

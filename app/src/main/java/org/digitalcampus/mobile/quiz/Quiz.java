@@ -17,6 +17,7 @@
 
 package org.digitalcampus.mobile.quiz;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
@@ -84,6 +85,7 @@ public class Quiz implements Serializable {
     public static final String JSON_PROPERTY_REQUIRED = "required";
     public static final String JSON_PROPERTY_MAXATTEMPTS = "maxattempts";
     public static final String JSON_PROPERTY_RANDOMSELECT = "randomselect";
+
 
     private static final long serialVersionUID = -2416034891439585524L;
     private int id;
@@ -298,14 +300,54 @@ public class Quiz implements Serializable {
     }
 
     public void moveNext() {
-        if (currentq + 1 < questions.size()) {
+        if (currentq < questions.size() - 1) {
+
+            checkQuestionsSkipped();
+
             currentq++;
+
+            QuizQuestion nextQuestion = questions.get(currentq);
+            if (nextQuestion.isSkipped()) {
+                moveNext();
+            }
         }
+    }
+
+    private void checkQuestionsSkipped() {
+
+        QuizQuestion currentQuestion = questions.get(currentq);
+        for (QuizQuestion question : questions) {
+            if (TextUtils.isEmpty(question.getDependItemLabel())) {
+                continue;
+            }
+            if (TextUtils.equals(currentQuestion.getLabel(), question.getDependItemLabel())) {
+                if (currentQuestion.isSkipped() || currentQuestion.getUserResponses().isEmpty()) {
+                    question.setSkipped(true);
+                    continue;
+                }
+                for (String userResponse : currentQuestion.getUserResponses()) {
+                    if (TextUtils.equals(userResponse, question.getDependValue())) {
+                        question.setSkipped(false);
+                        break;
+                    } else {
+                        question.setSkipped(true);
+                    }
+                }
+            }
+        }
+
     }
 
     public void movePrevious() {
         if (currentq > 0) {
             currentq--;
+
+            QuizQuestion previousQuestion = questions.get(currentq);
+            if (previousQuestion.isSkipped()) {
+                previousQuestion.setSkipped(false);
+                previousQuestion.clearUserResponses();
+                movePrevious();
+            }
         }
     }
 
