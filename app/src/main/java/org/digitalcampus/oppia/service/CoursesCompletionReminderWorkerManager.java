@@ -57,9 +57,6 @@ public class CoursesCompletionReminderWorkerManager {
     @Inject
     CoursesRepository coursesRepository;
 
-//    @Inject
-//    User user; #reminders-multi-user
-
     @Inject
     SharedPreferences prefs;
 
@@ -77,13 +74,6 @@ public class CoursesCompletionReminderWorkerManager {
 
         ReminderLogHelper reminderLogHelper = new ReminderLogHelper(context);
         String logEntry = "";
-
-//        if (!isUserLoggedIn()) { #reminders-multi-user
-//            logEntry += "User not logged in";
-//            reminderLogHelper.saveLogEntry("WORKER STARTED", "\nConfiguration: \n" + getConfiguration() + "\n\n" + logEntry);
-//            return Result.success();
-//        }
-
 
         try {
 
@@ -115,11 +105,6 @@ public class CoursesCompletionReminderWorkerManager {
                 new HashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.days_of_week_values_default))));
         return String.format("Enabled: %s\nInterval: %s\nTime: %s\nDays: %s", enabled, interval, time, NotificationsPrefsFragment.getWeekDaysNames(context, dayCodes));
     }
-
-//    private boolean isUserLoggedIn() { #reminders-multi-user
-//        return user != null && !TextUtils.isEmpty(user.getUsername());
-//    }
-
 
     private boolean checkActivityDone() throws Exception {
 

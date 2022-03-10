@@ -858,8 +858,6 @@ public class DbHelper extends SQLiteOpenHelper {
         if (userId == -1) {
             Log.v(TAG, "Record added");
             userId = db.insertOrThrow(USER_TABLE, null, values);
-            //this.insertOrUpdateUserLeaderboard(user.getUsername(), user.getDisplayName(), user.getPoints(), new DateTime(), 0);
-
         } else {
             String s = USER_C_ID + "=?";
             String[] args = new String[]{String.valueOf(userId)};

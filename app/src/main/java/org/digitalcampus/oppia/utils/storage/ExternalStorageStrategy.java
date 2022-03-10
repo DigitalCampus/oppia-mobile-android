@@ -65,7 +65,6 @@ public class ExternalStorageStrategy implements StorageAccessStrategy {
         else{
             return true;
         }
-//        return StorageUtils.getExternalMemoryDrive(ctx, true) != null;
     }
 
     @Override
