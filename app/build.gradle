@@ -287,10 +287,6 @@ dependencies {
     implementation "androidx.multidex:multidex:$multidex_version"
     androidTestImplementation 'com.google.dexmaker:dexmaker:1.2'
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.2'
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream/master
 }
 
 
