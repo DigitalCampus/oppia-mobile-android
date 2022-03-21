@@ -619,7 +619,7 @@
     <string name="password_needed">Password needed</string>
     <string name="password_needed_description">This topic is protected by password. \n Please, introduce the password below to access its contents (you will only need to do this once)</string>
     <string name="unlock_topic">Unlock topic</string>
-    <string name="staging_warning_msg">You are connecting to a staging/development server</string>
+    <string name="staging_warning_msg">You are connecting to a staging/development server.</string>
 
 </resources>
 
