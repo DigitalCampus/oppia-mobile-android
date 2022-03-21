@@ -120,14 +120,6 @@ public class VideoControllerView extends FrameLayout {
         Log.i(TAG, TAG);
     }
 
-//    @Override
-//    public void onFinishInflate() {
-//        if (mRoot != null) {
-//            initControllerView(mRoot);
-//        }
-//        super.onFinishInflate();
-//    }
-
     public void setMediaPlayer(MediaPlayerControl player) {
         mPlayer = player;
         updatePausePlay();

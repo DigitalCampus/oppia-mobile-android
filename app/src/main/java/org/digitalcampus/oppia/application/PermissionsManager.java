@@ -104,7 +104,6 @@ public class PermissionsManager {
             LayoutInflater layoutInflater = LayoutInflater.from(act);
             container.removeAllViews();
             @NonNull ViewPermissionsExplanationBinding bindingExplanation = ViewPermissionsExplanationBinding.inflate(layoutInflater, container, true);
-//            View explanation = layoutInflater.inflate(R.layout.view_permissions_explanation, container);
             showPermissionDescriptions(act, bindingExplanation.getRoot(), permissionsToAsk);
             container.setVisibility(View.VISIBLE);
 

@@ -184,9 +184,6 @@ public class App extends Application {
         setupPeriodicWorkers();
 
         OppiaNotificationUtils.initializeOreoNotificationChannels(this);
-
-//        launchWorkerToTest();
-
     }
 
 
