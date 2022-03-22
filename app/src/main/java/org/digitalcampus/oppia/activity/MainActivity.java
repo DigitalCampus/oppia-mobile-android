@@ -54,6 +54,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private ActivityMainBinding binding;
     private DrawerHeaderBinding bindingHeader;
     private ViewBadgeBinding bindingBadgeView;
+    private boolean stagingWarningClosed;
 
 
     @SuppressLint("RestrictedApi")
@@ -108,6 +109,20 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         configureUserOptions();
         updateUserTotalPoints();
+
+        checkStagingServer();
+    }
+
+    private void checkStagingServer() {
+        String server = prefs.getString(PrefsActivity.PREF_SERVER, "");
+        boolean staging = server.startsWith("http://staging.") || server.startsWith("https://staging.");
+        boolean showWarning = staging && !stagingWarningClosed;
+        binding.viewStagingWarning.setVisibility(showWarning ? View.VISIBLE : View.GONE);
+
+        binding.imgCloseStagingWarning.setOnClickListener((view) -> {
+            binding.viewStagingWarning.setVisibility(View.GONE);
+            stagingWarningClosed = true;
+        });
     }
 
     private void updateUserTotalPoints() {
