@@ -45,7 +45,6 @@ public class ResetUITest extends MockedApiEndpointTest {
             onView(withId(R.id.btn_reset_password))
                     .perform(click());
 
-//            Thread.sleep(100);
             await().atMost(5, TimeUnit.SECONDS)
                     .untilAsserted(
                             () ->
@@ -76,7 +75,6 @@ public class ResetUITest extends MockedApiEndpointTest {
             onView(withId(R.id.btn_reset_password))
                     .perform(click());
 
-//            Thread.sleep(100);
             await().atMost(5, TimeUnit.SECONDS)
                     .untilAsserted(
                             () ->

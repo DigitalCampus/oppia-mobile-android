@@ -43,8 +43,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.welcome_login))
                 .perform(scrollTo(), click());
 
-//        Thread.sleep(200); // Wait for viewpager transition
-
+        // Wait for viewpager transition
         await().atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(
                         () ->
@@ -67,7 +66,6 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
 
-//        Thread.sleep(200);
         await().atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(
                         () ->
@@ -88,7 +86,6 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_reset_password))
                 .perform(scrollTo(), click());
 
-//        Thread.sleep(200);
         await().atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(
                         () ->
@@ -112,7 +109,6 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_reset_password))
                 .perform(scrollTo(), click());
 
-//        Thread.sleep(200);
         await().atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(
                         () ->
@@ -142,7 +138,6 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_reset_password))
                 .perform(scrollTo(), click());
 
-//        Thread.sleep(200);
         await().atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(
                         () ->
@@ -172,7 +167,6 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_remember_username))
                 .perform(scrollTo(), click());
 
-//        Thread.sleep(200);
         await().atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(
                         () ->
@@ -202,7 +196,6 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_remember_username))
                 .perform(scrollTo(), click());
 
-//        Thread.sleep(200);
         await().atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(
                         () ->
@@ -228,8 +221,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
 
         onView(withId(R.id.btn_remember_username))
                 .perform(scrollTo(), click());
-
-//        Thread.sleep(200);
+        ;
         await().atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(
                         () ->

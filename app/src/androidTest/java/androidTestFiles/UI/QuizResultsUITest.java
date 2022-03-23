@@ -119,7 +119,7 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
             onView(withId(R.id.nav_bottom_scorecard)).perform(click());
             onView(withId(R.id.tabs)).perform(UITestActionsUtils.selectTabAtPosition(2));
 
-//            Thread.sleep(500); // wait for viewpager transition
+            // wait for viewpager transition
             await().atMost(5, TimeUnit.SECONDS)
                     .untilAsserted(
                             () ->
