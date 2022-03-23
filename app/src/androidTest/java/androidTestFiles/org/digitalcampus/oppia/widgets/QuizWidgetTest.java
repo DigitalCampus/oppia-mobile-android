@@ -3,6 +3,7 @@ package androidTestFiles.org.digitalcampus.oppia.widgets;
 
 import android.Manifest;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.EditText;
 
@@ -29,6 +30,7 @@ import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.Utils.ViewsUtils;
 import androidTestFiles.quiz.models.QuizModelGeneralTest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -211,6 +213,9 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
     }
 
     @Test
+    @SdkSuppress(maxSdkVersion = Build.VERSION_CODES.Q)
+    // Skipping test for API >= 30 until a fix for asserting Toast messages is found.
+    // https://oppia.atlassian.net/browse/OPPIA-1130
     public void dontEnterQuizWhenInvalidPassword() throws Exception {
         checkPasswordDialogDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NON_EMPTY_PASSWORD, true);
         onView(instanceOf(EditText.class))
