@@ -143,8 +143,6 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
 
             onView(withId(R.id.btn_save_profile)).perform(click());
 
-//            Thread.sleep(2000);
-
             onView(withText("Error message"))
                     .inRoot(isToast())
                     .check(matches(isDisplayed()));
