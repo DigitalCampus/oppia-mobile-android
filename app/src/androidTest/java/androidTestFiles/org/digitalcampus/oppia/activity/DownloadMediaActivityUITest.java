@@ -144,5 +144,21 @@ public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
         }
     }
 
+    @Test
+    public void showSortByOptionIfPendingMediaUnselected() throws Exception {
+
+        copyCourseFromAssets(COURSE_WITH_MEDIA_1);
+        copyCourseFromAssets(COURSE_WITH_MEDIA_2);
+
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
+
+        try (ActivityScenario<DownloadMediaActivity> scenario = ActivityScenario.launch(DownloadMediaActivity.class)) {
+
+            openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            onView(withText(R.string.menu_sort_by_course)).check(matches(isDisplayed()));
+        }
+    }
+
 
 }
