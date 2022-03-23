@@ -274,7 +274,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
         getMenuInflater().inflate(R.menu.missing_media_sortby, menu);
-        MenuItem selectAll = menu.findItem(R.id.menu_select_all);
+        MenuItem selectAll = menu.findItem(R.id.menu_unselect_all);
         if (selectAll != null) {
             selectAll.setVisible(!missingMedia.isEmpty());
         }
