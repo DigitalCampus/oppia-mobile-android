@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.Utils.MockedApiEndpointTest;
+
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
@@ -23,6 +25,9 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.awaitility.Awaitility.await;
+
+import java.util.concurrent.TimeUnit;
 
 @RunWith(AndroidJUnit4.class)
 public class WelcomeActivityUITest extends MockedApiEndpointTest {
@@ -38,7 +43,14 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.welcome_login))
                 .perform(scrollTo(), click());
 
-        Thread.sleep(200); // Wait for viewpager transition
+//        Thread.sleep(200); // Wait for viewpager transition
+
+        await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(
+                        () ->
+                                onView(ViewMatchers.withId(R.id.login_btn))
+                                        .check(matches(isDisplayed()))
+                );
 
         onView(withId(R.id.login_btn))
                 .perform(scrollTo())
@@ -55,7 +67,13 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
 
-        Thread.sleep(200);
+//        Thread.sleep(200);
+        await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(
+                        () ->
+                                onView(ViewMatchers.withId(R.id.register_title))
+                                        .check(matches(isDisplayed()))
+                );
 
         onView(withId(R.id.register_title))
                 .check(matches(isDisplayed()));
@@ -70,7 +88,13 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_reset_password))
                 .perform(scrollTo(), click());
 
-        Thread.sleep(200);
+//        Thread.sleep(200);
+        await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(
+                        () ->
+                                onView(ViewMatchers.withId(R.id.reset_btn))
+                                        .check(matches(isDisplayed()))
+                );
 
         onView(withId(R.id.reset_btn))
                 .perform(scrollTo())
@@ -88,7 +112,13 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_reset_password))
                 .perform(scrollTo(), click());
 
-        Thread.sleep(200);
+//        Thread.sleep(200);
+        await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(
+                        () ->
+                                onView(ViewMatchers.withId(R.id.reset_btn))
+                                        .check(matches(isDisplayed()))
+                );
 
         onView(withId(R.id.reset_username_field)).perform(typeText("username"), closeSoftKeyboard());
 
@@ -112,7 +142,13 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_reset_password))
                 .perform(scrollTo(), click());
 
-        Thread.sleep(200);
+//        Thread.sleep(200);
+        await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(
+                        () ->
+                                onView(ViewMatchers.withId(R.id.reset_btn))
+                                        .check(matches(isDisplayed()))
+                );
 
         onView(withId(R.id.reset_username_field)).perform(typeText("username"), closeSoftKeyboard());
 
@@ -136,7 +172,13 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_remember_username))
                 .perform(scrollTo(), click());
 
-        Thread.sleep(200);
+//        Thread.sleep(200);
+        await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(
+                        () ->
+                                onView(ViewMatchers.withId(R.id.edit_email))
+                                        .check(matches(isDisplayed()))
+                );
 
         onView(withId(R.id.edit_email)).perform(typeText("valid@email.is"), closeSoftKeyboard());
 
@@ -160,7 +202,13 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_remember_username))
                 .perform(scrollTo(), click());
 
-        Thread.sleep(200);
+//        Thread.sleep(200);
+        await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(
+                        () ->
+                                onView(ViewMatchers.withId(R.id.edit_email))
+                                        .check(matches(isDisplayed()))
+                );
 
         onView(withId(R.id.edit_email)).perform(typeText("wrong-email"), closeSoftKeyboard());
 
@@ -181,7 +229,13 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
         onView(withId(R.id.btn_remember_username))
                 .perform(scrollTo(), click());
 
-        Thread.sleep(200);
+//        Thread.sleep(200);
+        await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(
+                        () ->
+                                onView(ViewMatchers.withId(R.id.edit_email))
+                                        .check(matches(isDisplayed()))
+                );
 
         onView(withId(R.id.edit_email)).perform(typeText("valid@email.is"), closeSoftKeyboard());
 

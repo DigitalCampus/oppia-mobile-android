@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 
 import androidTestFiles.Utils.MockedApiEndpointTest;
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -22,6 +23,9 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.awaitility.Awaitility.await;
+
+import java.util.concurrent.TimeUnit;
 
 @RunWith(AndroidJUnit4.class)
 public class ResetUITest extends MockedApiEndpointTest {
@@ -41,7 +45,13 @@ public class ResetUITest extends MockedApiEndpointTest {
             onView(withId(R.id.btn_reset_password))
                     .perform(click());
 
-            Thread.sleep(100);
+//            Thread.sleep(100);
+            await().atMost(5, TimeUnit.SECONDS)
+                    .untilAsserted(
+                            () ->
+                                    onView(ViewMatchers.withId(R.id.reset_username_field))
+                                            .check(matches(isDisplayed()))
+                    );
 
             onView(withId(R.id.reset_username_field))
                     .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
@@ -66,7 +76,13 @@ public class ResetUITest extends MockedApiEndpointTest {
             onView(withId(R.id.btn_reset_password))
                     .perform(click());
 
-            Thread.sleep(100);
+//            Thread.sleep(100);
+            await().atMost(5, TimeUnit.SECONDS)
+                    .untilAsserted(
+                            () ->
+                                    onView(ViewMatchers.withId(R.id.reset_username_field))
+                                            .check(matches(isDisplayed()))
+                    );
 
             onView(withId(R.id.reset_username_field))
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongUsername"));
