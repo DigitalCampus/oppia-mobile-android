@@ -114,7 +114,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     }
 
     private void checkStagingServer() {
-        String server = prefs.getString(PrefsActivity.PREF_SERVER, "");
+        String server = prefs.getString(PrefsActivity.PREF_SERVER, getString(R.string.prefServerDefault));
         boolean staging = server.startsWith("http://staging.") || server.startsWith("https://staging.");
         boolean showWarning = staging && !stagingWarningClosed;
         binding.viewStagingWarning.setVisibility(showWarning ? View.VISIBLE : View.GONE);
