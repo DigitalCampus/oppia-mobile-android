@@ -19,9 +19,11 @@ import static androidTestFiles.Utils.ViewsUtils.onErrorViewWithinTextInputLayout
 
 import android.Manifest;
 import android.content.Context;
+import android.os.Build;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -133,6 +135,9 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
     }
 
     @Test
+    @SdkSuppress(maxSdkVersion = Build.VERSION_CODES.Q)
+    // Skipping test for API >= 30 until a fix for asserting Toast messages is found.
+    // https://oppia.atlassian.net/browse/OPPIA-1130
     public void checkShowsSubmitErrorMessageWhenServerError400Response() throws Exception {
 
         startServer(400, ERROR_MESSAGE_BODY, 0);
@@ -179,6 +184,9 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
 
 
     @Test
+    @SdkSuppress(maxSdkVersion = Build.VERSION_CODES.Q)
+    // Skipping test for API >= 30 until a fix for asserting Toast messages is found.
+    // https://oppia.atlassian.net/browse/OPPIA-1130
     public void checkShowsSubmitErrorMessageWhenServerError500Response() throws Exception {
 
         startServer(500, ERROR_MESSAGE_BODY, 0);
