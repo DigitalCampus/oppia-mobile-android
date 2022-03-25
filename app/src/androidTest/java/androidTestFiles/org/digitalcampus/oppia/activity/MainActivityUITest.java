@@ -104,6 +104,8 @@ public class MainActivityUITest extends MockedApiEndpointTest {
     public void setUp() throws Exception {
         initMockEditor();
         when(prefs.edit()).thenReturn(editor);
+
+        when(prefs.getString(eq(PrefsActivity.PREF_SERVER), anyString())).thenReturn("https://live.server.com");
     }
 
     private void initMockEditor() {
