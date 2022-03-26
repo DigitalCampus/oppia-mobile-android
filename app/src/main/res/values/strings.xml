@@ -486,7 +486,7 @@
     <string name="leaderboard_position">Your position</string>
     <string name="leaderboard_points">%1$s points</string>
 
-    <string name="transfer_receiving_course">Receiving course file...</string>
+    <string name="transfer_receiving_course">Receiving course file…</string>
     <string name="sign_in_title">Sign in</string>
     <string name="register_account_already">Already have an account?</string>
     <string name="login_dont_have_account">Don\'t have an account yet?</string>
@@ -573,7 +573,7 @@
     <string name="new_courses">New courses</string>
     <string name="back">Back</string>
     <string name="continue_to_course">Continue to course</string>
-    <string name="processing">Processing...</string>
+    <string name="processing">Processing…</string>
     <string name="user_data_download_success">Your data was downloaded successfully.\nYou can access it in the Downloads system folder.</string>
     <string name="open_download_folder">Open download folder</string>
     <string name="error_download_failure_reason_format">Download failure. Reason: %s</string>
@@ -621,6 +621,7 @@
     <string name="password_needed">Password needed</string>
     <string name="password_needed_description">This topic is protected by password. \n Please, introduce the password below to access its contents (you will only need to do this once)</string>
     <string name="unlock_topic">Unlock topic</string>
+    <string name="staging_warning_msg">You are connected to a staging/development server.</string>
 
 </resources>
 

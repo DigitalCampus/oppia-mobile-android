@@ -80,23 +80,6 @@ public class SearchActivity extends AppActivity {
             i.putExtras(tb);
             SearchActivity.this.startActivity(i);
         });
-
-//        new Handler().postDelayed(() -> {
-//
-//            new Thread(() -> {
-//
-//                for (int i = 0; i < 500000; i++) {
-//                    SearchResult searchResult = new SearchResult();
-//                    searchResult.setCourse(new Course());
-//                    searchResult.setActivity(new Activity());
-//                    searchResult.setSection(new Section());
-//                    results.add(searchResult);
-//
-//                    Log.i(TAG, "onCreate: index: " + i);
-//
-//                }
-//            }).start();
-//        }, 2000);
     }
 
     @Override

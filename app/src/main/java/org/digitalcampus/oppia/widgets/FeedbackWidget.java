@@ -109,7 +109,7 @@ public class FeedbackWidget extends AnswerWidget {
 		ArrayList<QuizAnswerFeedback> quizAnswersFeedback = new ArrayList<>();
 		List<QuizQuestion> questions = this.quiz.getQuestions();
 		for(QuizQuestion q: questions){
-			if(!(q instanceof Description)){
+			if(!(q instanceof Description) && !q.isSkipped()){
 				QuizAnswerFeedback qf = new QuizAnswerFeedback();
 				qf.setIsSurvey(true);
 				qf.setScore(100);

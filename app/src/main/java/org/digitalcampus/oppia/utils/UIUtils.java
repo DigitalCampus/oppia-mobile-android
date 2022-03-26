@@ -66,6 +66,7 @@ import java.util.concurrent.Callable;
 public class UIUtils {
 
     public static final String TAG = UIUtils.class.getSimpleName();
+    private static final String EXCEPTION = "Exception:";
     private static int pointsToSubstractForAnimationSaved;
 
     private UIUtils() {
@@ -247,7 +248,7 @@ public class UIUtils {
                 funct.call();
             } catch (Exception e) {
                 Analytics.logException(e);
-                Log.d(TAG, "Exception:", e);
+                Log.d(TAG, EXCEPTION, e);
             }
 
         });
@@ -308,7 +309,7 @@ public class UIUtils {
                             funct.call();
                         } catch (Exception e) {
                             Analytics.logException(e);
-                            Log.d(TAG, "Exception:", e);
+                            Log.d(TAG, EXCEPTION, e);
                         }
                     }).setTitle(ctx.getString(R.string.change_language))
                     .setNegativeButton(ctx.getString(R.string.cancel), (dialog, which) -> {
@@ -409,7 +410,7 @@ public class UIUtils {
                         }
                     } catch (Exception e) {
                         Analytics.logException(e);
-                        Log.d(TAG, "Exception:", e);
+                        Log.d(TAG, EXCEPTION, e);
                     }
 
                     dialog.dismiss();

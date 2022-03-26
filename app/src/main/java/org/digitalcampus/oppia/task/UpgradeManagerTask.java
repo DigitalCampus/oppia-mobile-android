@@ -600,6 +600,7 @@ public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
 	protected void onProgressUpdate(String... obj) {
 		synchronized (this) {
 
+
             if (mUpgradeListener != null) {
                 // update progress and total
                 mUpgradeListener.upgradeProgressUpdate(obj[0]);
