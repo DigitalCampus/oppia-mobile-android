@@ -4,6 +4,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertTrue;
@@ -124,7 +125,7 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
                     .untilAsserted(
                             () ->
                                     onView(ViewMatchers.withId(R.id.attempts_list))
-                                        .check(matches(isDisplayed()))
+                                        .check(matches(isCompletelyDisplayed()))
                     );
             UITestActionsUtils.clickRecyclerViewPosition(R.id.attempts_list, 0);
 

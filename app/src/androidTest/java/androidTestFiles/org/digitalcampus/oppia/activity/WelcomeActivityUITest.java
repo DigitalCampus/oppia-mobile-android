@@ -22,6 +22,7 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -48,7 +49,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
                 .untilAsserted(
                         () ->
                                 onView(ViewMatchers.withId(R.id.login_btn))
-                                        .check(matches(isDisplayed()))
+                                        .check(matches(isCompletelyDisplayed()))
                 );
 
         onView(withId(R.id.login_btn))
@@ -70,7 +71,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
                 .untilAsserted(
                         () ->
                                 onView(ViewMatchers.withId(R.id.register_title))
-                                        .check(matches(isDisplayed()))
+                                        .check(matches(isCompletelyDisplayed()))
                 );
 
         onView(withId(R.id.register_title))
@@ -90,7 +91,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
                 .untilAsserted(
                         () ->
                                 onView(ViewMatchers.withId(R.id.reset_btn))
-                                        .check(matches(isDisplayed()))
+                                        .check(matches(isCompletelyDisplayed()))
                 );
 
         onView(withId(R.id.reset_btn))
@@ -113,7 +114,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
                 .untilAsserted(
                         () ->
                                 onView(ViewMatchers.withId(R.id.reset_btn))
-                                        .check(matches(isDisplayed()))
+                                        .check(matches(isCompletelyDisplayed()))
                 );
 
         onView(withId(R.id.reset_username_field)).perform(typeText("username"), closeSoftKeyboard());
@@ -142,7 +143,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
                 .untilAsserted(
                         () ->
                                 onView(ViewMatchers.withId(R.id.reset_btn))
-                                        .check(matches(isDisplayed()))
+                                        .check(matches(isCompletelyDisplayed()))
                 );
 
         onView(withId(R.id.reset_username_field)).perform(typeText("username"), closeSoftKeyboard());
@@ -171,7 +172,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
                 .untilAsserted(
                         () ->
                                 onView(ViewMatchers.withId(R.id.edit_email))
-                                        .check(matches(isDisplayed()))
+                                        .check(matches(isCompletelyDisplayed()))
                 );
 
         onView(withId(R.id.edit_email)).perform(typeText("valid@email.is"), closeSoftKeyboard());
@@ -200,7 +201,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
                 .untilAsserted(
                         () ->
                                 onView(ViewMatchers.withId(R.id.edit_email))
-                                        .check(matches(isDisplayed()))
+                                        .check(matches(isCompletelyDisplayed()))
                 );
 
         onView(withId(R.id.edit_email)).perform(typeText("wrong-email"), closeSoftKeyboard());
@@ -226,7 +227,7 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
                 .untilAsserted(
                         () ->
                                 onView(ViewMatchers.withId(R.id.edit_email))
-                                        .check(matches(isDisplayed()))
+                                        .check(matches(isCompletelyDisplayed()))
                 );
 
         onView(withId(R.id.edit_email)).perform(typeText("valid@email.is"), closeSoftKeyboard());
