@@ -14,6 +14,40 @@
             android:id="@+id/toolbar"
             layout="@layout/toolbar" />
 
+        <LinearLayout
+            android:id="@+id/view_staging_warning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium_2"
+            android:orientation="horizontal"
+            android:background="@color/pink_dev_message"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_debug" />
+
+            <TextView
+                style="@style/TextBase"
+                android:text="@string/staging_warning_msg"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/img_close_staging_warning"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:adjustViewBounds="true"
+                android:padding="8dp"
+                android:src="@drawable/ic_close" />
+
+        </LinearLayout>
+
         <FrameLayout
             android:id="@+id/frame_main"
             android:layout_width="match_parent"

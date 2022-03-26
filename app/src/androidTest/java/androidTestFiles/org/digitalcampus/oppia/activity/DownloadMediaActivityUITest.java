@@ -1,10 +1,12 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -14,7 +16,6 @@ import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -38,9 +39,10 @@ public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    @Mock DownloadServiceDelegate downloadServiceDelegate;
+    @Mock
+    DownloadServiceDelegate downloadServiceDelegate;
 
-    private void sendBroadcast(Context ctx, String action, String url){
+    private void sendBroadcast(Context ctx, String action, String url) {
         Intent intent = new Intent(DownloadService.BROADCAST_ACTION);
         intent.putExtra(DownloadService.SERVICE_ACTION, action);
         intent.putExtra(DownloadService.SERVICE_URL, url);
@@ -124,5 +126,39 @@ public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
                     .check(matches(isDisplayed()));
         }
     }
+
+
+    @Test
+    public void showSelectptionIfPendingMediaUnselected() throws Exception {
+
+        copyCourseFromAssets(COURSE_WITH_MEDIA_1);
+        copyCourseFromAssets(COURSE_WITH_MEDIA_2);
+
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
+
+        try (ActivityScenario<DownloadMediaActivity> scenario = ActivityScenario.launch(DownloadMediaActivity.class)) {
+
+            openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            onView(withText(R.string.menu_select_all)).check(matches(isDisplayed()));
+        }
+    }
+
+    @Test
+    public void showSortByOptionIfPendingMediaUnselected() throws Exception {
+
+        copyCourseFromAssets(COURSE_WITH_MEDIA_1);
+        copyCourseFromAssets(COURSE_WITH_MEDIA_2);
+
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
+
+        try (ActivityScenario<DownloadMediaActivity> scenario = ActivityScenario.launch(DownloadMediaActivity.class)) {
+
+            openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            onView(withText(R.string.menu_sort_by_course)).check(matches(isDisplayed()));
+        }
+    }
+
 
 }

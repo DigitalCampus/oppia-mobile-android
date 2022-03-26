@@ -77,16 +77,19 @@ public class MultiSelectWidget extends QuestionWidget {
     @Override
     public List<String> getQuestionResponses(List<Response> responses) {
         int count = responsesLL.getChildCount();
-        List<String> response = new ArrayList<>();
+        List<String> responsesSelected = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             CheckBox cb = (CheckBox) responsesLL.getChildAt(i);
+            String responseText = responses.get(i).getTitle(currentUserLang);
             if (cb.isChecked()) {
-                response.add(responses.get(i).getTitle(currentUserLang));
+                responsesSelected.add(responseText);
                 Log.d(TAG, "User selected: " + cb.getText().toString());
+            } else {
+                responsesSelected.remove(responseText);
             }
         }
 
-        return response;
+        return responsesSelected;
 
     }
 

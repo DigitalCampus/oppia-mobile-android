@@ -2,10 +2,8 @@ package org.digitalcampus.oppia.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,6 +52,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private ActivityMainBinding binding;
     private DrawerHeaderBinding bindingHeader;
     private ViewBadgeBinding bindingBadgeView;
+    private boolean stagingWarningClosed;
 
 
     @SuppressLint("RestrictedApi")
@@ -108,6 +107,21 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         configureUserOptions();
         updateUserTotalPoints();
+
+        checkStagingServer();
+    }
+
+    private void checkStagingServer() {
+        String server = prefs.getString(PrefsActivity.PREF_SERVER, getString(R.string.prefServerDefault));
+        if (server == null) return;
+        boolean staging = server.startsWith("http://staging.") || server.startsWith("https://staging.");
+        boolean showWarning = staging && !stagingWarningClosed;
+        binding.viewStagingWarning.setVisibility(showWarning ? View.VISIBLE : View.GONE);
+
+        binding.imgCloseStagingWarning.setOnClickListener((view) -> {
+            binding.viewStagingWarning.setVisibility(View.GONE);
+            stagingWarningClosed = true;
+        });
     }
 
     private void updateUserTotalPoints() {

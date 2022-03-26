@@ -36,6 +36,12 @@ public class QuizQuestion implements Serializable {
     public static final String TAG = QuizQuestion.class.getSimpleName();
     private static final long serialVersionUID = 852385823168202643L;
 
+    public static final String JSON_KEY_QUESTION_PROP_LABEL = "label";
+    public static final String JSON_KEY_QUESTION_PROP_DEPEND_ITEM_LABEL = "dependitemlabel";
+    public static final String JSON_KEY_QUESTION_PROP_DEPEND_VALUE = "dependvalue";
+
+
+
     protected int id;
     protected float userscore = 0;
     private Map<String, String> title = new HashMap<>();
@@ -44,6 +50,7 @@ public class QuizQuestion implements Serializable {
     protected List<Response> responseOptions = new ArrayList<>();
     protected List<String> userResponses = new ArrayList<>();
     protected String feedback = "";
+    private boolean skipped;
 
     public void addResponseOption(Response r) {
         responseOptions.add(r);
@@ -62,6 +69,10 @@ public class QuizQuestion implements Serializable {
 
     public List<String> getUserResponses() {
         return this.userResponses;
+    }
+
+    public void clearUserResponses() {
+        this.userResponses.clear();
     }
 
     public void mark(String lang) {
@@ -164,6 +175,19 @@ public class QuizQuestion implements Serializable {
         return true;
     }
 
+
+    public String getLabel() {
+        return getProp(JSON_KEY_QUESTION_PROP_LABEL);
+    }
+
+    public String getDependItemLabel() {
+        return getProp(JSON_KEY_QUESTION_PROP_DEPEND_ITEM_LABEL);
+    }
+
+    public String getDependValue() {
+        return getProp(JSON_KEY_QUESTION_PROP_DEPEND_VALUE);
+    }
+
     public int getScoreAsPercent() {
         if (this.getMaxScore() > 0) {
             return (int) (100 * this.getUserscore()) / this.getMaxScore();
@@ -181,4 +205,11 @@ public class QuizQuestion implements Serializable {
         return feedbackDisplayed;
     }
 
+    public void setSkipped(boolean skipped) {
+        this.skipped = skipped;
+    }
+
+    public boolean isSkipped() {
+        return skipped;
+    }
 }

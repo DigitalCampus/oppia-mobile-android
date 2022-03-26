@@ -124,11 +124,9 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
 
     // View is not showing until scanComplete() so the messages have been removed
     public void scanStart() {
-//        binding.tvMediaMessage.setText(R.string.info_scan_media_start);
     }
 
     public void scanProgressUpdate(String msg) {
-//        binding.tvMediaMessage.setText(getContext().getString(R.string.info_scan_media_checking, msg));
     }
 
     public void scanComplete(EntityListResult<Media> result) {
@@ -162,6 +160,5 @@ public class MediaScanView extends FrameLayout implements ScanMediaListener {
             }
         }
     }
-
 
 }

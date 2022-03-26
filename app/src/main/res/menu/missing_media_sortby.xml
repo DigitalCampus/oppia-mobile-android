@@ -2,22 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:oppiamobile="http://schemas.android.com/apk/res-auto">
     <item
-        android:icon="@drawable/ic_more"
-        android:title="@string/options"
-        oppiamobile:showAsAction="ifRoom">
-        <menu>
-            <item
-                android:id="@+id/menu_sort_by"
-                android:title="" />
-            <item
-                android:id="@+id/menu_select_all"
-                android:title="@string/menu_select_all" />
+        android:id="@+id/menu_sort_by"
+        android:title=""
+        oppiamobile:showAsAction="never" />
+    <item
+        android:id="@+id/menu_select_all"
+        android:title="@string/menu_select_all"
+        oppiamobile:showAsAction="never" />
 
-            <item
-                android:id="@+id/menu_unselect_all"
-                android:title="@string/missing_media_unselect_all" />
-        </menu>
-    </item>
-
-
+    <item
+        android:id="@+id/menu_unselect_all"
+        android:title="@string/missing_media_unselect_all"
+        oppiamobile:showAsAction="never" />
 </menu>

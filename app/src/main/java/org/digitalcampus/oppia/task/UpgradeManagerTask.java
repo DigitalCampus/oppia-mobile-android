@@ -569,7 +569,7 @@ public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
                     // The media file was only used by this course, we can delete it
                     boolean success = file.delete();
                     Log.d(TAG, "Removing unused media file " + mediaFile +
-                            (success ? " successfully" : "failed"));
+                            (success ? " successfully" : MSG_FAILED));
                 }
             }
         }
