@@ -8,6 +8,7 @@ import androidTestFiles.UI.CourseMediaBaseTest;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
@@ -28,8 +29,11 @@ import java.util.concurrent.TimeUnit;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
@@ -70,7 +74,7 @@ public class VideoPlayerActivityTest extends CourseMediaBaseTest {
 
         try (ActivityScenario<VideoPlayerActivity> scenario = ActivityScenario.launch(videoActivityIntent)) {
 
-            Thread.sleep(TimeUnit.SECONDS.toMillis(MEDIA_TEST_LENGHT_SECONDS - 2));
+            await().atMost(MEDIA_TEST_LENGHT_SECONDS - 2, TimeUnit.SECONDS);
 
             Espresso.pressBackUnconditionally();
 
@@ -87,7 +91,12 @@ public class VideoPlayerActivityTest extends CourseMediaBaseTest {
 
         try (ActivityScenario<VideoPlayerActivity> scenario = ActivityScenario.launch(videoActivityIntent)) {
 
-            Thread.sleep(TimeUnit.SECONDS.toMillis(MEDIA_TEST_LENGHT_SECONDS + 2));
+            await().atMost(10, TimeUnit.SECONDS)
+                    .untilAsserted(
+                            () ->
+                                    onView(ViewMatchers.withId(R.id.continue_button))
+                                            .check(matches(isCompletelyDisplayed()))
+                    );
 
             onView(withId(R.id.continue_button)).perform(click());
 
