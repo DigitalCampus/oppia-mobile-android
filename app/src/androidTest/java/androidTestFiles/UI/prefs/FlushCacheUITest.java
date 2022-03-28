@@ -2,6 +2,9 @@ package androidTestFiles.UI.prefs;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBackUnconditionally;
+import static androidx.test.espresso.action.ViewActions.clearText;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static org.junit.Assert.assertEquals;
@@ -15,6 +18,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -47,6 +51,8 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBackUnconditionally;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -97,6 +103,13 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
             openDrawer();
             performClickDrawerItem(R.id.menu_settings);
             clickPrefWithText(R.string.prefAdvanced_title);
+
+            if (BuildConfig.ADMIN_PROTECT_ADVANCED_SETTINGS) {
+                String adminPass = context.getString(R.string.prefAdminPasswordDefault);
+                onView(withId(R.id.admin_password_field)).perform(clearText(), typeText(adminPass));
+                onView(withText(R.string.ok)).perform(click());
+            }
+
             clickPrefWithText(R.string.pref_flush_course_listing_cache);
 
             pressBackUnconditionally();

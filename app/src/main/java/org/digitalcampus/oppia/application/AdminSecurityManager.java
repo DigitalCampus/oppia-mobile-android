@@ -97,7 +97,8 @@ public class AdminSecurityManager {
 
     public boolean isPreferenceProtected(String preferenceKey) {
 
-        if (TextUtils.equals(preferenceKey, PrefsActivity.PREF_ADMIN_PROTECTION)) {
+        if (TextUtils.equals(preferenceKey, PrefsActivity.PREF_ADMIN_PROTECTION)
+            || TextUtils.equals(preferenceKey, PrefsActivity.PREF_ADMIN_PASSWORD)) {
             return true;
         }
 
@@ -109,8 +110,6 @@ public class AdminSecurityManager {
         }
 
         switch (preferenceKey){
-
-            case PrefsActivity.PREF_ADMIN_PASSWORD: return true;
 
             case PrefsActivity.PREF_SERVER: return App.ADMIN_PROTECT_SERVER;
             case PrefsActivity.PREF_ADVANCED_SCREEN: return App.ADMIN_PROTECT_ADVANCED_SETTINGS;
@@ -129,7 +128,7 @@ public class AdminSecurityManager {
 
     public boolean testForzeActionProtected() {
         String actionProtected = prefs.getString(PrefsActivity.PREF_TEST_ACTION_PROTECTED, null);
-        return  actionProtected != null && Boolean.parseBoolean(actionProtected);
+        return  actionProtected != null;
     }
 
     private boolean getTestActionProtectedValue() {
