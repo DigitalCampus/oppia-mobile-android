@@ -73,6 +73,15 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
         setStorageStrategy();
+
+        CourseUtils.cleanUp();
+    }
+
+    @Override
+    public void tearDown() throws Exception {
+        super.tearDown();
+
+        CourseUtils.cleanUp();
     }
 
     //Run test once for every StorageStrategy (Internal, External)
@@ -124,6 +133,7 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
 
         copyCourseFromAssets(UPDATED_COURSE);
         response = runInstallCourseTask(context);//Run test task
+        assertTrue(response.isSuccess());
 
         File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertTrue(modulesPath.exists());

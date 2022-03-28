@@ -8,6 +8,7 @@ import android.util.Log;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
@@ -169,9 +170,13 @@ public class CourseUtils {
 
 
     public static Uri.Builder getBaseUriBuilder() {
+
+        String serverHost = InstrumentationRegistry.getInstrumentation()
+                .getTargetContext().getString(R.string.oppiaServerHost);
+
         return new Uri.Builder()
                 .scheme("https")
-                .authority("demo.oppia-mobile.org")
+                .authority(serverHost)
                 .appendPath("view");
     }
 
