@@ -1,6 +1,7 @@
 package androidTestFiles.UI;
 
 import android.Manifest;
+import android.os.Build;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
@@ -12,6 +13,7 @@ import androidTestFiles.Utils.MockedApiEndpointTest;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.GrantPermissionRule;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -37,6 +39,7 @@ public class ResetUITest extends MockedApiEndpointTest {
     private static final String ERROR_RESET_RESPONSE = "responses/response_400_reset.json";
 
     @Test
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void showsErrorMessageWhenThereIsNoUsername() throws Exception {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
@@ -65,6 +68,7 @@ public class ResetUITest extends MockedApiEndpointTest {
     }
 
     @Test
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void clickResetButton_WrongUsername() throws Exception {
 
         startServer(400, ERROR_RESET_RESPONSE, 0);

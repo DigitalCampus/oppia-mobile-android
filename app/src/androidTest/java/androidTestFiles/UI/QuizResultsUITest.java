@@ -20,10 +20,12 @@ import static org.mockito.Mockito.when;
 import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.UiDevice;
 
@@ -140,6 +142,7 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
 
 
     @Test
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void showQuizResultsAtEndAndLater() throws Exception {
 
         installCourse(COURSE_QUIZ_SHOW_ALL);
@@ -148,6 +151,7 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
     }
 
     @Test
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void hideQuizResultsLater() throws Exception {
 
         installCourse(COURSE_QUIZ_HIDE_LATER);
@@ -156,6 +160,7 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
     }
 
     @Test
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void hideQuizResultsAtEnd() throws Exception {
 
         installCourse(COURSE_QUIZ_HIDE_AT_END);
@@ -164,6 +169,7 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
     }
 
     @Test
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void hideQuizResultsAtEndAndLater() throws Exception {
 
         installCourse(COURSE_QUIZ_HIDE_AT_END_AND_LATER);
