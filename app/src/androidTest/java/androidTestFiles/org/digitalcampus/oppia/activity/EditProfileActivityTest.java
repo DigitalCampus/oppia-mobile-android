@@ -89,11 +89,13 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
         onEditTextWithinTextInputLayoutWithId(R.id.field_lastname)
                 .perform(scrollTo(), clearText(), typeText(VALID_LAST_NAME));
 
-        onEditTextWithinTextInputLayoutWithId(R.id.field_organisation)
-                .perform(scrollTo(), clearText(), typeText(VALID_ORGANIZATION));
+        // The following fields are hidden in this Oppia implementation
 
-        onEditTextWithinTextInputLayoutWithId(R.id.field_jobtitle)
-                .perform(scrollTo(), clearText(), typeText(VALID_JOB_TITLE), closeSoftKeyboard());
+//        onEditTextWithinTextInputLayoutWithId(R.id.field_organisation)
+//                .perform(scrollTo(), clearText(), typeText(VALID_ORGANIZATION));
+//
+//        onEditTextWithinTextInputLayoutWithId(R.id.field_jobtitle)
+//                .perform(scrollTo(), clearText(), typeText(VALID_JOB_TITLE), closeSoftKeyboard());
 
     }
 
