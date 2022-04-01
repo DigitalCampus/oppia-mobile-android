@@ -118,7 +118,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         boolean showWarning = staging && !stagingWarningClosed;
         binding.viewStagingWarning.setVisibility(showWarning ? View.VISIBLE : View.GONE);
 
-        binding.imgCloseStagingWarning.setOnClickListener((view) -> {
+        binding.imgCloseStagingWarning.setOnClickListener(view -> {
             binding.viewStagingWarning.setVisibility(View.GONE);
             stagingWarningClosed = true;
         });
