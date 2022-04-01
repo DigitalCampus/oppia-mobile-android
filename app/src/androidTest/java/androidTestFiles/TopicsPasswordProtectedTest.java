@@ -44,14 +44,11 @@ import org.digitalcampus.oppia.activity.SearchActivity;
 import org.digitalcampus.oppia.activity.ViewDigestActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.analytics.AnalyticsProvider;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.result.BasicResult;
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -266,11 +263,11 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
         when(prefs.getBoolean(eq(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS), anyBoolean())).thenReturn(false);
 
         installCourse(COURSE_PASSWORD_PROTECT);
-        Assert.assertEquals(0, testDBHelper.getDbHelper().unlockedsectionsCount(COURSE_ID, USER_ID_NONE));
+        Assert.assertEquals(0, testDBHelper.getDbHelper().unlockedSectionsCount(COURSE_ID, USER_ID_NONE));
         setCourseSectionUnlockPassword(3, PASSWORD_INITIAL);
-        Assert.assertEquals(1, testDBHelper.getDbHelper().unlockedsectionsCount(COURSE_ID, USER_ID_NONE));
+        Assert.assertEquals(1, testDBHelper.getDbHelper().unlockedSectionsCount(COURSE_ID, USER_ID_NONE));
         installCourse(COURSE_PASSWORD_PROTECT_UPDATE);
-        Assert.assertEquals(1, testDBHelper.getDbHelper().unlockedsectionsCount(COURSE_ID, USER_ID_NONE));
+        Assert.assertEquals(1, testDBHelper.getDbHelper().unlockedSectionsCount(COURSE_ID, USER_ID_NONE));
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIntent())) {
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 7);
