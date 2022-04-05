@@ -41,7 +41,8 @@
         ],
         "props":{
           "maxscore":0,
-          "shuffleanswers":"1"
+          "shuffleanswers":"1",
+          "required": false
         },
         "type":"multichoice",
         "id":36249,
@@ -86,7 +87,8 @@
         ],
         "props":{
           "maxscore":0,
-          "shuffleanswers":"1"
+          "shuffleanswers":"1",
+          "required": false
         },
         "type":"multichoice",
         "id":36250,
