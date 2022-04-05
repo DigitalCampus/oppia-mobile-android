@@ -26,6 +26,7 @@ import androidx.test.rule.GrantPermissionRule;
 
 import static androidTestFiles.Utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
 import static androidTestFiles.Utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
+import static androidTestFiles.Utils.ViewsUtils.onHelperTextViewWithinTextInputLayoutWithId;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -430,4 +431,23 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
         }
     }
 
+    @Test
+    public void showHelperTextInUsernameAndPassword() {
+
+        if (!BuildConfig.ALLOW_REGISTER_USER) {
+            return;
+        }
+
+        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
+
+            onView(withId(R.id.welcome_register))
+                    .perform(scrollTo(), click());
+
+            String usernameHelperText = InstrumentationRegistry.getInstrumentation().getTargetContext().getString(R.string.error_register_username_length, App.USERNAME_MIN_CHARACTERS);
+            onHelperTextViewWithinTextInputLayoutWithId(R.id.register_form_username_field).check(matches(withText(usernameHelperText)));
+
+            String passwordHelperText = InstrumentationRegistry.getInstrumentation().getTargetContext().getString(R.string.error_register_password, App.PASSWORD_MIN_LENGTH);
+            onHelperTextViewWithinTextInputLayoutWithId(R.id.register_form_password_field).check(matches(withText(passwordHelperText)));
+        }
+    }
 }
