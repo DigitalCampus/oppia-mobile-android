@@ -49,6 +49,10 @@ public class ViewsUtils {
         return onView(allOf(isDescendantOfA(withId(textInputLayoutId)), withId(R.id.textinput_error)));
     }
 
+    public static ViewInteraction onHelperTextViewWithinTextInputLayoutWithId(@IdRes int textInputLayoutId) {
+        return onView(allOf(isDescendantOfA(withId(textInputLayoutId)), withId(R.id.textinput_helper_text)));
+    }
+
     public static Matcher<View> withHintInInputLayout(final Matcher<String> stringMatcher) {
         checkNotNull(stringMatcher);
 
