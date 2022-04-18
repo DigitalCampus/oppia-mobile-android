@@ -4,6 +4,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public interface ValidableField {
+
+    String REQUIRED_SPANNED_HINT = "<string>%s <span style=\"color:red;\">*</span></string>";
+
     void setRequired(boolean required);
     void initialize();
     boolean validate();

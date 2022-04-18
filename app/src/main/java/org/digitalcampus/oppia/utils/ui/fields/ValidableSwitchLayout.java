@@ -1,6 +1,8 @@
 package org.digitalcampus.oppia.utils.ui.fields;
 
 import android.content.Context;
+import android.os.Build;
+import android.text.Spanned;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import org.digitalcampus.mobile.learning.R;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.text.HtmlCompat;
 
 public class ValidableSwitchLayout extends LinearLayout implements ValidableField {
 
@@ -21,7 +24,7 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
     private CustomValidator validator;
     private onChangeListener listener;
 
-    public ValidableSwitchLayout(Context context){
+    public ValidableSwitchLayout(Context context) {
         super(context);
     }
 
@@ -32,9 +35,11 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
         this.addView(input);
         this.input = input;
 
+        input.setHintTextColor(ContextCompat.getColor(getContext(), android.R.color.tab_indicator_text));
+
         errorText = new TextView(getContext());
         errorText.setLayoutParams(CustomFieldsUIManager.getLinearParams());
-        errorText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        errorText.setTextSize(getResources().getDimension(R.dimen.hint_text_size));
         errorText.setTextColor(ContextCompat.getColor(getContext(), R.color.text_error));
         errorText.setText(getResources().getString(R.string.field_required));
         errorText.setVisibility(GONE);
@@ -46,23 +51,29 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
         this.required = required;
     }
 
-    public void setChecked(boolean checked){
+    public void setChecked(boolean checked) {
         input.setChecked(checked);
     }
 
-    public boolean isChecked(){
+    public boolean isChecked() {
         return input.isChecked();
     }
 
     @Override
     public void initialize() {
-        if (required && input != null){
-            this.input.setHint(input.getHint() + " *");
+        if (required && input != null) {
+            this.input.setHint(addRedAsterisk(input.getHint()));
         }
     }
 
+    private Spanned addRedAsterisk(CharSequence text) {
+        String html = String.format(REQUIRED_SPANNED_HINT, text);
+        Spanned spanned = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY);
+        return spanned;
+    }
+
     @Override
-    public void setLayoutParams(ViewGroup.LayoutParams params){
+    public void setLayoutParams(ViewGroup.LayoutParams params) {
         int margin = getContext().getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin);
         LayoutParams linearParams = (LayoutParams) params;
         linearParams.setMargins(0, margin, 0, margin);
@@ -81,12 +92,12 @@ public class ValidableSwitchLayout extends LinearLayout implements ValidableFiel
 
     @Override
     public boolean validate() {
-        if (input == null || this.getVisibility() == GONE){
+        if (input == null || this.getVisibility() == GONE) {
             return true;
         }
 
         boolean valid = !required || input.isChecked();
-        if (valid && validator != null){
+        if (valid && validator != null) {
             valid = validator.validate(this);
         }
         errorText.setVisibility(valid ? GONE : VISIBLE);
