@@ -337,7 +337,9 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
             // TODO 'refreshCourseList' method should be refactorized
             courseInstallRepository.refreshCourseList(this, courses, json, storage, mode == MODE_COURSE_TO_UPDATE);
-            if (mode == MODE_COURSE_TO_UPDATE) {
+            if (mode == MODE_TAG_COURSES) {
+                filterByCoursesAvailableForNewDownloads();
+            } else if (mode == MODE_COURSE_TO_UPDATE) {
                 filterOnlyInstalledCourses();
             } else if (mode == MODE_NEW_COURSES) {
                 filterNewCoursesNotSeen();
@@ -376,6 +378,17 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         getPrefs().edit().putLong(PrefsActivity.PREF_LAST_NEW_COURSE_SEEN_TIMESTAMP, newLastNewCourseSeenTimestamp).commit();
     }
 
+
+    private void filterByCoursesAvailableForNewDownloads() {
+
+        Iterator<CourseInstallViewAdapter> iter = courses.iterator();
+        while (iter.hasNext()) {
+            CourseInstallViewAdapter courseAdapter = iter.next();
+            if (!courseAdapter.isNewDownloadsEnabled()) {
+                iter.remove();
+            }
+        }
+    }
 
     private void filterOnlyInstalledCourses() {
         List<Course> installedCourses = coursesRepository.getCourses(this);

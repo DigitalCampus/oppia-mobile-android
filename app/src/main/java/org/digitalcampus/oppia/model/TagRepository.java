@@ -43,6 +43,8 @@ public class TagRepository {
     private static final String JSON_PROPERTY_ICON = "icon";
     private static final String JSON_PROPERTY_HIGHLIGHT = "highlight";
     private static final String JSON_PROPERTY_ORDER_PRIORITY = "order_priority";
+    private static final String JSON_PROPERTY_COUNT_NEW_DOWNLOADS_ENABLED = "count_new_downloads_enabled";
+
 
     public void getTagList(Context ctx, ApiEndpoint api) {
 
@@ -78,7 +80,14 @@ public class TagRepository {
             if (jsonObj.has(JSON_PROPERTY_ORDER_PRIORITY) && !jsonObj.isNull(JSON_PROPERTY_ORDER_PRIORITY)) {
                 t.setOrderPriority(jsonObj.getInt(JSON_PROPERTY_ORDER_PRIORITY));
             }
-            tags.add(t);
+            // Count new downloads enabled
+            if (jsonObj.has(JSON_PROPERTY_COUNT_NEW_DOWNLOADS_ENABLED) && !jsonObj.isNull(JSON_PROPERTY_COUNT_NEW_DOWNLOADS_ENABLED)) {
+                t.setCountNewDownloadEnabled(jsonObj.getInt(JSON_PROPERTY_COUNT_NEW_DOWNLOADS_ENABLED));
+            }
+
+            if (t.getCountNewDownloadEnabled() > 0) {
+                tags.add(t);
+            }
         }
     }
 }

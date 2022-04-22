@@ -58,6 +58,7 @@ public class CourseInstallViewAdapter extends Course {
     private static final String JSON_PROPERTY_AUTHOR = "author";
     private static final String JSON_PROPERTY_USERNAME = "username";
     private static final String JSON_PROPERTY_ORGANISATION = "organisation";
+    private static final String JSON_PROPERTY_NEW_DOWNLOADS_ENABLED = "new_downloads_enabled";
 
     public boolean isDownloading() {
         return downloading;
@@ -178,6 +179,9 @@ public class CourseInstallViewAdapter extends Course {
             if (jsonObj.has(JSON_PROPERTY_ORGANISATION) && !jsonObj.isNull(JSON_PROPERTY_ORGANISATION)) {
                 course.setOrganisationName(jsonObj.getString(JSON_PROPERTY_ORGANISATION));
             }
+
+            if (jsonObj.has(JSON_PROPERTY_NEW_DOWNLOADS_ENABLED) && !jsonObj.isNull(JSON_PROPERTY_NEW_DOWNLOADS_ENABLED))
+                course.setNewDownloadsEnabled(jsonObj.getBoolean(JSON_PROPERTY_NEW_DOWNLOADS_ENABLED));
 
             if (downloadingCourses != null && downloadingCourses.contains(course.getDownloadUrl())) {
                 course.setDownloading(true);
