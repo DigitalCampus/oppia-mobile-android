@@ -38,6 +38,7 @@ public class Tag implements Serializable{
 	private String icon;
 	private boolean highlight = false;
 	private int countNewDownloadEnabled;
+	private int countAvailable;
 	
 	private ArrayList<Course> courses = new ArrayList<>();
 	
@@ -101,5 +102,17 @@ public class Tag implements Serializable{
 
 	public void setCountNewDownloadEnabled(int countNewDownloadEnabled) {
 		this.countNewDownloadEnabled = countNewDownloadEnabled;
+	}
+
+	public int getCountAvailable() {
+		return countAvailable;
+	}
+
+	public void setCountAvailable(int countAvailable) {
+		this.countAvailable = countAvailable;
+	}
+
+	public void incrementCountAvailable() {
+		this.countAvailable++;
 	}
 }

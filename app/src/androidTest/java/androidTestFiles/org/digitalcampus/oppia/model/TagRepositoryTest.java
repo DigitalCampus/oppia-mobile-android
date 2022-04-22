@@ -41,7 +41,7 @@ public class TagRepositoryTest {
 
         try {
             JSONObject o = new JSONObject(tagListString);
-            tr.refreshTagList(tagList, o);
+            tr.refreshTagList(tagList, o, new ArrayList<>());
         } catch (JSONException jsone){
             // pass
             assertEquals(-1, tagList.size());

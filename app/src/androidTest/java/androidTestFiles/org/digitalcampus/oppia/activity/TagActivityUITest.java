@@ -62,7 +62,7 @@ public class TagActivityUITest extends DaggerInjectMockUITest {
                 setDescription("Mocked Course Description");
             }});
             return null;
-        }).when(tagRepository).refreshTagList(any(), any());
+        }).when(tagRepository).refreshTagList(any(), any(), any());
 
         try (ActivityScenario<TagSelectActivity> scenario = ActivityScenario.launch(TagSelectActivity.class)) {
 
