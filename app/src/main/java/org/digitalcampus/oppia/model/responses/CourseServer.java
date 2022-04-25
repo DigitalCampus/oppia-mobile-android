@@ -24,6 +24,9 @@ public class CourseServer {
     private boolean isDraft = false;
     private int priority = 0;
 
+    @SerializedName("new_downloads_enabled")
+    private boolean newDownloadsEnabled = true;
+
     public int getId() {
         return id;
     }
@@ -96,4 +99,11 @@ public class CourseServer {
         this.priority = priority;
     }
 
+    public boolean isNewDownloadsEnabled() {
+        return newDownloadsEnabled;
+    }
+
+    public void setNewDownloadsEnabled(boolean newDownloadsEnabled) {
+        this.newDownloadsEnabled = newDownloadsEnabled;
+    }
 }

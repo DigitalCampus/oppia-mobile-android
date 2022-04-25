@@ -29,7 +29,9 @@ import org.digitalcampus.oppia.adapter.TagsAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.APIRequestListener;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
@@ -40,6 +42,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
@@ -151,7 +154,8 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	public void refreshTagList() {
 		tags.clear();
 		try {
-			tagRepository.refreshTagList(tags, json);
+
+			tagRepository.refreshTagList(tags, json, getInstalledCoursesNames());
 
             adapterTags.notifyDataSetChanged();
             binding.emptyState.setVisibility((tags.isEmpty()) ? View.VISIBLE : View.GONE);
@@ -162,7 +166,16 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 		}
 		
 	}
-	
+
+	private List<String> getInstalledCoursesNames() {
+		List<Course> installedCourses = DbHelper.getInstance(this).getAllCourses();
+		List<String> installedCoursesNames = new ArrayList<>();
+		for (Course course : installedCourses) {
+			installedCoursesNames.add(course.getShortname());
+		}
+		return installedCoursesNames;
+	}
+
 	public void apiRequestComplete(BasicResult result) {
 		hideProgressDialog();
 		

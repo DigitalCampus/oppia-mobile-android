@@ -31,6 +31,8 @@ import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityDownloadBinding;
+import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.adapter.DownloadCoursesAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;
@@ -337,7 +339,9 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
             // TODO 'refreshCourseList' method should be refactorized
             courseInstallRepository.refreshCourseList(this, courses, json, storage, mode == MODE_COURSE_TO_UPDATE);
-            if (mode == MODE_COURSE_TO_UPDATE) {
+            if (mode == MODE_TAG_COURSES) {
+                filterByCoursesAvailableForNewDownloads();
+            } else if (mode == MODE_COURSE_TO_UPDATE) {
                 filterOnlyInstalledCourses();
             } else if (mode == MODE_NEW_COURSES) {
                 filterNewCoursesNotSeen();
@@ -376,6 +380,20 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         getPrefs().edit().putLong(PrefsActivity.PREF_LAST_NEW_COURSE_SEEN_TIMESTAMP, newLastNewCourseSeenTimestamp).commit();
     }
 
+
+    private void filterByCoursesAvailableForNewDownloads() {
+
+        Iterator<CourseInstallViewAdapter> iter = courses.iterator();
+        while (iter.hasNext()) {
+            CourseInstallViewAdapter courseAdapter = iter.next();
+            if (!courseAdapter.isNewDownloadsEnabled()) {
+                long id = DbHelper.getInstance(this).getCourseIdByShortname(courseAdapter.getShortname());
+                if (id == -1) {  // It is not installed
+                    iter.remove();
+                }
+            }
+        }
+    }
 
     private void filterOnlyInstalledCourses() {
         List<Course> installedCourses = coursesRepository.getCourses(this);

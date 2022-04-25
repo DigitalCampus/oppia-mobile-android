@@ -141,7 +141,7 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
                 setDescription("Mocked Course Description");
             }});
             return null;
-        }).when(tagRepository).refreshTagList(any(), any());
+        }).when(tagRepository).refreshTagList(any(), any(), any());
 
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

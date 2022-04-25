@@ -184,8 +184,16 @@ public class App extends Application {
         setupPeriodicWorkers();
 
         OppiaNotificationUtils.initializeOreoNotificationChannels(this);
+
+//        launchWorkerToTest();
     }
 
+    private void launchWorkerToTest() {
+
+        OneTimeWorkRequest request = OneTimeWorkRequest.from(CoursesChecksWorker.class);
+        WorkManager.getInstance(this)
+                .enqueueUniqueWork("worker_test", ExistingWorkPolicy.REPLACE, request);
+    }
 
 
     private void checkAppInstanceIdCreated(SharedPreferences prefs) {
@@ -219,12 +227,6 @@ public class App extends Application {
         return db;
     }
 
-    private void launchWorkerToTest() {
-
-        OneTimeWorkRequest request = OneTimeWorkRequest.from(CoursesCompletionReminderWorker.class);
-        WorkManager.getInstance(this)
-                .enqueueUniqueWork("worker_test", ExistingWorkPolicy.REPLACE, request);
-    }
 
     private void setupPeriodicWorkers() {
 
