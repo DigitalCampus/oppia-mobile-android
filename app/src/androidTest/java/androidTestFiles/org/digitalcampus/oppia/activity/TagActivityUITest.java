@@ -60,6 +60,7 @@ public class TagActivityUITest extends DaggerInjectMockUITest {
             tags.add(new Tag() {{
                 setName("Mocked Course Name");
                 setDescription("Mocked Course Description");
+                setCountAvailable(3);
             }});
             return null;
         }).when(tagRepository).refreshTagList(any(), any(), any());
@@ -69,6 +70,10 @@ public class TagActivityUITest extends DaggerInjectMockUITest {
             onView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.tag_name))
                     .check(matches(withText(startsWith("Mocked Course Name"))));
+
+            onView(withRecyclerView(R.id.recycler_tags)
+                    .atPositionOnView(0, R.id.tag_count))
+                    .check(matches(withText("3")));
         }
     }
 
