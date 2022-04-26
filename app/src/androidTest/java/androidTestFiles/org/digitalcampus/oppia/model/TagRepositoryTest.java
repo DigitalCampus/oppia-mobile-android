@@ -1,7 +1,10 @@
 package androidTestFiles.org.digitalcampus.oppia.model;
+
 import android.Manifest;
+import android.util.Log;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.oppia.model.Tag;
@@ -13,42 +16,91 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+
+import androidTestFiles.Utils.FileUtils;
 
 @RunWith(AndroidJUnit4.class)
 public class TagRepositoryTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    @Test
-    public void refreshTagListTest(){
-        String tagListString = "{\"tags\": [" +
-                "{\"count\": 2, \"description\": \"\", \"highlight\": true, \"icon\": \"myicon.jpg\", \"id\": 1, \"name\": \"tag1\", \"order_priority\": 0 }," +
-                "{\"count\": 2, \"description\": null, \"highlight\": true, \"icon\": null, \"id\": 2, \"name\": \"nulldesc\", \"order_priority\": 0 }," +
-                "{\"count\": 2, \"highlight\": true, \"icon\": null, \"id\": 3, \"name\": \"nodesc\", \"order_priority\": 0 }," +
-                "{\"count\": 2, \"description\": null, \"highlight\": true, \"icon\": null, \"id\": 4, \"name\": \"nullicon\", \"order_priority\": 0 }," +
-                "{\"count\": 2, \"description\": null, \"highlight\": true, \"id\": 5, \"name\": \"noicon\", \"order_priority\": 0 }," +
-                "{\"count\": 2, \"description\": null, \"highlight\": null, \"icon\": null, \"id\": 6, \"name\": \"nullhighlight\", \"order_priority\": 0 }," +
-                "{\"count\": 2, \"description\": null, \"id\": 7, \"name\": \"nohighlight\", \"order_priority\": 0 }," +
-                "{\"count\": 2, \"description\": null, \"highlight\": null, \"icon\": null, \"id\": 8, \"name\": \"nullpriority\", \"order_priority\": null }," +
-                "{\"count\": 2, \"description\": null, \"id\": 9, \"name\": \"nopriority\"}" +
-            "]}";
+    private static final String TAGS_ORIGINAL = "tags/tags_original.json";
+    private static final String TAGS_NEW_DOWNLOADS_ALL_AVAILABLE = "tags/new_downloads_all_available.json";
+    private static final String TAGS_NEW_DOWNLOADS_ONE_NON_AVAILABLE = "tags/new_downloads_one_non_available.json";
+
+    private List<Tag> loadTagList(String json) throws Exception {
+        return loadTagList(json, new ArrayList<>());
+    }
+
+    private List<Tag> loadTagList(String json, List<String> installedCoursesNames) throws Exception {
+
+        String tagListJson = FileUtils.getStringFromFile(
+                InstrumentationRegistry.getInstrumentation().getContext(),
+                json);
 
         TagRepository tr = new TagRepository();
         List<Tag> tagList = new ArrayList<>();
 
-        try {
-            JSONObject o = new JSONObject(tagListString);
-            tr.refreshTagList(tagList, o, new ArrayList<>());
-        } catch (JSONException jsone){
-            // pass
-            assertEquals(-1, tagList.size());
-        }
+        JSONObject o = new JSONObject(tagListJson);
+        tr.refreshTagList(tagList, o, installedCoursesNames);
+
+        return tagList;
+    }
+
+    @Test
+    public void loadTagsOriginalJson() throws Exception {
+
+        // For retrocompatibility after "new download enable" feature added
+
+        List<Tag> tagList = loadTagList(TAGS_ORIGINAL);
 
         assertEquals(9, tagList.size());
 
+    }
+
+    @Test
+    public void loadTagsAllLive() throws Exception {
+
+        List<Tag> tagList = loadTagList(TAGS_NEW_DOWNLOADS_ALL_AVAILABLE);
+
+        assertEquals(2, tagList.size());
+
+        assertEquals(2, tagList.get(0).getCount());
+        assertEquals(2, tagList.get(0).getCountNewDownloadEnabled());
+        assertEquals(2, tagList.get(0).getCountAvailable());
+
+        assertEquals(3, tagList.get(1).getCount());
+        assertEquals(2, tagList.get(1).getCountNewDownloadEnabled());
+        assertEquals(2, tagList.get(1).getCountAvailable());
+
+    }
+
+
+
+    @Test
+    public void loadTagsOneNonLive() throws Exception {
+
+        List<Tag> tagList = loadTagList(TAGS_NEW_DOWNLOADS_ONE_NON_AVAILABLE);
+
+        assertEquals(2, tagList.size());
+
+    }
+
+    @Test
+    public void loadTagsOneNonLiveButCourseInstalled() throws Exception {
+
+        List<String> installedCoursesNames = Arrays.asList("course-c");
+        List<Tag> tagList = loadTagList(TAGS_NEW_DOWNLOADS_ONE_NON_AVAILABLE, installedCoursesNames);
+
+        assertEquals(3, tagList.size());
+
+        assertEquals(2, tagList.get(2).getCount());
+        assertEquals(0, tagList.get(2).getCountNewDownloadEnabled());
+        assertEquals(1, tagList.get(2).getCountAvailable());
 
     }
 }

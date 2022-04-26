@@ -1,0 +1,47 @@
+{
+  "tags": [
+    {
+      "count": 2,
+      "count_new_downloads_enabled": 2,
+      "course_statuses": {
+        "course-a": "live",
+        "course-b": "live"
+      },
+      "description": null,
+      "highlight": false,
+      "icon": null,
+      "id": 116,
+      "name": "all-available",
+      "order_priority": 0
+    },
+    {
+      "count": 3,
+      "count_new_downloads_enabled": 2,
+      "course_statuses": {
+        "course-a": "live",
+        "course-b": "live",
+        "course-c": "new_downloads_disabled"
+      },
+      "description": null,
+      "highlight": false,
+      "icon": null,
+      "id": 117,
+      "name": "some-available",
+      "order_priority": 0
+    },
+    {
+      "count": 2,
+      "count_new_downloads_enabled": 0,
+      "course_statuses": {
+        "course-c": "new_downloads_disabled",
+        "course-d": "new_downloads_disabled"
+      },
+      "description": null,
+      "highlight": false,
+      "icon": null,
+      "id": 118,
+      "name": "none-available",
+      "order_priority": 0
+    }
+  ]
+}
