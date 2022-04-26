@@ -37,7 +37,7 @@ public class Tag implements Serializable{
 	private int orderPriority;
 	private String icon;
 	private boolean highlight = false;
-	private int countNewDownloadEnabled;
+	private int countNewDownloadEnabled = -1;
 	private int countAvailable;
 	
 	private ArrayList<Course> courses = new ArrayList<>();

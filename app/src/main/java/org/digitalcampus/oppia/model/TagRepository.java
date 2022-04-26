@@ -110,7 +110,7 @@ public class TagRepository {
                     }
                 }
             } else {
-                t.setCountAvailable(t.getCountNewDownloadEnabled());
+                t.setCountAvailable(t.getCountNewDownloadEnabled() > -1 ? t.getCountNewDownloadEnabled() : t.getCount());
             }
 
             if (t.getCountAvailable() > 0) {
