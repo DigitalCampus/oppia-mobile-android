@@ -20,8 +20,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
+import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
+import androidTestFiles.Utils.CourseUtils;
+import androidTestFiles.Utils.FileUtils;
+
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -29,12 +35,15 @@ import androidx.test.rule.GrantPermissionRule;
 
 import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
 import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -42,14 +51,26 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 
 @RunWith(AndroidJUnit4.class)
-public class DownloadActivityUITest  extends DaggerInjectMockUITest {
+public class DownloadActivityUITest extends DaggerInjectMockUITest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    @Mock CourseInstallRepository courseInstallRepository;
-    @Mock CourseInstallerServiceDelegate courseInstallerServiceDelegate;
+    @Mock
+    CourseInstallRepository courseInstallRepository;
+    @Mock
+    CourseInstallerServiceDelegate courseInstallerServiceDelegate;
 
-    private void givenThereAreSomeCourses(final int numberOfCourses, final CourseInstallViewAdapter course) throws Exception{
+    private void givenThereAreSomeCourses(final int numberOfCourses, final CourseInstallViewAdapter course) throws Exception {
+
+        CourseInstallViewAdapter[] courses = new CourseInstallViewAdapter[numberOfCourses];
+        for (int i = 0; i < numberOfCourses; i++) {
+            courses[i] = course;
+        }
+        givenThereAreSomeCourses(courses);
+
+    }
+
+    private void givenThereAreSomeCourses(final CourseInstallViewAdapter... coursesMock) throws Exception {
 
         doAnswer(invocationOnMock -> {
             Context ctx = (Context) invocationOnMock.getArguments()[0];
@@ -62,9 +83,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
 
         doAnswer(invocationOnMock -> {
-            ArrayList<CourseInstallViewAdapter>  courses = (ArrayList<CourseInstallViewAdapter>) invocationOnMock.getArguments()[1];
+            ArrayList<CourseInstallViewAdapter> courses = (ArrayList<CourseInstallViewAdapter>) invocationOnMock.getArguments()[1];
 
-            for(int i = 0; i < numberOfCourses; i++) {
+            for (CourseInstallViewAdapter course : coursesMock) {
                 courses.add(course);
             }
             return null;
@@ -73,7 +94,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
 
     }
 
-    private CourseInstallViewAdapter getBaseCourse(){
+    private CourseInstallViewAdapter getBaseCourse() {
         CourseInstallViewAdapter c = new CourseInstallViewAdapter("");
         c.setShortname("Mocked Course Name");
         c.setDownloadUrl("Mock URL");
@@ -81,7 +102,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
         return c;
     }
 
-    private void sendBroadcast(Context ctx, String action){
+    private void sendBroadcast(Context ctx, String action) {
         Intent intent = new Intent(CourseInstallerService.BROADCAST_ACTION);
         intent.putExtra(CourseInstallerService.SERVICE_ACTION, action);
         intent.putExtra(CourseInstallerService.SERVICE_URL, "Mock URL");
@@ -103,7 +124,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
     }
 
     @Test
-    public void showDraftTextIfCourseIsDraft() throws Exception{
+    public void showDraftTextIfCourseIsDraft() throws Exception {
         CourseInstallViewAdapter c = getBaseCourse();
         c.setDraft(true);
 
@@ -118,7 +139,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
     }
 
     @Test
-    public void dowsNotShowDraftTextIfCourseIsNotDraft() throws Exception{
+    public void dowsNotShowDraftTextIfCourseIsNotDraft() throws Exception {
         CourseInstallViewAdapter c = getBaseCourse();
         c.setDraft(false);
 
@@ -133,9 +154,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
     }
 
     @Test
-    public void showTitleIfExists() throws Exception{
+    public void showTitleIfExists() throws Exception {
         CourseInstallViewAdapter c = getBaseCourse();
-        final String title =  "Mock Title";
+        final String title = "Mock Title";
         c.setTitles(new ArrayList<Lang>() {{
             add(new Lang("en", title));
         }});
@@ -152,7 +173,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
     }
 
     @Test
-    public void showDefaultTitleIfNotExists() throws Exception{
+    public void showDefaultTitleIfNotExists() throws Exception {
         CourseInstallViewAdapter c = getBaseCourse();
 
         givenThereAreSomeCourses(2, c);
@@ -166,9 +187,9 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
     }
 
     @Test
-    public void showDescriptionIfExists() throws Exception{
+    public void showDescriptionIfExists() throws Exception {
         CourseInstallViewAdapter c = getBaseCourse();
-        final String description =  "Mock Description";
+        final String description = "Mock Description";
         c.setDescriptions(new ArrayList<Lang>() {{
             add(new Lang("en", description));
         }});
@@ -184,7 +205,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
     }
 
     @Test
-    public void showDefaultDescriptionIfNotExists() throws Exception{
+    public void showDefaultDescriptionIfNotExists() throws Exception {
         CourseInstallViewAdapter c = getBaseCourse();
 
         givenThereAreSomeCourses(2, c);
@@ -198,7 +219,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
     }
 
     @Test
-    public void showCourseAuthorIfExists() throws Exception{
+    public void showCourseAuthorIfExists() throws Exception {
         CourseInstallViewAdapter c = getBaseCourse();
         String authorName = "Mock Author";
         c.setAuthorName(authorName);
@@ -216,7 +237,7 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
     }
 
     @Test
-    public void doesNotShowCourseAuthorIfNotExists() throws Exception{
+    public void doesNotShowCourseAuthorIfNotExists() throws Exception {
 
         givenThereAreSomeCourses(2, getBaseCourse());
 
@@ -488,6 +509,65 @@ public class DownloadActivityUITest  extends DaggerInjectMockUITest {
                     .check(matches(isEnabled()));
         }
     }
-    
+
+
+    @Test
+    public void dontShowNewDownloadDisabledCourse() throws Exception {
+
+        CourseInstallViewAdapter c1 = getBaseCourse();
+        c1.setShortname("c1");
+        c1.setTitles(Arrays.asList(new Lang("en", "Course1")));
+
+        CourseInstallViewAdapter c2 = getBaseCourse();
+        c1.setShortname("c2");
+        c2.setNewDownloadsEnabled(false);
+        c2.setTitles(Arrays.asList(new Lang("en", "Course2")));
+
+        givenThereAreSomeCourses(c1, c2);
+
+        try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
+
+            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
+
+            onView(withRecyclerView(R.id.recycler_tags)
+                    .atPositionOnView(0, R.id.course_title))
+                    .check(matches(withText("Course1")));
+        }
+    }
+
+    @Test
+    public void showNewDownloadDisabledCourseIfItIsInstalled() throws Exception {
+
+        CourseUtils.cleanUp();
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        FileUtils.copyZipFromAssetsPath(context, "common", "test_course.zip");
+
+        BasicResult response = CourseUtils.runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
+
+        CourseInstallViewAdapter c1 = getBaseCourse();
+        c1.setShortname("c1");
+        c1.setTitles(Arrays.asList(new Lang("en", "Course1")));
+
+        CourseInstallViewAdapter c2 = getBaseCourse();
+        c2.setShortname("test_course");
+        c2.setNewDownloadsEnabled(false);
+        c2.setTitles(Arrays.asList(new Lang("en", "Course2")));
+
+        givenThereAreSomeCourses(c1, c2);
+
+        try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
+
+            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(2));
+
+            onView(withRecyclerView(R.id.recycler_tags)
+                    .atPositionOnView(0, R.id.course_title))
+                    .check(matches(withText("Course1")));
+
+            onView(withRecyclerView(R.id.recycler_tags)
+                    .atPositionOnView(1, R.id.course_title))
+                    .check(matches(withText("Course2")));
+        }
+    }
 
 }
