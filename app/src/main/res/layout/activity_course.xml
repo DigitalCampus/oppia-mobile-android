@@ -38,12 +38,13 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <ScrollView
+        android:id="@+id/unlock_topic_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:fillViewport="true">
 
         <LinearLayout
-            android:id="@+id/unlock_topic_form"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -52,8 +53,7 @@
             android:gravity="center"
             android:orientation="vertical"
             android:paddingStart="@dimen/padding_large"
-            android:paddingEnd="@dimen/padding_large"
-            android:visibility="gone">
+            android:paddingEnd="@dimen/padding_large">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/lock_indicator"
