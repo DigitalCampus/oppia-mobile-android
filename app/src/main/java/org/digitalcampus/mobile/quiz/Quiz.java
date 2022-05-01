@@ -292,8 +292,22 @@ public class Quiz implements Serializable {
     }
 
     public boolean hasNext() {
-        return this.currentq + 1 < questions.size();
+        return hasNext(currentq);
     }
+
+    private boolean hasNext(int questionId){
+        checkQuestionsSkipped(questionId);
+        int nextQuestionId = questionId + 1;
+        if (nextQuestionId < questions.size()) {
+            QuizQuestion nexQuestion = questions.get(nextQuestionId);
+            if(nexQuestion.isSkipped()){
+                return hasNext(nextQuestionId);
+            }
+            return true;
+        }
+        return false;
+    }
+
 
     public boolean hasPrevious() {
         return this.currentq > 0;
@@ -301,8 +315,6 @@ public class Quiz implements Serializable {
 
     public void moveNext() {
         if (currentq < questions.size() - 1) {
-
-            checkQuestionsSkipped();
 
             currentq++;
 
@@ -321,16 +333,16 @@ public class Quiz implements Serializable {
      * Backward loop - Checks the questions previous to the current question.
      *                 Goes from the first question until the current question (this one included)
      */
-    private void checkQuestionsSkipped() {
-        for (int forward = currentq + 1; forward < questions.size(); forward++) {
+    private void checkQuestionsSkipped(int questionId) {
+        for (int forward = questionId + 1; forward < questions.size(); forward++) {
             QuizQuestion forwardQuestion = questions.get(forward);
-            for (int backward = 0; backward <= currentq; backward++) {
+            for (int backward = 0; backward <= questionId; backward++) {
                 QuizQuestion backwardQuestion = questions.get(backward);
                 if (TextUtils.isEmpty(forwardQuestion.getDependItemLabel())) {
                     continue;
                 }
                 if (TextUtils.equals(backwardQuestion.getLabel(), forwardQuestion.getDependItemLabel())) {
-                    if (backwardQuestion.isSkipped() || backwardQuestion.getUserResponses().isEmpty()) {
+                    if (backwardQuestion.isSkipped()) {
                         forwardQuestion.setSkipped(true);
                         continue;
                     }
