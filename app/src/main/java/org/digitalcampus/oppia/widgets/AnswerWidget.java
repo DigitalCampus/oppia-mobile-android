@@ -337,10 +337,10 @@ public abstract class AnswerWidget extends BaseWidget {
 
         binding.mquizNextBtn.setOnClickListener(nextBtnClickListener());
         // set label on next button
-        if (quiz.hasNext()) {
-            binding.mquizNextBtn.setText(getString(R.string.widget_quiz_next));
-        } else {
+        if (quiz.getCurrentQuestionNo() == quiz.getTotalNoQuestions()) {
             binding.mquizNextBtn.setText(getFinishButtonLabel());
+        } else {
+            binding.mquizNextBtn.setText(getString(R.string.widget_quiz_next));
         }
     }
 
