@@ -240,6 +240,11 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
             Set<String> notInstalledAndNotNotifiedCourses = new HashSet<>();
             for (CourseServer courseServer : notInstalledCourses) {
+
+                if (!courseServer.isNewDownloadsEnabled()) {
+                    continue;
+                }
+
                 if (!newCoursesNotified.contains(courseServer.getShortname())) {
                     notInstalledAndNotNotifiedCourses.add(courseServer.getShortname());
                 }

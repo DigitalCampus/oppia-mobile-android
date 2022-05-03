@@ -69,6 +69,8 @@ public class Course extends MultiLangInfoModel implements Serializable {
     private String sequencingMode = SEQUENCING_MODE_NONE;
     private List<GamificationEvent> gamificationEvents = new ArrayList<>();
 
+    private boolean newDownloadsEnabled = true;
+
     private String root;
 
     public Course() {
@@ -272,5 +274,13 @@ public class Course extends MultiLangInfoModel implements Serializable {
             default:
                 return false;
         }
+    }
+
+    public boolean isNewDownloadsEnabled() {
+        return newDownloadsEnabled;
+    }
+
+    public void setNewDownloadsEnabled(boolean newDownloadsEnabled) {
+        this.newDownloadsEnabled = newDownloadsEnabled;
     }
 }

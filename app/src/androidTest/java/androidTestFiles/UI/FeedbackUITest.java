@@ -81,4 +81,17 @@ public class FeedbackUITest {
 
     }
 
+    @Test
+    public void showProgressTextInNotRequiredQuestions() {
+        launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+
+        onView(withId(R.id.tv_quiz_progress)).check(matches(withText("1/2")));
+        onView(withText("firstanswer")).perform(click());
+        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        onView(withId(R.id.tv_quiz_progress)).check(matches(withText("2/2")));
+        onView(withText("secondanswer")).perform(click());
+        onView(withId(R.id.mquiz_next_btn)).perform(click());
+
+
+    }
 }

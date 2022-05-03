@@ -49,7 +49,7 @@ import androidTestFiles.Utils.UITestActionsUtils;
 import androidTestFiles.database.TestDBHelper;
 
 @RunWith(AndroidJUnit4.class)
-public class FeedbackSkipLogic extends DaggerInjectMockUITest {
+public class FeedbackSkipLogicTest extends DaggerInjectMockUITest {
 
 
     private static final String COURSE_SKIP_LOGIC = "course-skip-logic.zip";

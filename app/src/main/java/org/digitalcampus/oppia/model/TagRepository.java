@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.model;
 
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
@@ -29,6 +30,7 @@ import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class TagRepository {
@@ -43,6 +45,13 @@ public class TagRepository {
     private static final String JSON_PROPERTY_ICON = "icon";
     private static final String JSON_PROPERTY_HIGHLIGHT = "highlight";
     private static final String JSON_PROPERTY_ORDER_PRIORITY = "order_priority";
+    private static final String JSON_PROPERTY_COUNT_NEW_DOWNLOADS_ENABLED = "count_new_downloads_enabled";
+    private static final String JSON_PROPERTY_COURSE_STATUSES = "course_statuses";
+
+    private static final CharSequence COURSE_STATUS_LIVE = "live";
+    private static final CharSequence COURSE_STATUS_NEW_DOWNLOADS_DISABLED = "new_downloads_disabled";
+
+
 
     public void getTagList(Context ctx, ApiEndpoint api) {
 
@@ -54,7 +63,7 @@ public class TagRepository {
         task.execute(url);
     }
 
-    public void refreshTagList(List<Tag> tags, JSONObject json) throws JSONException {
+    public void refreshTagList(List<Tag> tags, JSONObject json, List<String> installedCoursesNames) throws JSONException {
 
         for (int i = 0; i < (json.getJSONArray(JSON_PROPERTY_TAGS).length()); i++) {
             JSONObject jsonObj = (JSONObject) json.getJSONArray(JSON_PROPERTY_TAGS).get(i);
@@ -78,7 +87,44 @@ public class TagRepository {
             if (jsonObj.has(JSON_PROPERTY_ORDER_PRIORITY) && !jsonObj.isNull(JSON_PROPERTY_ORDER_PRIORITY)) {
                 t.setOrderPriority(jsonObj.getInt(JSON_PROPERTY_ORDER_PRIORITY));
             }
-            tags.add(t);
+            // Count new downloads enabled
+            if (jsonObj.has(JSON_PROPERTY_COUNT_NEW_DOWNLOADS_ENABLED) && !jsonObj.isNull(JSON_PROPERTY_COUNT_NEW_DOWNLOADS_ENABLED)) {
+                t.setCountNewDownloadEnabled(jsonObj.getInt(JSON_PROPERTY_COUNT_NEW_DOWNLOADS_ENABLED));
+            }
+
+            if (jsonObj.has(JSON_PROPERTY_COURSE_STATUSES)) {
+                if (!jsonObj.isNull(JSON_PROPERTY_COURSE_STATUSES)) {
+                    JSONObject jObjCourseStatuses = jsonObj.getJSONObject(JSON_PROPERTY_COURSE_STATUSES);
+                    Iterator<String> keys = jObjCourseStatuses.keys();
+
+                    while(keys.hasNext()) {
+                        String key = keys.next();
+                        String value = jObjCourseStatuses.getString(key);
+                        if (TextUtils.equals(value, COURSE_STATUS_LIVE)) {
+                            t.incrementCountAvailable();
+                        } else if (TextUtils.equals(value, COURSE_STATUS_NEW_DOWNLOADS_DISABLED)) {
+                            if (isCourseInstalled(key, installedCoursesNames)) {
+                                t.incrementCountAvailable();
+                            }
+                        }
+                    }
+                }
+            } else {
+                t.setCountAvailable(t.getCountNewDownloadEnabled() > -1 ? t.getCountNewDownloadEnabled() : t.getCount());
+            }
+
+            if (t.getCountAvailable() > 0) {
+                tags.add(t);
+            }
         }
+    }
+
+    private boolean isCourseInstalled(String name, List<String> installedCoursesNames) {
+        for (String installedCourseName : installedCoursesNames) {
+            if (TextUtils.equals(installedCourseName, name)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

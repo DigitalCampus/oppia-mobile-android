@@ -49,6 +49,7 @@ import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
@@ -368,7 +369,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
         String[] eventTypes = new String[]{Gamification.EVENT_NAME_ACTIVITY_COMPLETED, Gamification.EVENT_NAME_MEDIA_PLAYED,
                 Gamification.EVENT_NAME_COURSE_DOWNLOADED, Gamification.EVENT_NAME_QUIZ_ATTEMPT};
 
-        Random rand = new Random();
+        SecureRandom rand = new SecureRandom();
 
         for (int i = 0; i < 366; i++) {
 

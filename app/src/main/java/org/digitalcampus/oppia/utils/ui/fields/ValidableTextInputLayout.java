@@ -16,11 +16,10 @@ import androidx.core.text.HtmlCompat;
 
 public class ValidableTextInputLayout extends TextInputLayout implements ValidableField, View.OnFocusChangeListener {
 
-    private static final String REQUIRED_SPANNED_HINT = "<string>%s <span style=\"color:red;\">*</span></string>";
-
     private boolean required = false;
     private boolean cantContainSpaces = false;
     private CustomValidator validator;
+    private boolean asteriskAdded;
 
     public ValidableTextInputLayout(Context context) {
         super(context);
@@ -50,6 +49,7 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
         initialize();
     }
 
+    @Override
     public void setRequired(boolean required){
         if (!this.required && required){
             setRequiredHint();
@@ -58,9 +58,12 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
     }
 
     private void setRequiredHint(){
-        String html = String.format(REQUIRED_SPANNED_HINT, this.getHint());
-        Spanned requiredHint = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY);
-        this.setHint(requiredHint);
+        if (!asteriskAdded) {
+            String html = String.format(REQUIRED_SPANNED_HINT, this.getHint());
+            Spanned requiredHint = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY);
+            this.setHint(requiredHint);
+            asteriskAdded = true;
+        }
     }
 
     public void initialize(){

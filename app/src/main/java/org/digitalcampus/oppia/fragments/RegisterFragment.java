@@ -130,6 +130,9 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		fields.put("organisation", binding.registerFormOrganisationField);
 		fields.put("phoneno", binding.registerFormPhonenoField);
 
+		binding.registerFormUsernameField.setHelperText(getString(R.string.error_register_username_length, App.USERNAME_MIN_CHARACTERS));
+		binding.registerFormPasswordField.setHelperText(getString(R.string.error_register_password,  App.PASSWORD_MIN_LENGTH ));
+
 		return binding.getRoot();
 	}
 
