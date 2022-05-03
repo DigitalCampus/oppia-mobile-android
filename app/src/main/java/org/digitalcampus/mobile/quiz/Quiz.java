@@ -292,8 +292,22 @@ public class Quiz implements Serializable {
     }
 
     public boolean hasNext() {
-        return this.currentq + 1 < questions.size();
+        return hasNext(currentq);
     }
+
+    private boolean hasNext(int questionId){
+        checkQuestionsSkipped(questionId);
+        int nextQuestionId = questionId + 1;
+        if (nextQuestionId < questions.size()) {
+            QuizQuestion nexQuestion = questions.get(nextQuestionId);
+            if(nexQuestion.isSkipped()){
+                return hasNext(nextQuestionId);
+            }
+            return true;
+        }
+        return false;
+    }
+
 
     public boolean hasPrevious() {
         return this.currentq > 0;
@@ -301,8 +315,6 @@ public class Quiz implements Serializable {
 
     public void moveNext() {
         if (currentq < questions.size() - 1) {
-
-            checkQuestionsSkipped();
 
             currentq++;
 
@@ -313,29 +325,40 @@ public class Quiz implements Serializable {
         }
     }
 
-    private void checkQuestionsSkipped() {
-
-        QuizQuestion currentQuestion = questions.get(currentq);
-        for (QuizQuestion question : questions) {
-            if (TextUtils.isEmpty(question.getDependItemLabel())) {
-                continue;
-            }
-            if (TextUtils.equals(currentQuestion.getLabel(), question.getDependItemLabel())) {
-                if (currentQuestion.isSkipped() || currentQuestion.getUserResponses().isEmpty()) {
-                    question.setSkipped(true);
+    /**
+     * Checks which questions need to be skipped in the quiz.
+     *
+     * Forward loop - Checks the questions following to the current question.
+     *                Goes from the question after the current until the last question
+     * Backward loop - Checks the questions previous to the current question.
+     *                 Goes from the first question until the current question (this one included)
+     */
+    private void checkQuestionsSkipped(int questionId) {
+        for (int forward = questionId + 1; forward < questions.size(); forward++) {
+            QuizQuestion forwardQuestion = questions.get(forward);
+            for (int backward = 0; backward <= questionId; backward++) {
+                QuizQuestion backwardQuestion = questions.get(backward);
+                if (TextUtils.isEmpty(forwardQuestion.getDependItemLabel())) {
                     continue;
                 }
-                for (String userResponse : currentQuestion.getUserResponses()) {
-                    if (TextUtils.equals(userResponse, question.getDependValue())) {
-                        question.setSkipped(false);
-                        break;
-                    } else {
-                        question.setSkipped(true);
+                if (TextUtils.equals(backwardQuestion.getLabel(), forwardQuestion.getDependItemLabel())) {
+                    if (backwardQuestion.isSkipped()) {
+                        forwardQuestion.setSkipped(true);
+                        continue;
+                    }
+                    for (String userResponse : backwardQuestion.getUserResponses()) {
+                        String userResponseValue = userResponse.toLowerCase().trim();
+                        String forwardQuestionDependentValue = forwardQuestion.getDependValue().toLowerCase();
+                        if (TextUtils.equals(userResponseValue, forwardQuestionDependentValue)) {
+                            forwardQuestion.setSkipped(false);
+                            break;
+                        } else {
+                            forwardQuestion.setSkipped(true);
+                        }
                     }
                 }
             }
         }
-
     }
 
     public void movePrevious() {
