@@ -14,6 +14,7 @@ import android.widget.TextView;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.RowCourseDownloadBinding;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 
 import java.util.List;
@@ -56,8 +57,6 @@ public class DownloadCoursesAdapter extends MultiChoiceRecyclerViewAdapter<Downl
     }
 
 
-
-
     @Override
     public void onBindViewHolder(@NonNull final DownloadCoursesViewHolder viewHolder, final int position) {
 
@@ -69,17 +68,13 @@ public class DownloadCoursesAdapter extends MultiChoiceRecyclerViewAdapter<Downl
         updateActionButton(viewHolder, c);
     }
 
-    private void updateCourseDescription(DownloadCoursesViewHolder viewHolder, CourseInstallViewAdapter course){
+    private void updateCourseDescription(DownloadCoursesViewHolder viewHolder, CourseInstallViewAdapter course) {
         viewHolder.binding.courseTitle.setText(course.getTitle(prefLang));
-        if (course.isDraft()){
-            viewHolder.binding.courseDraft.setVisibility(View.VISIBLE);
-            viewHolder.binding.courseDraft.setText(context.getString(R.string.course_draft));
-        } else {
-            viewHolder.binding.courseDraft.setVisibility(View.GONE);
-        }
+
+        viewHolder.binding.viewCourseStatus.setCourseStatus(course.getStatus());
 
         String desc = course.getDescription(prefLang);
-        if (desc != null){
+        if (desc != null) {
             viewHolder.binding.courseDescription.setVisibility(View.VISIBLE);
             viewHolder.binding.courseDescription.setText(desc);
         } else {
@@ -87,38 +82,35 @@ public class DownloadCoursesAdapter extends MultiChoiceRecyclerViewAdapter<Downl
         }
 
         String organisation = course.getOrganisationName();
-        if (!TextUtils.isEmpty(organisation) && !(course.isDownloading() || course.isInstalling())){
+        if (!TextUtils.isEmpty(organisation) && !(course.isDownloading() || course.isInstalling())) {
             viewHolder.binding.labelAuthor.setVisibility(View.VISIBLE);
             viewHolder.binding.courseAuthor.setVisibility(View.VISIBLE);
             viewHolder.binding.courseAuthor.setText(organisation);
-        }
-        else{
+        } else {
             viewHolder.binding.labelAuthor.setVisibility(View.GONE);
             viewHolder.binding.courseAuthor.setVisibility(View.GONE);
         }
     }
 
-    private void updateActionButton(DownloadCoursesViewHolder viewHolder, CourseInstallViewAdapter course){
+    private void updateActionButton(DownloadCoursesViewHolder viewHolder, CourseInstallViewAdapter course) {
         int actionBtnImageRes;
-        if (course.isDownloading() || course.isInstalling()){
-            actionBtnImageRes =  R.drawable.ic_action_cancel;
+        if (course.isDownloading() || course.isInstalling()) {
+            actionBtnImageRes = R.drawable.ic_action_cancel;
             viewHolder.binding.downloadCourseBtn.setContentDescription(cancelDescription);
             viewHolder.binding.downloadCourseBtn.setEnabled(!course.isInstalling());
 
             viewHolder.binding.downloadProgress.setVisibility(View.VISIBLE);
-            if (course.getProgress()>0){
+            if (course.getProgress() > 0) {
                 viewHolder.binding.downloadProgress.setIndeterminate(false);
                 viewHolder.binding.downloadProgress.setProgress(course.getProgress());
-            }
-            else {
+            } else {
                 viewHolder.binding.downloadProgress.setIndeterminate(true);
             }
-        }
-        else{
+        } else {
             viewHolder.binding.downloadProgress.setVisibility(View.GONE);
 
-            if(course.isInstalled()){
-                if(course.isToUpdate()){
+            if (course.isInstalled()) {
+                if (course.isToUpdate()) {
                     actionBtnImageRes = R.drawable.ic_action_refresh;
                     viewHolder.binding.downloadCourseBtn.setContentDescription(updateDescription);
                     viewHolder.binding.downloadCourseBtn.setEnabled(true);

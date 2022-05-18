@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.model;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.App;
@@ -52,9 +53,16 @@ public class Course extends MultiLangInfoModel implements Serializable {
     public static final String COURSE_COMPLETE_FINAL_QUIZ = "final_quiz";
     public static final String COURSE_COMPLETE_ALL_QUIZZES_PLUS_PERCENT = "all_quizzes_plus_percent";
 
+    public static final String STATUS_LIVE = "live";
+    public static final String STATUS_DRAFT = "draft";
+    public static final String STATUS_ARCHIVED = "archived";
+    public static final String STATUS_NEW_DOWNLOADS_DISABLED = "new_downloads_disabled";
+    public static final String STATUS_READ_ONLY = "read_only";
+
     private int courseId;
     private String shortname;
     private Double versionId;
+    private String status = STATUS_LIVE;
     private boolean installed;
     private boolean toUpdate;
     private boolean toDelete;
@@ -62,14 +70,11 @@ public class Course extends MultiLangInfoModel implements Serializable {
     private String imageFile;
     private List<Media> media = new ArrayList<>();
     private List<CourseMetaPage> metaPages = new ArrayList<>();
-    private boolean isDraft = false;
     private int priority = 0;
     private int noActivities = 0;
     private int noActivitiesCompleted = 0;
     private String sequencingMode = SEQUENCING_MODE_NONE;
     private List<GamificationEvent> gamificationEvents = new ArrayList<>();
-
-    private boolean newDownloadsEnabled = true;
 
     private String root;
 
@@ -196,14 +201,6 @@ public class Course extends MultiLangInfoModel implements Serializable {
         return null;
     }
 
-    public boolean isDraft() {
-        return isDraft;
-    }
-
-    public void setDraft(boolean isDraft) {
-        this.isDraft = isDraft;
-    }
-
     public int getPriority() {
         return priority;
     }
@@ -276,11 +273,15 @@ public class Course extends MultiLangInfoModel implements Serializable {
         }
     }
 
-    public boolean isNewDownloadsEnabled() {
-        return newDownloadsEnabled;
+    public String getStatus() {
+        return status;
     }
 
-    public void setNewDownloadsEnabled(boolean newDownloadsEnabled) {
-        this.newDownloadsEnabled = newDownloadsEnabled;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public boolean hasStatus(String status) {
+        return TextUtils.equals(this.status, status);
     }
 }

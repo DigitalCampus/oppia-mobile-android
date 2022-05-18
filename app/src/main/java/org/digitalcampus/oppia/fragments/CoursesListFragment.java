@@ -2,7 +2,6 @@ package org.digitalcampus.oppia.fragments;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -12,18 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.mobile.learning.databinding.FragmentCoursesListBinding;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.DownloadActivity;
@@ -49,7 +44,6 @@ import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.CourseUtils;
-import org.digitalcampus.oppia.utils.ui.MediaScanView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,7 +145,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     private void displayCourses() {
         courses.clear();
         courses.addAll(coursesRepository.getCourses(getActivity()));
-        CourseUtils.setSyncStatus(prefs, courses, null);
+        CourseUtils.refreshStatuses(prefs, courses, null);
 
         if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY){
             displayDownloadSection();

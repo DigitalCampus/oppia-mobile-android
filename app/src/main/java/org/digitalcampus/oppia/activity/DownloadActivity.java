@@ -31,7 +31,6 @@ import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityDownloadBinding;
-import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.adapter.DownloadCoursesAdapter;
@@ -386,7 +385,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         Iterator<CourseInstallViewAdapter> iter = courses.iterator();
         while (iter.hasNext()) {
             CourseInstallViewAdapter courseAdapter = iter.next();
-            if (!courseAdapter.isNewDownloadsEnabled()) {
+            if (courseAdapter.hasStatus(Course.STATUS_NEW_DOWNLOADS_DISABLED)) {
                 long id = DbHelper.getInstance(this).getCourseIdByShortname(courseAdapter.getShortname());
                 if (id == -1) {  // It is not installed
                     iter.remove();

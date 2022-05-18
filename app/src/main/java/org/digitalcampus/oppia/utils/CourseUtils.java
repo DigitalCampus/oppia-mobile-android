@@ -21,8 +21,14 @@ import java.util.List;
 public class CourseUtils {
 
 
-
-    public static void setSyncStatus(SharedPreferences prefs, List<Course> courses, Double fromTimestamp) {
+    /**
+     * Utility method to set both sync status (to update or to delete) and course status (draft, live...)
+     * based on courses info cache
+     * @param prefs SharedPreferences to get the cache data (passed by parameter to be mockable for tests)
+     * @param courses Installed courses in local database
+     * @param fromTimestamp if not null, courses with version timestamp prior to this parameter are ignored
+     */
+    public static void refreshStatuses(SharedPreferences prefs, List<Course> courses, Double fromTimestamp) {
 
         if (courses == null || courses.isEmpty()) {
             return;
@@ -34,18 +40,19 @@ public class CourseUtils {
                     coursesCachedStr, CoursesServerResponse.class);
 
             for (Course course : courses) {
-                checkUpdateOrDeleteStatus(course, coursesServerResponse.getCourses(), fromTimestamp);
+                checkCourseStatuses(course, coursesServerResponse.getCourses(), fromTimestamp);
             }
 
         } else {
             for (Course course : courses) {
                 course.setToUpdate(false);
                 course.setToDelete(false);
+                course.setStatus(Course.STATUS_LIVE);
             }
         }
     }
 
-    private static void checkUpdateOrDeleteStatus(Course course, List<CourseServer> coursesServer, Double fromTimestamp) {
+    private static void checkCourseStatuses(Course course, List<CourseServer> coursesServer, Double fromTimestamp) {
 
         for (CourseServer courseServer : coursesServer) {
 
@@ -57,6 +64,7 @@ public class CourseUtils {
                 boolean toUpdate = course.getVersionId() < courseServer.getVersion();
                 course.setToUpdate(toUpdate);
                 course.setToDelete(false);
+                course.setStatus(courseServer.getStatus());
                 return;
             }
 
