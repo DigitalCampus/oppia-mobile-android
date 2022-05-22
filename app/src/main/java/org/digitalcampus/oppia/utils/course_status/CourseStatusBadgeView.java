@@ -62,7 +62,7 @@ public class CourseStatusBadgeView extends FrameLayout {
 
     public void setCourseStatus(String status) {
 
-        if (Course.STATUS_LIVE.equals(status)) {
+        if (Course.STATUS_LIVE.equals(status) || Course.STATUS_NEW_DOWNLOADS_DISABLED.equals(status)) {
             setVisibility(GONE);
             return;
         }
