@@ -621,5 +621,11 @@
     <string name="unlock_topic">Unlock topic</string>
     <string name="staging_warning_msg">You are connected to a staging/development server.</string>
 
+    <!-- Status badges -->
+    <string name="status_draft">Draft</string>
+    <string name="status_new_download_disabled">New download disabled</string>
+    <string name="status_archived">Archived</string>
+    <string name="status_read_only">Read only</string>
+
 </resources>
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.model.Lang;
@@ -21,7 +22,6 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
@@ -35,7 +35,6 @@ import androidx.test.rule.GrantPermissionRule;
 
 import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
 import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
-import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -126,7 +125,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
     @Test
     public void showDraftTextIfCourseIsDraft() throws Exception {
         CourseInstallViewAdapter c = getBaseCourse();
-        c.setDraft(true);
+        c.setStatus(Course.STATUS_DRAFT);
 
         givenThereAreSomeCourses(2, c);
 
@@ -141,7 +140,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
     @Test
     public void dowsNotShowDraftTextIfCourseIsNotDraft() throws Exception {
         CourseInstallViewAdapter c = getBaseCourse();
-        c.setDraft(false);
+        c.setStatus(Course.STATUS_LIVE);
 
         givenThereAreSomeCourses(2, c);
 
@@ -520,7 +519,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         CourseInstallViewAdapter c2 = getBaseCourse();
         c1.setShortname("c2");
-        c2.setNewDownloadsEnabled(false);
+        c2.setStatus(Course.STATUS_NEW_DOWNLOADS_DISABLED);
         c2.setTitles(Arrays.asList(new Lang("en", "Course2")));
 
         givenThereAreSomeCourses(c1, c2);
@@ -551,7 +550,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         CourseInstallViewAdapter c2 = getBaseCourse();
         c2.setShortname("test_course");
-        c2.setNewDownloadsEnabled(false);
+        c2.setStatus(Course.STATUS_NEW_DOWNLOADS_DISABLED);
         c2.setTitles(Arrays.asList(new Lang("en", "Course2")));
 
         givenThereAreSomeCourses(c1, c2);

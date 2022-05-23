@@ -197,7 +197,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
             return;
         }
 
-        CourseUtils.setSyncStatus(prefs, coursesInstalled, lastVersionTimestampChecked);
+        CourseUtils.refreshStatuses(prefs, coursesInstalled, lastVersionTimestampChecked);
 
         int toUpdateCount = 0;
 
@@ -241,7 +241,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
             Set<String> notInstalledAndNotNotifiedCourses = new HashSet<>();
             for (CourseServer courseServer : notInstalledCourses) {
 
-                if (!courseServer.isNewDownloadsEnabled()) {
+                if (courseServer.hasStatus(Course.STATUS_NEW_DOWNLOADS_DISABLED)) {
                     continue;
                 }
 
