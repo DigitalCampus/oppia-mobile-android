@@ -67,6 +67,7 @@ import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -105,7 +106,7 @@ public abstract class AnswerWidget extends BaseWidget {
 
     abstract int getContentAvailability(boolean afterAttempt);
 
-    abstract void showContentUnavailableRationale(int unavailabilityReasonStringResId);
+    abstract String getAnswerWidgetType();
 
     abstract String getFinishButtonLabel();
 
@@ -187,9 +188,15 @@ public abstract class AnswerWidget extends BaseWidget {
             return;
         }
 
+        if (course.hasStatus(Course.STATUS_READ_ONLY)) {
+            showContentUnavailableRationale(getString(R.string.read_only_answer_unavailable_message,
+                    getAnswerWidgetType().toLowerCase(Locale.ROOT)));
+            return;
+        }
+
         int contentAvailability = getContentAvailability(false);
         if (contentAvailability != QUIZ_AVAILABLE) {
-            showContentUnavailableRationale(contentAvailability);
+            showContentUnavailableRationale(getString(contentAvailability));
             return;
         }
 
@@ -201,6 +208,20 @@ public abstract class AnswerWidget extends BaseWidget {
 
         binding.initialInfoContainer.setVisibility(View.GONE);
         this.showQuestion();
+    }
+
+    private void showContentUnavailableRationale(String unavailabilityReasonString) {
+        View localContainer = getView();
+        if (localContainer != null){
+            ViewGroup vg = localContainer.findViewById(activity.getActId());
+            if (vg!=null){
+                vg.removeAllViews();
+                vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
+
+                TextView tv = getView().findViewById(R.id.quiz_unavailable);
+                tv.setText(unavailabilityReasonString);
+            }
+        }
     }
 
     private void showLoadingError() {

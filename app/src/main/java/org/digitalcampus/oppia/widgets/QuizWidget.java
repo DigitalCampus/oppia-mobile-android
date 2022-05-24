@@ -114,18 +114,8 @@ public class QuizWidget extends AnswerWidget {
     }
 
     @Override
-    void showContentUnavailableRationale(int unavailabilityReasonStringResId) {
-        View localContainer = getView();
-        if (localContainer != null){
-            ViewGroup vg = localContainer.findViewById(activity.getActId());
-            if (vg!=null){
-                vg.removeAllViews();
-                vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
-
-                TextView tv = getView().findViewById(R.id.quiz_unavailable);
-                tv.setText(unavailabilityReasonStringResId);
-            }
-        }
+    String getAnswerWidgetType() {
+        return getString(R.string.quiz);
     }
 
     @Override
