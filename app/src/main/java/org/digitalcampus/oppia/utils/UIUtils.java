@@ -271,7 +271,7 @@ public class UIUtils {
         for (Lang lang : langs) {
             boolean found = false;
             for (Lang ln : languagesList) {
-                if (ln.getLanguage().equals(lang.getLanguage())) {
+                if (ln.getLanguage().equalsIgnoreCase(lang.getLanguage())) {
                     found = true;
                     break;
                 }
