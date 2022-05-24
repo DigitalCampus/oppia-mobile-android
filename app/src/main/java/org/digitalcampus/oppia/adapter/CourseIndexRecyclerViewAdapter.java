@@ -74,6 +74,11 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
         notifyDataSetChanged();
     }
 
+    public void reloadLanguage(SharedPreferences prefs){
+        prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        super.notifyDataSetChanged();
+    }
+
     @Override
     public int getGroupItemCount() {
         return sectionList.size();
