@@ -73,6 +73,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
@@ -210,7 +211,8 @@ public abstract class AnswerWidget extends BaseWidget {
         this.showQuestion();
     }
 
-    private void showContentUnavailableRationale(String unavailabilityReasonString) {
+    @CallSuper
+    protected void showContentUnavailableRationale(String unavailabilityReasonString) {
         View localContainer = getView();
         if (localContainer != null){
             ViewGroup vg = localContainer.findViewById(activity.getActId());

@@ -17,11 +17,13 @@
 
 package org.digitalcampus.oppia.widgets;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,6 +38,7 @@ import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
 import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
 import org.digitalcampus.oppia.adapter.QuizAnswersFeedbackAdapter;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -116,6 +119,25 @@ public class QuizWidget extends AnswerWidget {
     @Override
     String getAnswerWidgetType() {
         return getString(R.string.quiz);
+    }
+
+    @Override
+    protected void showContentUnavailableRationale(String unavailabilityReasonString) {
+        super.showContentUnavailableRationale(unavailabilityReasonString);
+
+        QuizStats quizStats = attemptsRepository.getQuizAttemptStats(getActivity(), activity.getDigest());
+        quizStats.setQuizTitle(activity.getTitle(prefLang));
+        if (quizStats.isAttempted()) {
+            Button button = getView().findViewById(R.id.btn_quiz_unavailable);
+            button.setVisibility(View.VISIBLE);
+            button.setText(R.string.view_your_previous_attempts);
+            button.setOnClickListener(v -> {
+                Intent i = new Intent(getActivity(), CourseQuizAttemptsActivity.class);
+                i.putExtra(QuizStats.TAG, quizStats);
+                i.putExtra(CourseQuizAttemptsActivity.SHOW_ATTEMPT_BUTTON, false);
+                startActivity(i);
+            });
+        }
     }
 
     @Override

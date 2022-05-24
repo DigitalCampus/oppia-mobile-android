@@ -1165,7 +1165,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return digest;
     }
 
-    public QuizStats getQuizAttempt(String digest, long userId) {
+    public QuizStats getQuizAttemptStats(String digest, long userId) {
         QuizStats qs = new QuizStats();
         qs.setDigest(digest);
         qs.setAttempted(false);

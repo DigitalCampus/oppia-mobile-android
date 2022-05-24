@@ -45,13 +45,12 @@ public class CourseQuizAttemptsActivity extends AppActivity {
         getAppComponent().inject(this);
 
         Bundle bundle = this.getIntent().getExtras();
-        if (bundle == null) {
-            //There is no quiz?
-            return;
+        if (bundle == null || !bundle.containsKey(QuizStats.TAG)) {
+            throw new IllegalArgumentException("Mandatory argument: " + QuizStats.TAG);
         }
 
         stats = (QuizStats) bundle.getSerializable(QuizStats.TAG);
-        setTitle(stats.getSectionTitle() + " > " + stats.getQuizTitle());
+        setTitle((stats.getSectionTitle() != null ? stats.getSectionTitle() + " > " : "") + stats.getQuizTitle());
 
         binding.viewQuizStats.highlightAttempted.setText(String.valueOf(stats.getNumAttempts()));
 
