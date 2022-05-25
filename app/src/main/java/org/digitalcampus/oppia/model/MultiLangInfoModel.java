@@ -102,7 +102,7 @@ public class MultiLangInfoModel implements Serializable {
 
     private String getInfo(String lang, List<Lang> values){
         for(Lang l: values){
-            if(l.getLanguage().equals(lang)){
+            if(l.getLanguage().equalsIgnoreCase(lang)){
                 return l.getContent().trim();
             }
         }

@@ -307,7 +307,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     private boolean checkCourseHasLanguage(String currentLang) {
         for (Lang lang : course.getLangs()) {
-            if (TextUtils.equals(lang.getLanguage(), currentLang)) {
+            if (lang.getLanguage().equalsIgnoreCase(currentLang)) {
                 return true;
             }
         }
