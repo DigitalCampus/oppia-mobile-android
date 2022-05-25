@@ -19,7 +19,6 @@ package org.digitalcampus.oppia.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class CourseMetaPage implements Serializable{
 
@@ -45,7 +44,7 @@ public class CourseMetaPage implements Serializable{
 	
 	public Lang getLang(String langStr){
 		for(Lang l: langs){
-			if(l.getLanguage().toLowerCase(Locale.US).equals(langStr.toLowerCase(Locale.US))){
+			if(l.getLanguage().equalsIgnoreCase(langStr)){
 				return l;
 			}
 		}

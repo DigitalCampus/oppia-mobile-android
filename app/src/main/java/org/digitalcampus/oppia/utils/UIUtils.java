@@ -289,7 +289,7 @@ public class UIUtils {
             Locale locale = new Locale(lang.getLanguage());
             String langDisp = locale.getDisplayLanguage(locale);
             langStringList.add(langDisp);
-            if (lang.getLanguage().equals(prefLanguage)) {
+            if (lang.getLanguage().equalsIgnoreCase(prefLanguage)) {
                 prefLangPosition = i;
             }
             i++;
