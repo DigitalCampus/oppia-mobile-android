@@ -76,7 +76,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         // refresh course to get most recent info (otherwise gets the info from when course first opened)
         DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-        this.course = db.getCourse(this.course.getCourseId(), userId);
+        this.course = db.getCourseWithProgress(this.course.getCourseId(), userId);
 
         binding.loadingSpinner.setVisibility(View.VISIBLE);
         

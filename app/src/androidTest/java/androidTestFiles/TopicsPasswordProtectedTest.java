@@ -125,7 +125,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
     private Intent getTestCourseIntent() {
 
 //        int courseId = testDBHelper.getDbHelper().getCourseID("ref-course");
-        Course course = testDBHelper.getDbHelper().getCourse(COURSE_ID, USER_ID_NONE);
+        Course course = testDBHelper.getDbHelper().getCourseWithProgress(COURSE_ID, USER_ID_NONE);
 
         Intent i = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), CourseIndexActivity.class);
         i.putExtra(Course.TAG, course);

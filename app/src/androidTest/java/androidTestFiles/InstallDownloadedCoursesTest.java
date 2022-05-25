@@ -208,7 +208,7 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
         String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
         long courseId = getDbHelper().getCourseID(shortName);
         long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
-        Course c = getDbHelper().getCourse(courseId, userId);
+        Course c = getDbHelper().getCourseWithProgress(courseId, userId);
         assertNull(c);   //Check that the course exists in the database
 
     }
@@ -279,7 +279,7 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
 
         long courseId = getDbHelper().getCourseID(shortName);
         long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
-        Course c = getDbHelper().getCourse(courseId, userId);
+        Course c = getDbHelper().getCourseWithProgress(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
 
     }
@@ -331,10 +331,10 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
 
         long courseId = getDbHelper().getCourseID(shortName);
         long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
-        Course c = getDbHelper().getCourse(courseId, userId);
+        Course c = getDbHelper().getCourseWithProgress(courseId, userId);
         assertNotNull(c);                   //Check that the course exists in the database
         getDbHelper().deleteCourse((int) courseId);    //Delete course from database
-        c = getDbHelper().getCourse(courseId, userId);
+        c = getDbHelper().getCourseWithProgress(courseId, userId);
         assertNull(c);                      //Check that the course does not exists in the database
 
         installCourse_correctCourse();

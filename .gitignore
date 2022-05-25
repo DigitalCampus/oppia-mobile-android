@@ -18,3 +18,4 @@ custom.properties
 sonarqube.properties
 projectFilesBackup/
 /sonarcloud
+/captures/
