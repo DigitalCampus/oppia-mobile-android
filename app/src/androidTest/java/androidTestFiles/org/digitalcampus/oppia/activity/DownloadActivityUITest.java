@@ -569,4 +569,63 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
         }
     }
 
+
+    @Test
+    public void dontShowReadOnlyCourse() throws Exception {
+
+        CourseInstallViewAdapter c1 = getBaseCourse();
+        c1.setShortname("c1");
+        c1.setTitles(Arrays.asList(new Lang("en", "Course1")));
+
+        CourseInstallViewAdapter c2 = getBaseCourse();
+        c1.setShortname("c2");
+        c2.setStatus(Course.STATUS_READ_ONLY);
+        c2.setTitles(Arrays.asList(new Lang("en", "Course2")));
+
+        givenThereAreSomeCourses(c1, c2);
+
+        try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
+
+            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
+
+            onView(withRecyclerView(R.id.recycler_tags)
+                    .atPositionOnView(0, R.id.course_title))
+                    .check(matches(withText("Course1")));
+        }
+    }
+
+    @Test
+    public void showReadOnlyCourseIfItIsInstalled() throws Exception {
+
+        CourseUtils.cleanUp();
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        FileUtils.copyZipFromAssetsPath(context, "common", "test_course.zip");
+
+        BasicResult response = CourseUtils.runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
+
+        CourseInstallViewAdapter c1 = getBaseCourse();
+        c1.setShortname("c1");
+        c1.setTitles(Arrays.asList(new Lang("en", "Course1")));
+
+        CourseInstallViewAdapter c2 = getBaseCourse();
+        c2.setShortname("test_course");
+        c2.setStatus(Course.STATUS_READ_ONLY);
+        c2.setTitles(Arrays.asList(new Lang("en", "Course2")));
+
+        givenThereAreSomeCourses(c1, c2);
+
+        try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
+
+            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(2));
+
+            onView(withRecyclerView(R.id.recycler_tags)
+                    .atPositionOnView(0, R.id.course_title))
+                    .check(matches(withText("Course1")));
+
+            onView(withRecyclerView(R.id.recycler_tags)
+                    .atPositionOnView(1, R.id.course_title))
+                    .check(matches(withText("Course2")));
+        }
+    }
 }
