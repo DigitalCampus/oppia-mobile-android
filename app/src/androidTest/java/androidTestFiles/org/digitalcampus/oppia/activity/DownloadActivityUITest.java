@@ -132,7 +132,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
             onView(withRecyclerView(R.id.recycler_tags)
-                    .atPositionOnView(0, R.id.course_draft))
+                    .atPositionOnView(0, R.id.view_course_status))
                     .check(matches(withText(R.string.course_draft)));
         }
     }
@@ -147,7 +147,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
             onView(withRecyclerView(R.id.recycler_tags)
-                    .atPositionOnView(0, R.id.course_draft))
+                    .atPositionOnView(0, R.id.view_course_status))
                     .check(matches(not(isDisplayed())));
         }
     }

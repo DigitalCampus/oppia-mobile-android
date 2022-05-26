@@ -1,16 +1,16 @@
-/* 
+/*
  * This file is part of OppiaMobile - https://digital-campus.org/
- * 
+ *
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * OppiaMobile is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -348,8 +348,8 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             coursesAdapter.notifyDataSetChanged();
             binding.emptyState.setVisibility((courses.isEmpty()) ? View.VISIBLE : View.GONE);
 
-		} catch (Exception e) {
-			Analytics.logException(e);
+        } catch (Exception e) {
+            Analytics.logException(e);
             Log.d(TAG, "Error processing response: ", e);
             UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
         }
@@ -385,7 +385,8 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         Iterator<CourseInstallViewAdapter> iter = courses.iterator();
         while (iter.hasNext()) {
             CourseInstallViewAdapter courseAdapter = iter.next();
-            if (courseAdapter.hasStatus(Course.STATUS_NEW_DOWNLOADS_DISABLED)) {
+            if (courseAdapter.hasStatus(Course.STATUS_NEW_DOWNLOADS_DISABLED)
+                    || courseAdapter.hasStatus(Course.STATUS_READ_ONLY)) {
                 long id = DbHelper.getInstance(this).getCourseIdByShortname(courseAdapter.getShortname());
                 if (id == -1) {  // It is not installed
                     iter.remove();
@@ -469,8 +470,8 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                     findCourseAndDownload(courseToUpdate);
                 }
 
-			} catch (JSONException e) {
-				Analytics.logException(e);
+            } catch (JSONException e) {
+                Analytics.logException(e);
                 Log.d(TAG, "Error connecting to server: ", e);
                 UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
             }
