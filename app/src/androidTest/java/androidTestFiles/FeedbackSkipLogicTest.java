@@ -7,7 +7,6 @@ import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
@@ -42,7 +41,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
-import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.Utils.UITestActionsUtils;
@@ -128,7 +126,7 @@ public class FeedbackSkipLogicTest extends DaggerInjectMockUITest {
     private Intent getTestCourseIntent() {
 
 //        int courseId = testDBHelper.getDbHelper().getCourseID("ref-course");
-        Course course = testDBHelper.getDbHelper().getCourse(COURSE_ID, USER_ID_NONE);
+        Course course = testDBHelper.getDbHelper().getCourseWithProgress(COURSE_ID, USER_ID_NONE);
 
         Intent i = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), CourseIndexActivity.class);
         i.putExtra(Course.TAG, course);

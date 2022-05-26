@@ -22,14 +22,14 @@ public class CoursesRepository {
 
     public Course getCourse(Context ctx, long courseID, long userID){
         DbHelper db = DbHelper.getInstance(ctx);
-        return db.getCourse(courseID, userID);
+        return db.getCourseWithProgress(courseID, userID);
     }
 
     public Course getCourseByShortname(Context ctx, String shortname, long userID){
         DbHelper db = DbHelper.getInstance(ctx);
         long courseId = db.getCourseIdByShortname(shortname);
         if (courseId != -1) {
-            return db.getCourse(courseId, userID);
+            return db.getCourseWithProgress(courseId, userID);
         }
         return null;
     }

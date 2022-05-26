@@ -14,6 +14,7 @@ import org.digitalcampus.oppia.adapter.QuizAttemptAdapter;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizAttemptRepository;
 import org.digitalcampus.oppia.model.QuizStats;
+import org.digitalcampus.oppia.utils.CourseUtils;
 
 import java.util.List;
 
@@ -45,13 +46,12 @@ public class CourseQuizAttemptsActivity extends AppActivity {
         getAppComponent().inject(this);
 
         Bundle bundle = this.getIntent().getExtras();
-        if (bundle == null) {
-            //There is no quiz?
-            return;
+        if (bundle == null || !bundle.containsKey(QuizStats.TAG)) {
+            throw new IllegalArgumentException("Mandatory argument: " + QuizStats.TAG);
         }
 
         stats = (QuizStats) bundle.getSerializable(QuizStats.TAG);
-        setTitle(stats.getSectionTitle() + " > " + stats.getQuizTitle());
+        setTitle((stats.getSectionTitle() != null ? stats.getSectionTitle() + " > " : "") + stats.getQuizTitle());
 
         binding.viewQuizStats.highlightAttempted.setText(String.valueOf(stats.getNumAttempts()));
 
@@ -67,8 +67,9 @@ public class CourseQuizAttemptsActivity extends AppActivity {
             binding.viewQuizStats.highlightAverage.setText(stats.getAveragePercent() + "%");
             binding.viewQuizStats.highlightBest.setText(stats.getPercent() + "%");
 
+            boolean isReadOnlyCourse = CourseUtils.isReadOnlyCourse(this, stats.getDigest(), prefs);
             boolean showAttemptQuizButton = bundle.getBoolean(SHOW_ATTEMPT_BUTTON, true);
-            if (!showAttemptQuizButton){
+            if (!showAttemptQuizButton || isReadOnlyCourse){
                 binding.retakeQuizBtn.setVisibility(View.GONE);
             }
             else{

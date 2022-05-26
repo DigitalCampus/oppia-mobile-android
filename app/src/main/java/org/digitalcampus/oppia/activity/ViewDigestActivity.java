@@ -182,7 +182,7 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
             } else {
                 Intent i = new Intent(this, CourseIndexActivity.class);
                 Bundle tb = new Bundle();
-                Course c = DbHelper.getInstance(this).getCourse(activity.getCourseId(), user.getUserId());
+                Course c = DbHelper.getInstance(this).getCourseWithProgress(activity.getCourseId(), user.getUserId());
                 tb.putSerializable(Course.TAG, c);
                 tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, activity.getDigest());
                 i.putExtras(tb);

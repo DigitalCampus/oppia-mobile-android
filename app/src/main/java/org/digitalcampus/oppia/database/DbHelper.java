@@ -34,7 +34,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.exception.ActivityNotFoundException;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -57,6 +56,7 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.model.db_model.Leaderboard;
 import org.digitalcampus.oppia.model.db_model.UserCustomField;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
+import org.digitalcampus.oppia.utils.CourseUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.joda.time.DateTime;
@@ -989,6 +989,7 @@ public class DbHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Course course = setupCourseObject(c);
+            CourseUtils.refreshCachedStatus(ctx, course);
             courses.add(course);
             c.moveToNext();
         }
@@ -1038,6 +1039,7 @@ public class DbHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Course course = setupCourseObject(c);
+            CourseUtils.refreshCachedStatus(ctx, course);
             this.courseSetProgress(course, userId);
             courses.add(course);
             c.moveToNext();
@@ -1046,18 +1048,29 @@ public class DbHelper extends SQLiteOpenHelper {
         return courses;
     }
 
-    public Course getCourse(long courseId, long userId) {
-        Course course = null;
+    public Course getCourse(long courseId) {
         String s = COURSE_C_ID + "=?";
         String[] args = new String[]{String.valueOf(courseId)};
         Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
-        c.moveToFirst();
-        while (!c.isAfterLast()) {
-            course = setupCourseObject(c);
-            this.courseSetProgress(course, userId);
-            c.moveToNext();
+
+        if (c.getCount() <= 0) {
+            c.close();
+            return null;
         }
+
+        c.moveToFirst();
+        Course course = setupCourseObject(c);
+        CourseUtils.refreshCachedStatus(ctx, course);
         c.close();
+        return course;
+    }
+
+    public Course getCourseWithProgress(long courseId, long userId) {
+        Course course = getCourse(courseId);
+        if (course == null) {
+            return null;
+        }
+        courseSetProgress(course, userId);
         return course;
     }
 
@@ -1165,7 +1178,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return digest;
     }
 
-    public QuizStats getQuizAttempt(String digest, long userId) {
+    public QuizStats getQuizAttemptStats(String digest, long userId) {
         QuizStats qs = new QuizStats();
         qs.setDigest(digest);
         qs.setAttempted(false);
@@ -1224,7 +1237,7 @@ public class DbHelper extends SQLiteOpenHelper {
             long courseId = qa.getCourseId();
             Course course = fetchedCourses.get(courseId);
             if (course == null) {
-                course = this.getCourse(courseId, userId);
+                course = this.getCourseWithProgress(courseId, userId);
                 fetchedCourses.put(courseId, course);
             }
 
@@ -1521,7 +1534,7 @@ public class DbHelper extends SQLiteOpenHelper {
         while (!c.isAfterLast()) {
 
             Activity activity = this.getActivityByDigest(c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
-            Course course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
+            Course course = this.getCourseWithProgress(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
 
             if (courseFilter != null && course != null && courseFilter.getCourseId() != course.getCourseId()) {
                 c.moveToNext();
@@ -1545,7 +1558,7 @@ public class DbHelper extends SQLiteOpenHelper {
             switch (event) {
                 case Gamification.EVENT_NAME_ACTIVITY_COMPLETED:
                     if (activity != null) {
-                        Course courseActivity = this.getCourse(activity.getCourseId(), userId);
+                        Course courseActivity = this.getCourseWithProgress(activity.getCourseId(), userId);
                         if (courseActivity != null) {
                             description = this.ctx.getString(R.string.points_event_activity_completed,
                                     activity.getTitle(prefLang),
@@ -1629,7 +1642,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     continue;
                 }
 
-                Course course = this.getCourse(activity.getCourseId(), userId);
+                Course course = this.getCourseWithProgress(activity.getCourseId(), userId);
                 if (course != null) {
                     description = this.ctx.getString(R.string.points_event_quiz_attempt,
                             activity.getTitle(prefs),
@@ -1724,7 +1737,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 json.put(TRACKER_LOG_C_EVENT, c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT)));
                 json.put(TRACKER_LOG_C_POINTS, c.getInt(c.getColumnIndex(TRACKER_LOG_C_POINTS)));
 
-                Course m = this.getCourse(c.getLong(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
+                Course m = this.getCourseWithProgress(c.getLong(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
                 if (m != null) {
                     json.put(MEDIA_COURSE, m.getShortname());
                     json.put("course_version", m.getVersionId());
@@ -1785,7 +1798,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 json.put(TRACKER_LOG_C_ACTIVITYDIGEST, (digest != null) ? digest : "");
                 json.put(TRACKER_LOG_C_EVENT, c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT)));
                 json.put(TRACKER_LOG_C_POINTS, c.getInt(c.getColumnIndex(TRACKER_LOG_C_POINTS)));
-                Course m = this.getCourse(c.getLong(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
+                Course m = this.getCourseWithProgress(c.getLong(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
                 if (m != null) {
                     json.put("course", m.getShortname());
                     json.put("course_version", m.getVersionId());
@@ -2208,7 +2221,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 long courseId = c.getLong(c.getColumnIndex(COURSE_GAME_C_COURSEID));
                 Course course = fetchedCourses.get(courseId);
                 if (course == null) {
-                    course = this.getCourse(courseId, userId);
+                    course = this.getCourseWithProgress(courseId, userId);
                     fetchedCourses.put(courseId, course);
                 }
                 result.setCourse(course);

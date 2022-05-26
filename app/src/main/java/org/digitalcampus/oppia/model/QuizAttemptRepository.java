@@ -30,6 +30,6 @@ public class QuizAttemptRepository {
     public QuizStats getQuizAttemptStats(Context ctx, String digest){
         DbHelper db = DbHelper.getInstance(ctx);
         long userId = db.getUserId(SessionManager.getUsername(ctx));
-        return db.getQuizAttempt(digest, userId);
+        return db.getQuizAttemptStats(digest, userId);
     }
 }

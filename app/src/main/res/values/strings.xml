@@ -626,6 +626,9 @@
     <string name="status_new_download_disabled">New download disabled</string>
     <string name="status_archived">Archived</string>
     <string name="status_read_only">Read only</string>
+    <string name="quiz">Quiz</string>
+    <string name="read_only_answer_unavailable_message">This course is now read-only so access to this %s is no longer available</string>
+    <string name="view_your_previous_attempts">View your previous attempts</string>
 
 </resources>
 
