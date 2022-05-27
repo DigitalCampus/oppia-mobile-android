@@ -189,7 +189,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
         String status = Course.STATUS_READ_ONLY;
 
         QuizStats qs = new QuizStats();
-        qs.setAttempted(true);
+        qs.setNumAttempts(1);
 
         when(attemptsRepository.getQuizAttemptStats(any(), anyString())).thenReturn(qs);
 
@@ -201,10 +201,9 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
 
 
 
-    private Intent getTestCourseQuizAttemptsIntent() {
+    private Intent getTestCourseQuizAttemptsIntent(int numAttempts) {
         QuizStats qs = new QuizStats();
-        qs.setAttempted(true);
-        qs.setNumAttempts(2);
+        qs.setNumAttempts(numAttempts);
         qs.setDigest("4a9f4ca6bbec6e1142c0b8cf233a4d95");
         Intent i = new Intent(context, CourseQuizAttemptsActivity.class);
         i.putExtra(QuizStats.TAG, qs);
@@ -213,14 +212,28 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
 
 
     @Test
-    public void showRetakeQuizButtonIfNotReadOnlyCourse_CourseQuizAttemptsActivity() throws Exception {
+    public void showRetakeQuizButtonIfNotReadOnlyCourse_CourseQuizAttemptsActivity_WithAttempts() throws Exception {
 
         installCourse(PATH_COMMON, COURSE_QUIZ);
 
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_LIVE);
 
-        try (ActivityScenario<CourseQuizAttemptsActivity> scenario = ActivityScenario.launch(getTestCourseQuizAttemptsIntent())) {
+        try (ActivityScenario<CourseQuizAttemptsActivity> scenario = ActivityScenario.launch(getTestCourseQuizAttemptsIntent(1))) {
             onView(withId(R.id.retake_quiz_btn)).check(matches(isDisplayed()));
+            onView(withId(R.id.btn_take_quiz)).check(matches(not(isDisplayed())));
+        }
+    }
+
+    @Test
+    public void showTakeQuizButtonIfNotReadOnlyCourse_CourseQuizAttemptsActivity_WithNoAttempts() throws Exception {
+
+        installCourse(PATH_COMMON, COURSE_QUIZ);
+
+        mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_LIVE);
+
+        try (ActivityScenario<CourseQuizAttemptsActivity> scenario = ActivityScenario.launch(getTestCourseQuizAttemptsIntent(0))) {
+            onView(withId(R.id.retake_quiz_btn)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.btn_take_quiz)).check(matches(isDisplayed()));
         }
     }
 
@@ -231,8 +244,9 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
 
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_READ_ONLY);
 
-        try (ActivityScenario<CourseQuizAttemptsActivity> scenario = ActivityScenario.launch(getTestCourseQuizAttemptsIntent())) {
+        try (ActivityScenario<CourseQuizAttemptsActivity> scenario = ActivityScenario.launch(getTestCourseQuizAttemptsIntent(0))) {
             onView(withId(R.id.retake_quiz_btn)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.btn_take_quiz)).check(matches(not(isDisplayed())));
         }
     }
 

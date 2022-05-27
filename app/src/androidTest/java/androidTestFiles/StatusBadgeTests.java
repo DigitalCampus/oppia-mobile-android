@@ -10,7 +10,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -34,7 +34,7 @@ import org.mockito.Mock;
 import java.util.Arrays;
 
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
-import androidTestFiles.Utils.Assertions.StatusBadge;
+import androidTestFiles.Utils.Assertions.StatusBadgeAssertion;
 import androidTestFiles.Utils.CourseUtils;
 
 public class StatusBadgeTests extends DaggerInjectMockUITest {
@@ -96,7 +96,7 @@ public class StatusBadgeTests extends DaggerInjectMockUITest {
 
             onView(withRecyclerView(R.id.recycler_courses)
                     .atPositionOnView(0, R.id.view_course_status))
-                    .check(StatusBadge.withText(context.getString(R.string.status_read_only)));
+                    .check(StatusBadgeAssertion.withText(context.getString(R.string.status_read_only)));
         }
     }
 
@@ -141,7 +141,7 @@ public class StatusBadgeTests extends DaggerInjectMockUITest {
 
             onView(withRecyclerView(R.id.recycler_courses)
                     .atPositionOnView(0, R.id.view_course_status))
-                    .check(StatusBadge.withText(context.getString(R.string.status_draft)));
+                    .check(StatusBadgeAssertion.withText(context.getString(R.string.status_draft)));
         }
     }
 }

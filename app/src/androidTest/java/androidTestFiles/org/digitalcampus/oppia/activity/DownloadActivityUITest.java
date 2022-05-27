@@ -25,6 +25,7 @@ import java.util.Arrays;
 
 import androidTestFiles.TestRules.DaggerInjectMockUITest;
 import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
+import androidTestFiles.Utils.Assertions.StatusBadgeAssertion;
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.FileUtils;
 
@@ -33,8 +34,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
-import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
-import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.Utils.Matchers.EspressoTestsMatchers.withDrawable;
+import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -131,9 +132,10 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
+            Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
             onView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.view_course_status))
-                    .check(matches(withText(R.string.course_draft)));
+                    .check(StatusBadgeAssertion.withText(context.getString(R.string.status_draft)));
         }
     }
 

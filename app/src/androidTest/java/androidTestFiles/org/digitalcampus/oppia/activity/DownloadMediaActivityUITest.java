@@ -10,7 +10,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
-import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
 
 import android.Manifest;

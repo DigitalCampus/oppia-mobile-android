@@ -1,12 +1,10 @@
 package androidTestFiles.UI;
 
 import android.Manifest;
-import android.content.pm.ActivityInfo;
 import android.widget.Spinner;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.CustomField;
@@ -22,6 +20,7 @@ import org.mockito.Mock;
 import java.util.List;
 
 import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.Utils.Matchers.SpinnerMatcher;
 import androidTestFiles.Utils.MockedApiEndpointTest;
 
 import androidx.test.core.app.ActivityScenario;
@@ -230,22 +229,19 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
             onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
 
-            onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Select county")))))
+            onView(allOf(instanceOf(Spinner.class), SpinnerMatcher.withSpinnerSelectedItemText("Select county")))
                     .perform(scrollTo()).perform(click());
             onView(withText("Area1")).perform(click());
 
-            onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Select district")))))
-                    .check(matches(isDisplayed()))
-                    .perform(click());
-            onView(withText("region1"))
-                    .check(matches(isDisplayed()))
-                    .perform(click());
+            onView(allOf(instanceOf(Spinner.class), SpinnerMatcher.withSpinnerSelectedItemText("Select district")))
+                    .perform(scrollTo(), click());
+            onView(withText("region1")).perform(click());
 
-            onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Select county")))))
+            onView(allOf(instanceOf(Spinner.class), SpinnerMatcher.withSpinnerSelectedItemText("Area1")))
                     .perform(scrollTo()).perform(click());
             onView(withText("Area2")).perform(click());
 
-            onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Select district")))))
+            onView(allOf(instanceOf(Spinner.class), SpinnerMatcher.withSpinnerSelectedItemText("Select district")))
                     .perform(scrollTo())
                     .check(matches(isDisplayed()))
                     .perform(click());

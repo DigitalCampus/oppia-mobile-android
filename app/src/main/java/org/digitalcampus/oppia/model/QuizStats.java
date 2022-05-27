@@ -27,7 +27,6 @@ public class QuizStats implements Serializable {
 
     private String digest;
     private int numAttempts;
-    private boolean attempted;
     private float maxScore = -1;
     private float userScore = -1;
     private float averageScore = -1;
@@ -54,10 +53,7 @@ public class QuizStats implements Serializable {
     }
     public float getAverageScore(){ return averageScore; }
 
-    public boolean isAttempted(){ return attempted; }
-    public void setAttempted(boolean a){
-        attempted = a;
-    }
+    public boolean isAttempted(){ return numAttempts > 0; }
 
     public int getPercent(){
     	Log.d(TAG, "userScore:" + userScore);

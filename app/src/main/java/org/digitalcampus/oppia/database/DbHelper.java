@@ -1181,7 +1181,6 @@ public class DbHelper extends SQLiteOpenHelper {
     public QuizStats getQuizAttemptStats(String digest, long userId) {
         QuizStats qs = new QuizStats();
         qs.setDigest(digest);
-        qs.setAttempted(false);
         qs.setPassed(false);
 
         // find if attempted
@@ -1211,7 +1210,6 @@ public class DbHelper extends SQLiteOpenHelper {
         query.close();
 
         qs.setAverageScore(scoreSum / qs.getNumAttempts());
-        qs.setAttempted(true);
 
         return qs;
     }

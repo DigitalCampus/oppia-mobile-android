@@ -6,7 +6,7 @@ import androidx.test.espresso.ViewAssertion;
 
 import org.digitalcampus.oppia.utils.course_status.CourseStatusBadgeView;
 
-public class StatusBadge {
+public class StatusBadgeAssertion {
 
     public static ViewAssertion withText(String text) {
         return (view, noViewFoundException) -> {

@@ -55,24 +55,31 @@ public class CourseQuizAttemptsActivity extends AppActivity {
 
         binding.viewQuizStats.highlightAttempted.setText(String.valueOf(stats.getNumAttempts()));
 
-        if (stats.getNumAttempts() == 0){
+        boolean isReadOnlyCourse = CourseUtils.isReadOnlyCourse(this, stats.getDigest(), prefs);
+
+        if (stats.getNumAttempts() == 0) {
             binding.retakeQuizBtn.setVisibility(View.GONE);
             binding.attemptsList.setVisibility(View.GONE);
             binding.viewQuizStats.highlightAverage.setText("-");
             binding.viewQuizStats.highlightBest.setText("-");
             binding.emptyState.setVisibility(View.VISIBLE);
-            binding.btnTakeQuiz.setOnClickListener(view -> takeQuiz());
-        }
-        else{
+            if (isReadOnlyCourse) {
+                binding.btnTakeQuiz.setVisibility(View.GONE);
+                binding.tvQuizNotAvailable.setVisibility(View.VISIBLE);
+                binding.tvQuizNotAvailable.setText(getString(R.string.read_only_answer_unavailable_message, getString(R.string.quiz)));
+            } else {
+                binding.btnTakeQuiz.setVisibility(View.VISIBLE);
+                binding.tvQuizNotAvailable.setVisibility(View.GONE);
+                binding.btnTakeQuiz.setOnClickListener(view -> takeQuiz());
+            }
+        } else {
             binding.viewQuizStats.highlightAverage.setText(stats.getAveragePercent() + "%");
             binding.viewQuizStats.highlightBest.setText(stats.getPercent() + "%");
 
-            boolean isReadOnlyCourse = CourseUtils.isReadOnlyCourse(this, stats.getDigest(), prefs);
             boolean showAttemptQuizButton = bundle.getBoolean(SHOW_ATTEMPT_BUTTON, true);
-            if (!showAttemptQuizButton || isReadOnlyCourse){
+            if (!showAttemptQuizButton || isReadOnlyCourse) {
                 binding.retakeQuizBtn.setVisibility(View.GONE);
-            }
-            else{
+            } else {
                 binding.retakeQuizBtn.setVisibility(View.VISIBLE);
                 binding.retakeQuizBtn.setOnClickListener(view -> takeQuiz());
             }
@@ -94,7 +101,7 @@ public class CourseQuizAttemptsActivity extends AppActivity {
         binding.attemptsList.setAdapter(adapter);
     }
 
-    private void takeQuiz(){
+    private void takeQuiz() {
         Intent returnIntent = new Intent();
         returnIntent.putExtra(CourseIndexActivity.JUMPTO_TAG, stats.getDigest());
         setResult(CourseIndexActivity.RESULT_JUMPTO, returnIntent);

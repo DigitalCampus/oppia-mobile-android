@@ -22,7 +22,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.is;
 
-import androidTestFiles.Matchers.ToastMatcher;
+import androidTestFiles.Utils.Matchers.ToastMatcher;
 
 public class ViewsUtils {
 

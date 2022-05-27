@@ -11,8 +11,8 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
-import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
-import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.Utils.Matchers.EspressoTestsMatchers.withDrawable;
+import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
 
 import android.Manifest;
 import android.content.Context;
@@ -45,16 +45,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
-import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
-import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.pressBackUnconditionally;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class FlushCacheUITest extends MockedApiEndpointTest {
