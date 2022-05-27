@@ -80,4 +80,8 @@ public class CourseStatusBadgeView extends FrameLayout {
         binding.tvStatusBadge.setText(courseStatusBadgeData.getText());
 
     }
+
+    public String getText() {
+        return binding.tvStatusBadge.getText().toString();
+    }
 }

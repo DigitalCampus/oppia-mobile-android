@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import androidx.preference.PreferenceManager;
+
 import com.google.gson.Gson;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -135,4 +137,47 @@ public class CourseUtils {
         }
     }
 
+    public static boolean isReadOnlyCourse(Context context, String activityDigest) {
+        return isReadOnlyCourse(context, activityDigest, PreferenceManager.getDefaultSharedPreferences(context));
+
+    }
+
+    public static boolean isReadOnlyCourse(Context context, String activityDigest, SharedPreferences prefs) {
+        DbHelper db = DbHelper.getInstance(context);
+        Activity activity = db.getActivityByDigest(activityDigest);
+        Course course = db.getCourse(activity.getCourseId());
+
+        String coursesCachedStr = prefs.getString(PrefsActivity.PREF_SERVER_COURSES_CACHE, null);
+        if (coursesCachedStr != null) {
+            CoursesServerResponse coursesServerResponse = new Gson().fromJson(
+                    coursesCachedStr, CoursesServerResponse.class);
+
+            for (CourseServer courseServer : coursesServerResponse.getCourses()) {
+                if (TextUtils.equals(courseServer.getShortname(), course.getShortname())) {
+                    return courseServer.hasStatus(Course.STATUS_READ_ONLY);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static void refreshCachedStatus(Context context, Course course) {
+        refreshCachedStatus(context, course, PreferenceManager.getDefaultSharedPreferences(context));
+    }
+
+    public static void refreshCachedStatus(Context context, Course course, SharedPreferences prefs) {
+
+        String coursesCachedStr = prefs.getString(PrefsActivity.PREF_SERVER_COURSES_CACHE, null);
+        if (coursesCachedStr != null) {
+            CoursesServerResponse coursesServerResponse = new Gson().fromJson(
+                    coursesCachedStr, CoursesServerResponse.class);
+
+            for (CourseServer courseServer : coursesServerResponse.getCourses()) {
+                if (TextUtils.equals(courseServer.getShortname(), course.getShortname())) {
+                    course.setStatus(courseServer.getStatus());
+                }
+            }
+        }
+    }
 }

@@ -4,7 +4,7 @@
     "en": null
   },
   "id": 1,
-  "is_draft": false,
+  "status": "live",
   "organisation": "",
   "priority": 0,
   "resource_uri": "/api/v2/course/1/",

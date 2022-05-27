@@ -6,7 +6,7 @@
         "en": "A mock course"
       },
       "id": 126,
-      "is_draft": false,
+      "status": "live",
       "organisation": "DC",
       "priority": 8,
       "resource_uri": "/api/v2/course/126/",

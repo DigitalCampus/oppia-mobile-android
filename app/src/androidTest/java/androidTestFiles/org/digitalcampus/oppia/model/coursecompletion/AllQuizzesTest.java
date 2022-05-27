@@ -47,7 +47,7 @@ public class AllQuizzesTest {
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
-        Course course = db.getCourse(courseId, user.getUserId());
+        Course course = db.getCourseWithProgress(courseId, user.getUserId());
 
         TrackerData.loadDataAllQuizzesCourseComplete(context);
 
@@ -67,7 +67,7 @@ public class AllQuizzesTest {
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
-        Course course = db.getCourse(courseId, user.getUserId());
+        Course course = db.getCourseWithProgress(courseId, user.getUserId());
 
         TrackerData.loadDataAllQuizzesCourseNotComplete(context);
 

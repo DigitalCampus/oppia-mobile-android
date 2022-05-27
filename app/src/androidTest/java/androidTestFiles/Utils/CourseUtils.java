@@ -40,7 +40,7 @@ public class CourseUtils {
         DbHelper db = DbHelper.getInstance(ctx);
         long courseId = db.getCourseID(shortTitle);
         long userId = db.getUserId(SessionManager.getUsername(ctx));
-        return db.getCourse(courseId, userId);
+        return db.getCourseWithProgress(courseId, userId);
     }
 
     public static void cleanUp(){

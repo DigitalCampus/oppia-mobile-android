@@ -76,7 +76,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         // refresh course to get most recent info (otherwise gets the info from when course first opened)
         DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-        this.course = db.getCourse(this.course.getCourseId(), userId);
+        this.course = db.getCourseWithProgress(this.course.getCourseId(), userId);
 
         binding.loadingSpinner.setVisibility(View.VISIBLE);
         
@@ -131,7 +131,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
 
         for (Activity a: quizActs){
         	// get the max score for the quiz for the user
-        	QuizStats qs = db.getQuizAttempt(a.getDigest(), userId);
+        	QuizStats qs = db.getQuizAttemptStats(a.getDigest(), userId);
         	qs.setQuizTitle(a.getTitle(prefLang));
         	qs.setSectionTitle(parsedCourse.getSectionByActivityDigest(a.getDigest()).getTitle(prefLang));
         	quizzes.add(qs);
@@ -152,7 +152,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         int pretestScore = -1;
         for (Activity baselineAct : baseline){
             if (!baselineAct.getActType().equals("quiz")) continue;
-            QuizStats pretest = db.getQuizAttempt(baselineAct.getDigest(), userId);
+            QuizStats pretest = db.getQuizAttemptStats(baselineAct.getDigest(), userId);
             pretestScore = pretest.getPercent();
         }
         

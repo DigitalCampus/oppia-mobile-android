@@ -99,14 +99,14 @@ public class DeleteCourseTest extends BaseTestDB {
         long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
         String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
         long courseId = getDbHelper().getCourseID(shortName);
-        Course c = getDbHelper().getCourse(courseId, userId);
+        Course c = getDbHelper().getCourseWithProgress(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
 
         deleteTestCourse(c, context);
 
 //        assertTrue(response.isResult());
 
-        c = getDbHelper().getCourse(courseId, userId);
+        c = getDbHelper().getCourseWithProgress(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
 
         File finalPath = new File(modulesPath, children[0]);
@@ -129,12 +129,12 @@ public class DeleteCourseTest extends BaseTestDB {
         long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
         String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
         long courseId = getDbHelper().getCourseID(shortName);
-        Course c = getDbHelper().getCourse(courseId, userId);
+        Course c = getDbHelper().getCourseWithProgress(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
 
         deleteTestCourse(c, context);
 
-        c = getDbHelper().getCourse(courseId, userId);
+        c = getDbHelper().getCourseWithProgress(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
 
         assertEquals(0, modulesPath.list().length);    //Check that the course does not exists in the "modules" directory
@@ -155,12 +155,12 @@ public class DeleteCourseTest extends BaseTestDB {
         long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
         String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
         long courseId = getDbHelper().getCourseID(shortName);
-        Course c = getDbHelper().getCourse(courseId, userId);
+        Course c = getDbHelper().getCourseWithProgress(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
 
         deleteTestCourse(c, context);
 
-        c = getDbHelper().getCourse(courseId, userId);
+        c = getDbHelper().getCourseWithProgress(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
 
 

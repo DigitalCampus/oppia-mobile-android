@@ -9,8 +9,8 @@ import org.junit.runner.RunWith;
 
 import androidTestFiles.Utils.TestUtils;
 
-import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
-import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.Utils.Matchers.EspressoTestsMatchers.withDrawable;
+import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

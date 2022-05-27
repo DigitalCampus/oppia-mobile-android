@@ -8,6 +8,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.junit.Assert.assertTrue;
+import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
+
+import android.content.Context;
+
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
@@ -17,8 +22,10 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.junit.Rule;
 
+import androidTestFiles.Utils.FileUtils;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 public class DaggerInjectMockUITest {
@@ -51,5 +58,21 @@ public class DaggerInjectMockUITest {
 
     public void performClickDrawerItem(int itemId) {
         onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(itemId));
+    }
+
+
+    protected void copyCourseFromAssets(Context context, String path, String filename) {
+        FileUtils.copyZipFromAssetsPath(context, path, filename);  //Copy course zip from assets to download path
+    }
+
+
+    protected void installCourse(String path, String filename) {
+
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+
+        copyCourseFromAssets(context, path, filename);
+
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
     }
 }

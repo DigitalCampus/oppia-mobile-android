@@ -64,8 +64,8 @@ public class FeedbackWidget extends AnswerWidget {
 	}
 
 	@Override
-	void showContentUnavailableRationale(int unavailabilityReasonStringResId) {
-		// Always available, so no need to show any kind of message
+	String getAnswerWidgetType() {
+		return getString(R.string.feedback);
 	}
 
 	@Override

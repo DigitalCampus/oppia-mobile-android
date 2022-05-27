@@ -1,4 +1,4 @@
-package androidTestFiles.Matchers;
+package androidTestFiles.Utils.Matchers;
 
 import android.view.View;
 

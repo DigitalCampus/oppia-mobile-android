@@ -48,10 +48,6 @@ public class TagRepository {
     private static final String JSON_PROPERTY_COUNT_NEW_DOWNLOADS_ENABLED = "count_new_downloads_enabled";
     private static final String JSON_PROPERTY_COURSE_STATUSES = "course_statuses";
 
-    private static final CharSequence COURSE_STATUS_LIVE = "live";
-    private static final CharSequence COURSE_STATUS_NEW_DOWNLOADS_DISABLED = "new_downloads_disabled";
-
-
 
     public void getTagList(Context ctx, ApiEndpoint api) {
 
@@ -97,12 +93,13 @@ public class TagRepository {
                     JSONObject jObjCourseStatuses = jsonObj.getJSONObject(JSON_PROPERTY_COURSE_STATUSES);
                     Iterator<String> keys = jObjCourseStatuses.keys();
 
-                    while(keys.hasNext()) {
+                    while (keys.hasNext()) {
                         String key = keys.next();
                         String value = jObjCourseStatuses.getString(key);
-                        if (TextUtils.equals(value, COURSE_STATUS_LIVE)) {
+                        if (TextUtils.equals(value, Course.STATUS_LIVE)) {
                             t.incrementCountAvailable();
-                        } else if (TextUtils.equals(value, COURSE_STATUS_NEW_DOWNLOADS_DISABLED)) {
+                        } else if (TextUtils.equals(value, Course.STATUS_NEW_DOWNLOADS_DISABLED)
+                                || TextUtils.equals(value, Course.STATUS_READ_ONLY)) {
                             if (isCourseInstalled(key, installedCoursesNames)) {
                                 t.incrementCountAvailable();
                             }
