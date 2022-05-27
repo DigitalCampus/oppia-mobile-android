@@ -39,6 +39,7 @@ public class Tracker {
 	public static final String TAG = Tracker.class.getSimpleName();
 	public static final String SEARCH_TYPE = "search";
 	public static final String MISSING_MEDIA_TYPE = "missing_media";
+	public static final String DOWNLOAD_TYPE = "download";
 
 	private final Context ctx;
 	
@@ -46,7 +47,7 @@ public class Tracker {
 		this.ctx = context;
 	}
 
-	private void saveTracker(int courseId, String digest, JSONObject data, String type, boolean completed, GamificationEvent gamificationEvent){
+	public void saveTracker(int courseId, String digest, JSONObject data, String type, boolean completed, GamificationEvent gamificationEvent){
 		// add tracker UUID
 		UUID guid = java.util.UUID.randomUUID();
 		try {
