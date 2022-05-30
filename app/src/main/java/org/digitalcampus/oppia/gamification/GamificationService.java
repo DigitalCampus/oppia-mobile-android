@@ -97,11 +97,13 @@ public class GamificationService  extends IntentService {
                 Course course = null;
                 Activity act = null;
                 String trackerDigest = "";
+                String type = "";
 
                 if (SERVICE_EVENT_DOWNLOAD.equals(eventName)){
                     course = (Course) intent.getSerializableExtra(SERVICE_COURSE);
                     event = gEngine.processEventCourseDownloaded(course);
                     isCompleted = true;
+                    type = Tracker.DOWNLOAD_TYPE;
                 }
                 else if (SERVICE_EVENT_ACTIVITY.equals(eventName)){
                     if (isCompleted){
@@ -197,7 +199,7 @@ public class GamificationService  extends IntentService {
                     return;
 
                 Tracker t = new Tracker(this);
-                t.saveTracker(course.getCourseId(), trackerDigest, eventData, event.isCompleted() || isCompleted || isBaseline, event);
+                t.saveTracker(course.getCourseId(), trackerDigest, eventData, type, event.isCompleted() || isCompleted || isBaseline, event);
 
                 if (event.getPoints() > 0){
 
