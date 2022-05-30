@@ -37,9 +37,11 @@ import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -173,11 +175,14 @@ public abstract class BaseWidget extends Fragment {
         // check media file exists
         if (!Storage.mediaFileExists(ctx, mediaFileName)) {
             //Try if the filename is URL encoded
-            mediaFileName = Uri.decode(mediaFileName);
-            if (!Storage.mediaFileExists(ctx, mediaFileName)){
+            String decodedFileName = Uri.decode(mediaFileName);
+            if (!Storage.mediaFileExists(ctx, decodedFileName)){
                 Toast.makeText(ctx,
                     getString(R.string.error_media_not_found, mediaFileName),
                     Toast.LENGTH_LONG).show();
+                Media m =  activity.getMedia(mediaFileName);
+                String digest = (m == null) ? "" : m.getDigest();
+                new Tracker(ctx).saveMissingMediaTracker(course.getCourseId(), digest, mediaFileName);
                 return;
             }
         }

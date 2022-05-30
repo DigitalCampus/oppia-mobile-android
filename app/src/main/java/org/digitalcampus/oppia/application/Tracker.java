@@ -84,12 +84,13 @@ public class Tracker {
 		}
     }
 
-	public void saveMissingMediaTracker(String filename){
+	public void saveMissingMediaTracker(int courseId, String mediaDigest, String filename){
 
 		try {
 			JSONObject missingMedia = new MetaDataUtils(ctx).getMetaData();
 			missingMedia.put("filename", filename);
-			saveTracker(0, "", missingMedia, MISSING_MEDIA_TYPE, true, Gamification.GAMIFICATION_MEDIA_MISSING);
+			missingMedia.put("media_digest", mediaDigest);
+			saveTracker(courseId, "", missingMedia, MISSING_MEDIA_TYPE, false, Gamification.GAMIFICATION_MEDIA_MISSING);
 
 		} catch (JSONException e) {
 			Analytics.logException(e);
