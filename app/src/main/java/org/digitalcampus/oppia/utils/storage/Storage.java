@@ -124,12 +124,6 @@ public class Storage {
     public static boolean mediaFileExists(Context ctx, String filename) {
         File media = new File(Storage.getMediaPath(ctx) + filename);
         Log.d(TAG, "Looking for: " + Storage.getMediaPath(ctx) + filename);
-
-        if (!media.exists()){
-            //Save the missing media tracker
-            new Tracker(ctx).saveMissingMediaTracker(filename);
-        }
-
         return media.exists();
     }
 
