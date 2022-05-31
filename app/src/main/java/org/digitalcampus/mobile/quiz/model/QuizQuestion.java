@@ -215,4 +215,18 @@ public class QuizQuestion implements Serializable {
     public boolean isSkipped() {
         return skipped;
     }
+
+    public boolean isUserInputResponse(){ return false; }
+
+    public void updateUserResponsesLang(String previousLang, String newLang){
+        List<String> newLangResponses = new ArrayList<>();
+        for (String userResponse : this.getUserResponses()){
+            for (Response r : this.getResponseOptions()){
+                if (r.getTitle(previousLang).equalsIgnoreCase(userResponse)){
+                    newLangResponses.add(r.getTitle(newLang));
+                }
+            }
+        }
+        this.setUserResponses(newLangResponses);
+    }
 }

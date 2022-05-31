@@ -544,19 +544,10 @@ public class Quiz implements Serializable {
 
     public void updateResponsesAfterLanguageChange(String previousLang, String newLang){
         for (QuizQuestion question : questions){
-            if (!question.isAnswered()){
+            if (!question.isAnswered() || question.isUserInputResponse()){
                 continue;
             }
-
-            List<String> newLangResponses = new ArrayList<>();
-            for (String userResponse : question.getUserResponses()){
-                for (Response r : question.getResponseOptions()){
-                    if (r.getTitle(previousLang).equalsIgnoreCase(userResponse)){
-                        newLangResponses.add(r.getTitle(newLang));
-                    }
-                }
-            }
-            question.setUserResponses(newLangResponses);
+            question.updateUserResponsesLang(previousLang, newLang);
         }
     }
 }

@@ -29,5 +29,6 @@ public class Essay extends UserResponseQuestion implements Serializable {
         this.userscore = 0;
     }
 
-
+    @Override
+    public boolean isUserInputResponse(){ return true; }
 }
