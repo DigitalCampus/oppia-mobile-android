@@ -222,8 +222,6 @@ public abstract class AnswerWidget extends BaseWidget {
             return;
         }
 
-
-
         binding.initialInfoContainer.setVisibility(View.GONE);
         this.showQuestion();
     }
@@ -436,6 +434,9 @@ public abstract class AnswerWidget extends BaseWidget {
     }
 
     private boolean saveAnswer() {
+        if (currentQuestion == null){
+            return false;
+        }
         try {
             List<String> answers = currentQuestion.getQuestionResponses(quiz.getCurrentQuestion().getResponseOptions());
             if (quiz.getCurrentQuestion().responseExpected() && (answers == null || answers.isEmpty())) {

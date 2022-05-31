@@ -100,4 +100,7 @@ public class Numerical extends QuizQuestion implements Serializable {
         }
         return jo;
     }
+
+    @Override
+    public boolean isUserInputResponse(){ return true; }
 }

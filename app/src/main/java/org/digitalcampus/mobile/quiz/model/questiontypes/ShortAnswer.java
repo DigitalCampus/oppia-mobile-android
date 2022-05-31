@@ -63,5 +63,6 @@ public class ShortAnswer extends UserResponseQuestion implements Serializable {
         return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
     }
 
-
+    @Override
+    public boolean isUserInputResponse(){ return true; }
 }
