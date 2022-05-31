@@ -541,4 +541,22 @@ public class Quiz implements Serializable {
     public int getMaxAttempts() { return maxattempts; }
     public boolean limitAttempts(){ return maxattempts > 0; }
     private void setMaxAttempts(int maxAttempts) { this.maxattempts = maxAttempts; }
+
+    public void updateResponsesAfterLanguageChange(String previousLang, String newLang){
+        for (QuizQuestion question : questions){
+            if (!question.isAnswered()){
+                continue;
+            }
+
+            List<String> newLangResponses = new ArrayList<>();
+            for (String userResponse : question.getUserResponses()){
+                for (Response r : question.getResponseOptions()){
+                    if (r.getTitle(previousLang).equalsIgnoreCase(userResponse)){
+                        newLangResponses.add(r.getTitle(newLang));
+                    }
+                }
+            }
+            question.setUserResponses(newLangResponses);
+        }
+    }
 }

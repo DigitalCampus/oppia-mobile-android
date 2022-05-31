@@ -41,7 +41,6 @@ public class QuizQuestion implements Serializable {
     public static final String JSON_KEY_QUESTION_PROP_DEPEND_VALUE = "dependvalue";
 
 
-
     protected int id;
     protected float userscore = 0;
     private Map<String, String> title = new HashMap<>();
@@ -173,6 +172,10 @@ public class QuizQuestion implements Serializable {
             return Boolean.parseBoolean(this.getProp(Quiz.JSON_PROPERTY_REQUIRED));
         }
         return true;
+    }
+
+    public boolean isAnswered(){
+        return !userResponses.isEmpty();
     }
 
 
