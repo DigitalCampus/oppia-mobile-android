@@ -29,7 +29,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,7 +39,6 @@ import org.digitalcampus.mobile.learning.databinding.WidgetQuizBinding;
 import org.digitalcampus.mobile.quiz.InvalidQuizException;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
-import org.digitalcampus.mobile.quiz.model.Response;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Essay;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Matching;
@@ -66,7 +64,6 @@ import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
 import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -78,7 +75,6 @@ import javax.inject.Inject;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentActivity;
 
 public abstract class AnswerWidget extends BaseWidget {
 
@@ -193,6 +189,12 @@ public abstract class AnswerWidget extends BaseWidget {
             quiz = loadedQuiz;
         }
 
+        if (previousLang != null && !previousLang.equalsIgnoreCase(prefLang)){
+            Log.d(TAG, "Quiz lang changed, updating responses!");
+            quiz.updateResponsesAfterLanguageChange(previousLang, prefLang);
+            previousLang = prefLang;
+        }
+
         if (this.isOnResultsPage) {
             showResults();
             return;
@@ -208,12 +210,6 @@ public abstract class AnswerWidget extends BaseWidget {
         if (contentAvailability != QUIZ_AVAILABLE) {
             showContentUnavailableRationale(getString(contentAvailability));
             return;
-        }
-
-        if (previousLang != null && !previousLang.equalsIgnoreCase(prefLang)){
-            Log.d(TAG, "Quiz lang changed, updating responses!");
-            quiz.updateResponsesAfterLanguageChange(previousLang, prefLang);
-            previousLang = prefLang;
         }
 
         if (quiz.getCurrentQuestionNo() == 1 && !initialInfoShown && shouldShowInitialInfo()) {
