@@ -40,6 +40,7 @@ import org.digitalcampus.mobile.learning.databinding.WidgetQuizBinding;
 import org.digitalcampus.mobile.quiz.InvalidQuizException;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
+import org.digitalcampus.mobile.quiz.model.Response;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Essay;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Matching;
@@ -65,6 +66,7 @@ import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
 import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -81,10 +83,17 @@ import androidx.fragment.app.FragmentActivity;
 public abstract class AnswerWidget extends BaseWidget {
 
     public static final String TAG = AnswerWidget.class.getSimpleName();
+    protected static final String PROPERTY_QUIZ = "quiz";
+    protected static final String PROPERTY_ON_RESULTS_PAGE = "OnResultsPage";
+    protected static final String PROPERTY_ATTEMPT_SAVED = "attemptSaved";
+    protected static final String PROPERTY_INITIAL_INFO_SHOWN = "initialInfoShown";
+    protected static final String PROPERTY_LANG = "quiz_lang";
+
     static final int QUIZ_AVAILABLE = -1;
     private static final int PROGRESS_ANIM_DURATION = 600;
     protected Quiz quiz;
     private QuestionWidget currentQuestion;
+    private String previousLang;
     private String contents;
 
     boolean isOnResultsPage = false;
@@ -201,11 +210,19 @@ public abstract class AnswerWidget extends BaseWidget {
             return;
         }
 
-        if (!initialInfoShown && shouldShowInitialInfo()) {
+        if (previousLang != null && !previousLang.equalsIgnoreCase(prefLang)){
+            Log.d(TAG, "Quiz lang changed, updating responses!");
+            quiz.updateResponsesAfterLanguageChange(previousLang, prefLang);
+            previousLang = prefLang;
+        }
+
+        if (quiz.getCurrentQuestionNo() == 1 && !initialInfoShown && shouldShowInitialInfo()) {
             loadInitialInfo(binding.initialInfoContainer);
             binding.initialInfoContainer.setVisibility(View.VISIBLE);
             return;
         }
+
+
 
         binding.initialInfoContainer.setVisibility(View.GONE);
         this.showQuestion();
@@ -479,7 +496,6 @@ public abstract class AnswerWidget extends BaseWidget {
             parent.addView(progressContainer, index);
         }
 
-
         Button actionBtn = getView().findViewById(R.id.quiz_results_button);
         Button exitBtn = getView().findViewById(R.id.quiz_exit_button);
         showResultsInfo();
@@ -546,27 +562,36 @@ public abstract class AnswerWidget extends BaseWidget {
 
     @Override
     public HashMap<String, Object> getWidgetConfig() {
+        saveAnswer(); // Before setting the quiz, we save the current answer
         HashMap<String, Object> config = new HashMap<>();
-        config.put(BaseWidget.PROPERTY_QUIZ, this.quiz);
-        config.put(BaseWidget.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
-        config.put(BaseWidget.PROPERTY_ON_RESULTS_PAGE, this.isOnResultsPage);
-        config.put(BaseWidget.PROPERTY_ATTEMPT_SAVED, this.quizAttemptSaved);
+        config.put(PROPERTY_QUIZ, this.quiz);
+        config.put(PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
+        config.put(PROPERTY_ON_RESULTS_PAGE, this.isOnResultsPage);
+        config.put(PROPERTY_ATTEMPT_SAVED, this.quizAttemptSaved);
+        config.put(PROPERTY_INITIAL_INFO_SHOWN, initialInfoShown);
+        config.put(PROPERTY_LANG, prefLang);
         return config;
     }
 
     @Override
     public void setWidgetConfig(HashMap<String, Object> config) {
-        if (config.containsKey(BaseWidget.PROPERTY_QUIZ)) {
-            this.quiz = (Quiz) config.get(BaseWidget.PROPERTY_QUIZ);
+        if (config.containsKey(PROPERTY_QUIZ)) {
+            this.quiz = (Quiz) config.get(PROPERTY_QUIZ);
         }
         if (config.containsKey(BaseWidget.PROPERTY_ACTIVITY_STARTTIME)) {
             this.setStartTime((Long) config.get(BaseWidget.PROPERTY_ACTIVITY_STARTTIME));
         }
-        if (config.containsKey(BaseWidget.PROPERTY_ON_RESULTS_PAGE)) {
-            this.isOnResultsPage = (Boolean) config.get(BaseWidget.PROPERTY_ON_RESULTS_PAGE);
+        if (config.containsKey(PROPERTY_ON_RESULTS_PAGE)) {
+            this.isOnResultsPage = (Boolean) config.get(PROPERTY_ON_RESULTS_PAGE);
         }
-        if (config.containsKey(BaseWidget.PROPERTY_ATTEMPT_SAVED)) {
-            this.quizAttemptSaved = (Boolean) config.get(BaseWidget.PROPERTY_ATTEMPT_SAVED);
+        if (config.containsKey(PROPERTY_ATTEMPT_SAVED)) {
+            this.quizAttemptSaved = (Boolean) config.get(PROPERTY_ATTEMPT_SAVED);
+        }
+        if (config.containsKey(PROPERTY_INITIAL_INFO_SHOWN)){
+            this.initialInfoShown = (Boolean) config.get(PROPERTY_INITIAL_INFO_SHOWN);
+        }
+        if (config.containsKey(PROPERTY_LANG)) {
+            this.previousLang = (String) config.get(PROPERTY_LANG);
         }
     }
 
