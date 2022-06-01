@@ -57,7 +57,6 @@ public abstract class APIRequestTask<P, G, R> extends AsyncTask<P, G, R> {
                     .url(HTTPClientUtils.getUrlWithCredentials(url, u.getUsername(), u.getApiKey()));
 
         } catch (UserNotFoundException e) {
-            Analytics.logException(e);
             Log.d(TAG, "User not found: ", e);
         }
 
