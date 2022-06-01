@@ -63,7 +63,7 @@ public class BaselineQuizTest {
 
     @Test
     public void allCorrect() {
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
         onView(withId(R.id.question_text))
                 .check(matches(withText(QUESTION_TITLE_1)));
 
@@ -89,7 +89,7 @@ public class BaselineQuizTest {
 
     @Test
     public void partiallyCorrect() {
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
         onView(withId(R.id.question_text))
                 .check(matches(withText(QUESTION_TITLE_1)));
 
@@ -114,7 +114,7 @@ public class BaselineQuizTest {
 
     @Test
     public void allIncorrect() {
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
         onView(withId(R.id.question_text))
                 .check(matches(withText(QUESTION_TITLE_1)));
 

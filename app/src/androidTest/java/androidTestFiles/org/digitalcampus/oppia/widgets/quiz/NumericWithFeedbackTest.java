@@ -40,7 +40,7 @@ public class NumericWithFeedbackTest extends BaseQuizTest {
 
     @Test
     public void correctAnswer() {
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
         onView(withId(R.id.take_quiz_btn)).perform(click());
 
         onView(withId(R.id.question_text))
@@ -74,7 +74,7 @@ public class NumericWithFeedbackTest extends BaseQuizTest {
 
     @Test
     public void incorrectAnswer() {
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
         onView(withId(R.id.take_quiz_btn)).perform(click());
 
         onView(withId(R.id.question_text))
