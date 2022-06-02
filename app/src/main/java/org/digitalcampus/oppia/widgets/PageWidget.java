@@ -21,6 +21,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,8 @@ import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.utils.resources.JSInterface;
+import org.digitalcampus.oppia.utils.resources.JSInterfaceForInlineInput;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForResourceImages;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
@@ -49,14 +52,18 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.core.text.HtmlCompat;
 
-public class PageWidget extends BaseWidget {
+public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.OnInputEnteredListener {
 
 	public static final String TAG = PageWidget.class.getSimpleName();
 	private WebView webview;
+
+	private final List<JSInterface> jsInterfaces = new ArrayList<>();
+	private final List<String> inlineInput = new ArrayList<>();
 
 	public static PageWidget newInstance(Activity activity, Course course, boolean isBaseline) {
 		PageWidget myFragment = new PageWidget();
@@ -108,10 +115,16 @@ public class PageWidget extends BaseWidget {
 
 		try {
 			webview.getSettings().setJavaScriptEnabled(true);
+
             //We inject the interface to launch intents from the HTML
-            webview.addJavascriptInterface(
-                    new JSInterfaceForResourceImages(this.getActivity(), course.getLocation()),
-                    JSInterfaceForResourceImages.INTERFACE_EXPOSED_NAME);
+			JSInterfaceForResourceImages imagesJSInterface = new JSInterfaceForResourceImages(getContext(), course.getLocation());
+			jsInterfaces.add(imagesJSInterface);
+            webview.addJavascriptInterface(imagesJSInterface, imagesJSInterface.getInterfaceExposedName());
+
+			JSInterfaceForInlineInput inputJSInterface = new JSInterfaceForInlineInput(getContext());
+			inputJSInterface.setOnInputEnteredListener(this);
+			jsInterfaces.add(inputJSInterface);
+            webview.addJavascriptInterface(inputJSInterface, inputJSInterface.getInterfaceExposedName());
 
 			webview.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, FileUtils.readFile(url), "text/html", "utf-8", null);
 		} catch (IOException e) {
@@ -123,8 +136,10 @@ public class PageWidget extends BaseWidget {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                //We execute the necessary JS code to bind click on images with our JavascriptInterface
-                view.loadUrl(JSInterfaceForResourceImages.JS_INJECTION);
+                //We execute the necessary JS code to bind our JavascriptInterfaces
+                for (JSInterface jsInterface : jsInterfaces){
+					view.loadUrl(jsInterface.getJavascriptInjection());
+				}
             }
 
             // set up the page to intercept videos
@@ -219,9 +234,12 @@ public class PageWidget extends BaseWidget {
 			return;
 		}
 
-		new GamificationServiceDelegate(getActivity())
-			.createActivityIntent(course, activity, getActivityCompleted(), isBaseline)
-			.registerPageActivityEvent(timetaken, readAloud);
+		GamificationServiceDelegate delegate = new GamificationServiceDelegate(getActivity())
+				.createActivityIntent(course, activity, getActivityCompleted(), isBaseline);
+		if (!inlineInput.isEmpty()){
+			delegate.addExtraEventData("inline_input", TextUtils.join(",", inlineInput));
+		}
+		delegate.registerPageActivityEvent(timetaken, readAloud);
 	}
 
 	@Override
@@ -263,5 +281,10 @@ public class PageWidget extends BaseWidget {
 		return HtmlCompat.fromHtml(text.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY).toString();
 	}
 
-
+	@Override
+	public void inlineInputReceived(String input) {
+		if (!inlineInput.contains(input)){
+			inlineInput.add(input);
+		}
+	}
 }
