@@ -54,11 +54,10 @@ public class CourseInstallViewAdapter extends Course {
     private static final String JSON_PROPERTY_SHORTNAME = "shortname";
     private static final String JSON_PROPERTY_VERSION = "version";
     private static final String JSON_PROPERTY_URL = "url";
-    private static final String JSON_PROPERTY_IS_DRAFT = "is_draft";
     private static final String JSON_PROPERTY_AUTHOR = "author";
     private static final String JSON_PROPERTY_USERNAME = "username";
     private static final String JSON_PROPERTY_ORGANISATION = "organisation";
-    private static final String JSON_PROPERTY_NEW_DOWNLOADS_ENABLED = "new_downloads_enabled";
+    private static final String JSON_PROPERTY_STATUS = "status";
 
     public boolean isDownloading() {
         return downloading;
@@ -161,10 +160,8 @@ public class CourseInstallViewAdapter extends Course {
             course.setVersionId(jsonObj.getDouble(JSON_PROPERTY_VERSION));
             course.setDownloadUrl(jsonObj.getString(JSON_PROPERTY_URL));
 
-            if (jsonObj.has(JSON_PROPERTY_IS_DRAFT) && !jsonObj.isNull(JSON_PROPERTY_IS_DRAFT))
-                course.setDraft(jsonObj.getBoolean(JSON_PROPERTY_IS_DRAFT));
-            else
-                course.setDraft(false);
+            if (jsonObj.has(JSON_PROPERTY_STATUS) && !jsonObj.isNull(JSON_PROPERTY_STATUS))
+                course.setStatus(jsonObj.getString(JSON_PROPERTY_STATUS));
 
             if (jsonObj.has(JSON_PROPERTY_AUTHOR) && !jsonObj.isNull(JSON_PROPERTY_AUTHOR))
                 course.setAuthorName(jsonObj.getString(JSON_PROPERTY_AUTHOR));
@@ -179,9 +176,6 @@ public class CourseInstallViewAdapter extends Course {
             if (jsonObj.has(JSON_PROPERTY_ORGANISATION) && !jsonObj.isNull(JSON_PROPERTY_ORGANISATION)) {
                 course.setOrganisationName(jsonObj.getString(JSON_PROPERTY_ORGANISATION));
             }
-
-            if (jsonObj.has(JSON_PROPERTY_NEW_DOWNLOADS_ENABLED) && !jsonObj.isNull(JSON_PROPERTY_NEW_DOWNLOADS_ENABLED))
-                course.setNewDownloadsEnabled(jsonObj.getBoolean(JSON_PROPERTY_NEW_DOWNLOADS_ENABLED));
 
             if (downloadingCourses != null && downloadingCourses.contains(course.getDownloadUrl())) {
                 course.setDownloading(true);

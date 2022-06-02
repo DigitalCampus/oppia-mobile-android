@@ -197,7 +197,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
             return;
         }
 
-        CourseUtils.setSyncStatus(prefs, coursesInstalled, lastVersionTimestampChecked);
+        CourseUtils.refreshStatuses(prefs, coursesInstalled, lastVersionTimestampChecked);
 
         int toUpdateCount = 0;
 
@@ -222,7 +222,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
         Set<String> newCoursesNotified = prefs.getStringSet(PrefsActivity.PREF_NEW_COURSES_LIST_NOTIFIED, null);
 
         Log.i(TAG, "checkNewCoursesAndNotify: newCoursesNotified count: " +
-                (newCoursesNotified != null ? newCoursesNotified.size()+"" : "null"));
+                (newCoursesNotified != null ? newCoursesNotified.size() + "" : "null"));
 
         if (newCoursesNotified == null) {
 
@@ -241,7 +241,8 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
             Set<String> notInstalledAndNotNotifiedCourses = new HashSet<>();
             for (CourseServer courseServer : notInstalledCourses) {
 
-                if (!courseServer.isNewDownloadsEnabled()) {
+                if (courseServer.hasStatus(Course.STATUS_NEW_DOWNLOADS_DISABLED)
+                        || courseServer.hasStatus(Course.STATUS_READ_ONLY)) {
                     continue;
                 }
 
@@ -311,7 +312,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
         pendingChecks--;
         Log.i(TAG, "onRequestFinish: pendingChecks: " + pendingChecks);
 
-        if ((pendingChecks == 0) && (onFinishListener != null)){
+        if ((pendingChecks == 0) && (onFinishListener != null)) {
             onFinishListener.onFinish(null);
         }
     }

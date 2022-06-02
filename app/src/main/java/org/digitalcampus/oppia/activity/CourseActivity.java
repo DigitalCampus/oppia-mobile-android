@@ -307,7 +307,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     private boolean checkCourseHasLanguage(String currentLang) {
         for (Lang lang : course.getLangs()) {
-            if (TextUtils.equals(lang.getLanguage(), currentLang)) {
+            if (lang.getLanguage().equalsIgnoreCase(currentLang)) {
                 return true;
             }
         }
@@ -338,6 +338,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         }
 
         apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles);
+        binding.tabsToolbar.removeOnTabSelectedListener(this);
         binding.activityWidgetPager.setAdapter(apAdapter);
         binding.tabsToolbar.setupWithViewPager(binding.activityWidgetPager);
         binding.tabsToolbar.setTabMode(activities.size() > 1 ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED);

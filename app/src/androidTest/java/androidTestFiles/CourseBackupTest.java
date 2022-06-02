@@ -104,7 +104,7 @@ public class CourseBackupTest extends BaseTestDB {
         long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
         String shortName = children[0].toLowerCase(Locale.US);
         long courseId = getDbHelper().getCourseID(shortName);
-        Course c = getDbHelper().getCourse(courseId, userId);
+        Course c = getDbHelper().getCourseWithProgress(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
 
         DeleteCourseTest.deleteTestCourse(c, context);
@@ -118,7 +118,7 @@ public class CourseBackupTest extends BaseTestDB {
         // Check if result is true
         assertTrue(response.isSuccess());
         courseId = getDbHelper().getCourseID(shortName);
-        c = getDbHelper().getCourse(courseId, userId);
+        c = getDbHelper().getCourseWithProgress(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
 
 

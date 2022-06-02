@@ -65,7 +65,8 @@
             android:foreground="?android:windowContentOverlay"
             android:orientation="vertical"
             app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/row_quiz_attempt" />
+            tools:listitem="@layout/row_quiz_attempt"
+            android:visibility="visible"/>
 
         <LinearLayout
             android:id="@+id/empty_state"
@@ -91,7 +92,6 @@
                 android:id="@+id/textView11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:gravity="center"
                 android:text="@string/quiz_attempts.empty_state" />
@@ -101,7 +101,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/quiz_attempts.take_quiz" />
+                android:text="@string/quiz_attempts.take_quiz"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+            <TextView
+                android:id="@+id/tv_quiz_not_available"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:gravity="center" />
 
         </LinearLayout>
 

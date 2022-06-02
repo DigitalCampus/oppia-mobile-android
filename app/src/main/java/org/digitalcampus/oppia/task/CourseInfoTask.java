@@ -97,7 +97,7 @@ public class CourseInfoTask extends APIRequestTask<String, Void, EntityResult<Co
         course.setShortname(jsonObject.getString("shortname"));
         course.setTitlesFromJSONObjectMap(jsonObject.getJSONObject("title"));
         course.setDescriptionsFromJSONObjectMap(jsonObject.getJSONObject("description"));
-        course.setDraft(jsonObject.getBoolean("is_draft"));
+        course.setStatus(jsonObject.getString("status"));
         course.setVersionId(jsonObject.getDouble("version"));
         course.setDownloadUrl(jsonObject.getString("url"));
         course.setAuthorName(jsonObject.getString("author"));

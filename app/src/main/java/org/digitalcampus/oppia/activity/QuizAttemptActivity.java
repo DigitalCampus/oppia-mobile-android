@@ -38,6 +38,7 @@ import org.digitalcampus.oppia.model.QuizAnswerFeedback;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizAttemptRepository;
 import org.digitalcampus.oppia.model.QuizStats;
+import org.digitalcampus.oppia.utils.CourseUtils;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.json.JSONArray;
@@ -82,10 +83,11 @@ public class QuizAttemptActivity extends AppActivity {
         }
 
 		quizAttempt = (QuizAttempt) bundle.getSerializable(QuizAttempt.TAG);
-		course = DbHelper.getInstance(this).getCourse(quizAttempt.getCourseId(), quizAttempt.getUserId());
+		course = DbHelper.getInstance(this).getCourseWithProgress(quizAttempt.getCourseId(), quizAttempt.getUserId());
 
+		boolean isReadOnlyCourse = CourseUtils.isReadOnlyCourse(this, quizAttempt.getActivityDigest(), prefs);
 		boolean showAttemptQuizButton = bundle.getBoolean(CourseQuizAttemptsActivity.SHOW_ATTEMPT_BUTTON, false);
-		if (showAttemptQuizButton){
+		if (showAttemptQuizButton && !isReadOnlyCourse){
 			binding.retakeQuizBtn.setVisibility(View.VISIBLE);
 			binding.retakeQuizBtn.setOnClickListener(view -> retakeQuiz());
 		}

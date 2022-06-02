@@ -107,6 +107,8 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
             viewHolder.binding.imgSyncStatus.setVisibility(View.GONE);
         }
 
+        viewHolder.binding.viewCourseStatus.setCourseStatus(course.getStatus());
+
     }
 
     @Override

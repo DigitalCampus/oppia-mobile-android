@@ -28,4 +28,9 @@
     <color name="red">#E53935</color>
 
     <color name="pink_dev_message">#ffcdd2</color>
+
+    <color name="bg_badge_status_draft">#87589d</color>
+    <color name="bg_badge_status_new_download_disabled">#4ea8c2</color>
+    <color name="bg_badge_status_archived">#3d3d3d</color>
+    <color name="bg_badge_status_read_only">#bf7d54</color>
 </resources>

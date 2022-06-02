@@ -170,7 +170,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         if ((parsedCourse != null) && (sections != null) && (!sections.isEmpty())) {
             parsedCourse.setCourseId(course.getCourseId());
             parsedCourse.updateCourseActivity(this);
-            adapter.notifyDataSetChanged();
+            adapter.reloadLanguage(prefs);
             if (!isBaselineCompleted()) {
                 showBaselineMessage(null);
             } else {
@@ -405,6 +405,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         // update the points/badges by invalidating the menu
         if (key.equalsIgnoreCase(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH)) {
             supportInvalidateOptionsMenu();
+        }
+        else if (key.equalsIgnoreCase(PrefsActivity.PREF_LANGUAGE)){
+            adapter.reloadLanguage(prefs);
         }
     }
 

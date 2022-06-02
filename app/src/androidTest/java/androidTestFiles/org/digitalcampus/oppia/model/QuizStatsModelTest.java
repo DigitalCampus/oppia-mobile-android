@@ -25,11 +25,9 @@ public class QuizStatsModelTest {
     @Test
     public void getAndSet(){
         QuizStats qs = new QuizStats();
-        qs.setAttempted(false);
         qs.setAverageScore(4);
         qs.setDigest("abcd");
         qs.setMaxScore(7);
-        qs.setAttempted(false);
         qs.setNumAttempts(5);
         qs.setPassed(false);
         qs.setQuizTitle("my quiz");
@@ -39,7 +37,7 @@ public class QuizStatsModelTest {
         assertEquals(57, qs.getAveragePercent());
         assertEquals("abcd", qs.getDigest());
         assertEquals(7, qs.getMaxScore(),0);
-        assertEquals(false, qs.isAttempted());
+        assertEquals(true, qs.isAttempted());
         assertEquals(false, qs.isPassed());
         assertEquals(43, qs.getPercent());
         assertEquals(5, qs.getNumAttempts());

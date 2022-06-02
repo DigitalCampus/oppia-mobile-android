@@ -271,7 +271,7 @@ public class UIUtils {
         for (Lang lang : langs) {
             boolean found = false;
             for (Lang ln : languagesList) {
-                if (ln.getLanguage().equals(lang.getLanguage())) {
+                if (ln.getLanguage().equalsIgnoreCase(lang.getLanguage())) {
                     found = true;
                     break;
                 }
@@ -289,7 +289,7 @@ public class UIUtils {
             Locale locale = new Locale(lang.getLanguage());
             String langDisp = locale.getDisplayLanguage(locale);
             langStringList.add(langDisp);
-            if (lang.getLanguage().equals(prefLanguage)) {
+            if (lang.getLanguage().equalsIgnoreCase(prefLanguage)) {
                 prefLangPosition = i;
             }
             i++;

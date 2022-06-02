@@ -1,12 +1,10 @@
 package org.digitalcampus.oppia.model.responses;
 
-import com.google.gson.annotations.SerializedName;
+import android.text.TextUtils;
 
 import org.digitalcampus.oppia.model.Course;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CourseServer {
@@ -20,12 +18,9 @@ public class CourseServer {
     private Map<String, String> title = new HashMap<>();
     private Map<String, String> description = new HashMap<>();
 
-    @SerializedName("is_draft")
-    private boolean isDraft = false;
     private int priority = 0;
 
-    @SerializedName("new_downloads_enabled")
-    private boolean newDownloadsEnabled = true;
+    private String status = Course.STATUS_LIVE;
 
     public int getId() {
         return id;
@@ -83,14 +78,6 @@ public class CourseServer {
         this.description = description;
     }
 
-    public boolean isDraft() {
-        return isDraft;
-    }
-
-    public void setDraft(boolean draft) {
-        isDraft = draft;
-    }
-
     public int getPriority() {
         return priority;
     }
@@ -99,11 +86,16 @@ public class CourseServer {
         this.priority = priority;
     }
 
-    public boolean isNewDownloadsEnabled() {
-        return newDownloadsEnabled;
+
+    public String getStatus() {
+        return status;
     }
 
-    public void setNewDownloadsEnabled(boolean newDownloadsEnabled) {
-        this.newDownloadsEnabled = newDownloadsEnabled;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public boolean hasStatus(String status) {
+        return TextUtils.equals(this.status, status);
     }
 }

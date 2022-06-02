@@ -618,9 +618,18 @@
 
     <string name="incorrect_password_topic">Incorrect topic password. Try again</string>
     <string name="password_needed">Password needed</string>
-    <string name="password_needed_description">This topic is protected by password. \n Please, introduce the password below to access its contents (you will only need to do this once)</string>
+    <string name="password_needed_description">This topic is password protected. \n Please enter the password below to access content (you will only need to do this once).</string>
     <string name="unlock_topic">Unlock topic</string>
     <string name="staging_warning_msg">You are connected to a staging/development server.</string>
+
+    <!-- Status badges -->
+    <string name="status_draft">Draft</string>
+    <string name="status_new_download_disabled">New download disabled</string>
+    <string name="status_archived">Archived</string>
+    <string name="status_read_only">Read only</string>
+    <string name="quiz">Quiz</string>
+    <string name="read_only_answer_unavailable_message">This course is now read-only so access to this %s is no longer available</string>
+    <string name="view_your_previous_attempts">View your previous attempts</string>
 
 </resources>
 

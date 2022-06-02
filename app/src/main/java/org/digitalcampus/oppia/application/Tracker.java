@@ -39,6 +39,7 @@ public class Tracker {
 	public static final String TAG = Tracker.class.getSimpleName();
 	public static final String SEARCH_TYPE = "search";
 	public static final String MISSING_MEDIA_TYPE = "missing_media";
+	public static final String DOWNLOAD_TYPE = "download";
 
 	private final Context ctx;
 	
@@ -46,7 +47,7 @@ public class Tracker {
 		this.ctx = context;
 	}
 
-	private void saveTracker(int courseId, String digest, JSONObject data, String type, boolean completed, GamificationEvent gamificationEvent){
+	public void saveTracker(int courseId, String digest, JSONObject data, String type, boolean completed, GamificationEvent gamificationEvent){
 		// add tracker UUID
 		UUID guid = java.util.UUID.randomUUID();
 		try {
@@ -83,12 +84,13 @@ public class Tracker {
 		}
     }
 
-	public void saveMissingMediaTracker(String filename){
+	public void saveMissingMediaTracker(int courseId, String mediaDigest, String filename){
 
 		try {
 			JSONObject missingMedia = new MetaDataUtils(ctx).getMetaData();
 			missingMedia.put("filename", filename);
-			saveTracker(0, "", missingMedia, MISSING_MEDIA_TYPE, true, Gamification.GAMIFICATION_MEDIA_MISSING);
+			missingMedia.put("media_digest", mediaDigest);
+			saveTracker(courseId, "", missingMedia, MISSING_MEDIA_TYPE, false, Gamification.GAMIFICATION_MEDIA_MISSING);
 
 		} catch (JSONException e) {
 			Analytics.logException(e);

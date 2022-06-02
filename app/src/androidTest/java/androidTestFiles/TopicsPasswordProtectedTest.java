@@ -21,8 +21,8 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
-import static androidTestFiles.Matchers.EspressoTestsMatchers.withDrawable;
-import static androidTestFiles.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.Utils.Matchers.EspressoTestsMatchers.withDrawable;
+import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
 
 import android.content.Context;
@@ -125,7 +125,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
     private Intent getTestCourseIntent() {
 
 //        int courseId = testDBHelper.getDbHelper().getCourseID("ref-course");
-        Course course = testDBHelper.getDbHelper().getCourse(COURSE_ID, USER_ID_NONE);
+        Course course = testDBHelper.getDbHelper().getCourseWithProgress(COURSE_ID, USER_ID_NONE);
 
         Intent i = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), CourseIndexActivity.class);
         i.putExtra(Course.TAG, course);

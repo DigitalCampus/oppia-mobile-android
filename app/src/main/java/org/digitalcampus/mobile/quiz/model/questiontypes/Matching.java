@@ -18,6 +18,7 @@
 package org.digitalcampus.mobile.quiz.model.questiontypes;
 
 import android.util.Log;
+import android.util.Pair;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
@@ -27,7 +28,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class Matching extends QuizQuestion implements Serializable {
 
@@ -124,5 +127,45 @@ public class Matching extends QuizQuestion implements Serializable {
     @Override
     public boolean responseExpected() {
         return true;
+    }
+
+    public void updateUserResponsesLang(String previousLang, String newLang){
+
+        List<Pair<String, String>> selectors = new ArrayList<>();
+        List<Pair<String, String>> possibleAnswers = new ArrayList<>();
+
+        for (Response r : responseOptions) {
+            String[] prevLangValues = r.getTitle(previousLang).split(Quiz.MATCHING_REGEX, -1);
+            String[] newLangValues = r.getTitle(newLang).split(Quiz.MATCHING_REGEX, -1);
+
+            selectors.add(new Pair<>(prevLangValues[0], newLangValues[0]));
+            possibleAnswers.add(new Pair<>(prevLangValues[1], newLangValues[1]));
+        }
+
+        List<String> newLangResponses = new ArrayList<>();
+        for (String userResponse : this.getUserResponses()){
+            String[] response = userResponse.split(Quiz.MATCHING_REGEX, -1);
+            String prevLangSelector = response[0];
+            String prevLangAnswer = response[1];
+            String newLangSelector = null, newLangAnswer = null;
+            for (Pair<String, String> selector : selectors){
+                if (selector.first.equals(prevLangSelector)){
+                    newLangSelector = selector.second;
+                    break;
+                }
+            }
+            for (Pair<String, String> answer : possibleAnswers){
+                if (answer.first.equals(prevLangAnswer)){
+                    newLangAnswer = answer.second;
+                    break;
+                }
+            }
+
+            if ((newLangAnswer != null) && (newLangSelector != null)){
+                newLangResponses.add(newLangSelector + Quiz.MATCHING_SEPARATOR + newLangAnswer);
+            }
+
+            this.setUserResponses(newLangResponses);
+        }
     }
 }

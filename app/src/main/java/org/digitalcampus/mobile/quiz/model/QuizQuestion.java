@@ -41,7 +41,6 @@ public class QuizQuestion implements Serializable {
     public static final String JSON_KEY_QUESTION_PROP_DEPEND_VALUE = "dependvalue";
 
 
-
     protected int id;
     protected float userscore = 0;
     private Map<String, String> title = new HashMap<>();
@@ -175,6 +174,10 @@ public class QuizQuestion implements Serializable {
         return true;
     }
 
+    public boolean isAnswered(){
+        return !userResponses.isEmpty();
+    }
+
 
     public String getLabel() {
         return getProp(JSON_KEY_QUESTION_PROP_LABEL);
@@ -211,5 +214,19 @@ public class QuizQuestion implements Serializable {
 
     public boolean isSkipped() {
         return skipped;
+    }
+
+    public boolean isUserInputResponse(){ return false; }
+
+    public void updateUserResponsesLang(String previousLang, String newLang){
+        List<String> newLangResponses = new ArrayList<>();
+        for (String userResponse : this.getUserResponses()){
+            for (Response r : this.getResponseOptions()){
+                if (r.getTitle(previousLang).equalsIgnoreCase(userResponse)){
+                    newLangResponses.add(r.getTitle(newLang));
+                }
+            }
+        }
+        this.setUserResponses(newLangResponses);
     }
 }
