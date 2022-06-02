@@ -11,7 +11,7 @@ def version_code = 99
 def version_name = "7.3.9"
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     defaultConfig {
         versionCode version_code
@@ -20,7 +20,7 @@ android {
         applicationId "org.digitalcampus.mobile.learning"
 
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 32
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The following argument makes the Android Test Orchestrator run its
@@ -45,10 +45,14 @@ android {
         disable 'MissingTranslation', 'ExtraTranslation'
     }
 
-    // Configure to use Java8 features like try-with-resources
     compileOptions {
+
+        // Configure to use Java8 features like try-with-resources, lambdas...
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+
+        // Flag to enable support for the new language Java 8+ APIs: time, functional, concurrent...
+        coreLibraryDesugaringEnabled true
     }
 
 
@@ -274,10 +278,8 @@ dependencies {
 
     // Fragment testing
     implementation "androidx.fragment:fragment:$fragmentVersion"
-    debugImplementation("androidx.fragment:fragment-testing:1.4.1") {
-        // exclude androidx.test:core while fragment_testing depends on 1.1.0
-        exclude group: 'androidx.test', module: 'core'
-    }
+    debugImplementation 'androidx.test:core:1.4.0'
+    debugImplementation "androidx.fragment:fragment-testing:1.4.1"
 
     //Mockito Dependencies
     testImplementation 'org.mockito:mockito-core:4.3.1'
@@ -289,6 +291,8 @@ dependencies {
     implementation "androidx.multidex:multidex:$multidex_version"
     androidTestImplementation 'com.google.dexmaker:dexmaker:1.2'
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.2'
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
 }
 

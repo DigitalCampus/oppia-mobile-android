@@ -2,6 +2,9 @@ package androidTestFiles.org.digitalcampus.oppia.widgets.quiz;
 
 import android.os.Bundle;
 
+import androidx.fragment.app.FragmentFactory;
+import androidx.fragment.app.testing.FragmentScenario;
+import androidx.lifecycle.Lifecycle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -88,7 +91,7 @@ public class BaselineQuizTest {
     }
 
     @Test
-    public void partiallyCorrect() {
+    public void partiallyCorrect() throws InterruptedException {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
         onView(withId(R.id.question_text))
                 .check(matches(withText(QUESTION_TITLE_1)));

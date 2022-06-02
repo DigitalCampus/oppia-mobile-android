@@ -39,7 +39,6 @@ public class ResetUITest extends MockedApiEndpointTest {
     private static final String ERROR_RESET_RESPONSE = "responses/response_400_reset.json";
 
     @Test
-    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void showsErrorMessageWhenThereIsNoUsername() throws Exception {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
@@ -68,7 +67,6 @@ public class ResetUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void clickResetButton_WrongUsername() throws Exception {
 
         startServer(400, ERROR_RESET_RESPONSE, 0);
