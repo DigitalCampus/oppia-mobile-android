@@ -136,7 +136,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener, D
 			}
 
             adapterBadges.notifyDataSetChanged();
-		} catch (Exception e) {
+		} catch (JSONException e) {
 			Analytics.logException(e);
 			Log.d(TAG, "Error refreshing badges list: ", e);
 		}

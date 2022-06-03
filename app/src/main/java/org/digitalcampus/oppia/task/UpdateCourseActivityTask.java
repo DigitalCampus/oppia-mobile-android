@@ -112,7 +112,6 @@ public class UpdateCourseActivityTask extends APIRequestTask<Course, DownloadPro
 			result.setSuccess(false);
 			result.setResultMessage(ctx.getString(R.string.error_connection));
 		} catch (UserNotFoundException unfe) {
-            Analytics.logException(unfe);
             Log.d(TAG, "UserNotFoundException:", unfe);
 			result.setSuccess(false);
 			result.setResultMessage(ctx.getString(R.string.error_connection));

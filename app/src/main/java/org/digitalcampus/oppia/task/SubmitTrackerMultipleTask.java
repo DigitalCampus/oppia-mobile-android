@@ -142,21 +142,23 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Void, Integer, Ent
             //We don't need the current user to send this, just some with a valid apiKey
             User user = db.getOneRegisteredUser();
 
-            if (!user.isOfflineRegister()){
+            if (!user.isOfflineRegister()) {
                 boolean success = sendTrackers(user, dataToSend, true, result);
                 result.setSuccess(success);
-                if (!success){
+                if (!success) {
                     result.getEntityList().add(activityLog.getName());
                 }
-                if (success){
+                if (success) {
                     Log.d(TAG, "Success sending " + activityLog.getName());
                     // If the logs were sent successfully, we can delete the file
                     FileUtils.deleteFile(activityLog);
                 }
             }
 
-        } catch (IOException | UserNotFoundException e) {
+        } catch (IOException e) {
             Analytics.logException(e);
+            result.setSuccess(false);
+        } catch (UserNotFoundException e) {
             result.setSuccess(false);
         }
 

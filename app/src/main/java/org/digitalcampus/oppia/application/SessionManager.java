@@ -102,7 +102,6 @@ public class SessionManager {
             return u.getDisplayName();
 
         } catch (UserNotFoundException e) {
-            Analytics.logException(e);
             Log.d(TAG, "User not found: ", e);
             return null;
         }
