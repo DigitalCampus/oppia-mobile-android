@@ -26,7 +26,7 @@ public class ReminderPrefsTest {
     @Test
     public void showWarningIfZeroDaysSelected() throws Exception {
 
-        launchInContainer(NotificationsPrefsFragment.class, null, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(NotificationsPrefsFragment.class, null, R.style.Oppia_ToolbarTheme);
 
         onView(withId(androidx.preference.R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(
@@ -54,7 +54,7 @@ public class ReminderPrefsTest {
     @Test
     public void showWarningIfMoreThanOneDayInWeeklyInterval() throws Exception {
 
-        launchInContainer(NotificationsPrefsFragment.class, null, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(NotificationsPrefsFragment.class, null, R.style.Oppia_ToolbarTheme);
 
         onView(withId(androidx.preference.R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(

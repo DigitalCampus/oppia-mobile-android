@@ -35,7 +35,7 @@ public class LeaderboardFragmentTest extends MockedApiEndpointTest {
     public void openLeaderboardFragment(){
         startServer(200, VALID_LEADERBOARD_RESPONSE, 0);
 
-        launchInContainer(LeaderboardFragment.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(LeaderboardFragment.class, args, R.style.Oppia_ToolbarTheme);
         // onView(withId(R.id.tv_total_points)).check(matches(withText("0")));
     }
 }

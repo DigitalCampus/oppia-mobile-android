@@ -42,7 +42,6 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
             new ActivityScenarioRule<>(WelcomeActivity.class);
 
     @Test
-    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void showsLoginFragmentOnLoginButtonClick() throws InterruptedException {
         onView(withId(R.id.welcome_login))
                 .perform(scrollTo(), click());
@@ -61,7 +60,6 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void showsRegisterFragmentOnRegisterButtonClick() throws InterruptedException {
 
         if (!BuildConfig.ALLOW_REGISTER_USER) {
@@ -83,7 +81,6 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void showsResetFragmentOnResetTabClicked() throws InterruptedException {
 
         onView(withId(R.id.welcome_login))
@@ -105,7 +102,6 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void resetPassword_goToLoginScreenAfterSuccess() throws InterruptedException {
 
         startServer(200, null, 0);
@@ -135,7 +131,6 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void resetPassword_goToLoginScreenAfterError() throws InterruptedException {
 
         startServer(400, null, 0);
@@ -165,7 +160,6 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void rememberUsername_goToLoginScreenAfterSuccess() throws InterruptedException {
 
         startServer(200, null, 0);
@@ -195,7 +189,6 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void rememberUsername_showsErrorIfEmailPatterInvalid() throws InterruptedException {
 
         startServer(200, null, 0);
@@ -222,7 +215,6 @@ public class WelcomeActivityUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.O)
     public void rememberUsername_goToLoginScreenAfterError() throws InterruptedException {
 
         startServer(400, null, 0);

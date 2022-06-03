@@ -59,7 +59,7 @@ public class ResourceWidgetTest {
 
     @Test
     public void openResource() {
-        launchInContainer(ResourceWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(ResourceWidget.class, args, R.style.Oppia_ToolbarTheme);
         // this doesn't really test anything, but gives some coverage to the ResourceWidget class
         assertEquals(androidx.test.espresso.ViewInteraction.class.getCanonicalName(), onView(withId(act.getActId())).getClass().getCanonicalName());
     }

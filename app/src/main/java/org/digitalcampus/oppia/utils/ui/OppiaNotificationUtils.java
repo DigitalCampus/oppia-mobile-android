@@ -98,7 +98,8 @@ public class OppiaNotificationUtils {
 
     public static PendingIntent getMainActivityPendingIntent(Context context) {
         Intent mainActivityIntent = new Intent(context, MainActivity.class);
-        PendingIntent mainActivityPendingIntent = PendingIntent.getActivity(context, 0, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent mainActivityPendingIntent = PendingIntent.getActivity(context, 0,
+                mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         return mainActivityPendingIntent;
     }
 
@@ -123,7 +124,7 @@ public class OppiaNotificationUtils {
         stackBuilder.addNextIntentWithParentStack(activityIntent);
         // Get the PendingIntent containing the entire back stack
         PendingIntent activityPendingIntent =
-                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         return activityPendingIntent;
     }
 

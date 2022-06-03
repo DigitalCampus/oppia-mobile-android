@@ -59,7 +59,7 @@ public class AnswerWidgetTest extends BaseQuizTest {
         args.putSerializable(Activity.TAG, act);
         args.putSerializable(Course.TAG, new Course(""));
 
-        launchInContainer(this.widgetClass, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(this.widgetClass, args, R.style.Oppia_ToolbarTheme);
 
         onView(withId(R.id.quiz_unavailable))
                 .check(matches(withText((R.string.quiz_loading_error))));
@@ -68,7 +68,7 @@ public class AnswerWidgetTest extends BaseQuizTest {
 
     @Test
     public void dontContinueIfQuestionUnaswered() {
-        launchInContainer(this.widgetClass, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(this.widgetClass, args, R.style.Oppia_ToolbarTheme);
         if (widgetClass == QuizWidget.class){
             onView(withId(R.id.take_quiz_btn)).perform(click());
         }
@@ -85,7 +85,7 @@ public class AnswerWidgetTest extends BaseQuizTest {
 
     @Test
     public void continueIfQuestionAnswered() {
-        launchInContainer(this.widgetClass, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(this.widgetClass, args, R.style.Oppia_ToolbarTheme);
         if (widgetClass == QuizWidget.class){
             onView(withId(R.id.take_quiz_btn)).perform(click());
         }

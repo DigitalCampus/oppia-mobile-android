@@ -56,7 +56,7 @@ public class PageWidgetTest {
 
     @Test
     public void openPageTest() {
-        launchInContainer(PageWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(PageWidget.class, args, R.style.Oppia_ToolbarTheme);
         // this doesn't really test anything, but gives some coverage to the PageWidget class
         assertEquals(androidx.test.espresso.ViewInteraction.class.getCanonicalName(), onView(withId(act.getActId())).getClass().getCanonicalName());
     }
@@ -64,6 +64,6 @@ public class PageWidgetTest {
     @Test
     public void getContentToReadTest() {
         // TODO complete this
-        launchInContainer(PageWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(PageWidget.class, args, R.style.Oppia_ToolbarTheme);
     }
 }
