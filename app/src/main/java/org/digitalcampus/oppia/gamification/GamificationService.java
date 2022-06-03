@@ -22,6 +22,7 @@ import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 import androidx.preference.PreferenceManager;
@@ -54,6 +55,7 @@ public class GamificationService  extends IntentService {
     public static final String EVENTDATA_INSTANCEID = "data_instance_id";
     public static final String EVENTDATA_MEDIA_FILENAME = "data_media_filename";
     public static final String EVENTDATA_MEDIA_END_REACHED = "data_end_reached";
+    public static final String EVENTDATA_EXTRA = "data_extra";
 
     private static final String LOGDATA_LANG = "lang";
     private static final String LOGDATA_READALOUD = "readaloud";
@@ -197,6 +199,15 @@ public class GamificationService  extends IntentService {
 
                 if (event == null)
                     return;
+
+                if (intent.hasExtra(EVENTDATA_EXTRA)){
+                    HashMap<String, String> extraData = (HashMap<String, String>) intent.getSerializableExtra(EVENTDATA_EXTRA);
+                    for (String key : extraData.keySet()){
+                        if (!eventData.has(key)){
+                            eventData.put(key, extraData.get(key));
+                        }
+                    }
+                }
 
                 Tracker t = new Tracker(this);
                 t.saveTracker(course.getCourseId(), trackerDigest, eventData, type, event.isCompleted() || isCompleted || isBaseline, event);
