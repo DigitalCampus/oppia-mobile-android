@@ -168,12 +168,13 @@ public abstract class BaseWidget extends Fragment {
 
     protected void startMediaPlayerWithFile(String mediaFileName){
 
+        String filename = mediaFileName;
         Context ctx = getActivity();
         // check media file exists
-        if (!Storage.mediaFileExists(ctx, mediaFileName)) {
+        if (!Storage.mediaFileExists(ctx, filename)) {
             //Try if the filename is URL encoded
-            String decodedFileName = Uri.decode(mediaFileName);
-            if (!Storage.mediaFileExists(ctx, decodedFileName)){
+            filename = Uri.decode(mediaFileName);
+            if (!Storage.mediaFileExists(ctx, filename)){
                 Toast.makeText(ctx,
                     getString(R.string.error_media_not_found, mediaFileName),
                     Toast.LENGTH_LONG).show();
@@ -184,7 +185,7 @@ public abstract class BaseWidget extends Fragment {
             }
         }
 
-        String mimeType = FileUtils.getMimeType(Storage.getMediaPath(ctx) + mediaFileName);
+        String mimeType = FileUtils.getMimeType(Storage.getMediaPath(ctx) + filename);
         if (!FileUtils.isSupportedMediafileType(mimeType)) {
             Toast.makeText(ctx,
                     getString(R.string.error_media_unsupported, mediaFileName),
@@ -194,7 +195,7 @@ public abstract class BaseWidget extends Fragment {
 
         Intent intent = new Intent(ctx, VideoPlayerActivity.class);
         Bundle tb = new Bundle();
-        tb.putSerializable(VideoPlayerActivity.MEDIA_TAG, mediaFileName);
+        tb.putSerializable(VideoPlayerActivity.MEDIA_TAG, filename);
         tb.putSerializable(Activity.TAG, activity);
         tb.putSerializable(Course.TAG, course);
         intent.putExtras(tb);
