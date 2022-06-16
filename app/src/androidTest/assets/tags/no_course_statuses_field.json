@@ -1,0 +1,23 @@
+{
+  "tags": [
+    {
+      "count": 4,
+      "count_new_downloads_enabled": 3,
+      "description": null,
+      "highlight": false,
+      "icon": null,
+      "id": 117,
+      "name": "some-available",
+      "order_priority": 0
+    },
+    {
+      "count": 2,
+      "description": null,
+      "highlight": false,
+      "icon": null,
+      "id": 118,
+      "name": "none-available",
+      "order_priority": 0
+    }
+  ]
+}

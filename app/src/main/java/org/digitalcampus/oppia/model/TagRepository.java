@@ -96,7 +96,8 @@ public class TagRepository {
                     while (keys.hasNext()) {
                         String key = keys.next();
                         String value = jObjCourseStatuses.getString(key);
-                        if (TextUtils.equals(value, Course.STATUS_LIVE)) {
+                        if (TextUtils.equals(value, Course.STATUS_LIVE)
+                                || TextUtils.equals(value, Course.STATUS_DRAFT)) {
                             t.incrementCountAvailable();
                         } else if (TextUtils.equals(value, Course.STATUS_NEW_DOWNLOADS_DISABLED)
                                 || TextUtils.equals(value, Course.STATUS_READ_ONLY)) {
