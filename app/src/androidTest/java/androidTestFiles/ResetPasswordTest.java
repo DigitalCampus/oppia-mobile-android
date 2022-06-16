@@ -69,25 +69,27 @@ public class ResetPasswordTest {
 
             mockServer.start();
 
-        }catch(IOException ioe) {
+        } catch (IOException ioe) {
             ioe.printStackTrace();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         User user = new User();
         user.setUsername("");
         user.setPassword("");
-        
+
         try {
             ResetPasswordTask task = new ResetPasswordTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitEntityListener<User>() {
                 @Override
-                public void apiKeyInvalidated() { }
+                public void apiKeyInvalidated() {
+                }
 
                 @Override
                 public void submitComplete(EntityResult<User> result) {
-                    resultUser = result;;
+                    resultUser = result;
+                    ;
                     signal.countDown();
                 }
             });
@@ -98,10 +100,10 @@ public class ResetPasswordTest {
             assertTrue(resultUser.isSuccess());
             assertEquals(context.getString(R.string.reset_password_complete), resultUser.getResultMessage());
 
-        }catch (InterruptedException ie) {
+        } catch (InterruptedException ie) {
             ie.printStackTrace();
-        }catch(Exception e){}
-
+        } catch (Exception e) {
+        }
 
 
     }
@@ -119,9 +121,9 @@ public class ResetPasswordTest {
 
             mockServer.start();
 
-        }catch(IOException ioe) {
+        } catch (IOException ioe) {
             ioe.printStackTrace();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -133,11 +135,12 @@ public class ResetPasswordTest {
             ResetPasswordTask task = new ResetPasswordTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitEntityListener<User>() {
                 @Override
-                public void apiKeyInvalidated() { }
+                public void apiKeyInvalidated() {
+                }
 
                 @Override
                 public void submitComplete(EntityResult<User> result) {
-                    resultUser = result;;
+                    resultUser = result;
                     signal.countDown();
                 }
             });
@@ -148,16 +151,16 @@ public class ResetPasswordTest {
             assertFalse(resultUser.isSuccess());
             assertEquals(context.getString(R.string.error_reset_password), resultUser.getResultMessage());
 
-        }catch (InterruptedException ie) {
+        } catch (InterruptedException ie) {
             ie.printStackTrace();
-        }catch(Exception e){}
-
+        } catch (Exception e) {
+        }
 
 
     }
 
     @Test
-    public void passwordReset_EmptyResponse()throws Exception {
+    public void passwordReset_EmptyResponse() throws Exception {
         try {
             mockServer = new MockWebServer();
 
@@ -166,9 +169,9 @@ public class ResetPasswordTest {
 
             mockServer.start();
 
-        }catch(IOException ioe) {
+        } catch (IOException ioe) {
             ioe.printStackTrace();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -180,11 +183,12 @@ public class ResetPasswordTest {
             ResetPasswordTask task = new ResetPasswordTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitEntityListener<User>() {
                 @Override
-                public void apiKeyInvalidated() {  }
+                public void apiKeyInvalidated() {
+                }
 
                 @Override
                 public void submitComplete(EntityResult<User> result) {
-                    resultUser = result;;
+                    resultUser = result;
                     signal.countDown();
                 }
             });
@@ -195,27 +199,26 @@ public class ResetPasswordTest {
             assertFalse(resultUser.isSuccess());
             assertEquals(context.getString(R.string.error_processing_response), resultUser.getResultMessage());
 
-        }catch (InterruptedException ie) {
+        } catch (InterruptedException ie) {
             ie.printStackTrace();
-        }catch(Exception e){}
-
+        } catch (Exception e) {
+        }
 
 
     }
 
     @Test
-    public void passwordReset_BadResponse()throws Exception {
+    public void passwordReset_BadResponse() throws Exception {
         try {
             mockServer = new MockWebServer();
 
-            mockServer.enqueue(new MockResponse()
-                    .setBody(FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), "")));
+            mockServer.enqueue(new MockResponse().setBody(""));
 
             mockServer.start();
 
-        }catch(IOException ioe) {
+        } catch (IOException ioe) {
             ioe.printStackTrace();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -227,11 +230,12 @@ public class ResetPasswordTest {
             ResetPasswordTask task = new ResetPasswordTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitEntityListener<User>() {
                 @Override
-                public void apiKeyInvalidated() {  }
+                public void apiKeyInvalidated() {
+                }
 
                 @Override
                 public void submitComplete(EntityResult<User> result) {
-                    resultUser = result;;
+                    resultUser = result;
                     signal.countDown();
                 }
             });
@@ -242,10 +246,10 @@ public class ResetPasswordTest {
             assertFalse(resultUser.isSuccess());
             assertEquals(context.getString(R.string.error_processing_response), resultUser.getResultMessage());
 
-        }catch (InterruptedException ie) {
+        } catch (InterruptedException ie) {
             ie.printStackTrace();
-        }catch(Exception e){}
-
+        } catch (Exception e) {
+        }
 
 
     }

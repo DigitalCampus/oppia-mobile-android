@@ -36,7 +36,7 @@ public class ResetUITest extends MockedApiEndpointTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    private static final String ERROR_RESET_RESPONSE = "responses/response_400_reset.json";
+    private static final String ERROR_RESET_RESPONSE = "responses/response_400_reset_password.json";
 
     @Test
     public void showsErrorMessageWhenThereIsNoUsername() throws Exception {

@@ -28,7 +28,7 @@ public class CourseInfoTaskTest  extends MockedApiEndpointTaskTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    private static final String NOT_JSON_RESPONSE = "responses/response_body_error_message.json";
+    private static final String NOT_JSON_RESPONSE = "responses/response_body_error_message.txt";
     private static final String VALID_COURSEINFO_RESPONSE = "responses/course/response_200_course_info.json";
 
     private CourseInstallViewAdapter courseResult;
@@ -89,8 +89,7 @@ public class CourseInfoTaskTest  extends MockedApiEndpointTaskTest {
 
     @Test
     public void fetchCourseInfo_malformedResponse() throws Exception{
-        startServer(200, FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), NOT_JSON_RESPONSE));
+        startServer(200, NOT_JSON_RESPONSE);
         fetchCourseInfoSync();
         assertNull(courseResult);
         assertEquals(errorMsg, context.getString(R.string.error_processing_response));
