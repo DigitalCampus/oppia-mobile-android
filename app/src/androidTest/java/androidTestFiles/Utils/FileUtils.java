@@ -38,7 +38,7 @@ public class FileUtils {
 
     ///from https://github.com/riggaroo/android-retrofit-test-examples/blob/master/RetrofitTestExample/app/src/androidTest/java/za/co/riggaroo/retrofittestexample/RestServiceTestHelper.java
 
-    public static String convertStreamToString(InputStream is) throws Exception {
+    public static String convertStreamToString(InputStream is) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
         String line;
@@ -49,25 +49,12 @@ public class FileUtils {
         return sb.toString().trim();
     }
 
-    public static String getStringFromFile(Context context, String filePath) throws Exception {
-        String ret = "";
+    public static String getStringFromFile(Context context, String filePath) throws IOException{
 
-        InputStream stream = null;
-        try {
-            stream = context.getResources().getAssets().open(filePath);
-            ret = convertStreamToString(stream);
-        }catch(IOException ioe){
-            ioe.printStackTrace();
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
+        try (InputStream stream = context.getResources().getAssets().open(filePath)) {
+            String string = convertStreamToString(stream);
+            return string;
         }
-        return ret;
     }
 
     public static void copyFileFromAssets(Context context, String assetsDir, String filename, File destination, String destinationFilename){

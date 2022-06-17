@@ -106,7 +106,7 @@ public class APIUserRequestTask extends APIRequestTask<String, Object, BasicResu
                     JSONObject json = new JSONObject(message);
                     if (json.has("message")) {
                         message = json.getString("message");
-			result.setResultMessage(message);
+                        result.setResultMessage(message);
                     }
                 } catch (JSONException e) {
                     Log.d(TAG, e.getMessage());

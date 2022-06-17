@@ -26,8 +26,9 @@ public class CourseUtils {
     /**
      * Utility method to set both sync status (to update or to delete) and course status (draft, live...)
      * based on courses info cache
-     * @param prefs SharedPreferences to get the cache data (passed by parameter to be mockable for tests)
-     * @param courses Installed courses in local database
+     *
+     * @param prefs         SharedPreferences to get the cache data (passed by parameter to be mockable for tests)
+     * @param courses       Installed courses in local database
      * @param fromTimestamp if not null, courses with version timestamp prior to this parameter are ignored
      */
     public static void refreshStatuses(SharedPreferences prefs, List<Course> courses, Double fromTimestamp) {
@@ -173,9 +174,11 @@ public class CourseUtils {
             CoursesServerResponse coursesServerResponse = new Gson().fromJson(
                     coursesCachedStr, CoursesServerResponse.class);
 
-            for (CourseServer courseServer : coursesServerResponse.getCourses()) {
-                if (TextUtils.equals(courseServer.getShortname(), course.getShortname())) {
-                    course.setStatus(courseServer.getStatus());
+            if (coursesServerResponse != null) {
+                for (CourseServer courseServer : coursesServerResponse.getCourses()) {
+                    if (TextUtils.equals(courseServer.getShortname(), course.getShortname())) {
+                        course.setStatus(courseServer.getStatus());
+                    }
                 }
             }
         }
