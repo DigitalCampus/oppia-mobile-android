@@ -44,6 +44,9 @@ jobs:
     name: Instrumentation tests
     needs: [build]
     runs-on: macos-latest
+    strategy:
+      matrix:
+        api-level: [27, 28, 29, 30]
 
     steps:
       - name: Checkout repo
@@ -58,7 +61,7 @@ jobs:
       - name: Run all instrumented Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 28
+          api-level: ${{ matrix.api-level }}
           target: google_apis
           disable-animations: true
           script: ./gradlew connectedNormalDebugAndroidTest
