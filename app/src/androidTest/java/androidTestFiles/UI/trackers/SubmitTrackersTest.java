@@ -76,7 +76,7 @@ public class SubmitTrackersTest extends MockedApiEndpointTest {
     @Test
     public void submitTrackers_error() throws Exception {
 
-        startServer(500, EMPTY_JSON, 0);
+        startServer(500, null, 0);
 
         db.insertTracker(1, "anyDigest", "anyData", "anyType", true, "anyEvent", 10);
 

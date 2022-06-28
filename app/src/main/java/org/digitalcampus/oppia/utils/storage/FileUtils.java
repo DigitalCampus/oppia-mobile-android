@@ -150,7 +150,7 @@ public class FileUtils {
                     out.write(data, 0, count);
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             Analytics.logException(e);
             Log.d(TAG, "Exception:", e);
             return false;

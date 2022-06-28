@@ -11,7 +11,7 @@ def version_code = 100
 def version_name = "7.3.10.et-irt.1.int"
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     defaultConfig {
         versionCode version_code
@@ -20,7 +20,7 @@ android {
         applicationId "et.gov.moh.training"
 
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 32
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The following argument makes the Android Test Orchestrator run its
@@ -32,12 +32,12 @@ android {
 
         vectorDrawables.useSupportLibrary = true
     }
-
     packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'README.md'
+        resources {
+            excludes += ['META-INF/LICENSE.txt', 'META-INF/NOTICE.txt', 'README.md']
+        }
     }
+
 
     lint {
         checkReleaseBuilds true
@@ -45,10 +45,14 @@ android {
         disable 'MissingTranslation', 'ExtraTranslation'
     }
 
-    // Configure to use Java8 features like try-with-resources
     compileOptions {
+
+        // Configure to use Java8 features like try-with-resources, lambdas...
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+
+        // Flag to enable support for the new language Java 8+ APIs: time, functional, concurrent...
+        coreLibraryDesugaringEnabled true
     }
 
 
@@ -208,7 +212,7 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'joda-time:joda-time:2.10.13'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.6.1'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
     implementation 'androidx.core:core:1.7.0'
@@ -216,8 +220,8 @@ dependencies {
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.navigation:navigation-fragment:2.4.1'
-    implementation 'androidx.navigation:navigation-ui:2.4.1'
+    implementation 'androidx.navigation:navigation-fragment:2.4.2'
+    implementation 'androidx.navigation:navigation-ui:2.4.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.concurrent:concurrent-futures:1.1.0'
@@ -264,6 +268,7 @@ dependencies {
 
     //Espresso Dependencies
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-web:3.4.0'
     androidTestImplementation('androidx.test.espresso:espresso-contrib:3.4.0') {
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
@@ -274,10 +279,8 @@ dependencies {
 
     // Fragment testing
     implementation "androidx.fragment:fragment:$fragmentVersion"
-    debugImplementation("androidx.fragment:fragment-testing:$fragmentVersion") {
-        // exclude androidx.test:core while fragment_testing depends on 1.1.0
-        exclude group: 'androidx.test', module: 'core'
-    }
+    debugImplementation 'androidx.test:core:1.4.0'
+    debugImplementation "androidx.fragment:fragment-testing:1.4.1"
 
     //Mockito Dependencies
     testImplementation 'org.mockito:mockito-core:4.3.1'
@@ -289,6 +292,8 @@ dependencies {
     implementation "androidx.multidex:multidex:$multidex_version"
     androidTestImplementation 'com.google.dexmaker:dexmaker:1.2'
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.2'
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
 }
 

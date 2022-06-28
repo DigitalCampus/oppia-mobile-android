@@ -71,7 +71,7 @@ public class MatchingDefaultFeedbackTest extends BaseQuizTest {
 
     @Test
     public void correctAnswer() throws InterruptedException {
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
         onView(withId(R.id.take_quiz_btn)).perform(click());
 
         onView(withId(R.id.question_text))
@@ -111,7 +111,7 @@ public class MatchingDefaultFeedbackTest extends BaseQuizTest {
 
     @Test
     public void partiallyIncorrectAnswer() throws InterruptedException {
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
         onView(withId(R.id.take_quiz_btn)).perform(click());
 
         onView(withId(R.id.question_text))
@@ -151,7 +151,7 @@ public class MatchingDefaultFeedbackTest extends BaseQuizTest {
 
     @Test
     public void incorrectAnswer() throws InterruptedException {
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
         onView(withId(R.id.take_quiz_btn)).perform(click());
 
         onView(withId(R.id.question_text))

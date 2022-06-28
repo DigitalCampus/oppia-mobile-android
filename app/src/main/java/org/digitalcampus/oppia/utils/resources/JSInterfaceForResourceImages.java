@@ -8,24 +8,32 @@ import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
-public class JSInterfaceForResourceImages {
+public class JSInterfaceForResourceImages extends JSInterface{
 
     private static final String TAG = JSInterfaceForResourceImages.class.getSimpleName();
 
     //Name of the JS interface to add to the webView
-    public static final String INTERFACE_EXPOSED_NAME = "OppiaAndroid";
+    public static final String INTERFACE_EXPOSED_NAME = "OppiaAndroid_ResourceImages";
+    private static final String JS_RESOURCE_FILE = "open_file.js";
 
-    //Script to inject in the webView after load
-    public static final String JS_INJECTION = "javascript: (function(){var imgs = document.querySelectorAll('img'); Array.prototype.forEach.call(imgs, function(img, i){if (img.parentNode.nodeName.toLowerCase()!=='a'){img.addEventListener('click', function(){"+ INTERFACE_EXPOSED_NAME +".openFile(img.getAttribute('src'));});}});})();";
-    Context context;
-    String resourcesLocation;
+    private final String resourcesLocation;
 
-    /** Instantiate the interface and set the context */
     public JSInterfaceForResourceImages(Context ctx, String location) {
-        this.context = ctx;
+        super(ctx);
         this.resourcesLocation = location;
+        loadJSInjectionSourceFile(JS_RESOURCE_FILE);
+    }
+
+    @Override
+    public String getInterfaceExposedName() {
+        return INTERFACE_EXPOSED_NAME;
     }
 
     @JavascriptInterface   // must be added for API 17 or higher

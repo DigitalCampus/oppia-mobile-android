@@ -51,7 +51,7 @@ public class BadgesFragmentTest extends MockedApiEndpointTest {
 
         startServer(400, null, 200);
 
-        launchInContainer(BadgesFragment.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(BadgesFragment.class, args, R.style.Oppia_ToolbarTheme);
 
         onView(withId(R.id.error_state)).check(matches(isDisplayed()));
         onView(withId(R.id.empty_state)).check(matches(not(isDisplayed())));
@@ -63,7 +63,7 @@ public class BadgesFragmentTest extends MockedApiEndpointTest {
 
         startServer(200, ERROR_MESSAGE_BODY, 200);
 
-        launchInContainer(BadgesFragment.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(BadgesFragment.class, args, R.style.Oppia_ToolbarTheme);
 
         onView(withText(R.string.error_connection))
                 .inRoot(isDialog())
@@ -84,7 +84,7 @@ public class BadgesFragmentTest extends MockedApiEndpointTest {
 
         startServer(200, VALID_BADGES_RESPONSE_EMPTY, 200);
 
-        launchInContainer(BadgesFragment.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(BadgesFragment.class, args, R.style.Oppia_ToolbarTheme);
 
         onView(withId(R.id.error_state)).check(matches(not(isDisplayed())));
         onView(withId(R.id.empty_state)).check(matches(isDisplayed()));
@@ -97,7 +97,7 @@ public class BadgesFragmentTest extends MockedApiEndpointTest {
 
         startServer(200, VALID_BADGES_RESPONSE_NOT_EMPTY, 200);
 
-        launchInContainer(BadgesFragment.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(BadgesFragment.class, args, R.style.Oppia_ToolbarTheme);
 
         onView(withId(R.id.error_state)).check(matches(not(isDisplayed())));
         onView(withId(R.id.empty_state)).check(matches(not(isDisplayed())));

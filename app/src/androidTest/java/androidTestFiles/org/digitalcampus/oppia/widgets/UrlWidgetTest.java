@@ -56,7 +56,7 @@ public class UrlWidgetTest {
 
     @Test
     public void openUrlTest() {
-        launchInContainer(UrlWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(UrlWidget.class, args, R.style.Oppia_ToolbarTheme);
         // this doesn't really test anything, but gives some coverage to the UrlWidget class
         assertEquals(androidx.test.espresso.ViewInteraction.class.getCanonicalName(), onView(withId(act.getActId())).getClass().getCanonicalName());
     }

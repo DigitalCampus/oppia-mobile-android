@@ -308,11 +308,6 @@ public class Quiz implements Serializable {
         return false;
     }
 
-
-    public boolean hasPrevious() {
-        return this.currentq > 0;
-    }
-
     public void moveNext() {
         if (currentq < questions.size() - 1) {
 
@@ -321,6 +316,23 @@ public class Quiz implements Serializable {
             QuizQuestion nextQuestion = questions.get(currentq);
             if (nextQuestion.isSkipped()) {
                 moveNext();
+            }
+        }
+    }
+
+    public boolean hasPrevious() {
+        return this.currentq > 0;
+    }
+
+    public void movePrevious() {
+        if (currentq > 0) {
+            currentq--;
+
+            QuizQuestion previousQuestion = questions.get(currentq);
+            if (previousQuestion.isSkipped()) {
+                previousQuestion.setSkipped(false);
+                previousQuestion.clearUserResponses();
+                movePrevious();
             }
         }
     }
@@ -336,16 +348,18 @@ public class Quiz implements Serializable {
     private void checkQuestionsSkipped(int questionId) {
         for (int forward = questionId + 1; forward < questions.size(); forward++) {
             QuizQuestion forwardQuestion = questions.get(forward);
+            if (TextUtils.isEmpty(forwardQuestion.getDependItemLabel())) {
+                continue;
+            }
+
             for (int backward = 0; backward <= questionId; backward++) {
                 QuizQuestion backwardQuestion = questions.get(backward);
-                if (TextUtils.isEmpty(forwardQuestion.getDependItemLabel())) {
-                    continue;
-                }
                 if (TextUtils.equals(backwardQuestion.getLabel(), forwardQuestion.getDependItemLabel())) {
                     if (backwardQuestion.isSkipped()) {
                         forwardQuestion.setSkipped(true);
                         continue;
                     }
+
                     for (String userResponse : backwardQuestion.getUserResponses()) {
                         String userResponseValue = userResponse.toLowerCase().trim();
                         String forwardQuestionDependentValue = forwardQuestion.getDependValue().toLowerCase();
@@ -357,19 +371,6 @@ public class Quiz implements Serializable {
                         }
                     }
                 }
-            }
-        }
-    }
-
-    public void movePrevious() {
-        if (currentq > 0) {
-            currentq--;
-
-            QuizQuestion previousQuestion = questions.get(currentq);
-            if (previousQuestion.isSkipped()) {
-                previousQuestion.setSkipped(false);
-                previousQuestion.clearUserResponses();
-                movePrevious();
             }
         }
     }

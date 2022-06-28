@@ -63,7 +63,7 @@ public class FeedbackUITest {
 
     @Test
     public void showGreetingsAtFinish() {
-        launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
         onView(withText("firstanswer")).perform(click());
         onView(withId(R.id.mquiz_next_btn)).perform(click());
@@ -83,7 +83,7 @@ public class FeedbackUITest {
 
     @Test
     public void showProgressTextInNotRequiredQuestions() {
-        launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
         onView(withId(R.id.tv_quiz_progress)).check(matches(withText("1/2")));
         onView(withText("firstanswer")).perform(click());

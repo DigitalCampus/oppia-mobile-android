@@ -92,7 +92,7 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
 
     @Test
     public void showContinueIfQuizPassed() {
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
         onView(withId(R.id.take_quiz_btn)).perform(click());
         onView(withText("correctanswer")).perform(click());
         onView(withId(R.id.mquiz_next_btn)).perform(click());
@@ -108,7 +108,7 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
 
     @Test
     public void showRetakeIfQuizNotPassed() {
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
         onView(withId(R.id.take_quiz_btn)).perform(click());
         onView(withText("correctanswer")).perform(click());
         onView(withId(R.id.mquiz_next_btn)).perform(click());
@@ -130,7 +130,7 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
         stats.setNumAttempts(5);
         Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), any());
 
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
 
         onView(withText(R.string.widget_quiz_unavailable_attempts))
             .check(matches(isDisplayed()));
@@ -140,7 +140,7 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
     public void hideRetakeButtonAfterLastAttempt() throws Exception {
         loadQuizAndSetArgs(WITH_MAX_ATTEMPTS_JSON);
 
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
         onView(withId(R.id.take_quiz_btn)).perform(click());
         onView(withText("correctanswer")).perform(click());
         onView(withId(R.id.mquiz_next_btn)).perform(click());
@@ -187,7 +187,7 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
     private void checkPasswordDialogDisplayed(String quizJson, boolean mustBeDisplayed) throws Exception {
 
         loadQuizAndSetArgs(quizJson);
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
 
         onView(withId(R.id.take_quiz_btn)).perform(click());
 
