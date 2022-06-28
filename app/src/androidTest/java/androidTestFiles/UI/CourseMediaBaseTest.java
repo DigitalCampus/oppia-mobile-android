@@ -58,8 +58,12 @@ public abstract class CourseMediaBaseTest extends DaggerInjectMockUITest {
         FileUtils.copyZipFromAssetsPath(context, "courses_media", filename);  //Copy course zip from assets to download path
     }
 
-    protected void copyMediaFromAssets(String filename){
+    protected void copyMediaFromAssets(String filename, String destinationFilename){
         File mediaPath = new File(Storage.getMediaPath(context));
-        FileUtils.copyFileFromAssets(context, "courses_media", filename, mediaPath);  //Copy course zip from assets to download path
+        FileUtils.copyFileFromAssets(context, "courses_media", filename, mediaPath, destinationFilename);  //Copy course zip from assets to download path
+    }
+
+    protected void copyMediaFromAssets(String filename){
+        copyMediaFromAssets(filename, filename);
     }
 }
