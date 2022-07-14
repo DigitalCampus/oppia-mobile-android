@@ -34,11 +34,13 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -98,6 +100,7 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
                 setPointsAndBadges(jsonResp, user);
                 setPointsAndBadgesEnabled(jsonResp, user);
                 setMetaData(jsonResp);
+                setCohorts(jsonResp, user);
                 DbHelper.getInstance(ctx).addOrUpdateUser(user);
                 result.setSuccess(true);
                 result.setResultMessage(ctx.getString(R.string.login_complete));
@@ -202,6 +205,15 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
             Analytics.logException(e);
             Log.d(TAG, "JSONException: ", e);
         }
+    }
+
+    private void setCohorts(JSONObject jsonResp, User u) throws JSONException{
+        JSONArray cohortsJson = jsonResp.getJSONArray("cohorts");
+        List<Integer> cohorts = new ArrayList<>();
+        for (int i = 0; i < cohortsJson.length(); i++) {
+            cohorts.add(cohortsJson.getInt(i));
+        }
+        u.setCohorts(cohorts);
     }
 
 	@Override

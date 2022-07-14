@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityDownloadBinding;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.adapter.DownloadCoursesAdapter;
@@ -42,6 +43,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Tag;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
@@ -54,6 +56,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -339,6 +342,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             // TODO 'refreshCourseList' method should be refactorized
             courseInstallRepository.refreshCourseList(this, courses, json, storage, mode == MODE_COURSE_TO_UPDATE);
             if (mode == MODE_TAG_COURSES) {
+                filterCoursesByCohort();
                 filterByCoursesAvailableForNewDownloads();
             } else if (mode == MODE_COURSE_TO_UPDATE) {
                 filterOnlyInstalledCourses();
@@ -406,6 +410,20 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             }
         }
 
+    }
+
+    private void filterCoursesByCohort() {
+        App app = (App) this.getApplicationContext();
+        User currentUser = app.getComponent().getUser();
+        Iterator<CourseInstallViewAdapter> iter = courses.iterator();
+        while (iter.hasNext()) {
+            CourseInstallViewAdapter courseAdapter = iter.next();
+            boolean commonCohort = courseAdapter.getRestrictedCohorts().stream()
+                    .anyMatch(currentUser.getCohorts()::contains);
+            if (courseAdapter.isRestricted() && !commonCohort) {// It is not installed
+                iter.remove();
+            }
+        }
     }
 
     private boolean isInstalled(CourseInstallViewAdapter courseAdapter, List<Course> installedCourses) {

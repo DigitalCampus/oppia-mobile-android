@@ -16,6 +16,8 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.responses.CourseServer;
 import org.digitalcampus.oppia.model.responses.CoursesServerResponse;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -182,5 +184,13 @@ public class CourseUtils {
                 }
             }
         }
+    }
+
+    public static List<Integer> parseCourseCohortsFromJSONArray(JSONArray cohortsJson) throws JSONException {
+        List<Integer> cohorts = new ArrayList<>();
+        for (int i = 0; i < cohortsJson.length(); i++) {
+            cohorts.add(cohortsJson.getInt(i));
+        }
+        return cohorts;
     }
 }
