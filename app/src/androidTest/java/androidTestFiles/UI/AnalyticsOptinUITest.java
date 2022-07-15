@@ -76,7 +76,7 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    public void checkAnalyticsOptinScreenAndValuesAreCorrectOnPerUserBasis() throws Exception {
+    public void checkAnalyticsOptionScreenAndValuesAreCorrectOnPerUserBasis() throws Exception {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
