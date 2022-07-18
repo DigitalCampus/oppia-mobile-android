@@ -165,12 +165,8 @@ public class CourseUtils {
         return false;
     }
 
-    public static void refreshCachedStatus(Context context, Course course) {
-        refreshCachedStatus(context, course, PreferenceManager.getDefaultSharedPreferences(context));
-    }
-
-    public static void refreshCachedStatus(Context context, Course course, SharedPreferences prefs) {
-
+    public static void refreshCachedData(Context context, Course course) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String coursesCachedStr = prefs.getString(PrefsActivity.PREF_SERVER_COURSES_CACHE, null);
         if (coursesCachedStr != null) {
             CoursesServerResponse coursesServerResponse = new Gson().fromJson(
@@ -179,11 +175,21 @@ public class CourseUtils {
             if (coursesServerResponse != null) {
                 for (CourseServer courseServer : coursesServerResponse.getCourses()) {
                     if (TextUtils.equals(courseServer.getShortname(), course.getShortname())) {
-                        course.setStatus(courseServer.getStatus());
+                        refreshCachedStatus(course, courseServer.getStatus());
+                        refreshCachedCohorts(course, courseServer.isRestricted(), courseServer.getRestrictedCohorts());
                     }
                 }
             }
         }
+    }
+
+    private static void refreshCachedStatus(Course course, String newStatus) {
+        course.setStatus(newStatus);
+    }
+
+    private static void refreshCachedCohorts(Course course, boolean isRestricted, List<Integer> cohorts) {
+        course.setRestricted(isRestricted);
+        course.setRestrictedCohorts(cohorts);
     }
 
     public static List<Integer> parseCourseCohortsFromJSONArray(JSONArray cohortsJson) throws JSONException {

@@ -1065,7 +1065,7 @@ public class DbHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Course course = setupCourseObject(c);
-            CourseUtils.refreshCachedStatus(ctx, course);
+            CourseUtils.refreshCachedData(ctx, course);
             courses.add(course);
             c.moveToNext();
         }
@@ -1117,7 +1117,7 @@ public class DbHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Course course = setupCourseObject(c);
-            CourseUtils.refreshCachedStatus(ctx, course);
+            CourseUtils.refreshCachedData(ctx, course);
             this.courseSetProgress(course, userId);
             courses.add(course);
             c.moveToNext();
@@ -1164,7 +1164,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         c.moveToFirst();
         Course course = setupCourseObject(c);
-        CourseUtils.refreshCachedStatus(ctx, course);
+        CourseUtils.refreshCachedData(ctx, course);
         c.close();
         return course;
     }

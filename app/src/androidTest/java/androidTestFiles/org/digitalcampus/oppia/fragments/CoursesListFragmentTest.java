@@ -12,8 +12,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.fragment.app.testing.FragmentScenario;
-import androidx.lifecycle.Lifecycle;
 import androidx.preference.PreferenceManager;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -40,34 +38,48 @@ public class CoursesListFragmentTest {
         args = new Bundle();
 
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+
+        // Load User data:
+        //      [User]       [Cohorts]
+        //    TEST_USER_1 ->   1,2
+        //    TEST_USER_2 ->   2,3
+        //    TEST_USER_3 ->    3
         UserData.loadData(context);
+
+        // Load Course data:
+        //  [Course shortname]   [Cohorts]
+        //     TEST_COURSE_1  ->    1
+        //     TEST_COURSE_2  ->   1,2
+        //     TEST_COURSE_3  -> Not Restricted
         CourseData.loadData(context);
     }
 
     @Test
-    public void showCourse3ForUser3(){
+    public void shouldDisplayCourse3ForUser3(){
 
+        // 1. Given a logged user that belongs to cohort 3
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefs.edit().putString(PrefsActivity.PREF_USER_NAME, UserData.TEST_USER_3).commit();
 
-
         launchInContainer(CoursesListFragment.class, args, R.style.Oppia_ToolbarTheme);
 
+        // 2. Then TEST_USER_3 should only see TEST_COURSE_3 which is not restricted to cohorts
         onView(withId(R.id.recycler_courses)).check(new RecyclerViewItemCountAssertion(1));
-
         onView(withRecyclerView(R.id.recycler_courses)
                 .atPositionOnView(0, R.id.course_title))
                 .check(matches(withText(CourseData.TEST_COURSE_3)));
     }
 
     @Test
-    public void showCourse2AndCourse3ForUser2() {
+    public void shouldDisplayCourse2AndCourse3ForUser2() {
 
+        // 1. Given a logged user that belongs to cohorts 2 and 3
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefs.edit().putString(PrefsActivity.PREF_USER_NAME, UserData.TEST_USER_2).commit();
 
         launchInContainer(CoursesListFragment.class, args, R.style.Oppia_ToolbarTheme);
 
+        // 2. Then TEST_USER_2 should see TEST_COURSE_2 and TEST_COURSE_3
         onView(withId(R.id.recycler_courses)).check(new RecyclerViewItemCountAssertion(2));
 
         onView(withRecyclerView(R.id.recycler_courses)
@@ -80,13 +92,15 @@ public class CoursesListFragmentTest {
     }
 
     @Test
-    public void showCourse1Course2AndCourse3ForUser1() throws Exception {
+    public void shouldDisplayCourse1Course2AndCourse3ForUser1() {
 
+        // 1. Given a logged user that belongs to cohorts 1 and 2
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefs.edit().putString(PrefsActivity.PREF_USER_NAME, UserData.TEST_USER_1).commit();
 
         launchInContainer(CoursesListFragment.class, args, R.style.Oppia_ToolbarTheme);
 
+        // 2. Then TEST_USER_1 should see TEST_COURSE_1, TEST_COURSE_2, and TEST_COURSE_3
         onView(withId(R.id.recycler_courses)).check(new RecyclerViewItemCountAssertion(3));
 
         onView(withRecyclerView(R.id.recycler_courses)
@@ -103,13 +117,15 @@ public class CoursesListFragmentTest {
     }
 
     @Test
-    public void testCohortVisibilityWithUserChange() throws Exception {
+    public void testCohortVisibilityWithUserChange() {
 
+        // 1. Given a logged user that belongs to cohorts 1 and 2
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefs.edit().putString(PrefsActivity.PREF_USER_NAME, UserData.TEST_USER_1).commit();
 
         launchInContainer(CoursesListFragment.class, args, R.style.Oppia_ToolbarTheme);
 
+        // 2. Then TEST_USER_1 should see TEST_COURSE_1, TEST_COURSE_2, and TEST_COURSE_3
         onView(withId(R.id.recycler_courses)).check(new RecyclerViewItemCountAssertion(3));
 
         onView(withRecyclerView(R.id.recycler_courses)
@@ -124,10 +140,12 @@ public class CoursesListFragmentTest {
                 .atPositionOnView(2, R.id.course_title))
                 .check(matches(withText(CourseData.TEST_COURSE_3)));
 
+        // 3. Now, changing to TEST_USER_3 that belongs to cohort 3
         prefs.edit().putString(PrefsActivity.PREF_USER_NAME, UserData.TEST_USER_3).commit();
 
         launchInContainer(CoursesListFragment.class, args, R.style.Oppia_ToolbarTheme);
 
+        // 4. We should only see TEST_COURSE_3
         onView(withId(R.id.recycler_courses)).check(new RecyclerViewItemCountAssertion(1));
 
         onView(withRecyclerView(R.id.recycler_courses)

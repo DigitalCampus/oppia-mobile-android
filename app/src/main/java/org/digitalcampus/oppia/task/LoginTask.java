@@ -73,6 +73,8 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
                     localUser.getPasswordEncrypted().equals(user.getPasswordEncrypted())){
 				result.setSuccess(true);
 				result.setResultMessage(ctx.getString(R.string.login_complete));
+
+                updateLoggedUserCohorts(localUser);
 				return result;
 			}
 		} catch (UserNotFoundException unfe) {
@@ -100,7 +102,8 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
                 setPointsAndBadges(jsonResp, user);
                 setPointsAndBadgesEnabled(jsonResp, user);
                 setMetaData(jsonResp);
-                setCohorts(jsonResp, user);
+                JSONArray cohortsJson = jsonResp.getJSONArray("cohorts");
+                setCohorts(cohortsJson, user);
                 DbHelper.getInstance(ctx).addOrUpdateUser(user);
                 result.setSuccess(true);
                 result.setResultMessage(ctx.getString(R.string.login_complete));
@@ -207,8 +210,7 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
         }
     }
 
-    private void setCohorts(JSONObject jsonResp, User u) throws JSONException{
-        JSONArray cohortsJson = jsonResp.getJSONArray("cohorts");
+    private void setCohorts(JSONArray cohortsJson, User u) throws JSONException{
         List<Integer> cohorts = new ArrayList<>();
         for (int i = 0; i < cohortsJson.length(); i++) {
             cohorts.add(cohortsJson.getInt(i));
@@ -228,6 +230,25 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
 	public void setLoginListener(SubmitEntityListener srl) {
         synchronized (this) {
             mStateListener = srl;
+        }
+    }
+
+    private void updateLoggedUserCohorts(User localUser){
+        try {
+            OkHttpClient client = HTTPClientUtils.getClient(ctx);
+            String url = apiEndpoint.getFullURL(ctx, Paths.USER_COHORTS_PATH);
+            Request request = new Request.Builder()
+                    .url(HTTPClientUtils.getUrlWithCredentials(url, localUser.getUsername(), localUser.getApiKey()))
+                    .build();
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                JSONArray cohortsJson = new JSONArray(response.body().string());
+                setCohorts(cohortsJson, localUser);
+                DbHelper.getInstance(ctx).addOrUpdateUser(localUser);
+
+            }
+        } catch (JSONException | IOException e) {
+            Log.w(TAG, "Unable to update user cohorts: ", e);
         }
     }
 
