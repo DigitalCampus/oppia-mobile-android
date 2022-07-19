@@ -1111,8 +1111,9 @@ public class DbHelper extends SQLiteOpenHelper {
     public List<Course> getCoursesForUser(long userId) {
         ArrayList<Course> courses = new ArrayList<>();
         String order = COURSE_C_ORDER_PRIORITY + " " + DESC + ", " + COURSE_C_TITLE + " ASC";
+        String username = getUsername(userId);
         Cursor c = db.rawQuery(
-            selectCoursesAndRestrictByCohort()
+            selectCoursesAndRestrictByCohort(username)
                 + " ORDER BY " + order, null);
         c.moveToFirst();
         while (!c.isAfterLast()) {
@@ -1126,30 +1127,32 @@ public class DbHelper extends SQLiteOpenHelper {
         return courses;
     }
 
-    private String selectCoursesAndRestrictByCohort() {
+    private String selectCoursesAndRestrictByCohort(String username) {
         /***
          * SELECT * FROM Module c
-         * WHERE c.restricted=0
-         *    OR EXISTS (
+         * WHERE (
+         *    c.restricted=0
+         *    OR
+         *    EXISTS (
          *       SELECT 1
          *       FROM CohortUser cohort_user
          *       INNER JOIN CohortCourse cohort_course
          *       ON cohort_user.cohort = cohort_course.cohort
          *       WHERE cohort_user.username='<username>'
          *           AND cohort_course.course_shortname=c.shortname
-         *    );
+         *    ));
          */
         return  SELECT_ALL_FROM + COURSE_TABLE + " c "
-                + " WHERE c." + COURSE_C_RESTRICTED + "=0 "
+                + " WHERE (c." + COURSE_C_RESTRICTED + "=0 "
                 + OR
                 + " EXISTS ( SELECT 1 FROM "
                 + COHORT_USER_TABLE + " cohort_user"
                 + " INNER JOIN "
                 + COHORT_COURSE_TABLE + " cohort_course"
                 + " ON cohort_user.cohort = cohort_course.cohort"
-                + " WHERE cohort_user.username='" + SessionManager.getUsername(ctx) + "' "
+                + " WHERE cohort_user.username='" + username + "' "
                 + AND
-                + " cohort_course." + COHORT_COURSE_C_COURSE_SHORTNAME + "=c.shortname)";
+                + " cohort_course." + COHORT_COURSE_C_COURSE_SHORTNAME + "=c.shortname))";
     }
 
     public Course getCourse(long courseId) {
@@ -1178,10 +1181,11 @@ public class DbHelper extends SQLiteOpenHelper {
         return course;
     }
 
-    public long getCourseIdByShortname(String shortname) {
+    public long getCourseIdByShortname(String shortname, long userId) {
         String s = COURSE_C_SHORTNAME + "=?";
         String[] args = new String[]{shortname};
-        Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
+        String username = getUsername(userId);
+        Cursor c = db.rawQuery(selectCoursesAndRestrictByCohort(username) + AND + s, args);
 
         if (c.getCount() > 0) {
             c.moveToFirst();
@@ -1490,6 +1494,20 @@ public class DbHelper extends SQLiteOpenHelper {
         }
         c.close();
         return userId;
+    }
+
+    public String getUsername(long userId) {
+        String s = USER_C_ID + "=? ";
+        String[] args = new String[]{ String.valueOf(userId) };
+        Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
+        c.moveToFirst();
+        String username = null;
+        while (!c.isAfterLast()) {
+            username = c.getString(c.getColumnIndex(USER_C_USERNAME));
+            c.moveToNext();
+        }
+        c.close();
+        return username;
     }
 
     private User fetchUser(Cursor c) {
@@ -2311,7 +2329,8 @@ public class DbHelper extends SQLiteOpenHelper {
      */
     public List<SearchResult> search(String searchText, int limit, long userId, Context ctx) {
         ArrayList<SearchResult> results = new ArrayList<>();
-        String selectCoursesSubQuery = "(" + selectCoursesAndRestrictByCohort() + ")";
+        String username = getUsername(userId);
+        String selectCoursesSubQuery = "(" + selectCoursesAndRestrictByCohort(username) + ")";
         String sqlSeachFullText = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 1 AS ranking FROM %s ft " +
                         STR_INNERJOIN_FULLTEXT +
                         STR_INNERJOIN_COURSE +

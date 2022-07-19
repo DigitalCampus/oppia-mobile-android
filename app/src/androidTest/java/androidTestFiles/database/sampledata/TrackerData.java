@@ -15,14 +15,14 @@ public class TrackerData {
     public static void loadDataAllActivitiesCourseComplete(Context ctx){
 
         DbHelper db = DbHelper.getInstance(ctx);
-
-        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1);
         User user = null;
         try {
             user = db.getUser(UserData.TEST_USER_1);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
+
+        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1, user.getUserId());
 
         TrackerLog t1 = new TrackerLog();
         t1.setCompleted(true);
@@ -75,13 +75,14 @@ public class TrackerData {
 
         DbHelper db = DbHelper.getInstance(ctx);
 
-        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1);
         User user = null;
         try {
             user = db.getUser(UserData.TEST_USER_1);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
+
+        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1, user.getUserId());
 
         TrackerLog t1 = new TrackerLog();
         t1.setCompleted(false);
@@ -133,13 +134,14 @@ public class TrackerData {
     public static void loadDataAllQuizzesCourseComplete(Context ctx){
         DbHelper db = DbHelper.getInstance(ctx);
 
-        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1);
         User user = null;
         try {
             user = db.getUser(UserData.TEST_USER_1);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
+
+        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1, user.getUserId());
 
         TrackerLog t1 = new TrackerLog();
         t1.setCompleted(true);
@@ -171,13 +173,14 @@ public class TrackerData {
     public static void loadDataAllQuizzesCourseNotComplete(Context ctx){
         DbHelper db = DbHelper.getInstance(ctx);
 
-        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1);
         User user = null;
         try {
             user = db.getUser(UserData.TEST_USER_1);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
+
+        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1, user.getUserId());
 
         TrackerLog t1 = new TrackerLog();
         t1.setCompleted(true);
@@ -208,13 +211,14 @@ public class TrackerData {
     public static void loadDataFinalQuizCourseComplete(Context ctx){
         DbHelper db = DbHelper.getInstance(ctx);
 
-        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1);
         User user = null;
         try {
             user = db.getUser(UserData.TEST_USER_1);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
+
+        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1, user.getUserId());
 
         TrackerLog t4 = new TrackerLog();
         t4.setCompleted(false);
@@ -238,13 +242,14 @@ public class TrackerData {
     public static void loadDataFinalQuizCourseNotComplete(Context ctx){
         DbHelper db = DbHelper.getInstance(ctx);
 
-        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1);
         User user = null;
         try {
             user = db.getUser(UserData.TEST_USER_1);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
+
+        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1, user.getUserId());
 
         TrackerLog t4 = new TrackerLog();
         t4.setCompleted(true);
@@ -268,13 +273,14 @@ public class TrackerData {
     public static void loadDataAllQuizzesPlusPercentCourseComplete(Context ctx){
         DbHelper db = DbHelper.getInstance(ctx);
 
-        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1);
         User user = null;
         try {
             user = db.getUser(UserData.TEST_USER_1);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
+
+        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1, user.getUserId());
 
         TrackerLog t1 = new TrackerLog();
         t1.setCompleted(true);
@@ -326,13 +332,14 @@ public class TrackerData {
     public static void loadDataAllQuizzesPlusPercentCourseNotComplete(Context ctx){
         DbHelper db = DbHelper.getInstance(ctx);
 
-        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1);
         User user = null;
         try {
             user = db.getUser(UserData.TEST_USER_1);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
+
+        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1, user.getUserId());
 
         TrackerLog t1 = new TrackerLog();
         t1.setCompleted(true);

@@ -385,13 +385,14 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
 
     private void filterByCoursesAvailableForNewDownloads() {
-
         Iterator<CourseInstallViewAdapter> iter = courses.iterator();
         while (iter.hasNext()) {
             CourseInstallViewAdapter courseAdapter = iter.next();
             if (courseAdapter.hasStatus(Course.STATUS_NEW_DOWNLOADS_DISABLED)
                     || courseAdapter.hasStatus(Course.STATUS_READ_ONLY)) {
-                long id = DbHelper.getInstance(this).getCourseIdByShortname(courseAdapter.getShortname());
+                App app = (App) this.getApplicationContext();
+                User currentUser = app.getComponent().getUser();
+                long id = DbHelper.getInstance(this).getCourseIdByShortname(courseAdapter.getShortname(), currentUser.getUserId());
                 if (id == -1) {  // It is not installed
                     iter.remove();
                 }
