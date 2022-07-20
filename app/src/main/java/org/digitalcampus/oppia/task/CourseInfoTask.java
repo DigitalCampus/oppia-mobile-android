@@ -26,12 +26,14 @@ import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.task.result.EntityResult;
+import org.digitalcampus.oppia.utils.CourseUtils;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -101,6 +103,13 @@ public class CourseInfoTask extends APIRequestTask<String, Void, EntityResult<Co
         course.setVersionId(jsonObject.getDouble("version"));
         course.setDownloadUrl(jsonObject.getString("url"));
         course.setAuthorName(jsonObject.getString("author"));
+        boolean courseRestricted = jsonObject.getBoolean("restricted");
+        course.setRestricted(courseRestricted);
+
+        if (courseRestricted) {
+            List<Integer> restrictedCohorts = CourseUtils.parseCourseCohortsFromJSONArray(jsonObject.getJSONArray("cohorts"));
+            course.setRestrictedCohorts(restrictedCohorts);
+        }
         return course;
 
     }

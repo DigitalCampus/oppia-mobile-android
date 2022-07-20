@@ -1,5 +1,6 @@
 {
   "api_key": "fakeapikey",
   "first_name": "Tester",
-  "last_name": "Testington"
+  "last_name": "Testington",
+  "cohorts": []
 }

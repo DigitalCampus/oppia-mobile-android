@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.digitalcampus.oppia.model.Course;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CourseServer {
@@ -21,6 +22,9 @@ public class CourseServer {
     private int priority = 0;
 
     private String status = Course.STATUS_LIVE;
+
+    private boolean isRestricted = false;
+    private List<Integer> cohorts;
 
     public int getId() {
         return id;
@@ -97,5 +101,21 @@ public class CourseServer {
 
     public boolean hasStatus(String status) {
         return TextUtils.equals(this.status, status);
+    }
+
+    public boolean isRestricted() {
+        return isRestricted;
+    }
+
+    public void setRestricted(boolean isRestricted) {
+        this.isRestricted = isRestricted;
+    }
+
+    public List<Integer> getRestrictedCohorts() {
+        return cohorts;
+    }
+
+    public void setRestrictedCohorts(List<Integer> cohorts) {
+        this.cohorts = cohorts;
     }
 }

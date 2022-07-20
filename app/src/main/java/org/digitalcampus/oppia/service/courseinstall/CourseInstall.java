@@ -39,6 +39,7 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 import androidx.preference.PreferenceManager;
@@ -55,7 +56,7 @@ public class CourseInstall {
     public static final String TAG = CourseInstall.class.getSimpleName();
     private static final String STR_ERROR = "Error: ";
 
-    public static void installDownloadedCourse(Context ctx, String filename, String shortname, CourseInstallingListener listener) {
+    public static void installDownloadedCourse(Context ctx, String filename, String shortname, boolean isRestricted, List<Integer> restrictedCohorts, CourseInstallingListener listener) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         File tempdir = new File(Storage.getStorageLocationRoot(ctx), "temp/");
@@ -117,6 +118,8 @@ public class CourseInstall {
         }
 
         c.setShortname(courseDir);
+        c.setRestricted(isRestricted);
+        c.setRestrictedCohorts(restrictedCohorts);
         String title = c.getTitle(prefs);
         listener.onInstallProgress(20);
 

@@ -21,6 +21,7 @@ import android.content.Context;
 
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
+import org.digitalcampus.oppia.utils.CourseUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,6 +59,8 @@ public class CourseInstallViewAdapter extends Course {
     private static final String JSON_PROPERTY_USERNAME = "username";
     private static final String JSON_PROPERTY_ORGANISATION = "organisation";
     private static final String JSON_PROPERTY_STATUS = "status";
+    private static final String JSON_PROPERTY_RESTRICTED = "restricted";
+    private static final String JSON_PROPERTY_RESTRICTED_COHORTS = "cohorts";
 
     public boolean isDownloading() {
         return downloading;
@@ -159,6 +162,13 @@ public class CourseInstallViewAdapter extends Course {
             course.setShortname(jsonObj.getString(JSON_PROPERTY_SHORTNAME));
             course.setVersionId(jsonObj.getDouble(JSON_PROPERTY_VERSION));
             course.setDownloadUrl(jsonObj.getString(JSON_PROPERTY_URL));
+            boolean courseRestricted = jsonObj.getBoolean(JSON_PROPERTY_RESTRICTED);
+            course.setRestricted(courseRestricted);
+
+            if (courseRestricted) {
+                List<Integer> restrictedCohorts = CourseUtils.parseCourseCohortsFromJSONArray(jsonObj.getJSONArray(JSON_PROPERTY_RESTRICTED_COHORTS));
+                course.setRestrictedCohorts(restrictedCohorts);
+            }
 
             if (jsonObj.has(JSON_PROPERTY_STATUS) && !jsonObj.isNull(JSON_PROPERTY_STATUS))
                 course.setStatus(jsonObj.getString(JSON_PROPERTY_STATUS));

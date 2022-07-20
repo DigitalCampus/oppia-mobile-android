@@ -51,7 +51,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Void, DownloadProgre
 
 			for (final String course_filename : children) {
 
-				CourseInstall.installDownloadedCourse(ctx, course_filename, "", new CourseInstall.CourseInstallingListener() {
+				CourseInstall.installDownloadedCourse(ctx, course_filename, "", false, null, new CourseInstall.CourseInstallingListener() {
 					@Override
 					public void onInstallProgress(int progress) {
 						DownloadProgress dp = new DownloadProgress();

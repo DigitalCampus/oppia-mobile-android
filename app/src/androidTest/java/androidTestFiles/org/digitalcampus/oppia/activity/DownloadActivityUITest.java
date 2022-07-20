@@ -3,9 +3,11 @@ package androidTestFiles.org.digitalcampus.oppia.activity;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
@@ -15,6 +17,7 @@ import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.task.result.BasicResult;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +31,9 @@ import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
 import androidTestFiles.Utils.Assertions.StatusBadgeAssertion;
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.database.sampledata.UserData;
 
+import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -59,6 +64,14 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
     CourseInstallRepository courseInstallRepository;
     @Mock
     CourseInstallerServiceDelegate courseInstallerServiceDelegate;
+
+    private Context context;
+
+    @Before
+    public void setUp() throws Exception {
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        UserData.loadData(context);
+    }
 
     private void givenThereAreSomeCourses(final int numberOfCourses, final CourseInstallViewAdapter course) throws Exception {
 
@@ -628,6 +641,153 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
             onView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(1, R.id.course_title))
                     .check(matches(withText("Course2")));
+        }
+    }
+
+    @Test
+    public void showEmptyDownloadListIfNoCohortsMatch() throws Exception {
+        // 1. Given a course restricted for cohort 3
+        CourseInstallViewAdapter c1 = getBaseCourse();
+        c1.setShortname("c1");
+        c1.setTitles(Arrays.asList(new Lang("en", "Course1")));
+        c1.setRestricted(true);
+        c1.setRestrictedCohorts(Arrays.asList(3));
+        givenThereAreSomeCourses(c1);
+
+        // 2. Given a logged user that belongs to cohorts 1 and 2
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().putString(PrefsActivity.PREF_USER_NAME, UserData.TEST_USER_1).commit();
+
+        // 3. The available courses for download should be 0
+        try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
+            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(0));
+        }
+    }
+
+    @Test
+    public void showCourse1ToUser1BecauseTheyHaveCohort1InCommon() throws Exception {
+        // 1. Given a course restricted for cohorts 1 and 3
+        CourseInstallViewAdapter c1 = getBaseCourse();
+        c1.setShortname("c1");
+        c1.setTitles(Arrays.asList(new Lang("en", "Course1")));
+        c1.setRestricted(true);
+        c1.setRestrictedCohorts(Arrays.asList(1, 3));
+
+        givenThereAreSomeCourses(c1);
+
+        // 2. Given a logged user that belongs to cohorts 1 and 2
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().putString(PrefsActivity.PREF_USER_NAME, UserData.TEST_USER_1).commit();
+
+        // 3. The user should see Course1 because they share cohort 1
+        try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
+            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
+
+            onView(withRecyclerView(R.id.recycler_tags)
+                    .atPositionOnView(0, R.id.course_title))
+                    .check(matches(withText("Course1")));
+        }
+    }
+
+    @Test
+    public void showCourse1ToUser1BecauseTheyHaveCohort1InCommon_dontShowCourse2() throws Exception {
+        // 1. Given Course1 restricted for cohorts 1 and 3 and Course2 restricted for cohort 3
+        CourseInstallViewAdapter c1 = getBaseCourse();
+        c1.setShortname("c1");
+        c1.setTitles(Arrays.asList(new Lang("en", "Course1")));
+        c1.setRestricted(true);
+        c1.setRestrictedCohorts(Arrays.asList(1, 3));
+
+        CourseInstallViewAdapter c2 = getBaseCourse();
+        c2.setShortname("c2");
+        c2.setTitles(Arrays.asList(new Lang("en", "Course2")));
+        c2.setRestricted(true);
+        c2.setRestrictedCohorts(Arrays.asList(3));
+
+        givenThereAreSomeCourses(c1, c2);
+
+        // 2. Given a logged user that belongs to cohorts 1 and 2
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().putString(PrefsActivity.PREF_USER_NAME, UserData.TEST_USER_1).commit();
+
+        // 3. The user should see Course1 because they share cohort 1
+        try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
+            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
+
+            onView(withRecyclerView(R.id.recycler_tags)
+                    .atPositionOnView(0, R.id.course_title))
+                    .check(matches(withText("Course1")));
+        }
+    }
+
+    @Test
+    public void testCohortVisibilityWithUserChange() throws Exception {
+        // 1. Given Course1 restricted for cohorts 1 and 3 and Course2 restricted for cohort 3
+        CourseInstallViewAdapter c1 = getBaseCourse();
+        c1.setShortname("c1");
+        c1.setTitles(Arrays.asList(new Lang("en", "Course1")));
+        c1.setRestricted(true);
+        c1.setRestrictedCohorts(Arrays.asList(1, 3));
+
+        CourseInstallViewAdapter c2 = getBaseCourse();
+        c2.setShortname("c2");
+        c2.setTitles(Arrays.asList(new Lang("en", "Course2")));
+        c2.setRestricted(true);
+        c2.setRestrictedCohorts(Arrays.asList(3));
+
+        givenThereAreSomeCourses(c1, c2);
+
+        // 2. Given a logged user that belongs to cohorts 1 and 2
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().putString(PrefsActivity.PREF_USER_NAME, UserData.TEST_USER_1).commit();
+
+        // 3. The user should see Course1 because they share cohort 1
+        try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
+            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
+
+            onView(withRecyclerView(R.id.recycler_tags)
+                    .atPositionOnView(0, R.id.course_title))
+                    .check(matches(withText("Course1")));
+        }
+
+        // 4. Login now with user 3 that belongs only to cohort 3
+        prefs.edit().putString(PrefsActivity.PREF_USER_NAME, UserData.TEST_USER_3).commit();
+
+        // 5. The user should see Course1 and Course2 because they share cohort 3
+        try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
+            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(2));
+
+            onView(withRecyclerView(R.id.recycler_tags)
+                    .atPositionOnView(0, R.id.course_title))
+                    .check(matches(withText("Course1")));
+
+            onView(withRecyclerView(R.id.recycler_tags)
+                    .atPositionOnView(1, R.id.course_title))
+                    .check(matches(withText("Course2")));
+        }
+    }
+
+    @Test
+    public void alwaysShowNonRestrictedCourses() throws Exception {
+        // 1. Given a non-restricted course
+        CourseInstallViewAdapter c1 = getBaseCourse();
+        c1.setShortname("c1");
+        c1.setTitles(Arrays.asList(new Lang("en", "Course1")));
+        c1.setRestricted(false);
+
+        givenThereAreSomeCourses(c1);
+
+        // 2. Given a logged user that belongs to cohorts 1 and 2
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().putString(PrefsActivity.PREF_USER_NAME, UserData.TEST_USER_1).commit();
+
+        // 3. The user should see Course1 because the course is not restricted
+        try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
+            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
+
+            onView(withRecyclerView(R.id.recycler_tags)
+                    .atPositionOnView(0, R.id.course_title))
+                    .check(matches(withText("Course1")));
         }
     }
 }

@@ -35,9 +35,9 @@ import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
 import org.digitalcampus.oppia.service.CoursesChecksWorker;
-import org.digitalcampus.oppia.service.CoursesCompletionReminderWorker;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.service.TrackerWorker;
+import org.digitalcampus.oppia.service.UserCohortsCheckerWorker;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
@@ -133,6 +133,7 @@ public class App extends Application {
     public static final String WORK_COURSES_CHECKS = "no_course_worker";
     public static final String WORK_COURSES_NOT_COMPLETED_REMINDER = "courses_reminder";
     public static final String WORK_COURSES_NOT_COMPLETED_REMINDER_ = "courses_reminder_";
+    public static final String WORK_USER_PROFILE_CHECKS = "user_profile_checks_worker";
 
 
     private AppComponent appComponent;
@@ -234,9 +235,10 @@ public class App extends Application {
 
         if (backgroundData) {
             scheduleTrackerWork();
+            scheduleUserProfileChecksWork();
             scheduleCoursesChecksWork();
         } else {
-            cancelWorks(WORK_COURSES_CHECKS, WORK_TRACKER_SEND);
+            cancelWorks(WORK_COURSES_CHECKS, WORK_TRACKER_SEND, WORK_USER_PROFILE_CHECKS);
         }
 
         scheduleCoursesReminderWork();
@@ -284,6 +286,19 @@ public class App extends Application {
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_COURSES_CHECKS,
                 ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
 
+    }
+
+    private void scheduleUserProfileChecksWork() {
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        PeriodicWorkRequest userProfileCheckWork = new PeriodicWorkRequest.Builder(UserCohortsCheckerWorker.class, 12, TimeUnit.HOURS)
+                .setConstraints(constraints)
+                .build();
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_USER_PROFILE_CHECKS,
+                ExistingPeriodicWorkPolicy.REPLACE, userProfileCheckWork);
     }
 
 
