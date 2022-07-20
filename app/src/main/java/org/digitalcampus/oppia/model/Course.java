@@ -75,6 +75,8 @@ public class Course extends MultiLangInfoModel implements Serializable {
     private int noActivitiesCompleted = 0;
     private String sequencingMode = SEQUENCING_MODE_NONE;
     private List<GamificationEvent> gamificationEvents = new ArrayList<>();
+    private boolean restricted;
+    private List<Integer> restrictedCohorts = new ArrayList<>();
 
     private String root;
 
@@ -283,5 +285,21 @@ public class Course extends MultiLangInfoModel implements Serializable {
 
     public boolean hasStatus(String status) {
         return TextUtils.equals(this.status, status);
+    }
+
+    public void setRestricted(boolean restricted) {
+        this.restricted = restricted;
+    }
+
+    public boolean isRestricted() {
+        return restricted;
+    }
+
+    public void setRestrictedCohorts(List<Integer> cohorts){
+        this.restrictedCohorts = cohorts;
+    }
+
+    public List<Integer> getRestrictedCohorts(){
+        return restrictedCohorts;
     }
 }

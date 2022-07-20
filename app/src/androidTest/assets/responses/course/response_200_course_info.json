@@ -14,5 +14,6 @@
   },
   "url": "http://localhost:8000/api/v2/course/1/download/",
   "username": "alexlittle",
-  "version": 20200120164032
+  "version": 20200120164032,
+  "restricted": false
 }

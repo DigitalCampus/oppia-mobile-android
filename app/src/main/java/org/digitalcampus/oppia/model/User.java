@@ -19,7 +19,9 @@ package org.digitalcampus.oppia.model;
 
 import org.digitalcampus.oppia.utils.CryptoUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class User {
@@ -41,6 +43,7 @@ public class User {
 	private int points = 0;
 	private int badges = 0;
 	private boolean offlineRegister = false;
+	private List<Integer> cohorts = new ArrayList<>();
 
 	private Map<String, CustomValue> userCustomFields = new HashMap<>();
 
@@ -182,6 +185,14 @@ public class User {
 
 	public void setUserCustomFields(Map<String, CustomValue> userCustomFields) {
 		this.userCustomFields = userCustomFields;
+	}
+
+	public void setCohorts(List<Integer> cohorts) {
+		this.cohorts = cohorts;
+	}
+
+	public List<Integer> getCohorts() {
+		return this.cohorts;
 	}
 
 }

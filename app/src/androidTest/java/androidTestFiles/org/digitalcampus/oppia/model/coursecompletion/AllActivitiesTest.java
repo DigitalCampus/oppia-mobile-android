@@ -40,13 +40,14 @@ public class AllActivitiesTest {
     @Test
     public void testCourseCompleted() {
         DbHelper db = DbHelper.getInstance(context);
-        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1);
         User user = null;
         try {
             user = db.getUser(UserData.TEST_USER_1);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
+
+        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1, user.getUserId());
         Course course = db.getCourseWithProgress(courseId, user.getUserId());
 
         TrackerData.loadDataAllActivitiesCourseComplete(context);
@@ -60,13 +61,14 @@ public class AllActivitiesTest {
     @Test
     public void testCourseNotCompleted() {
         DbHelper db = DbHelper.getInstance(context);
-        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1);
         User user = null;
         try {
             user = db.getUser(UserData.TEST_USER_1);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
+
+        long courseId = db.getCourseIdByShortname(CourseData.TEST_COURSE_1, user.getUserId());
         Course course = db.getCourseWithProgress(courseId, user.getUserId());
 
         TrackerData.loadDataAllActivitiesCourseNotComplete(context);
