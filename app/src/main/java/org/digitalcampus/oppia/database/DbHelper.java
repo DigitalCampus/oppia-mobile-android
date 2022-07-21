@@ -745,7 +745,7 @@ public class DbHelper extends SQLiteOpenHelper {
         if (oldVersion < 50){
             createCohortUserTable(db);
             createCohortCourseTable(db);
-            String sql1 = STR_ALTER_TABLE + COURSE_TABLE + STR_ADD_COLUMN + COURSE_C_RESTRICTED + STR_INT_DEFAULT_O + "';";
+            String sql1 = STR_ALTER_TABLE + COURSE_TABLE + STR_ADD_COLUMN + COURSE_C_RESTRICTED + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql1);
         }
     }
