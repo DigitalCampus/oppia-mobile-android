@@ -14,7 +14,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:foreground="?android:attr/selectableItemBackground"
-        app:contentPaddingBottom="5dp"
+        app:contentPaddingBottom="15dp"
         app:contentPaddingLeft="10dp"
         app:contentPaddingRight="10dp"
         app:contentPaddingTop="5dp">
@@ -72,6 +72,11 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:orientation="vertical">
+
+                <org.digitalcampus.oppia.utils.course_status.CourseStatusBadgeView
+                    android:id="@+id/view_course_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/course_title"

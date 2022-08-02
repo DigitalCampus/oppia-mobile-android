@@ -5,13 +5,18 @@ import android.content.Context;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Lang;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CourseData {
 
     public final static String TEST_COURSE_1 = "test-course1";
+    public final static String TEST_COURSE_2 = "test-course2";
+    public final static String TEST_COURSE_3 = "test-course3";
 
     public final static String TEST_DIGEST_1 = "111111";
     public final static String TEST_DIGEST_2 = "222222";
@@ -25,7 +30,10 @@ public class CourseData {
         DbHelper db = DbHelper.getInstance(ctx);
 
         Course c1 = new Course();
+        c1.setTitles(Arrays.asList(new Lang("en", TEST_COURSE_1)));
         c1.setShortname(TEST_COURSE_1);
+        c1.setRestricted(true);
+        c1.setRestrictedCohorts(Collections.singletonList(1));
         c1.setDescriptionsFromJSONString("my test course");
 
         long courseId = db.addOrUpdateCourse(c1);
@@ -87,6 +95,19 @@ public class CourseData {
         activityList.add(a6);
 
         db.insertActivities(activityList);
+
+        Course c2 = new Course();
+        c2.setTitles(Arrays.asList(new Lang("en", TEST_COURSE_2)));
+        c2.setShortname(TEST_COURSE_2);
+        c2.setRestricted(true);
+        c2.setRestrictedCohorts(Arrays.asList(1, 2));
+        db.addOrUpdateCourse(c2);
+
+        Course c3 = new Course();
+        c3.setTitles(Arrays.asList(new Lang("en", TEST_COURSE_3)));
+        c3.setShortname(TEST_COURSE_3);
+        c3.setRestricted(false);
+        db.addOrUpdateCourse(c3);
 
     }
 }

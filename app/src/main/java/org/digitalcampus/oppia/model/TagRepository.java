@@ -88,22 +88,22 @@ public class TagRepository {
                 t.setCountNewDownloadEnabled(jsonObj.getInt(JSON_PROPERTY_COUNT_NEW_DOWNLOADS_ENABLED));
             }
 
-            if (jsonObj.has(JSON_PROPERTY_COURSE_STATUSES)) {
-                if (!jsonObj.isNull(JSON_PROPERTY_COURSE_STATUSES)) {
-                    JSONObject jObjCourseStatuses = jsonObj.getJSONObject(JSON_PROPERTY_COURSE_STATUSES);
-                    Iterator<String> keys = jObjCourseStatuses.keys();
+            if (jsonObj.has(JSON_PROPERTY_COURSE_STATUSES) && !jsonObj.isNull(JSON_PROPERTY_COURSE_STATUSES)) {
+                t.setCountAvailable(t.getCountNewDownloadEnabled());
+                JSONObject jObjCourseStatuses = jsonObj.getJSONObject(JSON_PROPERTY_COURSE_STATUSES);
+                Iterator<String> keys = jObjCourseStatuses.keys();
 
-                    while (keys.hasNext()) {
-                        String key = keys.next();
-                        String value = jObjCourseStatuses.getString(key);
-                        if (TextUtils.equals(value, Course.STATUS_LIVE)
-                                || TextUtils.equals(value, Course.STATUS_DRAFT)) {
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    String value = jObjCourseStatuses.getString(key);
+
+                    if (isCourseInstalled(key, installedCoursesNames)) {
+                        if(TextUtils.equals(value, Course.STATUS_NEW_DOWNLOADS_DISABLED)){
                             t.incrementCountAvailable();
-                        } else if (TextUtils.equals(value, Course.STATUS_NEW_DOWNLOADS_DISABLED)
-                                || TextUtils.equals(value, Course.STATUS_READ_ONLY)) {
-                            if (isCourseInstalled(key, installedCoursesNames)) {
-                                t.incrementCountAvailable();
-                            }
+                        }
+                    } else {
+                        if(TextUtils.equals(value, Course.STATUS_READ_ONLY)){
+                            t.decrementCountAvailable();
                         }
                     }
                 }

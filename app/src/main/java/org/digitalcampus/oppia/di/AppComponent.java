@@ -35,6 +35,7 @@ import org.digitalcampus.oppia.fragments.prefs.NotificationsPrefsFragment;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.CoursesChecksWorkerManager;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
+import org.digitalcampus.oppia.service.UserCohortsChecksWorkerManager;
 import org.digitalcampus.oppia.widgets.AnswerWidget;
 
 import javax.inject.Singleton;
@@ -88,4 +89,5 @@ public interface AppComponent {
 
     void inject(DBDataMigration dbDataMigration);
 
+    void inject(UserCohortsChecksWorkerManager userCohortsChecksWorkerManager);
 }

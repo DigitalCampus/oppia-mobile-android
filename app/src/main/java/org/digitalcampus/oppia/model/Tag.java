@@ -115,4 +115,8 @@ public class Tag implements Serializable{
 	public void incrementCountAvailable() {
 		this.countAvailable++;
 	}
+
+	public void decrementCountAvailable() {
+		this.countAvailable--;
+	}
 }

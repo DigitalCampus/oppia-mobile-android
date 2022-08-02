@@ -27,7 +27,7 @@ public class CoursesRepository {
 
     public Course getCourseByShortname(Context ctx, String shortname, long userID){
         DbHelper db = DbHelper.getInstance(ctx);
-        long courseId = db.getCourseIdByShortname(shortname);
+        long courseId = db.getCourseIdByShortname(shortname, userID);
         if (courseId != -1) {
             return db.getCourseWithProgress(courseId, userID);
         }
