@@ -9,13 +9,18 @@ import androidx.preference.PreferenceManager;
 import com.google.gson.Gson;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.responses.CourseServer;
 import org.digitalcampus.oppia.model.responses.CoursesServerResponse;
+import org.digitalcampus.oppia.task.APIUserRequestTask;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -198,5 +203,28 @@ public class CourseUtils {
             cohorts.add(cohortsJson.getInt(i));
         }
         return cohorts;
+    }
+
+    public static void updateCourseCache(Context context, SharedPreferences prefs, ApiEndpoint apiEndpoint) {
+        APIUserRequestTask task = new APIUserRequestTask(context, apiEndpoint);
+        String url = Paths.SERVER_COURSES_PATH;
+        task.setAPIRequestListener(new APIRequestListener() {
+            @Override
+            public void apiRequestComplete(BasicResult result) {
+
+                if (result.isSuccess()) {
+                    prefs.edit()
+                            .putLong(PrefsActivity.PREF_LAST_COURSES_CHECKS_SUCCESSFUL_TIME, System.currentTimeMillis())
+                            .putString(PrefsActivity.PREF_SERVER_COURSES_CACHE, result.getResultMessage())
+                            .commit();
+                }
+            }
+
+            @Override
+            public void apiKeyInvalidated() {
+
+            }
+        });
+        task.execute(url);
     }
 }
