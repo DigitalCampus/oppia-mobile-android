@@ -23,10 +23,14 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
+import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
+import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.UpdateUserCohortsTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
@@ -35,10 +39,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.concurrent.CountDownLatch;
 
 import androidTestFiles.Utils.CourseUtils;
 import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.Utils.MockedApiEndpointTest;
+import androidTestFiles.database.sampledata.UserData;
+
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -47,7 +55,6 @@ import androidx.test.rule.GrantPermissionRule;
 
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.mockito.Matchers.any;
 
 @RunWith(AndroidJUnit4.class)
 public class FlushCacheUITest extends MockedApiEndpointTest {
@@ -59,6 +66,8 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
 
     @Mock
     TagRepository tagRepository;
+
+    private static final String COHORTS_5_AND_6 = "responses/cohorts/response_200_cohorts_5_6.json";
 
     private void givenThereAreSomeCourses(int numberOfCourses) {
 
@@ -73,7 +82,7 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    public void flushCourseListingCache() throws Exception {
+    public void flushAppCache() throws Exception {
 
         givenThereAreSomeCourses(1);
 
@@ -103,7 +112,7 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
                 onView(withText(R.string.ok)).perform(click());
             }
 
-            clickPrefWithText(R.string.pref_flush_course_listing_cache);
+            clickPrefWithText(R.string.pref_flush_app_cache);
 
             pressBackUnconditionally();
             pressBackUnconditionally();
@@ -156,4 +165,32 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
         }
     }
 
+    @Test
+    public void testFlushUserCohorts() throws Exception {
+        final CountDownLatch signal = new CountDownLatch(1);
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        DbHelper dbHelper = DbHelper.getInstance(context);
+        UserData.loadData(context);
+
+        User user;
+        try {
+            // 1. Initially, User1 belongs to cohorts 1 and 2
+            user = dbHelper.getUser(UserData.TEST_USER_1);
+            assertEquals(Arrays.asList(1, 2), user.getCohorts());
+
+            // 2. Flush cache and retrieve mocked response with cohorts 5 and 6
+            startServer(200, COHORTS_5_AND_6, 0);
+            UpdateUserCohortsTask task = new UpdateUserCohortsTask();
+            task.setListener(() -> signal.countDown());
+            task.updateLoggedUserCohorts(context, apiEndpoint, user);
+            signal.await();
+
+            // 3. Assert User1 now belongs to cohorts 5 and 6
+            user = dbHelper.getUser(UserData.TEST_USER_1);
+            assertEquals(Arrays.asList(5, 6), user.getCohorts());
+
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }

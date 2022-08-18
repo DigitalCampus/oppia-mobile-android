@@ -28,14 +28,13 @@ import org.digitalcampus.mobile.learning.databinding.ActivityDownloadBinding;
 import org.digitalcampus.oppia.adapter.TagsAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
-import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.utils.CourseUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,7 +88,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 			startActivity(i);
 		});
 
-		updateCourseCache();
+		CourseUtils.updateCourseCache(this, prefs, apiEndpoint);
 	}
 
 	
@@ -197,31 +196,6 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 			String errorMsg = result.getResultMessage();
 			UIUtils.showAlert(this, R.string.error, errorMsg, finishActivity);
 		}
-
-	}
-
-	private void updateCourseCache() {
-
-		APIUserRequestTask task = new APIUserRequestTask(this, apiEndpoint);
-		String url = Paths.SERVER_COURSES_PATH;
-		task.setAPIRequestListener(new APIRequestListener() {
-			@Override
-			public void apiRequestComplete(BasicResult result) {
-
-				if (result.isSuccess()) {
-					prefs.edit()
-							.putLong(PrefsActivity.PREF_LAST_COURSES_CHECKS_SUCCESSFUL_TIME, System.currentTimeMillis())
-							.putString(PrefsActivity.PREF_SERVER_COURSES_CACHE, result.getResultMessage())
-							.commit();
-				}
-			}
-
-			@Override
-			public void apiKeyInvalidated() {
-
-			}
-		});
-		task.execute(url);
 
 	}
 }
