@@ -4,7 +4,6 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.core.StringStartsWith.startsWith;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
@@ -13,11 +12,9 @@ import android.content.Context;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
-import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.task.result.BasicResult;
@@ -28,8 +25,6 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
-import androidTestFiles.Utils.FileUtils;
 import androidTestFiles.Utils.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
@@ -89,7 +84,7 @@ public class TagActivityUITest extends MockedApiEndpointTest {
 
             onView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.tag_count))
-                    .check(matches(withText("2")));
+                    .check(matches(withText("1")));
         }
 
     }
@@ -105,7 +100,7 @@ public class TagActivityUITest extends MockedApiEndpointTest {
 
             onView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.tag_count))
-                    .check(matches(withText("3")));
+                    .check(matches(withText("2")));
         }
 
     }
@@ -121,7 +116,7 @@ public class TagActivityUITest extends MockedApiEndpointTest {
 
             onView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.tag_count))
-                    .check(matches(withText("3")));
+                    .check(matches(withText("2")));
         }
 
     }
@@ -138,7 +133,7 @@ public class TagActivityUITest extends MockedApiEndpointTest {
 
             onView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.tag_count))
-                    .check(matches(withText("4")));
+                    .check(matches(withText("3")));
         }
 
     }
