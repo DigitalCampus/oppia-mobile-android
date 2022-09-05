@@ -18,6 +18,8 @@
 package org.digitalcampus.oppia.model;
 
 import org.digitalcampus.oppia.utils.CryptoUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -189,6 +191,14 @@ public class User {
 
 	public void setCohorts(List<Integer> cohorts) {
 		this.cohorts = cohorts;
+	}
+
+	public void setCohortsFromJSONArray(JSONArray cohortsJson) throws JSONException {
+		List<Integer> cohorts = new ArrayList<>();
+		for (int i = 0; i < cohortsJson.length(); i++) {
+			cohorts.add(cohortsJson.getInt(i));
+		}
+		setCohorts(cohorts);
 	}
 
 	public List<Integer> getCohorts() {

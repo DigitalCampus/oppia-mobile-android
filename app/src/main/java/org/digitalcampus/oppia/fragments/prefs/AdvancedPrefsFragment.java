@@ -21,15 +21,16 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.listener.APIRequestListener;
-import org.digitalcampus.oppia.task.APIUserRequestTask;
+import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ExportActivityTask;
-import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.task.UpdateUserCohortsTask;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
+import org.digitalcampus.oppia.utils.CourseUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -116,11 +117,18 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
             return true;
         });
 
-        findPreference(PrefsActivity.PREF_FLUSH_COURSE_LISTING_CACHE).setOnPreferenceClickListener(preference -> {
-            flushCourseListingCache();
+        findPreference(PrefsActivity.PREF_FLUSH_APP_CACHE).setOnPreferenceClickListener(preference -> {
+            flushAppCache();
             return true;
         });
 
+    }
+
+    private void flushAppCache() {
+        flushCourseListingCache();
+        flushUserCohorts();
+
+        ((AppActivity)getActivity()).toast(R.string.cache_flushed_successfuly);
     }
 
     private void flushCourseListingCache() {
@@ -129,36 +137,18 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                 .remove(PrefsActivity.PREF_SERVER_COURSES_CACHE)
                 .commit();
 
-        ((AppActivity)getActivity()).toast(R.string.cache_flushed_successfuly);
-
         if (ConnectionUtils.isNetworkConnected(getActivity())) {
-            updateCourseCache();
+            CourseUtils.updateCourseCache(getActivity(), prefs, apiEndpoint);
         }
     }
 
-    private void updateCourseCache() {
-
-        APIUserRequestTask task = new APIUserRequestTask(getActivity(), apiEndpoint);
-        String url = Paths.SERVER_COURSES_PATH;
-        task.setAPIRequestListener(new APIRequestListener() {
-            @Override
-            public void apiRequestComplete(BasicResult result) {
-
-                if (result.isSuccess()) {
-                    prefs.edit()
-                            .putLong(PrefsActivity.PREF_LAST_COURSES_CHECKS_SUCCESSFUL_TIME, System.currentTimeMillis())
-                            .putString(PrefsActivity.PREF_SERVER_COURSES_CACHE, result.getResultMessage())
-                            .commit();
-                }
-            }
-
-            @Override
-            public void apiKeyInvalidated() {
-
-            }
-        });
-        task.execute(url);
-
+    private void flushUserCohorts() {
+        try {
+            User user = DbHelper.getInstance(getContext()).getUser(SessionManager.getUsername(getContext()));
+            new UpdateUserCohortsTask().updateLoggedUserCohorts(getContext(), apiEndpoint, user);
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void showCreateExportDataDialog() {
