@@ -28,6 +28,18 @@ import java.util.Map;
 
 public class User {
 
+	public static final String API_KEY = "api_key";
+	public static final String FIRST_NAME = "first_name";
+	public static final String LAST_NAME = "last_name";
+	public static final String EMAIL = "email";
+	public static final String ORGANISATION = "organisation";
+	public static final String JOB_TITLE = "job_title";
+	public static final String SCORING_ENABLED = "scoring";
+	public static final String BADGING_ENABLED = "badging";
+	public static final String POINTS = "points";
+	public static final String BADGES = "badges";
+	public static final String COHORTS = "cohorts";
+
 	private long userId;
 	private String username;
 	private String email;
