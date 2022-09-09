@@ -47,20 +47,7 @@ public class CourseInstallViewAdapter extends Course {
     private String authorName;
     private String organisationName;
 
-
     public static final String SERVER_COURSES_NAME = "courses";
-
-    private static final String JSON_PROPERTY_DESCRIPTION = "description";
-    private static final String JSON_PROPERTY_TITLE = "title";
-    private static final String JSON_PROPERTY_SHORTNAME = "shortname";
-    private static final String JSON_PROPERTY_VERSION = "version";
-    private static final String JSON_PROPERTY_URL = "url";
-    private static final String JSON_PROPERTY_AUTHOR = "author";
-    private static final String JSON_PROPERTY_USERNAME = "username";
-    private static final String JSON_PROPERTY_ORGANISATION = "organisation";
-    private static final String JSON_PROPERTY_STATUS = "status";
-    private static final String JSON_PROPERTY_RESTRICTED = "restricted";
-    private static final String JSON_PROPERTY_RESTRICTED_COHORTS = "cohorts";
 
     public boolean isDownloading() {
         return downloading;
@@ -162,12 +149,15 @@ public class CourseInstallViewAdapter extends Course {
             course.setShortname(jsonObj.getString(JSON_PROPERTY_SHORTNAME));
             course.setVersionId(jsonObj.getDouble(JSON_PROPERTY_VERSION));
             course.setDownloadUrl(jsonObj.getString(JSON_PROPERTY_URL));
-            boolean courseRestricted = jsonObj.getBoolean(JSON_PROPERTY_RESTRICTED);
-            course.setRestricted(courseRestricted);
 
-            if (courseRestricted) {
-                List<Integer> restrictedCohorts = CourseUtils.parseCourseCohortsFromJSONArray(jsonObj.getJSONArray(JSON_PROPERTY_RESTRICTED_COHORTS));
-                course.setRestrictedCohorts(restrictedCohorts);
+            if (jsonObj.has(JSON_PROPERTY_RESTRICTED)){
+                boolean courseRestricted = jsonObj.getBoolean(JSON_PROPERTY_RESTRICTED);
+                course.setRestricted(courseRestricted);
+
+                if (courseRestricted) {
+                    List<Integer> restrictedCohorts = CourseUtils.parseCourseCohortsFromJSONArray(jsonObj.getJSONArray(JSON_PROPERTY_RESTRICTED_COHORTS));
+                    course.setRestrictedCohorts(restrictedCohorts);
+                }
             }
 
             if (jsonObj.has(JSON_PROPERTY_STATUS) && !jsonObj.isNull(JSON_PROPERTY_STATUS))
