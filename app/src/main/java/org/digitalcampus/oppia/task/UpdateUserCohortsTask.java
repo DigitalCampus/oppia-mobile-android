@@ -52,7 +52,9 @@ public class UpdateUserCohortsTask {
                 }
 
                 handler.post(() -> {
-                    listener.onComplete();
+                    if (listener != null) {
+                        listener.onComplete();
+                    }
                 });
             } catch (JSONException | IOException e) {
                 Log.w(TAG, "Unable to update user cohorts: ", e);
