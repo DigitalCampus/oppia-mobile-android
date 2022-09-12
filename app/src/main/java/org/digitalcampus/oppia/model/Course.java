@@ -59,6 +59,18 @@ public class Course extends MultiLangInfoModel implements Serializable {
     public static final String STATUS_NEW_DOWNLOADS_DISABLED = "new_downloads_disabled";
     public static final String STATUS_READ_ONLY = "read_only";
 
+    public static final String JSON_PROPERTY_DESCRIPTION = "description";
+    public static final String JSON_PROPERTY_TITLE = "title";
+    public static final String JSON_PROPERTY_SHORTNAME = "shortname";
+    public static final String JSON_PROPERTY_VERSION = "version";
+    public static final String JSON_PROPERTY_URL = "url";
+    public static final String JSON_PROPERTY_AUTHOR = "author";
+    public static final String JSON_PROPERTY_USERNAME = "username";
+    public static final String JSON_PROPERTY_ORGANISATION = "organisation";
+    public static final String JSON_PROPERTY_STATUS = "status";
+    public static final String JSON_PROPERTY_RESTRICTED = "restricted";
+    public static final String JSON_PROPERTY_RESTRICTED_COHORTS = "cohorts";
+
     private int courseId;
     private String shortname;
     private Double versionId;
@@ -75,7 +87,7 @@ public class Course extends MultiLangInfoModel implements Serializable {
     private int noActivitiesCompleted = 0;
     private String sequencingMode = SEQUENCING_MODE_NONE;
     private List<GamificationEvent> gamificationEvents = new ArrayList<>();
-    private boolean restricted;
+    private boolean restricted = false;
     private List<Integer> restrictedCohorts = new ArrayList<>();
 
     private String root;
