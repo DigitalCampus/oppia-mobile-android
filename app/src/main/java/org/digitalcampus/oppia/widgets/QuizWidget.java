@@ -103,18 +103,7 @@ public class QuizWidget extends AnswerWidget {
         return QUIZ_AVAILABLE;
     }
 
-    private boolean isUserOverLimitedAttempts(boolean afterAttempt){
-        if (this.quiz.limitAttempts()){
-            //Check if the user has attempted the quiz the max allowed
-            QuizStats qs = attemptsRepository.getQuizAttemptStats(this.getActivity(), activity.getDigest());
-            if (afterAttempt){
-                //If the quiz was just attempted, it is not saved yet, so we added
-                qs.setNumAttempts(qs.getNumAttempts() + 1);
-            }
-            return qs.getNumAttempts() >= quiz.getMaxAttempts();
-        }
-        return false;
-    }
+
 
     @Override
     String getAnswerWidgetType() {
