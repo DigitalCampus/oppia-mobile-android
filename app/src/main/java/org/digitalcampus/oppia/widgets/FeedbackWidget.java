@@ -59,8 +59,18 @@ public class FeedbackWidget extends AnswerWidget {
 
 	@Override
 	int getContentAvailability(boolean afterAttempt) {
-		// Feedback widget always available?
-		return QUIZ_AVAILABLE;
+		if (afterAttempt){
+			// In the case we just submitted the feedback, we set the value as available
+			// to avoid showing the retake message
+			return QUIZ_AVAILABLE;
+		}
+		else if (isUserOverLimitedAttempts(afterAttempt)){
+			return R.string.widget_feedback_unavailable_attempts;
+		}
+		else{
+			return QUIZ_AVAILABLE;
+		}
+
 	}
 
 	@Override

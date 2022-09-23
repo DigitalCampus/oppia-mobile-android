@@ -61,6 +61,7 @@
 
     <string name="widget_feedback_submit">Submit</string>
     <string name="widget_feedback_submit_title">Thank you for submitting your feedback.</string>
+    <string name="widget_feedback_unavailable_attempts">You have already sent your feedback</string>
 
     <string name="widget_quiz_next">Next</string>
     <string name="widget_quiz_prev">Prev</string>

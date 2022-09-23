@@ -51,6 +51,7 @@ import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAttemptRepository;
+import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
@@ -235,6 +236,19 @@ public abstract class AnswerWidget extends BaseWidget {
                 tv.setText(unavailabilityReasonString);
             }
         }
+    }
+
+    protected boolean isUserOverLimitedAttempts(boolean afterAttempt){
+        if (this.quiz.limitAttempts()){
+            //Check if the user has attempted the quiz the max allowed
+            QuizStats qs = attemptsRepository.getQuizAttemptStats(this.getActivity(), activity.getDigest());
+            if (afterAttempt){
+                //If the quiz was just attempted, it is not saved yet, so we added
+                qs.setNumAttempts(qs.getNumAttempts() + 1);
+            }
+            return qs.getNumAttempts() >= quiz.getMaxAttempts();
+        }
+        return false;
     }
 
     private void showLoadingError() {
