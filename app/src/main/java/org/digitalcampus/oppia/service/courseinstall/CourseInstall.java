@@ -26,6 +26,7 @@ import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.exception.CourseInstallException;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -66,12 +67,13 @@ public class CourseInstall {
         long startTime = System.currentTimeMillis();
 
         listener.onInstallProgress(1);
-        boolean unzipResult = FileUtils.unzipFiles(Storage.getDownloadPath(ctx), filename, tempdir.getAbsolutePath());
 
-        if (!unzipResult){
+        try {
+            FileUtils.unzipFiles(ctx, Storage.getDownloadPath(ctx), filename, tempdir.getAbsolutePath());
+        } catch (CourseInstallException e) {
             //then was invalid zip file and should be removed
             FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
-            listener.onError(ctx.getString(R.string.error_installing_course, shortname));
+            listener.onError(ctx.getString(R.string.error_installing_course, shortname) + ". " + e.getMessage());
             return;
         }
 
