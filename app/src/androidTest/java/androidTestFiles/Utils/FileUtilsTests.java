@@ -1,10 +1,15 @@
-package testFiles.UnitTests;
+package androidTestFiles.Utils;
 
 
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.exception.CourseInstallException;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -21,74 +26,84 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
+import android.content.Context;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+
+
+@RunWith(AndroidJUnit4.class)
 public class FileUtilsTests {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
+
+    @Rule
+    public ExpectedException exceptionRule = ExpectedException.none();
+
     private static final int FILES_COUNT = 5;
+    private Context context;
+
+    @Before
+    public void setUp() {
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+    }
 
     @Test
-    public void UnzipFiles_correctPaths(){
-        File zipFile;
-        boolean result = false;
-        try {
-            zipFile = createTestZipFile();
+    public void UnzipFiles_correctPaths() throws Exception {
 
-            if (zipFile != null) {
-                result = FileUtils.unzipFiles(zipFile.getParentFile().getAbsolutePath(),
-                        zipFile.getName(),
-                        zipFile.getParentFile().getAbsolutePath());
-            }
+        File zipFile = createTestZipFile();
 
-            assertTrue(result);
-            assertEquals(FILES_COUNT + 1, zipFile.getParentFile().listFiles().length);
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (zipFile != null) {
+            FileUtils.unzipFiles(context, zipFile.getParentFile().getAbsolutePath(),
+                    zipFile.getName(),
+                    zipFile.getParentFile().getAbsolutePath());
         }
+
+        assertEquals(FILES_COUNT + 1, zipFile.getParentFile().listFiles().length);
+
 
     }
 
     @Test
-    public void UnzipFiles_wrongPaths(){
-        File zipFile;
-        boolean result;
-        try {
-            zipFile = createTestZipFile();
+    public void UnzipFiles_wrongSrcDir() throws Exception {
 
+        exceptionRule.expect(CourseInstallException.class);
+        exceptionRule.expectMessage(context.getString(R.string.source_dir_does_not_exist));
 
-            if (zipFile != null) {
-                //Source directory equals null
-                result = FileUtils.unzipFiles("Non_Existing_path",
-                        zipFile.getName(),
-                        zipFile.getParentFile().getAbsolutePath());
+        File zipFile = createTestZipFile();
+        FileUtils.unzipFiles(context, "Non_Existing_path",
+                zipFile.getName(),
+                zipFile.getParentFile().getAbsolutePath());
 
-
-                assertFalse(result);
-
-                //Source file equals null
-                result = FileUtils.unzipFiles(zipFile.getParentFile().getAbsolutePath(),
-                        "Non_Existing_path",
-                        zipFile.getParentFile().getAbsolutePath());
-
-
-                assertFalse(result);
-
-                //Destination directory equals null
-                result = FileUtils.unzipFiles(zipFile.getParentFile().getAbsolutePath(),
-                        zipFile.getName(),
-                        "Non_Existing_path");
-
-
-                assertFalse(result);
-
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
+
+    @Test
+    public void UnzipFiles_wrongSrcFile() throws Exception {
+
+        exceptionRule.expect(CourseInstallException.class);
+        exceptionRule.expectMessage(context.getString(R.string.source_file_does_not_exist));
+
+        File zipFile = createTestZipFile();
+        FileUtils.unzipFiles(context, zipFile.getParentFile().getAbsolutePath(),
+                "Non_Existing_file",
+                zipFile.getParentFile().getAbsolutePath());
+
+    }
+
+    @Test
+    public void UnzipFiles_wrongDstDir() throws Exception {
+
+        exceptionRule.expect(CourseInstallException.class);
+        exceptionRule.expectMessage(context.getString(R.string.dest_dir_does_not_exist));
+
+        File zipFile = createTestZipFile();
+        FileUtils.unzipFiles(context, zipFile.getParentFile().getAbsolutePath(),
+                zipFile.getName(),
+                "Non_Existing_path");
+
+    }
+
 
    /* @Test
     public void UnzipFiles_createDir(){
@@ -118,7 +133,7 @@ public class FileUtilsTests {
 
 
     @Test
-    public void CleanDir_correctPath(){
+    public void CleanDir_correctPath() {
 
         try {
             File tempFolder = folder.newFolder("tempFolder");
@@ -132,50 +147,50 @@ public class FileUtilsTests {
 
             assertEquals(0, tempFolder.listFiles().length);
 
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
     }
 
     @Test
-    public void CleanDir_wrongPath(){
+    public void CleanDir_wrongPath() {
         File tempFile = new File("tempFile");
         assertTrue(FileUtils.cleanDir(tempFile));
     }
 
     @Test
-    public void CleanDir_fileAsArgument(){
+    public void CleanDir_fileAsArgument() {
 
         try {
             File tempFile = folder.newFile("tempFile.txt");
 
             assertTrue(FileUtils.cleanDir(tempFile));
 
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
     }
 
     @Test
-    public void DeleteDir_correctPath(){
-        try{
+    public void DeleteDir_correctPath() {
+        try {
             File tempFolder = folder.newFolder("tempFolder");
 
             assertTrue(FileUtils.deleteDir(tempFolder));
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
 
     }
 
     @Test
-    public void DeleteDir_wrongPath(){
+    public void DeleteDir_wrongPath() {
         File tempFile = new File("tempFile");
         assertFalse(FileUtils.deleteDir(tempFile));
     }
 
     @Test
-    public void DirSize_correctSize(){
+    public void DirSize_correctSize() {
         //Case when the directory does not exists
         File f = new File("non_exists_dir");
         assertEquals(0, FileUtils.dirSize(f));
@@ -199,14 +214,14 @@ public class FileUtilsTests {
             }
 
             assertEquals(text.length() * FILES_COUNT, FileUtils.dirSize(tempFolder));
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
 
     }
 
     @Test
-    public void CleanUp(){
+    public void CleanUp() {
         try {
             File dir = folder.newFolder("testFolder");
             File zipFile = folder.newFile("zipFile.zip");
@@ -217,13 +232,13 @@ public class FileUtilsTests {
             assertFalse(dir.exists());
             assertFalse(zipFile.exists());
 
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
     }
 
     @Test
-    public void ReadFile_FileInputStream(){
+    public void ReadFile_FileInputStream() {
         String text = "The quick brown fox jumps over the lazy dog";
         String filename = "test_file.txt";
 
@@ -235,13 +250,13 @@ public class FileUtilsTests {
 
             FileInputStream fis = new FileInputStream(file);
             assertEquals(text, FileUtils.readFile(fis));
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
     }
 
     @Test
-    public void ReadFile_String(){
+    public void ReadFile_String() {
         String text = "The quick brown fox jumps over the lazy dog";
         String filename = "test_file.txt";
 
@@ -252,7 +267,7 @@ public class FileUtilsTests {
             fileWriter.close();
 
             assertEquals(text, FileUtils.readFile(file.getAbsolutePath()));
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
     }
@@ -296,27 +311,27 @@ public class FileUtilsTests {
 
             byte data[] = new byte[FileUtils.BUFFER_SIZE];
 
-            for(int i = 0; i < files.length; i++){
+            for (int i = 0; i < files.length; i++) {
                 FileInputStream fis = new FileInputStream(files[i]);
                 is = new BufferedInputStream(fis, FileUtils.BUFFER_SIZE);
-                try{
+                try {
                     ZipEntry entry = new ZipEntry(files[i].getName());
                     out.putNextEntry(entry);
 
                     int count;
-                    while ((count = is.read(data, 0, FileUtils.BUFFER_SIZE)) != -1){
+                    while ((count = is.read(data, 0, FileUtils.BUFFER_SIZE)) != -1) {
                         out.write(data, 0, count);
                     }
-                }catch(IOException ioe){
+                } catch (IOException ioe) {
                     ioe.printStackTrace();
-                }finally{
+                } finally {
                     is.close();
                     files[i].delete();
                 }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             out.close();
         }
 
