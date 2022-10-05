@@ -187,8 +187,8 @@ public class CourseInstallerService extends FileIntentService {
             Response response = client.newCall(request).execute();
 
             long fileLength = response.body().contentLength();
-            Log.d(TAG, "Content-length: " + fileLength);
             long availableStorage = Storage.getAvailableStorageSize(this);
+            Log.d(TAG, "sizes: Content-length: " + fileLength + ". available storage: " + availableStorage);
 
             if (fileLength >= availableStorage){
                 sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_insufficient_storage_available));

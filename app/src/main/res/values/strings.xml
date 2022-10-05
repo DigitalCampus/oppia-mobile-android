@@ -62,6 +62,7 @@
 
     <string name="widget_feedback_submit">Submit</string>
     <string name="widget_feedback_submit_title">Thank you for submitting your feedback.</string>
+    <string name="widget_feedback_unavailable_attempts">You have already sent your feedback</string>
 
     <string name="widget_quiz_next">Next</string>
     <string name="widget_quiz_prev">Prev</string>
@@ -630,6 +631,10 @@
     <string name="quiz">Quiz</string>
     <string name="read_only_answer_unavailable_message">This course is now read-only so access to this %s is no longer available</string>
     <string name="view_your_previous_attempts">View your previous attempts</string>
+    <string name="invalid_parameters">Invalid parameters</string>
+    <string name="source_dir_does_not_exist">Source directory does not exist</string>
+    <string name="source_file_does_not_exist">Source file does not exist</string>
+    <string name="dest_dir_does_not_exist">Destination directory does not exist</string>
 
 </resources>
 
