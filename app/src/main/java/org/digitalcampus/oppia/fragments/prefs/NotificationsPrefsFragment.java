@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -139,7 +140,7 @@ public class NotificationsPrefsFragment extends BasePreferenceFragment implement
             }
             return running;
         } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+            Log.d(TAG, "WorkManager interrupted: ", e);
             return false;
         }
     }
