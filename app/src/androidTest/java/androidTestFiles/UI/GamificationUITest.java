@@ -16,8 +16,8 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
-import androidTestFiles.Utils.CourseUtils;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
+import androidTestFiles.utils.CourseUtils;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.contrib.RecyclerViewActions;

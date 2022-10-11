@@ -20,8 +20,8 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import androidTestFiles.Utils.MockedApiEndpointTest;
-import androidTestFiles.Utils.TestUtils;
+import androidTestFiles.utils.MockedApiEndpointTest;
+import androidTestFiles.utils.TestUtils;
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.contrib.DrawerActions;
@@ -30,7 +30,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
-import static androidTestFiles.Utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
+import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;

@@ -24,12 +24,12 @@ import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.FileUtils;
 import androidTestFiles.database.BaseTestDB;
 import androidx.test.rule.GrantPermissionRule;
 
-import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
+import static androidTestFiles.utils.CourseUtils.runInstallCourseTask;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;

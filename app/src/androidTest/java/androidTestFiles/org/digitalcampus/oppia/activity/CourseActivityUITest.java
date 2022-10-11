@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import androidx.appcompat.widget.Toolbar;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.matcher.ViewMatchers;

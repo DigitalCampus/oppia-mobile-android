@@ -1,4 +1,4 @@
-package androidTestFiles.org.digitalcampus.oppia.api;
+package androidTestFiles.utils;
 
 import android.content.Context;
 

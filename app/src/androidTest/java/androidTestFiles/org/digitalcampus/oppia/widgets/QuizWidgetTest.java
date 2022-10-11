@@ -25,9 +25,9 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
-import androidTestFiles.Utils.FileUtils;
-import androidTestFiles.Utils.ViewsUtils;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
+import androidTestFiles.utils.FileUtils;
+import androidTestFiles.utils.ViewsUtils;
 import androidTestFiles.quiz.models.QuizModelGeneralTest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;

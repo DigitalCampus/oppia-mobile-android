@@ -24,9 +24,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
-import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
-import androidTestFiles.Utils.MockedApiEndpointTest;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
+import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
 import androidTestFiles.database.sampledata.UserData;
 import androidx.test.rule.GrantPermissionRule;
 

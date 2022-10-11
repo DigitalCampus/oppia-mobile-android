@@ -9,13 +9,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
+import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
-import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
-import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
+import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.utils.CourseUtils.runInstallCourseTask;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;

@@ -10,8 +10,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
-import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
-import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
+import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.utils.CourseUtils.runInstallCourseTask;
 
 import android.Manifest;
 import android.content.Context;
@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import androidTestFiles.UI.CourseMediaBaseTest;
-import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
+import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
 
 public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
     @Rule

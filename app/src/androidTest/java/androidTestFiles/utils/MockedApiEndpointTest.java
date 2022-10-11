@@ -1,4 +1,4 @@
-package androidTestFiles.Utils;
+package androidTestFiles.utils;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -7,16 +7,12 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.App;
-import org.mockito.Answers;
 import org.mockito.Mock;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 

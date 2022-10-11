@@ -18,7 +18,7 @@ import java.io.File;
 import java.util.concurrent.CountDownLatch;
 
 
-import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.utils.FileUtils;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;

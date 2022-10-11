@@ -6,7 +6,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -23,7 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
+import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
 import androidTestFiles.database.sampledata.CourseData;
 import androidTestFiles.database.sampledata.UserData;
 

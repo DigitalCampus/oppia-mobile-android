@@ -14,9 +14,9 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
+import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.FileUtils;
 import androidTestFiles.database.TestDBHelper;
 import androidx.test.rule.GrantPermissionRule;
 

@@ -10,7 +10,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -33,9 +33,9 @@ import org.mockito.Mock;
 
 import java.util.Arrays;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
-import androidTestFiles.Utils.Assertions.StatusBadgeAssertion;
-import androidTestFiles.Utils.CourseUtils;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
+import androidTestFiles.utils.assertions.StatusBadgeAssertion;
+import androidTestFiles.utils.CourseUtils;
 
 public class StatusBadgeTests extends DaggerInjectMockUITest {
 

@@ -22,15 +22,15 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.TestUtils;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
+import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.TestUtils;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
-import static androidTestFiles.Utils.CourseUtils.mockCourse;
+import static androidTestFiles.utils.CourseUtils.mockCourse;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;

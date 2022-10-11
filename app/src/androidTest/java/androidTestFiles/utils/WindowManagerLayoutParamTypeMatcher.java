@@ -1,4 +1,4 @@
-package androidTestFiles.Utils;
+package androidTestFiles.utils;
 
 
 import android.os.IBinder;

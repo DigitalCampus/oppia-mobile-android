@@ -1,7 +1,6 @@
 package androidTestFiles.org.digitalcampus.oppia.activity;
 
 import android.Manifest;
-import android.os.Build;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -10,12 +9,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidTestFiles.Utils.MockedApiEndpointTest;
+import androidTestFiles.utils.MockedApiEndpointTest;
 
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.GrantPermissionRule;
 
 import static androidx.test.espresso.Espresso.onView;

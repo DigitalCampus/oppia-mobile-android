@@ -17,16 +17,16 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import androidTestFiles.Utils.MockedApiEndpointTest;
-import androidTestFiles.Utils.TestUtils;
+import androidTestFiles.utils.MockedApiEndpointTest;
+import androidTestFiles.utils.TestUtils;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
-import static androidTestFiles.Utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
-import static androidTestFiles.Utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
-import static androidTestFiles.Utils.ViewsUtils.onHelperTextViewWithinTextInputLayoutWithId;
+import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
+import static androidTestFiles.utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
+import static androidTestFiles.utils.ViewsUtils.onHelperTextViewWithinTextInputLayoutWithId;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;

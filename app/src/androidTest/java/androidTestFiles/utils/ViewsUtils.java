@@ -1,4 +1,4 @@
-package androidTestFiles.Utils;
+package androidTestFiles.utils;
 
 import android.view.View;
 import android.widget.EditText;
@@ -22,7 +22,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.is;
 
-import androidTestFiles.Utils.Matchers.ToastMatcher;
+import androidTestFiles.utils.matchers.ToastMatcher;
 
 public class ViewsUtils {
 

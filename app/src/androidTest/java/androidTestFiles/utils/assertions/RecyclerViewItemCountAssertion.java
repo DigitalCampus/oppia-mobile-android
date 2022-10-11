@@ -1,4 +1,4 @@
-package androidTestFiles.Utils.Assertions;
+package androidTestFiles.utils.assertions;
 
 import android.view.View;
 

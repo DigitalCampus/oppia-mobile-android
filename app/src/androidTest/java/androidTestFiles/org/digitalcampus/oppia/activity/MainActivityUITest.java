@@ -13,7 +13,6 @@ import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.SearchActivity;
 import org.digitalcampus.oppia.activity.StartUpActivity;
-import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -25,7 +24,6 @@ import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
-import org.digitalcampus.oppia.task.result.BasicResult;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,10 +35,10 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.MockedApiEndpointTest;
-import androidTestFiles.Utils.TestUtils;
-import androidTestFiles.Utils.UITestActionsUtils;
+import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.MockedApiEndpointTest;
+import androidTestFiles.utils.TestUtils;
+import androidTestFiles.utils.UITestActionsUtils;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoMatchingViewException;
@@ -73,7 +71,6 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 

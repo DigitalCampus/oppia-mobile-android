@@ -1,4 +1,4 @@
-package androidTestFiles.TestRules;
+package androidTestFiles.utils.parent;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -9,7 +9,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.junit.Assert.assertTrue;
-import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
+import static androidTestFiles.utils.CourseUtils.runInstallCourseTask;
 
 import android.content.Context;
 
@@ -25,7 +25,7 @@ import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.junit.Rule;
 
-import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.utils.FileUtils;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 public class DaggerInjectMockUITest {

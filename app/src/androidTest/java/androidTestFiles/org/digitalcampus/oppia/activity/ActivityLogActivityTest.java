@@ -14,12 +14,12 @@ import org.mockito.Mock;
 import java.io.File;
 import java.util.ArrayList;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
-import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;

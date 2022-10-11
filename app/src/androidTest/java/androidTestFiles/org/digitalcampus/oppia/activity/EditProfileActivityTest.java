@@ -13,9 +13,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
-import static androidTestFiles.Utils.ViewsUtils.isToast;
-import static androidTestFiles.Utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
-import static androidTestFiles.Utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
+import static androidTestFiles.utils.ViewsUtils.isToast;
+import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
+import static androidTestFiles.utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
 
 import android.Manifest;
 import android.content.Context;
@@ -42,7 +42,7 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import androidTestFiles.Utils.MockedApiEndpointTest;
+import androidTestFiles.utils.MockedApiEndpointTest;
 import androidTestFiles.database.TestDBHelper;
 
 @RunWith(AndroidJUnit4.class)

@@ -1,4 +1,4 @@
-package androidTestFiles.Services;
+package androidTestFiles.services;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

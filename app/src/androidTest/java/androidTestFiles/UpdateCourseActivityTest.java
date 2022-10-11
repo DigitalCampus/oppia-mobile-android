@@ -1,29 +1,5 @@
 package androidTestFiles;
 
-import android.content.Context;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-
-import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.listener.UpdateActivityListener;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
-import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
-import org.digitalcampus.oppia.task.result.BasicResult;
-import org.digitalcampus.oppia.task.result.EntityResult;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import java.util.concurrent.CountDownLatch;
-
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.FileUtils;
-
 import static org.junit.Assert.assertTrue;
 
 /**

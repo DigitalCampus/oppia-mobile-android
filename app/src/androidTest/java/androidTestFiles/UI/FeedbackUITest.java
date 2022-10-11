@@ -2,10 +2,9 @@ package androidTestFiles.UI;
 
 
 import android.Manifest;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -26,7 +25,7 @@ import org.mockito.Mock;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.utils.FileUtils;
 import androidx.test.rule.GrantPermissionRule;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
@@ -36,7 +35,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;

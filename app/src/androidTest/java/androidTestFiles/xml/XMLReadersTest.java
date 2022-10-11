@@ -20,7 +20,7 @@ import org.junit.runner.RunWith;
 import java.io.File;
 import java.util.List;
 
-import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.utils.FileUtils;
 import androidx.test.rule.GrantPermissionRule;
 
 import static junit.framework.Assert.assertEquals;

@@ -27,8 +27,8 @@ import java.io.File;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.FileUtils;
 import androidTestFiles.database.BaseTestDB;
 
 import static junit.framework.Assert.assertEquals;

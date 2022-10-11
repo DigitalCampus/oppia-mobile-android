@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.utils.FileUtils;
 import androidx.test.rule.GrantPermissionRule;
 
 import static junit.framework.Assert.assertEquals;

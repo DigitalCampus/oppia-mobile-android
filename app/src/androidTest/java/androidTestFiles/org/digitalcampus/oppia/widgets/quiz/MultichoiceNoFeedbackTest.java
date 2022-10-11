@@ -7,10 +7,10 @@ import org.digitalcampus.oppia.widgets.QuizWidget;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidTestFiles.Utils.TestUtils;
+import androidTestFiles.utils.TestUtils;
 
-import static androidTestFiles.Utils.Matchers.EspressoTestsMatchers.withDrawable;
-import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withDrawable;
+import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

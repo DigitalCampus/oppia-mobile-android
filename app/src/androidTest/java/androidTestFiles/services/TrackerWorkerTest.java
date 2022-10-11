@@ -1,4 +1,4 @@
-package androidTestFiles.Services;
+package androidTestFiles.services;
 
 import android.Manifest;
 import android.content.Context;

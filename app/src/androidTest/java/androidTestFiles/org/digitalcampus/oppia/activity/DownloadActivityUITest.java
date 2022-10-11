@@ -26,11 +26,11 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
-import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
-import androidTestFiles.Utils.Assertions.StatusBadgeAssertion;
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
+import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
+import androidTestFiles.utils.assertions.StatusBadgeAssertion;
+import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.FileUtils;
 import androidTestFiles.database.sampledata.UserData;
 
 import androidx.preference.PreferenceManager;
@@ -39,8 +39,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
-import static androidTestFiles.Utils.Matchers.EspressoTestsMatchers.withDrawable;
-import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withDrawable;
+import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;

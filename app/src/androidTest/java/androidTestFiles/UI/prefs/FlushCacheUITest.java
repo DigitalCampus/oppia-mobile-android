@@ -11,8 +11,8 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
-import static androidTestFiles.Utils.Matchers.EspressoTestsMatchers.withDrawable;
-import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withDrawable;
+import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 
 import android.Manifest;
 import android.content.Context;
@@ -42,9 +42,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.FileUtils;
-import androidTestFiles.Utils.MockedApiEndpointTest;
+import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.FileUtils;
+import androidTestFiles.utils.MockedApiEndpointTest;
 import androidTestFiles.database.sampledata.UserData;
 
 import androidx.preference.PreferenceManager;

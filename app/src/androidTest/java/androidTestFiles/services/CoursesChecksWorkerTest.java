@@ -1,4 +1,4 @@
-package androidTestFiles.Services;
+package androidTestFiles.services;
 
 import android.Manifest;
 import android.content.Context;
@@ -35,7 +35,7 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import androidTestFiles.Utils.CourseUtils;
+import androidTestFiles.utils.CourseUtils;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static org.hamcrest.MatcherAssert.assertThat;

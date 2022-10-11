@@ -1,4 +1,4 @@
-package androidTestFiles.Utils;
+package androidTestFiles.utils;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -8,12 +8,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.CoreMatchers.allOf;
 
-import android.os.IBinder;
 import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
-import androidx.test.espresso.Espresso;
 import androidx.test.espresso.Root;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
@@ -22,10 +20,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 
 import com.google.android.material.tabs.TabLayout;
 
-import org.digitalcampus.mobile.learning.R;
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 
 public class UITestActionsUtils {
 

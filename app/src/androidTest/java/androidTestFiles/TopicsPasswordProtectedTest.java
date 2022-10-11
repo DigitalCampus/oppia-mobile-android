@@ -21,9 +21,9 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
-import static androidTestFiles.Utils.Matchers.EspressoTestsMatchers.withDrawable;
-import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
-import static androidTestFiles.Utils.CourseUtils.runInstallCourseTask;
+import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withDrawable;
+import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.utils.CourseUtils.runInstallCourseTask;
 
 import android.content.Context;
 import android.content.Intent;
@@ -57,10 +57,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.FileUtils;
-import androidTestFiles.Utils.MockedApiEndpointTest;
-import androidTestFiles.Utils.UITestActionsUtils;
+import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.FileUtils;
+import androidTestFiles.utils.MockedApiEndpointTest;
+import androidTestFiles.utils.UITestActionsUtils;
 import androidTestFiles.database.TestDBHelper;
 
 @RunWith(AndroidJUnit4.class)

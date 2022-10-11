@@ -44,9 +44,9 @@ import org.mockito.Mock;
 import java.util.Arrays;
 import java.util.Locale;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.UITestActionsUtils;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
+import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.UITestActionsUtils;
 import androidTestFiles.database.TestDBHelper;
 
 public class ReadOnlyTests extends DaggerInjectMockUITest {

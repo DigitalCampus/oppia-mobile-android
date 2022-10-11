@@ -4,9 +4,7 @@ import android.Manifest;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 
-import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
@@ -25,9 +23,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.MockedApiEndpointTest;
-import androidTestFiles.Utils.TestUtils;
+import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.MockedApiEndpointTest;
+import androidTestFiles.utils.TestUtils;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;

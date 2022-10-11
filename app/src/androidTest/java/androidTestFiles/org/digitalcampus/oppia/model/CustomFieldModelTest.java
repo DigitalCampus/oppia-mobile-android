@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.utils.FileUtils;
 import androidx.test.rule.GrantPermissionRule;
 
 @RunWith(AndroidJUnit4.class)

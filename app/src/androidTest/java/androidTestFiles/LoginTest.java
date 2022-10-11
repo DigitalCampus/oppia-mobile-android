@@ -21,9 +21,9 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.utils.FileUtils;
 import androidTestFiles.database.BaseTestDB;
-import androidTestFiles.org.digitalcampus.oppia.api.MockApiEndpoint;
+import androidTestFiles.utils.MockApiEndpoint;
 import androidx.test.rule.GrantPermissionRule;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;

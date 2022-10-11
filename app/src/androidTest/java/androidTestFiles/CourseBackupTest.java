@@ -21,8 +21,8 @@ import org.junit.runners.Parameterized;
 import java.io.File;
 import java.util.Locale;
 
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.FileUtils;
 import androidTestFiles.database.BaseTestDB;
 import androidx.test.rule.GrantPermissionRule;
 

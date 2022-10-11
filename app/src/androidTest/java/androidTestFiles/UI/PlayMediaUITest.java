@@ -8,7 +8,6 @@ import android.os.Bundle;
 
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.DeviceListActivity;
-import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -25,8 +24,8 @@ import org.mockito.Mock;
 import java.io.File;
 import java.util.ArrayList;
 
-import androidTestFiles.Utils.FileUtils;
-import androidTestFiles.Utils.TestUtils;
+import androidTestFiles.utils.FileUtils;
+import androidTestFiles.utils.TestUtils;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.web.webdriver.Locator;
 import androidx.test.ext.junit.runners.AndroidJUnit4;

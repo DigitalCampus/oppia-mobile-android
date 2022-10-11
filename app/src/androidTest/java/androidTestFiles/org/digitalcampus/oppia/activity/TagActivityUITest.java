@@ -6,7 +6,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
-import static androidTestFiles.Utils.Matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 
 import android.content.Context;
 
@@ -25,7 +25,7 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import androidTestFiles.Utils.MockedApiEndpointTest;
+import androidTestFiles.utils.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
 public class TagActivityUITest extends MockedApiEndpointTest {

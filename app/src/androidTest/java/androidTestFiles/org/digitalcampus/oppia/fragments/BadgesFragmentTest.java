@@ -14,12 +14,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 
-import androidTestFiles.Utils.Assertions.RecyclerViewItemCountAssertion;
-import androidTestFiles.Utils.MockedApiEndpointTest;
+import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
+import androidTestFiles.utils.MockedApiEndpointTest;
 
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
-import androidx.test.uiautomator.UiDevice;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;

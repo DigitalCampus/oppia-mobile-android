@@ -2,9 +2,6 @@ package androidTestFiles.org.digitalcampus.oppia.widgets.quiz;
 
 import android.os.Bundle;
 
-import androidx.fragment.app.FragmentFactory;
-import androidx.fragment.app.testing.FragmentScenario;
-import androidx.lifecycle.Lifecycle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -20,8 +17,8 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
-import androidTestFiles.Utils.FileUtils;
-import androidTestFiles.Utils.TestUtils;
+import androidTestFiles.utils.FileUtils;
+import androidTestFiles.utils.TestUtils;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;

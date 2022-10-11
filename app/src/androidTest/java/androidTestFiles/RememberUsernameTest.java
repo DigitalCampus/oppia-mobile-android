@@ -17,8 +17,8 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-import androidTestFiles.Utils.FileUtils;
-import androidTestFiles.org.digitalcampus.oppia.api.MockApiEndpoint;
+import androidTestFiles.utils.FileUtils;
+import androidTestFiles.utils.MockApiEndpoint;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import androidx.test.platform.app.InstrumentationRegistry;

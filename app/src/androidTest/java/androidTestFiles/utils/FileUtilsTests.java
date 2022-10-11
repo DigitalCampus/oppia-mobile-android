@@ -1,4 +1,4 @@
-package androidTestFiles.Utils;
+package androidTestFiles.utils;
 
 
 import org.digitalcampus.mobile.learning.R;

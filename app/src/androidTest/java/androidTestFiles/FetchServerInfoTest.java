@@ -14,7 +14,6 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,9 +21,9 @@ import org.mockito.Mockito;
 
 import java.util.concurrent.CountDownLatch;
 
-import androidTestFiles.Utils.FileUtils;
-import androidTestFiles.org.digitalcampus.oppia.api.MockApiEndpoint;
-import androidTestFiles.org.digitalcampus.oppia.api.MockedApiEndpointTaskTest;
+import androidTestFiles.utils.FileUtils;
+import androidTestFiles.utils.MockApiEndpoint;
+import androidTestFiles.utils.parent.MockedApiEndpointTaskTest;
 import androidx.test.rule.GrantPermissionRule;
 
 import static junit.framework.Assert.assertEquals;

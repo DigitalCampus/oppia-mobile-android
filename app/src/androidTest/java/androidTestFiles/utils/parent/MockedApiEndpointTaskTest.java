@@ -1,4 +1,4 @@
-package androidTestFiles.org.digitalcampus.oppia.api;
+package androidTestFiles.utils.parent;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;

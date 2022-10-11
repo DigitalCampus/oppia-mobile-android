@@ -1,4 +1,4 @@
-package androidTestFiles.Services;
+package androidTestFiles.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,7 +17,6 @@ import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.TrackerLogRepository;
-import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.junit.Assert;

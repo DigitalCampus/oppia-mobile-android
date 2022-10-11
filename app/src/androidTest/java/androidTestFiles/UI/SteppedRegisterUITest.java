@@ -19,9 +19,9 @@ import org.mockito.Mock;
 
 import java.util.List;
 
-import androidTestFiles.Utils.FileUtils;
-import androidTestFiles.Utils.Matchers.SpinnerMatcher;
-import androidTestFiles.Utils.MockedApiEndpointTest;
+import androidTestFiles.utils.FileUtils;
+import androidTestFiles.utils.matchers.SpinnerMatcher;
+import androidTestFiles.utils.MockedApiEndpointTest;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -29,10 +29,10 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.UiDevice;
 
-import static androidTestFiles.Utils.ViewsUtils.onEditTextWithinTextInputLayout;
-import static androidTestFiles.Utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
-import static androidTestFiles.Utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
-import static androidTestFiles.Utils.ViewsUtils.withHintInInputLayout;
+import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayout;
+import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
+import static androidTestFiles.utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
+import static androidTestFiles.utils.ViewsUtils.withHintInInputLayout;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.Espresso.pressBack;

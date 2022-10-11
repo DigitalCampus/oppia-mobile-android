@@ -1,7 +1,6 @@
 package androidTestFiles.org.digitalcampus.oppia.model;
 
 import android.Manifest;
-import android.util.Log;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -9,7 +8,6 @@ import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,7 +19,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-import androidTestFiles.Utils.FileUtils;
+import androidTestFiles.utils.FileUtils;
 
 @RunWith(AndroidJUnit4.class)
 public class TagRepositoryTest {

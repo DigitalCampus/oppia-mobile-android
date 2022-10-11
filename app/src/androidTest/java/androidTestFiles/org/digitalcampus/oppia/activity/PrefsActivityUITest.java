@@ -53,9 +53,9 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import androidTestFiles.TestRules.DaggerInjectMockUITest;
-import androidTestFiles.Utils.CourseUtils;
-import androidTestFiles.Utils.TestUtils;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
+import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.TestUtils;
 import androidx.test.rule.GrantPermissionRule;
 
 @RunWith(AndroidJUnit4.class)
