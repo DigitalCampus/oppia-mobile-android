@@ -14,6 +14,10 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.parent.BaseTest.COURSE_FEEDBACK;
+import static androidTestFiles.utils.parent.BaseTest.COURSE_QUIZ;
+import static androidTestFiles.utils.parent.BaseTest.COURSE_QUIZ_SHORTNAME;
+import static androidTestFiles.utils.parent.BaseTest.PATH_COMMON_TESTS;
 
 import android.content.Context;
 import android.content.Intent;
@@ -44,18 +48,12 @@ import org.mockito.Mock;
 import java.util.Arrays;
 import java.util.Locale;
 
-import androidTestFiles.utils.parent.DaggerInjectMockUITest;
+import androidTestFiles.database.TestDBHelper;
 import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.UITestActionsUtils;
-import androidTestFiles.database.TestDBHelper;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 public class ReadOnlyTests extends DaggerInjectMockUITest {
-
-    public static final String PATH_COMMON = "common";
-    public static final String COURSE_FEEDBACK = "course-with-feedback.zip";
-    public static final String COURSE_QUIZ = "course-with-quiz.zip";
-    private static final String COURSE_FEEDBACK_SHORTNAME = "course-with-feedback";
-    private static final String COURSE_QUIZ_SHORTNAME = "course-with-quiz";
 
     @Mock
     SharedPreferences prefs;
@@ -119,7 +117,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
     @Test
     public void showFeedbackIfCourseLive() throws Exception {
 
-        installCourse(PATH_COMMON, COURSE_FEEDBACK);
+        installCourse(PATH_COMMON_TESTS, COURSE_FEEDBACK);
         String status = Course.STATUS_LIVE;
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIndexIntent(status))) {
@@ -131,7 +129,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
     @Test
     public void showFeedbackNotAvailableIfCourseReadOnly() throws Exception {
 
-        installCourse(PATH_COMMON, COURSE_FEEDBACK);
+        installCourse(PATH_COMMON_TESTS, COURSE_FEEDBACK);
         String status = Course.STATUS_READ_ONLY;
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIndexIntent(status))) {
@@ -146,7 +144,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
     @Test
     public void showQuizIfCourseLive() throws Exception {
 
-        installCourse(PATH_COMMON, COURSE_QUIZ);
+        installCourse(PATH_COMMON_TESTS, COURSE_QUIZ);
         String status = Course.STATUS_LIVE;
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIndexIntent(status))) {
@@ -158,7 +156,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
     @Test
     public void showQuizNotAvailableIfCourseReadOnly() throws Exception {
 
-        installCourse(PATH_COMMON, COURSE_QUIZ);
+        installCourse(PATH_COMMON_TESTS, COURSE_QUIZ);
         String status = Course.STATUS_READ_ONLY;
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIndexIntent(status))) {
@@ -173,7 +171,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
     @Test
     public void dontShowViewAttempsButtonIfQuizNotAvailableHasNoAttemps() throws Exception {
 
-        installCourse(PATH_COMMON, COURSE_QUIZ);
+        installCourse(PATH_COMMON_TESTS, COURSE_QUIZ);
         String status = Course.STATUS_READ_ONLY;
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIndexIntent(status))) {
@@ -185,7 +183,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
     @Test
     public void showViewAttempsButtonIfQuizNotAvailableHasAttemps() throws Exception {
 
-        installCourse(PATH_COMMON, COURSE_QUIZ);
+        installCourse(PATH_COMMON_TESTS, COURSE_QUIZ);
         String status = Course.STATUS_READ_ONLY;
 
         QuizStats qs = new QuizStats();
@@ -214,7 +212,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
     @Test
     public void showRetakeQuizButtonIfNotReadOnlyCourse_CourseQuizAttemptsActivity_WithAttempts() throws Exception {
 
-        installCourse(PATH_COMMON, COURSE_QUIZ);
+        installCourse(PATH_COMMON_TESTS, COURSE_QUIZ);
 
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_LIVE);
 
@@ -227,7 +225,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
     @Test
     public void showTakeQuizButtonIfNotReadOnlyCourse_CourseQuizAttemptsActivity_WithNoAttempts() throws Exception {
 
-        installCourse(PATH_COMMON, COURSE_QUIZ);
+        installCourse(PATH_COMMON_TESTS, COURSE_QUIZ);
 
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_LIVE);
 
@@ -240,7 +238,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
     @Test
     public void dontShowRetakeQuizButtonIfReadOnlyCourse_CourseQuizAttemptsActivity() throws Exception {
 
-        installCourse(PATH_COMMON, COURSE_QUIZ);
+        installCourse(PATH_COMMON_TESTS, COURSE_QUIZ);
 
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_READ_ONLY);
 
@@ -264,7 +262,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
     @Test
     public void showRetakeQuizButtonIfNotReadOnlyCourse_QuizAttemptActivity() throws Exception {
 
-        installCourse(PATH_COMMON, COURSE_QUIZ);
+        installCourse(PATH_COMMON_TESTS, COURSE_QUIZ);
 
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_LIVE);
 
@@ -276,7 +274,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
     @Test
     public void dontShowRetakeQuizButtonIfReadOnlyCourse_QuizAttemptActivity() throws Exception {
 
-        installCourse(PATH_COMMON, COURSE_QUIZ);
+        installCourse(PATH_COMMON_TESTS, COURSE_QUIZ);
 
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_READ_ONLY);
 

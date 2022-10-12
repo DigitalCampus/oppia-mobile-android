@@ -25,7 +25,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 
-import androidTestFiles.utils.MockedApiEndpointTest;
+import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidTestFiles.database.sampledata.UserData;
 import androidx.test.rule.GrantPermissionRule;
 

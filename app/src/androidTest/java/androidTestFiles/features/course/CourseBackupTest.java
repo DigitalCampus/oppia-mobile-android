@@ -32,6 +32,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.parent.BaseTest.CORRECT_COURSE;
 
 @RunWith(Parameterized.class)
 public class CourseBackupTest extends BaseTestDB {
@@ -39,8 +40,6 @@ public class CourseBackupTest extends BaseTestDB {
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     public static final String TAG = InstallDownloadedCoursesTest.class.getSimpleName();
-
-    private final String CORRECT_COURSE = "Correct_Course.zip";
 
     private Context context;
     private BasicResult response;

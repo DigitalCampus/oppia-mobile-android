@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 /**
 @RunWith(AndroidJUnit4.class)
 public class UpdateCourseActivityTest {
-    private final String CORRECT_COURSE = "Correct_Course.zip";
     private Context context;
     private CountDownLatch signal;
     private BasicResult response;

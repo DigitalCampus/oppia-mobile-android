@@ -16,6 +16,8 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
+import static androidTestFiles.utils.parent.BaseTest.*;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -51,11 +53,6 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    public static final String COURSE_QUIZ_SHOW_ALL = "show_all.zip";
-    public static final String COURSE_QUIZ_HIDE_LATER = "hide_later.zip";
-    public static final String COURSE_QUIZ_HIDE_AT_END = "hide_at_end.zip";
-    public static final String COURSE_QUIZ_HIDE_AT_END_AND_LATER = "hide_at_end_and_later.zip";
-
     @Mock
     SharedPreferences prefs;
     @Mock
@@ -86,7 +83,7 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
         CourseUtils.cleanUp();
-        FileUtils.copyZipFromAssetsPath(context, "courses_quiz_results", course);
+        FileUtils.copyZipFromAssetsPath(context, PATH_COURSES_QUIZ_RESULTS_TESTS, course);
         BasicResult response = CourseUtils.runInstallCourseTask(context);
         assertTrue(response.isSuccess());
     }

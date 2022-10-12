@@ -7,6 +7,12 @@ import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.utils.parent.BaseTest.COURSE_TEST;
+import static androidTestFiles.utils.parent.BaseTest.COURSE_TEST_2;
+import static androidTestFiles.utils.parent.BaseTest.PATH_COMMON_TESTS;
+import static androidTestFiles.utils.parent.BaseTest.PATH_TESTS;
+import static androidTestFiles.utils.parent.BaseTest.TAGS_LIVE_DRAFT_RESPONSE;
+import static androidTestFiles.utils.parent.BaseTest.TAGS_NO_COURSE_STATUSES_FIELD_RESPONSE;
 
 import android.content.Context;
 
@@ -25,14 +31,11 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import androidTestFiles.utils.MockedApiEndpointTest;
+import androidTestFiles.utils.parent.BaseTest;
+import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
 public class TagActivityUITest extends MockedApiEndpointTest {
-
-
-    private static final String TAGS_LIVE_DRAFT_RESPONSE = "tags/all_statuses_types.json";
-    private static final String TAGS_NO_COURSE_STATUSES_FIELD_RESPONSE = "tags/no_course_statuses_field.json";
 
     @Mock(answer = Answers.CALLS_REAL_METHODS)
     TagRepository tagRepository;
@@ -92,7 +95,7 @@ public class TagActivityUITest extends MockedApiEndpointTest {
     @Test
     public void checkCountOfReadOnlyCoursesIfInstalled() throws Exception {
 
-        installCourse("common", "test_course.zip");
+        installCourse(PATH_COMMON_TESTS, COURSE_TEST);
 
         startServer(200, TAGS_LIVE_DRAFT_RESPONSE, 0, 2);
 
@@ -108,7 +111,7 @@ public class TagActivityUITest extends MockedApiEndpointTest {
     @Test
     public void checkCountOfNewDownloadsDisabledCoursesIfInstalled() throws Exception {
 
-        installCourse("common", "test_course_2.zip");
+        installCourse(PATH_COMMON_TESTS, COURSE_TEST_2);
 
         startServer(200, TAGS_LIVE_DRAFT_RESPONSE, 0, 2);
 
@@ -124,8 +127,8 @@ public class TagActivityUITest extends MockedApiEndpointTest {
     @Test
     public void checkCountOfReadOnlyAndNewDownloadsDisabledCoursesIfInstalled() throws Exception {
 
-        installCourse("common", "test_course.zip");
-        installCourse("common", "test_course_2.zip");
+        installCourse(PATH_COMMON_TESTS, COURSE_TEST);
+        installCourse(PATH_COMMON_TESTS, COURSE_TEST_2);
 
         startServer(200, TAGS_LIVE_DRAFT_RESPONSE, 0, 2);
 

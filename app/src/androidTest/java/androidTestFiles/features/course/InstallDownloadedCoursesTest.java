@@ -30,6 +30,7 @@ import androidTestFiles.database.BaseTestDB;
 import androidx.test.rule.GrantPermissionRule;
 
 import static androidTestFiles.utils.CourseUtils.runInstallCourseTask;
+import static androidTestFiles.utils.parent.BaseTest.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
@@ -45,14 +46,6 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     public static final String TAG = InstallDownloadedCoursesTest.class.getSimpleName();
-
-    private final String CORRECT_COURSE = "Correct_Course.zip";
-    private final String EXISTING_COURSE = "Existing_Course.zip";
-    private final String UPDATED_COURSE = "Updated_Course.zip";
-    private final String INCORRECT_COURSE = "Incorrect_Course.zip";
-    private final String NOXML_COURSE = "NoXML_Course.zip";
-    private final String MALFORMEDXML_COURSE = "MalformedXML_Course.zip";
-    private final String INSECURE_COURSE = "Insecure_Course.zip";
 
     private Context context;
     private BasicResult response;

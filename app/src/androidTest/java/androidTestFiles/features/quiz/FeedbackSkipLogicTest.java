@@ -10,7 +10,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
@@ -18,8 +17,10 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidTestFiles.utils.CourseUtils.runInstallCourseTask;
+import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.utils.parent.BaseTest.COURSE_SKIP_LOGIC;
+import static androidTestFiles.utils.parent.BaseTest.PATH_COURSES_SKIP_LOGIC_TESTS;
 
 import android.content.Context;
 import android.content.Intent;
@@ -40,17 +41,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import androidTestFiles.utils.parent.DaggerInjectMockUITest;
+import androidTestFiles.database.TestDBHelper;
 import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.UITestActionsUtils;
-import androidTestFiles.database.TestDBHelper;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 @RunWith(AndroidJUnit4.class)
 public class FeedbackSkipLogicTest extends DaggerInjectMockUITest {
 
-
-    private static final String COURSE_SKIP_LOGIC = "course-skip-logic.zip";
     private Context context;
 
     private static final long USER_ID_NONE = -1;
@@ -111,7 +110,7 @@ public class FeedbackSkipLogicTest extends DaggerInjectMockUITest {
     }
 
     protected void copyCourseFromAssets(String filename) {
-        FileUtils.copyZipFromAssetsPath(context, "courses_skip_logic", filename);  //Copy course zip from assets to download path
+        FileUtils.copyZipFromAssetsPath(context, PATH_COURSES_SKIP_LOGIC_TESTS, filename);  //Copy course zip from assets to download path
     }
 
 

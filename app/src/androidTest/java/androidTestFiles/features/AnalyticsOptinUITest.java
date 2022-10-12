@@ -20,7 +20,7 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import androidTestFiles.utils.MockedApiEndpointTest;
+import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidTestFiles.utils.TestUtils;
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ActivityScenario;

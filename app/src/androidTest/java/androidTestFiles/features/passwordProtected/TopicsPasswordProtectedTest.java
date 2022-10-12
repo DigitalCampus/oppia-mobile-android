@@ -21,9 +21,12 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.CourseUtils.runInstallCourseTask;
 import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withDrawable;
 import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
-import static androidTestFiles.utils.CourseUtils.runInstallCourseTask;
+import static androidTestFiles.utils.parent.BaseTest.COURSE_PASSWORD_PROTECT;
+import static androidTestFiles.utils.parent.BaseTest.COURSE_PASSWORD_PROTECT_UPDATE;
+import static androidTestFiles.utils.parent.BaseTest.PATH_COURSES_TOPICS_PASSWORD_PROTECT_TESTS;
 
 import android.content.Context;
 import android.content.Intent;
@@ -57,18 +60,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import androidTestFiles.database.TestDBHelper;
 import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.FileUtils;
-import androidTestFiles.utils.MockedApiEndpointTest;
 import androidTestFiles.utils.UITestActionsUtils;
-import androidTestFiles.database.TestDBHelper;
+import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
 public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
 
-
-    private static final String COURSE_PASSWORD_PROTECT = "password-protect-initial.zip";
-    private static final String COURSE_PASSWORD_PROTECT_UPDATE = "password-protect-update.zip";
 
     private static final String PASSWORD_INITIAL = "password";
     private static final String PASSWORD_UPDATE = "newpassword";
@@ -119,7 +119,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
     }
 
     protected void copyCourseFromAssets(String filename) {
-        FileUtils.copyZipFromAssetsPath(context, "courses_topics_password_protect", filename);  //Copy course zip from assets to download path
+        FileUtils.copyZipFromAssetsPath(context, PATH_COURSES_TOPICS_PASSWORD_PROTECT_TESTS, filename);  //Copy course zip from assets to download path
     }
 
     private Intent getTestCourseIntent() {

@@ -26,6 +26,9 @@ import androidx.test.rule.GrantPermissionRule;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+import static androidTestFiles.utils.parent.BaseTest.CORRECT_XML;
+import static androidTestFiles.utils.parent.BaseTest.INCORRECT_XML;
+import static androidTestFiles.utils.parent.BaseTest.PATH_COURSES_XML_TESTS;
 
 @RunWith(AndroidJUnit4.class)
 public class XMLReadersTest {
@@ -33,10 +36,6 @@ public class XMLReadersTest {
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private Context context;
-
-    private static final String ASSETS_FOLDER = "course_xmls";
-    private static final String CORRECT_XML = "correct_course.xml";
-    private static final String INCORRECT_XML = "incorrect_xml.xml";
 
     @Before
     public void setUp() throws Exception {
@@ -46,7 +45,7 @@ public class XMLReadersTest {
 
     private String copyFile(String filename){
         String destination = Storage.getStorageLocationRoot(context) + File.separator + "test" + File.separator;
-        FileUtils.copyFileFromAssets(context, ASSETS_FOLDER, filename, new File(destination));
+        FileUtils.copyFileFromAssets(context, PATH_COURSES_XML_TESTS, filename, new File(destination));
         return destination + filename;
     }
 

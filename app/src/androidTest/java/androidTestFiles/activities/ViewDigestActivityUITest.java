@@ -24,7 +24,7 @@ import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 
 import androidTestFiles.utils.CourseUtils;
-import androidTestFiles.utils.MockedApiEndpointTest;
+import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidTestFiles.utils.TestUtils;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;

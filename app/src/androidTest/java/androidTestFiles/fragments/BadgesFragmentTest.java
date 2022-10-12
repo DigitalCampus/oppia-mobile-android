@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 
 
 import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
-import androidTestFiles.utils.MockedApiEndpointTest;
+import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 import androidx.test.rule.GrantPermissionRule;
 

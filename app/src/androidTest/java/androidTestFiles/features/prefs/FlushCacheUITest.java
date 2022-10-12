@@ -44,7 +44,7 @@ import java.util.concurrent.CountDownLatch;
 
 import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.FileUtils;
-import androidTestFiles.utils.MockedApiEndpointTest;
+import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidTestFiles.database.sampledata.UserData;
 
 import androidx.preference.PreferenceManager;

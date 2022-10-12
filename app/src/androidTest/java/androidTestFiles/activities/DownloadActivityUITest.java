@@ -41,6 +41,9 @@ import androidx.test.rule.GrantPermissionRule;
 
 import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withDrawable;
 import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.utils.parent.BaseTest.COURSE_TEST;
+import static androidTestFiles.utils.parent.BaseTest.PATH_COMMON_TESTS;
+import static androidTestFiles.utils.parent.BaseTest.PATH_TESTS;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -57,6 +60,8 @@ import static org.mockito.Mockito.doAnswer;
 
 @RunWith(AndroidJUnit4.class)
 public class DownloadActivityUITest extends DaggerInjectMockUITest {
+
+
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
@@ -554,7 +559,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         CourseUtils.cleanUp();
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        FileUtils.copyZipFromAssetsPath(context, "common", "test_course.zip");
+        FileUtils.copyZipFromAssetsPath(context, PATH_COMMON_TESTS, COURSE_TEST);
 
         BasicResult response = CourseUtils.runInstallCourseTask(context);
         assertTrue(response.isSuccess());
@@ -614,7 +619,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         CourseUtils.cleanUp();
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        FileUtils.copyZipFromAssetsPath(context, "common", "test_course.zip");
+        FileUtils.copyZipFromAssetsPath(context, PATH_COMMON_TESTS, COURSE_TEST);
 
         BasicResult response = CourseUtils.runInstallCourseTask(context);
         assertTrue(response.isSuccess());

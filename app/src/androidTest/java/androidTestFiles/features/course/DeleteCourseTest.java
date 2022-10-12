@@ -39,14 +39,13 @@ import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.parent.BaseTest.CORRECT_COURSE;
 
 @RunWith(Parameterized.class)
 public class DeleteCourseTest extends BaseTestDB {
     public static final String TAG = DeleteCourseTest.class.getSimpleName();
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-    private final String CORRECT_COURSE = "Correct_Course.zip";
 
     private Context context;
     private StorageAccessStrategy storageStrategy;

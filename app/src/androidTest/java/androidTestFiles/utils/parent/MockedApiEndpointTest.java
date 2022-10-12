@@ -1,4 +1,4 @@
-package androidTestFiles.utils;
+package androidTestFiles.utils.parent;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -50,7 +51,7 @@ public abstract class MockedApiEndpointTest extends DaggerInjectMockUITest {
             if (!TextUtilsJava.isEmpty(responseAsset)) {
 
                 String responseBody = FileUtils.getStringFromFile(
-                        InstrumentationRegistry.getInstrumentation().getContext(), responseAsset);
+                        InstrumentationRegistry.getInstrumentation().getContext(), /*BaseTest.PATH_TESTS + File.separator + */responseAsset);
 
                 response.setBody(responseBody);
 

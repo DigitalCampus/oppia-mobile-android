@@ -42,7 +42,7 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import androidTestFiles.utils.MockedApiEndpointTest;
+import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidTestFiles.database.TestDBHelper;
 
 @RunWith(AndroidJUnit4.class)

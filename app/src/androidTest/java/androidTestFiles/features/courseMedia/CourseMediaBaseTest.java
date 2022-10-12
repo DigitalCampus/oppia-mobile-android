@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.FileUtils;
@@ -25,12 +26,6 @@ public abstract class CourseMediaBaseTest extends DaggerInjectMockUITest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    protected static final String COURSE_WITH_NO_MEDIA = "Course_with_no_media.zip";
-    protected static final String COURSE_WITH_MEDIA_1 = "Course_with_media_1.zip";
-    protected static final String COURSE_WITH_MEDIA_2 = "Course_with_media_2.zip";
-
-    protected static final String MEDIA_FILE_VIDEO_TEST_1 = "video-test-1.mp4";
-    protected static final String MEDIA_FILE_VIDEO_TEST_2 = "video-test-2.mp4";
 
     protected Context context;
     protected TestDBHelper testDBHelper;
@@ -55,12 +50,12 @@ public abstract class CourseMediaBaseTest extends DaggerInjectMockUITest {
     }
 
     protected void copyCourseFromAssets(String filename){
-        FileUtils.copyZipFromAssetsPath(context, "courses_media", filename);  //Copy course zip from assets to download path
+        FileUtils.copyZipFromAssetsPath(context, BaseTest.PATH_COURSES_MEDIA_TESTS, filename);  //Copy course zip from assets to download path
     }
 
     protected void copyMediaFromAssets(String filename, String destinationFilename){
         File mediaPath = new File(Storage.getMediaPath(context));
-        FileUtils.copyFileFromAssets(context, "courses_media", filename, mediaPath, destinationFilename);  //Copy course zip from assets to download path
+        FileUtils.copyFileFromAssets(context, BaseTest.PATH_COURSES_MEDIA_TESTS, filename, mediaPath, destinationFilename);  //Copy course zip from assets to download path
     }
 
     protected void copyMediaFromAssets(String filename){

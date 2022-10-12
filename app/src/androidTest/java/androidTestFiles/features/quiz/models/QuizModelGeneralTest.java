@@ -59,6 +59,7 @@ public class QuizModelGeneralTest {
                 InstrumentationRegistry.getInstrumentation().getContext(), MULTICHOICE_QUIZ_JSON);
         quiz = new Quiz();
         quiz.load(quizContent, DEFAULT_LANG);
+
     }
 
     @Test

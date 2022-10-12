@@ -7,6 +7,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.is;
 
+import static androidTestFiles.utils.parent.BaseTest.MEDIA_FILE_VIDEO_TEST_1;
+
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;

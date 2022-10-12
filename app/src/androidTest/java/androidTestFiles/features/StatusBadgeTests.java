@@ -11,6 +11,9 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
+import static androidTestFiles.utils.parent.BaseTest.COURSE_QUIZ;
+import static androidTestFiles.utils.parent.BaseTest.COURSE_QUIZ_SHORTNAME;
+import static androidTestFiles.utils.parent.BaseTest.PATH_COMMON_TESTS;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -38,10 +41,6 @@ import androidTestFiles.utils.assertions.StatusBadgeAssertion;
 import androidTestFiles.utils.CourseUtils;
 
 public class StatusBadgeTests extends DaggerInjectMockUITest {
-
-    public static final String PATH_COMMON = "common";
-    public static final String COURSE_QUIZ = "course-with-quiz.zip";
-    private static final String COURSE_QUIZ_SHORTNAME = "course-with-quiz";
 
     @Mock
     SharedPreferences prefs;
@@ -88,7 +87,7 @@ public class StatusBadgeTests extends DaggerInjectMockUITest {
     @Test
     public void setCorrectReadOnlyStatusBadge() throws Exception {
 
-        installCourse(PATH_COMMON, COURSE_QUIZ);
+        installCourse(PATH_COMMON_TESTS, COURSE_QUIZ);
 
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_READ_ONLY);
 
@@ -103,7 +102,7 @@ public class StatusBadgeTests extends DaggerInjectMockUITest {
     @Test
     public void hideLiveStatusBadge() throws Exception {
 
-        installCourse(PATH_COMMON, COURSE_QUIZ);
+        installCourse(PATH_COMMON_TESTS, COURSE_QUIZ);
 
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_LIVE);
 
@@ -118,7 +117,7 @@ public class StatusBadgeTests extends DaggerInjectMockUITest {
     @Test
     public void hideNewDownloadsDisabledStatusBadge() throws Exception {
 
-        installCourse(PATH_COMMON, COURSE_QUIZ);
+        installCourse(PATH_COMMON_TESTS, COURSE_QUIZ);
 
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_NEW_DOWNLOADS_DISABLED);
 
@@ -133,7 +132,7 @@ public class StatusBadgeTests extends DaggerInjectMockUITest {
     @Test
     public void setCorrectDraftStatusBadge() throws Exception {
 
-        installCourse(PATH_COMMON, COURSE_QUIZ);
+        installCourse(PATH_COMMON_TESTS, COURSE_QUIZ);
 
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_DRAFT);
 

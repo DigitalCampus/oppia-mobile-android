@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 
-import androidTestFiles.utils.MockedApiEndpointTest;
+import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidx.test.rule.GrantPermissionRule;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;

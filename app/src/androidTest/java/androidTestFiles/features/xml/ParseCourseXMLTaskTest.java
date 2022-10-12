@@ -23,6 +23,9 @@ import androidTestFiles.utils.FileUtils;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static androidTestFiles.utils.parent.BaseTest.CORRECT_XML;
+import static androidTestFiles.utils.parent.BaseTest.INCORRECT_XML;
+import static androidTestFiles.utils.parent.BaseTest.PATH_COURSES_XML_TESTS;
 
 public class ParseCourseXMLTaskTest {
 
@@ -30,10 +33,6 @@ public class ParseCourseXMLTaskTest {
     private SharedPreferences prefs;
     private CompleteCourse resultCourse;
     private boolean success;
-
-    private static final String ASSETS_FOLDER = "course_xmls";
-    private static final String CORRECT_XML = "correct_course.xml";
-    private static final String INCORRECT_XML = "incorrect_xml.xml";
 
     @Before
     public void setUp() throws Exception {
@@ -43,7 +42,7 @@ public class ParseCourseXMLTaskTest {
 
     private String copyCourseFile(String shortname, String filename){
         String destination = Storage.getStorageLocationRoot(context) +  File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + shortname + File.separator;
-        FileUtils.copyFileFromAssets(context, ASSETS_FOLDER, filename, new File(destination), App.COURSE_XML);
+        FileUtils.copyFileFromAssets(context, PATH_COURSES_XML_TESTS, filename, new File(destination), App.COURSE_XML);
         return destination + filename;
     }
 

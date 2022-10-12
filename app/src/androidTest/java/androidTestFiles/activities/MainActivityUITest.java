@@ -36,7 +36,7 @@ import org.mockito.stubbing.Answer;
 import java.util.ArrayList;
 
 import androidTestFiles.utils.CourseUtils;
-import androidTestFiles.utils.MockedApiEndpointTest;
+import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidTestFiles.utils.TestUtils;
 import androidTestFiles.utils.UITestActionsUtils;
 import androidx.test.core.app.ActivityScenario;

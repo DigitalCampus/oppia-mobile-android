@@ -21,7 +21,7 @@ import java.util.List;
 
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.matchers.SpinnerMatcher;
-import androidTestFiles.utils.MockedApiEndpointTest;
+import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -33,6 +33,7 @@ import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayout;
 import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
 import static androidTestFiles.utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
 import static androidTestFiles.utils.ViewsUtils.withHintInInputLayout;
+import static androidTestFiles.utils.parent.BaseTest.PATH_CUSTOM_FIELDS_TESTS;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.Espresso.pressBack;
@@ -60,10 +61,9 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    private static final String VALID_REGISTER_RESPONSE = "responses/response_200_register.json";
-    private static final String BASIC_DEPENDANT_STEPS = "customfields/dependant_fields.json";
-    private static final String REGISTER_STEPS_NORMAL = "customfields/custom_fields.json";
-    private static final String ADVANCED_SCENARIOS = "customfields/advanced_scenarios.json";
+    private static final String BASIC_DEPENDANT_STEPS = PATH_CUSTOM_FIELDS_TESTS + "/dependant_fields.json";
+    private static final String REGISTER_STEPS_NORMAL = PATH_CUSTOM_FIELDS_TESTS + "/custom_fields.json";
+    private static final String ADVANCED_SCENARIOS = PATH_CUSTOM_FIELDS_TESTS + "/advanced_scenarios.json";
 
     @Mock
     protected CustomFieldsRepository customFieldsRepo;

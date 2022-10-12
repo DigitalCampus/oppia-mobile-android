@@ -1,5 +1,7 @@
 package androidTestFiles.utils;
 
+import static androidTestFiles.utils.parent.BaseTest.PATH_COURSES_TESTS;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -107,7 +109,7 @@ public class FileUtils {
 
     public static void copyZipFromAssets(Context context, String filename){
         File downloadPath = new File(Storage.getDownloadPath(context));
-        copyFileFromAssets(context, "courses", filename, downloadPath);
+        copyFileFromAssets(context, PATH_COURSES_TESTS, filename, downloadPath);
     }
 
     public static void copyZipFromAssetsPath(Context context, String path, String filename){

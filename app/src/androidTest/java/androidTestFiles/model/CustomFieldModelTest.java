@@ -1,5 +1,7 @@
 package androidTestFiles.model;
 
+import static androidTestFiles.utils.parent.BaseTest.PATH_CUSTOM_FIELDS_TESTS;
+
 import android.Manifest;
 import android.content.Context;
 
@@ -26,7 +28,6 @@ public class CustomFieldModelTest {
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private Context context;
-    private static final String ASSETS_FOLDER = "customfields";
 
     @Before
     public void setUp() throws Exception {
@@ -36,7 +37,7 @@ public class CustomFieldModelTest {
 
     private String copyFile(String filename){
         String destination = Storage.getStorageLocationRoot(context) + File.separator + "test" + File.separator;
-        FileUtils.copyFileFromAssets(context, ASSETS_FOLDER, filename, new File(destination));
+        FileUtils.copyFileFromAssets(context, PATH_CUSTOM_FIELDS_TESTS, filename, new File(destination));
         return destination + filename;
     }
 
