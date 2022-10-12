@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import androidTestFiles.UI.CourseMediaBaseTest;
+import androidTestFiles.features.courseMedia.CourseMediaBaseTest;
 
 @RunWith(AndroidJUnit4.class)
 public class VideoPlayerActivityTest extends CourseMediaBaseTest {

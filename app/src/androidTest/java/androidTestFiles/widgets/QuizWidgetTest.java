@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.ViewsUtils;
-import androidTestFiles.quiz.models.QuizModelGeneralTest;
+import androidTestFiles.features.quiz.models.QuizModelGeneralTest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;

@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.utils.TestUtils;
-import androidTestFiles.quiz.models.MatchingQuestionTest;
+import androidTestFiles.features.quiz.models.MatchingQuestionTest;
 
 import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withDrawable;
 import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;

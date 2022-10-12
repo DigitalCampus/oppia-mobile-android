@@ -32,7 +32,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import androidTestFiles.UI.CourseMediaBaseTest;
+import androidTestFiles.features.courseMedia.CourseMediaBaseTest;
 import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
 
 public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
