@@ -1,31 +1,20 @@
-package androidTestFiles.model;
+package testFiles.model;
 
-import android.Manifest;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.GrantPermissionRule;
+import static org.junit.Assert.assertEquals;
 
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Tag;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
-@RunWith(AndroidJUnit4.class)
 public class TagModelTest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Test
-    public void getAndSetTest(){
+    public void getAndSetTest() {
 
         Tag t = new Tag();
-
         t.setCount(5);
         assertEquals(5, t.getCount());
 

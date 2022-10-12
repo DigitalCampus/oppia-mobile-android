@@ -40,6 +40,7 @@ import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.resources.JSInterface;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForInlineInput;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForResourceImages;
@@ -237,7 +238,7 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 		GamificationServiceDelegate delegate = new GamificationServiceDelegate(getActivity())
 				.createActivityIntent(course, activity, getActivityCompleted(), isBaseline);
 		if (!inlineInput.isEmpty()){
-			delegate.addExtraEventData("inline_input", TextUtils.join(",", inlineInput));
+			delegate.addExtraEventData("inline_input", TextUtilsJava.join(",", inlineInput));
 		}
 		delegate.registerPageActivityEvent(timetaken, readAloud);
 	}

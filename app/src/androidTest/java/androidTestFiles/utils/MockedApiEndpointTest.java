@@ -7,6 +7,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.mockito.Mock;
 
 import java.io.IOException;
@@ -46,7 +47,7 @@ public abstract class MockedApiEndpointTest extends DaggerInjectMockUITest {
             MockResponse response = new MockResponse();
             response.setResponseCode(responseCode);
 
-            if (!TextUtils.isEmpty(responseAsset)) {
+            if (!TextUtilsJava.isEmpty(responseAsset)) {
 
                 String responseBody = FileUtils.getStringFromFile(
                         InstrumentationRegistry.getInstrumentation().getContext(), responseAsset);

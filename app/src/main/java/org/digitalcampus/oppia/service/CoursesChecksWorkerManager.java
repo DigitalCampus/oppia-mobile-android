@@ -29,6 +29,7 @@ import org.digitalcampus.oppia.model.responses.CoursesServerResponse;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.CourseUtils;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.util.HashSet;
@@ -79,7 +80,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
     }
 
     private boolean isUserLoggedIn() {
-        return user != null && !TextUtils.isEmpty(user.getUsername());
+        return user != null && !TextUtilsJava.isEmpty(user.getUsername());
     }
 
     public void startChecks() {

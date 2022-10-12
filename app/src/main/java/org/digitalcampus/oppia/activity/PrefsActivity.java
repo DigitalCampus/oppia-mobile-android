@@ -47,6 +47,7 @@ import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
 import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
@@ -290,7 +291,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             checkAdminProtection(sharedPreferences);
         } else if (key.equalsIgnoreCase(PREF_ADMIN_PASSWORD)) {
             String newPassword = sharedPreferences.getString(PrefsActivity.PREF_ADMIN_PASSWORD, "");
-            if (TextUtils.equals(newPassword, "")) {
+            if (TextUtilsJava.equals(newPassword, "")) {
                 //If the user introduced an empty password, disable the password protection
                 disableAdminProtection(sharedPreferences);
             }
@@ -428,7 +429,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         }
 
         //Finally, to handle the possibility that is in an inconsistent state
-        if (!TextUtils.equals(storageOption, STORAGE_OPTION_INTERNAL)) {
+        if (!TextUtilsJava.equals(storageOption, STORAGE_OPTION_INTERNAL)) {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(PrefsActivity.PREF_STORAGE_OPTION, STORAGE_OPTION_EXTERNAL).apply();
         }

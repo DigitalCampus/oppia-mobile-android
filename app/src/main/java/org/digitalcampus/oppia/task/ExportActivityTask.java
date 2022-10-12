@@ -17,6 +17,7 @@ import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
@@ -100,7 +101,7 @@ public class ExportActivityTask extends AsyncTask<Integer, Integer, BasicResult>
             }
             userJSON += "\"firstname\":\"" + u.getFirstname() + "\", ";
             userJSON += "\"lastname\":\"" + u.getLastname() + "\", ";
-            if (!TextUtils.isEmpty(u.getOrganisation())){
+            if (!TextUtilsJava.isEmpty(u.getOrganisation())){
                 userJSON += "\"organisation\":\"" + u.getOrganisation() + "\", ";
             }
             userJSON += "\"jobtitle\":\"" + u.getJobTitle() + "\", ";
@@ -125,7 +126,7 @@ public class ExportActivityTask extends AsyncTask<Integer, Integer, BasicResult>
 
         String json = "{\"export_date\":\"" + new Date().toString() + "\", ";
         json += "\"server\":\"" + prefs.getString(PrefsActivity.PREF_SERVER, "") + "\", ";
-        json += "\"users\":[" + TextUtils.join(",", userResults) + "]}";
+        json += "\"users\":[" + TextUtilsJava.join(",", userResults) + "]}";
         Log.d(TAG, json);
         String destPath = typeActivity == UNEXPORTED_ACTIVITY ? Storage.getActivityPath(ctx)
                 : Storage.getActivityFullExportPath(ctx);

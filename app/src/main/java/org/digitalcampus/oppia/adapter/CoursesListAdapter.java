@@ -24,6 +24,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.CircleTransform;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.io.File;
 import java.util.List;
@@ -71,7 +72,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         viewHolder.binding.courseTitle.setText(course.getTitle(lang));
         String description = course.getDescription(lang);
-        if (!TextUtils.isEmpty(description) && prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, BuildConfig.SHOW_COURSE_DESCRIPTION)) {
+        if (!TextUtilsJava.isEmpty(description) && prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, BuildConfig.SHOW_COURSE_DESCRIPTION)) {
             viewHolder.binding.courseDescription.setText(description);
             viewHolder.binding.courseDescription.setVisibility(View.VISIBLE);
         } else {

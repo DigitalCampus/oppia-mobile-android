@@ -1,21 +1,11 @@
-package androidTestFiles.model;
-
-import android.Manifest;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.GrantPermissionRule;
-
-import org.digitalcampus.oppia.model.QuizStats;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+package testFiles.model;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(AndroidJUnit4.class)
+import org.digitalcampus.oppia.model.QuizStats;
+import org.junit.Test;
+
 public class QuizStatsModelTest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Test
     public void simpleName(){

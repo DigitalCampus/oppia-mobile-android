@@ -22,7 +22,7 @@ import java.util.Collection;
 @RunWith(MockitoJUnitRunner.class)
 public class QuizAttemptModelTest {
 
-    private static final String UNKNOWN_QUIZ_TEXT = "Unknown/removed quiz-------";
+    private static final String UNKNOWN_QUIZ_TEXT = "Unknown/removed quiz";
 
     @Mock
     private Context context;

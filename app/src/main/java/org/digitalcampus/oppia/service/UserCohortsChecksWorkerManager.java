@@ -22,6 +22,7 @@ import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -59,7 +60,7 @@ public class UserCohortsChecksWorkerManager implements APIRequestFinishListener,
     }
 
     private boolean isUserLoggedIn() {
-        return user != null && !TextUtils.isEmpty(user.getUsername());
+        return user != null && !TextUtilsJava.isEmpty(user.getUsername());
     }
 
     public void startChecks() {

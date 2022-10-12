@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.RowFragmentBadgesListBinding;
 import org.digitalcampus.oppia.model.Badge;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.BadgesView
 
         viewHolder.binding.badgesDescription.setText(badge.getDescription());
         viewHolder.binding.badgesDate.setText(badge.getDateAsString());
-        viewHolder.binding.btnDownloadCertificate.setVisibility(TextUtils.isEmpty(badge.getCertificatePdf())
+        viewHolder.binding.btnDownloadCertificate.setVisibility(TextUtilsJava.isEmpty(badge.getCertificatePdf())
                 ? View.INVISIBLE : View.VISIBLE);
 
     }

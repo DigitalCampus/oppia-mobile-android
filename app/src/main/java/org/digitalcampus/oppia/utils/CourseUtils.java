@@ -70,7 +70,7 @@ public class CourseUtils {
                 continue;
             }
 
-            if (TextUtils.equals(course.getShortname(), courseServer.getShortname())) {
+            if (TextUtilsJava.equals(course.getShortname(), courseServer.getShortname())) {
                 boolean toUpdate = course.getVersionId() < courseServer.getVersion();
                 course.setToUpdate(toUpdate);
                 course.setToDelete(false);
@@ -109,7 +109,7 @@ public class CourseUtils {
 
     private static boolean isCourseInstalled(CourseServer courseServer, List<Course> coursesInstalled) {
         for (Course course : coursesInstalled) {
-            if (TextUtils.equals(course.getShortname(), courseServer.getShortname())) {
+            if (TextUtilsJava.equals(course.getShortname(), courseServer.getShortname())) {
                 return true;
             }
         }
@@ -161,7 +161,7 @@ public class CourseUtils {
                     coursesCachedStr, CoursesServerResponse.class);
 
             for (CourseServer courseServer : coursesServerResponse.getCourses()) {
-                if (TextUtils.equals(courseServer.getShortname(), course.getShortname())) {
+                if (TextUtilsJava.equals(courseServer.getShortname(), course.getShortname())) {
                     return courseServer.hasStatus(Course.STATUS_READ_ONLY);
                 }
             }
@@ -179,7 +179,7 @@ public class CourseUtils {
 
             if (coursesServerResponse != null) {
                 for (CourseServer courseServer : coursesServerResponse.getCourses()) {
-                    if (TextUtils.equals(courseServer.getShortname(), course.getShortname())) {
+                    if (TextUtilsJava.equals(courseServer.getShortname(), course.getShortname())) {
                         refreshCachedStatus(course, courseServer.getStatus());
                         refreshCachedCohorts(course, courseServer.isRestricted(), courseServer.getRestrictedCohorts());
                     }

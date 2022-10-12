@@ -58,6 +58,7 @@ import org.digitalcampus.oppia.model.db_model.Leaderboard;
 import org.digitalcampus.oppia.model.db_model.UserCustomField;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
 import org.digitalcampus.oppia.utils.CourseUtils;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.joda.time.DateTime;
@@ -771,7 +772,7 @@ public class DbHelper extends SQLiteOpenHelper {
         while (!c1.isAfterLast()) {
 
             String data = c1.getString(c1.getColumnIndex(QUIZATTEMPTS_C_DATA));
-            if (TextUtils.isEmpty(data)) {
+            if (TextUtilsJava.isEmpty(data)) {
                 c1.moveToNext();
                 continue;
             }
@@ -1283,7 +1284,7 @@ public class DbHelper extends SQLiteOpenHelper {
             }
             c.close();
         }
-        if (TextUtils.isEmpty(digest)) {
+        if (TextUtilsJava.isEmpty(digest)) {
             throw new ActivityNotFoundException();
         }
         return digest;
@@ -1549,7 +1550,7 @@ public class DbHelper extends SQLiteOpenHelper {
         while (!c.isAfterLast()) {
             String key = c.getString(c.getColumnIndex(CF_FIELD_KEY));
             for (CustomField field : cFields) {
-                if (TextUtils.equals(key, field.getKey())) {
+                if (TextUtilsJava.equals(key, field.getKey())) {
                     if (field.isString() || field.isChoices()) {
                         // Internally, we just save the choices key value as a str
                         String value = c.getString(c.getColumnIndex(CF_VALUE_STR));
@@ -1708,7 +1709,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
             // get course and activity title
             String event = c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT));
-            if (TextUtils.isEmpty(event)) {
+            if (TextUtilsJava.isEmpty(event)) {
                 c.moveToNext();
                 continue;
             }
@@ -2536,7 +2537,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public void insertOrUpdateCustomField(CustomField field) {
 
-        if (TextUtils.isEmpty(field.getKey()))
+        if (TextUtilsJava.isEmpty(field.getKey()))
             return;
 
         ContentValues values = new ContentValues();
@@ -2628,7 +2629,7 @@ public class DbHelper extends SQLiteOpenHelper {
         c.close();
 
         for (CustomField field : fields) {
-            if (field.isChoices() && !TextUtils.isEmpty(field.getCollectionName())) {
+            if (field.isChoices() && !TextUtilsJava.isEmpty(field.getCollectionName())) {
                 field.setCollection(getCollection(field.getCollectionName()));
             }
         }

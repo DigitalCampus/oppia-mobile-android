@@ -47,6 +47,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAnswerFeedback;
 import org.digitalcampus.oppia.model.QuizStats;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -208,7 +209,7 @@ public class QuizWidget extends AnswerWidget {
     }
 
     private void checkPasswordProtected() {
-        if (TextUtils.isEmpty(quiz.getPassword())) {
+        if (TextUtilsJava.isEmpty(quiz.getPassword())) {
             showQuestion();
         } else {
             final EditText editPassword = new EditText(getActivity());
@@ -218,7 +219,7 @@ public class QuizWidget extends AnswerWidget {
                     .setView(editPassword)
                     .setPositiveButton(R.string.ok, (dialog, which) -> {
                         String passwordInput = editPassword.getText().toString();
-                        if (TextUtils.equals(passwordInput, quiz.getPassword())) {
+                        if (TextUtilsJava.equals(passwordInput, quiz.getPassword())) {
                             showQuestion();
                         } else {
                             Toast.makeText(getActivity(), R.string.invalid_password, Toast.LENGTH_SHORT).show();

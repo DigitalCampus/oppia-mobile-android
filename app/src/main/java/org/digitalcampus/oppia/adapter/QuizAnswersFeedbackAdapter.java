@@ -11,6 +11,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.RowWidgetQuizFeedbackBinding;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.model.QuizAnswerFeedback;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public class QuizAnswersFeedbackAdapter extends RecyclerView.Adapter<QuizAnswers
         }
 
         viewHolder.binding.quizQuestionText.setText(UIUtils.getFromHtmlAndTrim(qf.getQuestionText()));
-        if (qf.isSurvey() && TextUtils.isEmpty(userResponseText)){
+        if (qf.isSurvey() && TextUtilsJava.isEmpty(userResponseText)){
             viewHolder.binding.quizQuestionUserResponseTitle.setText(R.string.widget_quiz_feedback_response_skipped);
             viewHolder.binding.quizQuestionUserResponseText.setVisibility(View.GONE);
         }

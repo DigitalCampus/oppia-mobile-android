@@ -16,6 +16,7 @@ import org.digitalcampus.mobile.learning.databinding.RowCourseDownloadBinding;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.util.List;
 import java.util.Locale;
@@ -82,7 +83,7 @@ public class DownloadCoursesAdapter extends MultiChoiceRecyclerViewAdapter<Downl
         }
 
         String organisation = course.getOrganisationName();
-        if (!TextUtils.isEmpty(organisation) && !(course.isDownloading() || course.isInstalling())) {
+        if (!TextUtilsJava.isEmpty(organisation) && !(course.isDownloading() || course.isInstalling())) {
             viewHolder.binding.labelAuthor.setVisibility(View.VISIBLE);
             viewHolder.binding.courseAuthor.setVisibility(View.VISIBLE);
             viewHolder.binding.courseAuthor.setText(organisation);

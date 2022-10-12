@@ -5,6 +5,7 @@ import android.widget.Spinner;
 
 import com.google.android.apps.common.testing.accessibility.framework.replacements.TextUtils;
 
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -22,7 +23,7 @@ public class SpinnerMatcher {
             protected boolean matchesSafely(View item) {
                 Spinner spinner = (Spinner) item;
                 String itemText = spinner.getSelectedItem().toString();
-                return TextUtils.equals(text, itemText);
+                return TextUtilsJava.equals(text, itemText);
             }
         };
     }

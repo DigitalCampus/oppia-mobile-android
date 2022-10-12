@@ -38,6 +38,7 @@ import org.digitalcampus.oppia.service.CoursesChecksWorker;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.service.UserCohortsCheckerWorker;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
@@ -207,7 +208,7 @@ public class App extends Application {
     private void configureStorageType() {
 
         String storageOption = getPrefs(this).getString(PrefsActivity.PREF_STORAGE_OPTION, "");
-        if (TextUtils.isEmpty(storageOption)) {
+        if (TextUtilsJava.isEmpty(storageOption)) {
             storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
         }
 

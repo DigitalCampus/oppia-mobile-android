@@ -1,30 +1,19 @@
-package androidTestFiles.model;
+package testFiles.model;
 
-import android.Manifest;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.GrantPermissionRule;
+import static org.junit.Assert.assertEquals;
 
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.json.JSONObject;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import testFiles.utils.UnitTestsFileUtils;
 
-import androidTestFiles.utils.FileUtils;
-
-@RunWith(AndroidJUnit4.class)
 public class TagRepositoryTest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String TAGS_ORIGINAL = "tags/tags_original.json";
     private static final String TAGS_NEW_DOWNLOADS_ALL_AVAILABLE = "tags/new_downloads_all_available.json";
@@ -34,11 +23,9 @@ public class TagRepositoryTest {
         return loadTagList(json, new ArrayList<>());
     }
 
-    private List<Tag> loadTagList(String json, List<String> installedCoursesNames) throws Exception {
+    private List<Tag> loadTagList(String path, List<String> installedCoursesNames) throws Exception {
 
-        String tagListJson = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(),
-                json);
+        String tagListJson = UnitTestsFileUtils.readFileFromTestResources(path);
 
         TagRepository tr = new TagRepository();
         List<Tag> tagList = new ArrayList<>();

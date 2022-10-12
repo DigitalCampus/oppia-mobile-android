@@ -3,6 +3,7 @@ package testFiles.model;
 import static org.junit.Assert.assertEquals;
 
 import org.digitalcampus.oppia.model.MultiLangInfoModel;
+import org.jarjar.apache.commons.codec.binary.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -14,7 +15,7 @@ public class MultiLangInfoModelTest {
 
         MultiLangInfoModel mlim = new MultiLangInfoModel();
 
-        String json = "{ \"titles\" : [{ \"en\": \"my title\"}, { \"es\": \"mi titular\"}] }";
+        String json = "{ \"en\": \"my title\", \"es\": \"mi titular\"}";
         try {
             JSONObject jsonObj = new JSONObject(json);
             mlim.setTitlesFromJSONObjectMap(jsonObj);
@@ -22,7 +23,8 @@ public class MultiLangInfoModelTest {
             e.printStackTrace();
         }
 
-        assertEquals("[{\"en\":\"my title\"},{\"es\":\"mi titular\"}]", mlim.getTitle("en"));
+        assertEquals("my title", mlim.getTitle("en"));
+        assertEquals("mi titular", mlim.getTitle("es"));
     }
 
     @Test
@@ -30,7 +32,7 @@ public class MultiLangInfoModelTest {
 
         MultiLangInfoModel mlim = new MultiLangInfoModel();
 
-        String json = "{ \"descriptions\" : [{ \"en\": \"my desc\"}, { \"es\": \"mi description\"}] }";
+        String json = "{ \"en\": \"my desc\", \"es\": \"mi description\"}";
         try {
             JSONObject jsonObj = new JSONObject(json);
             mlim.setDescriptionsFromJSONObjectMap(jsonObj);
@@ -38,6 +40,7 @@ public class MultiLangInfoModelTest {
             e.printStackTrace();
         }
 
-        assertEquals("[{\"en\":\"my desc\"},{\"es\":\"mi description\"}]", mlim.getDescription("en"));
+        assertEquals("my desc", mlim.getDescription("en"));
+        assertEquals("mi description", mlim.getDescription("es"));
     }
 }
