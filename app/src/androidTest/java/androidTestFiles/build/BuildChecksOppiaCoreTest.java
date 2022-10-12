@@ -1,4 +1,4 @@
-package androidTestFiles.features;
+package androidTestFiles.build;
 
 import android.Manifest;
 import android.content.Context;

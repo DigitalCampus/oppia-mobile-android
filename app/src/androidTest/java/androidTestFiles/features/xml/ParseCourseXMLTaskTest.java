@@ -1,4 +1,4 @@
-package androidTestFiles.xml;
+package androidTestFiles.features.xml;
 
 import android.content.Context;
 import android.content.SharedPreferences;
