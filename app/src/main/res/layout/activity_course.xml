@@ -41,8 +41,9 @@
         android:id="@+id/unlock_topic_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         android:visibility="gone"
-        android:fillViewport="true">
+        tools:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
