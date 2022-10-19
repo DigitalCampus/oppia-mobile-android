@@ -17,7 +17,6 @@
 
 package org.digitalcampus.mobile.quiz;
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
@@ -495,7 +494,7 @@ public class Quiz implements Serializable {
     }
 
     public boolean isPasswordProtected(){
-        return !TextUtils.isEmpty(this.getPassword());
+        return !TextUtilsJava.isEmpty(this.getPassword());
     }
 
     public String getPassword(){

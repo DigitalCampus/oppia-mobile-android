@@ -19,17 +19,13 @@ package org.digitalcampus.oppia.widgets;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,7 +43,6 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAnswerFeedback;
 import org.digitalcampus.oppia.model.QuizStats;
-import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -203,7 +198,7 @@ public class QuizWidget extends AnswerWidget {
         numQuestions.setText(getString(R.string.widget_quiz_num_questions, quiz.getTotalNoQuestions()));
         thresholdBar.setProgress(quiz.getPassThreshold());
 
-        info.findViewById(R.id.take_quiz_btn).setOnClickListener(view -> checkPasswordProtected());
+        info.findViewById(R.id.take_quiz_btn).setOnClickListener(view -> checkPasswordProtectionAndShowQuestion());
         QuizStats stats = attemptsRepository.getQuizAttemptStats(getContext(), activity.getDigest());
         showStats(info, stats);
     }
