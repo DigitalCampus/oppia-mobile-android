@@ -24,12 +24,14 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +50,7 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAttemptRepository;
@@ -55,6 +58,7 @@ import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
+import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
 import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
 import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
@@ -332,6 +336,30 @@ public abstract class AnswerWidget extends BaseWidget {
         currentQuestion.setQuestionResponses(q.getResponseOptions(), q.getUserResponses());
         this.setProgress();
         this.setNav();
+    }
+
+    protected void checkPasswordProtectionAndShowQuestion() {
+        if (!quiz.isPasswordProtected()) {
+            showQuestion();
+        } else {
+            ViewGroup infoContainer = binding.initialInfoContainer;
+            infoContainer.removeAllViews();
+            ViewGroup password_view = (ViewGroup) View.inflate(infoContainer.getContext(), R.layout.view_activity_password, infoContainer);
+            EditText passwordET = password_view.findViewById(R.id.activity_password_field);
+
+            password_view.findViewById(R.id.submit_activity_password).setOnClickListener(view -> {
+                String password = passwordET.getText().toString();
+                if (TextUtils.equals(password, quiz.getPassword())) {
+                    showQuestion();
+                }
+                else{
+                    View passwordError = password_view.findViewById(R.id.activity_password_error);
+                    passwordError.setVisibility(View.VISIBLE);
+                    SimpleAnimator.fade(passwordError, SimpleAnimator.FADE_IN);
+                    passwordET.setText("");
+                }
+            });
+        }
     }
 
     private String stripAudioFromText(QuizQuestion q) {

@@ -166,25 +166,25 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
 
     @Test
     public void dontShowPasswordDialogIfPasswordPropDoesNotExist() throws Exception {
-        checkPasswordDialogDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NO_PASSWORD_FIELD, false);
+        checkPasswordViewDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NO_PASSWORD_FIELD, false);
     }
 
     @Test
     public void dontShowPasswordDialogIfPasswordPropIsNull() throws Exception {
-        checkPasswordDialogDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NULL_PASSWORD, false);
+        checkPasswordViewDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NULL_PASSWORD, false);
     }
 
     @Test
     public void dontShowPasswordDialogIfPasswordPropIsEmpty() throws Exception {
-        checkPasswordDialogDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_EMPTY_PASSWORD, false);
+        checkPasswordViewDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_EMPTY_PASSWORD, false);
     }
 
     @Test
     public void showPasswordDialogIfPasswordPropIsNotEmpty() throws Exception {
-        checkPasswordDialogDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NON_EMPTY_PASSWORD, true);
+        checkPasswordViewDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NON_EMPTY_PASSWORD, true);
     }
 
-    private void checkPasswordDialogDisplayed(String quizJson, boolean mustBeDisplayed) throws Exception {
+    private void checkPasswordViewDisplayed(String quizJson, boolean mustBeDisplayed) throws Exception {
 
         loadQuizAndSetArgs(quizJson);
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
@@ -192,7 +192,7 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
         onView(withId(R.id.take_quiz_btn)).perform(click());
 
         if (mustBeDisplayed) {
-            onView(withText(R.string.quiz_protected))
+            onView(withText(R.string.password_activity_description))
                     .check(matches(isDisplayed()));
         } else {
             onView(withText(R.string.quiz_protected))
@@ -204,11 +204,10 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
 
     @Test
     public void enterQuizWhenValidPassword() throws Exception {
-        checkPasswordDialogDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NON_EMPTY_PASSWORD, true);
-        onView(instanceOf(EditText.class))
-                .inRoot(isDialog())
+        checkPasswordViewDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NON_EMPTY_PASSWORD, true);
+        onView(withId(R.id.activity_password_field))
                 .perform(typeText("letmein"));
-        onView(withText(R.string.ok)).perform(click());
+        onView(withText(R.string.password_activity_submit)).perform(click());
         onView(withText("Is it snowing today?")).check(matches(isDisplayed()));
     }
 
@@ -217,7 +216,7 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
     // Skipping test for API >= 30 until a fix for asserting Toast messages is found.
     // https://oppia.atlassian.net/browse/OPPIA-1130
     public void dontEnterQuizWhenInvalidPassword() throws Exception {
-        checkPasswordDialogDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NON_EMPTY_PASSWORD, true);
+        checkPasswordViewDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NON_EMPTY_PASSWORD, true);
         onView(instanceOf(EditText.class))
                 .inRoot(isDialog())
                 .perform(typeText("wrong_pass"));

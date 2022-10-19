@@ -494,6 +494,10 @@ public class Quiz implements Serializable {
         return propsSerializedGetInt("showfeedback", SHOW_FEEDBACK_ALWAYS);
     }
 
+    public boolean isPasswordProtected(){
+        return !TextUtils.isEmpty(this.getPassword());
+    }
+
     public String getPassword(){
         return propsSerializedGetString("password", null);
     }

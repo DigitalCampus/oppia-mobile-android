@@ -12,16 +12,13 @@ import androidx.preference.PreferenceManager;
 
 public class Analytics {
 
-    public static final String ANALYTICS_LIBRARY_MINT = "MINT";
     public static final String ANALYTICS_LIBRARY_COUNTLY = "COUNTLY";
 
     private static volatile BaseAnalytics analyticsEngine;
 
     public static void initializeAnalytics(Context ctx) {
         if (analyticsEngine == null) {
-            if (BuildConfig.ANALYTICS_LIBRARY.equals(ANALYTICS_LIBRARY_MINT)) {
-                analyticsEngine = new MintAnalytics(ctx);
-            } else if (BuildConfig.ANALYTICS_LIBRARY.equals(ANALYTICS_LIBRARY_COUNTLY)) {
+            if (BuildConfig.ANALYTICS_LIBRARY.equals(ANALYTICS_LIBRARY_COUNTLY)){
                 analyticsEngine = new CountlyAnalytics(ctx);
             } else {
                 analyticsEngine = new DefaultNoOpAnalytics(ctx);
