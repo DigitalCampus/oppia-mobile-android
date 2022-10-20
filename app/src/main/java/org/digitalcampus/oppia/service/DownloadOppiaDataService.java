@@ -21,6 +21,7 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import androidx.annotation.Nullable;
 import okhttp3.HttpUrl;
@@ -77,7 +78,7 @@ public class DownloadOppiaDataService {
         HttpUrl urlWithCredentials = HTTPClientUtils.getUrlWithCredentials(url, user.getUsername(), user.getApiKey());
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(urlWithCredentials.toString()));
 
-        if (TextUtils.isEmpty(filename)) {
+        if (TextUtilsJava.isEmpty(filename)) {
             filename = urlWithCredentials.pathSegments().get(urlWithCredentials.pathSize() - 1);
         }
 

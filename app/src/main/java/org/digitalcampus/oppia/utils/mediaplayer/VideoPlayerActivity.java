@@ -41,6 +41,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
+import java.io.File;
 import java.io.IOException;
 
 import androidx.preference.PreferenceManager;
@@ -175,7 +176,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     private Media getMedia() {
 
         for (Media m : this.activity.getMedia()) {
-            Log.d(TAG, mediaFileName + "/" + m.getFilename());
+            Log.d(TAG, mediaFileName + File.separator + m.getFilename());
             if (m.getFilename().equals(mediaFileName)) {
                 return m;
             }

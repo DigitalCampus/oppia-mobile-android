@@ -42,6 +42,7 @@ import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -84,7 +85,7 @@ public abstract class BaseWidget extends Fragment {
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (TextUtils.equals(intent.getAction(), ACTION_TEXT_SIZE_CHANGED)) {
+            if (TextUtilsJava.equals(intent.getAction(), ACTION_TEXT_SIZE_CHANGED)) {
                 int fontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
                 onTextSizeChanged(fontSize);
             }

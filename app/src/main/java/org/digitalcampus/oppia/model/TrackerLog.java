@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.model;
 import android.text.TextUtils;
 
 import org.digitalcampus.oppia.utils.DateUtils;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.joda.time.DateTime;
 
 import java.util.Collection;
@@ -120,7 +121,7 @@ public class TrackerLog {
 	}
 	
 	public static String asJSONCollectionString(Collection<TrackerLog> trackerLogs){
-		return "[" +  TextUtils.join(",", trackerLogs) + "]";
+		return "[" +  TextUtilsJava.join(",", trackerLogs) + "]";
 
 	}
 }

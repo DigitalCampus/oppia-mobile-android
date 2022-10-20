@@ -41,6 +41,7 @@ import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.RegisterTask;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.ui.fields.CustomFieldsUIManager;
 import org.digitalcampus.oppia.utils.ui.fields.SteppedFormUIManager;
@@ -81,7 +82,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 
 		binding.registerFormEmailField.setCustomValidator(field -> {
 			String email = field.getCleanedValue();
-			if (!TextUtils.isEmpty(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+			if (!TextUtilsJava.isEmpty(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 				binding.registerFormEmailField.setErrorEnabled(true);
 				binding.registerFormEmailField.setError(getString(R.string.error_register_email));
 				return false;
@@ -112,7 +113,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		});
 
 		binding.registerFormUsernameField.setCustomValidator(field -> {
-			boolean validValue = !TextUtils.isEmpty(field.getCleanedValue()) && field.getCleanedValue().length() >= App.USERNAME_MIN_CHARACTERS;
+			boolean validValue = !TextUtilsJava.isEmpty(field.getCleanedValue()) && field.getCleanedValue().length() >= App.USERNAME_MIN_CHARACTERS;
 			if (!validValue) {
 				binding.registerFormUsernameField.setError(getString(R.string.error_register_username_length, App.USERNAME_MIN_CHARACTERS));
 			}

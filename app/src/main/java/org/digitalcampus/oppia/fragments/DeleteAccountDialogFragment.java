@@ -17,6 +17,7 @@ import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.task.DeleteAccountTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -57,7 +58,7 @@ public class DeleteAccountDialogFragment extends DialogFragment implements APIRe
 
         binding.btnDelete.setOnClickListener(v -> {
             String password = binding.inputLayoutPassword.getEditText().getText().toString();
-            if (TextUtils.isEmpty(password)){
+            if (TextUtilsJava.isEmpty(password)){
                 binding.inputLayoutPassword.setErrorEnabled(true);
                 binding.inputLayoutPassword.setError(getText(R.string.field_required));
                 return;

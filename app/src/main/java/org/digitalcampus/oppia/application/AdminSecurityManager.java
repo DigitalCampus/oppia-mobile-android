@@ -24,6 +24,7 @@ import android.text.TextUtils;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.fragments.PasswordDialogFragment;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import javax.inject.Inject;
 
@@ -97,8 +98,8 @@ public class AdminSecurityManager {
 
     public boolean isPreferenceProtected(String preferenceKey) {
 
-        if (TextUtils.equals(preferenceKey, PrefsActivity.PREF_ADMIN_PROTECTION)
-            || TextUtils.equals(preferenceKey, PrefsActivity.PREF_ADMIN_PASSWORD)) {
+        if (TextUtilsJava.equals(preferenceKey, PrefsActivity.PREF_ADMIN_PROTECTION)
+            || TextUtilsJava.equals(preferenceKey, PrefsActivity.PREF_ADMIN_PASSWORD)) {
             return true;
         }
 

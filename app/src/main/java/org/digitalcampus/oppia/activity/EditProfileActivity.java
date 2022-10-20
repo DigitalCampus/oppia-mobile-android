@@ -17,6 +17,7 @@ import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.UpdateProfileTask;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.ui.fields.CustomFieldsUIManager;
 import org.digitalcampus.oppia.utils.ui.fields.ValidableField;
 
@@ -119,7 +120,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
 
         binding.fieldEmail.setCustomValidator(field -> {
             String email = field.getCleanedValue();
-            if (!TextUtils.isEmpty(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            if (!TextUtilsJava.isEmpty(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 binding.fieldEmail.setErrorEnabled(true);
                 binding.fieldEmail.setError(getString(R.string.error_register_email));
                 return false;

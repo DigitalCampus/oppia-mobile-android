@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -113,11 +114,11 @@ public class CustomField {
     }
 
     public boolean isDependantOnField(){
-        return !TextUtils.isEmpty(fieldVisibleBy);
+        return !TextUtilsJava.isEmpty(fieldVisibleBy);
     }
 
     public boolean isNegativeDependency(){
-        return !TextUtils.isEmpty(valueVisibleBy) && valueVisibleBy.startsWith("!");
+        return !TextUtilsJava.isEmpty(valueVisibleBy) && valueVisibleBy.startsWith("!");
     }
 
     public String getFieldVisibleBy() {
@@ -136,15 +137,15 @@ public class CustomField {
         this.valueVisibleBy = valueVisibleBy;
     }
 
-    public boolean isString(){ return TextUtils.equals(type, TYPE_STRING); }
-    public boolean isBoolean(){ return TextUtils.equals(type, TYPE_BOOLEAN); }
-    public boolean isInteger(){ return TextUtils.equals(type, TYPE_INT); }
-    public boolean isFloat(){ return TextUtils.equals(type, TYPE_FLOAT); }
-    public boolean isChoices(){ return TextUtils.equals(type, TYPE_CHOICES); }
+    public boolean isString(){ return TextUtilsJava.equals(type, TYPE_STRING); }
+    public boolean isBoolean(){ return TextUtilsJava.equals(type, TYPE_BOOLEAN); }
+    public boolean isInteger(){ return TextUtilsJava.equals(type, TYPE_INT); }
+    public boolean isFloat(){ return TextUtilsJava.equals(type, TYPE_FLOAT); }
+    public boolean isChoices(){ return TextUtilsJava.equals(type, TYPE_CHOICES); }
     public boolean isExportedAsString(){ return isString() || isChoices(); }
 
     public static void loadCustomFields(Context ctx, String data){
-        if (TextUtils.isEmpty(data)){
+        if (TextUtilsJava.isEmpty(data)){
             return;
         }
         try {

@@ -31,6 +31,7 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.task.PreloadAccountsTask;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
@@ -79,13 +80,13 @@ public class SessionManager {
     }
     public static boolean isLoggedIn(Context ctx) {
         String username = getUsername(ctx);
-        return !TextUtils.isEmpty(username);
+        return !TextUtilsJava.isEmpty(username);
     }
 
     // For testing, to be able to pass mocked prefs
     public static boolean isLoggedIn(SharedPreferences prefs) {
         String username = getUsernameFromPrefs(prefs);
-        return !TextUtils.isEmpty(username);
+        return !TextUtilsJava.isEmpty(username);
     }
 
     private static String getUsernameFromPrefs(SharedPreferences prefs) {
@@ -146,7 +147,7 @@ public class SessionManager {
         String username = getUsernameFromPrefs(prefs);
 
         //If there was a logged in user, we save her Preferences in the DB
-        if (!TextUtils.isEmpty(username)) {
+        if (!TextUtilsJava.isEmpty(username)) {
             saveUserPrefs(username, prefs);
         }
 
@@ -165,7 +166,7 @@ public class SessionManager {
 
         for (String prefID : USER_STRING_PREFS) {
             String prefValue = prefs.getString(prefID, "");
-            if (!TextUtils.isEmpty(prefValue)) {
+            if (!TextUtilsJava.isEmpty(prefValue)) {
                 userPreferences.add(new UserPreference(username, prefID, prefValue));
             }
         }

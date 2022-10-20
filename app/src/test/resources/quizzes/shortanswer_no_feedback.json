@@ -1,0 +1,46 @@
+{
+  "id": 3495,
+  "title": {
+    "en": "Short answer no feedback"
+  },
+  "description": {
+    "en": ""
+  },
+  "props": {
+    "digest": "106f643adf1daee86f60a9b1401898f0524cr0s2p80m0",
+    "courseversion": "20200218100357",
+    "showfeedback": 2,
+    "passthreshold": 80,
+    "maxattempts": 0,
+    "maxscore": 1
+  },
+  "questions": [
+    {
+      "order": 1,
+      "id": 36136,
+      "question": {
+        "id": 19775,
+        "type": "shortanswer",
+        "title": {
+          "en": "What is the capital of Spain?"
+        },
+        "props": {
+          "maxscore": 1
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 103343,
+            "props": {
+              "id": 919
+            },
+            "title": {
+              "en": "madrid"
+            },
+            "score": "1.0000"
+          }
+        ]
+      }
+    }
+  ]
+}

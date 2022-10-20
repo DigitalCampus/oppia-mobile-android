@@ -22,6 +22,7 @@ import android.text.TextUtils;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.utils.DateUtils;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -166,7 +167,7 @@ public class QuizAttempt implements Serializable {
 				jsonQuizAttempts.add(qa.getData());
 			}
 		}
-		return "[" +  TextUtils.join(",", jsonQuizAttempts) + "]";
+		return "[" +  TextUtilsJava.join(",", jsonQuizAttempts) + "]";
 
 	}
 

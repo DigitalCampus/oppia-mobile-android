@@ -44,6 +44,7 @@ import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.CourseUtils;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +74,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     BroadcastReceiver coursesUpdatesReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (TextUtils.equals(intent.getAction(), ACTION_COURSES_UPDATES)) {
+            if (TextUtilsJava.equals(intent.getAction(), ACTION_COURSES_UPDATES)) {
                 displayCourses();
             }
         }
