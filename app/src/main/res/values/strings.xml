@@ -638,6 +638,12 @@
     <string name="source_dir_does_not_exist">Source directory does not exist</string>
     <string name="source_file_does_not_exist">Source file does not exist</string>
     <string name="dest_dir_does_not_exist">Destination directory does not exist</string>
+    <string name="pref_update_activity_on_login">Update activity on login</string>
+
+    <!-- Update activity on login -->
+    <string name="none">None</string>
+    <string name="optional">Optional</string>
+    <string name="force">Force</string>
 
 </resources>
 

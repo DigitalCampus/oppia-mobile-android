@@ -146,9 +146,6 @@ android {
             buildConfigField "boolean", "SHOW_GAMIFICATION_EVENTS", runtimeProps['SHOW_GAMIFICATION_EVENTS']
             buildConfigField "boolean", "ALLOW_REGISTER_USER", runtimeProps['ALLOW_REGISTER_USER']
 
-            buildConfigField "String", "UPDATE_ACTIVITY_ON_LOGIN", "\"" + runtimeProps['UPDATE_ACTIVITY_ON_LOGIN'] + "\""
-
-
             resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
             resValue "string", "MENU_ALLOW_COURSE_DOWNLOAD_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_COURSE_DOWNLOAD']
             resValue "string", "MENU_ALLOW_LANGUAGE_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LANGUAGE']
@@ -164,6 +161,8 @@ android {
             resValue "string", "prefCoursesReminderTimeDefault", runtimeProps['DEFAULT_REMINDER_TIME']
             resValue "string", "prefCoursesReminderDaysDefaultSerialized", runtimeProps['DEFAULT_REMINDER_DAYS']
             resValue "string", "prefShowGamificationEventsDefault", runtimeProps['SHOW_GAMIFICATION_EVENTS']
+            resValue "string", "prefUpdateActivityOnLoginDefault", runtimeProps['UPDATE_ACTIVITY_ON_LOGIN']
+
         }
 
         debug {
