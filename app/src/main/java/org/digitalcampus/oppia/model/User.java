@@ -61,6 +61,8 @@ public class User {
 
 	private Map<String, CustomValue> userCustomFields = new HashMap<>();
 
+	private boolean localUser;
+
 	public String getUsername() {
 		return username;
 	}
@@ -217,4 +219,11 @@ public class User {
 		return this.cohorts;
 	}
 
+	public boolean isLocalUser() {
+		return localUser;
+	}
+
+	public void setLocalUser(boolean localUser) {
+		this.localUser = localUser;
+	}
 }

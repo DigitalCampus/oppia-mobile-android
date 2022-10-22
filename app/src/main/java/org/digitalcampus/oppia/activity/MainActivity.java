@@ -44,6 +44,8 @@ import javax.inject.Inject;
 public class MainActivity extends AppActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
          View.OnClickListener {
 
+    public static final String EXTRA_MUST_UPDATE_COURSES_ACTIVITY = "extra_must_update_courses_activity";
+
     private DrawerMenuManager drawer;
     private MenuItem searchMenuItem;
 
@@ -77,12 +79,18 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         bindingHeader.viewProfileOptions.setVisibility(View.GONE);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, getCoursesListFragment()).commit();
 
         saveServerBadgeAwardCriteria();
 
         binding.drawerVersionName.setText(getString(R.string.version, BuildConfig.VERSION_NAME));
 
+    }
+
+    private Fragment getCoursesListFragment() {
+        Fragment fragment = new CoursesListFragment();
+        fragment.setArguments(getIntent().getExtras());
+        return fragment;
     }
 
     private void saveServerBadgeAwardCriteria() {

@@ -72,6 +72,7 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
                     localUser.getPasswordEncrypted().equals(user.getPasswordEncrypted())){
 				result.setSuccess(true);
 				result.setResultMessage(ctx.getString(R.string.login_complete));
+                result.getEntity().setLocalUser(true);
 				return result;
 			}
 		} catch (UserNotFoundException unfe) {

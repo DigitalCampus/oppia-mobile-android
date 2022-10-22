@@ -160,6 +160,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_COURSES_REMINDER_TIME = "prefCoursesReminderTime";
     public static final String PREF_REMINDERS_LOG = "prefRemindersLog";
 
+    public static final String PREF_UPDATE_ACTIVITY_ON_LOGIN = "prefUpdateActivityOnLogin";
+
     private PreferenceChangedCallback currentPrefScreen;
 
     @Inject
