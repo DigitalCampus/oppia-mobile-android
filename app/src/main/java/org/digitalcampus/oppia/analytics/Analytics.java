@@ -12,111 +12,122 @@ import androidx.preference.PreferenceManager;
 
 public class Analytics {
 
-    public static final String ANALYTICS_LIBRARY_MINT = "MINT";
     public static final String ANALYTICS_LIBRARY_COUNTLY = "COUNTLY";
 
     private static volatile BaseAnalytics analyticsEngine;
 
-    public static void initializeAnalytics(Context ctx){
+    public static void initializeAnalytics(Context ctx) {
         if (analyticsEngine == null) {
-            if (BuildConfig.ANALYTICS_LIBRARY.equals(ANALYTICS_LIBRARY_MINT)){
-                analyticsEngine = new MintAnalytics(ctx);
-            }
-            else if (BuildConfig.ANALYTICS_LIBRARY.equals(ANALYTICS_LIBRARY_COUNTLY)){
+            if (BuildConfig.ANALYTICS_LIBRARY.equals(ANALYTICS_LIBRARY_COUNTLY)){
                 analyticsEngine = new CountlyAnalytics(ctx);
-            }
-            else{
+            } else {
                 analyticsEngine = new DefaultNoOpAnalytics(ctx);
             }
         }
     }
 
-    private static SharedPreferences getPrefs(Context ctx){
+    private static SharedPreferences getPrefs(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
     }
 
-    public static boolean shouldShowOptOutRationale(Context ctx){
+    public static boolean shouldShowOptOutRationale(Context ctx) {
         return !getPrefs(ctx).getBoolean(PrefsActivity.PREF_ANALYTICS_INITIAL_PROMPT, false);
     }
 
-    public static void optOutRationaleShown(Context ctx){
+    public static void optOutRationaleShown(Context ctx) {
         getPrefs(ctx).edit().putBoolean(PrefsActivity.PREF_ANALYTICS_INITIAL_PROMPT, true).apply();
     }
 
-    public static void startTrackingIfEnabled(Context ctx){
-        if (isBugReportEnabled(ctx) || isTrackingEnabled(ctx)){
+    public static void startTrackingIfEnabled(Context ctx) {
+
+        if (analyticsEngine == null) {
+            return;
+        }
+
+        if (isBugReportEnabled(ctx) || isTrackingEnabled(ctx)) {
             analyticsEngine.startTrackingSession();
             String username = SessionManager.getUsername(ctx);
             Analytics.setUserId(username);
         }
     }
 
-    public static void setUserId(String username){
+    public static void setUserId(String username) {
+        if (analyticsEngine == null) {
+            return;
+        }
         analyticsEngine.setUserIdentifier(username.equals("") ? "anon" : username);
     }
 
-    public static void enableTracking(Context ctx){
+    public static void enableTracking(Context ctx) {
+        if (analyticsEngine == null) {
+            return;
+        }
         getPrefs(ctx).edit().putBoolean(PrefsActivity.PREF_ANALYTICS_ENABLED, true).apply();
-        if (!isBugReportEnabled(ctx)){
+        if (!isBugReportEnabled(ctx)) {
             analyticsEngine.startTrackingSession();
-        }
-        else{
+        } else {
             analyticsEngine.trackingConfigChanged();
         }
     }
 
-    public static void enableBugReport(Context ctx){
+    public static void enableBugReport(Context ctx) {
+        if (analyticsEngine == null) {
+            return;
+        }
         getPrefs(ctx).edit().putBoolean(PrefsActivity.PREF_BUG_REPORT_ENABLED, true).apply();
-        if (!isTrackingEnabled(ctx)){
+        if (!isTrackingEnabled(ctx)) {
             analyticsEngine.startTrackingSession();
-        }
-        else{
+        } else {
             analyticsEngine.trackingConfigChanged();
         }
     }
 
-    public static void disableTracking(Context ctx){
+    public static void disableTracking(Context ctx) {
+        if (analyticsEngine == null) {
+            return;
+        }
         getPrefs(ctx).edit().putBoolean(PrefsActivity.PREF_ANALYTICS_ENABLED, false).apply();
-        if (!isBugReportEnabled(ctx)){
+        if (!isBugReportEnabled(ctx)) {
             analyticsEngine.stopTrackingSession();
-        }
-        else{
+        } else {
             analyticsEngine.trackingConfigChanged();
         }
     }
 
-    public static void disableBugReport(Context ctx){
+    public static void disableBugReport(Context ctx) {
+        if (analyticsEngine == null) {
+            return;
+        }
         getPrefs(ctx).edit().putBoolean(PrefsActivity.PREF_BUG_REPORT_ENABLED, false).apply();
-        if (!isTrackingEnabled(ctx)){
+        if (!isTrackingEnabled(ctx)) {
             analyticsEngine.stopTrackingSession();
-        }
-        else{
+        } else {
             analyticsEngine.trackingConfigChanged();
         }
     }
 
-    public static void logException(Exception e){
-        if (analyticsEngine.isBugReportEnabled()){
+    public static void logException(Exception e) {
+        if (analyticsEngine != null && analyticsEngine.isBugReportEnabled()) {
             analyticsEngine.logHandledException(e);
         }
     }
 
-    public static boolean isTrackingEnabled(Context ctx){
+    public static boolean isTrackingEnabled(Context ctx) {
         return getPrefs(ctx).getBoolean(PrefsActivity.PREF_ANALYTICS_ENABLED, false);
     }
 
-    public static boolean isBugReportEnabled(Context ctx){
+    public static boolean isBugReportEnabled(Context ctx) {
         return getPrefs(ctx).getBoolean(PrefsActivity.PREF_BUG_REPORT_ENABLED, false);
     }
 
-    public static void trackViewOnStart(Activity a){
-        if (analyticsEngine.isAnalyticsEnabled()){
+    public static void trackViewOnStart(Activity a) {
+        if (analyticsEngine != null && analyticsEngine.isAnalyticsEnabled()) {
             analyticsEngine.trackViewOnStart(a);
         }
     }
 
-    public static void trackViewOnStop(Activity a){
-        if (analyticsEngine.isAnalyticsEnabled()){
+    public static void trackViewOnStop(Activity a) {
+        if (analyticsEngine != null && analyticsEngine.isAnalyticsEnabled()) {
             analyticsEngine.trackViewOnStop(a);
         }
     }

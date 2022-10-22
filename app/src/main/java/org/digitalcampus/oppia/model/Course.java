@@ -28,6 +28,7 @@ import org.digitalcampus.oppia.model.coursecomplete.AllActivities;
 import org.digitalcampus.oppia.model.coursecomplete.AllQuizzes;
 import org.digitalcampus.oppia.model.coursecomplete.AllQuizzesPlusPercent;
 import org.digitalcampus.oppia.model.coursecomplete.FinalQuiz;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
@@ -296,7 +297,7 @@ public class Course extends MultiLangInfoModel implements Serializable {
     }
 
     public boolean hasStatus(String status) {
-        return TextUtils.equals(this.status, status);
+        return TextUtilsJava.equals(this.status, status);
     }
 
     public void setRestricted(boolean restricted) {

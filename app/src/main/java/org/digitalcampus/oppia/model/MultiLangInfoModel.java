@@ -23,6 +23,7 @@ import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -171,7 +172,7 @@ public class MultiLangInfoModel implements Serializable {
         while(keys.hasNext()) {
             String key = keys.next();
             String value = jsonObjectMultilang.getString(key);
-            if (!TextUtils.isEmpty(value) && !TextUtils.equals(value,"null")){
+            if (!TextUtilsJava.isEmpty(value) && !TextUtilsJava.equals(value,"null")){
                 localLangs.add(new Lang(key, value));
             }
         }

@@ -69,6 +69,15 @@ public class Lang implements Serializable {
     }
 
     @Override
+    public String toString() {
+        return "Lang{" +
+                "language='" + language + '\'' +
+                ", content='" + content + '\'' +
+                ", location='" + location + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean equals(@Nullable Object obj) {
         if (obj == null)
             return false;
@@ -76,7 +85,7 @@ public class Lang implements Serializable {
         if (this.getClass() != obj.getClass())
             return false;
 
-        return TextUtils.equals(getLanguage(), ((Lang) obj).getLanguage());
+        return getLanguage() != null && getLanguage().equals(((Lang) obj).getLanguage());
     }
 
     @Override

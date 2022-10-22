@@ -1,0 +1,63 @@
+{
+  "id": 3496,
+  "title": {
+    "en": "Short answer with feedback"
+  },
+  "description": {
+    "en": ""
+  },
+  "props": {
+    "digest": "7a7d378d89a4be189bb77dc5266c7478525cr0s2p80m0",
+    "courseversion": "20200218100357",
+    "showfeedback": 2,
+    "passthreshold": 80,
+    "maxattempts": 0,
+    "maxscore": 1
+  },
+  "questions": [
+    {
+      "order": 1,
+      "id": 36137,
+      "question": {
+        "id": 19776,
+        "type": "shortanswer",
+        "title": {
+          "en": "What is the capital of Italy?"
+        },
+        "props": {
+          "maxscore": 1
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 103344,
+            "props": {
+              "id": 317,
+              "feedback": {
+                "en": "correct"
+              }
+            },
+            "title": {
+              "en": "Rome"
+            },
+            "score": "1.0000"
+          },
+          {
+            "order": 2,
+            "id": 103345,
+            "props": {
+              "id": 39,
+              "feedback": {
+                "en": "wrong"
+              }
+            },
+            "title": {
+              "en": "*"
+            },
+            "score": "0.0000"
+          }
+        ]
+      }
+    }
+  ]
+}

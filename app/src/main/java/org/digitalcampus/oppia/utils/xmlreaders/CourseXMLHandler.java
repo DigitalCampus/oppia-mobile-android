@@ -29,6 +29,7 @@ import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.Section;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -128,7 +129,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
             sectTitles = new ArrayList<>();
             currentSection.setOrder(Integer.parseInt(aAttributes.getValue(ATTR_ORDER)));
             String sectionPassword = aAttributes.getValue(ATTR_PASSWORD);
-            if (!TextUtils.isEmpty(sectionPassword)){
+            if (!TextUtilsJava.isEmpty(sectionPassword)){
                 currentSection.setPassword(sectionPassword);
             }
             parentElements.push(NODE_SECTION);

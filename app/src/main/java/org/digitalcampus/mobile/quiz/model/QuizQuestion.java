@@ -17,11 +17,11 @@
 
 package org.digitalcampus.mobile.quiz.model;
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -83,7 +83,7 @@ public class QuizQuestion implements Serializable {
                 if (r.getTitle(lang).equals(a)) {
                     total += r.getScore();
                     String feedbackLang = r.getFeedback(lang);
-                    if (!TextUtils.isEmpty(feedbackLang)) {
+                    if (!TextUtilsJava.isEmpty(feedbackLang)) {
                         feedback = feedbackLang;
                     }
                 }

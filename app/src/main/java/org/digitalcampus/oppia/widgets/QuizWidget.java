@@ -19,17 +19,13 @@ package org.digitalcampus.oppia.widgets;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -202,31 +198,9 @@ public class QuizWidget extends AnswerWidget {
         numQuestions.setText(getString(R.string.widget_quiz_num_questions, quiz.getTotalNoQuestions()));
         thresholdBar.setProgress(quiz.getPassThreshold());
 
-        info.findViewById(R.id.take_quiz_btn).setOnClickListener(view -> checkPasswordProtected());
+        info.findViewById(R.id.take_quiz_btn).setOnClickListener(view -> checkPasswordProtectionAndShowQuestion());
         QuizStats stats = attemptsRepository.getQuizAttemptStats(getContext(), activity.getDigest());
         showStats(info, stats);
-    }
-
-    private void checkPasswordProtected() {
-        if (TextUtils.isEmpty(quiz.getPassword())) {
-            showQuestion();
-        } else {
-            final EditText editPassword = new EditText(getActivity());
-            new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle)
-                    .setTitle(getString(R.string.quiz_protected))
-                    .setMessage(getString(R.string.please_enter_quiz_password))
-                    .setView(editPassword)
-                    .setPositiveButton(R.string.ok, (dialog, which) -> {
-                        String passwordInput = editPassword.getText().toString();
-                        if (TextUtils.equals(passwordInput, quiz.getPassword())) {
-                            showQuestion();
-                        } else {
-                            Toast.makeText(getActivity(), R.string.invalid_password, Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton(R.string.cancel, null)
-                    .show();
-        }
     }
 
     @Override

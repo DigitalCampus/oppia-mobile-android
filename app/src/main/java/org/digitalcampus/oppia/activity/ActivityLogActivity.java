@@ -22,6 +22,7 @@ import org.digitalcampus.oppia.task.ExportActivityTask;
 import org.digitalcampus.oppia.task.SubmitQuizAttemptsTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 
@@ -172,7 +173,7 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
 
         if (!failures.isEmpty()){
             msg += "\nErrors: \n";
-            msg += TextUtils.join("\n", failures);
+            msg += TextUtilsJava.join("\n", failures);
         }
 
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();

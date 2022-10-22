@@ -80,12 +80,13 @@ public class FeedbackWidget extends AnswerWidget {
 
 	@Override
 	boolean shouldShowInitialInfo() {
-		return false;
+		return quiz.isPasswordProtected();
 	}
 
 	@Override
 	void loadInitialInfo(ViewGroup infoContainer) {
-		// Don't need to show anything specific
+		// Only in the case of password protection
+		checkPasswordProtectionAndShowQuestion();
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.CustomField;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +103,7 @@ public class ValidableSpinnerLayout extends LinearLayout implements ValidableFie
             return;
         }
         for (int i=0; i<items.size(); i++){
-            if (TextUtils.equals(items.get(i).getKey(), key)){
+            if (TextUtilsJava.equals(items.get(i).getKey(), key)){
                 int position = i + (selected ? 0 : 1);
                 input.setSelection(position);
                 onItemSelected(null, null, position, 0);

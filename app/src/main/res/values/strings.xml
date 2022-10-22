@@ -619,6 +619,10 @@
     <string name="incorrect_password_topic">Incorrect topic password. Try again</string>
     <string name="password_needed">Password needed</string>
     <string name="password_needed_description">This topic is password protected. \n Please enter the password below to access content (you will only need to do this once).</string>
+    <string name="password_activity_title">Activity protected</string>
+    <string name="password_activity_description">This activity is password protected. \n Please, enter the password below to access its contents. </string>
+    <string name="password_activity_incorrect">Incorrect password. Try again</string>
+    <string name="password_activity_submit">Access contents</string>
     <string name="unlock_topic">Unlock topic</string>
     <string name="staging_warning_msg">You are connected to a staging/development server.</string>
 

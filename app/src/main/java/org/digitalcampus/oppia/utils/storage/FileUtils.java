@@ -26,6 +26,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.exception.CourseInstallException;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -60,9 +61,9 @@ public class FileUtils {
     public static void unzipFiles(Context context, String srcDirectory, String srcFile, String destDirectory) throws CourseInstallException {
 
         // first make sure that all the arguments are valid and not null
-        if (TextUtils.isEmpty(srcDirectory)
-                || TextUtils.isEmpty(srcFile)
-                || TextUtils.isEmpty(destDirectory)) {
+        if (TextUtilsJava.isEmpty(srcDirectory)
+                || TextUtilsJava.isEmpty(srcFile)
+                || TextUtilsJava.isEmpty(destDirectory)) {
             throw new CourseInstallException(context.getString(R.string.invalid_parameters));
         }
 

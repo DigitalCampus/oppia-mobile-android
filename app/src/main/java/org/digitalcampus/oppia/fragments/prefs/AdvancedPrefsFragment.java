@@ -31,6 +31,7 @@ import org.digitalcampus.oppia.task.ExportActivityTask;
 import org.digitalcampus.oppia.task.UpdateUserCohortsTask;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.CourseUtils;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -210,14 +211,14 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         if (isLoggedIn()) {
             String currentUrl = App.getPrefs(getActivity()).getString(PrefsActivity.PREF_SERVER, null);
             String newUrl = newValue.trim();
-            if (!TextUtils.equals(currentUrl, newUrl)) {
+            if (!TextUtilsJava.equals(currentUrl, newUrl)) {
                 showWarningLogout(currentUrl, newUrl);
             }
         }
     }
 
     private boolean isLoggedIn() {
-        return !TextUtils.isEmpty(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+        return !TextUtilsJava.isEmpty(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
     }
 
     private void showWarningLogout(String currentUrl, String newUrl) {

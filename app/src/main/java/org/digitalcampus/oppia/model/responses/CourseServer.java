@@ -3,6 +3,7 @@ package org.digitalcampus.oppia.model.responses;
 import android.text.TextUtils;
 
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.util.HashMap;
 import java.util.List;
@@ -100,7 +101,7 @@ public class CourseServer {
     }
 
     public boolean hasStatus(String status) {
-        return TextUtils.equals(this.status, status);
+        return TextUtilsJava.equals(this.status, status);
     }
 
     public boolean isRestricted() {

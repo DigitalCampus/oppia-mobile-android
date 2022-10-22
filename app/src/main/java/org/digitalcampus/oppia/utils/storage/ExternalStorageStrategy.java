@@ -32,6 +32,7 @@ import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.StorageAccessListener;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.io.File;
 
@@ -49,7 +50,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy {
     @Override
     public boolean isStorageAvailable(Context ctx) {
         String externalStorageLocation = getStorageLocation(ctx);
-        if (TextUtils.isEmpty(externalStorageLocation)) {
+        if (TextUtilsJava.isEmpty(externalStorageLocation)) {
             return false;
         }
 

@@ -27,6 +27,7 @@ import org.digitalcampus.oppia.model.TrackerLogRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.ReminderLogHelper;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 import org.joda.time.DateTime;
 
@@ -110,12 +111,12 @@ public class CoursesCompletionReminderWorkerManager {
 
         String datetimeString = trackerLogRepository.getLastTrackerDatetime(context);
 
-        if (!TextUtils.isEmpty(datetimeString)) {
+        if (!TextUtilsJava.isEmpty(datetimeString)) {
             DateTime datetime = DateUtils.DATETIME_FORMAT.parseDateTime(datetimeString);
 
             String interval = prefs.getString(PrefsActivity.PREF_COURSES_REMINDER_INTERVAL, context.getString(R.string.prefCoursesReminderIntervalDefault));
 
-            int daysBefore = TextUtils.equals(interval, context.getString(R.string.interval_weekly_value)) ? WEEK_DAYS_NUM : ONE_DAY_NUM;
+            int daysBefore = TextUtilsJava.equals(interval, context.getString(R.string.interval_weekly_value)) ? WEEK_DAYS_NUM : ONE_DAY_NUM;
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_MONTH, -daysBefore);
             // Not necessary to set the time in this calendar. This worker will be launched at the time configured.

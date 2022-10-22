@@ -1,0 +1,80 @@
+{
+  "id": 3490,
+  "title": {
+    "en": "Multiselect - no feedback"
+  },
+  "description": {
+    "en": ""
+  },
+  "props": {
+    "digest": "864056edff7bed8bba471d34c009b14f519cr0s2p80m0",
+    "courseversion": "20200216172747",
+    "showfeedback": 2,
+    "passthreshold": 80,
+    "maxattempts": 0,
+    "maxscore": 1
+  },
+  "questions": [
+    {
+      "order": 1,
+      "id": 36131,
+      "question": {
+        "id": 19770,
+        "type": "multiselect",
+        "title": {
+          "en": "What of the following are colours of the rainbow?"
+        },
+        "props": {
+          "maxscore": 1,
+          "shuffleanswers": "1"
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 103330,
+            "props": {
+              "id": 309
+            },
+            "title": {
+              "en": "Red"
+            },
+            "score": "0.5000"
+          },
+          {
+            "order": 2,
+            "id": 103331,
+            "props": {
+              "id": 740
+            },
+            "title": {
+              "en": "Yellow"
+            },
+            "score": "0.5000"
+          },
+          {
+            "order": 3,
+            "id": 103332,
+            "props": {
+              "id": 11
+            },
+            "title": {
+              "en": "Black"
+            },
+            "score": "0.0000"
+          },
+          {
+            "order": 4,
+            "id": 103333,
+            "props": {
+              "id": 511
+            },
+            "title": {
+              "en": "White"
+            },
+            "score": "0.0000"
+          }
+        ]
+      }
+    }
+  ]
+}

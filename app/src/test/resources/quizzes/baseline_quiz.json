@@ -1,0 +1,95 @@
+{
+  "id": 790,
+  "title": {
+    "en": "baseline quiz"
+  },
+  "description": {
+    "en": "Pre-test"
+  },
+  "props": {
+    "digest": "2aadd06f629370028539ee0cac50f738528cr0s2p80m0",
+    "courseversion": "20200224185852",
+    "showfeedback": 2,
+    "passthreshold": 80,
+    "maxattempts": 0,
+    "maxscore": 2
+  },
+  "questions": [
+    {
+      "order": 1,
+      "id": 287,
+      "question": {
+        "id": 753,
+        "type": "multichoice",
+        "title": {
+          "en": "The capital of Finland is Helsinki"
+        },
+        "props": {
+          "maxscore": 1
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 244,
+            "props": {
+              "id": 527
+            },
+            "title": {
+              "en": "True"
+            },
+            "score": "1.0000"
+          },
+          {
+            "order": 2,
+            "id": 370,
+            "props": {
+              "id": 600
+            },
+            "title": {
+              "en": "False"
+            },
+            "score": "0.0000"
+          }
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "id": 640,
+      "question": {
+        "id": 987,
+        "type": "multichoice",
+        "title": {
+          "en": "The sky is blue"
+        },
+        "props": {
+          "maxscore": 1
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 37,
+            "props": {
+              "id": 541
+            },
+            "title": {
+              "en": "True"
+            },
+            "score": "1.0000"
+          },
+          {
+            "order": 2,
+            "id": 490,
+            "props": {
+              "id": 859
+            },
+            "title": {
+              "en": "False"
+            },
+            "score": "0.0000"
+          }
+        ]
+      }
+    }
+  ]
+}
