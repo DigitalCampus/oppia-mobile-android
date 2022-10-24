@@ -69,6 +69,9 @@ public class AppFragment extends Fragment implements APIKeyRequestListener{
     }
 
     public void showProgressDialog(String message, boolean cancelable) {
+        showProgressDialog(message, cancelable, true);
+    }
+    public void showProgressDialog(String message, boolean cancelable, boolean indeterminate) {
 
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
@@ -79,7 +82,17 @@ public class AppFragment extends Fragment implements APIKeyRequestListener{
         progressDialog.setMessage(message);
         progressDialog.setCancelable(cancelable);
         progressDialog.setCanceledOnTouchOutside(false);
+
+        if (!indeterminate) {
+            progressDialog.setIndeterminate(false);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        }
+
         progressDialog.show();
+    }
+
+    protected ProgressDialog getProgressDialog() {
+        return progressDialog;
     }
 
     public void hideProgressDialog() {

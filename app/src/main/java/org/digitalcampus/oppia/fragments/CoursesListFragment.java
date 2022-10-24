@@ -43,10 +43,12 @@ import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.task.result.EntityResult;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.CourseUtils;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -121,11 +123,18 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         displayCourses();
 
         if (getArguments() != null && getArguments().getBoolean(MainActivity.EXTRA_MUST_UPDATE_COURSES_ACTIVITY)) {
-            String updateActivityOnLoginOption = getPrefs().getString(PrefsActivity.PREF_LANGUAGE, null);
-            if (TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.optional))
-                    || TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.force))) {
+            String updateActivityOnLoginOption = sharedPrefs.getString(PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN, getString(R.string.prefUpdateActivityOnLoginDefault));
+            if (TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_option_optional))
+                    || TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_option_force))) {
                 runUpdateCoursesActivityProcess();
             }
+            getArguments().remove(MainActivity.EXTRA_MUST_UPDATE_COURSES_ACTIVITY);
+        }
+    }
+
+    private void runUpdateCoursesActivityProcess() {
+        if (!courses.isEmpty()) {
+            launchUpdateCoursesActivityTask(courses, "", false);
         }
     }
 
@@ -294,13 +303,22 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void confirmCourseUpdateActivity(Course course) {
 
-        showProgressDialog(getString(R.string.course_updating), false);
+        launchUpdateCoursesActivityTask(Arrays.asList(course), getString(R.string.course_updating), true);
+    }
+
+    private void launchUpdateCoursesActivityTask(List<Course> courses, String progressDialogMessage, boolean progressDialogIndeterminate) {
+
+        if (!ConnectionUtils.isNetworkConnected(getActivity())) {
+            toast(R.string.connection_unavailable_couse_activity);
+            return;
+        }
+
+        showProgressDialog(progressDialogMessage, false, progressDialogIndeterminate);
 
         UpdateCourseActivityTask task = new UpdateCourseActivityTask(getActivity(),
                 SessionManager.getUserId(getActivity()), apiEndpoint);
         task.setUpdateActivityListener(CoursesListFragment.this);
-        task.execute(course);
-
+        task.execute(courses);
     }
 
     @Override
@@ -308,7 +326,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         if (key.equalsIgnoreCase(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS) || key.equalsIgnoreCase(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS)) {
             displayCourses();
         }
-
     }
 
     @Override
@@ -346,18 +363,43 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     /* UpdateActivityListener implementation */
     public void updateActivityProgressUpdate(DownloadProgress dp) {
-        // no need to show download progress in this activity
+        getProgressDialog().setProgress(dp.getProgress());
+        getProgressDialog().setMessage(getString(R.string.updating_course_activity, dp.getMessage()));
     }
 
-    public void updateActivityComplete(EntityResult<Course> result) {
-        Course course = result.getEntity();
+    public void updateActivityComplete(EntityResult<List<Course>> result) {
+        List<Course> courses = result.getEntity();
 
         hideProgressDialog();
 
-        toast(getString(result.isSuccess() ? R.string.course_updating_success :
-                R.string.course_updating_error, (course != null) ? course.getShortname() : ""));
+        if (courses.size() == 1) {
+            Course course = courses.get(0);
+            toast(getString(result.isSuccess() ? R.string.course_updating_success :
+                    R.string.course_updating_error, (course != null) ? course.getShortname() : ""));
+        } else {
+            if (!result.isSuccess()) {
+                showCoursesActivityUpdateErrorDialog();
+            }
+        }
+
 
         displayCourses();
+    }
+
+    private void showCoursesActivityUpdateErrorDialog() {
+        AlertDialog.Builder ab = new AlertDialog.Builder(getActivity());
+        ab.setMessage(R.string.error_unable_retrieve_course_activity);
+        ab.setPositiveButton(R.string.try_again, (dialog, which) -> runUpdateCoursesActivityProcess());
+
+        String updateActivityOnLoginOption = sharedPrefs.getString(PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN, null);
+        boolean canContinue = TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_option_optional));
+
+        if (canContinue) {
+            ab.setNegativeButton(R.string.continue_anyway, (dialog, which) -> dialog.dismiss());
+        }
+
+        ab.setCancelable(false);
+        ab.show();
     }
 
 }

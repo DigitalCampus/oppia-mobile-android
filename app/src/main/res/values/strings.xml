@@ -644,6 +644,11 @@
     <string name="none">None</string>
     <string name="optional">Optional</string>
     <string name="force">Force</string>
+    <string name="updating_course_activity">Updating course activity: %s</string>
+    <string name="error_unable_retrieve_course_activity">Currently unable to retrieve course activity</string>
+    <string name="connection_unavailable_couse_activity">Connection unavailable, unable to retrieve course activity</string>
+    <string name="try_again">Try again</string>
+    <string name="continue_anyway">Continue anyway</string>
 
 </resources>
 
