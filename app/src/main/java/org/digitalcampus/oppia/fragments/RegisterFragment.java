@@ -19,7 +19,6 @@ package org.digitalcampus.oppia.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -268,7 +267,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		//Save the search tracker
 		new Tracker(super.getActivity()).saveRegisterTracker();
 
-		((WelcomeActivity) getActivity()).onSuccessUserAccess(registeredUser);
+		((WelcomeActivity) getActivity()).onSuccessUserAccess(registeredUser, false);
 
 	}
 
