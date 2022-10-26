@@ -109,7 +109,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                 return false;
             }
 
-            String currentValue = App.getPrefs(getActivity()).getString(preference.getKey(), getString(R.string.prefServerDefault));
+            String currentValue = prefs.getString(preference.getKey(), getString(R.string.prefServerDefault));
             if (checkMustShowWarningLogout(preference.getKey(), currentValue, (String) newValue)) {
                 showWarningLogout(() -> App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, currentValue).apply());
             }
@@ -123,7 +123,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                 return false;
             }
 
-            String currentValue = App.getPrefs(getActivity()).getString(preference.getKey(), getString(R.string.prefUpdateActivityOnLoginDefault));
+            String currentValue = prefs.getString(preference.getKey(), getString(R.string.prefUpdateActivityOnLoginDefault));
             if (checkMustShowWarningLogout(preference.getKey(), currentValue, (String) newValue)) {
                 showWarningLogout(() -> ((ListPreference) preference).setValue(currentValue));
             }
@@ -154,9 +154,9 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                 return !TextUtilsJava.equals(currentValue, newValue);
 
             case PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN:
-                boolean currentIsNone = TextUtilsJava.equals(getString(R.string.update_activity_on_login_option_none), currentValue);
-                boolean newIsOptionalOrForce = TextUtilsJava.equals(getString(R.string.update_activity_on_login_option_optional), newValue)
-                        || TextUtilsJava.equals(getString(R.string.update_activity_on_login_option_force), newValue);
+                boolean currentIsNone = TextUtilsJava.equals(getString(R.string.update_activity_on_login_value_none), currentValue);
+                boolean newIsOptionalOrForce = TextUtilsJava.equals(getString(R.string.update_activity_on_login_value_optional), newValue)
+                        || TextUtilsJava.equals(getString(R.string.update_activity_on_login_value_force), newValue);
                 return currentIsNone && newIsOptionalOrForce;
 
             default:

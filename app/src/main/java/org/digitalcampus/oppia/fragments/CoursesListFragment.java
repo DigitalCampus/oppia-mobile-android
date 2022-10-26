@@ -122,13 +122,13 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         super.onStart();
         displayCourses();
 
-        if (getArguments() != null && getArguments().getBoolean(MainActivity.EXTRA_MUST_UPDATE_COURSES_ACTIVITY)) {
+        if (getArguments() != null && getArguments().getBoolean(MainActivity.EXTRA_FIRST_LOGIN)) {
             String updateActivityOnLoginOption = sharedPrefs.getString(PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN, getString(R.string.prefUpdateActivityOnLoginDefault));
-            if (TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_option_optional))
-                    || TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_option_force))) {
+            if (TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_value_optional))
+                    || TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_value_force))) {
                 runUpdateCoursesActivityProcess();
             }
-            getArguments().remove(MainActivity.EXTRA_MUST_UPDATE_COURSES_ACTIVITY);
+            getArguments().remove(MainActivity.EXTRA_FIRST_LOGIN);
         }
     }
 
@@ -392,7 +392,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         ab.setPositiveButton(R.string.try_again, (dialog, which) -> runUpdateCoursesActivityProcess());
 
         String updateActivityOnLoginOption = sharedPrefs.getString(PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN, null);
-        boolean canContinue = TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_option_optional));
+        boolean canContinue = TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_value_optional));
 
         if (canContinue) {
             ab.setNegativeButton(R.string.continue_anyway, (dialog, which) -> dialog.dismiss());

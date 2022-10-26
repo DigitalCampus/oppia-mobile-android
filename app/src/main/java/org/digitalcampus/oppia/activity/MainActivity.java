@@ -44,7 +44,7 @@ import javax.inject.Inject;
 public class MainActivity extends AppActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
          View.OnClickListener {
 
-    public static final String EXTRA_MUST_UPDATE_COURSES_ACTIVITY = "extra_must_update_courses_activity";
+    public static final String EXTRA_FIRST_LOGIN = "extra_first_login";
 
     private DrawerMenuManager drawer;
     private MenuItem searchMenuItem;
