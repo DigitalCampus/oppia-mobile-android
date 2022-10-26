@@ -309,7 +309,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     private void launchUpdateCoursesActivityTask(List<Course> courses, String progressDialogMessage, boolean progressDialogIndeterminate) {
 
         if (!ConnectionUtils.isNetworkConnected(getActivity())) {
-            toast(R.string.connection_unavailable_couse_activity);
+            showCoursesActivityUpdateErrorDialog(getString(R.string.connection_unavailable_couse_activity));
             return;
         }
 
@@ -378,7 +378,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
                     R.string.course_updating_error, (course != null) ? course.getShortname() : ""));
         } else {
             if (!result.isSuccess()) {
-                showCoursesActivityUpdateErrorDialog();
+                showCoursesActivityUpdateErrorDialog(getString(R.string.error_unable_retrieve_course_activity));
             }
         }
 
@@ -386,12 +386,13 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         displayCourses();
     }
 
-    private void showCoursesActivityUpdateErrorDialog() {
+    private void showCoursesActivityUpdateErrorDialog(String message) {
         AlertDialog.Builder ab = new AlertDialog.Builder(getActivity());
-        ab.setMessage(R.string.error_unable_retrieve_course_activity);
+        ab.setMessage(message);
         ab.setPositiveButton(R.string.try_again, (dialog, which) -> runUpdateCoursesActivityProcess());
 
-        String updateActivityOnLoginOption = sharedPrefs.getString(PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN, null);
+        String updateActivityOnLoginOption = sharedPrefs.getString(PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN,
+                getString(R.string.prefUpdateActivityOnLoginDefault));
         boolean canContinue = TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_value_optional));
 
         if (canContinue) {
