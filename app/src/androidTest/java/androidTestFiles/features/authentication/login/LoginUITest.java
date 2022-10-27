@@ -31,7 +31,7 @@ public class LoginUITest extends MockedApiEndpointTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    private static final String VALID_LOGIN_RESPONSE = "responses/response_201_login.json";
+    public static final String VALID_LOGIN_RESPONSE = "responses/response_201_login.json";
     private static final String WRONG_CREDENTIALS_RESPONSE = "responses/response_400_login.json";
 
 

@@ -105,5 +105,6 @@ public class BuildChecksOppiaCoreTest {
         assertEquals("10:30", BuildConfig.DEFAULT_REMINDER_TIME);
         assertEquals("2", BuildConfig.DEFAULT_REMINDER_DAYS);
 
+        assertEquals("NONE", context.getString(R.string.prefUpdateActivityOnLoginDefault));
     }
 }

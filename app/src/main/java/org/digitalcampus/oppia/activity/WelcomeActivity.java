@@ -170,7 +170,7 @@ public class WelcomeActivity extends AppActivity {
         }
     }
 
-    public void onSuccessUserAccess(User user, boolean mustUpdateCoursesActivity) {
+    public void onSuccessUserAccess(User user, boolean firstLogin) {
 
         boolean fromViewDigest = getIntent().getBooleanExtra(ViewDigestActivity.EXTRA_FROM_VIEW_DIGEST, false);
 
@@ -180,7 +180,7 @@ public class WelcomeActivity extends AppActivity {
             setResult(Activity.RESULT_OK);
         } else {
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(MainActivity.EXTRA_MUST_UPDATE_COURSES_ACTIVITY, mustUpdateCoursesActivity);
+            intent.putExtra(MainActivity.EXTRA_FIRST_LOGIN, firstLogin);
             startActivity(intent);
         }
 

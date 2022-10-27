@@ -75,6 +75,10 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     SharedPreferences sharedPrefs;
     @Inject
     ApiEndpoint apiEndpoint;
+    @Inject
+    ConnectionUtils connectionUtils;
+
+    private boolean singleCourseUpdate;
 
     BroadcastReceiver coursesUpdatesReceiver = new BroadcastReceiver() {
         @Override
@@ -122,13 +126,13 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         super.onStart();
         displayCourses();
 
-        if (getArguments() != null && getArguments().getBoolean(MainActivity.EXTRA_MUST_UPDATE_COURSES_ACTIVITY)) {
+        if (getArguments() != null && getArguments().getBoolean(MainActivity.EXTRA_FIRST_LOGIN)) {
             String updateActivityOnLoginOption = sharedPrefs.getString(PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN, getString(R.string.prefUpdateActivityOnLoginDefault));
-            if (TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_option_optional))
-                    || TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_option_force))) {
+            if (TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_value_optional))
+                    || TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_value_force))) {
                 runUpdateCoursesActivityProcess();
             }
-            getArguments().remove(MainActivity.EXTRA_MUST_UPDATE_COURSES_ACTIVITY);
+            getArguments().remove(MainActivity.EXTRA_FIRST_LOGIN);
         }
     }
 
@@ -303,20 +307,21 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void confirmCourseUpdateActivity(Course course) {
 
+        singleCourseUpdate = true;
         launchUpdateCoursesActivityTask(Arrays.asList(course), getString(R.string.course_updating), true);
     }
 
     private void launchUpdateCoursesActivityTask(List<Course> courses, String progressDialogMessage, boolean progressDialogIndeterminate) {
 
-        if (!ConnectionUtils.isNetworkConnected(getActivity())) {
-            toast(R.string.connection_unavailable_couse_activity);
+        if (!connectionUtils.isConnected(getContext())) {
+            showCoursesActivityUpdateErrorDialog(getString(R.string.connection_unavailable_couse_activity));
             return;
         }
 
         showProgressDialog(progressDialogMessage, false, progressDialogIndeterminate);
 
         UpdateCourseActivityTask task = new UpdateCourseActivityTask(getActivity(),
-                SessionManager.getUserId(getActivity()), apiEndpoint);
+                SessionManager.getUserId(getActivity()), apiEndpoint, singleCourseUpdate);
         task.setUpdateActivityListener(CoursesListFragment.this);
         task.execute(courses);
     }
@@ -372,13 +377,14 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         hideProgressDialog();
 
-        if (courses.size() == 1) {
+        if (singleCourseUpdate) {
+            singleCourseUpdate = false;
             Course course = courses.get(0);
             toast(getString(result.isSuccess() ? R.string.course_updating_success :
                     R.string.course_updating_error, (course != null) ? course.getShortname() : ""));
         } else {
             if (!result.isSuccess()) {
-                showCoursesActivityUpdateErrorDialog();
+                showCoursesActivityUpdateErrorDialog(getString(R.string.error_unable_retrieve_course_activity));
             }
         }
 
@@ -386,13 +392,14 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         displayCourses();
     }
 
-    private void showCoursesActivityUpdateErrorDialog() {
+    private void showCoursesActivityUpdateErrorDialog(String message) {
         AlertDialog.Builder ab = new AlertDialog.Builder(getActivity());
-        ab.setMessage(R.string.error_unable_retrieve_course_activity);
+        ab.setMessage(message);
         ab.setPositiveButton(R.string.try_again, (dialog, which) -> runUpdateCoursesActivityProcess());
 
-        String updateActivityOnLoginOption = sharedPrefs.getString(PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN, null);
-        boolean canContinue = TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_option_optional));
+        String updateActivityOnLoginOption = sharedPrefs.getString(PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN,
+                getString(R.string.prefUpdateActivityOnLoginDefault));
+        boolean canContinue = TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_value_optional));
 
         if (canContinue) {
             ab.setNegativeButton(R.string.continue_anyway, (dialog, which) -> dialog.dismiss());

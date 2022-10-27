@@ -91,13 +91,13 @@
     </string-array>
 
     <string-array name="update_activity_on_login_values">
-        <item>@string/update_activity_on_login_option_none</item>
-        <item>@string/update_activity_on_login_option_optional</item>
-        <item>@string/update_activity_on_login_option_force</item>
+        <item>@string/update_activity_on_login_value_none</item>
+        <item>@string/update_activity_on_login_value_optional</item>
+        <item>@string/update_activity_on_login_value_force</item>
     </string-array>
 
-    <string name="update_activity_on_login_option_none">NONE</string>
-    <string name="update_activity_on_login_option_optional">OPTIONAL</string>
-    <string name="update_activity_on_login_option_force">FORCE</string>
+    <string name="update_activity_on_login_value_none">NONE</string>
+    <string name="update_activity_on_login_value_optional">OPTIONAL</string>
+    <string name="update_activity_on_login_value_force">FORCE</string>
 
 </resources>

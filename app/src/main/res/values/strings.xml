@@ -543,7 +543,7 @@
     <string name="options">Options</string>
     <string name="quiz_loading_error">Unexpected error loading quiz. Maybe the format was wrong or out-dated?</string>
     <string name="error_register_username_length">Username must have at least %d characters</string>
-    <string name="change_server_logout_warning">You are already logged in. If you change the server your current session will finish. Do you confirm?</string>
+    <string name="change_setting_logout_warning">You are already logged in. If you change this setting your current session will finish. Do you confirm?</string>
     <string name="accept">Accept</string>
     <string name="user_not_logged_in">User not logged in</string>
 

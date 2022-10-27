@@ -36,7 +36,7 @@ public class Section extends MultiLangInfoModel implements Serializable  {
 	
 	public static final String TAG = Section.class.getSimpleName();
 	private int order;
-	private ArrayList<Activity> activities;
+	private List<Activity> activities;
 	private String imageFile;
 	private String password;
 	private boolean unlocked = false;
@@ -69,7 +69,7 @@ public class Section extends MultiLangInfoModel implements Serializable  {
 		this.activities.add(activity);
 	}
 	public void setActivities(List<Activity> activities) {
-		this.activities = (ArrayList<Activity>) activities;
+		this.activities = (List<Activity>) activities;
 	}
 
 	public boolean isProtectedByPassword() {
