@@ -29,6 +29,8 @@ import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.UpdateActivityListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.model.QuizAttempt;
+import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
@@ -44,13 +46,15 @@ import okhttp3.Response;
 
 public class UpdateCourseActivityTask extends APIRequestTask<List<Course>, DownloadProgress, EntityResult<List<Course>>> {
 
+    private final boolean singleCourseUpdate;
     private UpdateActivityListener mStateListener;
     private boolean apiKeyInvalidated = false;
     private long userId;
 
-    public UpdateCourseActivityTask(Context ctx, long userId, ApiEndpoint apiEndpoint) {
+    public UpdateCourseActivityTask(Context ctx, long userId, ApiEndpoint apiEndpoint, boolean singleCourseUpdate) {
         super(ctx, apiEndpoint);
         this.userId = userId;
+        this.singleCourseUpdate = singleCourseUpdate;
     }
 
     @Override
@@ -95,12 +99,18 @@ public class UpdateCourseActivityTask extends APIRequestTask<List<Course>, Downl
                     CourseTrackerXMLReader ctxr;
                     try {
                         ctxr = new CourseTrackerXMLReader(response.body().string());
-                        db.resetCourse(course.getCourseId(), userId);
-                        db.insertTrackers(ctxr.getTrackers(course.getCourseId(), userId));
-                        db.insertQuizAttempts(ctxr.getQuizAttempts(course.getCourseId(), userId));
-                        dp.setProgress(100);
-                        dp.setMessage(ctx.getString(R.string.download_complete));
-                        publishProgress(dp);
+                        List<TrackerLog> trackers = ctxr.getTrackers(course.getCourseId(), userId);
+                        List<QuizAttempt> quizAttempts = ctxr.getQuizAttempts(course.getCourseId(), userId);
+
+                        if (singleCourseUpdate) {
+                            db.resetCourse(course.getCourseId(), userId);
+                            db.insertTrackers(trackers);
+                            db.insertQuizAttempts(quizAttempts);
+                        } else {
+                            db.insertOrUpdateTrackers(trackers);
+                            db.insertOrUpdateQuizAttempts(quizAttempts);
+                        }
+
                         result.setSuccess(true);
 
                     } catch (InvalidXMLException e) {

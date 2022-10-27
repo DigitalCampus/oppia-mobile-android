@@ -74,6 +74,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -1058,6 +1059,47 @@ public class DbHelper extends SQLiteOpenHelper {
         endTransaction(true);
     }
 
+    public void insertOrUpdateTrackers(List<TrackerLog> trackers) {
+        for (TrackerLog t : trackers) {
+            ContentValues values = new ContentValues();
+            values.put(TRACKER_LOG_C_DATETIME, t.getDateTimeString());
+            values.put(TRACKER_LOG_C_ACTIVITYDIGEST, t.getDigest());
+            values.put(TRACKER_LOG_C_SUBMITTED, t.isSubmitted());
+            values.put(TRACKER_LOG_C_COURSEID, t.getCourseId());
+            values.put(TRACKER_LOG_C_COMPLETED, t.isCompleted());
+            values.put(TRACKER_LOG_C_USERID, t.getUserId());
+
+            int trackerId = getTrackerId(t.getDigest(), t.getUserId(), t.getEvent());
+            if (trackerId > -1) {
+                String s = TRACKER_LOG_C_ID + "=?";
+                String[] args = new String[]{String.valueOf(trackerId)};
+                db.update(TRACKER_LOG_TABLE, values, s, args);
+            } else {
+                db.insert(TRACKER_LOG_TABLE, null, values);
+            }
+
+        }
+    }
+
+    private int getTrackerId(String digest, long userId, String event) {
+        String s = TRACKER_LOG_C_ACTIVITYDIGEST + STR_EQUALS_AND + TRACKER_LOG_C_USERID + STR_EQUALS_AND + TRACKER_LOG_C_EVENT + STR_EQUALS;
+        String[] args = new String[]{digest, String.valueOf(userId), event};
+        Cursor c = db.query(TRACKER_LOG_TABLE, new String[]{TRACKER_LOG_C_ID}, s, args, null, null, null);
+
+        try {
+            if (c.getCount() == 0) {
+                return -1;
+            } else {
+                c.moveToFirst();
+                int id = c.getInt(0);
+                return id;
+            }
+        } finally {
+            c.close();
+        }
+
+    }
+
 
     public List<Course> getAllCourses() {
         ArrayList<Course> courses = new ArrayList<>();
@@ -2033,6 +2075,52 @@ public class DbHelper extends SQLiteOpenHelper {
             db.insertOrThrow(QUIZATTEMPTS_TABLE, null, values);
         }
         endTransaction(true);
+    }
+
+
+    public void insertOrUpdateQuizAttempts(List<QuizAttempt> quizAttempts) {
+
+        for (QuizAttempt qa : quizAttempts) {
+            ContentValues values = createContentValuesFromQuizAttempt(qa);
+            values.put(QUIZATTEMPTS_C_SENT, qa.isSent());
+            values.put(QUIZATTEMPTS_C_DATETIME, qa.getDateTimeString());
+
+
+            List<QuizAttempt> quizAttemptsForActivity = getQuizAttempts(qa.getActivityDigest(), qa.getUserId());
+            quizAttemptsForActivity.stream().forEach(quizAttempt -> {
+                if (TextUtilsJava.equals(quizAttempt.getDateTimeString(), qa.getDateTimeString())) {
+
+                }
+            });
+            int trackerId = getTrackerId(t.getDigest(), t.getUserId());
+            if (trackerId > -1) {
+                String s = TRACKER_LOG_C_ID + "=?";
+                String[] args = new String[]{String.valueOf(trackerId)};
+                db.update(TRACKER_LOG_TABLE, values, s, args);
+            } else {
+                db.insert(QUIZATTEMPTS_TABLE, null, values);
+            }
+
+        }
+    }
+
+    private int getTrackerId(String digest, long userId) {
+        String s = TRACKER_LOG_C_ACTIVITYDIGEST + STR_EQUALS_AND + TRACKER_LOG_C_USERID + STR_EQUALS;
+        String[] args = new String[]{digest, String.valueOf(userId)};
+        Cursor c = db.query(TRACKER_LOG_TABLE, new String[]{TRACKER_LOG_C_ID}, s, args, null, null, null);
+
+        try {
+            if (c.getCount() == 0) {
+                return -1;
+            } else {
+                c.moveToFirst();
+                int id = c.getInt(0);
+                return id;
+            }
+        } finally {
+            c.close();
+        }
+
     }
 
     private ContentValues createContentValuesFromQuizAttempt(QuizAttempt qa) {

@@ -75,6 +75,10 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     SharedPreferences sharedPrefs;
     @Inject
     ApiEndpoint apiEndpoint;
+    @Inject
+    ConnectionUtils connectionUtils;
+
+    private boolean singleCourseUpdate;
 
     BroadcastReceiver coursesUpdatesReceiver = new BroadcastReceiver() {
         @Override
@@ -303,12 +307,13 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void confirmCourseUpdateActivity(Course course) {
 
+        singleCourseUpdate = true;
         launchUpdateCoursesActivityTask(Arrays.asList(course), getString(R.string.course_updating), true);
     }
 
     private void launchUpdateCoursesActivityTask(List<Course> courses, String progressDialogMessage, boolean progressDialogIndeterminate) {
 
-        if (!ConnectionUtils.isNetworkConnected(getActivity())) {
+        if (!connectionUtils.isConnected(getContext())) {
             showCoursesActivityUpdateErrorDialog(getString(R.string.connection_unavailable_couse_activity));
             return;
         }
@@ -316,7 +321,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         showProgressDialog(progressDialogMessage, false, progressDialogIndeterminate);
 
         UpdateCourseActivityTask task = new UpdateCourseActivityTask(getActivity(),
-                SessionManager.getUserId(getActivity()), apiEndpoint);
+                SessionManager.getUserId(getActivity()), apiEndpoint, singleCourseUpdate);
         task.setUpdateActivityListener(CoursesListFragment.this);
         task.execute(courses);
     }
@@ -372,7 +377,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         hideProgressDialog();
 
-        if (courses.size() == 1) {
+        if (singleCourseUpdate) {
+            singleCourseUpdate = false;
             Course course = courses.get(0);
             toast(getString(result.isSuccess() ? R.string.course_updating_success :
                     R.string.course_updating_error, (course != null) ? course.getShortname() : ""));
