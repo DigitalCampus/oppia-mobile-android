@@ -1054,6 +1054,9 @@ public class DbHelper extends SQLiteOpenHelper {
             values.put(TRACKER_LOG_C_COURSEID, t.getCourseId());
             values.put(TRACKER_LOG_C_COMPLETED, t.isCompleted());
             values.put(TRACKER_LOG_C_USERID, t.getUserId());
+            values.put(TRACKER_LOG_C_TYPE, t.getType());
+            values.put(TRACKER_LOG_C_EVENT, t.getEvent());
+            values.put(TRACKER_LOG_C_POINTS, t.getPoints());
             db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
         }
         endTransaction(true);
@@ -1068,8 +1071,11 @@ public class DbHelper extends SQLiteOpenHelper {
             values.put(TRACKER_LOG_C_COURSEID, t.getCourseId());
             values.put(TRACKER_LOG_C_COMPLETED, t.isCompleted());
             values.put(TRACKER_LOG_C_USERID, t.getUserId());
+            values.put(TRACKER_LOG_C_TYPE, t.getType());
+            values.put(TRACKER_LOG_C_EVENT, t.getEvent());
+            values.put(TRACKER_LOG_C_POINTS, t.getPoints());
 
-            int trackerId = getTrackerId(t.getDigest(), t.getUserId(), t.getEvent());
+            int trackerId = getTrackerId(t.getDigest(), t.getUserId(), t.getEvent(), t.getDateTimeString());
             if (trackerId > -1) {
                 String s = TRACKER_LOG_C_ID + "=?";
                 String[] args = new String[]{String.valueOf(trackerId)};
@@ -1081,9 +1087,10 @@ public class DbHelper extends SQLiteOpenHelper {
         }
     }
 
-    private int getTrackerId(String digest, long userId, String event) {
-        String s = TRACKER_LOG_C_ACTIVITYDIGEST + STR_EQUALS_AND + TRACKER_LOG_C_USERID + STR_EQUALS_AND + TRACKER_LOG_C_EVENT + STR_EQUALS;
-        String[] args = new String[]{digest, String.valueOf(userId), event};
+    private int getTrackerId(String digest, long userId, String event, String dateTimeString) {
+        String s = TRACKER_LOG_C_ACTIVITYDIGEST + STR_EQUALS_AND + TRACKER_LOG_C_USERID + STR_EQUALS_AND
+                + TRACKER_LOG_C_EVENT + STR_EQUALS_AND + TRACKER_LOG_C_DATETIME + STR_EQUALS;
+        String[] args = new String[]{digest, String.valueOf(userId), event, dateTimeString};
         Cursor c = db.query(TRACKER_LOG_TABLE, new String[]{TRACKER_LOG_C_ID}, s, args, null, null, null);
 
         try {
@@ -2087,40 +2094,19 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
             List<QuizAttempt> quizAttemptsForActivity = getQuizAttempts(qa.getActivityDigest(), qa.getUserId());
-            quizAttemptsForActivity.stream().forEach(quizAttempt -> {
-                if (TextUtilsJava.equals(quizAttempt.getDateTimeString(), qa.getDateTimeString())) {
 
-                }
-            });
-            int trackerId = getTrackerId(t.getDigest(), t.getUserId());
-            if (trackerId > -1) {
-                String s = TRACKER_LOG_C_ID + "=?";
-                String[] args = new String[]{String.valueOf(trackerId)};
-                db.update(TRACKER_LOG_TABLE, values, s, args);
+            QuizAttempt quizAttemptMatch = quizAttemptsForActivity.stream().filter(quizAttempt ->
+                    TextUtilsJava.equals(quizAttempt.getDateTimeString(), qa.getDateTimeString())).findFirst().orElse(null);
+
+            if (quizAttemptMatch != null) {
+                String s = QUIZATTEMPTS_C_ID + "=?";
+                String[] args = new String[]{String.valueOf(quizAttemptMatch.getId())};
+                db.update(QUIZATTEMPTS_TABLE, values, s, args);
             } else {
                 db.insert(QUIZATTEMPTS_TABLE, null, values);
             }
 
         }
-    }
-
-    private int getTrackerId(String digest, long userId) {
-        String s = TRACKER_LOG_C_ACTIVITYDIGEST + STR_EQUALS_AND + TRACKER_LOG_C_USERID + STR_EQUALS;
-        String[] args = new String[]{digest, String.valueOf(userId)};
-        Cursor c = db.query(TRACKER_LOG_TABLE, new String[]{TRACKER_LOG_C_ID}, s, args, null, null, null);
-
-        try {
-            if (c.getCount() == 0) {
-                return -1;
-            } else {
-                c.moveToFirst();
-                int id = c.getInt(0);
-                return id;
-            }
-        } finally {
-            c.close();
-        }
-
     }
 
     private ContentValues createContentValuesFromQuizAttempt(QuizAttempt qa) {
