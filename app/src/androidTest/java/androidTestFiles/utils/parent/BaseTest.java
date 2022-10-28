@@ -26,6 +26,7 @@ public class BaseTest {
     public static final String COURSE_FEEDBACK = "course-with-feedback.zip";
     public static final String COURSE_QUIZ = "course-with-quiz.zip";
     public static final String COURSE_QUIZ_SHORTNAME = "course-with-quiz";
+    public static final String COURSE_SINGLE_PAGE = "single-page-course.zip";
 
     public static final String CORRECT_COURSE = "Correct_Course.zip";
     public static final String EXISTING_COURSE = "Existing_Course.zip";
