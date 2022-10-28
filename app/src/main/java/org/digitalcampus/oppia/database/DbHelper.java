@@ -1124,12 +1124,21 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<QuizAttempt> getAllQuizAttempts() {
-        return getQuizAttempts(db);
+        ArrayList<QuizAttempt> quizAttempts = new ArrayList<>();
+        Cursor c = db.query(QUIZATTEMPTS_TABLE, null, null, null, null, null, null);
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            QuizAttempt qa = fetchQuizAttempt(c);
+            quizAttempts.add(qa);
+            c.moveToNext();
+        }
+        c.close();
+        return quizAttempts;
     }
 
-    public List<QuizAttempt> getQuizAttempts(SQLiteDatabase database) {
-        ArrayList<QuizAttempt> quizAttempts = new ArrayList<>();
-        Cursor c = database.query(QUIZATTEMPTS_TABLE, null, null, null, null, null, null);
+    public List<QuizAttempt> getUserQuizAttempts(int userId) {
+        List<QuizAttempt> quizAttempts = new ArrayList<>();
+        Cursor c = db.query(QUIZATTEMPTS_TABLE, null, QUIZATTEMPTS_C_USERID + "=" + userId, null, null, null, null);
         c.moveToFirst();
         while (!c.isAfterLast()) {
             QuizAttempt qa = fetchQuizAttempt(c);
@@ -1154,6 +1163,7 @@ public class DbHelper extends SQLiteOpenHelper {
         qa.setPassed(Boolean.parseBoolean(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_PASSED))));
         qa.setType(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_TYPE)));
         qa.setTimetaken(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_TIMETAKEN)));
+        qa.setPoints(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_POINTS)));
 
         return qa;
     }
@@ -1462,6 +1472,10 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void insertTracker(int courseId, String digest, String data, String type, boolean completed, String event, int points) {
+        insertTracker(courseId, digest, data, type, completed, event, points, null);
+    }
+
+    public void insertTracker(int courseId, String digest, String data, String type, boolean completed, String event, int points, String datetime) {
         long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 
         ContentValues values = new ContentValues();
@@ -1473,6 +1487,9 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(TRACKER_LOG_C_TYPE, type);
         values.put(TRACKER_LOG_C_EVENT, event);
         values.put(TRACKER_LOG_C_POINTS, points);
+        if (datetime != null) {
+            values.put(TRACKER_LOG_C_DATETIME, datetime);
+        }
         db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 
         this.incrementUserPoints(userId, points);
@@ -2030,6 +2047,32 @@ public class DbHelper extends SQLiteOpenHelper {
         c.close();
         return trackers;
     }
+
+
+    public List<TrackerLog> getAllTrackers(long userId) {
+
+        String s = TRACKER_LOG_C_USERID + STR_EQUALS;
+        String[] args = new String[]{String.valueOf(userId)};
+
+        Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
+        c.moveToFirst();
+
+        List<TrackerLog> trackers = new ArrayList<>();
+        while (!c.isAfterLast()) {
+            TrackerLog tracker = new TrackerLog();
+            tracker.setId(c.getLong(c.getColumnIndex(TRACKER_LOG_C_ID)));
+            tracker.setDigest(c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
+            tracker.setPoints(c.getInt(c.getColumnIndex(TRACKER_LOG_C_POINTS)));
+
+            trackers.add(tracker);
+            c.moveToNext();
+        }
+
+        c.close();
+
+        return trackers;
+    }
+
 
     public void markLogsAndQuizzesExported() {
         ContentValues trackerValues = new ContentValues();

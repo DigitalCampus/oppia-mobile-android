@@ -30,10 +30,12 @@ import android.content.SharedPreferences;
 import android.view.Gravity;
 import android.widget.EditText;
 
+import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -138,6 +140,10 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
         when(prefs.getString(eq(PrefsActivity.PREF_USER_NAME), anyString())).thenReturn("test_user");
         when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(false);
         when(prefs.getString(eq(PrefsActivity.PREF_TEST_ACTION_PROTECTED), anyString())).thenReturn("false");
+        when(prefs.getString(eq(PrefsActivity.PREF_SERVER), anyString())).thenReturn("https://mock-server.com");
+
+        PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getInstrumentation().getTargetContext())
+                .edit().putString(PrefsActivity.PREF_SERVER, "https://mock-server.com").apply();
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             onView(withId(R.id.drawer))
@@ -182,6 +188,11 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
         when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(false);
         when(prefs.getString(eq(PrefsActivity.PREF_TEST_ACTION_PROTECTED), anyString())).thenReturn("false");
         when(prefs.edit()).thenReturn(editor);
+
+        when(prefs.getString(eq(PrefsActivity.PREF_SERVER), anyString())).thenReturn("https://mock-server.com");
+
+        PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getInstrumentation().getTargetContext())
+                .edit().putString(PrefsActivity.PREF_SERVER, "https://mock-server.com").apply();
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             onView(withId(R.id.drawer))

@@ -98,7 +98,8 @@ public class UpdateCourseActivityTask extends APIRequestTask<List<Course>, Downl
                 } else {
                     CourseTrackerXMLReader ctxr;
                     try {
-                        ctxr = new CourseTrackerXMLReader(response.body().string());
+                        String responseString = response.body().string();
+                        ctxr = new CourseTrackerXMLReader(responseString);
                         List<TrackerLog> trackers = ctxr.getTrackers(course.getCourseId(), userId);
                         List<QuizAttempt> quizAttempts = ctxr.getQuizAttempts(course.getCourseId(), userId);
 

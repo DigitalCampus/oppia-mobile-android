@@ -49,7 +49,7 @@ public class TestDataManager {
         addCourse(1, "my-course");
     }
 
-    public void addCourse(int courseId, String shortname){
+    public Course addCourse(int courseId, String shortname){
         Course c = new Course();
         c.setCourseId(courseId);
         c.setShortname(shortname);
@@ -58,6 +58,7 @@ public class TestDataManager {
         langList.add(l);
         c.setTitles(langList);
         dbHelper.addOrUpdateCourse(c);
+        return c;
     }
 
 

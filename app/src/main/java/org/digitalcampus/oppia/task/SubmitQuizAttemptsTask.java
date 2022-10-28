@@ -59,7 +59,6 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<List<QuizAttempt>, Ob
 		for (QuizAttempt quizAttempt : quizAttempts) {
 			
 			try {
-				Log.d(TAG, quizAttempt.getData());
                 OkHttpClient client = HTTPClientUtils.getClient(ctx);
 				String url = apiEndpoint.getFullURL(ctx, Paths.QUIZ_SUBMIT_PATH);
                 Request request = new Request.Builder()
