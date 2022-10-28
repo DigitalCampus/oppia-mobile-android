@@ -54,14 +54,11 @@ public class FileUtilsTests {
 
         File zipFile = createTestZipFile();
 
-        if (zipFile != null) {
-            FileUtils.unzipFiles(context, zipFile.getParentFile().getAbsolutePath(),
-                    zipFile.getName(),
-                    zipFile.getParentFile().getAbsolutePath());
-        }
+        FileUtils.unzipFiles(context, zipFile.getParentFile().getAbsolutePath(),
+                zipFile.getName(),
+                zipFile.getParentFile().getAbsolutePath());
 
         assertEquals(FILES_COUNT + 1, zipFile.getParentFile().listFiles().length);
-
 
     }
 
@@ -103,33 +100,6 @@ public class FileUtilsTests {
                 "Non_Existing_path");
 
     }
-
-
-   /* @Test
-    public void UnzipFiles_createDir(){
-        File zipFile;
-        boolean result = false;
-        try {
-            zipFile = createTestZipFile();
-
-            String srcDirectory = zipFile.getParentFile().getParentFile().getAbsolutePath();
-            String srcFile = zipFile.getParentFile().getName() + File.separator + zipFile.getName();
-            String destDirectory = zipFile.getParentFile().getParentFile().getAbsolutePath();
-
-            if (zipFile != null) {
-                result = FileUtils.unzipFiles(srcDirectory,
-                        srcFile,
-                        destDirectory);
-            }
-
-            assertTrue(result);
-            assertEquals(FILES_COUNT + 1, zipFile.getParentFile().listFiles().length);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }*/
 
 
     @Test
@@ -272,26 +242,11 @@ public class FileUtilsTests {
         }
     }
 
-    /* @Test
-    public void FileUtils_supportedMediafileType(){
-        assertFalse(FileUtils.isSupportedMediafileType(null));
-
-        assertTrue(FileUtils.isSupportedMediafileType("video/m4v"));
-
-        assertTrue(FileUtils.isSupportedMediafileType("video/mp4"));
-
-        assertTrue(FileUtils.isSupportedMediafileType("audio/mpeg"));
-
-        assertFalse(FileUtils.isSupportedMediafileType("application/json"));
-
-    }
-*/
 
     private File createTestZipFile() throws IOException {
 
         //Create the files that will be zipped
 
-        File zipFile = null;
         File[] files = new File[FILES_COUNT];
         try {
             for (int i = 0; i < FILES_COUNT; i++) {
@@ -302,7 +257,13 @@ public class FileUtilsTests {
             e.printStackTrace();
         }
 
-        //Create the test zip file and add the previous files to it
+        return createZipFile(files);
+
+    }
+
+    private File createZipFile(File[] files) throws IOException {
+
+        File zipFile = null;
         BufferedInputStream is;
         ZipOutputStream out = null;
         try {
