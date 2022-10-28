@@ -1922,8 +1922,8 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public int getUnsentTrackersCount() {
-        String s = TRACKER_LOG_C_SUBMITTED + "=? ";
-        String[] args = new String[]{"0"};
+        String s = TRACKER_LOG_C_SUBMITTED + STR_EQUALS_AND + TRACKER_LOG_C_USERID + ">? ";
+        String[] args = new String[]{"0", "0"};
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         int count = c.getCount();
         c.close();
@@ -1931,8 +1931,8 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public int getUnexportedTrackersCount() {
-        String s = TRACKER_LOG_C_SUBMITTED + STR_EQUALS_AND + TRACKER_LOG_C_EXPORTED + "=? ";
-        String[] args = new String[]{"0", "0"};
+        String s = TRACKER_LOG_C_SUBMITTED + STR_EQUALS_AND + TRACKER_LOG_C_EXPORTED + STR_EQUALS_AND + TRACKER_LOG_C_USERID + ">? ";
+        String[] args = new String[]{"0", "0", "0"};
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         int count = c.getCount();
         c.close();
