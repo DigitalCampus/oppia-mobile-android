@@ -24,6 +24,7 @@ import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.CourseInfoTask;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import javax.inject.Inject;
 
@@ -109,7 +110,7 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
     private void processLinkPath(Uri data) {
 
         try {
-            if (!TextUtils.equals(data.getPathSegments().get(0), "view")) {
+            if (!TextUtilsJava.equals(data.getPathSegments().get(0), "view")) {
                 throw new IllegalArgumentException("Incorrect path segment");
             }
         } catch (Exception e) {
@@ -204,7 +205,7 @@ public class ViewDigestActivity extends AppActivity implements CourseInstallerLi
 
     private boolean isUserLoggedIn() {
 
-        if (user == null || TextUtils.isEmpty(user.getUsername())) {
+        if (user == null || TextUtilsJava.isEmpty(user.getUsername())) {
             Log.d(TAG, "Not logged in");
             showLoginAccess();
             return false;

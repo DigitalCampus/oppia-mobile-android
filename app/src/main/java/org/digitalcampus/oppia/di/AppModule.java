@@ -25,6 +25,7 @@ import org.digitalcampus.oppia.model.TrackerLogRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.DownloadServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,5 +143,11 @@ public class AppModule {
     @Singleton
     public AnalyticsProvider provideAnalyticsProvider(){
         return new AnalyticsProvider();
+    }
+
+    @Provides
+    @Singleton
+    public ConnectionUtils provideConnectionUtils() {
+        return new ConnectionUtils();
     }
 }

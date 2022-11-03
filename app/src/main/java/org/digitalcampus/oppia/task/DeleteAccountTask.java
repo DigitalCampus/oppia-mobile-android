@@ -12,6 +12,7 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.io.IOException;
 
@@ -57,7 +58,7 @@ public class DeleteAccountTask extends APIUserRequestTask{
                     case 403: // unauthorised
                         result.setSuccess(false);
                         String message = response.body().string();
-                        if (TextUtils.isEmpty(message)){
+                        if (TextUtilsJava.isEmpty(message)){
                             result.setResultMessage(message);
                         }
                         else{

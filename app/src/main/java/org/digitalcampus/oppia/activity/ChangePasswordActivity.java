@@ -11,6 +11,7 @@ import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ChangePasswordTask;
 import org.digitalcampus.oppia.task.UpdateProfileTask;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import javax.inject.Inject;
 
@@ -62,7 +63,7 @@ public class ChangePasswordActivity extends AppActivity implements ChangePasswor
             return;
         }
 
-        if (!TextUtils.equals(pass1, pass2)) {
+        if (!TextUtilsJava.equals(pass1, pass2)) {
             binding.fieldPasswordRepeat.setError(getString(R.string.error_register_password_no_match));
             return;
         }

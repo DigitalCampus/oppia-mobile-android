@@ -392,7 +392,7 @@ public class UIUtils {
         int checkedPosition = 0;
         for (int i = 0; i < textSizeValues.length; i++) {
             String textSizeValue = textSizeValues[i];
-            if (TextUtils.equals(textSizeValue, selectedFontSize)) {
+            if (TextUtilsJava.equals(textSizeValue, selectedFontSize)) {
                 checkedPosition = i;
                 break;
             }

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +21,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.FragmentCoursesListBinding;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.CoursesListAdapter;
@@ -43,9 +43,12 @@ import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.task.result.EntityResult;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.CourseUtils;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,7 +60,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         CourseInstallerListener,
         UpdateActivityListener, CoursesListAdapter.OnItemClickListener {
 
-    public  static final String ACTION_COURSES_UPDATES = "actionCoursesUpdates";
+    public static final String ACTION_COURSES_UPDATES = "actionCoursesUpdates";
 
     private List<Course> courses;
 
@@ -66,14 +69,21 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private InstallerBroadcastReceiver receiver;
 
-    @Inject CoursesRepository coursesRepository;
-    @Inject SharedPreferences sharedPrefs;
-    @Inject ApiEndpoint apiEndpoint;
+    @Inject
+    CoursesRepository coursesRepository;
+    @Inject
+    SharedPreferences sharedPrefs;
+    @Inject
+    ApiEndpoint apiEndpoint;
+    @Inject
+    ConnectionUtils connectionUtils;
+
+    private boolean singleCourseUpdate;
 
     BroadcastReceiver coursesUpdatesReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (TextUtils.equals(intent.getAction(), ACTION_COURSES_UPDATES)) {
+            if (TextUtilsJava.equals(intent.getAction(), ACTION_COURSES_UPDATES)) {
                 displayCourses();
             }
         }
@@ -115,10 +125,25 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     public void onStart() {
         super.onStart();
         displayCourses();
+
+        if (getArguments() != null && getArguments().getBoolean(MainActivity.EXTRA_FIRST_LOGIN)) {
+            String updateActivityOnLoginOption = sharedPrefs.getString(PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN, getString(R.string.prefUpdateActivityOnLoginDefault));
+            if (TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_value_optional))
+                    || TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_value_force))) {
+                runUpdateCoursesActivityProcess();
+            }
+            getArguments().remove(MainActivity.EXTRA_FIRST_LOGIN);
+        }
+    }
+
+    private void runUpdateCoursesActivityProcess() {
+        if (!courses.isEmpty()) {
+            launchUpdateCoursesActivityTask(courses, "", false);
+        }
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
         receiver = new InstallerBroadcastReceiver();
@@ -136,7 +161,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         getActivity().unregisterReceiver(receiver);
         getActivity().unregisterReceiver(coursesUpdatesReceiver);
@@ -147,7 +172,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         courses.addAll(coursesRepository.getCourses(getActivity()));
         CourseUtils.refreshStatuses(prefs, courses, null);
 
-        if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY){
+        if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY) {
             displayDownloadSection();
         } else {
             binding.manageCoursesText.setText(R.string.no_courses);
@@ -160,9 +185,9 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     }
 
 
-    private void displayDownloadSection(){
+    private void displayDownloadSection() {
         binding.noCourses.setVisibility(View.VISIBLE);
-        binding.manageCoursesText.setText((!courses.isEmpty())? R.string.more_courses : R.string.no_courses);
+        binding.manageCoursesText.setText((!courses.isEmpty()) ? R.string.more_courses : R.string.no_courses);
         binding.manageCoursesBtn.setOnClickListener(v -> onManageCoursesClick());
         binding.emptyStateImg.setOnClickListener(v -> onManageCoursesClick());
 
@@ -236,14 +261,14 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         AdminSecurityManager.with(getActivity()).checkAdminPermission(itemId, () -> {
             Course course = courses.get(position);
             if (itemId == R.id.course_context_delete) {
-                if (sharedPrefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
+                if (sharedPrefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)) {
                     confirmCourseDelete(course);
                 } else {
                     Toast.makeText(getActivity(), getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
                 }
             } else if (itemId == R.id.course_context_reset) {
                 confirmCourseReset(course);
-            } else if (itemId == R.id.course_context_update_activity){
+            } else if (itemId == R.id.course_context_update_activity) {
                 confirmCourseUpdateActivity(course);
             }
         });
@@ -280,28 +305,37 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         builder.show();
     }
 
-    private void confirmCourseUpdateActivity(Course course){
+    private void confirmCourseUpdateActivity(Course course) {
 
-        showProgressDialog(getString(R.string.course_updating), false);
+        singleCourseUpdate = true;
+        launchUpdateCoursesActivityTask(Arrays.asList(course), getString(R.string.course_updating), true);
+    }
+
+    private void launchUpdateCoursesActivityTask(List<Course> courses, String progressDialogMessage, boolean progressDialogIndeterminate) {
+
+        if (!connectionUtils.isConnected(getContext())) {
+            showCoursesActivityUpdateErrorDialog(getString(R.string.connection_unavailable_couse_activity));
+            return;
+        }
+
+        showProgressDialog(progressDialogMessage, false, progressDialogIndeterminate);
 
         UpdateCourseActivityTask task = new UpdateCourseActivityTask(getActivity(),
-                SessionManager.getUserId(getActivity()), apiEndpoint);
+                SessionManager.getUserId(getActivity()), apiEndpoint, singleCourseUpdate);
         task.setUpdateActivityListener(CoursesListFragment.this);
-        task.execute(course);
-
+        task.execute(courses);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equalsIgnoreCase(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS) || key.equalsIgnoreCase(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS)){
+        if (key.equalsIgnoreCase(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS) || key.equalsIgnoreCase(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS)) {
             displayCourses();
         }
-
     }
 
     @Override
     public void onCourseDeletionComplete(BasicResult result) {
-        if (result.isSuccess()){
+        if (result.isSuccess()) {
             Media.resetMediaScan(prefs);
         }
 
@@ -334,18 +368,45 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     /* UpdateActivityListener implementation */
     public void updateActivityProgressUpdate(DownloadProgress dp) {
-        // no need to show download progress in this activity
+        getProgressDialog().setProgress(dp.getProgress());
+        getProgressDialog().setMessage(getString(R.string.updating_course_activity, dp.getMessage()));
     }
 
-    public void updateActivityComplete(EntityResult<Course> result) {
-        Course course = result.getEntity();
+    public void updateActivityComplete(EntityResult<List<Course>> result) {
+        List<Course> courses = result.getEntity();
 
         hideProgressDialog();
 
-        toast(getString(result.isSuccess() ? R.string.course_updating_success :
-                        R.string.course_updating_error, (course!=null) ? course.getShortname() : ""));
+        if (singleCourseUpdate) {
+            singleCourseUpdate = false;
+            Course course = courses.get(0);
+            toast(getString(result.isSuccess() ? R.string.course_updating_success :
+                    R.string.course_updating_error, (course != null) ? course.getShortname() : ""));
+        } else {
+            if (!result.isSuccess()) {
+                showCoursesActivityUpdateErrorDialog(getString(R.string.error_unable_retrieve_course_activity));
+            }
+        }
+
 
         displayCourses();
+    }
+
+    private void showCoursesActivityUpdateErrorDialog(String message) {
+        AlertDialog.Builder ab = new AlertDialog.Builder(getActivity());
+        ab.setMessage(message);
+        ab.setPositiveButton(R.string.try_again, (dialog, which) -> runUpdateCoursesActivityProcess());
+
+        String updateActivityOnLoginOption = sharedPrefs.getString(PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN,
+                getString(R.string.prefUpdateActivityOnLoginDefault));
+        boolean canContinue = TextUtilsJava.equals(updateActivityOnLoginOption, getString(R.string.update_activity_on_login_value_optional));
+
+        if (canContinue) {
+            ab.setNegativeButton(R.string.continue_anyway, (dialog, which) -> dialog.dismiss());
+        }
+
+        ab.setCancelable(false);
+        ab.show();
     }
 
 }

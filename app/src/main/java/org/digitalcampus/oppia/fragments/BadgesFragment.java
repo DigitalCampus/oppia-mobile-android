@@ -36,6 +36,7 @@ import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.service.DownloadOppiaDataService;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -190,7 +191,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener, D
 	@Override
 	public void onDownloadFinished(boolean success, String errorMessage) {
 		hideProgressDialog();
-		if (!TextUtils.isEmpty(errorMessage)) {
+		if (!TextUtilsJava.isEmpty(errorMessage)) {
 			toast(errorMessage);
 		}
 	}

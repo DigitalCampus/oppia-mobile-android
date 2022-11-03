@@ -43,6 +43,7 @@ import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,11 +100,11 @@ public class GlobalScorecardFragment extends AppFragment implements ScorecardsGr
     private void showBadgeAwardingInfo(){
         String criteria = prefs.getString(PrefsActivity.PREF_BADGE_AWARD_CRITERIA, null);
         String criteriaDescription = null;
-        if (TextUtils.equals(criteria, Badge.BADGE_CRITERIA_ALL_QUIZZES_PERCENT)){
+        if (TextUtilsJava.equals(criteria, Badge.BADGE_CRITERIA_ALL_QUIZZES_PERCENT)){
             int percent = prefs.getInt(PrefsActivity.PREF_BADGE_AWARD_CRITERIA_PERCENT, 100);
             criteriaDescription = getString(R.string.badges_award_method_all_quizzes_plus_percent, percent);
         }
-        else if (criteria!=null && !TextUtils.isEmpty(criteria) && !TextUtils.equals(criteria, "undefined")) {
+        else if (criteria!=null && !TextUtilsJava.isEmpty(criteria) && !TextUtilsJava.equals(criteria, "undefined")) {
             int resId = getResources().getIdentifier("badges.award_method." + criteria, "string", getContext().getPackageName());
             criteriaDescription = getString(resId);
         }

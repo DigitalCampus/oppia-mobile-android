@@ -1,0 +1,71 @@
+{
+  "id": 3498,
+  "title": {
+    "en": "matching - no feedback"
+  },
+  "description": {
+    "en": ""
+  },
+  "props": {
+    "digest": "df5f236097c6ec87f008bb2c1b89d961527cr0s2p80m0",
+    "courseversion": "20200219124637",
+    "showfeedback": 2,
+    "passthreshold": 80,
+    "maxattempts": 0,
+    "maxscore": 1
+  },
+  "questions": [
+    {
+      "order": 1,
+      "id": 36139,
+      "question": {
+        "id": 19778,
+        "type": "matching",
+        "title": {
+          "en": "What beats what?"
+        },
+        "props": {
+          "maxscore": 1,
+          "correctfeedback": {
+            "en": "Your answer is correct."
+          },
+          "partiallycorrectfeedback": {
+            "en": "Your answer is partially correct."
+          },
+          "incorrectfeedback": {
+            "en": "Your answer is incorrect."
+          }
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 103349,
+            "props": {},
+            "title": {
+              "en": "Rock beats|Scissors"
+            },
+            "score": "0.3333"
+          },
+          {
+            "order": 2,
+            "id": 103350,
+            "props": {},
+            "title": {
+              "en": "Paper beats|Rock"
+            },
+            "score": "0.3333"
+          },
+          {
+            "order": 3,
+            "id": 103351,
+            "props": {},
+            "title": {
+              "en": "Scissors beat|Paper"
+            },
+            "score": "0.3333"
+          }
+        ]
+      }
+    }
+  ]
+}

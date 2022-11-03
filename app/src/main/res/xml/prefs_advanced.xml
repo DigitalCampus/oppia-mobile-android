@@ -12,8 +12,7 @@
         android:title="@string/prefStorageLocation"
         app:icon="@drawable/ic_settings_storage"
         android:entries="@array/StorageOptions"
-        android:entryValues="@array/StorageOptionValues">
-    </ListPreference>
+        android:entryValues="@array/StorageOptionValues" />
 
     <EditTextPreference
         app:allowDividerAbove="true"
@@ -71,5 +70,16 @@
         app:icon="@drawable/ic_refresh"
         app:key="prefFlushAppCache"
         app:title="@string/pref_flush_app_cache" />
+
+    <ListPreference
+        app:key="prefUpdateActivityOnLogin"
+        android:defaultValue="@string/prefUpdateActivityOnLoginDefault"
+        android:entries="@array/update_activity_on_login_options"
+        android:entryValues="@array/update_activity_on_login_values"
+        app:icon="@drawable/ic_update_activity"
+        app:title="@string/pref_update_activity_on_login"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:useSimpleSummaryProvider="true"/>
 
 </androidx.preference.PreferenceScreen>

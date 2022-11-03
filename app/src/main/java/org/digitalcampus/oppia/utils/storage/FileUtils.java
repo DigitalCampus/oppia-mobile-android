@@ -26,6 +26,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.exception.CourseInstallException;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -60,9 +61,9 @@ public class FileUtils {
     public static void unzipFiles(Context context, String srcDirectory, String srcFile, String destDirectory) throws CourseInstallException {
 
         // first make sure that all the arguments are valid and not null
-        if (TextUtils.isEmpty(srcDirectory)
-                || TextUtils.isEmpty(srcFile)
-                || TextUtils.isEmpty(destDirectory)) {
+        if (TextUtilsJava.isEmpty(srcDirectory)
+                || TextUtilsJava.isEmpty(srcFile)
+                || TextUtilsJava.isEmpty(destDirectory)) {
             throw new CourseInstallException(context.getString(R.string.invalid_parameters));
         }
 
@@ -112,20 +113,22 @@ public class FileUtils {
 
             while ((entry = zis.getNextEntry()) != null) {
 
-                if (entry.getName().startsWith("..")) {
+                File f = new File(destDirectory, entry.getName());
+                String canonicalPath = f.getCanonicalPath();
+
+                File fileDestDir = new File(destDirectory);
+                String destDirCanonicalPath = fileDestDir.getCanonicalPath();
+
+                if (!canonicalPath.startsWith(destDirCanonicalPath)) {
                     throw new SecurityException("Suspect file: " + entry.getName()
                             + ". Possibility of trying to access parent directory");
                 }
-
-                String outputFilename = destDirectory + File.separator + entry.getName();
 
                 createDirIfNeeded(destDirectory, entry);
 
                 int count;
 
                 byte[] data = new byte[BUFFER_SIZE];
-
-                File f = new File(outputFilename);
 
                 // write the file to the disk
                 if (!f.isDirectory()) {
@@ -200,12 +203,12 @@ public class FileUtils {
         File[] fileList = folder.listFiles();
 
         for (File file : fileList) {
-                if (file.isDirectory()) {
-                    zipSubFolder(out, file, basePathLength);
-                } else {
-                    String unmodifiedFilePath = file.getPath();
-                    try (FileInputStream fi = new FileInputStream(unmodifiedFilePath);
-                         BufferedInputStream origin = new BufferedInputStream(fi, BUFFER)) {
+            if (file.isDirectory()) {
+                zipSubFolder(out, file, basePathLength);
+            } else {
+                String unmodifiedFilePath = file.getPath();
+                try (FileInputStream fi = new FileInputStream(unmodifiedFilePath);
+                     BufferedInputStream origin = new BufferedInputStream(fi, BUFFER)) {
 
                     byte[] data = new byte[BUFFER];
                     String relativePath = unmodifiedFilePath

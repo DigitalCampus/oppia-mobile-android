@@ -1,0 +1,136 @@
+{
+  "id": 261,
+  "title": {
+    "en": "Quiz with unicode characters - test for #OPPIA-830"
+  },
+  "description": {
+    "en": ""
+  },
+  "props": {
+    "courseversion": "20211111181631",
+    "showfeedback": 1,
+    "passthreshold": 80,
+    "maxattempts": "unlimited",
+    "maxscore": 2,
+    "digest": "3ae52f30505ad5319b1bb2f0ad55af38"
+  },
+  "questions": [
+    {
+      "order": 1,
+      "id": 501,
+      "question": {
+        "id": 809,
+        "type": "multiselect",
+        "title": {
+          "en": "Test with Unicode characters in response options"
+        },
+        "props": {
+          "maxscore": 1,
+          "shuffleanswers": "1"
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 833,
+            "props": {
+              "id": 27,
+              "feedback": {
+                "en": "<p dir=\"ltr\" style=\"text-align: left;\">Correct!<\/p>"
+              }
+            },
+            "title": {
+              "en": "<p dir=\"ltr\" style=\"text-align: left;\">response option without unicode - correct<\/p>"
+            },
+            "score": "0.5000"
+          },
+          {
+            "order": 2,
+            "id": 319,
+            "props": {
+              "id": 1000,
+              "feedback": {
+                "en": "<p dir=\"ltr\" style=\"text-align: left;\">incorrect<\/p>"
+              }
+            },
+            "title": {
+              "en": "<p dir=\"ltr\" style=\"text-align: left;\">response option without unicode - incorrect<br><\/p>"
+            },
+            "score": "0.0000"
+          },
+          {
+            "order": 3,
+            "id": 602,
+            "props": {
+              "id": 300,
+              "feedback": {
+                "en": "<p dir=\"ltr\" style=\"text-align: left;\">correct<\/p>"
+              }
+            },
+            "title": {
+              "en": "<p dir=\"ltr\" style=\"text-align: left;\">With unicode - correct -&nbsp;+2\u00b0C to +8\u00b0C<\/p>"
+            },
+            "score": "0.5000"
+          },
+          {
+            "order": 4,
+            "id": 783,
+            "props": {
+              "id": 669,
+              "feedback": {
+                "en": "<p dir=\"ltr\" style=\"text-align: left;\">that's wrong!<\/p>"
+              }
+            },
+            "title": {
+              "en": "<p dir=\"ltr\" style=\"text-align: left;\">With unicode - incorrect -&nbsp;+2\u00b0C to +8\u00b0C<br><\/p>"
+            },
+            "score": "0.0000"
+          }
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "id": 213,
+      "question": {
+        "id": 751,
+        "type": "multichoice",
+        "title": {
+          "en": "<p dir=\"ltr\" style=\"text-align: left;\">Another question<\/p>"
+        },
+        "props": {
+          "maxscore": 1
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 825,
+            "props": {
+              "id": 123,
+              "feedback": {
+                "en": "<p dir=\"ltr\" style=\"text-align: left;\">yes true is correct<\/p>"
+              }
+            },
+            "title": {
+              "en": "True"
+            },
+            "score": "1.0000"
+          },
+          {
+            "order": 2,
+            "id": 636,
+            "props": {
+              "id": 663,
+              "feedback": {
+                "en": "<p dir=\"ltr\" style=\"text-align: left;\">false is incorrect<\/p>"
+              }
+            },
+            "title": {
+              "en": "False"
+            },
+            "score": "0.0000"
+          }
+        ]
+      }
+    }
+  ]
+}

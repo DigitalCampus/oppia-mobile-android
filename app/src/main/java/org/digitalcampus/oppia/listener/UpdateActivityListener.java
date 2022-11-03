@@ -22,8 +22,10 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.task.result.EntityResult;
 
+import java.util.List;
+
 public interface UpdateActivityListener extends APIKeyRequestListener {
 
-	void updateActivityComplete(EntityResult<Course> result);
+	void updateActivityComplete(EntityResult<List<Course>> result);
     void updateActivityProgressUpdate(DownloadProgress dp);
 }

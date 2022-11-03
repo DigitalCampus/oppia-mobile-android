@@ -544,7 +544,7 @@
     <string name="options">Options</string>
     <string name="quiz_loading_error">Unexpected error loading quiz. Maybe the format was wrong or out-dated?</string>
     <string name="error_register_username_length">Username must have at least %d characters</string>
-    <string name="change_server_logout_warning">You are already logged in. If you change the server your current session will finish. Do you confirm?</string>
+    <string name="change_setting_logout_warning">You are already logged in. If you change this setting your current session will finish. Do you confirm?</string>
     <string name="accept">Accept</string>
     <string name="user_not_logged_in">User not logged in</string>
 
@@ -620,6 +620,10 @@
     <string name="incorrect_password_topic">Incorrect topic password. Try again</string>
     <string name="password_needed">Password needed</string>
     <string name="password_needed_description">This topic is password protected. \n Please enter the password below to access content (you will only need to do this once).</string>
+    <string name="password_activity_title">Activity protected</string>
+    <string name="password_activity_description">This activity is password protected. \n Please, enter the password below to access its contents. </string>
+    <string name="password_activity_incorrect">Incorrect password. Try again</string>
+    <string name="password_activity_submit">Access contents</string>
     <string name="unlock_topic">Unlock topic</string>
     <string name="staging_warning_msg">You are connected to a staging/development server.</string>
 
@@ -635,6 +639,17 @@
     <string name="source_dir_does_not_exist">Source directory does not exist</string>
     <string name="source_file_does_not_exist">Source file does not exist</string>
     <string name="dest_dir_does_not_exist">Destination directory does not exist</string>
+    <string name="pref_update_activity_on_login">Update activity on login</string>
+
+    <!-- Update activity on login -->
+    <string name="none">None</string>
+    <string name="optional">Optional</string>
+    <string name="force">Force</string>
+    <string name="updating_course_activity">Updating course activity: %s</string>
+    <string name="error_unable_retrieve_course_activity">Currently unable to retrieve course activity</string>
+    <string name="connection_unavailable_couse_activity">Connection unavailable, unable to retrieve course activity</string>
+    <string name="try_again">Try again</string>
+    <string name="continue_anyway">Continue anyway</string>
 
 </resources>
 

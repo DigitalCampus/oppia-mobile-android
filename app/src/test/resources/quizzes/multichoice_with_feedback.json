@@ -1,0 +1,78 @@
+{
+  "id": 3489,
+  "title": {
+    "en": "Multichoice - with feedback"
+  },
+  "description": {
+    "en": ""
+  },
+  "props": {
+    "digest": "d1718ce22a48256b7182673da97d7b89518cr0s2p80m0",
+    "courseversion": "20200216172747",
+    "showfeedback": 2,
+    "passthreshold": 80,
+    "maxattempts": 0,
+    "maxscore": 1
+  },
+  "questions": [
+    {
+      "order": 1,
+      "id": 36130,
+      "question": {
+        "id": 19769,
+        "type": "multichoice",
+        "title": {
+          "en": "Which of the following is a colour of the rainbow?"
+        },
+        "props": {
+          "maxscore": 1,
+          "shuffleanswers": "1"
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 103327,
+            "props": {
+              "id": 385,
+              "feedback": {
+                "en": "try again"
+              }
+            },
+            "title": {
+              "en": "Black"
+            },
+            "score": "0.0000"
+          },
+          {
+            "order": 2,
+            "id": 103328,
+            "props": {
+              "id": 484,
+              "feedback": {
+                "en": "correct"
+              }
+            },
+            "title": {
+              "en": "Red"
+            },
+            "score": "1.0000"
+          },
+          {
+            "order": 3,
+            "id": 103329,
+            "props": {
+              "id": 813,
+              "feedback": {
+                "en": "try again"
+              }
+            },
+            "title": {
+              "en": "White"
+            },
+            "score": "0.0000"
+          }
+        ]
+      }
+    }
+  ]
+}

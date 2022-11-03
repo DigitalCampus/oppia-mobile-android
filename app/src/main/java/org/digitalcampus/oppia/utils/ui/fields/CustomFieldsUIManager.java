@@ -19,6 +19,7 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +43,7 @@ public class CustomFieldsUIManager {
 
     private void addAndConfigureInput(CustomField field, ValidableField input){
         input.setRequired(field.isRequired());
-        if (!TextUtils.isEmpty(field.getHelperText())){
+        if (!TextUtilsJava.isEmpty(field.getHelperText())){
             input.setHelperText(field.getHelperText());
         }
         inputs.add(new Pair<>(field, input));
@@ -54,7 +55,7 @@ public class CustomFieldsUIManager {
         }
 
         for (final Pair<CustomField, ValidableField> formField : inputs){
-            if (TextUtils.equals(formField.first.getKey(), key)) {
+            if (TextUtilsJava.equals(formField.first.getKey(), key)) {
                 return formField.second;
             }
         }
@@ -211,7 +212,7 @@ public class CustomFieldsUIManager {
             else if (field.isChoices()){
                 ValidableSpinnerLayout input = (ValidableSpinnerLayout) formField.second;
                 String value = input.getCleanedValue();
-                if (value != null && !TextUtils.isEmpty(value)){
+                if (value != null && !TextUtilsJava.isEmpty(value)){
                     values.put(field.getKey(), new CustomValue<>(input.getCleanedValue()));
                 }
 
@@ -220,7 +221,7 @@ public class CustomFieldsUIManager {
                 ValidableTextInputLayout input = (ValidableTextInputLayout) formField.second;
                 if (field.isInteger()){
                     String value = input.getCleanedValue();
-                    if (value != null && !TextUtils.isEmpty(value)){
+                    if (value != null && !TextUtilsJava.isEmpty(value)){
                         values.put(field.getKey(), new CustomValue<>(Integer.parseInt(value)));
                     }
                 }
@@ -250,8 +251,8 @@ public class CustomFieldsUIManager {
         if (negation){ // We have to remove the starting "!"
             assertValue = assertValue.substring(1);
         }
-        boolean match = (TextUtils.isEmpty(assertValue) && !TextUtils.isEmpty(value)) ||
-                TextUtils.equals(assertValue, value);
+        boolean match = (TextUtilsJava.isEmpty(assertValue) && !TextUtilsJava.isEmpty(value)) ||
+                TextUtilsJava.equals(assertValue, value);
         return negation != match;
     }
 
@@ -290,7 +291,7 @@ public class CustomFieldsUIManager {
         for (final Pair<CustomField, ValidableField> formField : inputs){
             CustomField field = formField.first;
             ValidableField input = formField.second;
-            if (TextUtils.equals(field.getKey(), fieldName)) {
+            if (TextUtilsJava.equals(field.getKey(), fieldName)) {
                 input.setVisibility(View.VISIBLE);
                 moveToView(input, container);
                 ValidableField dependant = getInputByKey(field.getFieldVisibleBy());

@@ -7,7 +7,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Patterns;
@@ -31,6 +30,7 @@ import org.digitalcampus.oppia.task.ExportActivityTask;
 import org.digitalcampus.oppia.task.UpdateUserCohortsTask;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.CourseUtils;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -49,6 +49,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
     private ListPreference storagePref;
     private EditTextPreference serverPref;
     private EditTextPreference usernamePref;
+    private ListPreference updateActivityOnLoginPref;
 
     @Inject
     SharedPreferences prefs;
@@ -87,6 +88,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         storagePref = findPreference(PrefsActivity.PREF_STORAGE_OPTION);
         serverPref = findPreference(PrefsActivity.PREF_SERVER);
         usernamePref = findPreference(PrefsActivity.PREF_USER_NAME);
+        updateActivityOnLoginPref = findPreference(PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN);
 
         if (serverPref == null || storagePref == null) {
             return;
@@ -97,7 +99,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         liveUpdateSummary(PrefsActivity.PREF_STORAGE_OPTION);
         liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_CONN, " ms");
         liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_RESP, " ms");
-        usernamePref.setSummary("".equals(usernamePref.getText()) ?
+        usernamePref.setSummary(TextUtilsJava.isEmpty(usernamePref.getText()) ?
                 getString(R.string.about_not_logged_in) :
                 getString(R.string.about_logged_in, usernamePref.getText()));
 
@@ -107,7 +109,24 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                 return false;
             }
 
-            showWarningIfLoggedIn((String) newValue);
+            String currentValue = prefs.getString(preference.getKey(), getString(R.string.prefServerDefault));
+            if (checkMustShowWarningLogout(preference.getKey(), currentValue, (String) newValue)) {
+                showWarningLogout(() -> App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, currentValue).apply());
+            }
+
+            return true;
+        });
+
+        updateActivityOnLoginPref.setOnPreferenceChangeListener((preference, newValue) -> {
+            boolean mustUpdate = onPreferenceChangedDelegate(preference, newValue);
+            if (!mustUpdate) {
+                return false;
+            }
+
+            String currentValue = prefs.getString(preference.getKey(), getString(R.string.prefUpdateActivityOnLoginDefault));
+            if (checkMustShowWarningLogout(preference.getKey(), currentValue, (String) newValue)) {
+                showWarningLogout(() -> ((ListPreference) preference).setValue(currentValue));
+            }
 
             return true;
         });
@@ -124,11 +143,33 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
 
     }
 
+    private boolean checkMustShowWarningLogout(String key, String currentValue, String newValue) {
+
+        if (!isLoggedIn()) {
+            return false;
+        }
+
+        switch (key) {
+            case PrefsActivity.PREF_SERVER:
+                return !TextUtilsJava.equals(currentValue, newValue);
+
+            case PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN:
+                boolean currentIsNone = TextUtilsJava.equals(getString(R.string.update_activity_on_login_value_none), currentValue);
+                boolean newIsOptionalOrForce = TextUtilsJava.equals(getString(R.string.update_activity_on_login_value_optional), newValue)
+                        || TextUtilsJava.equals(getString(R.string.update_activity_on_login_value_force), newValue);
+                return currentIsNone && newIsOptionalOrForce;
+
+            default:
+                return false;
+        }
+
+    }
+
     private void flushAppCache() {
         flushCourseListingCache();
         flushUserCohorts();
 
-        ((AppActivity)getActivity()).toast(R.string.cache_flushed_successfuly);
+        ((AppActivity) getActivity()).toast(R.string.cache_flushed_successfuly);
     }
 
     private void flushCourseListingCache() {
@@ -206,35 +247,38 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         return super.onPreferenceChangedDelegate(preference, newValue);
     }
 
-    protected void showWarningIfLoggedIn(String newValue){
-        if (isLoggedIn()) {
-            String currentUrl = App.getPrefs(getActivity()).getString(PrefsActivity.PREF_SERVER, null);
-            String newUrl = newValue.trim();
-            if (!TextUtils.equals(currentUrl, newUrl)) {
-                showWarningLogout(currentUrl, newUrl);
-            }
-        }
-    }
+//    protected void showWarningIfLoggedIn(String newValue) {
+//        if (isLoggedIn()) {
+//            String currentUrl = App.getPrefs(getActivity()).getString(PrefsActivity.PREF_SERVER, null);
+//            String newUrl = newValue.trim();
+//            if (!TextUtilsJava.equals(currentUrl, newUrl)) {
+//                showWarningLogout(() -> App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, currentUrl).apply());
+//            }
+//        }
+//    }
 
     private boolean isLoggedIn() {
-        return !TextUtils.isEmpty(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+        return !TextUtilsJava.isEmpty(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
     }
 
-    private void showWarningLogout(String currentUrl, String newUrl) {
+    private void showWarningLogout(Runnable restoreValueRunnable) {
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.warning)
-                .setMessage(R.string.change_server_logout_warning)
-                .setPositiveButton(R.string.accept, (dialog, which) -> {
-                    SessionManager.invalidateCurrentUserApiKey(getContext());
-                    SessionManager.logoutCurrentUser(getActivity());
-                    clearNotificationProcessCachedData();
-                    usernamePref.setSummary(R.string.about_not_logged_in);
-                    ((PrefsActivity)getActivity()).forzeGoToLoginScreen();
-                    App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, newUrl).apply();
+                .setMessage(R.string.change_setting_logout_warning)
+                .setPositiveButton(R.string.accept, (dialog, which) -> launchLogoutTasks())
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    if (restoreValueRunnable != null) restoreValueRunnable.run();
                 })
-                .setNegativeButton(R.string.cancel, (dialog, which) ->
-                    App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, currentUrl).apply())
                 .show();
+    }
+
+    private void launchLogoutTasks() {
+
+        SessionManager.invalidateCurrentUserApiKey(getContext());
+        SessionManager.logoutCurrentUser(getActivity());
+        clearNotificationProcessCachedData();
+        usernamePref.setSummary(R.string.about_not_logged_in);
+        ((PrefsActivity) getActivity()).forzeGoToLoginScreen();
     }
 
     private void clearNotificationProcessCachedData() {

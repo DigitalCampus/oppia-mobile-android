@@ -45,6 +45,7 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.CourseUtils;
 import org.digitalcampus.oppia.utils.SearchUtils;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageUtils;
@@ -265,7 +266,7 @@ public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
     protected void upgradeV49() {
 
         String location = Storage.getStorageLocationRoot(ctx);
-        if (TextUtils.isEmpty(location)) {
+        if (TextUtilsJava.isEmpty(location)) {
             return;
         }
 
@@ -487,7 +488,7 @@ public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
     private void upgradeV55() {
 
         String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, PrefsActivity.STORAGE_OPTION_EXTERNAL);
-        if (TextUtils.equals(storageOption, PrefsActivity.STORAGE_OPTION_INTERNAL)) {
+        if (TextUtilsJava.equals(storageOption, PrefsActivity.STORAGE_OPTION_INTERNAL)) {
 
             String sourcePath = ctx.getFilesDir().getPath();
             String destPath = StorageUtils.getInternalMemoryDrive(ctx).getPath();

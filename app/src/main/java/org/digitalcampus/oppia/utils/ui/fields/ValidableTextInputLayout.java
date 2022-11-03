@@ -11,6 +11,7 @@ import android.widget.EditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import androidx.core.text.HtmlCompat;
 
@@ -71,7 +72,7 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
             setRequiredHint();
         }
 
-        if (!TextUtils.isEmpty(getHelperText())){
+        if (!TextUtilsJava.isEmpty(getHelperText())){
             // We add some additional bottom margin
             LayoutParams params = (LayoutParams) getLayoutParams();
             if (params != null){
@@ -155,7 +156,7 @@ public class ValidableTextInputLayout extends TextInputLayout implements Validab
     private void setEditTextSelected(){
         EditText input = getEditText();
         if (input != null){
-            boolean selected = !TextUtils.isEmpty(input.getText().toString());
+            boolean selected = !TextUtilsJava.isEmpty(input.getText().toString());
             this.setSelected(selected);
         }
     }

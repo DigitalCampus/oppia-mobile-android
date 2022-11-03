@@ -1,0 +1,107 @@
+{
+  "id": 3488,
+  "title": {
+    "en": "Questions"
+  },
+  "description": {
+    "en": ""
+  },
+  "props": {
+    "digest": "595e067faa3a6f1cb85e03f0193ce677517cr0s2p80m0",
+    "courseversion": "20200216163021",
+    "showfeedback": 2,
+    "passthreshold": 80,
+    "maxattempts": 0,
+    "maxscore": 1
+  },
+  "questions": [
+    {
+      "order": 1,
+      "id": 36123,
+      "question": {
+        "id": 19762,
+        "type": "unsupportedtype",
+        "title": {
+          "en": "The sky is blue"
+        },
+        "props": {
+          "maxscore": 1
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 103313,
+            "props": {
+              "id": 929
+            },
+            "title": {
+              "en": "True"
+            },
+            "score": "1.0000"
+          },
+          {
+            "order": 2,
+            "id": 103314,
+            "props": {
+              "id": 255
+            },
+            "title": {
+              "en": "False"
+            },
+            "score": "0.0000"
+          }
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "id": 36124,
+      "question": {
+        "id": 19763,
+        "type": "multichoice",
+        "title": {
+          "en": "What is the capital of Germany?"
+        },
+        "props": {
+          "maxscore": 1,
+          "shuffleanswers": "1"
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 103315,
+            "props": {
+              "id": 102
+            },
+            "title": {
+              "en": "Berlin"
+            },
+            "score": "1.0000"
+          },
+          {
+            "order": 2,
+            "id": 103316,
+            "props": {
+              "id": 216
+            },
+            "title": {
+              "en": "Bonn"
+            },
+            "score": "0.0000"
+          },
+          {
+            "order": 3,
+            "id": 103317,
+            "props": {
+              "id": 144
+            },
+            "title": {
+              "en": "Munich"
+            },
+            "score": "0.0000"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -19,7 +19,6 @@ package org.digitalcampus.oppia.model;
 
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
@@ -98,11 +97,11 @@ public class TagRepository {
                     String value = jObjCourseStatuses.getString(key);
 
                     if (isCourseInstalled(key, installedCoursesNames)) {
-                        if(TextUtils.equals(value, Course.STATUS_NEW_DOWNLOADS_DISABLED)){
+                        if(Course.STATUS_NEW_DOWNLOADS_DISABLED.equals(value)){
                             t.incrementCountAvailable();
                         }
                     } else {
-                        if(TextUtils.equals(value, Course.STATUS_READ_ONLY)){
+                        if(Course.STATUS_READ_ONLY.equals(value)){
                             t.decrementCountAvailable();
                         }
                     }
@@ -118,11 +117,6 @@ public class TagRepository {
     }
 
     private boolean isCourseInstalled(String name, List<String> installedCoursesNames) {
-        for (String installedCourseName : installedCoursesNames) {
-            if (TextUtils.equals(installedCourseName, name)) {
-                return true;
-            }
-        }
-        return false;
+        return installedCoursesNames.contains(name);
     }
 }

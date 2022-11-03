@@ -80,4 +80,24 @@
         <item>6</item>
     </string-array>
 
+
+
+    <!-- Update activity on login options -->
+
+    <string-array name="update_activity_on_login_options">
+        <item>@string/none</item>
+        <item>@string/optional</item>
+        <item>@string/force</item>
+    </string-array>
+
+    <string-array name="update_activity_on_login_values">
+        <item>@string/update_activity_on_login_value_none</item>
+        <item>@string/update_activity_on_login_value_optional</item>
+        <item>@string/update_activity_on_login_value_force</item>
+    </string-array>
+
+    <string name="update_activity_on_login_value_none">NONE</string>
+    <string name="update_activity_on_login_value_optional">OPTIONAL</string>
+    <string name="update_activity_on_login_value_force">FORCE</string>
+
 </resources>

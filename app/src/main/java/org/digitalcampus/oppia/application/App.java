@@ -38,6 +38,7 @@ import org.digitalcampus.oppia.service.CoursesChecksWorker;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.service.UserCohortsCheckerWorker;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
@@ -97,7 +98,6 @@ public class App extends Application {
     public static final boolean METADATA_INCLUDE_BATTERY_LEVEL = BuildConfig.METADATA_INCLUDE_BATTERY_LEVEL;
 
     // general other settings
-    public static final String MINT_API_KEY = BuildConfig.MINT_API_KEY;
     public static final int DOWNLOAD_COURSES_DISPLAY = BuildConfig.DOWNLOAD_COURSES_DISPLAY; //this no of courses must be displayed for the 'download more courses' option to disappear
     public static final int USERNAME_MIN_CHARACTERS = 4;
     public static final int PASSWORD_MIN_LENGTH = 6;
@@ -207,7 +207,7 @@ public class App extends Application {
     private void configureStorageType() {
 
         String storageOption = getPrefs(this).getString(PrefsActivity.PREF_STORAGE_OPTION, "");
-        if (TextUtils.isEmpty(storageOption)) {
+        if (TextUtilsJava.isEmpty(storageOption)) {
             storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
         }
 

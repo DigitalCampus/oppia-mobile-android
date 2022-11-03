@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 public class StorageLocationInfo {
 
@@ -23,7 +24,7 @@ public class StorageLocationInfo {
     }
 
     public String getDisplayName(Context ctx) {
-        return ctx.getString(TextUtils.equals(type, PrefsActivity.STORAGE_OPTION_INTERNAL)
+        return ctx.getString(TextUtilsJava.equals(type, PrefsActivity.STORAGE_OPTION_INTERNAL)
                 ? R.string.prefStorageOptionInternal : R.string.prefStorageOptionExternal);
     }
 }

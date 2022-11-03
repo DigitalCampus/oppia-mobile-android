@@ -170,7 +170,7 @@ public class WelcomeActivity extends AppActivity {
         }
     }
 
-    public void onSuccessUserAccess(User user) {
+    public void onSuccessUserAccess(User user, boolean firstLogin) {
 
         boolean fromViewDigest = getIntent().getBooleanExtra(ViewDigestActivity.EXTRA_FROM_VIEW_DIGEST, false);
 
@@ -179,7 +179,9 @@ public class WelcomeActivity extends AppActivity {
         if (fromViewDigest) {
             setResult(Activity.RESULT_OK);
         } else {
-            startActivity(new Intent(this, MainActivity.class));
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(MainActivity.EXTRA_FIRST_LOGIN, firstLogin);
+            startActivity(intent);
         }
 
 		if (analyticsProvider.shouldShowOptOutRationale(this)){

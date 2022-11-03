@@ -2,6 +2,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- File used for setting default values for user specific ones -->
+
     <ListPreference
         android:key="prefLanguage"
         android:title="@string/prefLanguage" >
