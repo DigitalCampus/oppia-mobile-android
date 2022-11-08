@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+    <!ENTITY appName "OppiaMobile">
+    <!ENTITY companyName "Digital Campus"> ]>
+<resources>
+    <string name="fragment_welcome_title">baga nagaan gara &appName; dhuftan</string>
+
+</resources>
