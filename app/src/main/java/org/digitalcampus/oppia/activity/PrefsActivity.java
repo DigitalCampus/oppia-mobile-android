@@ -36,6 +36,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityPreferencesBinding;
 import org.digitalcampus.oppia.fragments.prefs.BasePreferenceFragment;
+import org.digitalcampus.oppia.fragments.prefs.DisplayPrefsFragment;
 import org.digitalcampus.oppia.fragments.prefs.MainPreferencesFragment;
 import org.digitalcampus.oppia.fragments.prefs.NotificationsPrefsFragment;
 import org.digitalcampus.oppia.fragments.prefs.PreferenceChangedCallback;
@@ -93,7 +94,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
      * Start personal prefs - move these to UserProps table
      */
     public static final String PREF_PHONE_NO = "prefPhoneNo";
-    public static final String PREF_LANGUAGE = "prefLanguage";
+    public static final String PREF_CONTENT_LANGUAGE = "prefLanguage";
+    public static final String PREF_INTERFACE_LANGUAGE = "prefInterfaceLanguage";
     public static final String PREF_SHOW_SCHEDULE_REMINDERS = "prefShowScheduleReminders";
     public static final String PREF_NO_SCHEDULE_REMINDERS = "prefNoScheduleReminders";
     public static final String PREF_SHOW_COURSE_DESC = "prefShowCourseDescription";
@@ -466,7 +468,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         Bundle args = new Bundle();
         args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, caller.getTag());
         if (pref.getKey().equals(PrefsActivity.PREF_DISPLAY_SCREEN)) {
-            args.putSerializable("langs", getLanguagesCourses());
+            args.putSerializable(DisplayPrefsFragment.ARG_CONTENT_LANGS, getLanguagesCourses());
             Log.d(TAG, "Langs added!");
         }
         fragment.setArguments(args);

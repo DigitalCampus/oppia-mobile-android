@@ -99,8 +99,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
 
         // set preferred lang to the default lang
-        if ("".equals(sharedPrefs.getString(PrefsActivity.PREF_LANGUAGE, ""))) {
-            sharedPrefs.edit().putString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()).apply();
+        if ("".equals(sharedPrefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, ""))) {
+            sharedPrefs.edit().putString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage()).apply();
         }
 
         if (getResources().getBoolean(R.bool.is_tablet)) {

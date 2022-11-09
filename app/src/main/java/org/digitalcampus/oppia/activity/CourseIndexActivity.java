@@ -194,7 +194,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         int order = 104;
         for (CourseMetaPage mmp : ammp) {
             Lang titleLang = mmp.getLang(
-                    prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+                    prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage()));
 
             if (titleLang != null) {
                 String title = titleLang.getContent();
@@ -406,7 +406,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         if (key.equalsIgnoreCase(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH)) {
             supportInvalidateOptionsMenu();
         }
-        else if (key.equalsIgnoreCase(PrefsActivity.PREF_LANGUAGE)){
+        else if (key.equalsIgnoreCase(PrefsActivity.PREF_CONTENT_LANGUAGE)){
             adapter.reloadLanguage(prefs);
         }
     }

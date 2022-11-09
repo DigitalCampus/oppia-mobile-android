@@ -59,8 +59,14 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
         Preference pref = findPreference(prefKey);
         if (pref instanceof ListPreference) {
             final ListPreference listPref = (ListPreference) pref;
-            listPref.setSummary(listPref.getEntry() + append);
+            listPref.setSummary(listPref.getEntry() != null ? (listPref.getEntry() + append) : "");
             listPref.setOnPreferenceChangeListener((preference, newValue) -> {
+
+                boolean mustUpdate = onPreferenceChangedDelegate(preference, newValue);
+                if (!mustUpdate) {
+                    return false;
+                }
+
                 CharSequence[] entryValues = listPref.getEntryValues();
                 for (int i = 0; i < entryValues.length; i++) {
                     if (entryValues[i].equals(newValue)) {

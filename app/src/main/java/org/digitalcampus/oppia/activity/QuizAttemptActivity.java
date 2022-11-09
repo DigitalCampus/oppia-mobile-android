@@ -75,7 +75,7 @@ public class QuizAttemptActivity extends AppActivity {
         setContentView(binding.getRoot());
 		getAppComponent().inject(this);
 
-		String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+		String prefLang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
         Bundle bundle = this.getIntent().getExtras();
 
         if (bundle == null) {

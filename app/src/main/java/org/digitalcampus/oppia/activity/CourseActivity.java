@@ -24,7 +24,6 @@ import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.UtteranceProgressListener;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -301,7 +300,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private boolean checkLanguageSelected() {
-        String currentLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, null);
+        String currentLang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, null);
         return currentLang != null && checkCourseHasLanguage(currentLang);
     }
 
@@ -315,7 +314,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private void loadActivities() {
-        String currentLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        String currentLang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
         String actionBarTitle = section.getTitle(currentLang);
         if (actionBarTitle != null && !actionBarTitle.equals(MultiLangInfoModel.DEFAULT_NOTITLE)) {
             setTitle(actionBarTitle);
@@ -463,7 +462,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             ((BaseWidget) apAdapter.getItem(currentActivityNo)).setReadAloud(true);
             supportInvalidateOptionsMenu();
 
-            String currentLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+            String currentLang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
             Locale localeContent = new Locale(currentLang);
             List<Integer> validLangAvailableCodes = new ArrayList<>(Arrays.asList(
                     TextToSpeech.LANG_AVAILABLE, TextToSpeech.LANG_COUNTRY_AVAILABLE, TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE));

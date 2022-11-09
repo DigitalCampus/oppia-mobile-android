@@ -3,18 +3,13 @@ package org.digitalcampus.oppia.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.RowCourseDownloadBinding;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 
@@ -42,7 +37,7 @@ public class DownloadCoursesAdapter extends MultiChoiceRecyclerViewAdapter<Downl
         this.courses = courses;
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        prefLang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
 
         updateDescription = context.getString(R.string.update);
         installDescription = context.getString(R.string.install);

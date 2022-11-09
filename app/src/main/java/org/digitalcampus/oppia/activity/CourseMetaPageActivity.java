@@ -21,10 +21,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.webkit.WebView;
-import android.widget.TextView;
 
-import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityCourseMetapageBinding;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.model.Course;
@@ -57,7 +54,7 @@ public class CourseMetaPageActivity extends AppActivity {
         setContentView(binding.getRoot());
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+		String prefLang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
             course = (Course) bundle.getSerializable(Course.TAG);

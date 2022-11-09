@@ -29,7 +29,6 @@ import androidx.fragment.app.Fragment;
 
 import androidx.preference.PreferenceManager;
 
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -98,7 +97,7 @@ public abstract class BaseWidget extends Fragment {
         Log.i(TAG, "onCreate WidgetFactory: " + this.getClass().getSimpleName());
 
         prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-        prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        prefLang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
 
         getActivity().registerReceiver(receiver, new IntentFilter(ACTION_TEXT_SIZE_CHANGED));
     }

@@ -25,7 +25,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.preference.PreferenceManager;
@@ -34,7 +33,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.ActivityNotFoundException;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -74,7 +72,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -1756,7 +1753,7 @@ public class DbHelper extends SQLiteOpenHelper {
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
 
-        String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        String prefLang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
 
         while (!c.isAfterLast()) {
 

@@ -23,7 +23,7 @@ public class QuizAttemptRepository {
         DbHelper db = DbHelper.getInstance(ctx);
         long userId = db.getUserId(SessionManager.getUsername(ctx));
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        String lang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
         return db.getGlobalQuizAttempts(userId, lang);
     }
 

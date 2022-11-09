@@ -75,6 +75,7 @@
  	
  	<string name="prefServer">Servidor</string>
 	<string name="prefContentLanguage">Idioma de contenido preferido</string>
+    <string name="prefInterfaceLanguage">Idioma de interfaz</string>
 	<string name="prefAdvanced">Configuración avanzada</string>
 	<string name="prefServerTimeoutConnection">Tiempo de espera de conexión superado</string>
 	<string name="prefServerTimeoutResponse">Tiempo de espera de respuesta superado</string>

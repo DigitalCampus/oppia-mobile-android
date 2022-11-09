@@ -1,67 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:key="prefDisplay"
-    >
+    app:key="prefDisplay">
 
     <ListPreference
-        app:allowDividerAbove="true"
-        app:allowDividerBelow="true"
-        app:icon="@drawable/ic_settings_language"
         android:key="prefLanguage"
-        android:title="@string/prefContentLanguage" >
-    </ListPreference>
+        android:title="@string/prefContentLanguage"
+        app:icon="@drawable/ic_settings_language"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true" />
 
     <ListPreference
+        android:key="prefInterfaceLanguage"
+        android:title="@string/prefInterfaceLanguage"
+        app:icon="@drawable/ic_interface_language"
         app:allowDividerAbove="true"
-        app:allowDividerBelow="true"
-        app:icon="@drawable/ic_settings_text_size"
+        app:allowDividerBelow="true" />
+
+    <ListPreference
         android:defaultValue="16"
         android:entries="@array/TextSize"
         android:entryValues="@array/TextSizeValues"
         android:key="prefTextSize"
-        android:title="@string/prefTextSize" />
-
-    <CheckBoxPreference
+        android:title="@string/prefTextSize"
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
-        app:iconSpaceReserved="false"
+        app:icon="@drawable/ic_settings_text_size" />
+
+    <CheckBoxPreference
         android:defaultValue="true"
         android:key="prefHighlightCompleted"
-        android:title="@string/prefHighlightCompleted" />
-
-    <CheckBoxPreference
+        android:title="@string/prefHighlightCompleted"
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
-        app:iconSpaceReserved="false"
+        app:iconSpaceReserved="false" />
+
+    <CheckBoxPreference
         android:defaultValue="false"
         android:key="prefShowSectionNumbers"
-        android:title="@string/prefShowSectionNumbers" />
-
-    <CheckBoxPreference
+        android:title="@string/prefShowSectionNumbers"
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
-        app:iconSpaceReserved="false"
+        app:iconSpaceReserved="false" />
+
+    <CheckBoxPreference
         android:defaultValue="true"
         android:key="prefShowProgressBar"
-        android:title="@string/prefShowProgressBar" />
-
-    <CheckBoxPreference
+        android:title="@string/prefShowProgressBar"
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
-        app:iconSpaceReserved="false"
+        app:iconSpaceReserved="false" />
+
+    <CheckBoxPreference
         android:defaultValue="@string/SHOW_COURSE_DESCRIPTION"
         android:key="prefShowCourseDescription"
-        android:title="@string/prefShowCourseDescription" />
-
-    <CheckBoxPreference
+        android:title="@string/prefShowCourseDescription"
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
-        app:iconSpaceReserved="false"
+        app:iconSpaceReserved="false" />
+
+    <CheckBoxPreference
         android:defaultValue="@string/START_COURSEINDEX_COLLAPSED"
         android:key="prefStartCourseIndexCollapsed"
-        android:title="@string/prefStartCourseIndexCollapsed" />
+        android:title="@string/prefStartCourseIndexCollapsed"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="false" />
 
 
 </androidx.preference.PreferenceScreen>
