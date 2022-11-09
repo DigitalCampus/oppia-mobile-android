@@ -57,43 +57,42 @@ public class DisplayPrefsFragment extends BasePreferenceFragment implements Pref
         liveUpdateSummary(PrefsActivity.PREF_TEXT_SIZE);
     }
 
-    private void loadInterfaceLangs() {
-        String[] langs = BuildConfig.INTERFACE_LANGUAGE_OPTIONS.split(",");
-        Map<String, String> langNames = Arrays.stream(langs).collect(Collectors.toMap(
+    private Map<String, String> mapLangCodesToNames(List<String> langCodes) {
+        return langCodes.stream().collect(Collectors.toMap(
                 langCode -> new Locale(langCode).getDisplayLanguage(new Locale(langCode)),
                 langCode -> langCode));
+    }
+
+    private void loadInterfaceLangs() {
+        String[] langs = BuildConfig.INTERFACE_LANGUAGE_OPTIONS.split(",");
+
+        Map<String, String> langNames = mapLangCodesToNames(Arrays.asList(langs));
 
         ListPreference prefInterfaceLangs = findPreference(PrefsActivity.PREF_INTERFACE_LANGUAGE);
         prefInterfaceLangs.setEntries(langNames.keySet().toArray(new String[0]));
         prefInterfaceLangs.setEntryValues(langNames.values().toArray(new String[0]));
 
         liveUpdateSummary(PrefsActivity.PREF_INTERFACE_LANGUAGE);
-
     }
+
 
     private void updateContentLangsList(List<Lang> langs){
-        List<String> entries = new ArrayList<>();
-        List<String> entryValues = new ArrayList<>();
 
-        for(Lang l: langs){
-            if(!entryValues.contains(l.getLanguage())){
-                entryValues.add(l.getLanguage());
-                Locale loc = new Locale(l.getLanguage());
-                entries.add(loc.getDisplayLanguage(loc));
-            }
-        }
+        ListPreference prefContentLang = findPreference(PrefsActivity.PREF_CONTENT_LANGUAGE);
 
-        ListPreference langsList = findPreference(PrefsActivity.PREF_CONTENT_LANGUAGE);
-        if (entries.size() > 1){
-            langsList.setEntries( entries.toArray(new CharSequence[0]) );
-            langsList.setEntryValues( entryValues.toArray(new CharSequence[0]) );
+        if (langs.size() > 1) {
+            List<String> langCodes = langs.stream().map(Lang::getLanguage).collect(Collectors.toList());
+            Map<String, String> langNames = mapLangCodesToNames(langCodes);
+            prefContentLang.setEntries(langNames.keySet().toArray(new String[0]));
+            prefContentLang.setEntryValues(langNames.values().toArray(new String[0]));
+
             liveUpdateSummary(PrefsActivity.PREF_CONTENT_LANGUAGE);
-        }
-        else{
-            getPreferenceScreen().removePreference(langsList);
+        } else {
+            getPreferenceScreen().removePreference(prefContentLang);
         }
 
     }
+
 
     @Override
     protected boolean onPreferenceChangedDelegate(Preference preference, Object newValue) {
