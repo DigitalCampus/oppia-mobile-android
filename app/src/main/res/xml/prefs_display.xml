@@ -10,7 +10,7 @@
         app:allowDividerBelow="true"
         app:icon="@drawable/ic_settings_language"
         android:key="prefLanguage"
-        android:title="@string/prefLanguage" >
+        android:title="@string/prefContentLanguage" >
     </ListPreference>
 
     <ListPreference

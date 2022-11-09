@@ -86,7 +86,7 @@
 	<string name="prefAdvanced">اعلیٰ درجے کی ترتیبات</string>
 	<string name="prefBackgroundDataConnect">Background activity tracker</string>
 	<string name="prefBackgroundDataConnect_summary">Send activity logs even when this application isn\'t running</string>
-	<string name="prefLanguage">پسندیدہ زبان</string>
+	<string name="prefContentLanguage">پسندیدہ زبان</string>
 	<string name="prefHighlightCompleted">Highlight completed activities</string>
 	<string name="prefServer">سرور</string>
 	<string name="prefServerTimeoutConnection">Connection timeout</string>

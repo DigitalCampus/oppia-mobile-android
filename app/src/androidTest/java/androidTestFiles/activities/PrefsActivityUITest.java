@@ -110,7 +110,7 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefDisplay_title)),
                             click()));
 
-            onView(withText(R.string.prefLanguage)).check(matches(isDisplayed()));
+            onView(withText(R.string.prefContentLanguage)).check(matches(isDisplayed()));
         }
     }
 
@@ -125,7 +125,7 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-            onView(withText(R.string.prefLanguage)).check(doesNotExist());
+            onView(withText(R.string.prefContentLanguage)).check(doesNotExist());
         }
     }
 

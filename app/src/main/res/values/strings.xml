@@ -98,7 +98,7 @@
     <string name="prefAdvanced">Advanced settings</string>
     <string name="prefBackgroundDataConnect">Background activity tracker</string>
     <string name="prefBackgroundDataConnect_summary">Send activity logs even when this application isn\'t running</string>
-    <string name="prefLanguage">Preferred Language</string>
+    <string name="prefContentLanguage">Preferred content language</string>
     <string name="prefHighlightCompleted">Highlight completed activities</string>
     <string name="prefServer">Server</string>
     <string name="prefServer_notChecked">Unchecked URL</string>

@@ -74,7 +74,7 @@
  	<string name="no_courses">No hay ningún curso instalado</string>
  	
  	<string name="prefServer">Servidor</string>
-	<string name="prefLanguage">Idioma preferido</string>
+	<string name="prefContentLanguage">Idioma de contenido preferido</string>
 	<string name="prefAdvanced">Configuración avanzada</string>
 	<string name="prefServerTimeoutConnection">Tiempo de espera de conexión superado</string>
 	<string name="prefServerTimeoutResponse">Tiempo de espera de respuesta superado</string>

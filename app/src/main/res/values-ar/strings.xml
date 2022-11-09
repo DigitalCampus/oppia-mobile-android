@@ -91,7 +91,7 @@
 <string name="prefAdvanced">الإعدادات المتقدمة</string>
 <string name="prefBackgroundDataConnect">رصد مراقبة الأنشطة في الخلفية</string>
 <string name="prefBackgroundDataConnect_summary">أرسل سجل الأنشطة حتى إذا كان التطبيق في وضع توقف مؤقت</string>
-<string name="prefLanguage">اللغة المفضلة</string>
+<string name="prefContentLanguage">لغة المحتوى المفضلة</string>
 <string name="prefHighlightCompleted">إبراز الأنشطة المنتهية</string>
 <string name="prefServer">الخادم</string>
 <string name="prefServerTimeoutConnection">مهلة الإتصال</string>
