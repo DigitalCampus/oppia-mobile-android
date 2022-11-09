@@ -98,7 +98,7 @@
     <string name="prefAdvanced">ተወሰኽቲ ኣጠቓቕማ</string>
     <string name="prefBackgroundDataConnect">ውሽጣዊ ንጥፈታት መከታተሊ</string>
     <string name="prefBackgroundDataConnect_summary">ዋላ እዚ መተግበሪ ኣይከፈት ንጥፈታት ይለኣኸለይ</string>
-    <string name="prefLanguage">ናይ ቋንቋ ምርጫይ</string>
+    <string name="prefContentLanguage">ተመራጺ ቋንቋ ትሕዝቶ</string>
     <string name="prefHighlightCompleted">ዝተፈፀሙ ንጥፈታት ኣጕልህ</string>
     <string name="prefServer">ኣንጋዲ</string>
     <string name="prefServer_notChecked">ዘይተረጋገፀ ኣድራሻ</string>
