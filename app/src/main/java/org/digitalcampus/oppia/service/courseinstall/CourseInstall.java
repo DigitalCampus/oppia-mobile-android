@@ -45,6 +45,8 @@ import java.util.Locale;
 
 import androidx.preference.PreferenceManager;
 
+import com.squareup.picasso.Picasso;
+
 public class CourseInstall {
 
     public interface CourseInstallingListener{
@@ -189,6 +191,8 @@ public class CourseInstall {
         new GamificationServiceDelegate(ctx)
                 .registerCourseDownloadEvent(c);
 
+        invalidateImagesCache(c);
+
         long estimatedTime = System.currentTimeMillis() - startTime;
         Log.d(TAG, "MeasureTime - " + c.getShortname() + ": " + estimatedTime + "ms");
         Log.d(TAG, shortname + " succesfully downloaded");
@@ -243,4 +247,15 @@ public class CourseInstall {
 
     }
 
+    // Invalidate course icons from Picasso's cache
+    private static void invalidateImagesCache(CompleteCourse c) {
+        File imagesDir = new File(c.getLocation() + File.separator + "images");
+        File[] images = imagesDir.listFiles();
+        if (images != null) {
+            for (File image : images) {
+                Picasso.get().invalidate(image);
+            }
+        }
+        Picasso.get().invalidate(c.getImageFileFromRoot());
+    }
 }
