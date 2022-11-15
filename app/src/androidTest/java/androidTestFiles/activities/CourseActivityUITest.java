@@ -261,7 +261,7 @@ public class CourseActivityUITest extends DaggerInjectMockUITest {
                     .check(matches(isDisplayed()));
 
             openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
-            onView(anyOf(withText(R.string.menu_language), withId(R.id.menu_language))).perform(click());
+            onView(anyOf(withText(R.string.change_content_language), withId(R.id.menu_language))).perform(click());
 
             when(prefs.getString(eq(PrefsActivity.PREF_CONTENT_LANGUAGE), anyString())).thenReturn("fi");
             onView(withText("suomi")).perform(click());

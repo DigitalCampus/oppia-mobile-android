@@ -7,7 +7,6 @@
     <string name="about_not_logged_in">ናፍቱ መተግበሪ ኣይተኣትወን</string>
 
     <string name="menu_download">ኮርስ ኣውርድ</string>
-    <string name="menu_language">ቋንቋ ቀይር</string>
     <string name="menu_change_text_size">መጠን ፅሑፍ ቀይር</string>
     <string name="menu_settings">ኣጠቓቕማ</string>
     <string name="menu_privacy">ስትረት መረዳእታ</string>
@@ -322,7 +321,7 @@
 
     <string name="remember_username_complete">ስም ተጠቃማይ መዘኻኸሪ ኢሜል ተልኢኹ።</string>
 
-    <string name="change_language">ቋንቋ ቐይር</string>
+    <string name="change_content_language">ቋንቋ ቐይር</string>
 
     <string name="course_draft">ንድፊ ሕታም</string>
 

@@ -8,7 +8,6 @@
     <string name="app_logo_alt">&companyName; Logo</string>
     
     <string name="menu_download">कोर्स डाउनलोड करें</string>
-    <string name="menu_language">भाषा बदलें</string>
     <string name="menu_settings">सेटिंग</string>
     <string name="menu_about">प्रोग्राम के बारे में जाने</string>
     <string name="menu_help">मदद</string>
@@ -204,7 +203,7 @@
 	<string name="reset_process">पासवर्ड रिसेट हो रहा है  &#8203;</string>
 	<string name="reset_password_complete">आपका पासवर्ड रिसेट हो गया है.\n\nPlease check your email for your new password.</string>
 	
-	<string name="change_language">भाषा बदलें</string>
+	<string name="change_content_language">भाषा बदलें</string>
 	
 	<string name="course_draft">(Draft version)</string>
 	

@@ -12,7 +12,6 @@
     <string name="about_not_logged_in">Not logged in</string>
 
     <string name="menu_download">کورس ڈاؤن لوڈ کریں</string>
-    <string name="menu_language">زبان تبدیل کریں</string>
     <string name="menu_settings">سیٹنگز</string>
     <string name="menu_about">پروگرام کا تعارف</string>
 	<string name="menu_help">مدد</string>
@@ -213,7 +212,7 @@
 	<string name="reset_process">&#8203;پاسورڈ رسےٹ ہو رہا ہے </string>
 	<string name="reset_password_complete">آپ کا پاس ورڈ رسےٹ ہو گیا ہے.\n\nPlease check your email for your new password.</string>
 	
-	<string name="change_language">زبان تبدیل کریں</string>
+	<string name="change_content_language">زبان تبدیل کریں</string>
 	
 	<string name="course_draft">(Draft version)</string>
 	

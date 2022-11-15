@@ -310,7 +310,7 @@ public class UIUtils {
                             Analytics.logException(e);
                             Log.d(TAG, EXCEPTION, e);
                         }
-                    }).setTitle(ctx.getString(R.string.change_language))
+                    }).setTitle(ctx.getString(R.string.change_content_language))
                     .setNegativeButton(ctx.getString(R.string.cancel), (dialog, which) -> {
                         // do nothing
                     }).create();
