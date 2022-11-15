@@ -19,15 +19,13 @@ package org.digitalcampus.oppia.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
+
 import org.digitalcampus.mobile.learning.databinding.FragmentWebviewBinding;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 

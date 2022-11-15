@@ -84,7 +84,7 @@ public class AboutActivity extends AppActivity {
 		super.onStart();
 		initialize();
 
-		String lang = sharedPreferences.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
+		String lang = sharedPreferences.getString(PrefsActivity.PREF_INTERFACE_LANGUAGE, Locale.getDefault().getLanguage());
 		List<Fragment> fragments = new ArrayList<>();
         List<String> titles = new ArrayList<>();
 

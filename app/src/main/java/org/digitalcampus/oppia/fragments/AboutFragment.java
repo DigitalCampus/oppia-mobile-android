@@ -58,7 +58,7 @@ public class AboutFragment extends AppFragment {
 		super.onActivityCreated(savedInstanceState);
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		String lang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
+		String lang = prefs.getString(PrefsActivity.PREF_INTERFACE_LANGUAGE, Locale.getDefault().getLanguage());
 		String url = Storage.getLocalizedFilePath(super.getActivity(), lang, "about.html");
 
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
