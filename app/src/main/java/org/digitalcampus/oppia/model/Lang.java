@@ -85,7 +85,7 @@ public class Lang implements Serializable {
         if (this.getClass() != obj.getClass())
             return false;
 
-        return getLanguage() != null && getLanguage().equals(((Lang) obj).getLanguage());
+        return getLanguage() != null && getLanguage().equalsIgnoreCase(((Lang) obj).getLanguage());
     }
 
     @Override

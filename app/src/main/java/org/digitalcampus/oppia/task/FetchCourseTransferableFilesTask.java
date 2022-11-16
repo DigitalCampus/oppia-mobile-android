@@ -56,7 +56,7 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Void, Boolean, V
     private void fetchCourseBackups(){
         List<Course> courses = DbHelper.getInstance(ctx).getAllCourses();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        String lang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
 
         for (Course course : courses){
             File backup = CourseInstall.savedBackupCourse(ctx, course.getShortname());

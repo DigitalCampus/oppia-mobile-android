@@ -523,7 +523,7 @@ public class MainActivityUITest extends MockedApiEndpointTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
             openDrawer();
-            onView(withText(R.string.menu_language)).check(matches(isDisplayed()));
+            onView(withText(R.string.change_content_language)).check(matches(isDisplayed()));
         }
     }
 
@@ -540,7 +540,7 @@ public class MainActivityUITest extends MockedApiEndpointTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
             openDrawer();
-            onView(withText(R.string.change_language)).check(doesNotExist());
+            onView(withText(R.string.change_content_language)).check(doesNotExist());
         }
     }
 
@@ -556,7 +556,7 @@ public class MainActivityUITest extends MockedApiEndpointTest {
             openDrawer();
             performClickDrawerItem(R.id.menu_language);
 
-            onView(withText(R.string.change_language)).check(doesNotExist());
+            onView(withText(R.string.change_content_language)).check(doesNotExist());
         }
     }
 
@@ -576,7 +576,7 @@ public class MainActivityUITest extends MockedApiEndpointTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
             openDrawer();
-            onView(withText(R.string.change_language)).check(doesNotExist());
+            onView(withText(R.string.change_content_language)).check(doesNotExist());
         }
     }
 

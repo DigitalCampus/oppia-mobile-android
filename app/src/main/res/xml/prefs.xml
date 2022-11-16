@@ -6,7 +6,7 @@
 
     <ListPreference
         android:key="prefLanguage"
-        android:title="@string/prefLanguage" >
+        android:title="@string/prefContentLanguage" >
     </ListPreference>
 
     <ListPreference

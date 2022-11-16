@@ -6,9 +6,6 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.RowScorecardBinding;
@@ -32,7 +29,7 @@ public class ScorecardsGridAdapter extends RecyclerViewClickableAdapter<Scorecar
         this.context = context;
         this.courses = courses;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        prefLang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
     }
 
     @Override

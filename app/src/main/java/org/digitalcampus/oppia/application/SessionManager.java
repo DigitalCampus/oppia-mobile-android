@@ -19,7 +19,6 @@ package org.digitalcampus.oppia.application;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -29,11 +28,9 @@ import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
-import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.task.PreloadAccountsTask;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,7 +50,7 @@ public class SessionManager {
 
     private static final List<String> USER_STRING_PREFS = Arrays.asList(
             PrefsActivity.PREF_PHONE_NO,
-            PrefsActivity.PREF_LANGUAGE,
+            PrefsActivity.PREF_CONTENT_LANGUAGE,
             PrefsActivity.PREF_NO_SCHEDULE_REMINDERS,
             PrefsActivity.PREF_TEXT_SIZE,
             PrefsActivity.PREF_GAMIFICATION_POINTS_ANIMATION,

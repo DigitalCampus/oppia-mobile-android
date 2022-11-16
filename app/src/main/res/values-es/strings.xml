@@ -7,7 +7,6 @@
     <string name="app_logo_alt">Logo &companyName;</string>
     
     <string name="menu_download">Gestionar cursos</string>
-    <string name="menu_language">Cambiar idioma</string>
     <string name="menu_settings">Ajustes</string>
     <string name="menu_about">Acerca de</string>
     <string name="menu_help">Ayuda</string>
@@ -74,7 +73,8 @@
  	<string name="no_courses">No hay ningún curso instalado</string>
  	
  	<string name="prefServer">Servidor</string>
-	<string name="prefLanguage">Idioma preferido</string>
+	<string name="prefContentLanguage">Idioma de contenido preferido</string>
+    <string name="prefInterfaceLanguage">Idioma de interfaz</string>
 	<string name="prefAdvanced">Configuración avanzada</string>
 	<string name="prefServerTimeoutConnection">Tiempo de espera de conexión superado</string>
 	<string name="prefServerTimeoutResponse">Tiempo de espera de respuesta superado</string>
@@ -236,7 +236,7 @@
 	<string name="register_process">Identificando</string>
 	<string name="register_complete">Registro completo</string>
 	
-	<string name="change_language">Cambiar idioma</string>
+	<string name="change_content_language">Cambiar idioma de contenido</string>
 
     <string name="search.result_summary">%1$d resultados para \"%2$s\"</string>
     <string name="search.message.searching">Buscando…</string>

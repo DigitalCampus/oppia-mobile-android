@@ -10,7 +10,6 @@
     <string name="about_not_logged_in">Non connecté in</string>
 
     <string name="menu_download">Télécharger des cours</string>
-    <string name="menu_language">Choisir la langue</string>
     <string name="menu_settings">Paramètres</string>
     <string name="menu_about">À propos</string>
     <string name="menu_help">Aide</string>
@@ -90,7 +89,7 @@
     <string name="prefAdvanced">Paramètres avancés</string>
     <string name="prefBackgroundDataConnect">Suivi d\'activité en arrière-plan</string>
     <string name="prefBackgroundDataConnect_summary">Envoyer le journal d\'activités même lorsque l\'application est en mode de veille</string>
-    <string name="prefLanguage">Langue préférée</string>
+    <string name="prefContentLanguage">Langue de contenu préférée</string>
     <string name="prefHighlightCompleted">Mettre en surbrillance les activités terminées</string>
     <string name="prefServer">Serveur</string>
     <string name="prefServerTimeoutConnection">Délai de connexion</string>
@@ -255,7 +254,7 @@
     <string name="reset_process">Réinitialisation du mot de passe …</string>
     <string name="reset_password_complete">Votre mot de passe a bien été réinitialisé.\n\nVeuillez consulter votre email pour obtenir votre nouveau mot de passe.</string>
 
-    <string name="change_language">Changer la langue</string>
+    <string name="change_content_language">Changer la langue</string>
 
     <string name="course_draft">(Brouillon)</string>
 

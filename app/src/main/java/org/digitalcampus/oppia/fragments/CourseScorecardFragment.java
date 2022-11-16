@@ -127,7 +127,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         ArrayList<Activity> quizActs = (ArrayList<Activity>) db.getCourseQuizzes(course.getCourseId());
         ArrayList<QuizStats> quizzes = new ArrayList<>();
 
-        prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        prefLang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
 
         for (Activity a: quizActs){
         	// get the max score for the quiz for the user

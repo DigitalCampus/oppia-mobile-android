@@ -8,7 +8,6 @@
     <string name="about_logged_in">Kirjautunut sisään nimellä: %1$s</string>
     <string name="about_not_logged_in">Ei kirjautuneena</string>
     <string name="menu_download">Lataa Kursseja</string>
-    <string name="menu_language">Vaihda kieltä</string>
     <string name="menu_settings">Asetukset</string>
     <string name="menu_search">Etsi</string>
     <string name="login_password_title">Salasana</string>
@@ -37,7 +36,7 @@
     <string name="login_username_title">Käyttäjätunnus</string>
     <string name="close">Sulje</string>
     <string name="download">Lataa</string>
-    <string name="change_language">Vaihda Lieltä</string>
+    <string name="change_content_language">Vaihda Lieltä</string>
     <string name="downloaded">Ladattu</string>
     <string name="error">Virhe</string>
     <string name="error_resource_not_found">Tiedosto: \'%1$s\' ei löytynyt.</string>

@@ -32,7 +32,6 @@ import android.os.Bundle;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.BulletSpan;
 import android.util.Log;
 import android.view.Menu;
@@ -284,7 +283,7 @@ public class UIUtils {
         int prefLangPosition = -1;
         int i = 0;
 
-        String prefLanguage = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        String prefLanguage = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
         for (Lang lang : languagesList) {
             Locale locale = new Locale(lang.getLanguage());
             String langDisp = locale.getDisplayLanguage(locale);
@@ -302,7 +301,7 @@ public class UIUtils {
                     .setSingleChoiceItems(arr, prefLangPosition, (dialog, whichButton) -> {
                         String newLang = languagesList.get(whichButton).getLanguage();
                         Editor editor = prefs.edit();
-                        editor.putString(PrefsActivity.PREF_LANGUAGE, newLang);
+                        editor.putString(PrefsActivity.PREF_CONTENT_LANGUAGE, newLang);
                         editor.apply();
                         dialog.dismiss();
                         try {
@@ -311,7 +310,7 @@ public class UIUtils {
                             Analytics.logException(e);
                             Log.d(TAG, EXCEPTION, e);
                         }
-                    }).setTitle(ctx.getString(R.string.change_language))
+                    }).setTitle(ctx.getString(R.string.change_content_language))
                     .setNegativeButton(ctx.getString(R.string.cancel), (dialog, which) -> {
                         // do nothing
                     }).create();

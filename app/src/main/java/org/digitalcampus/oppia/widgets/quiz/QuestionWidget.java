@@ -53,7 +53,7 @@ public abstract class QuestionWidget {
 	protected QuestionWidget(Activity activity, View v, ViewGroup container, int layout){
 		ctx = new ContextThemeWrapper(activity, R.style.Oppia_Theme);
 		prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-		currentUserLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+		currentUserLang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
 		view = v;
 
 		LinearLayout ll = v.findViewById(R.id.quiz_response_widget);

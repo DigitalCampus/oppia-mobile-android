@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appName "OppiaMobile"><!ENTITY companyName "Digital Campus"> ]>
+<resources>
+    <string name="app_name">&appName;</string>
+
+    <string name="app_logo_alt">&companyName; Logo</string>
+    <string name="about_logged_in">ብ %1$s ፡ ናፍቲ መተግበሪ ተኣትዩ</string>
+    <string name="about_not_logged_in">ናፍቱ መተግበሪ ኣይተኣትወን</string>
+
+    <string name="menu_download">ኮርስ ኣውርድ</string>
+    <string name="menu_change_text_size">መጠን ፅሑፍ ቀይር</string>
+    <string name="menu_settings">ኣጠቓቕማ</string>
+    <string name="menu_privacy">ስትረት መረዳእታ</string>
+    <string name="menu_about">ብዛዕባ and ሓገዝ</string>
+    <string name="menu_help">ሓገዝ</string>
+    <string name="menu_logout">ካብ መተግበሪ ምውፅእ</string>
+    <string name="menu_read_aloud">ብዓውታ ኣንብብ</string>
+    <string name="menu_return_to_courses">ናብ ኮርስታት ተመለስ</string>
+    <string name="menu_scorecard">ካርድ ነጥቢ</string>
+    <string name="menu_search">መአለሺ</string>
+    <string name="menu_stop_read_aloud">ምንባብ ኣቋርፅ</string>
+    <string name="menu_sort_by">መደርደሪ</string>
+    <string name="menu_sort_by_course">ብ ኮርስ ደርድረለይ</string>
+    <string name="menu_sort_by_filename">ብ ሽም ፋይል ደርድረለይ</string>
+    <string name="menu_select_all">ኩሎም ምረፅ</string>
+
+    <string name="service_tracker">&appName; ግልጋሎት መከታተሊ</string>
+
+    <string name="fragment_welcome_title">&appName;እንኳዕ ደሓን መፃኹም </string>
+    <string name="fragment_welcome_desc">&appName;ናይ ሞባይል መተግበሪ መምሃሪ ብ ፅሑፍ፣ ቪድዮን ትምህርታዊ ሕቶን እዩ።\n\n\'Oppia\' means \'to learn\' in Finnish</string>
+    <string name="fragment_welcome_login_info">&appName;ንኽትጥቀሙ, ተመዝጊብካ ናይ ይሕለፍ ኮድ ክትወስድ ይግባእ.</string>
+    <string name="fragment_welcome_privacy_info">ብምምዝጋብን መእተዊ ኮድ ብምሃብ,<a href="">ንናይ ናይ ተጠቃምነትን ስትረትን ፖሊሲ ከምዝተስማዕማዕኻ ግለፅ</a>.</string>
+    <string name="fragment_welcome_powered_by">ብ<a href="https://digital-campus.org/oppiamobile/" >ዝተሰርሐ OppiaMobile</a></string>
+
+    <string name="tab_title_about">ብዛዕባ</string>
+    <string name="tab_title_badges">ባጅ</string>
+    <string name="tab_title_help">ሓገዝ</string>
+    <string name="tab_title_login">እቶ</string>
+    <string name="tab_title_points">ነጥብታት</string>
+    <string name="tab_title_privacy">ፖሊሲ ስትረት </string>
+    <string name="tab_title_terms">ስያመታት ኣገልግሎት</string>
+    <string name="tab_title_register">መዝገብ</string>
+    <string name="tab_title_reset_password">መሕለፍቃል ቀይር</string>
+    <string name="tab_title_remember_username">ዝተረሰዐ ስም ተጠቃሚ</string>
+    <string name="tab_title_scorecard">ካርድ ነጥቢ</string>
+    <string name="tab_title_activity">ንጥፈታት</string>
+    <string name="tab_title_welcome">እንኳዕ ብደሓን መጻእኩም</string>
+
+    <string name="title_about">ብዛዕባ ሓገዝን</string>
+    <string name="title_baseline">መበገሲ መስመር</string>
+    <string name="title_btn_reset_password">መሕለፍቃል ቀይር</string>
+    <string name="title_btn_remember_username">ዝተረሰዐ ስም ተጠቃሚ</string>
+    <string name="title_download_activity">ኮርስ ምምሕዳር</string>
+    <string name="title_activity_course_index">ኮርስ መሐበሪ</string>
+    <string name="title_activity_course">ንጥፈታት</string>
+    <string name="title_course_meta">ብዛዕባ</string>
+    <string name="title_prefs">ኣጠቓቕማ</string>
+    <string name="title_scorecard">ካርድ ነጥቢ</string>
+    <string name="title_tag_select_activity">ምድብ ምረፅ</string>
+    <string name="version">ሕታም: %1$s</string>
+    <string name="title_download_media"> ሚድያ ኣውርድ</string>
+
+    <string name="widget_feedback_submit">ኣእቱ</string>
+    <string name="widget_feedback_submit_title">ግብረመልሲኹም ስለዝሃብኩምና ነመስግን።</string>
+
+    <string name="widget_quiz_next">ቀፂሉ</string>
+    <string name="widget_quiz_prev">ቅድሚኡ</string>
+    <string name="widget_quiz_getresults">ውፅኢት ኣምፅእ</string>
+    <string name="widget_quiz_noanswergiven">ናብ ቀፃሊ ሕቶ ቅድሚ ምኻድኩም መልሲ ናይዚ ሕቶ እዚ ኣቕምጡ</string>
+    <string name="widget_quiz_progress">ሕቶ %1$d / %2$d</string>
+    <string name="widget_quiz_results_score"> %1$./ %%: ነጥቢ ረኺብካ</string>
+    <string name="widget_quiz_results_restart">እዚ ሕቶ ደጊምካ ተፈተን</string>
+    <string name="widget_quiz_continue">ቀፅል &gt;&gt;</string>
+    <string name="widget_quiz_baseline_completed">እዚ ቅድመ ፈተና ስለዝወሰድኩም ነመስግን. ናፍቲ ኮርስ ምቕፃል ይክኣል።</string>
+    <string name="widget_quiz_baseline_goto_course">ናብ ኮርስ ቀፅል &gt;&gt;</string>
+    <string name="widget_quiz_image_caption">እቲ ምስሊ ብምፅቃጥ ዕብይ ብዝበለ መልክዑ ምርኣይ ይከኣል</string>
+    <string name="widget_quiz_media_caption">እቲ ምስሊ ብምፅቃጥ እቲ ቪድዮ ምጅማር ይከኣል</string>
+    <string name="widget_quiz_feedback_response_title">መልሲ መሊስካ: </string>
+    <string name="widget_quiz_feedback_response_skipped">እዚ ሕቶ ዘሊልካዮ.</string>
+    <string name="widget_quiz_feedback_feedback_title">ግብረመልሲ: </string>
+    <string name="widget_quiz_num_questions">%1$d ሕቶታት</string>
+    <string name="widget_quiz_pass_threshold">%1$d%% መሕለፊ ነጥቢ</string>
+    <string name="widget_quiz_unavailable_section">እዚ ሕቶ እዚ ንምምላስ ኣብዚ ብርኪ ዝነበሩ ኩሎም ቅድሚኡ ዝነበሩ ንጥፈታት ክማልኡ ኣለዎም።</string>
+    <string name="widget_quiz_unavailable_course">እዚ ሕቶ እዚ ንምምላስ ኣብዚ ኮርስ ዝነበሩ ኩሎም ቅድሚኡ ዝነበሩ ንጥፈታት ክማልኡ ኣለዎም።You must complete all the previous activities in this course before this quiz becomes available to you.</string>
+    <string name="widget_quiz_unavailable_attempts">ንዚ ሕቶ ዝተፈቐደ መጠን ፈተነ ተወዲኡ</string>
+    <string name="widget_resource_open_file">ክፈት \'%1$s\'</string>
+
+    <string name="course_context_reset">ከም ሓዱሽ ምጅማር</string>
+    <string name="course_context_delete">ኣወግድ</string>
+    <string name="course_context_update_activity">ንጥፈታት ምምሕያሽ</string>
+    <string name="course_context_reset_confirm">ውሳነ ከም ሓዱሽ ምጅማር ብዉነ ድዩ? ኣብዚ ኮርስ ዝነበሩ ንጥፈታት ኩሎም ክድምሰሱ እዮም!</string>
+    <string name="course_context_delete_confirm">ውሳን ምውጋድ እዚ ኮርስ ብዉነ ድዩ? እዚ ኮርስ ካብ ሞባይል ክጠፍእ እዩ።</string>
+
+    <string name="no_courses">ኣብዚ ሐዚ እዋን ዝተፅዓነ ኮርስ የለን</string>
+    <string name="more_courses">ተወሰኽቲ ኮርስታት ኣውርድ</string>
+
+    <string name="prefCurrentVersion">ሕታም: %1$s</string>
+    <string name="prefAdvanced">ተወሰኽቲ ኣጠቓቕማ</string>
+    <string name="prefBackgroundDataConnect">ውሽጣዊ ንጥፈታት መከታተሊ</string>
+    <string name="prefBackgroundDataConnect_summary">ዋላ እዚ መተግበሪ ኣይከፈት ንጥፈታት ይለኣኸለይ</string>
+    <string name="prefContentLanguage">ተመራጺ ቋንቋ ትሕዝቶ</string>
+    <string name="prefHighlightCompleted">ዝተፈፀሙ ንጥፈታት ኣጕልህ</string>
+    <string name="prefServer">ኣንጋዲ</string>
+    <string name="prefServer_notChecked">ዘይተረጋገፀ ኣድራሻ</string>
+    <string name="prefServer_errorTitle">ዘይትኽክለኛ ኣድራሻ</string>
+    <string name="prefServer_errorDescription">ን &appName;
+        ኣንጋዲ ዘብፅሕ ትኽክለኛ ኣድራሻ ተወከስ</string>
+    <string name="prefServerTimeoutConnection"> ግዜ ምሕላፍ ርክክብ</string>
+    <string name="prefServerTimeoutResponse"> ግዜ ምሕላፍ መልሲ ኣንጋዲ</string>
+    <string name="prefServerIncompatible">ዘይቃዶ ሕታም (ሕሉፍ)</string>
+    <string name="prefInt_errorTitle">ዘይቃዶ ዋጋ</string>
+    <string name="prefInt_errorDescription">ትኽክለኛ ቁፅሪ የእትዉ</string>
+    <string name="prefShowCourseDescription">ናይ ኮርስ መግለፂ ኣርእይ</string>
+    <string name="prefShowProgressBar">መጠን ገስጋስ ኣርእይ</string>
+    <string name="prefShowSectionNumbers">ቁፅሪ ብርክታት ኣርእይ</string>
+    <string name="prefTextSize">መጠን ፅሑፍ</string>
+    <string name="prefUser">ስም ተጠቃሚ</string>
+    <string name="prefUserHint">(ዝንበብ ጥራሕ)</string>
+    <string name="prefLogoutEnabled">ካብ ዋና ገፅ ጀሚርካ ንምውፃእ ፍቐድ</string>
+    <string name="prefDeleteCourseEnabled">ኮርስታት ንምውጋድ ፍቐድ</string>
+    <string name="prefDisableNotifications">መስታወሲ ዘይቁቡል መግበሪ</string>
+    <string name="prefNotifications_title">መስታወስቲ</string>
+    <string name="prefSecurity_title">ድሕንነት</string>
+    <string name="prefAdvanced_title">ተወሰኽቲ</string>
+    <string name="prefDisplay_title">መራእይቲ</string>
+    <string name="prefNotifications_description">ናይ ስይስተም መስታወስትን ናይ መተግበሪ መጻወቲ መልእኽትታት</string>
+    <string name="prefSecurity_description">ካብ ስክሪን ብምብጋስ ውሕስና ፍሉይ ተጠቃምነት ን ዝተፈለዩ ንጥፈታት ምፍቃድን ዘይምፍቃድን</string>
+    <string name="prefAdvanced_description">ተወሰኽቲ ቴክኒካዊ ኣጠቓቕማ</string>
+    <string name="prefDisplay_description">ትርኢት ትሕዝቶታትን ኮርስታትን ተቖፃፀር </string>
+
+    <string name="prefAdminProtection">ተግባራት ዋና ተጠቃሚ ብ መሕለፊ ቃል ሓሉ</string>
+    <string name="prefAdminPassword">ናይ ዋና ተጠቃሚ መሕለፊ ቃል ቀይር</string>
+    <string name="prefRemoteAdminEnabled">ዋና ተጠቃምነት ካብ ግዳም ፍቐድ</string>
+    <string name="prefSectionSystemNotifs">ሲስተም ውከሳ</string>
+    <string name="prefSectionGamification">ፍፃመ ፀዎታታት</string>
+    <string name="prefShowGamificationEvents">ፍፃመ ፀዎታታት ኣርእይ</string>
+    <string name="prefDownloadEnabled">ካብ ዋና ገፅ ኮርስ ንምውራድ ምፍቃድ</string>
+    <string name="prefChangeLanguageEnabled">ካብ ዋና ገፅ ቋንቋ ንምቕያር ምፍቃድ</string>
+    <string name="prefStartCourseIndexCollapsed">ብርክታት ብምዕፃፍ ኮርስ ኣጀምር</string>
+    <string name="prefAnimationTypeGamificationPoints">ነጥብታት ፀዎታታትን ዓይነት ምስላዊ ምንቅስቓሳትን</string>
+    <string name="prefGamificationPointsViewTypeFullAnimationSound">ምሉእ ምስላዊ ምንቅስቓስ ምስ ድምፂ</string>
+    <string name="prefGamificationPointsViewTypeFullAnimation">ምሉእ ምስላዊ ምንቅስቓስ</string>
+    <string name="prefGamificationPointsViewTypeSimpleAnimation">ቀሊል ምስላዊ ምንቅስቓስ</string>
+    <string name="prefGamificationPointsViewTypeNone">ዋላ ሓደ</string>
+    <string name="prefDurationAnimationTypeGamificationPointsView">ገደብ ምስላዊ ምንቅስቓስ</string>
+    <string name="prefDurationAnimation_summary">ነጥብታት ፀዎታታትን ዓይነት ምስላዊ ምንቅስቓሳትን ኣብ ምስሊ ዝፀንሐሉ ግዜ (ብ ሰኮንዳት)</string>
+
+    <string name="prefSectionReminder">ኮርስ ከምዘይተወድአ መስታወሲ</string>
+    <string name="prefCoursesReminderEnabled">መዘኻኸሪ መወከሲ ምፍቃድEnable reminder notifications</string>
+    <string name="prefCoursesReminderIntervalTitle">ገደብ መዘኻኸሪ</string>
+    <string name="prefCoursesReminderDaysTitle">መዘኻኸሪ መዓልትታት</string>
+    <string name="prefCoursesReminderTimeTitle">መዘኻኸሪ ግዜታት</string>
+
+    <!-- Strings relative to Storage -->
+    <string name="prefStorageLocation">መኽዝን ቦታ</string>
+    <string name="prefStorageOptionInternal">ውሽጣዊ</string>
+    <string name="prefStorageOptionExternal">ግዳማዊ</string>
+    <string name="moving_storage_location">ፋይላት ናብ ሓዱሽ መኽዝን ቦታ ምውሳድ</string>
+    <string name="move_storage_completed">መኽዝን ቦታ መሊኡ</string>
+    <string name="storageNonRemovable">ዘይንቀሳቐስ መኽዝን</string>
+    <string name="storageRemovable">ተንቀሳቓሲ SD Card</string>
+    <string name="storageAccessNotGranted">ፍቓድ ሜሞሪ ካርድ ኣይተውሃበን</string>
+    <string name="storageAccess_help1">ካብ Android 5 ጀሚሩ ናብ ደጋዊ ሜሞሪ ካርድ ኦፊሴላዊ መንገዲ መፅሓፊ ኣሎ።መተግበርታ ኣብ ናይ ግዳማዊ ሜሞሪ ናይ ምፅሕእፍ ፍቓድ ን ተጠቃሚ ክሓቱ ይግብኦም። ሲስተም ፎልደር መምረፂ ይኽፈት፣ ደሓር እቲ ግዳማዊ ሜሞር ክትመርፅ ይግባእ።</string>
+    <string name="storageAccess_help2">እቲ ዝርርብ ባዶ እንድሕር ድኣ ኾይኑን ምንም ተመረፅቲ ኣፍቲ ፀጋማይ ተስሓቢ፣ መጀመርታ ናፍቲ መማረፂ ብምኻድ ነቲ ሲስተም ግዳማዊ ሚሞሪ ምረፅ.</string>
+    <string name="storageAccess_help3">ድሓር, ኣፍቲ ግዳማዊ ሚሞሪ ይመረፅ እሞ ናይቲ ፎልደር ቅርፂ ኣስተኻኽል። ኣፍቲ ቅሩፅ ምስሊ ክልቲኦም \"Internal storage\" ሜሞሪ ካርድ ትሪኡ። እቲ ሜሞሪ ካርድ ብ ዝተፈለይ ሽም ክኸውን ይኽእል እዩ። ን ኣብነት \"Kingston\". እዚ ማለት ሽም ናይቲ ግዳማዊ ሜሞሪ እዩ።</string>
+    <string name="storageAccess_help4">እቲ ክላስ ምረፅ. ናፍቲ ቀፃሊ ብርኪ ኣይትቐፅል. እቲ ዋና ፎልደር ናይቲ ግዳማዊ ካርድ ክምረፅ ኣለዎ።እዚ ኣገዳሲ እዩ።</string>
+    <string name="storageAccess_help5">ድሕሪ ምምራፅ \"Select SD card\"  ደሓር ናፍቲ መተግበሪ ክትምለስ ይግባእ። እቲ መተግበሪ ናብ ግዳማዊ ሚሞሪ ከምዝፅሕፍ የረጋግፅን።</string>
+
+    <string name="notification_course_update_title">ሓዱሽ ምምሕያሽ ኮርስ</string>
+    <string name="notification_course_update_text">ነቶም ኮርስታት ምምሕያሻት ተገርሎም ኣሎ.</string>
+
+    <string name="notification_course_download_title">ዝተራገፉ ኮርስታት</string>
+    <string name="notification_course_download_text">ብተጠቃሚ ክራገፉ ዝኽእሉ ኮርስታት</string>
+
+    <string name="title_login">እተው</string>
+    <string name="login_username_title">ስም ተጠቃሚ</string>
+    <string name="login_password_title">መሕለፊ ቃል</string>
+    <string name="title_register">ተመዝገብ</string>
+
+    <string name="register_form_username_title">ስም ተጠቃሚ</string>
+    <string name="register_form_email_title">ኢሜል ኣድራሻ</string>
+    <string name="register_form_firstname_title">ሽም</string>
+    <string name="register_form_jobtitle_title">ስራሕ</string>
+    <string name="register_form_lastname_title">ሽም ኣቦ</string>
+    <string name="register_form_organisation_title">ትካል</string>
+    <string name="register_form_password_title">መሕለፊ ቃል</string>
+    <string name="register_form_password_again_title">መሕለፊ ቃል (ድገም)</string>
+    <string name="register_form_phoneno_title">ቑፅሪ ስልኪ</string>
+    <string name="register_btn_text">ተመዝገብ</string>
+
+    <string name="reset_password_field">ሽም ተጠቃሚ ወይ ኢሜል</string>
+    <string name="reset_password_description">ናይ ተጠቃሚ ስም ወይ ኢሜል ኣብ ታሕቲ ይእተው ቀፂሉ ድማ ኢሜል ምስ መሕለፊ ቁፅሪ መስርሒ ይለኣኽ።</string>
+
+    <string name="remember_username_description">ኢሜል ኣብታሕቲ ኣእትው ቀፂሉ ድማ ተጠቃሚ ስም ዘስታው ኢመል ይልእኽ።</string>
+    <string name="yes">እወ</string>
+    <string name="no">ኣይፋል</string>
+    <string name="close">ዕፆ</string>
+    <string name="error">ስሕተት</string>
+    <string name="info">ሓበሬታ</string>
+    <string name="warning">መጠንቀቕታ</string>
+    <string name="loading">ኣብ ምምፅእ</string>
+    <string name="ok">እሺ</string>
+    <string name="cancel">ኣቋርፅ</string>
+    <string name="logout"></string>
+    <string name="feedback">ግብረመልሲ</string>
+    <string name="download">ኣራግፍ</string>
+    <string name="downloaded">ዝተራገፉ</string>
+    <string name="open">Open</string>
+    <string name="storage_default">ንቡር</string>
+
+    <string name="alert_pretest">ቅድመ ፈተና</string>
+    <string name="alert_pretest_summary">እዚ ኮርስ ቅድሚ ምጅማር ዝውሰድ ቅድመ ፈተና ኣለዎ።</string>
+
+    <string name="tag_label">%1$s (%2$d)</string>
+    <string name="alt_activity_icon">ንጥፈት icon</string>
+
+    <string name="publisher">መሐተሚ:</string>
+    <string name="update">ኣመሓይሽ</string>
+    <string name="installed">ዝተፅዓነ</string>
+    <string name="install">ፀዓን</string>
+    <string name="courses_install_pending">ዘይተፅዓኑ ሓደሽቲ ኮርስታት ኣለው።</string>
+
+    <string name="download_starting">ምውራድ ጀሚሩ</string>
+    <string name="downloading">ኣብ ምውራድ &#8230;</string>
+    <string name="download_complete">ምውራድ ተዛዚሙ</string>
+
+    <string name="updating">ኣብ ምምይሕያሽ &#8230;</string>
+
+    <string name="installing_course">ኣብ ምፅዓን: %1$s</string>
+    <string name="install_complete">ምፅዓን ተዛዚሙ</string>
+
+    <string name="install_course_complete">%1$s: ተፅዒኑ</string>
+
+    <string name="info_scan_media_start">ኣለሻ ሚድያ</string>
+    <string name="info_scan_media_checking">ኣብ ምምስኻር ን: %1$s</string>
+    <string name="info_scan_media_missing">ሓደ ሓደ ናይ ሚድያ ትሕዝቶታት ናይዚ ኮርስ የለዉን</string>
+    <string name="info_scan_course_media_missing">ሓደ ሓደ ናይ ሚድያ ትሕዝቶታት ኣብዚ ኮርስ የለዉን.</string>
+
+    <string name="info_upgrading"> ናብ %1$s ምዕባይ</string>
+    <string name="course_updating">ንጥፈታት ኮስር ምምሕያሽ…</string>
+    <string name="course_updating_success">\'%1$s\': ምምሕያሽ ንጥፈታት ኮርስ ብ ዕዊት ተዛዚሙ</string>
+    <string name="course_updating_error">\'%1$s\': ስሕተት ኣብ ምምሕያሽ ኮርስ</string>
+    <string name="course_deleting">ኮርስ ኣብ ምድምሳስ…</string>
+    <string name="course_deleting_success">ኮርስ ምድምሳስ ብ ዕዉት ተዛዚሙ</string>
+    <string name="course_deleting_error">ስሕተት ኣብ ምድምሳስ ኮርስ</string>
+    <string name="info.startup.preloaded_accounts">ዝተዘጋጀው %1$d ሓደሽቲ ተጠቀምቲ.</string>
+
+    <string name="loading_courses">ኮርስ ኣብ ምምፃእ</string>
+    <string name="loading_points">ነጥብታት ኣብ ምምፃእ &#8230;</string>
+
+    <string name="badges.loading">ባጅ ኣብ ምምፃእ &#8230;</string>
+    <string name="badges.empty_state">ክሳዕ ሐዚ ባጅ የለን. ናይ ፈለማ ባጅ ንምርካብ ሓድ ሙሉእ ኮርስ ብ ዕውት መገዲ ይዛዘም።</string>
+    <string name="badges.award_method.criteria">ባጅ መርከቢ ረቛሒ: </string>
+    <string name="badges.award_method.final_quiz">ናይ መዛዘሚ ፈተና ጥራሕ ምውሳድን ምሕላፍን ጥራሕ የድሊ</string>
+    <string name="badges.award_method.all_quizzes_plus_percent">ኩሎም ፈተናታን ምውሳድን ምሕላፍን የድሊ, ካብ ኩሎም ንጥፈታት እቶም %1$d%% ብዕዊት ተዛዞሞም።</string>
+    <string name="badges.award_method.all_quizzes">ኩሎም ፈተናታን ክውሰዱን ክሕለፉን ይግባእ።</string>
+    <string name="badges.award_method.all_activities">ሚድያ ምርኣይን ኩሎም ፈተናታት ምሕላፍን ሓዊሱ ኩሎም ንጥፈታት ብ ዕውት መንገዲ ክዛዘሙ ይግባእ።</string>
+
+    <string name="scan_media_download_button">ኣውርድ</string>
+    <string name="success_media_download">ትሕዝቶ ሚድያ: \'%1$s\' ብ ዕውት ወሪዱ.</string>
+    <string name="media_file_size">%1$.1fMb</string>
+    <string name="missing_media_download_selected">ምምራፅ ንዝወርድ</string>
+    <string name="missing_media_stop_selected">ዝተመረፀ ንምግዳፍ</string>
+    <string name="missing_media_unselect_all">ኩሎም ኣይትምረፅ</string>
+    <string name="notification_media_title">ምሕደራ ሚድያ፥&appName;</string>
+    <string name="notification_media_subject">ኩሎም ትሕዝቶታ ሚድያ ብ ዕውት ወሪዶም</string>
+
+    <string name="error_connection">ስሕተት ኣብ ምርካብ ኣገልጋሊ. ኢንተርኔት ከምዘሎ ብምርግጋፅ ተደጊሙ ይሞከር።</string>
+    <string name="error_connection_required">እዚ ገፅ እዚ ንምርኣይ ኢንተርኔት የድሊ። ዋይፋይ ወይ ሞባይል ኢንተርኔት ንምኽፋት ደጊምካ ይፈተን።</string>
+    <string name="error_connection_needed">እዚ ተግባር ንምፍፃም ኢንተርኔት የድሊ። ኢንተርኔት ክህሉ ከሎ ደጊምካ ይፈተን.</string>
+    <string name="error_connection_ssl">Eብምኽንያት ፀገም SSL ዝተፈጠረ ስሕተት ርክብ. ናይ &appName; host ከምዘሎ ኣርጋግፅ
+        ናይ ሞባይል ሰዓትን ግዘን ትኽክል ሙኳኑ ፍለጥ</string>
+    <string name="error_connection_timeout">ርክብ ምስ መገልገሊ ግዚኡ ሓሊፍዎ!. ኢንተርኔት ምህላው ተረጋጊፁ ተደጊሙ ይሞከር.</string>
+    <string name="error_installing_course">%1$s: ዘይዕዉት ምፅዓን</string>
+    <string name="error_latest_already_installed">%1$s: ሓዱሽ ሕታም ተፃዒኑ እዩ</string>
+    <string name="error_login">ዘይትኽክል መጥቀሚ ስም/መሕለፊ ቃል\n ደጊምካ ሞክር</string>
+    <string name="error_media_app_not_found">ነዚ ቪድዮ ዘፃውት መተግበሪ የለን</string>
+    <string name="error_no_username">ስም ተጠቃማይ ይእተው</string>
+    <string name="error_processing_response">ዘይዕዉት ግብረመልሲ</string>
+    <string name="error_quiz_no_questions">ኣብዚ ፈተና እዚ ሕቶታት የለዉን</string>
+    <string name="error_register_no_email">ናይ ኢሜል ኣድራሻ ይእቶ</string>
+    <string name="error_register_password">ናይ መሕለፊ ቃል እንተዋሓደ %1$d ወይ ድማ ልዕሊኡን ቃላት ይኹኑ።</string>
+    <string name="error_register_password_no_match">መሕለፊ ቃል ኣይተቓደወን</string>
+    <string name="error_register_no_firstname">ስም ይፀሓፍ</string>
+    <string name="error_register_no_lastname">ስም ኣቦ ይፀሓፍ</string>
+    <string name="error_register_no_phoneno">ቑፅሪ ስልኪ ይፀሓፍ</string>
+    <string name="error_register_no_username">ስም ተጠቃማይ ይፀሓፍ</string>
+    <string name="error_register_username_spaces">ስም ክፍተት ክህልዎ ኣይፍቀድን</string>
+    <string name="error_register_email">ዘይትኽክል ኢሜል</string>
+    <string name="error_resource_app_not_found">ዝተፅዓነ መተግበሪ ዘሎ ኣይመስል \'%1$s\'. ነዚ ፋይል ክኸፍት ዝኽእል መተግበሪ ይፀዓን።</string>
+    <string name="error_resource_not_found">ፋይል: \'%1$s\' ኣይተረኸበን.</string>
+    <string name="error_preloading_accounts">ስሕተት ኣብ ምምፃእ ሕሉፋት ዛንታታት ካብ csv ፋይል</string>
+    <string name="error_reset_password">መጥቀሚ ስም ወይ ኢሜል ኣይተረኸበን\nተደጊሙ ይፈተን</string>
+    <string name="error_remember_username">ኢሜል ኣይተረኸበን\nእንደገና ይፈተን</string>
+    <string name="no_title_set">ዝተቐመጠ ኣርእስቲ የለን</string>
+
+    <string name="error_insufficient_storage_available">መጠን መኽዝን እኹል ኣይኮነን</string>
+    <string name="error_sdcard">መዘክር ካርድ ኣይተረኽበን - ክርከብ ከሎ እቲ መተግበሪ ደጊሙ ንኽልዓል ይገበር\nThe app will now close.</string>
+    <string name="error_media_not_found"> \'%1$s\': ትሕዝቶ ሚድያ ኣይተረኽበን።</string>
+    <string name="error_media_unsupported">\'%1$s\' ስሩዕ ሚድያ ፋይል ኣይኮከን.</string>
+    <string name="error_download_failure">ዘይተሳኽዐ ምውራድ</string>
+    <string name="error_update_failure">ዘይተሳኽዐ ምምሕያሽ</string>
+    <string name="error_install_failure">ዘይተሳኸዐ ምፅዓን</string>
+    <string name="error_media_download">ሚድያ ንምውራድ ኣይተኽኣለን,ተደጊሙ ይሞከር</string>
+    <string name="error_reading_xml">ኮርስ ንምውራድ ስሕተት ተፈጢሩሎ. ኮርስ ከምሓዱሽ ይፀዓን.</string>
+    <string name="error_tts_start">ፅሑፍ ናብ ዘረባ ኣይተሳኸዐን. ኣብ ሞባይል ፅሑፍ ናብ ዘረባ መጥቀሚ ከምዝተስተኻከለ ይረጋገፅ</string>
+    <string name="warning_wifi_required">ብ ሞባይል ጌርካ ንምውራድ ናብ ዋይፋይ ኔትዎርክ ምሕዋስ የድሊ, ወይ ድማ ብ ኮምፒተር ይወረድ.</string>
+    <string name="warning_delete_disabled">ይቕሬታ, ኮርስ ምድምሳስ ኣብዚ ሐዚ ክልኩል እዩ - ኩሎም ኮርስታት ንምድምሳስ ኣብ መጥቀሚ ይስተኻኸል.</string>
+
+    <string name="login_process">መእተዊ</string>
+    <string name="login_complete">ተኣትዩ</string>
+
+    <string name="logout_confirm">ካብዚ መተግበሪ ንምውፃእ ተደልዩ ድዩ?</string>
+
+    <string name="register_alert_title">መዝግብ</string>
+    <string name="register_process">ኣብ ምምዝጋብ …</string>
+    <string name="register_complete">ዕዉት ምዝገባ</string>
+
+    <string name="reset_password">ከይዲ ምቕያር መሕለፊ ቃል</string>
+    <string name="reset_process">መሕለፊ ቃል ኣብ ምቕያር ከይዲ …</string>
+    <string name="reset_password_complete">መሕለፊ ካልካ ናብ ሕሉፍ ተመሊሱ ኣሎ.\n\n ንሓዱሽ መሕለፊ ቃል ኢሜልኩም ተወከሱ</string>
+
+    <string name="remember_username_complete">ስም ተጠቃማይ መዘኻኸሪ ኢሜል ተልኢኹ።</string>
+
+    <string name="change_content_language">ቋንቋ ቐይር</string>
+
+    <string name="course_draft">ንድፊ ሕታም</string>
+
+    <string name="search.activity_title">መአለሺ</string>
+    <string name="search.result_summary">%1$d ውፅኢት ን \"%2$s\"</string>
+    <string name="search.message.searching">ኣብ ኣለሻ…</string>
+    <string name="search.message.no_results">መልሲ ኣይተረኸበን \"%1$s\"</string>
+    <string name="search.message.fetching">መልሲ ኣብ ምእካብ…</string>
+    <string name="submit_stats_btn_text">ሐዚ ስደድ</string>
+
+    <string name="media_player_description">&appName; መፃወቲ ሚድያ</string>
+
+    <string name="upgradev49_1">ፋይላት ናብ ሓዱሽ ቦታ ኣብ ምግልባጥ - ደቓይቕ ክወስድ ይኽእል እዩ, ብትዕግስቲ ምፅባይ የድሊ</string>
+    <string name="loading_course">ኮርስ ኣብ ምጅማር…</string>
+    <string name="scorecard_quizzes_title">ሕቶታት</string>
+    <string name="scorecard_quizzes_highlight_pretest">ቅድመ ፈተና</string>
+    <string name="scorecard_quizzes_highlight_attempted">ዝተፈተኑ</string>
+    <string name="scorecard_quizzes_highlight_passed">ዝተሓለፉ</string>
+    <string name="scorecard_activities_completed">ዝተወድኡ ንጥፈታት</string>
+    <string name="scorecard_activities_total">ጠቕላላ</string>
+
+    <string name="admin_password_required">እዚ ተኽእሎ ንዋና ተጠቀምቲ ጥራሕ ዝተፈቐደ። ናይ ፍሉይ ተጠቃሚ መረጋገፂ መሕለፊ ቃል ብምእታው ቀፅል:</string>
+    <string name="admin_password_error_incorrect_password">ዘይትኽክል ናይ ፍሉይ ተጠቃሚ መሕለፊ ቃል. እንደገና ይፈተን</string>
+    <string name="admin_password_newpassword_dialog_title">ፍሉት ተጠቃሚ መሕለፊ ቃል</string>
+    <string name="admin_password_newpassword_dialog_message">ናይ ፍሉይ ተጠቃሚ መሐልፊ ቃል ይእቶ</string>
+
+    <string name="notification.remote_admin.title">&appName; ካብ ርሑቕ ምሕደራ</string>
+    <string name="notification.remote_admin.camera_disabled">ናይ ሞባይል ካሜራ ካብ ርሑቕ ተኸልኪሉ ኣሎ።</string>
+    <string name="notification.remote_admin.camera_enabled">ናይ ሞባይል ካሜራ ካብ ርሑቕ ተፈቒዱ ኣሎ።</string>
+
+    <string name="sequencing.dialog_title">ንጥፈታት ተዓፅዮም</string>
+    <string name="sequencing.section.message">ቅድሚ እዚ ክፋል ክፍቲ ሙዃኑ፣ ናይዚ ክፋል ዝሓለፉ ንጥፈታት ክውገኑ ይግባእ።</string>
+    <string name="sequencing.course.message">ቅድሚ እዚ ክፋል ክፍቲ ሙዃኑ፣ ናይዚ ኮርስ ዝሓለፉ ንጥፈታት ክውገኑ ይግባእ</string>
+    <string name="empty_state_courses">ኣብዚ መገልገሊ ዝትፈቐዱ ኮርስታት የለዉን</string>
+    <string name="empty_state_media">ብጣዕሚ ፅቡቕ! ዘድሊ ትሕዝቶ ሚድያ ወሪዱን ተዋህሊሉ ኣሎ።</string>
+    <string name="empty_state_scorecard">ዝፅዓን ኮርስ የለን. \n ኮርስ ምስ ተፅዓነ፣ ለውጥታት ኣብዚ ይረኣይ።</string>
+
+    <string name="permissions.title">&appName;
+        ብግብእ ንኽሰርሕ እቶም ኣብ ታሕቲ ዝተጽፀርሑ ፍቓዳት የድልይዎ:</string>
+    <string name="permissions.storage.title">ፍቓድ ምንባብን ምቕያርን ትሕዝቶ ናይ ሜሞሪ ካርድ</string>
+    <string name="permissions.simple.title">ዝድለይ ፍቓዳት</string>
+    <string name="permissions.storage.description">&appName;እቶም ዝወረዱ ኮርስ ትሕዝቶታት ንምቕማጥ እቲ ግዳማዊ ሜሞሪ ካርድ ምጥቃም የድሊ </string>
+    <string name="permissions.phone_state.title">ናይ ሞባይል ኩነታትን ዋንነትን ምንባብ</string>
+    <string name="permissions.phone_state.description">&appName; ብዛዕባ ናይ ሞባይልካ ሞዴልን ኣንድሮይድ ሶፍትዌር ሓበሬታ ንምርካብን ንምፍላጥን ፍቓድ የድሊ</string>
+    <string name="permissions.allow_btn_text">ፍቓድ ሃብ</string>
+    <string name="permissions.not_askable.message">እዚ መተግበሪ ፍቓድ መስርሒ ኣይረኸበን። ናብ ዝርዝር ኣጠቓቕማ | መተግበሪ | &appName;
+        | ፍቓድ መውሃቢ </string>
+    <string name="permissions.not_askable.info">እዚ መልእኽቲ ዝርኣይ ዘሎ ፍቓድ ቅድሚ ምኽልካሉን ምምራፁን ስለዝተመረፀ እዩ። \ ካልኣይ ግዜ ከይትሓትት\"</string>
+    <string name="permissions.bluetooth.message">እቲ መተግበሪ ብሉቱዝ ንምእላሽ ተወሰኽቲ ፍቓዳት ይሓትት።</string>
+    <string name="error_apikey_expired"> API ቁፅሪ ግዚኡ ሓሊፍዎ። ካልኣይ ግዜ እተው።</string>
+
+    <string name="privacy.title">መረዳእታን ስትረትን</string>
+    <string name="privacy.policy_info">ፖሊሲ ስትረት</string>
+    <string name="privacy.terms">Terms of Service</string>
+    <string name="privacy.data_why">መረዳእታ ንምንታይ ይጠቅም?</string>
+    <string name="privacy.data_what">እንታይ ዓይነት መረዳእታ ይእከብ?</string>
+
+    <string name="privacy.section.privacy">ስትረትን ተጠቃምነት መረዳእታን</string>
+    <string name="privacy.section.analytics"> ኣተናትና ድልየታት</string>
+    <string name="privacy.section.manage_data">መረዳእታ ምምሕዳር</string>
+
+    <string name="privacy.download_data.info">ቅዳሕ ትሕዝቶ &appName; ሰደድ ግበር።</string>
+    <string name="privacy.download_data.label">መረዳእታ ኣውርድ</string>
+    <string name="privacy.download_data.description">&appName;መረዳእታኻ ብዝንበብ መልክዕ ሰደድ ምግባር ይክኣል። Please select the information you want to download: </string>
+    <string name="privacy.download_data.profile">መግለፂ መረዳእታ</string>
+    <string name="privacy.download_data.course">ንጥፈታት ኮርስ</string>
+    <string name="privacy.download_data.quizzes">ሕቶ ን ሙከራ ግብረመልስን </string>
+    <string name="privacy.delete_account.info">መትቀሚ ፍቓድካን ምስኡ ዝተተሓሕዙ መረዳእታታትን ይጥፋእ &appName; መገልገሊ</string>
+    <string name="privacy.delete_account.label">መጥቀሚ ፍቓድ ደምስስ</string>
+    <string name="privacy.delete_account.explanation">መጥቀሚ ፍቓድ ምድምሳስ ንድሕሪት ዘይምለስ ክንውን እዩ!, ኩሎም መረዳእታታት ይድምሰሱ። &appName; ንኽትጥቀሙ ሓዱሽ መጥቀሚ ክፍጠር ኣለዎ \n\n መጥቀሚ ፍቓድካ ንምድምሳስ መሕለፊ ቃል ክኣቱ ይግባእ።</string>
+
+    <string name="analytics.optin.title">ኣተናትና ድልየታት</string>
+    <string name="analytics.optin.description"> &appName; ንምምሕያሽ ሓገዝ ንምግባር, ዝተፈጠሩ ስሕተታትን ዝድለዩ ትንተናታትን ምስዳድ ይከኣል። You can change these settings at any time in the app.</string>
+    <string name="privacy.optin.bugreport.switch">ፍቓድ ምልኣኽ ዝተበላሸዉ ነገራት</string>
+    <string name="privacy.optin.analytics.switch">ፍቓድ ምልኣኽ ናይ ተጠቀምነት ሓበሬታ</string>
+
+    <string name="open_digest.errors.invalid_param">The \"digest\" ብትኽክል ዘይተቐናጀው ወይ ድማ ዘይተማልአ ነገር ኣሎ. እቲ መላገቢ ትኽክል ሙዃኑ ይረጋገፅ.</string>
+    <string name="open_digest.errors.not_logged_in">ናፍቲ መተግበሪ ኣይተኣትወን. ናፍቲ ሲስተም ንምእታው ተደጊሙ ይሞከር</string>
+    <string name="open_digest.errors.activity_not_found">ንጥፈት ኣይተረኽበን. እዚ ንጥፈት ዝሓዘ ኮርስ ብ ኣግባቡ ከምዝተፅዓነ ይረጋግፅ?</string>
+    <string name="open_digest.errors.course_not_found">ኣፍቲ መገልገሊ እዚ ኮርስ ኣይተረኽበን። ወይ እዚ ኮርስ የለን ወይድማ ነዚ ኮርስ ዝኸውን ፍቓድ ኣይተረኽበን።</string>
+    <string name="open_digest.errors.bad_request">ኣፍቲ መገልገሊ እዚ ኮርስ ኣይተረኽበን።ወይ እዚ ኮርስ የለን ወይድማ ነዚ ኮርስ ዝኸውን ፍቓድ ኣይተረኽበን።</string>
+    <string name="open_digest.description">&appName; ናይ ምኽፋት ክእለት ዝተፈላለዩ ገፅታት (ን ኣብነት ምኽፋት ካብ ሓጺር መልእኽቲ) ኣሎ</string>
+    <string name="open_digest.course_not_installed">እቲ ኮርስ ኣብዚ ሞባይል ኣይተፅዓነን. እቲ መውረዲ ብምጥዋቕ ክወርድ ይኽእል እዩ።</string>
+    <string name="open_digest.btn_action">ንጥፈታት ክፈት</string>
+    <string name="open_digest.activity_completed">ንጥፈት ብጉቡእ ተዛዚሙ</string>
+    <string name="open_digest.weblink_not_supported">ልጋብ ትኽክል ኣይኮነን</string>
+    <string name="open_digest.fetching_course_info">ሓበሬታ ኮርስታት ኣብ ምቕዳሕ…</string>
+    <string name="open_digest.go_to_course">ናብ ኮርስስ</string>
+    <string name="open_digest.login_register">መእተዊ ወይ መመዝገቢ</string>
+    <string name="open_digest.login_text">ናፍቲ መተግበሪ ኣይተኣትወን. ንምቕፃል ወይ ምእታው ወይ ምምዝጋብ የድሊ.</string>
+
+    <string name="menu_sync">ኣዋድድ</string>
+    <string name="title_sync">ኣዋድድ</string>
+    <string name="export_activity.text">ንጥፈታትን ሕቶታትን ናብ ውሑስ ፋይል ሰደድ ግበር</string>
+    <string name="export_task_completed">ሰደድ ምግባር ብ ዕዉት ተዛዚሙ</string>
+    <string name="export_task_completed_text">ሽም ፋይል \'%1$s\' ዝኾነ ኣፍቲ ናይ ሞባይል ፋይል ሲስተም ተፈጢሩ</string>
+    <string name="exported_activities.title">ተኸታተልቲ ሰድድ ንጥፈታት </string>
+    <string name="export_task_no_activities">ሰደድ ዝግበሩ ሓደሽቲ ሕቶታት ወይ ንጥፈታት የለዉን።</string>
+    <string name="submit_trackers_success">መከታተልቲ ነጥብታት ናብ መገልገሊ ብ ዝተሳኽዐ ኩነታት ተሰዲዶም።</string>
+
+    <!-- Strings for Bluetooth transfer -->
+    <string name="bt_not_enabled_leaving">ብሉቱዝ ኣይተፈቕደን</string>
+    <string name="paired_devices">ዝተናበባ ሞባይላት</string>
+    <string name="other_devices">ካልኦት</string>
+    <string name="bluetooth.button_scan">ኣልሽ</string>
+    <string name="bluetooth.none_paired">ክሳብ ሐዚ ዝተፃመደ ሞባይል የለን</string>
+    <string name="bluetooth.scanning">ኣብ ኣለሻ…</string>
+    <string name="bluetooth.no_devices_found">ሞባይል ኣይተረኽበን</string>
+    <string name="bluetooth.no_device_connected">ዝተራኸበ ሞባይል የለን</string>
+    <string name="bluetooth.select_device">ንምንባብ ሞባይል ምረፅ</string>
+    <string name="bluetooth.title_connecting">ናብ ሞባይል ንምንባብ ኣብ ፈተነ</string>
+    <string name="bluetooth.title_not_connected">ኣይተራኸበን</string>
+    <string name="bluetooth.title_connected_to">ተራኺቡ</string>
+    <string name="course_transferring">ኮርስ ምምሕልላፍ ኣብ ከይዲ…</string>
+    <string name="bluetooth.info_connect">ምስ ካልእ ሞባይል ብ ብሉቱዝ ተራኺብኩም ሞባይል ክወርድ ይከኣል</string>
+    <string name="bluetooth.transferable_type">ዓይነት ምምሕልላፍ</string>
+    <string name="bluetooth_device_scanning">ኣለሻ ን ሞባይል…</string>
+    <string name="bluetooth_communication_closed">ብሉቱዝ ተዓፅዩ</string>
+    <string name="bluetooth_transfer_failure">ዘይተሳኽዐ ናይ ብሉቱዝ ምምሕልላፍ.</string>
+    <string name="bluetooth.files_pending">%1$d ፋይላት ኣብ ትፅቢት</string>
+    <string name="bluetooth_all_transfers_complete">ዝተረፉ ናይ ብሉቱዝ ምምሕላፋት ተሳኺዕም</string>
+    <string name="bluetooth.transfer_complete">%1$s: ምምሕልላፍ ብ ዕዉት ተዛዚሙ</string>
+    <string name="bluetooth.btn_connect">ተራኸብ</string>
+    <string name="bluetooth.device_name">ሽም ሞባይል:</string>
+    <string name="bluetooth.tab_course">ኮርስታት</string>
+    <string name="bluetooth.tab_activitylog">ንጥፈታት ሎግ</string>
+    <string name="bluetooth.send_all">ኩሉ ይለኣኽ</string>
+    <string name="bluetooth.btn_disconnect">ርክብ ኣቋርፅ</string>
+    <string name="bluetooth.enable_discovery">መአለሺ ሞድ ክፍቲ ግበር</string>
+    <string name="bluetooth.discovery_already_enabled">ሞባይል ክርከብ ይኽእል</string>
+    <string name="bluetooth.discovery_fail">ሞባይል መአለሺ ሞድ ኣይከኣልን</string>
+    <string name="bluetooth.discovery_success">መአለሺ ሞድ ተፈቒዱ %1$d ሰኮንዳት</string>
+
+
+    <!-- Strings for quiz attempts -->
+    <string name="quiz_attempts.title">ዝተፈተኑ ሕቶታት</string>
+    <string name="quiz_attempts.loading">ዝተፈተኑ ሕቶታት ኣብ ምኽፋት…</string>
+    <string name="quiz_attempts.number">ፈተነታት</string>
+    <string name="quiz_attempts.best">ብሉፅ</string>
+    <string name="quiz_attempts.average">ብ ማእኸላይ</string>
+    <string name="quiz_attempts.empty_state">እዚ ሕቶ ክሳዕ ሐዚ ንምምላስ ኣይተፈተነን</string>
+    <string name="quiz_attempts.retake_quiz">እዚ ፈተና ተደጊሙ ይወሰድ</string>
+    <string name="quiz_attempts.take_quiz">ፈተና ይወሰድ</string>
+    <string name="quiz_attempts.unknown_course">ዝተኣለዩ ወይ ዘይተፈልጡ ኮርስታት</string>
+    <string name="quiz_attempts.unknown_quiz">ዝተኣለዩ ወይ ዘይተፈልጡ ሕቶታት</string>
+    <string name="quiz_attempts.global_empty_state">ክሳዕ ሐዚ ዝተፈተነ ሕቶ የለን</string>
+    <string name="quiz_attempt.title">ዝተፈተኑ ሕቶታት</string>
+    <string name="quiz_attempts.previous">ሕሉፍ ፈተነ</string>
+    <string name="quiz_attempts.unlimited">ዘይግዱብ ፈተን</string>
+    <string name="quiz_attempts.left">%1$d ፈተነታት (%2$d ይቐሪ)</string>
+
+    <!-- Strings for point events -->
+    <string name="points_event_default">ውፅኢት!</string>
+    <string name="points_event_activity_completed">ዝተወገኑ ንጥፈታት \'%1$s - %2$s\'</string>
+    <string name="points_event_media_played">ዝተርኣዩ ሚድያታት \'%1$s\'</string>
+    <string name="points_event_quiz_attempt">ዝተፈተኑ ሕቶታት \'%1$s - %2$s\'</string>
+    <string name="points_event_course_downloaded">ዝተራገፉ \'%1$s\' ኮርስታት</string>
+    <string name="points_event_feedback_completed">ግብረመልሲ  \'%1$s - %2$s\' ዝተረከቡ</string>
+    <string name="tab_title_leaderboard">ፀፍሒ መራሒ</string>
+    <string name="leaderboard_position">ህልው ኩነታት</string>
+    <string name="leaderboard_points">%1$s ነጥብታት</string>
+
+    <string name="transfer_receiving_course">ኮርስ ፋይል ኣብ ምዉሳድ…</string>
+    <string name="sign_in_title">መእተዊ</string>
+    <string name="register_account_already">መፍለይ ኣሎ እዩ?</string>
+    <string name="login_dont_have_account">መፍለይ የለን?</string>
+    <string name="offline_register_confirm">ከም መማረፂ, ኢንተርኔት ኣብዘይብሉ ተመዝጊብካ እዚ መተግበሪ ምጥቃም ይክኣል። ድሓር, ናይ ተጠቃምነት መረዳእታኻ ክተተሓላልፍ ይክኣል</string>
+    <string name="register_offline">ብዘይ ኢንተርኔት ተመዝገብ</string>
+    <string name="field_required">እዚ ባይታ ባዶ ክኸውን ኣይኽእልን</string>
+    <string name="field_spaces_error">ክፍተት ክህልዎ ኣይኽእልን</string>
+    <string name="permissions.location.title">ፍቓድ ቦታ</string>
+    <string name="permissions.location.description">ኣብ ኣንድሮይድ ሞባይል, ብብሉቱዝ ምስ ካልኦት ክናበብን ክተሓላለፍን ይግባእ</string>
+    <string name="points">ነትብታት</string>
+    <string name="last_year">ዝሓለፈ ዓመት</string>
+    <string name="last_month">ዝሓለፈ ወርሒ</string>
+    <string name="last_week">ዝሓለፈ ሰሙን</string>
+    <string name="no_points_data">No points data</string>
+    <string name="event_activity_completed">ፍፃመ ንጥፈታት</string>
+    <string name="event_media_played">ዝተፀወቱ ሚድያታት</string>
+    <string name="event_media_watched">ዝተርኣዩ ሚድያታት</string>
+    <string name="event_course_downloaded">ዝተራገፉ ኮርስታት</string>
+    <string name="event_quiz_attempt">ዝተፈተኑ ሕቶታት</string>
+    <string name="event_activity_all">ኩሎም ንጥፈታት</string>
+
+
+    <string name="channel_notif_internal_name">ውሽጣዊ ሓበሬታ</string>
+    <string name="channel_notif_internal_description">እዚ ገፅ  ናይ ሓበሬታ መትረብ ኮይኑ ዝተፈላልዩ ከይድታት ከም ቡሉቱዝ ምትሕልላፍን, ኮርስ መውረዲ ወይ መዋደዲ ኮይኑ የገልግል።</string>
+
+
+    <string name="nav_home">መበገሲ</string>
+    <string name="nav_scorecard">ነጥቢ ካርድ</string>
+    <string name="nav_points">ነጥብታት</string>
+    <string name="edit_profile">ውልቃዊ ሓበሬታ ምስትኽኻል</string>
+
+
+    <string name="info_override_password">ሸለልታ ፍሉይ ተጠቃሚ መሕለፊ ቃል</string>
+    <string name="register_username_exists">ስም ተጠቃማይ ኣሎ እዩ</string>
+    <string name="collapse_all_sections">ኩሎም ብርክታት ዕፀፍ</string>
+    <string name="expand_all_sections">ኩሎም ብርክታት በትን</string>
+
+    <string name="title_activitylog">መዘክር ንጥፈታት</string>
+    <string name="archived_activities">ዝተቛፀሩ (ሓሊፉ) መከታተሊ መዝገባት</string>
+    <string name="activitylog_delete">ደምስስ</string>
+    <string name="activitylog_delete_confirm">ፋይል መዘክር ንጥፈታት ብዉነ ድዩ ዝድምሰስ ዘሎ?</string>
+    <string name="activitylog_delete_failed">ፋይል መዘክር ንጥፈታት ክድምሰስ ኣይኽእልን</string>
+
+    <string name="title_activity_edit_profile">ውልቃዊ ሓበሬታ ምስትኽኻል</string>
+    <string name="option_available_online">እዚ መማረፂ ዝሰርሕ እንተድኣ እቲ ሞባይል ምስ ኢንተርኔት ተራኺቡ እዩ።</string>
+    <string name="save_profile">ውልቃዊ ሓበሬታ ዓቅብ</string>
+    <string name="profile_updated_successfully">ክንውን ምስትኽኻል ውልቃዊ ሓበሬታ ተሳኺዑ</string>
+    <string name="activitylog_submitted">ናብ መገልገሊ ተረኪቡ</string>
+    <string name="activitylog_tosubmit">ንምርካብ</string>
+    <string name="activitylog_toexport">ሰደድ ንምግባር</string>
+    <string name="activitylog_btn_submit">ናብ መገልገሊ ኣረክብ</string>
+    <string name="activitylog_btn_export">ንጥፈታት ሰደድ</string>
+    <string name="videoplayer_play_again">ደጊምካ ተፃወት</string>
+    <string name="videoplayer_continue">ናብ ኮርስ ቀፅል</string>
+    <string name="options">መማረፅታት</string>
+    <string name="quiz_loading_error">ትፅቢት ዘይተገበረሉ ስሕተት ኣብ ሕቶታት. ምናልባት እቲ ፎርማት ዘይትኽክል ወይ ግዚኡ ዝሓለፎ ኮይኑ?</string>
+    <string name="error_register_username_length">ተጠቃሚ ስም እንተነኣሰ  %d ፊደላት ይህልውዎ</string>
+    <string name="change_server_logout_warning">ናፍቲ መተግበሪ ተኣትዩ እዩ. እንድሕር መገልገሊ ተቐይሩ እቲ ሐዚ ተጀሚሩ ዘሎ ፕሮግራም ይቋረፅ. ክቕፀል ይድለ ድዩ?</string>
+    <string name="accept">ቅቡል</string>
+    <string name="user_not_logged_in">ተጠቃማይ ኣይኣተወን</string>
+
+    <string name="notification_courses_to_update_title">ናይ ሓዱሽ ኮርስ ሓበሬታ</string>
+    <plurals name="notification_courses_to_update_text">
+        <item quantity="one">ዝመሓየሸ ዝተዳለዉን %d ኮርስታት ኣለዉ</item>
+        <item quantity="few"> %d ንምምሕያሽ ዝተዘጋጀው ኣለዉ።</item>
+        <item quantity="other">%d ንምምሕያሽ ዝተዘጋጀው ኣለዉ።</item>
+    </plurals>
+
+
+    <string name="notification_new_courses_title">ዘለዉ ሓደሽቲ ኮርስታት</string>
+    <plurals name="notification_new_courses_text">
+        <item quantity="one">ዝመሓየሸ ዝተዳለዉን %d ኮርስታት ኣለዉ</item>
+        <item quantity="few">%d ንምምሕያሽ ዝተዘጋጀው ኣለዉ።</item>
+        <item quantity="other">%d ንምምሕያሽ ዝተዘጋጀው ኣለዉ።</item>
+    </plurals>
+    <string name="btn_continue">ቀፅል</string>
+
+    <string name="course_deleted">ዝተደምሰሱ ኮርስታት</string>
+    <string name="course_deleted_dialog_message">እዚ ኮርስ ካብ መገልገሊ ተደምሲሱ እዩ ብቐፃልነት ኣብዚ መተግበሪ ኣይህሉን።\n ካፍቲ መተግበሪ ክተጥፍኦ ይድለ ድዩ?</string>
+    <string name="course_update">ኮርስ ምምሕያሻት</string>
+    <string name="course_update_dialog_message">ነዚ ኮርስ ሓደሽቲ ምምሕያሻት ኣለዉ እዮም።\nሐዚ ክመሓየሽ ይድለ ድዩ?</string>
+
+    <string name="course_updates">ዝተመሓየሹ ኮርስታት</string>
+    <string name="new_courses">ሓደሽቲ ኮርስታት</string>
+    <string name="back">ተመለስ</string>
+    <string name="continue_to_course">ናብ ኮርስ ቀፅል</string>
+    <string name="processing">ኣብ ምቅንባር…</string>
+    <string name="user_data_download_success">መረዳእታ ብግቡእ ወርዲዱ.\nኣብ ምውረዲ ሲስተም ፎልደር ክርከብ ይከኣል.</string>
+    <string name="open_download_folder">ዝወረደሉ ፎልደር ክፈት</string>
+    <string name="error_download_failure_reason_format">ምውራድ ኣይተሳኸዐን. ምኽንያት: %s</string>
+    <string name="download_certificate">ሰርተፊኬት ኣውርድ</string>
+    <string name="storage_permission_not_granted">ፍቓድ መኽዝን ኣይትወሃበን</string>
+    <string name="courses_reminder_notif_text">ክሳዕ ሐዚ ኩሎም ኮርስታት ኣይወዳእኻዮምን.\n ናብ ኮርስታት ኪድ</string>
+    <string name="courses_reminder_notif_title">ኮርስ መስታወሲ</string>
+    <string name="courses_reminder_settings">መስታወሲ ኣመዓራሪ</string>
+    <string name="change_password">መሕለፊ ቃል ቀይር</string>
+    <string name="change_password_success">መሕለፊ ቃል ብዝግባእ ተሕእዲሱ</string>
+    <string name="change_password_intro">መሕለፊ ቃል ንምልዋጥ, ሓዱሽ መሕለፊ ቃል ኣብ ታሕቲ ይእቶ:</string>
+
+    <string name="text_size_smallest">ዝነኣሰ</string>
+    <string name="text_size_small">ንእሽተይ</string>
+    <string name="text_size_normal">ምጡን</string>
+    <string name="text_size_large">ዓብይ</string>
+    <string name="text_size_largest">ዝዓበየ</string>
+
+    <string name="interval_weekly">ሰሙናዊ</string>
+    <string name="interval_daily">መዓልታዊ</string>
+
+    <string name="week_day_1">ሰንበት</string>
+    <string name="week_day_2">ሶኒ</string>
+    <string name="week_day_3">ሰሉስ</string>
+    <string name="week_day_4">ሮቡዕ</string>
+    <string name="week_day_5">ሓሙስ</string>
+    <string name="week_day_6">ዓርቢ</string>
+    <string name="week_day_7">ቀዳም</string>
+
+    <string name="warning_reminder_weekly_just_one_day">በብሰሙኑ ተገደደ ሓደ መዓልቲ ይመረፅ</string>
+    <string name="warning_reminder_at_least_one_day">እንተነኣሰ ሓደ መዓልቲ ክምረፅ ኣለዎ</string>
+
+    <string name="quiz_protected">ዕቁብ ሕቶታት</string>
+    <string name="please_enter_quiz_password">እዞም ሕቶታት ንምርካብ መሕለፊ ቃል ይእቶ</string>
+    <string name="invalid_password">ዘይልክዕ መሕለፊ ቃል</string>
+    <string name="pref_export_full_activity_title">ሙሉእ ንጥፈታት ሰደድ ዝተገበሩሉ ዕለት</string>
+    <string name="full_activity_exported_success">ሙሉእ ንጥፈታት ብ ዕዉት ሰደድ ተገይሮም.\n\nናብ ካልእ መተግበሪ ብ "Share" button ክስደድ ይድለይ</string>
+    <string name="full_activity_export_path">\n\nPath: %s.</string>
+    <string name="share">Share</string>
+    <string name="no_app_to_share">ስሕተት. እዚ ፋይል ንምክፋል ዝተፅዓነ መተግበሪ የለን</string>
+    <string name="pref_flush_course_listing_cache">ፍላሽ ኮርስ ካሽ መትሓዚ</string>
+    <string name="cache_flushed_successfuly">ካሽ ተገይሩ</string>
+
+    <string name="incorrect_password_topic">ዘይትኽክል መሕለፊ ቃል. እንደገና ይሞከር</string>
+    <string name="password_needed">መሕለፊ ቃል የድሊ</string>
+    <string name="password_needed_description">እዚ ዛዕባ ብ መሕለፊ ቃል ዝተሓፀረ እዩ. \n እዚ ዛዕባ ንምጥቃም መሐልፊ ቃል ምእታው የድሊ(እዚ ፍፃመ ናይ ሓደ እዋን እዩ።).</string>
+    <string name="unlock_topic">ኣርእስቲ ኣኽፍት</string>
+    <string name="staging_warning_msg">እዚ ርክክብ ምስ ግዝያዊ ኣብ ምምዕባል ዘሎ መገልገሊ እዩ።</string>
+
+    <!-- Status badges -->
+    <string name="status_draft">ንድፊ</string>
+    <string name="status_new_download_disabled">ሓዱሽ ንምውራድ ተገዲቡ</string>
+    <string name="status_archived">ዝተቐመጡ</string>
+    <string name="status_read_only">ዝረአ ጥራሕ</string>
+    <string name="quiz">ሕቶታት</string>
+    <string name="read_only_answer_unavailable_message">እዚ ኮርስ እዚ ዝረአ ጥራሕ እዩ %s ኣብዚ ሐዚ ግዜ ክፍቲ ኣይኮነን</string>
+    <string name="view_your_previous_attempts">ናይ ቅድሚ ሐዚ ሙከራ ምርኣይ</string>
+
+</resources>

@@ -10,8 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -39,7 +37,7 @@ public class SearchResultsAdapter extends RecyclerViewClickableAdapter<SearchRes
         this.context = context;
         this.searchResults = searchResults;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        prefLang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
     }
 
     @Override

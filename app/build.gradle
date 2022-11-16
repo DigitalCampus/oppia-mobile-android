@@ -10,7 +10,19 @@ def version_code = 105
 def version_name = "7.4.0"
 
 android {
-    compileSdkVersion 32
+
+    Properties runtimeProps = new Properties()
+    runtimeProps.load(new FileInputStream(rootProject.file('oppia-default.properties')))
+
+    def oppiaPropsFile = rootProject.file('custom.properties')
+    if (oppiaPropsFile.canRead()) {
+        logger.lifecycle('Fetching properties from external file')
+        runtimeProps.load(new FileInputStream(oppiaPropsFile))
+    } else {
+        logger.error('No properties file found. Using default values.')
+    }
+
+    compileSdkVersion 33
 
     defaultConfig {
         versionCode version_code
@@ -19,7 +31,7 @@ android {
         applicationId "org.digitalcampus.mobile.learning"
 
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The following argument makes the Android Test Orchestrator run its
@@ -30,13 +42,20 @@ android {
         testInstrumentationRunnerArguments coverageFilePath: '/sdcard/coverage/'
 
         vectorDrawables.useSupportLibrary = true
+
+        def interfaceLangs = runtimeProps.getProperty('INTERFACE_LANGUAGE_OPTIONS').split(",")
+        // Language region format in android resources requires 'r' char
+        interfaceLangs.eachWithIndex { lang, index -> interfaceLangs[index] = lang.replace("-", "-r")}
+        resConfigs interfaceLangs
+//        resConfigs "en", "es", "ar", "fi", "fr", "hi", "ur-rPK", "am-rET", "om-rET"
+
     }
+
     packagingOptions {
         resources {
             excludes += ['META-INF/LICENSE.txt', 'META-INF/NOTICE.txt', 'README.md']
         }
     }
-
 
     lint {
         checkReleaseBuilds true
@@ -52,18 +71,6 @@ android {
 
         // Flag to enable support for the new language Java 8+ APIs: time, functional, concurrent...
         coreLibraryDesugaringEnabled true
-    }
-
-
-    Properties runtimeProps = new Properties()
-    runtimeProps.load(new FileInputStream(rootProject.file('oppia-default.properties')))
-
-    def oppiaPropsFile = rootProject.file('custom.properties')
-    if (oppiaPropsFile.canRead()) {
-        logger.lifecycle('Fetching properties from external file')
-        runtimeProps.load(new FileInputStream(oppiaPropsFile))
-    } else {
-        logger.error('No properties file found. Using default values.')
     }
 
     buildTypes {
@@ -146,6 +153,8 @@ android {
             buildConfigField "boolean", "SHOW_GAMIFICATION_EVENTS", runtimeProps['SHOW_GAMIFICATION_EVENTS']
             buildConfigField "boolean", "ALLOW_REGISTER_USER", runtimeProps['ALLOW_REGISTER_USER']
 
+            buildConfigField "String", "INTERFACE_LANGUAGE_OPTIONS", "\"" + runtimeProps['INTERFACE_LANGUAGE_OPTIONS'] + "\""
+
             resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
             resValue "string", "MENU_ALLOW_COURSE_DOWNLOAD_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_COURSE_DOWNLOAD']
             resValue "string", "MENU_ALLOW_LANGUAGE_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LANGUAGE']
@@ -208,6 +217,7 @@ dependencies {
     def roomVersion = "1.1.1"
     def fragmentVersion = '1.2.5'
     def daggerVersion = '2.41'
+    def appcompatVersion = '1.6.0-rc01'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'joda-time:joda-time:2.10.13'
@@ -217,7 +227,9 @@ dependencies {
     implementation 'androidx.core:core:1.7.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.preference:preference:1.2.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+
+    implementation "androidx.appcompat:appcompat:$appcompatVersion"
+
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.navigation:navigation-fragment:2.4.2'
     implementation 'androidx.navigation:navigation-ui:2.4.2'

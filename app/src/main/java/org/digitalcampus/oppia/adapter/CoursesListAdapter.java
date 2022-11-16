@@ -5,16 +5,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.google.android.material.transition.Hold;
-import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.squareup.picasso.Picasso;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
@@ -30,7 +25,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -69,7 +63,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
 
         final Course course = getItemAtPosition(position);
 
-        String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        String lang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
         viewHolder.binding.courseTitle.setText(course.getTitle(lang));
         String description = course.getDescription(lang);
         if (!TextUtilsJava.isEmpty(description) && prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, BuildConfig.SHOW_COURSE_DESCRIPTION)) {
