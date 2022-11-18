@@ -31,6 +31,7 @@ import org.digitalcampus.oppia.fragments.RegisterFragment;
 import org.digitalcampus.oppia.fragments.RememberUsernameFragment;
 import org.digitalcampus.oppia.fragments.ResetPasswordFragment;
 import org.digitalcampus.oppia.fragments.prefs.AdvancedPrefsFragment;
+import org.digitalcampus.oppia.fragments.prefs.DisplayPrefsFragment;
 import org.digitalcampus.oppia.fragments.prefs.NotificationsPrefsFragment;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.CoursesChecksWorkerManager;
@@ -67,6 +68,7 @@ public interface AppComponent {
     void inject(AppFragment fragment);
     void inject(GlobalQuizAttemptsFragment fragment);
     void inject(RegisterFragment fragment);
+    void inject(DisplayPrefsFragment fragment);
     void inject(App app);
     void inject(ChangePasswordActivity activity);
     void inject(QuizAttemptActivity activity);
