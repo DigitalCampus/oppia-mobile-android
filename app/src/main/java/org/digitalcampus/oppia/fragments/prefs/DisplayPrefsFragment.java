@@ -108,10 +108,5 @@ public class DisplayPrefsFragment extends BasePreferenceFragment implements Pref
     @Override
     public void onPreferenceUpdated(String pref, String newValue) {
 
-        if (TextUtilsJava.equals(pref, PrefsActivity.PREF_INTERFACE_LANGUAGE)) {
-            LocaleListCompat appLocale = LocaleListCompat.forLanguageTags(newValue);
-            // Call this on the main thread as it may require Activity.restart()
-            AppCompatDelegate.setApplicationLocales(appLocale);
-        }
     }
 }
