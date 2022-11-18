@@ -693,4 +693,9 @@ public abstract class AnswerWidget extends BaseWidget {
             startMediaPlayerWithFile(mediaFileName);
         }
     }
+
+    public float getPercentScore() {
+        quiz.mark(prefLang);
+        return quiz.getUserscore() * 100 / quiz.getMaxscore();
+    }
 }
