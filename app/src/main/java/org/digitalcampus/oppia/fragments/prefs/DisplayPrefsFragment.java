@@ -10,7 +10,10 @@ import androidx.preference.Preference;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.repository.InterfaceLanguagesRepository;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import java.util.ArrayList;
@@ -20,11 +23,16 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 public class DisplayPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback{
 
     public static final String TAG = PrefsActivity.class.getSimpleName();
 
     public static final String ARG_CONTENT_LANGS = "arg_content_langs";
+
+    @Inject
+    InterfaceLanguagesRepository interfaceLanguagesRepository;
 
     public static DisplayPrefsFragment newInstance() {
         return new DisplayPrefsFragment();
@@ -40,9 +48,15 @@ public class DisplayPrefsFragment extends BasePreferenceFragment implements Pref
         addPreferencesFromResource(R.xml.prefs_display);
     }
 
+    public AppComponent getAppComponent(){
+        App app = (App) getActivity().getApplication();
+        return app.getComponent();
+    }
+
     @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
+        getAppComponent().inject(this);
 
         Bundle bundle = getArguments();
         if ((bundle != null) && bundle.containsKey(ARG_CONTENT_LANGS)) {
@@ -64,7 +78,7 @@ public class DisplayPrefsFragment extends BasePreferenceFragment implements Pref
     }
 
     private void loadInterfaceLangs() {
-        String[] langs = BuildConfig.INTERFACE_LANGUAGE_OPTIONS.split(",");
+        String[] langs = interfaceLanguagesRepository.getLanguageOptions();
 
         Map<String, String> langNames = mapLangCodesToNames(Arrays.asList(langs));
 
@@ -108,10 +122,5 @@ public class DisplayPrefsFragment extends BasePreferenceFragment implements Pref
     @Override
     public void onPreferenceUpdated(String pref, String newValue) {
 
-        if (TextUtilsJava.equals(pref, PrefsActivity.PREF_INTERFACE_LANGUAGE)) {
-            LocaleListCompat appLocale = LocaleListCompat.forLanguageTags(newValue);
-            // Call this on the main thread as it may require Activity.restart()
-            AppCompatDelegate.setApplicationLocales(appLocale);
-        }
     }
 }
