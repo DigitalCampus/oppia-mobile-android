@@ -216,7 +216,7 @@ public abstract class AnswerWidget extends BaseWidget {
             return;
         }
 
-        if (quiz.getCurrentQuestionNo() == 1 && !initialInfoShown && shouldShowInitialInfo()) {
+        if (quiz.getCurrentQuestionNo() <= 1 && !initialInfoShown && shouldShowInitialInfo()) {
             loadInitialInfo(binding.initialInfoContainer);
             binding.initialInfoContainer.setVisibility(View.VISIBLE);
             return;
