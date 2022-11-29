@@ -155,7 +155,7 @@ public class CourseActivityUITest extends DaggerInjectMockUITest {
     public void openCourseActivityWrongPosition() throws Exception {
 
         Intent i = getIntentParams(getMockCourse(), getMockSection(3), 5, false);
-        try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
+        try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launchActivityForResult(i)) {
 
             assertThat(scenario.getResult(), hasResultCode(android.app.Activity.RESULT_CANCELED));
         }

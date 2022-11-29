@@ -73,7 +73,7 @@ public class VideoPlayerActivityTest extends CourseMediaBaseTest {
 
         Intent videoActivityIntent = getTestVideoActivityIntent();
 
-        try (ActivityScenario<VideoPlayerActivity> scenario = ActivityScenario.launch(videoActivityIntent)) {
+        try (ActivityScenario<VideoPlayerActivity> scenario = ActivityScenario.launchActivityForResult(videoActivityIntent)) {
 
             onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(MEDIA_TEST_LENGHT_SECONDS - 2)));
 
@@ -90,7 +90,7 @@ public class VideoPlayerActivityTest extends CourseMediaBaseTest {
 
         Intent videoActivityIntent = getTestVideoActivityIntent();
 
-        try (ActivityScenario<VideoPlayerActivity> scenario = ActivityScenario.launch(videoActivityIntent)) {
+        try (ActivityScenario<VideoPlayerActivity> scenario = ActivityScenario.launchActivityForResult(videoActivityIntent)) {
 
             onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(MEDIA_TEST_LENGHT_SECONDS + 2)));
 
