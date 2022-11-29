@@ -19,6 +19,7 @@ package org.digitalcampus.mobile.quiz;
 
 import android.util.Log;
 
+import org.digitalcampus.mobile.quiz.model.GradeBoundary;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
@@ -39,11 +40,14 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Quiz implements Serializable {
 
@@ -543,6 +547,16 @@ public class Quiz implements Serializable {
         return defaultValue;
     }
 
+    private JSONArray propsSerializedGetJSONArray(String key) {
+        try {
+            JSONObject json = new JSONObject(propsSerialized);
+            return json.isNull(key) ? null : json.getJSONArray(key);
+        } catch (JSONException jsone) {
+            Log.d(TAG, "Error getting JSONArray from propsSerialized " + key);
+        }
+        return null;
+    }
+
     public int getMaxAttempts() { return maxattempts; }
     public boolean limitAttempts(){ return maxattempts > 0; }
     private void setMaxAttempts(int maxAttempts) { this.maxattempts = maxAttempts; }
@@ -553,6 +567,68 @@ public class Quiz implements Serializable {
                 continue;
             }
             question.updateUserResponsesLang(previousLang, newLang);
+        }
+    }
+
+    private List<GradeBoundary> getGradeBoundaries() {
+        ArrayList<GradeBoundary> gradeBoundaries = new ArrayList<>();
+        JSONArray gradeBoundariesJSON = propsSerializedGetJSONArray("grade_boundaries");
+
+        try {
+            if(gradeBoundariesJSON != null) {
+                for (int i = 0; i < gradeBoundariesJSON.length(); i++) {
+                    JSONObject gradeBoundary = gradeBoundariesJSON.getJSONObject(i);
+                    Iterator<String> keys = gradeBoundary.keys();
+                    while (keys.hasNext()) {
+                        String key = keys.next();
+                        int grade = Integer.parseInt(key);
+                        String message = gradeBoundary.getString(key);
+                        gradeBoundaries.add(new GradeBoundary(grade, message));
+                    }
+                }
+                Collections.sort(gradeBoundaries, GradeBoundary.sorByGradeDescending);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return gradeBoundaries;
+    }
+
+    // Get the feedback message associated to a grade. The learner must get a grade
+    // that is greater or equal than the defined grade boundaries
+    public String getFeedbackMessageBasedOnQuizGrade(float quizGrade) {
+        List<GradeBoundary> gradeBoundaries = this.getGradeBoundaries();
+        for(GradeBoundary gradeBoundary : gradeBoundaries) {
+            if(quizGrade >= gradeBoundary.getGrade()){
+                return cleanFeedbackMessage(gradeBoundary.getMessage());
+            }
+        }
+        return null;
+    }
+
+    // Replace placeholders in the form of {{property_name}} by the value of property_name
+    private String cleanFeedbackMessage(String feedbackMessage) {
+        Pattern p = Pattern.compile("\\{\\{(\\w+)\\}\\}");
+        Matcher m = p.matcher(feedbackMessage);
+        while (m.find()) {
+            String placeholder = m.group();
+            String propertyName = placeholder.replaceAll("[{}]", "");
+            String propertyValue = getPropertyValue(propertyName);
+            if(propertyValue != null) {
+                feedbackMessage = feedbackMessage.replace(placeholder, propertyValue);
+            }
+        }
+        return feedbackMessage;
+    }
+
+    // Get a property´s value by its name, or null if the property name is not included.
+    private String getPropertyValue(String propertyName) {
+        switch (propertyName) {
+            case "user_score": return String.valueOf(this.userscore);
+            case "max_score": return String.valueOf(this.maxscore);
+            case "score_percentage": return String.valueOf(this.userscore * 100 / this.maxscore);
+            default: return null;
         }
     }
 }

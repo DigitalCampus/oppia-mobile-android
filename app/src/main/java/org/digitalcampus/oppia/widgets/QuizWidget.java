@@ -210,11 +210,6 @@ public class QuizWidget extends AnswerWidget {
         baselineText.setVisibility(View.VISIBLE);
     }
 
-    private float getPercentScore() {
-        quiz.mark(prefLang);
-        return quiz.getUserscore() * 100 / quiz.getMaxscore();
-    }
-
 
     @Override
     public boolean getActivityCompleted() {

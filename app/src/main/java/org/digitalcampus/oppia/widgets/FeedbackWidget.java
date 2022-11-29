@@ -91,8 +91,13 @@ public class FeedbackWidget extends AnswerWidget {
 
 	@Override
 	void showResultsInfo() {
+		String feedbackMessage = this.quiz.getFeedbackMessageBasedOnQuizGrade(this.getPercentScore());
 		TextView title = getView().findViewById(R.id.quiz_results_score);
-		title.setText(R.string.widget_feedback_submit_title);
+		if(feedbackMessage != null && !feedbackMessage.isEmpty()) {
+			title.setText(feedbackMessage);
+		} else {
+			title.setText(R.string.widget_feedback_submit_title);
+		}
 	}
 
 	@Override
