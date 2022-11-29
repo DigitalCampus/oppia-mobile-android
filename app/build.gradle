@@ -44,10 +44,10 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         def interfaceLangs = runtimeProps.getProperty('INTERFACE_LANGUAGE_OPTIONS').split(",")
-        // Language region format in android resources requires 'r' char
-        interfaceLangs.eachWithIndex { lang, index -> interfaceLangs[index] = lang.replace("-", "-r")}
         resConfigs interfaceLangs
-//        resConfigs "en", "es", "ar", "fi", "fr", "hi", "ur-rPK", "am-rET", "om-rET"
+// Language region format in android resources requires 'r' char
+        interfaceLangs.eachWithIndex { lang, index -> interfaceLangs[index] = lang.replace("-", "-r")}
+        //        resConfigs "en", "es", "ar", "fi", "fr", "hi", "ur-rPK", "am-rET", "om-rET"
 
     }
 
@@ -208,6 +208,7 @@ android {
     }
 
     useLibrary 'android.test.mock'
+    namespace 'org.digitalcampus.mobile.learning'
 
     android.buildFeatures.viewBinding = true
 }
@@ -215,24 +216,25 @@ android {
 dependencies {
     def workVersion = '2.7.1'
     def roomVersion = "1.1.1"
-    def fragmentVersion = '1.2.5'
+    def fragmentVersion = '1.5.4'
     def daggerVersion = '2.41'
     def appcompatVersion = '1.6.0-rc01'
+    def espressoVersion = '3.5.0'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'joda-time:joda-time:2.10.13'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.7.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
-    implementation 'androidx.core:core:1.7.0'
+    implementation 'androidx.core:core:1.9.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.preference:preference:1.2.0'
 
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
 
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.navigation:navigation-fragment:2.4.2'
-    implementation 'androidx.navigation:navigation-ui:2.4.2'
+    implementation 'androidx.navigation:navigation-fragment:2.5.3'
+    implementation 'androidx.navigation:navigation-ui:2.5.3'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.concurrent:concurrent-futures:1.1.0'
@@ -267,22 +269,22 @@ dependencies {
     implementation "com.squareup.inject:assisted-inject-annotations-dagger2:0.8.1"
 
     //JUnit Dependencies
-    testImplementation 'androidx.test.ext:junit:1.1.3'
+    testImplementation 'androidx.test.ext:junit:1.1.4'
     testImplementation "org.json:json:20220924"
 
     androidTestImplementation 'com.squareup.okhttp3:mockwebserver:4.9.3'
-    androidTestImplementation 'androidx.test:runner:1.4.0'
-    androidTestImplementation 'androidx.test:rules:1.4.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test:runner:1.5.1'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.annotation:annotation:1.3.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
-    androidTestUtil 'androidx.test:orchestrator:1.4.1'
+    androidTestUtil 'androidx.test:orchestrator:1.4.2'
 
     //Espresso Dependencies
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-web:3.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
-    androidTestImplementation('androidx.test.espresso:espresso-contrib:3.4.0') {
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-web:$espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$espressoVersion"
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:$espressoVersion") {
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
         exclude module: 'support-v13'
@@ -292,8 +294,8 @@ dependencies {
 
     // Fragment testing
     implementation "androidx.fragment:fragment:$fragmentVersion"
-    debugImplementation 'androidx.test:core:1.4.0'
-    debugImplementation "androidx.fragment:fragment-testing:1.4.1"
+    debugImplementation 'androidx.test:core:1.5.0'
+    debugImplementation "androidx.fragment:fragment-testing:1.5.4"
 
     //Mockito Dependencies
     testImplementation 'org.mockito:mockito-core:4.3.1'
@@ -323,6 +325,8 @@ task grantPermissions(type: Exec, dependsOn: 'installNormalDebug') {
     }
 
     commandLine "${adb} shell pm grant ${android.defaultConfig.applicationId} android.permission.SET_ANIMATION_SCALE".split(' ')
+    commandLine "${adb} shell pm grant ${android.defaultConfig.applicationId} android.permission.SET_ANIMATION_SCALE".split(' ')
+
 }
 
 tasks.whenTaskAdded { task ->
