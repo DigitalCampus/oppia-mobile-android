@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.model;
 
 import android.content.SharedPreferences;
-import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -51,7 +50,7 @@ public class MultiLangInfoModel implements Serializable {
     }
 
     public String getTitle(SharedPreferences prefs){
-        return this.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+        return this.getTitle(prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage()));
     }
 
     public void setTitles(List<Lang> titles) {
@@ -71,7 +70,7 @@ public class MultiLangInfoModel implements Serializable {
     }
 
     public String getDescription(SharedPreferences prefs){
-        return this.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+        return this.getDescription(prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage()));
     }
 
     public void setDescriptions(List<Lang> descriptions) {

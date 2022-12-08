@@ -14,7 +14,7 @@ public class TestUtils{
         final Activity[] activity = new Activity[1];
         getInstrumentation().runOnMainSync(() -> {
             java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
-            activity[0] = Iterables.getOnlyElement(activities);
+            activity[0] = (Activity) Iterables.getOnlyElement(activities);
         });
         return activity[0];
 

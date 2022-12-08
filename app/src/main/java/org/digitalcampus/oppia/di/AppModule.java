@@ -23,6 +23,7 @@ import org.digitalcampus.oppia.model.QuizAttemptRepository;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.model.TrackerLogRepository;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.repository.InterfaceLanguagesRepository;
 import org.digitalcampus.oppia.service.DownloadServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
@@ -149,5 +150,10 @@ public class AppModule {
     @Singleton
     public ConnectionUtils provideConnectionUtils() {
         return new ConnectionUtils();
+    }
+
+    @Provides
+    public InterfaceLanguagesRepository provideInterfaceLanguagesRepository(){
+        return new InterfaceLanguagesRepository();
     }
 }

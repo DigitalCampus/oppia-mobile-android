@@ -92,7 +92,7 @@ public class GamificationService  extends IntentService {
                 boolean isBaseline = intent.getBooleanExtra(EVENTDATA_IS_BASELINE, false);
 
                 JSONObject eventData =  new MetaDataUtils(this).getMetaData();
-                String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+                String lang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
                 eventData.put(LOGDATA_LANG, lang);
 
                 GamificationEvent event = null;

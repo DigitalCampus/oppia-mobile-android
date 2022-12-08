@@ -155,7 +155,7 @@ public class CourseActivityUITest extends DaggerInjectMockUITest {
     public void openCourseActivityWrongPosition() throws Exception {
 
         Intent i = getIntentParams(getMockCourse(), getMockSection(3), 5, false);
-        try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
+        try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launchActivityForResult(i)) {
 
             assertThat(scenario.getResult(), hasResultCode(android.app.Activity.RESULT_CANCELED));
         }
@@ -251,7 +251,7 @@ public class CourseActivityUITest extends DaggerInjectMockUITest {
         first.setTitlesFromJSONString(MULTILANG_TITLE);
 
         //Mock the calls to sharedPrefs when the value is set
-        when(prefs.getString(eq(PrefsActivity.PREF_LANGUAGE), anyString())).thenReturn("en");
+        when(prefs.getString(eq(PrefsActivity.PREF_CONTENT_LANGUAGE), anyString())).thenReturn("en");
 
         Intent i = getIntentParams(c, section, 0, false);
         try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
@@ -261,9 +261,9 @@ public class CourseActivityUITest extends DaggerInjectMockUITest {
                     .check(matches(isDisplayed()));
 
             openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
-            onView(anyOf(withText(R.string.menu_language), withId(R.id.menu_language))).perform(click());
+            onView(anyOf(withText(R.string.change_content_language), withId(R.id.menu_language))).perform(click());
 
-            when(prefs.getString(eq(PrefsActivity.PREF_LANGUAGE), anyString())).thenReturn("fi");
+            when(prefs.getString(eq(PrefsActivity.PREF_CONTENT_LANGUAGE), anyString())).thenReturn("fi");
             onView(withText("suomi")).perform(click());
 
             onView(AllOf.allOf(withText("Suomi title"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),

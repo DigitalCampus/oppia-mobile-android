@@ -6,9 +6,6 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.RowMediaDownloadBinding;
@@ -107,7 +104,7 @@ public class DownloadMediaAdapter extends MultiChoiceRecyclerViewAdapter<Downloa
     public void sortByCourse() {
         //Sort the media list by filename
         SharedPreferences prefsCourse = PreferenceManager.getDefaultSharedPreferences(context);
-        final String lang = prefsCourse.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        final String lang = prefsCourse.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
         Collections.sort(this.mediaList, (Comparator<Object>) (o1, o2) -> {
             String titleCourse1 = ((Media) o1).getCourses().get(0).getTitle(lang);
             String titleCourse2 = ((Media) o2).getCourses().get(0).getTitle(lang);

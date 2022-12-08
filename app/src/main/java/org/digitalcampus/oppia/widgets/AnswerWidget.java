@@ -216,7 +216,7 @@ public abstract class AnswerWidget extends BaseWidget {
             return;
         }
 
-        if (quiz.getCurrentQuestionNo() == 1 && !initialInfoShown && shouldShowInitialInfo()) {
+        if (quiz.getCurrentQuestionNo() <= 1 && !initialInfoShown && shouldShowInitialInfo()) {
             loadInitialInfo(binding.initialInfoContainer);
             binding.initialInfoContainer.setVisibility(View.VISIBLE);
             return;
@@ -692,5 +692,10 @@ public abstract class AnswerWidget extends BaseWidget {
         public void onClick(View v) {
             startMediaPlayerWithFile(mediaFileName);
         }
+    }
+
+    public float getPercentScore() {
+        quiz.mark(prefLang);
+        return quiz.getUserscore() * 100 / quiz.getMaxscore();
     }
 }
