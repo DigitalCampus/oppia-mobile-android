@@ -22,3 +22,6 @@ sonarqube.properties
 projectFilesBackup/
 /sonarcloud
 /captures/
+/app/normal/
+
+/app/src/main/res/values-ti/
