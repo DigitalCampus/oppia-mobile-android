@@ -207,48 +207,6 @@ public class InstallDownloadedCoursesTest extends BaseTestDB {
     }
 
     @Test
-    public void installCourse_insecureCourse()throws Exception {
-
-        CourseUtils.cleanUp();
-        copyCourseFromAssets(INSECURE_COURSE);
-        response = runInstallCourseTask(context);//Run test task
-
-        assertFalse(response.isSuccess());
-    }
-
-  /*  @Test
-    public void installCourse_malformedXMLCourse()throws Exception{
-        String filename = MALFORMEDXML_COURSE;
-
-        CourseUtils.cleanUp();
-
-        FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
-
-        runInstallCourseTask();//Run test task
-
-        signal.await();
-
-        //Check if result is true
-        assertFalse(response.isSuccess());
-        //Check if the resultResponse is correct
-        assertEquals(context.getString(R.string.error_installing_course, filename), response.getResultMessage());
-        File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getInstrumentation().getTargetContext()), filename);
-        assertFalse(initialPath.exists());  //Check that the course does not exists in the "downloads" directory
-
-
-        String shortTitle = "malformedxml_course";
-        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()), shortTitle);
-        assertFalse(finalPath.exists()); //Check that the course exists in the "modules" directory
-
-        DbHelper db = DbHelper.getInstance(context);
-        long courseId = getDbHelper().getCourseID(shortTitle);
-        long userId = getDbHelper().getUserId(SessionManager.getUsername(context));
-        Course c = getDbHelper().getCourse(courseId, userId);
-        assertNull(c);   //Check that the course exists in the database
-
-    }*/
-
-    @Test
     public void installCourse_errorInstallingCourse()throws Exception{
 
         CourseUtils.cleanUp();
