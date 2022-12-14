@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.ManagedVirtualDevice
+
 apply plugin: 'com.android.application'
 apply from: '../jacoco.gradle'
 apply from: '../sonarqube.gradle'
@@ -101,7 +103,7 @@ android {
             buildConfigField "boolean", "ADMIN_PROTECT_COURSE_RESET", runtimeProps['ADMIN_PROTECT_COURSE_RESET']
             buildConfigField "boolean", "ADMIN_PROTECT_COURSE_INSTALL", runtimeProps['ADMIN_PROTECT_COURSE_INSTALL']
             buildConfigField "boolean", "ADMIN_PROTECT_COURSE_UPDATE", runtimeProps['ADMIN_PROTECT_COURSE_UPDATE']
-            
+
             buildConfigField "boolean", "ADMIN_PROTECT_NOTIFICATIONS", runtimeProps['ADMIN_PROTECT_NOTIFICATIONS']
             buildConfigField "boolean", "ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS", runtimeProps['ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS']
             buildConfigField "boolean", "ADMIN_PROTECT_REMINDER_INTERVAL", runtimeProps['ADMIN_PROTECT_REMINDER_INTERVAL']
@@ -199,6 +201,20 @@ android {
                 jacoco.excludes = ['jdk.internal.*']
             }
         }
+
+        managedDevices {
+            devices {
+                pixel2api30 (ManagedVirtualDevice) {
+                    // Use device profiles you typically see in Android Studio.
+                    device = "Pixel 2"
+                    // ATDs currently support only API level 30.
+                    apiLevel = 30
+                    // You can also specify "google-atd" if you require Google Play Services.
+                    systemImageSource = "aosp"
+                }
+            }
+        }
+
     }
 
     flavorDimensions "main"
