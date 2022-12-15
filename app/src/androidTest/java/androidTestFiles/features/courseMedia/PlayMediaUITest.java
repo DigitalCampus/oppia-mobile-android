@@ -24,6 +24,7 @@ import org.mockito.Mock;
 import java.io.File;
 import java.util.ArrayList;
 
+import androidTestFiles.database.sampledata.UserData;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.TestUtils;
 import androidx.test.core.app.ActivityScenario;
@@ -70,6 +71,8 @@ public class PlayMediaUITest extends CourseMediaBaseTest {
         super.setUp();
         initMockEditor();
         when(prefs.edit()).thenReturn(editor);
+
+        UserData.loadData(context);
     }
 
     private Course getMockCourse() {
@@ -138,19 +141,20 @@ public class PlayMediaUITest extends CourseMediaBaseTest {
         // Don't copy the video initially
         int trackers = DbHelper.getInstance(context).getUnsentTrackersCount();
         Intent i = getIntentParams(getMockCourse(), getMockSectionActivityWithMediaFilename(MEDIA_TEST_FILENAME));
-        try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
+        try (ActivityScenario<CourseActivity> scenario = ActivityScenario.launch(i)) {
             onWebView()
                     .withElement(findElement(Locator.TAG_NAME, "a"))
                     .perform(webClick());
 
+//            Thread.sleep(3000);
             //TODO: When checking for Toast messages work correctly, check the toast is displayed
             assertEquals(CourseActivity.class, TestUtils.getCurrentActivity().getClass());
 
+            // There should be a new tracker for the missing media event
+            int newTrackers = DbHelper.getInstance(context).getUnsentTrackersCount();
+            assertEquals(newTrackers, trackers + 1);
         }
 
-        // There should be a new tracker for the missing media event
-        int newTrackers = DbHelper.getInstance(context).getUnsentTrackersCount();
-        assertEquals(newTrackers, trackers + 1);
 
     }
 
