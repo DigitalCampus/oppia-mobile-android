@@ -1,11 +1,36 @@
 package androidTestFiles.features.courseMedia;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.espresso.web.sugar.Web.onWebView;
+import static androidx.test.espresso.web.webdriver.DriverAtoms.findElement;
+import static androidx.test.espresso.web.webdriver.DriverAtoms.webClick;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.ViewsUtils.isToast;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.web.webdriver.Locator;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SdkSuppress;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
+
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.DeviceListActivity;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -27,21 +52,6 @@ import java.util.ArrayList;
 import androidTestFiles.database.sampledata.UserData;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.TestUtils;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.web.webdriver.Locator;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.GrantPermissionRule;
-
-import static androidx.test.espresso.web.sugar.Web.onWebView;
-import static androidx.test.espresso.web.webdriver.DriverAtoms.findElement;
-import static androidx.test.espresso.web.webdriver.DriverAtoms.webClick;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class PlayMediaUITest extends CourseMediaBaseTest {
@@ -85,7 +95,7 @@ public class PlayMediaUITest extends CourseMediaBaseTest {
         return course;
     }
 
-    private String getPageContent(String filename){
+    private String getPageContent(String filename) {
         return "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
                 "<a href=\"/video/" + Uri.encode(filename) + "\"> My video</a>\n" +
                 "</body></html>";
@@ -99,7 +109,7 @@ public class PlayMediaUITest extends CourseMediaBaseTest {
         act.setTitlesFromJSONString("[{\"en\":\"Media page\"}]");
 
         File courseDir = new File(Storage.getCoursesPath(context), COURSE_SHORTNAME);
-        FileUtils.createFileWithContents(context, getPageContent(mediaFilename), courseDir,PAGE_FILENAME);
+        FileUtils.createFileWithContents(context, getPageContent(mediaFilename), courseDir, PAGE_FILENAME);
 
         ArrayList<Lang> location = new ArrayList<>();
         location.add(new Lang("en", PAGE_FILENAME));
@@ -136,18 +146,22 @@ public class PlayMediaUITest extends CourseMediaBaseTest {
     }
 
     @Test
+    @SdkSuppress(maxSdkVersion = Build.VERSION_CODES.Q)
     public void openMissingMediaFile() throws Exception {
 
         // Don't copy the video initially
         int trackers = DbHelper.getInstance(context).getUnsentTrackersCount();
         Intent i = getIntentParams(getMockCourse(), getMockSectionActivityWithMediaFilename(MEDIA_TEST_FILENAME));
         try (ActivityScenario<CourseActivity> scenario = ActivityScenario.launch(i)) {
+
             onWebView()
                     .withElement(findElement(Locator.TAG_NAME, "a"))
                     .perform(webClick());
 
-//            Thread.sleep(3000);
-            //TODO: When checking for Toast messages work correctly, check the toast is displayed
+            onView(withText(context.getString(R.string.error_media_not_found, MEDIA_TEST_FILENAME))).
+                    inRoot(isToast()).
+                    check(matches(isDisplayed()));
+
             assertEquals(CourseActivity.class, TestUtils.getCurrentActivity().getClass());
 
             // There should be a new tracker for the missing media event
