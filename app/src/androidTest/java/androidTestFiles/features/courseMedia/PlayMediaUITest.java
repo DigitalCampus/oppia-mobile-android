@@ -136,7 +136,7 @@ public class PlayMediaUITest extends CourseMediaBaseTest {
         copyMediaFromAssets(MEDIA_TEST_FILENAME);
 
         Intent i = getIntentParams(getMockCourse(), getMockSectionActivityWithMediaFilename(MEDIA_TEST_FILENAME));
-        try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
+        try (ActivityScenario<CourseActivity> scenario = ActivityScenario.launch(i)) {
             onWebView()
                     .withElement(findElement(Locator.TAG_NAME, "a"))
                     .perform(webClick());
@@ -177,7 +177,7 @@ public class PlayMediaUITest extends CourseMediaBaseTest {
         copyMediaFromAssets(MEDIA_TEST_FILENAME, MEDIA_TEST_FILENAME_WITH_SPACES);
 
         Intent i = getIntentParams(getMockCourse(), getMockSectionActivityWithMediaFilename(MEDIA_TEST_FILENAME_WITH_SPACES));
-        try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
+        try (ActivityScenario<CourseActivity> scenario = ActivityScenario.launch(i)) {
             onWebView()
                     .withElement(findElement(Locator.TAG_NAME, "a"))
                     .perform(webClick());

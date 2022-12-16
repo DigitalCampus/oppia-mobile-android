@@ -212,7 +212,22 @@ android {
                     // You can also specify "google-atd" if you require Google Play Services.
                     systemImageSource = "aosp"
                 }
+
+                nexusSapi28 (ManagedVirtualDevice) {
+                    device = "Nexus S"
+                    apiLevel = 28
+                    systemImageSource = "aosp"
+                }
             }
+
+
+            groups {
+                phones {
+                    targetDevices.add(devices.pixel2api30)
+                    targetDevices.add(devices.nexusSapi28)
+                }
+            }
+
         }
 
     }
