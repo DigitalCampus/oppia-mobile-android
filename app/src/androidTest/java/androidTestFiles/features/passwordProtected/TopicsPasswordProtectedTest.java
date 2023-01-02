@@ -64,6 +64,7 @@ import androidTestFiles.database.TestDBHelper;
 import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.UITestActionsUtils;
+import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
@@ -406,7 +407,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
             onView(withId(R.id.search_string)).perform(typeText("omicron"), closeSoftKeyboard());
             onView(withId(R.id.searchbutton)).perform(click());
 
-            onView(withId(R.id.recycler_results_search)).check(matches(hasChildCount(4)));
+            onView(withId(R.id.recycler_results_search)).check(new RecyclerViewItemCountAssertion(4));
         }
     }
 
