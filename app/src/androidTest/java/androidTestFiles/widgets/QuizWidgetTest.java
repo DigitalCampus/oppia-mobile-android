@@ -204,7 +204,7 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
     public void enterQuizWhenValidPassword() throws Exception {
         checkPasswordViewDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NON_EMPTY_PASSWORD, true);
         onView(withId(R.id.activity_password_field))
-                .perform(typeText("letmein"));
+                .perform(typeText("letmein"), closeSoftKeyboard());
         onView(withText(R.string.password_activity_submit)).perform(click());
         onView(withText("Is it snowing today?")).check(matches(isDisplayed()));
     }

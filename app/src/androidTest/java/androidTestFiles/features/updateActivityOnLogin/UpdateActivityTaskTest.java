@@ -114,7 +114,7 @@ public class UpdateActivityTaskTest extends MockedApiEndpointTaskTest {
     public void checkQuizAttemptsUpdate() throws Exception {
 
         testDBHelper.getTestDataManager().addUsers();
-        App.getPrefs(context).edit().putString(PrefsActivity.PREF_USER_NAME, "user1").apply();
+        App.getPrefs(context).edit().putString(PrefsActivity.PREF_USER_NAME, "user1").commit();
         Course course = testDBHelper.getTestDataManager().addCourse(1, "mock-course");
         addMockQuizAttemps();
 
