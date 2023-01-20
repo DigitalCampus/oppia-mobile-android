@@ -13,11 +13,20 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-public class MockedApiEndpointTaskTest {
+public class MockedApiEndpointTaskTest extends DaggerInjectMockUITest {
 
     protected MockWebServer mockServer;
 
-    protected void startServer(int responseCode, String responseBody, int timeoutDelay){
+    protected void startServer(int responseCode, String responseBody, int timeoutDelay, boolean connected) {
+
+        try {
+            // Change connectivity operation takes some milliseconds
+            enableConnectivity(connected);
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         try {
             mockServer = new MockWebServer();
             MockResponse response = new MockResponse();
@@ -35,11 +44,13 @@ public class MockedApiEndpointTaskTest {
         }catch(Exception e){
             e.printStackTrace();
         }
-
     }
 
-    protected void startServer(int responseCode, String responseBody){
-        enableConnectivity(true);
+    protected void startServer(int responseCode, String responseBody, int timeoutDelay) {
+        startServer(responseCode, responseBody, timeoutDelay, true);
+    }
+
+    protected void startServer(int responseCode, String responseBody) {
         startServer(responseCode, responseBody, 0);
     }
 

@@ -1,6 +1,9 @@
 package androidTestFiles.features.authentication.login;
 
-import android.Manifest;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+
 import android.content.Context;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -14,192 +17,83 @@ import org.digitalcampus.oppia.task.RegisterTask;
 import org.digitalcampus.oppia.task.result.EntityResult;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
+import androidTestFiles.database.TestDBHelper;
 import androidTestFiles.utils.FileUtils;
-import androidTestFiles.database.BaseTestDB;
 import androidTestFiles.utils.MockApiEndpoint;
-import androidx.test.rule.GrantPermissionRule;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import androidTestFiles.utils.parent.MockedApiEndpointTaskTest;
 
 
 @RunWith(AndroidJUnit4.class)
-public class LoginTest extends BaseTestDB {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-    // adb  shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE
-    // https://product.reverb.com/disabling-animations-in-espresso-for-android-testing-de17f7cf236f
-
+public class LoginTest extends MockedApiEndpointTaskTest {
 
     private CountDownLatch signal;
-    private MockWebServer mockServer;
     private Context context;
     private EntityResult<User> resultUser;
     private boolean registerOK;
+    private TestDBHelper testDBHelper;
 
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-
+        testDBHelper = new TestDBHelper(context);
+        testDBHelper.setUp();
         signal = new CountDownLatch(1);
-        mockServer = new MockWebServer();
     }
 
     @After
     public void tearDown() throws Exception {
-        super.tearDown();
-        signal.countDown();
-        mockServer.shutdown();
-    }
 
-    @Test
-    public void userLogin_EmptyResponse()throws Exception {
-        try {
+        testDBHelper.tearDown();
+        enableConnectivity(true);
 
-            mockServer.enqueue(new MockResponse()
-                    .setBody(""));
-
-            mockServer.start();
-
-        }catch(IOException ioe) {
-            ioe.printStackTrace();
-        }catch(Exception e){
-            e.printStackTrace();
+        if (mockServer != null) {
+            mockServer.shutdown();
         }
-
-        User user = new User();
-        user.setUsername("");
-        user.setPassword("");
-
-        try {
-            LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
-            task.setLoginListener(new SubmitEntityListener<User>() {
-                @Override
-                public void apiKeyInvalidated() {  }
-
-                @Override
-                public void submitComplete(EntityResult<User> result) {
-                    resultUser = result;
-                    signal.countDown();
-                }
-            });
-            task.execute(user);
-
-            signal.await();
-
-            assertFalse(resultUser.isSuccess());
-            assertEquals(context.getString(R.string.error_processing_response), resultUser.getResultMessage());
-
-        }catch (InterruptedException ie) {
-            ie.printStackTrace();
-        }catch(Exception e){}
 
     }
 
     @Test
-    public void userLogin_OKResponse()throws Exception {
-        try {
+    public void userLogin_EmptyResponse() throws Exception {
+        startServer(200, "", 500);
 
-            String filename = "responses/response_201_login.json";
+        launchLoginTask();
 
-            mockServer.enqueue(new MockResponse()
-                    .setResponseCode(201)
-                    .setBody(FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), filename)));
-
-            mockServer.start();
-
-
-        }catch(IOException ioe) {
-            ioe.printStackTrace();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-        User user = new User();
-        user.setUsername("");
-        user.setPassword("");
-
-        try {
-            LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
-            task.setLoginListener(new SubmitEntityListener<User>() {
-                @Override
-                public void apiKeyInvalidated() { }
-
-                @Override
-                public void submitComplete(EntityResult<User> result) {
-                    resultUser = result;
-                    signal.countDown();
-                }
-            });
-            task.execute(user);
-
-            signal.await();
-
-            assertTrue(resultUser.isSuccess());
-            assertEquals(context.getString(R.string.login_complete), resultUser.getResultMessage());
-
-        }catch (InterruptedException ie) {
-            ie.printStackTrace();
-        }catch(Exception e){}
+        assertFalse(resultUser.isSuccess());
+        assertEquals(context.getString(R.string.error_processing_response), resultUser.getResultMessage());
 
     }
 
     @Test
-    public void userLogin_WrongPassword()throws Exception {
-        try {
+    public void userLogin_OKResponse() throws Exception {
 
-            String filename = "responses/response_400_login.json";
+        String filename = "responses/response_201_login.json";
+        String response = FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), filename);
+        startServer(201, response);
 
-            mockServer.enqueue(new MockResponse()
-                    .setResponseCode(400)
-                    .setBody(FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), filename)));
 
-            mockServer.start();
+        launchLoginTask();
 
-        }catch(IOException ioe) {
-            ioe.printStackTrace();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        assertTrue(resultUser.isSuccess());
+        assertEquals(context.getString(R.string.login_complete), resultUser.getResultMessage());
 
-        User user = new User();
-        user.setUsername("");
-        user.setPassword("");
+    }
 
-        try {
-            LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
-            task.setLoginListener(new SubmitEntityListener<User>() {
-                @Override
-                public void apiKeyInvalidated() { }
+    @Test
+    public void userLogin_WrongPassword() throws Exception {
 
-                @Override
-                public void submitComplete(EntityResult<User> result) {
-                    resultUser = result;
-                    signal.countDown();
-                }
-            });
-            task.execute(user);
+        String filename = "responses/response_400_login.json";
+        String response = FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), filename);
+        startServer(400, response, 500);
 
-            signal.await();
+        launchLoginTask();
 
-            assertFalse(resultUser.isSuccess());
-            assertEquals(context.getString(R.string.error_login), resultUser.getResultMessage());
-
-        }catch (InterruptedException ie) {
-            ie.printStackTrace();
-        }catch(Exception e){}
+        assertFalse(resultUser.isSuccess());
+        assertEquals(context.getString(R.string.error_login), resultUser.getResultMessage());
 
     }
 
@@ -251,4 +145,61 @@ public class LoginTest extends BaseTestDB {
         });
         rt.execute(user);
     }
+
+
+    @Test
+    public void offlineUserNotFound() throws Exception {
+
+        startServer(0, "", 0, false);
+
+        launchLoginTask();
+
+        assertFalse(resultUser.isSuccess());
+        assertEquals(context.getString(R.string.offline_user_not_found), resultUser.getResultMessage());
+
+    }
+
+    @Test
+    public void offlineUserPasswordInvalid() throws Exception {
+
+        testDBHelper.getTestDataManager().addUsers();
+
+        startServer(0, "", 0, false);
+
+        launchLoginTask();
+
+        assertFalse(resultUser.isSuccess());
+        assertEquals(context.getString(R.string.offline_user_invalid_password), resultUser.getResultMessage());
+
+    }
+
+    private void launchLoginTask() {
+
+        User user = new User();
+        user.setUsername("user1");
+        user.setPassword("password1");
+
+        try {
+            LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
+            task.setLoginListener(new SubmitEntityListener<User>() {
+                @Override
+                public void apiKeyInvalidated() {
+                }
+
+                @Override
+                public void submitComplete(EntityResult<User> result) {
+                    resultUser = result;
+                    signal.countDown();
+                }
+            });
+            task.execute(user);
+
+            signal.await();
+
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        } catch (Exception e) {
+        }
+    }
+
 }
