@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidTestFiles.utils.TestUtils;
@@ -26,6 +27,7 @@ import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
@@ -39,10 +41,12 @@ import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -127,6 +131,14 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
     private void performLogout() {
 
         onView(withId(R.id.drawer)).perform(DrawerActions.open());
+
+        await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(
+                        () ->
+                                onView(ViewMatchers.withId(R.id.btn_expand_profile_options))
+                                        .check(matches(isCompletelyDisplayed()))
+                );
+
         onView(withId(R.id.btn_expand_profile_options)).perform(click());
         onView(withId(R.id.btn_logout)).perform(click());
         onView(withText(R.string.yes)).perform(click());

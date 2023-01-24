@@ -218,6 +218,12 @@ android {
                     apiLevel = 28
                     systemImageSource = "aosp"
                 }
+
+                nexus5api30 (ManagedVirtualDevice) {
+                    device = "Nexus 5"
+                    apiLevel = 30
+                    systemImageSource = "aosp"
+                }
             }
 
 

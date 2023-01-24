@@ -1,6 +1,6 @@
 instrumented_tests_task:
   name: Run Android instrumented tests
-  only_if: $CIRRUS_BRANCH =~ "release-.*" || $CIRRUS_PR != ""
+  # only_if: $CIRRUS_BRANCH =~ "release-.*" || $CIRRUS_PR != ""
   timeout_in: 120m
   env:
     matrix:
