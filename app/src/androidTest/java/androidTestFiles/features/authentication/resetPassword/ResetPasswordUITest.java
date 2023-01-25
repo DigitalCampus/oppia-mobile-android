@@ -57,7 +57,7 @@ public class ResetPasswordUITest extends MockedApiEndpointTest {
                     .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
             onView(withId(R.id.reset_btn))
-                    .perform(scrollTo(), click());
+                    .perform(closeSoftKeyboard(), scrollTo(), click());
 
             onView(withText(R.string.error_register_no_username))
                     .check(matches(isDisplayed()));
@@ -87,7 +87,7 @@ public class ResetPasswordUITest extends MockedApiEndpointTest {
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongUsername"));
 
             onView(withId(R.id.reset_btn))
-                    .perform(scrollTo(), click());
+                    .perform(closeSoftKeyboard(), scrollTo(), click());
 
             onView(withText(R.string.error_reset_password))
                     .check(matches(isDisplayed()));

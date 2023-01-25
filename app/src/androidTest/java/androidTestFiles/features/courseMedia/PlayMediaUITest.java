@@ -2,6 +2,8 @@ package androidTestFiles.features.courseMedia;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.espresso.web.sugar.Web.onWebView;
@@ -16,6 +18,7 @@ import static org.mockito.Mockito.when;
 import static androidTestFiles.utils.ViewsUtils.isToast;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -24,6 +27,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.web.webdriver.Locator;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
@@ -40,6 +44,7 @@ import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
 import org.digitalcampus.oppia.utils.storage.Storage;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -83,6 +88,13 @@ public class PlayMediaUITest extends CourseMediaBaseTest {
         when(prefs.edit()).thenReturn(editor);
 
         UserData.loadData(context);
+
+        Intents.init();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        Intents.release();
     }
 
     private Course getMockCourse() {
@@ -182,7 +194,8 @@ public class PlayMediaUITest extends CourseMediaBaseTest {
                     .withElement(findElement(Locator.TAG_NAME, "a"))
                     .perform(webClick());
 
-            assertEquals(VideoPlayerActivity.class, TestUtils.getCurrentActivity().getClass());
+            intended(hasComponent(new ComponentName(InstrumentationRegistry.getInstrumentation().getTargetContext(), VideoPlayerActivity.class)));
+//            assertEquals(VideoPlayerActivity.class, TestUtils.getCurrentActivity().getClass());
         }
     }
 }

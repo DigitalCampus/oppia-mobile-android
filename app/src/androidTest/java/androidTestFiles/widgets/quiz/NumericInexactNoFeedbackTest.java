@@ -46,7 +46,7 @@ public class NumericInexactNoFeedbackTest extends BaseQuizTest {
 
         onView(withId(R.id.responsetext))
                 .perform(closeSoftKeyboard(), scrollTo(), typeText(CORRECT_ANSWER));
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        onView(withId(R.id.mquiz_next_btn)).perform(closeSoftKeyboard(), click());
 
         String actual = TestUtils.getCurrentActivity().getString(R.string.widget_quiz_results_score, (float) 100);
         onView(withId(R.id.quiz_results_score))
@@ -75,7 +75,7 @@ public class NumericInexactNoFeedbackTest extends BaseQuizTest {
 
         onView(withId(R.id.responsetext))
                 .perform(closeSoftKeyboard(), scrollTo(), typeText(CLOSE_ANSWER));
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        onView(withId(R.id.mquiz_next_btn)).perform(closeSoftKeyboard(), click());
 
         String actual = TestUtils.getCurrentActivity()
                 .getString(R.string.widget_quiz_results_score, (float) 60);
@@ -103,7 +103,7 @@ public class NumericInexactNoFeedbackTest extends BaseQuizTest {
 
         onView(withId(R.id.responsetext))
                 .perform(closeSoftKeyboard(), scrollTo(), typeText(INCORRECT_ANSWER));
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        onView(withId(R.id.mquiz_next_btn)).perform(closeSoftKeyboard(), click());
 
         String actual = TestUtils.getCurrentActivity().getString(R.string.widget_quiz_results_score, (float) 0);
         onView(withId(R.id.quiz_results_score))

@@ -117,7 +117,7 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
 
     private void openPrivacyScreen() {
 
-        onView(withId(R.id.drawer)).perform(DrawerActions.open());
+        openDrawer();
         onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(R.id.menu_privacy));
     }
 
@@ -130,14 +130,7 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
 
     private void performLogout() {
 
-        onView(withId(R.id.drawer)).perform(DrawerActions.open());
-
-        await().atMost(5, TimeUnit.SECONDS)
-                .untilAsserted(
-                        () ->
-                                onView(ViewMatchers.withId(R.id.btn_expand_profile_options))
-                                        .check(matches(isCompletelyDisplayed()))
-                );
+        openDrawer();
 
         onView(withId(R.id.btn_expand_profile_options)).perform(click());
         onView(withId(R.id.btn_logout)).perform(click());
@@ -151,7 +144,7 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
         onView(withId(R.id.welcome_login)).perform(scrollTo(), click());
         onView(withId(R.id.login_username_field)).perform(closeSoftKeyboard(), scrollTo(), typeText(username));
         onView(withId(R.id.login_password_field))
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_password"));
+                .perform(scrollTo(), typeText("valid_password"), closeSoftKeyboard());
         onView(withId(R.id.login_btn)).perform(scrollTo(), click());
     }
 
@@ -184,7 +177,7 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
-                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"), closeSoftKeyboard());
 
             onView(withId(R.id.register_btn))
                     .perform(click());

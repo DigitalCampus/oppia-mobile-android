@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 
 import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -20,10 +21,14 @@ import static androidTestFiles.utils.parent.BaseTest.*;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertTrue;
+
+import java.util.concurrent.TimeUnit;
 
 @RunWith(AndroidJUnit4.class)
 public class MissingMediaUITest extends CourseMediaBaseTest {
@@ -192,6 +197,11 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
 
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+
+            await().atMost(5, TimeUnit.SECONDS)
+                    .untilAsserted(() -> onView(ViewMatchers.withId(R.id.btn_media_download))
+                            .check(matches(isCompletelyDisplayed())));
+
             onView(withId(R.id.btn_media_download)).perform(click());
 
             onView(withId(R.id.missing_media_list)).check(new RecyclerViewItemCountAssertion(2));
@@ -212,6 +222,10 @@ public class MissingMediaUITest extends CourseMediaBaseTest {
             onView(withRecyclerView(R.id.recycler_courses)
                     .atPosition(0))
                     .perform(click());
+
+            await().atMost(5, TimeUnit.SECONDS)
+                    .untilAsserted(() -> onView(ViewMatchers.withId(R.id.btn_media_download))
+                                            .check(matches(isCompletelyDisplayed())));
 
             onView(withId(R.id.btn_media_download)).perform(click());
 
