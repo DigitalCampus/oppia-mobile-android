@@ -155,7 +155,7 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_password"));
 
             onView(withId(R.id.login_btn))
-                    .perform(scrollTo(), click());
+                    .perform(closeSoftKeyboard(), scrollTo(), click());
 
             intended(allOf(
                     hasComponent(MainActivity.class.getName()),
@@ -182,7 +182,7 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("password"));
 
             onView(withId(R.id.login_btn))
-                    .perform(scrollTo(), click());
+                    .perform(closeSoftKeyboard(), scrollTo(), click());
 
             intended(allOf(
                     hasComponent(MainActivity.class.getName()),
@@ -409,9 +409,7 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
                 PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN, initialValue).apply();
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.drawer))
-                    .check(matches(isClosed(Gravity.START)))
-                    .perform(DrawerActions.open());
+            openDrawer();
 
             onView(withText(R.string.menu_settings)).perform(click());
 

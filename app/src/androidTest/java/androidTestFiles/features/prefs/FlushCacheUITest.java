@@ -4,6 +4,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBackUnconditionally;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -109,7 +110,7 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
             if (BuildConfig.ADMIN_PROTECT_ADVANCED_SETTINGS) {
                 String adminPass = context.getString(R.string.prefAdminPasswordDefault);
                 onView(withId(R.id.admin_password_field)).perform(clearText(), typeText(adminPass));
-                onView(withText(R.string.ok)).perform(click());
+                onView(withText(R.string.ok)).perform(closeSoftKeyboard(), click());
             }
 
             clickPrefWithText(R.string.pref_flush_app_cache);

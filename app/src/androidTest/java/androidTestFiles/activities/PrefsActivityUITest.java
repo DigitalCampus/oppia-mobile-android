@@ -32,6 +32,7 @@ import android.widget.EditText;
 
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -146,9 +147,7 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
                 .edit().putString(PrefsActivity.PREF_SERVER, "https://mock-server.com").apply();
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.drawer))
-                    .check(matches(isClosed(Gravity.START)))
-                    .perform(DrawerActions.open());
+            openDrawer();
 
             onView(withText(R.string.menu_settings)).perform(click());
 
@@ -195,9 +194,7 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
                 .edit().putString(PrefsActivity.PREF_SERVER, "https://mock-server.com").apply();
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.drawer))
-                    .check(matches(isClosed(Gravity.START)))
-                    .perform(DrawerActions.open());
+            openDrawer();
 
             onView(withText(R.string.menu_settings)).perform(click());
 
@@ -211,7 +208,8 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
 
             onView(allOf(instanceOf(EditText.class)))
                     .inRoot(isDialog())
-                    .perform(clearText(), typeText(String.format("https://some-url-%s.com", getRandomString())));
+                    .perform(clearText(), typeText(String.format("https://some-url-%s.com", getRandomString())),
+                            ViewActions.closeSoftKeyboard());
 
             closeSoftKeyboard();
 

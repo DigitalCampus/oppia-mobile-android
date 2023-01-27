@@ -158,7 +158,7 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-            onView(withId(R.id.next_btn)).perform(click());
+            onView(withId(R.id.next_btn)).perform(closeSoftKeyboard(), click());
 
             onView(withText("Second step")).check(matches(isDisplayed()));
 
@@ -185,7 +185,7 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-            onView(withId(R.id.next_btn)).perform(click());
+            onView(withId(R.id.next_btn)).perform(closeSoftKeyboard(), click());
             onView(withText("Second step")).check(matches(isDisplayed()));
             onView(withId(R.id.prev_btn)).perform(click());
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
@@ -307,7 +307,7 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
                     withHintInInputLayout(startsWith("Please specify"))))
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("None"));
 
-            onView(withId(R.id.next_btn)).perform(click());
+            onView(withId(R.id.next_btn)).perform(closeSoftKeyboard(), click());
 
             onView(withText("Other role info")).check(matches(isDisplayed()));
         }
@@ -357,7 +357,7 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-            onView(withId(R.id.next_btn)).perform(click());
+            onView(withId(R.id.next_btn)).perform(closeSoftKeyboard(), click());
 
             onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Position")))))
                     .perform(scrollTo())
@@ -396,7 +396,7 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-            onView(withId(R.id.next_btn)).perform(click());
+            onView(withId(R.id.next_btn)).perform(closeSoftKeyboard(), click());
 
             onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Position")))))
                     .perform(scrollTo())
@@ -430,7 +430,7 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
             openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
-            onView(withText(R.string.menu_settings)).perform(click());
+            onView(withText(R.string.menu_settings)).perform(closeSoftKeyboard(), click());
 
             pressBack();
 
@@ -458,7 +458,8 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
-                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password1")
+                            , closeSoftKeyboard());
 
             UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
             device.setOrientationLeft();

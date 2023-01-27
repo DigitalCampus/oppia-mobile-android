@@ -213,7 +213,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
 
     private void performLogout() {
 
-        onView(withId(R.id.drawer)).perform(DrawerActions.open());
+        openDrawer();
         onView(withId(R.id.btn_expand_profile_options)).perform(click());
         onView(withId(R.id.btn_logout)).perform(click());
         onView(withText(R.string.yes)).perform(click());
@@ -227,7 +227,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
         onView(withId(R.id.login_username_field)).perform(closeSoftKeyboard(), scrollTo(), typeText(username));
         onView(withId(R.id.login_password_field))
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_password"));
-        onView(withId(R.id.login_btn)).perform(scrollTo(), click());
+        onView(withId(R.id.login_btn)).perform(closeSoftKeyboard(), scrollTo(), click());
     }
 
 
