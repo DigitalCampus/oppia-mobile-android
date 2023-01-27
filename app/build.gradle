@@ -219,9 +219,9 @@ android {
                     systemImageSource = "aosp"
                 }
 
-                nexus5api30 (ManagedVirtualDevice) {
+                nexus5api29 (ManagedVirtualDevice) {
                     device = "Nexus 5"
-                    apiLevel = 30
+                    apiLevel = 29
                     systemImageSource = "aosp"
                 }
             }
@@ -229,8 +229,9 @@ android {
 
             groups {
                 phones {
-                    targetDevices.add(devices.nexus5api30)
+                    targetDevices.add(devices.nexus5api29)
                     targetDevices.add(devices.pixel2api30)
+                    targetDevices.add(devices.nexusSapi28)
                 }
             }
 
