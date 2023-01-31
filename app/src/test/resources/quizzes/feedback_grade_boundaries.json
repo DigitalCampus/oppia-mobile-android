@@ -1,0 +1,229 @@
+{
+  "id":3472,
+  "title":{
+    "en":"Feedback Grade Boundaries"
+  },
+  "description":{
+    "en":"Feedback Grade Boundaries"
+  },
+  "props":{
+    "allowtryagain":1,
+    "courseversion":"20190521122247",
+    "maxattempts":0,
+    "digest":"b56d41a0bd7c93acdea034c50118414718295cr0s2a1p80a0m0",
+    "maxscore":8,
+    "availability":0,
+    "showfeedback":2,
+    "grade_boundaries": [
+      {"0": "Quiz score is between 0% and 49%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%"},
+      {"50": "Quiz score is between 50% and 99%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%"},
+      {"100": "Quiz score is 100%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%"}
+    ]
+  },
+  "questions":[
+    {
+      "question":{
+        "responses":[
+          {
+            "title":{
+              "en":"Completely Performed (2)"
+            },
+            "props":{
+              "id":244
+            },
+            "order":1,
+            "score":"2.0000",
+            "id":103055
+          },
+          {
+            "title":{
+              "en":"Needs Improvement (1)"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"1.0000",
+            "id":103056
+          },
+          {
+            "title":{
+              "en":"Not Done or Done Incorrectly (0)"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"0.0000",
+            "id":103057
+          }
+        ],
+        "props":{
+          "maxscore":2,
+          "shuffleanswers":"1",
+          "required": false
+        },
+        "type":"multichoice",
+        "id":36249,
+        "title":{
+          "en":"Question 1"
+        }
+      },
+      "order":1,
+      "id":36042
+    },
+    {
+      "question":{
+        "responses":[
+          {
+            "title":{
+              "en":"Completely Performed (2)"
+            },
+            "props":{
+              "id":244
+            },
+            "order":1,
+            "score":"2.0000",
+            "id":103058
+          },
+          {
+            "title":{
+              "en":"Needs Improvement (1)"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"1.0000",
+            "id":103059
+          },
+          {
+            "title":{
+              "en":"Not Done or Done Incorrectly (0)"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"0.0000",
+            "id":103060
+          }
+        ],
+        "props":{
+          "maxscore":2,
+          "shuffleanswers":"1",
+          "required": false
+        },
+        "type":"multichoice",
+        "id":36250,
+        "title":{
+          "en":"Question 2"
+        }
+      },
+      "order":2,
+      "id":36043
+    },
+    {
+      "question":{
+        "responses":[
+          {
+            "title":{
+              "en":"Completely Performed (2)"
+            },
+            "props":{
+              "id":244
+            },
+            "order":1,
+            "score":"2.0000",
+            "id":103061
+          },
+          {
+            "title":{
+              "en":"Needs Improvement (1)"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"1.0000",
+            "id":103062
+          },
+          {
+            "title":{
+              "en":"Not Done or Done Incorrectly (0)"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"0.0000",
+            "id":103063
+          }
+        ],
+        "props":{
+          "maxscore":2,
+          "shuffleanswers":"1",
+          "required": false
+        },
+        "type":"multichoice",
+        "id":36250,
+        "title":{
+          "en":"Question 3"
+        }
+      },
+      "order":3,
+      "id":36044
+    },
+    {
+      "question":{
+        "responses":[
+          {
+            "title":{
+              "en":"Completely Performed (2)"
+            },
+            "props":{
+              "id":244
+            },
+            "order":1,
+            "score":"2.0000",
+            "id":103064
+          },
+          {
+            "title":{
+              "en":"Needs Improvement (1)"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"1.0000",
+            "id":103065
+          },
+          {
+            "title":{
+              "en":"Not Done or Done Incorrectly (0)"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"0.0000",
+            "id":103066
+          }
+        ],
+        "props":{
+          "maxscore":2,
+          "shuffleanswers":"1",
+          "required": false
+        },
+        "type":"multichoice",
+        "id":36250,
+        "title":{
+          "en":"Question 4"
+        }
+      },
+      "order":3,
+      "id":36045
+    }
+  ]
+}

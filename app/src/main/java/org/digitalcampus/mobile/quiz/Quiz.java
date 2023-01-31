@@ -449,6 +449,10 @@ public class Quiz implements Serializable {
         this.maxscore = maxscore;
     }
 
+    public float getQuizPercentageScore() {
+        return this.getUserscore() * 100 / this.getMaxscore();
+    }
+
     public int getTotalNoQuestions() {
         int noQs = 0;
         for (QuizQuestion q: questions){
@@ -625,9 +629,9 @@ public class Quiz implements Serializable {
     // Get a property´s value by its name, or null if the property name is not included.
     private String getPropertyValue(String propertyName) {
         switch (propertyName) {
-            case "user_score": return String.valueOf(this.userscore);
-            case "max_score": return String.valueOf(this.maxscore);
-            case "score_percentage": return String.valueOf(this.userscore * 100 / this.maxscore);
+            case "user_score": return String.valueOf(this.getUserscore());
+            case "max_score": return String.valueOf(this.getMaxscore());
+            case "score_percentage": return String.valueOf(this.getQuizPercentageScore());
             default: return null;
         }
     }
