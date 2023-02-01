@@ -67,7 +67,7 @@ public class LoginUITest extends MockedApiEndpointTest {
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongPassword"));
 
             onView(withId(R.id.login_btn))
-                    .perform(scrollTo(), click());
+                    .perform(closeSoftKeyboard(), scrollTo(), click());
 
             onView(withText(R.string.error_login))
                     .check(matches(isDisplayed()));
@@ -90,7 +90,7 @@ public class LoginUITest extends MockedApiEndpointTest {
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_password"));
 
             onView(withId(R.id.login_btn))
-                    .perform(scrollTo(), click());
+                    .perform(closeSoftKeyboard(), scrollTo(), click());
 
             assertNotEquals(WelcomeActivity.class, TestUtils.getCurrentActivity().getClass());
         }

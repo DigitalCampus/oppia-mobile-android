@@ -696,6 +696,6 @@ public abstract class AnswerWidget extends BaseWidget {
 
     public float getPercentScore() {
         quiz.mark(prefLang);
-        return quiz.getUserscore() * 100 / quiz.getMaxscore();
+        return quiz.getQuizPercentageScore();
     }
 }

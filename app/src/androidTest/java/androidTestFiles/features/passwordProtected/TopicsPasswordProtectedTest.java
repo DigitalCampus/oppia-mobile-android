@@ -64,6 +64,7 @@ import androidTestFiles.database.TestDBHelper;
 import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.UITestActionsUtils;
+import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
@@ -212,7 +213,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
 
     private void performLogout() {
 
-        onView(withId(R.id.drawer)).perform(DrawerActions.open());
+        openDrawer();
         onView(withId(R.id.btn_expand_profile_options)).perform(click());
         onView(withId(R.id.btn_logout)).perform(click());
         onView(withText(R.string.yes)).perform(click());
@@ -226,7 +227,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
         onView(withId(R.id.login_username_field)).perform(closeSoftKeyboard(), scrollTo(), typeText(username));
         onView(withId(R.id.login_password_field))
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_password"));
-        onView(withId(R.id.login_btn)).perform(scrollTo(), click());
+        onView(withId(R.id.login_btn)).perform(closeSoftKeyboard(), scrollTo(), click());
     }
 
 
@@ -406,7 +407,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
             onView(withId(R.id.search_string)).perform(typeText("omicron"), closeSoftKeyboard());
             onView(withId(R.id.searchbutton)).perform(click());
 
-            onView(withId(R.id.recycler_results_search)).check(matches(hasChildCount(4)));
+            onView(withId(R.id.recycler_results_search)).check(new RecyclerViewItemCountAssertion(4));
         }
     }
 

@@ -15,9 +15,11 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.allOf;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -41,6 +43,7 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
@@ -57,6 +60,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.Mock;
+
+import java.util.concurrent.TimeUnit;
 
 import androidTestFiles.database.TestDBHelper;
 import androidTestFiles.utils.CourseUtils;
@@ -150,7 +155,7 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_password"));
 
             onView(withId(R.id.login_btn))
-                    .perform(scrollTo(), click());
+                    .perform(closeSoftKeyboard(), scrollTo(), click());
 
             intended(allOf(
                     hasComponent(MainActivity.class.getName()),
@@ -177,7 +182,7 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("password"));
 
             onView(withId(R.id.login_btn))
-                    .perform(scrollTo(), click());
+                    .perform(closeSoftKeyboard(), scrollTo(), click());
 
             intended(allOf(
                     hasComponent(MainActivity.class.getName()),
@@ -202,6 +207,12 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
         setOption(R.string.update_activity_on_login_value_optional);
         launchCoursesListFragment(true);
 
+            await().atMost(5, TimeUnit.SECONDS)
+                    .untilAsserted(
+                            () ->
+                                    onView(ViewMatchers.withId(R.id.circularProgressBar))
+                                            .check(CircularProgressbarAssertion.withProgress(100))
+                    );
         onView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(100));
 
     }
@@ -214,6 +225,13 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
         setOption(R.string.update_activity_on_login_value_force);
         launchCoursesListFragment(true);
 
+        await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(
+                        () ->
+                                onView(ViewMatchers.withId(R.id.circularProgressBar))
+                                        .check(CircularProgressbarAssertion.withProgress(100))
+                );
+
         onView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(100));
     }
 
@@ -223,6 +241,13 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
         prepareCircularProgressbarTests();
         setOption(R.string.update_activity_on_login_value_none);
         launchCoursesListFragment(true);
+
+        await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(
+                        () ->
+                                onView(ViewMatchers.withId(R.id.circularProgressBar))
+                                        .check(CircularProgressbarAssertion.withProgress(0))
+                );
 
         onView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(0));
     }
@@ -234,6 +259,13 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
         setOption(R.string.update_activity_on_login_value_optional);
         launchCoursesListFragment(false);
 
+        await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(
+                        () ->
+                                onView(ViewMatchers.withId(R.id.circularProgressBar))
+                                        .check(CircularProgressbarAssertion.withProgress(0))
+                );
+
         onView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(0));
 
     }
@@ -244,6 +276,13 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
         prepareCircularProgressbarTests();
         setOption(R.string.update_activity_on_login_value_force);
         launchCoursesListFragment(false);
+
+        await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(
+                        () ->
+                                onView(ViewMatchers.withId(R.id.circularProgressBar))
+                                        .check(CircularProgressbarAssertion.withProgress(0))
+                );
 
         onView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(0));
 
@@ -370,9 +409,7 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
                 PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN, initialValue).apply();
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.drawer))
-                    .check(matches(isClosed(Gravity.START)))
-                    .perform(DrawerActions.open());
+            openDrawer();
 
             onView(withText(R.string.menu_settings)).perform(click());
 

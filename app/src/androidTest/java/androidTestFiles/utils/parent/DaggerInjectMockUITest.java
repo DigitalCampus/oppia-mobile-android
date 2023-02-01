@@ -3,19 +3,24 @@ package androidTestFiles.utils.parent;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertTrue;
 import static androidTestFiles.utils.CourseUtils.runInstallCourseTask;
 
 import android.content.Context;
+import android.view.Gravity;
 
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.R;
@@ -24,6 +29,8 @@ import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.junit.Rule;
+
+import java.util.concurrent.TimeUnit;
 
 import androidTestFiles.utils.FileUtils;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
@@ -46,6 +53,10 @@ public class DaggerInjectMockUITest {
     public void openDrawer() {
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
+
+        await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(() -> onView(ViewMatchers.withId(R.id.drawer))
+                        .check(matches(isCompletelyDisplayed())));
 
         onView(withId(R.id.drawer)).check(matches(isOpen()));
     }

@@ -92,7 +92,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
                     .perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Us"));
+                    .perform(closeSoftKeyboard(), scrollTo(), typeText("Us"), closeSoftKeyboard());
 
             onView(withId(R.id.register_btn))
                     .perform(click());
@@ -121,7 +121,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("Username With Spaces"));
 
             onView(withId(R.id.register_btn))
-                    .perform(click());
+                    .perform(closeSoftKeyboard(), click());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.register_form_username_field)
                     .check(matches(withText(R.string.field_spaces_error)));
@@ -162,7 +162,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
 
             onView(withId(R.id.register_btn))
-                    .perform(click());
+                    .perform(closeSoftKeyboard(), click());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.register_form_email_field)
                     .check(matches(withText(R.string.error_register_email)));
@@ -203,7 +203,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
 
             onView(withId(R.id.register_btn))
-                    .perform(click());
+                    .perform(closeSoftKeyboard(), click());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.register_form_email_field)
                     .check(matches(withText(R.string.field_spaces_error)));
@@ -232,7 +232,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("123"));
 
             onView(withId(R.id.register_btn))
-                    .perform(click());
+                    .perform(closeSoftKeyboard(), click());
 
             String passwordError = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().getString(
                     R.string.error_register_password, App.PASSWORD_MIN_LENGTH);

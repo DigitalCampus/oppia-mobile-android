@@ -650,6 +650,8 @@
     <string name="connection_unavailable_couse_activity">Connection unavailable, unable to retrieve course activity</string>
     <string name="try_again">Try again</string>
     <string name="continue_anyway">Continue anyway</string>
+    <string name="offline_user_not_found">Offline user not found.\nYou have no internet connection so only local users are available.</string>
+    <string name="offline_user_invalid_password">Invalid password.\nYou have no internet connection so only local users are available.</string>
 
 </resources>
 

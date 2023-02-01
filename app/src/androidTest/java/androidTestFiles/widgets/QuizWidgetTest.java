@@ -1,11 +1,28 @@
 package androidTestFiles.widgets;
 
 
+import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.not;
+import static org.mockito.Matchers.any;
+
 import android.Manifest;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.widget.EditText;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SdkSuppress;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
@@ -25,28 +42,9 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
-import androidTestFiles.utils.parent.DaggerInjectMockUITest;
-import androidTestFiles.utils.FileUtils;
-import androidTestFiles.utils.ViewsUtils;
 import androidTestFiles.features.quiz.models.QuizModelGeneralTest;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.SdkSuppress;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.GrantPermissionRule;
-
-import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.isDialog;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.not;
-import static org.mockito.Matchers.any;
+import androidTestFiles.utils.FileUtils;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -206,7 +204,7 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
     public void enterQuizWhenValidPassword() throws Exception {
         checkPasswordViewDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NON_EMPTY_PASSWORD, true);
         onView(withId(R.id.activity_password_field))
-                .perform(typeText("letmein"));
+                .perform(typeText("letmein"), closeSoftKeyboard());
         onView(withText(R.string.password_activity_submit)).perform(click());
         onView(withText("Is it snowing today?")).check(matches(isDisplayed()));
     }
@@ -217,14 +215,12 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
     // https://oppia.atlassian.net/browse/OPPIA-1130
     public void dontEnterQuizWhenInvalidPassword() throws Exception {
         checkPasswordViewDisplayed(QuizModelGeneralTest.PASSWORD_PROTECT_NON_EMPTY_PASSWORD, true);
-        onView(instanceOf(EditText.class))
-                .inRoot(isDialog())
-                .perform(typeText("wrong_pass"));
-        onView(withText(R.string.ok)).perform(click());
 
-        onView(withText(R.string.invalid_password))
-                .inRoot(ViewsUtils.isToast())
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.activity_password_field)).perform(typeText("wrong_pass"), closeSoftKeyboard());
+
+        onView(withId(R.id.submit_activity_password)).perform(click());
+
+        onView(withText(R.string.password_activity_incorrect)).check(matches(isDisplayed()));
 
         onView(withText("Is it snowing today?")).check(doesNotExist());
 
