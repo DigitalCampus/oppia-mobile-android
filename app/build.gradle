@@ -8,8 +8,8 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-def version_code = 106
-def version_name = "7.4.1.et-irt.1.int"
+def version_code = 107
+def version_name = "7.4.2.et-irt.1.int"
 
 android {
 
