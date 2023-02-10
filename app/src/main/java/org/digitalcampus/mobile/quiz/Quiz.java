@@ -629,9 +629,9 @@ public class Quiz implements Serializable {
     // Get a property´s value by its name, or null if the property name is not included.
     private String getPropertyValue(String propertyName) {
         switch (propertyName) {
-            case "user_score": return String.valueOf(this.getUserscore());
-            case "max_score": return String.valueOf(this.getMaxscore());
-            case "score_percentage": return String.valueOf(this.getQuizPercentageScore());
+            case "user_score": return String.valueOf(Math.round(this.getUserscore()));
+            case "max_score": return String.valueOf(Math.round(this.getMaxscore()));
+            case "score_percentage": return String.valueOf(Math.round(this.getQuizPercentageScore()));
             default: return null;
         }
     }
