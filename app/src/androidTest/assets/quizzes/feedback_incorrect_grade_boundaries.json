@@ -1,0 +1,229 @@
+{
+  "id":3472,
+  "title":{
+    "en":"Feedback Grade Boundaries"
+  },
+  "description":{
+    "en":"Feedback Grade Boundaries"
+  },
+  "props":{
+    "allowtryagain":1,
+    "courseversion":"20190521122247",
+    "maxattempts":0,
+    "digest":"b56d41a0bd7c93acdea034c50118414718295cr0s2a1p80a0m0",
+    "maxscore":8,
+    "availability":0,
+    "showfeedback":2,
+    "grade_boundaries": [
+      {"0": "Property missing double curly braces: {max_score}; Property does not exist: {{not_exist}}"},
+      {"50": "Property missing double curly braces: {max_score}; Property does not exist: {{not_exist}}"},
+      {"100": "Property missing double curly braces: {max_score}; Property does not exist: {{not_exist}}"}
+    ]
+  },
+  "questions":[
+    {
+      "question":{
+        "responses":[
+          {
+            "title":{
+              "en":"Response with score 2.0"
+            },
+            "props":{
+              "id":244
+            },
+            "order":1,
+            "score":"2.0000",
+            "id":103055
+          },
+          {
+            "title":{
+              "en":"Response with score 1.0"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"1.0000",
+            "id":103056
+          },
+          {
+            "title":{
+              "en":"Response with score 0.0"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"0.0000",
+            "id":103057
+          }
+        ],
+        "props":{
+          "maxscore":2,
+          "shuffleanswers":"1",
+          "required": false
+        },
+        "type":"multichoice",
+        "id":36249,
+        "title":{
+          "en":"Question 1"
+        }
+      },
+      "order":1,
+      "id":36042
+    },
+    {
+      "question":{
+        "responses":[
+          {
+            "title":{
+              "en":"Response with score 2.0"
+            },
+            "props":{
+              "id":244
+            },
+            "order":1,
+            "score":"2.0000",
+            "id":103058
+          },
+          {
+            "title":{
+              "en":"Response with score 1.0"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"1.0000",
+            "id":103059
+          },
+          {
+            "title":{
+              "en":"Response with score 0.0"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"0.0000",
+            "id":103060
+          }
+        ],
+        "props":{
+          "maxscore":2,
+          "shuffleanswers":"1",
+          "required": false
+        },
+        "type":"multichoice",
+        "id":36250,
+        "title":{
+          "en":"Question 2"
+        }
+      },
+      "order":2,
+      "id":36043
+    },
+    {
+      "question":{
+        "responses":[
+          {
+            "title":{
+              "en":"Response with score 2.0"
+            },
+            "props":{
+              "id":244
+            },
+            "order":1,
+            "score":"2.0000",
+            "id":103061
+          },
+          {
+            "title":{
+              "en":"Response with score 1.0"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"1.0000",
+            "id":103062
+          },
+          {
+            "title":{
+              "en":"Response with score 0.0"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"0.0000",
+            "id":103063
+          }
+        ],
+        "props":{
+          "maxscore":2,
+          "shuffleanswers":"1",
+          "required": false
+        },
+        "type":"multichoice",
+        "id":36250,
+        "title":{
+          "en":"Question 3"
+        }
+      },
+      "order":3,
+      "id":36044
+    },
+    {
+      "question":{
+        "responses":[
+          {
+            "title":{
+              "en":"Response with score 2.0"
+            },
+            "props":{
+              "id":244
+            },
+            "order":1,
+            "score":"2.0000",
+            "id":103064
+          },
+          {
+            "title":{
+              "en":"Response with score 1.0"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"1.0000",
+            "id":103065
+          },
+          {
+            "title":{
+              "en":"Response with score 0.0"
+            },
+            "props":{
+              "id":954
+            },
+            "order":2,
+            "score":"0.0000",
+            "id":103066
+          }
+        ],
+        "props":{
+          "maxscore":2,
+          "shuffleanswers":"1",
+          "required": false
+        },
+        "type":"multichoice",
+        "id":36250,
+        "title":{
+          "en":"Question 4"
+        }
+      },
+      "order":3,
+      "id":36045
+    }
+  ]
+}
