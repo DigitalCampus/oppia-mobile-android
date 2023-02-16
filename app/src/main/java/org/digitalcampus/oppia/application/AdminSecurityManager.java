@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.fragments.PasswordDialogFragment;
@@ -84,13 +85,13 @@ public class AdminSecurityManager {
         if(testForzeActionProtected()) return getTestActionProtectedValue();
 
         switch (actionId){
-            case R.id.course_context_delete: return App.ADMIN_PROTECT_COURSE_DELETE;
-            case R.id.course_context_reset: return App.ADMIN_PROTECT_COURSE_RESET;
-            case R.id.course_context_update_activity: return App.ADMIN_PROTECT_COURSE_UPDATE;
-            case R.id.menu_download: return App.ADMIN_PROTECT_COURSE_INSTALL;
-            case R.id.menu_settings: return App.ADMIN_PROTECT_SETTINGS;
-            case R.id.menu_sync: return App.ADMIN_PROTECT_ACTIVITY_SYNC;
-            case R.id.action_export_activity: return App.ADMIN_PROTECT_ACTIVITY_EXPORT;
+            case R.id.course_context_delete: return BuildConfig.ADMIN_PROTECT_COURSE_DELETE;
+            case R.id.course_context_reset: return BuildConfig.ADMIN_PROTECT_COURSE_RESET;
+            case R.id.course_context_update_activity: return BuildConfig.ADMIN_PROTECT_COURSE_UPDATE;
+            case R.id.menu_download: return BuildConfig.ADMIN_PROTECT_COURSE_INSTALL;
+            case R.id.menu_settings: return BuildConfig.ADMIN_PROTECT_SETTINGS;
+            case R.id.menu_sync: return BuildConfig.ADMIN_PROTECT_ACTIVITY_SYNC;
+            case R.id.action_export_activity: return BuildConfig.ADMIN_PROTECT_ACTIVITY_EXPORT;
 
             default: return false;
         }
@@ -112,15 +113,15 @@ public class AdminSecurityManager {
 
         switch (preferenceKey){
 
-            case PrefsActivity.PREF_SERVER: return App.ADMIN_PROTECT_SERVER;
-            case PrefsActivity.PREF_ADVANCED_SCREEN: return App.ADMIN_PROTECT_ADVANCED_SETTINGS;
-            case PrefsActivity.PREF_SECURITY_SCREEN: return App.ADMIN_PROTECT_SECURITY_SETTINGS;
+            case PrefsActivity.PREF_SERVER: return BuildConfig.ADMIN_PROTECT_SERVER;
+            case PrefsActivity.PREF_ADVANCED_SCREEN: return BuildConfig.ADMIN_PROTECT_ADVANCED_SETTINGS;
+            case PrefsActivity.PREF_SECURITY_SCREEN: return BuildConfig.ADMIN_PROTECT_SECURITY_SETTINGS;
 
-            case PrefsActivity.PREF_DISABLE_NOTIFICATIONS: return App.ADMIN_PROTECT_NOTIFICATIONS;
-            case PrefsActivity.PREF_COURSES_REMINDER_ENABLED: return App.ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS;
-            case PrefsActivity.PREF_COURSES_REMINDER_INTERVAL: return App.ADMIN_PROTECT_REMINDER_INTERVAL;
-            case PrefsActivity.PREF_COURSES_REMINDER_DAYS: return App.ADMIN_PROTECT_REMINDER_DAYS;
-            case PrefsActivity.PREF_COURSES_REMINDER_TIME: return App.ADMIN_PROTECT_REMINDER_TIME;
+            case PrefsActivity.PREF_DISABLE_NOTIFICATIONS: return BuildConfig.ADMIN_PROTECT_NOTIFICATIONS;
+            case PrefsActivity.PREF_COURSES_REMINDER_ENABLED: return BuildConfig.ADMIN_PROTECT_ENABLE_REMINDER_NOTIFICATIONS;
+            case PrefsActivity.PREF_COURSES_REMINDER_INTERVAL: return BuildConfig.ADMIN_PROTECT_REMINDER_INTERVAL;
+            case PrefsActivity.PREF_COURSES_REMINDER_DAYS: return BuildConfig.ADMIN_PROTECT_REMINDER_DAYS;
+            case PrefsActivity.PREF_COURSES_REMINDER_TIME: return BuildConfig.ADMIN_PROTECT_REMINDER_TIME;
 
             default: return false;
         }

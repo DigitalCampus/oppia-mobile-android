@@ -26,6 +26,8 @@ import android.os.Build;
 import androidx.preference.PreferenceManager;
 
 import android.telephony.TelephonyManager;
+
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
 import org.json.JSONException;
@@ -109,22 +111,22 @@ public class MetaDataUtils {
             json = new JSONObject();
         }
 
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK), App.METADATA_INCLUDE_NETWORK)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK), BuildConfig.METADATA_INCLUDE_NETWORK)) {
             json.put("network", this.getNetworkProvider());
         }
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_APP_INSTANCE_ID), App.METADATA_INCLUDE_APP_INSTANCE_ID)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_APP_INSTANCE_ID), BuildConfig.METADATA_INCLUDE_APP_INSTANCE_ID)) {
             json.put("appInstanceId", this.getAppInstanceId());
         }
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_MANUFACTURER_MODEL), App.METADATA_INCLUDE_MANUFACTURER_MODEL)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_MANUFACTURER_MODEL), BuildConfig.METADATA_INCLUDE_MANUFACTURER_MODEL)) {
             json.put("manufacturermodel", this.getManufacturerModel());
         }
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_WIFI_ON), App.METADATA_INCLUDE_WIFI_ON)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_WIFI_ON), BuildConfig.METADATA_INCLUDE_WIFI_ON)) {
             json.put("wifion", ConnectionUtils.isOnWifi(ctx));
         }
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK_CONNECTED), App.METADATA_INCLUDE_NETWORK_CONNECTED)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK_CONNECTED), BuildConfig.METADATA_INCLUDE_NETWORK_CONNECTED)) {
             json.put("netconnected", ConnectionUtils.isNetworkConnected(ctx));
         }
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_BATTERY_LEVEL), App.METADATA_INCLUDE_BATTERY_LEVEL)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_BATTERY_LEVEL), BuildConfig.METADATA_INCLUDE_BATTERY_LEVEL)) {
             json.put("battery", this.getBatteryLevel());
         }
         return json;

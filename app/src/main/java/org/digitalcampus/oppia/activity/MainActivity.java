@@ -219,7 +219,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
     // CONFIGURATIONS
     private void configureUserOptions() {
-        boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, App.MENU_ALLOW_LOGOUT);
+        boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, BuildConfig.MENU_ALLOW_LOGOUT);
         bindingHeader.btnLogout.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
         if (!logoutVisible) {
             setupProfileOptionsView(false);

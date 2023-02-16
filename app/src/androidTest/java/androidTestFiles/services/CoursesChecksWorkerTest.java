@@ -16,6 +16,7 @@ import androidx.work.testing.SynchronousExecutor;
 import androidx.work.testing.TestListenableWorkerBuilder;
 import androidx.work.testing.WorkManagerTestInitHelper;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.di.AppComponent;
@@ -117,7 +118,7 @@ public class CoursesChecksWorkerTest {
 
         when(user.getUsername()).thenReturn(null);
 
-        givenThereAreSomeCourses(App.DOWNLOAD_COURSES_DISPLAY - 1);
+        givenThereAreSomeCourses(BuildConfig.DOWNLOAD_COURSES_DISPLAY - 1);
 
         coursesChecksWorkerManager.checkNoCoursesInstalled();
 
@@ -135,7 +136,7 @@ public class CoursesChecksWorkerTest {
 
         when(user.getUsername()).thenReturn("test_user");
 
-        givenThereAreSomeCourses(App.DOWNLOAD_COURSES_DISPLAY - 1);
+        givenThereAreSomeCourses(BuildConfig.DOWNLOAD_COURSES_DISPLAY - 1);
 
         coursesChecksWorkerManager.checkNoCoursesInstalled();
 
@@ -154,7 +155,7 @@ public class CoursesChecksWorkerTest {
 
         when(user.getUsername()).thenReturn("test_user");
 
-        givenThereAreSomeCourses(App.DOWNLOAD_COURSES_DISPLAY);
+        givenThereAreSomeCourses(BuildConfig.DOWNLOAD_COURSES_DISPLAY);
 
         coursesChecksWorkerManager.checkNoCoursesInstalled();
 
