@@ -211,6 +211,12 @@ public class SessionManager {
         App.getDb().userPreferenceDao().insert(userPreference);
     }
 
+    public static void invalidateAllApiKeys(Context ctx){
+            for (User u : DbHelper.getInstance(ctx).getAllUsers()) {
+                SessionManager.setUserApiKeyValid(u, false);
+            }
+    }
+
     public static void invalidateCurrentUserApiKey(Context ctx){
         try {
             User u = DbHelper.getInstance(ctx).getUser(SessionManager.getUsername(ctx));
