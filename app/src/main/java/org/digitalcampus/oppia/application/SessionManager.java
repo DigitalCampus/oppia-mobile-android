@@ -240,6 +240,16 @@ public class SessionManager {
         return (userPref == null || STR_TRUE.equals(userPref.getValue()));
     }
 
+    public static boolean areAllApiKeysInvalid(Context ctx){
+        List<User> users = DbHelper.getInstance(ctx).getAllUsers();
+        for (User u : users) {
+            if (isUserApiKeyValid(u.getUsername())){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static void preloadUserAccounts(Context ctx, PreloadAccountsListener listener) {
         File csvAccounts = new File(Storage.getStorageLocationRoot(ctx) + File.separator + ACCOUNTS_CSV_FILENAME);
         if (csvAccounts.exists()) {

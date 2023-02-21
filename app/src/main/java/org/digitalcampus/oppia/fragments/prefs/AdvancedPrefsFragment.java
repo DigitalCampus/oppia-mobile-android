@@ -147,7 +147,10 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
 
         switch (key) {
             case PrefsActivity.PREF_SERVER:
-                return !TextUtilsJava.equals(currentValue, newValue);
+                boolean allApiKeysInvalid = SessionManager.areAllApiKeysInvalid(getContext());
+                //If all API keys are already invalidated, we don't need to show the warning
+                return !TextUtilsJava.equals(currentValue, newValue) &&
+                        (isLoggedIn() || !allApiKeysInvalid);
 
             case PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN:
                 if (!isLoggedIn()) {
