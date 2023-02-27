@@ -1,12 +1,10 @@
 package androidTestFiles.features;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.GrantPermissionRule;
 import androidx.test.rule.ServiceTestRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
@@ -20,10 +18,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidTestFiles.utils.parent.NotificationsUiTest;
+
 @RunWith(AndroidJUnit4.class)
-public class BluetoothTransferTest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+public class BluetoothTransferTest extends NotificationsUiTest {
 
     @Rule
     public final ServiceTestRule serviceRule = new ServiceTestRule();
@@ -49,7 +47,6 @@ public class BluetoothTransferTest {
         device.openNotification();
         device.wait(Until.hasObject(By.text(context.getString(stringId))), 1000);
         Assert.assertNotNull(device.findObject(By.text(context.getString(stringId))));
-        device.pressBack();
     }
 
     @Test

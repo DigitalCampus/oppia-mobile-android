@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.parent.NotificationsUiTest;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -44,23 +45,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
-public class CoursesChecksWorkerTest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-    @Rule
-    public DaggerMockRule<AppComponent> daggerRule =
-            new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
-                    .getTargetContext()
-                    .getApplicationContext())).set(
-                    component -> {
-
-                        App app =
-                                (App) InstrumentationRegistry.getInstrumentation()
-                                        .getTargetContext()
-                                        .getApplicationContext();
-                        app.setComponent(component);
-                    });
+public class CoursesChecksWorkerTest extends NotificationsUiTest {
 
     @Mock
     CoursesRepository coursesRepository;
@@ -126,7 +111,6 @@ public class CoursesChecksWorkerTest {
         device.wait(Until.hasObject(By.text(context.getString(R.string.notification_course_download_title))), 1000);
 
         Assert.assertNull(device.findObject(By.text(context.getString(R.string.notification_course_download_title))));
-        device.pressBack(); // To close notification panel.
 
     }
 
@@ -144,8 +128,6 @@ public class CoursesChecksWorkerTest {
         device.wait(Until.hasObject(By.text(context.getString(R.string.notification_course_download_title))), 1000);
         Assert.assertNotNull(device.findObject(By.text(context.getString(R.string.notification_course_download_title))));
 
-        device.pressBack(); // To close notification panel.
-
     }
 
 
@@ -162,7 +144,6 @@ public class CoursesChecksWorkerTest {
         device.openNotification();
         device.wait(Until.hasObject(By.text(context.getString(R.string.notification_course_download_title))), 1000);
         Assert.assertNull(device.findObject(By.text(context.getString(R.string.notification_course_download_title))));
-        device.pressBack(); // To close notification panel.
 
     }
 

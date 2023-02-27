@@ -23,8 +23,6 @@ import androidx.test.rule.GrantPermissionRule;
 
 @RunWith(AndroidJUnit4.class)
 public abstract class CourseMediaBaseTest extends DaggerInjectMockUITest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
 
     protected Context context;

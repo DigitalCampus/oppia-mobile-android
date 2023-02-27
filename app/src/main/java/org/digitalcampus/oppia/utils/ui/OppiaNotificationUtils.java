@@ -86,6 +86,13 @@ public class OppiaNotificationUtils {
         boolean notificationsDisabled = prefs.getBoolean(PrefsActivity.PREF_DISABLE_NOTIFICATIONS, false);
         if(!notificationsDisabled) {
             NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                if (!notificationManager.areNotificationsEnabled()) {
+                    return;
+                }
+            }
+
             notificationManager.notify(id, notification);
         }
     }

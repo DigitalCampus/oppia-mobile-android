@@ -62,11 +62,6 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
     private static final String TAG = "DeviceListActivity";
 
     public static final String EXTRA_DEVICE_ADDRESS = "device_address";
-    private static final List<String> BLUETOOTH_PERMISSIONS = Arrays.asList(
-            //Remember to update this when the Manifest permissions change!
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION
-    );
 
     private BluetoothBroadcastReceiver receiver;
     private BluetoothAdapter mBtAdapter;
@@ -88,7 +83,8 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
 
         // Initialize the button to perform device discovery
         binding.buttonScan.setOnClickListener(v -> {
-            final List<String> notGrantedPerms = PermissionsManager.filterNotGrantedPermissions(DeviceListActivity.this, BLUETOOTH_PERMISSIONS);
+            final List<String> notGrantedPerms = PermissionsManager.filterNotGrantedPermissions(
+                    DeviceListActivity.this, PermissionsManager.BLUETOOTH_PERMISSIONS_REQUIRED);
             if (!notGrantedPerms.isEmpty()) {
                 if (PermissionsManager.canAskForAllPermissions(DeviceListActivity.this, notGrantedPerms)) {
                     UIUtils.showAlert(

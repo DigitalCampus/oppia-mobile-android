@@ -3,6 +3,7 @@ package org.digitalcampus.oppia.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
@@ -22,6 +24,7 @@ import org.digitalcampus.mobile.learning.databinding.ActivityMainBinding;
 import org.digitalcampus.mobile.learning.databinding.DrawerHeaderBinding;
 import org.digitalcampus.mobile.learning.databinding.ViewBadgeBinding;
 import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.fragments.CoursesListFragment;
 import org.digitalcampus.oppia.fragments.MainPointsFragment;
 import org.digitalcampus.oppia.fragments.MainScorecardFragment;
@@ -33,6 +36,7 @@ import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
+import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +46,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class MainActivity extends AppActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
-         View.OnClickListener {
+        View.OnClickListener {
 
     public static final String EXTRA_FIRST_LOGIN = "extra_first_login";
 
@@ -61,7 +65,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
         getAppComponent().inject(this);
@@ -85,6 +89,20 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         binding.drawerVersionName.setText(getString(R.string.version, BuildConfig.VERSION_NAME));
 
+        checkNotificationPermission();
+
+    }
+
+
+    private void checkNotificationPermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            final List<String> notGrantedPerms = PermissionsManager.filterNotGrantedPermissions(
+                    this, PermissionsManager.NOTIFICATIONS_PERMISSIONS_REQUIRED);
+            if (!notGrantedPerms.isEmpty()) {
+                PermissionsManager.requestPermissions(this, notGrantedPerms);
+            }
+        }
     }
 
     private Fragment getCoursesListFragment() {
@@ -117,6 +135,12 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         updateUserTotalPoints();
 
         checkStagingServer();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionsManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void checkStagingServer() {
@@ -253,8 +277,8 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
                 fragment = MainPointsFragment.newInstance();
                 break;
 
-                default:
-                    throw new IllegalArgumentException("menuItem not valid: " + menuItem.toString());
+            default:
+                throw new IllegalArgumentException("menuItem not valid: " + menuItem.toString());
         }
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, fragment).commit();
@@ -308,7 +332,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() ==  R.id.menu_search) {
+        if (item.getItemId() == R.id.menu_search) {
             drawer.launchIntentForActivity(SearchActivity.class);
         }
         return super.onOptionsItemSelected(item);

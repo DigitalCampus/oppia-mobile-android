@@ -1,5 +1,14 @@
 package androidTestFiles.services;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -11,9 +20,6 @@ import androidx.work.ListenableWorker;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.di.AppComponent;
-import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.TrackerLogRepository;
@@ -21,7 +27,6 @@ import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -32,36 +37,13 @@ import java.util.Collections;
 
 import androidTestFiles.database.sampledata.CourseData;
 import androidTestFiles.database.sampledata.UserData;
-import it.cosenonjaviste.daggermock.DaggerMockRule;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import androidTestFiles.utils.parent.NotificationsUiTest;
 
 @RunWith(Parameterized.class)
-public class CourseCompletionReminderWorderTest {
+public class CourseCompletionReminderWorderTest extends NotificationsUiTest {
 
     private final ReminderDataTestParameter reminderDataTestParameter;
     private Context context;
-
-    @Rule
-    public DaggerMockRule<AppComponent> daggerRule =
-            new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
-                    .getTargetContext()
-                    .getApplicationContext())).set(
-                    component -> {
-
-                        App app =
-                                (App) InstrumentationRegistry.getInstrumentation()
-                                        .getTargetContext()
-                                        .getApplicationContext();
-                        app.setComponent(component);
-                    });
 
     @Mock
     CoursesRepository coursesRepository;
@@ -183,7 +165,6 @@ public class CourseCompletionReminderWorderTest {
         } else {
             Assert.assertNull(device.findObject(By.text(context.getString(R.string.courses_reminder_notif_title))));
         }
-        device.pressBack(); // To close notification panel.
     }
 
     private void setCompletedCourses(boolean completed) {
