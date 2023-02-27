@@ -26,6 +26,7 @@ import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,46 +45,51 @@ public class PermissionsManager {
     public static final String TAG = PermissionsManager.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST = 1246;
     private static final List<String> STARTUP_PERMISSIONS_REQUIRED = Arrays.asList(
-        //Remember to update this when the Manifest permissions change!
+            //Remember to update this when the Manifest permissions change!
     );
-    private static final List<String> BLUETOOTH_PERMISSIONS_REQUIRED = Arrays.asList(
+    public static final List<String> BLUETOOTH_PERMISSIONS_REQUIRED = Arrays.asList(
             //Remember to update this when the Manifest permissions change!
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
     );
-    private static final List<String> STORAGE_PERMISSIONS_REQUIRED = Arrays.asList(
+    public static final List<String> STORAGE_PERMISSIONS_REQUIRED = Arrays.asList(
             Manifest.permission.WRITE_EXTERNAL_STORAGE
+    );
+
+    public static final List<String> NOTIFICATIONS_PERMISSIONS_REQUIRED = Arrays.asList(
+            Manifest.permission.POST_NOTIFICATIONS
     );
 
     public static final int STARTUP_PERMISSIONS = 1;
     public static final int BLUETOOTH_PERMISSIONS = 2;
     public static final int STORAGE_PERMISSIONS = 3;
+    public static final int NOTIFICATIONS_PERMISSIONS = 4;
 
     private PermissionsManager() {
         throw new IllegalStateException("Utility class");
     }
 
-    private static boolean isFirstTimeAsked(SharedPreferences prefs, String permission){
+    private static boolean isFirstTimeAsked(SharedPreferences prefs, String permission) {
         return !prefs.getBoolean(permission + "_asked", false);
     }
 
-    private static void setAsked(SharedPreferences prefs, String permission){
-         prefs.edit().putBoolean(permission + "_asked", true).apply();
+    private static void setAsked(SharedPreferences prefs, String permission) {
+        prefs.edit().putBoolean(permission + "_asked", true).apply();
     }
 
-    public static boolean checkPermissionsAndInform(final Activity act, int perms){
+    public static boolean checkPermissionsAndInform(final Activity act, int perms) {
         ViewGroup container = act.findViewById(R.id.permissions_explanation);
         return checkPermissionsAndInform(act, perms, container);
     }
 
-    public static boolean checkPermissionsAndInform(final Activity act, int perms, ViewGroup container){
+    public static boolean checkPermissionsAndInform(final Activity act, int perms, ViewGroup container) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             //If sdk version prior to 23 (Android M), the permissions are granted by manifest
             return true;
         }
 
         List<String> permissions = new ArrayList<>();
-        switch (perms){
+        switch (perms) {
             case STARTUP_PERMISSIONS: {
                 permissions = STARTUP_PERMISSIONS_REQUIRED;
                 break;
@@ -94,6 +100,10 @@ public class PermissionsManager {
             }
             case STORAGE_PERMISSIONS: {
                 permissions = STORAGE_PERMISSIONS_REQUIRED;
+                break;
+            }
+            case NOTIFICATIONS_PERMISSIONS: {
+                permissions = NOTIFICATIONS_PERMISSIONS_REQUIRED;
                 break;
             }
         }
@@ -113,17 +123,15 @@ public class PermissionsManager {
                 bindingExplanation.btnPermissions.setVisibility(View.VISIBLE);
                 bindingExplanation.notAskableDescription.setVisibility(View.GONE);
                 bindingExplanation.btnPermissions.setOnClickListener(v ->
-                    //Open the dialog to ask for permissions
-                    requestPermissions(act, permissionsToAsk)
+                        //Open the dialog to ask for permissions
+                        requestPermissions(act, permissionsToAsk)
                 );
-            }
-            else{
+            } else {
                 //Just show the informative option
                 bindingExplanation.btnPermissions.setVisibility(View.GONE);
                 bindingExplanation.notAskableDescription.setVisibility(View.VISIBLE);
             }
-        }
-        else{
+        } else {
             container.setVisibility(View.GONE);
         }
 
@@ -132,26 +140,26 @@ public class PermissionsManager {
     }
 
 
-    private static void showPermissionDescriptions(Context ctx, View container, final List<String> permissions){
-        for (String permission : permissions){
-            String descriptionID = "permission_" + permission.substring(permission.lastIndexOf(".")+1);
+    private static void showPermissionDescriptions(Context ctx, View container, final List<String> permissions) {
+        for (String permission : permissions) {
+            String descriptionID = "permission_" + permission.substring(permission.lastIndexOf(".") + 1);
             Log.d(TAG, descriptionID);
             int viewID = ctx.getResources().getIdentifier(descriptionID, "id", ctx.getPackageName());
             View description = container.findViewById(viewID);
-            if (description != null){
+            if (description != null) {
                 description.setVisibility(View.VISIBLE);
             }
         }
     }
 
-    public static void requestPermissions(final Activity act, List<String> permissions){
+    public static void requestPermissions(final Activity act, List<String> permissions) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            act.requestPermissions( permissions.toArray(new String[0]), PERMISSIONS_REQUEST );
+            act.requestPermissions(permissions.toArray(new String[0]), PERMISSIONS_REQUEST);
         }
     }
 
 
-    public static boolean canAskForAllPermissions(final Activity act, List<String> permissions){
+    public static boolean canAskForAllPermissions(final Activity act, List<String> permissions) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             //If sdk version prior to 23 (Android M), the permissions are granted by manifest
             return true;
@@ -167,7 +175,7 @@ public class PermissionsManager {
         return true;
     }
 
-    public static List<String> filterNotGrantedPermissions(final Activity act, List<String> permissions){
+    public static List<String> filterNotGrantedPermissions(final Activity act, List<String> permissions) {
 
         final List<String> permissionsToAsk = new ArrayList<>();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -175,9 +183,12 @@ public class PermissionsManager {
             return permissionsToAsk;
         }
 
-        for (String permission : permissions){
-            int permitted = act.checkSelfPermission( permission );
-            if( permitted != PackageManager.PERMISSION_GRANTED ) {
+        for (String permission : permissions) {
+            if (permission.equals(Manifest.permission.POST_NOTIFICATIONS) && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                continue;
+            }
+            int permitted = act.checkSelfPermission(permission);
+            if (permitted != PackageManager.PERMISSION_GRANTED) {
                 permissionsToAsk.add(permission);
             }
         }
@@ -185,19 +196,19 @@ public class PermissionsManager {
     }
 
 
-    public static boolean onRequestPermissionsResult(Context ctx, int requestCode, String[] permissions, int[] grantResults){
+    public static boolean onRequestPermissionsResult(Context ctx, int requestCode, String[] permissions, int[] grantResults) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx.getApplicationContext());
         int permissionsGranted = 0;
-        if ( requestCode == PERMISSIONS_REQUEST) {
-            for( int i = 0; i < permissions.length; i++ ) {
+        if (requestCode == PERMISSIONS_REQUEST) {
+            for (int i = 0; i < permissions.length; i++) {
                 setAsked(prefs, permissions[i]);
 
-                if( grantResults[i] == PackageManager.PERMISSION_GRANTED ) {
-                    Log.d( "Permissions", "Permission Granted: " + permissions[i] );
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("Permissions", "Permission Granted: " + permissions[i]);
                     permissionsGranted++;
-                } else if( grantResults[i] == PackageManager.PERMISSION_DENIED ) {
-                    Log.d( "Permissions", "Permission Denied: " + permissions[i] );
+                } else if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                    Log.d("Permissions", "Permission Denied: " + permissions[i]);
                 }
             }
         }

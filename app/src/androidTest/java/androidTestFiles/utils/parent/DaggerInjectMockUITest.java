@@ -14,14 +14,16 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertTrue;
 import static androidTestFiles.utils.CourseUtils.runInstallCourseTask;
 
+import android.Manifest;
 import android.content.Context;
-import android.view.Gravity;
+import android.os.Build;
 
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.App;
@@ -36,6 +38,15 @@ import androidTestFiles.utils.FileUtils;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 public class DaggerInjectMockUITest {
+
+    @Rule
+    public GrantPermissionRule grantWriteStoragePermissionsRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+    @Rule
+    public GrantPermissionRule grantNotificationsPermissionsRule =
+            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) ?
+                    GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS) :
+                    GrantPermissionRule.grant();
 
     @Rule
     public DaggerMockRule<AppComponent> daggerRule =

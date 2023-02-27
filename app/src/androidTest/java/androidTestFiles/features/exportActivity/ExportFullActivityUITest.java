@@ -89,20 +89,4 @@ public class ExportFullActivityUITest extends BaseTestDB {
         }
     }
 
-    private void clickPrefWithText(int prefTitleId) {
-        onView(withId(androidx.preference.R.id.recycler_view))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(prefTitleId)),
-                        click()));
-    }
-
-    private void openDrawer() {
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
-
-        onView(withId(R.id.drawer)).check(matches(isOpen()));
-    }
-
-    private void performClickDrawerItem(int itemId) {
-        onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(itemId));
-    }
 }

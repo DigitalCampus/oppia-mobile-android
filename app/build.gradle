@@ -24,7 +24,7 @@ android {
         logger.error('No properties file found. Using default values.')
     }
 
-    compileSdkVersion 33
+    compileSdk 33
 
     defaultConfig {
         versionCode version_code
@@ -32,8 +32,8 @@ android {
 
         applicationId "org.digitalcampus.mobile.learning"
 
-        minSdkVersion 21
-        targetSdkVersion 33
+        minSdk 21
+        targetSdk 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The following argument makes the Android Test Orchestrator run its
@@ -219,17 +219,17 @@ android {
                     systemImageSource = "aosp"
                 }
 
-                nexus5api29 (ManagedVirtualDevice) {
+                nexus5api33 (ManagedVirtualDevice) {
                     device = "Nexus 5"
-                    apiLevel = 29
-                    systemImageSource = "aosp"
+                    apiLevel = 33
+                    systemImageSource = "google"
                 }
             }
 
 
             groups {
                 phones {
-                    targetDevices.add(devices.nexus5api29)
+                    targetDevices.add(devices.nexus5api33)
                     targetDevices.add(devices.pixel2api30)
                     targetDevices.add(devices.nexusSapi28)
                 }
