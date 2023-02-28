@@ -10,6 +10,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -113,7 +114,7 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
         }
 
         List<Course> courses = coursesRepository.getCourses(context);
-        if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY) {
+        if (courses.size() < BuildConfig.DOWNLOAD_COURSES_DISPLAY) {
 
             NotificationCompat.Builder mBuilder = OppiaNotificationUtils.getBaseBuilder(context, true);
             mBuilder
