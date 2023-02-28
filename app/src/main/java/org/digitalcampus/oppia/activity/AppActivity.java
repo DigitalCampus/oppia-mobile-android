@@ -232,14 +232,14 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         registerReceiver(gamificationReceiver, broadcastFilter);
 
         //We check if the user session time has expired to log him out
-        if (App.SESSION_EXPIRATION_ENABLED) {
+        if (BuildConfig.SESSION_EXPIRATION_ENABLED) {
             SharedPreferences prefsReload = PreferenceManager.getDefaultSharedPreferences(this);
             long now = System.currentTimeMillis() / 1000;
             long lastTimeActive = prefsReload.getLong(PrefsActivity.LAST_ACTIVE_TIME, now);
             long timePassed = now - lastTimeActive;
 
             prefsReload.edit().putLong(PrefsActivity.LAST_ACTIVE_TIME, now).apply();
-            if (timePassed > App.SESSION_EXPIRATION_TIMEOUT) {
+            if (timePassed > BuildConfig.SESSION_EXPIRATION_TIMEOUT) {
                 Log.d(TAG, "Session timeout (passed " + timePassed + " seconds), logging out");
                 logoutAndRestartApp();
             }
@@ -249,7 +249,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     @Override
     public void onPause() {
         super.onPause();
-        if (App.SESSION_EXPIRATION_ENABLED) {
+        if (BuildConfig.SESSION_EXPIRATION_ENABLED) {
             long now = System.currentTimeMillis() / 1000;
             PreferenceManager
                     .getDefaultSharedPreferences(this).edit()

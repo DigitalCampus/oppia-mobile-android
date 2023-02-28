@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.FragmentCoursesListBinding;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
@@ -172,7 +173,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         courses.addAll(coursesRepository.getCourses(getActivity()));
         CourseUtils.refreshStatuses(prefs, courses, null);
 
-        if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY) {
+        if (courses.size() < BuildConfig.DOWNLOAD_COURSES_DISPLAY) {
             displayDownloadSection();
         } else {
             binding.manageCoursesText.setText(R.string.no_courses);
