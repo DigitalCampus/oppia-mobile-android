@@ -14,9 +14,9 @@ import testFiles.utils.UnitTestsFileUtils;
 public class FeedbackGradeBoundariesTest {
 
     private static final String FEEDBACK_JSON_FILE = "quizzes/feedback_grade_boundaries.json";
-    private static final String FEEDBACK_MESSAGE_25 = "Quiz score is between 0% and 49%. MaxQuizScore: 8.0; UserScore: 2.0; QuizScore: 25.0%";
-    private static final String FEEDBACK_MESSAGE_75 = "Quiz score is between 50% and 99%. MaxQuizScore: 8.0; UserScore: 6.0; QuizScore: 75.0%";
-    private static final String FEEDBACK_MESSAGE_100 = "Quiz score is 100%. MaxQuizScore: 8.0; UserScore: 8.0; QuizScore: 100.0%";
+    private static final String FEEDBACK_MESSAGE_25 = "Quiz score is between 20% and 49%. MaxQuizScore: 8; UserScore: 2; QuizScore: 25%";
+    private static final String FEEDBACK_MESSAGE_75 = "Quiz score is between 50% and 99%. MaxQuizScore: 8; UserScore: 6; QuizScore: 75%";
+    private static final String FEEDBACK_MESSAGE_100 = "Quiz score is 100%. MaxQuizScore: 8; UserScore: 8; QuizScore: 100%";
 
     @Test
     public void testCorrectFeedbackMessageIsShown() throws Exception {
