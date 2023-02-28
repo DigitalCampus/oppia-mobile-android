@@ -111,7 +111,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
 
             String currentValue = prefs.getString(preference.getKey(), getString(R.string.prefServerDefault));
             if (checkMustShowWarningLogout(preference.getKey(), currentValue, (String) newValue)) {
-                showWarningLogout(() -> App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, currentValue).apply());
+                showApiKeyWarning(() -> App.getPrefs(getActivity()).edit().putString(PrefsActivity.PREF_SERVER, currentValue).apply());
             }
 
             return true;
@@ -145,15 +145,17 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
 
     private boolean checkMustShowWarningLogout(String key, String currentValue, String newValue) {
 
-        if (!isLoggedIn()) {
-            return false;
-        }
-
         switch (key) {
             case PrefsActivity.PREF_SERVER:
-                return !TextUtilsJava.equals(currentValue, newValue);
+                boolean allApiKeysInvalid = SessionManager.areAllApiKeysInvalid(getContext());
+                //If all API keys are already invalidated, we don't need to show the warning
+                return !TextUtilsJava.equals(currentValue, newValue) &&
+                        (isLoggedIn() || !allApiKeysInvalid);
 
             case PrefsActivity.PREF_UPDATE_ACTIVITY_ON_LOGIN:
+                if (!isLoggedIn()) {
+                    return false;
+                }
                 boolean currentIsNone = TextUtilsJava.equals(getString(R.string.update_activity_on_login_value_none), currentValue);
                 boolean newIsOptionalOrForce = TextUtilsJava.equals(getString(R.string.update_activity_on_login_value_optional), newValue)
                         || TextUtilsJava.equals(getString(R.string.update_activity_on_login_value_force), newValue);
@@ -266,6 +268,26 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                 .setTitle(R.string.warning)
                 .setMessage(R.string.change_setting_logout_warning)
                 .setPositiveButton(R.string.accept, (dialog, which) -> launchLogoutTasks())
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    if (restoreValueRunnable != null) restoreValueRunnable.run();
+                })
+                .show();
+    }
+
+    private void showApiKeyWarning(Runnable restoreValueRunnable) {
+
+        String message = getString(R.string.change_setting_apikey_warning);
+        if (isLoggedIn()){
+            message += "\n\n" + getString(R.string.change_setting_logout_warning);
+        }
+
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.warning)
+                .setMessage(message)
+                .setPositiveButton(R.string.accept, (dialog, which) -> {
+                    SessionManager.invalidateAllApiKeys(getContext());
+                    launchLogoutTasks();
+                })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     if (restoreValueRunnable != null) restoreValueRunnable.run();
                 })
