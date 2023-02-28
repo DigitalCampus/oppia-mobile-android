@@ -1,10 +1,10 @@
 {
   "id":3472,
   "title":{
-    "en":"Feedback Grade Boundaries"
+    "en":"Feedback Multilang Grade Boundaries"
   },
   "description":{
-    "en":"Feedback Grade Boundaries"
+    "en":"Feedback Multilang Grade Boundaries"
   },
   "props":{
     "allowtryagain":1,
@@ -15,9 +15,9 @@
     "availability":0,
     "showfeedback":2,
     "grade_boundaries": [
-      {"20": "Quiz score is between 20% and 49%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%"},
-      {"50": "Quiz score is between 50% and 99%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%"},
-      {"100": "Quiz score is 100%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%"}
+      {"0": "Quiz score is between 20% and 49%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%"},
+      {"50": "en=Quiz score is between 50% and 99%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%\r\nes=La puntuación del quiz está entre 50% y 99%. PuntuaciónMáxima: {{max_score}}; PuntuaciónDelUsuario: {{user_score}}; PuntuaciónDelQuiz: {{score_percentage}}%"},
+      {"100": "en=Quiz score is 100%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%\r\nes=La puntuación del quiz es de 100%. PuntuaciónMáxima: {{max_score}}; PuntuaciónDelUsuario: {{user_score}}; PuntuaciónDelQuiz: {{score_percentage}}%"}
     ]
   },
   "questions":[
