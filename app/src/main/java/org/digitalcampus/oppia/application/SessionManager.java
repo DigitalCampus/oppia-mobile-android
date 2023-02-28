@@ -211,6 +211,12 @@ public class SessionManager {
         App.getDb().userPreferenceDao().insert(userPreference);
     }
 
+    public static void invalidateAllApiKeys(Context ctx){
+            for (User u : DbHelper.getInstance(ctx).getAllUsers()) {
+                SessionManager.setUserApiKeyValid(u, false);
+            }
+    }
+
     public static void invalidateCurrentUserApiKey(Context ctx){
         try {
             User u = DbHelper.getInstance(ctx).getUser(SessionManager.getUsername(ctx));
@@ -232,6 +238,16 @@ public class SessionManager {
 
         UserPreference userPref = App.getDb().userPreferenceDao().getUserPreference(username, APIKEY_VALID);
         return (userPref == null || STR_TRUE.equals(userPref.getValue()));
+    }
+
+    public static boolean areAllApiKeysInvalid(Context ctx){
+        List<User> users = DbHelper.getInstance(ctx).getAllUsers();
+        for (User u : users) {
+            if (isUserApiKeyValid(u.getUsername())){
+                return false;
+            }
+        }
+        return true;
     }
 
     public static void preloadUserAccounts(Context ctx, PreloadAccountsListener listener) {
