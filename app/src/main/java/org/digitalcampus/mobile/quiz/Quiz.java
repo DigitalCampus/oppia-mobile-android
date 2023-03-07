@@ -574,7 +574,7 @@ public class Quiz implements Serializable {
         }
     }
 
-    private List<GradeBoundary> getGradeBoundaries() {
+    private List<GradeBoundary> getGradeBoundaries(String lang) {
         ArrayList<GradeBoundary> gradeBoundaries = new ArrayList<>();
         JSONArray gradeBoundariesJSON = propsSerializedGetJSONArray("grade_boundaries");
 
@@ -582,13 +582,11 @@ public class Quiz implements Serializable {
             if(gradeBoundariesJSON != null) {
                 for (int i = 0; i < gradeBoundariesJSON.length(); i++) {
                     JSONObject gradeBoundary = gradeBoundariesJSON.getJSONObject(i);
-                    Iterator<String> keys = gradeBoundary.keys();
-                    while (keys.hasNext()) {
-                        String key = keys.next();
-                        int grade = Integer.parseInt(key);
-                        String message = gradeBoundary.getString(key);
-                        gradeBoundaries.add(new GradeBoundary(grade, message));
-                    }
+                    String gradeStr = gradeBoundary.keys().next();
+                    int grade = Integer.parseInt(gradeStr);
+                    String multilangMessage = gradeBoundary.getString(gradeStr);
+                    String message = getGradeBoundaryMessageForLang(multilangMessage, lang);
+                    gradeBoundaries.add(new GradeBoundary(grade, message));
                 }
                 Collections.sort(gradeBoundaries, GradeBoundary.sorByGradeDescending);
             }
@@ -599,10 +597,31 @@ public class Quiz implements Serializable {
         return gradeBoundaries;
     }
 
+    private String getGradeBoundaryMessageForLang(String multilangMessage, String lang) {
+        String defaultMessage = "";
+        String[] messages = multilangMessage.trim().split("\r\n");
+
+        for (String message : messages) {
+            String[] messageSplit = message.split("="); // Split language code and message
+            if (messageSplit.length == 1) {
+                return messageSplit[0]; // If there is no language code, this is the message
+            }
+            String langCode = messageSplit[0];
+            String messageText = messageSplit[1];
+            if (langCode.equalsIgnoreCase(lang)){
+                return messageText;
+            } else if (defaultMessage.isEmpty()) {
+                defaultMessage = messageText;   // Set first message as default message in case
+                                                // language is not found
+            }
+        }
+        return defaultMessage;
+    }
+
     // Get the feedback message associated to a grade. The learner must get a grade
     // that is greater or equal than the defined grade boundaries
     public String getFeedbackMessageBasedOnQuizGrade(float quizGrade) {
-        List<GradeBoundary> gradeBoundaries = this.getGradeBoundaries();
+        List<GradeBoundary> gradeBoundaries = this.getGradeBoundaries(defaultLang);
         for(GradeBoundary gradeBoundary : gradeBoundaries) {
             if(quizGrade >= gradeBoundary.getGrade()){
                 return cleanFeedbackMessage(gradeBoundary.getMessage());
@@ -629,9 +648,9 @@ public class Quiz implements Serializable {
     // Get a property´s value by its name, or null if the property name is not included.
     private String getPropertyValue(String propertyName) {
         switch (propertyName) {
-            case "user_score": return String.valueOf(this.getUserscore());
-            case "max_score": return String.valueOf(this.getMaxscore());
-            case "score_percentage": return String.valueOf(this.getQuizPercentageScore());
+            case "user_score": return String.valueOf(Math.round(this.getUserscore()));
+            case "max_score": return String.valueOf(Math.round(this.getMaxscore()));
+            case "score_percentage": return String.valueOf(Math.round(this.getQuizPercentageScore()));
             default: return null;
         }
     }

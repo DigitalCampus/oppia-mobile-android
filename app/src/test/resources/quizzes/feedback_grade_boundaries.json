@@ -15,7 +15,7 @@
     "availability":0,
     "showfeedback":2,
     "grade_boundaries": [
-      {"0": "Quiz score is between 0% and 49%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%"},
+      {"20": "Quiz score is between 20% and 49%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%"},
       {"50": "Quiz score is between 50% and 99%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%"},
       {"100": "Quiz score is 100%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%"}
     ]

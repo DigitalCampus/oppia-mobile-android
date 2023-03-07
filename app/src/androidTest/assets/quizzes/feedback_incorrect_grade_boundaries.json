@@ -15,9 +15,9 @@
     "availability":0,
     "showfeedback":2,
     "grade_boundaries": [
-      {"20": "Quiz score is between 20% and 49%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%"},
-      {"50": "Quiz score is between 50% and 99%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%"},
-      {"100": "Quiz score is 100%. MaxQuizScore: {{max_score}}; UserScore: {{user_score}}; QuizScore: {{score_percentage}}%"}
+      {"0": "Property missing double curly braces: {max_score}; Property does not exist: {{not_exist}}"},
+      {"50": "Property missing double curly braces: {max_score}; Property does not exist: {{not_exist}}"},
+      {"100": "Property missing double curly braces: {max_score}; Property does not exist: {{not_exist}}"}
     ]
   },
   "questions":[

@@ -363,7 +363,7 @@
 
     <string name="permissions.title">&appName;
         needs the following permissions to function properly:</string>
-    <string name="permissions.storage.title">read and modify contents of the SD card</string>
+    <string name="permissions.storage.title">Read and modify contents of the SD card</string>
     <string name="permissions.simple.title">Permissions needed</string>
     <string name="permissions.storage.description">&appName; needs access to the SD card to be able to store the downloaded media contents for the courses</string>
     <string name="permissions.phone_state.title">read phone state and identity</string>
@@ -494,7 +494,7 @@
     <string name="register_offline">Register offline</string>
     <string name="field_required">This field cannot be empty</string>
     <string name="field_spaces_error">Cannot contain spaces</string>
-    <string name="permissions.location.title">access location</string>
+    <string name="permissions.location.title">Access location</string>
     <string name="permissions.location.description">In new Android devices, this permission is needed to be able to pair with other devices using Bluetooth</string>
     <string name="points">points</string>
     <string name="last_year">last year</string>
@@ -544,7 +544,8 @@
     <string name="options">Options</string>
     <string name="quiz_loading_error">Unexpected error loading quiz. Maybe the format was wrong or out-dated?</string>
     <string name="error_register_username_length">Username must have at least %d characters</string>
-    <string name="change_setting_logout_warning">You are already logged in. If you change this setting your current session will finish. Do you confirm?</string>
+    <string name="change_setting_apikey_warning">This will invalidate the API keys for every user cached in the device, so they will need an active internet connection to login again.</string>
+    <string name="change_setting_logout_warning">You are currently logged in. If you change this setting your session will finish. Do you confirm?</string>
     <string name="accept">Accept</string>
     <string name="user_not_logged_in">User not logged in</string>
 

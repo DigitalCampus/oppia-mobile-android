@@ -18,6 +18,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import androidx.test.rule.GrantPermissionRule;
+
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static org.mockito.Matchers.anyBoolean;
@@ -34,10 +36,7 @@ import static org.mockito.Mockito.when;
  * and call setUp() and tearDown() methods.
  */
 @RunWith(AndroidJUnit4.class)
-public abstract class BaseTestDB {
-
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+public abstract class BaseTestDB extends DaggerInjectMockUITest {
 
 
     private TestDBHelper testDBHelper;
@@ -47,19 +46,6 @@ public abstract class BaseTestDB {
     public SharedPreferences prefs;
     @Mock
     SharedPreferences.Editor editor;
-
-    @Rule
-    public DaggerMockRule<AppComponent> daggerRule =
-            new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
-                    .getTargetContext()
-                    .getApplicationContext())).set(
-                    component -> {
-                        App app =
-                                (App) InstrumentationRegistry.getInstrumentation()
-                                        .getTargetContext()
-                                        .getApplicationContext();
-                        app.setComponent(component);
-                    });
 
     @Before
     public void setUp() throws Exception {

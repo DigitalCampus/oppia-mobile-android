@@ -16,6 +16,7 @@ import androidx.work.testing.SynchronousExecutor;
 import androidx.work.testing.TestListenableWorkerBuilder;
 import androidx.work.testing.WorkManagerTestInitHelper;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.di.AppComponent;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.parent.NotificationsUiTest;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -44,23 +46,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
-public class CoursesChecksWorkerTest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-    @Rule
-    public DaggerMockRule<AppComponent> daggerRule =
-            new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
-                    .getTargetContext()
-                    .getApplicationContext())).set(
-                    component -> {
-
-                        App app =
-                                (App) InstrumentationRegistry.getInstrumentation()
-                                        .getTargetContext()
-                                        .getApplicationContext();
-                        app.setComponent(component);
-                    });
+public class CoursesChecksWorkerTest extends NotificationsUiTest {
 
     @Mock
     CoursesRepository coursesRepository;
@@ -117,7 +103,7 @@ public class CoursesChecksWorkerTest {
 
         when(user.getUsername()).thenReturn(null);
 
-        givenThereAreSomeCourses(App.DOWNLOAD_COURSES_DISPLAY - 1);
+        givenThereAreSomeCourses(BuildConfig.DOWNLOAD_COURSES_DISPLAY - 1);
 
         coursesChecksWorkerManager.checkNoCoursesInstalled();
 
@@ -126,7 +112,6 @@ public class CoursesChecksWorkerTest {
         device.wait(Until.hasObject(By.text(context.getString(R.string.notification_course_download_title))), 1000);
 
         Assert.assertNull(device.findObject(By.text(context.getString(R.string.notification_course_download_title))));
-        device.pressBack(); // To close notification panel.
 
     }
 
@@ -135,7 +120,7 @@ public class CoursesChecksWorkerTest {
 
         when(user.getUsername()).thenReturn("test_user");
 
-        givenThereAreSomeCourses(App.DOWNLOAD_COURSES_DISPLAY - 1);
+        givenThereAreSomeCourses(BuildConfig.DOWNLOAD_COURSES_DISPLAY - 1);
 
         coursesChecksWorkerManager.checkNoCoursesInstalled();
 
@@ -143,8 +128,6 @@ public class CoursesChecksWorkerTest {
         device.openNotification();
         device.wait(Until.hasObject(By.text(context.getString(R.string.notification_course_download_title))), 1000);
         Assert.assertNotNull(device.findObject(By.text(context.getString(R.string.notification_course_download_title))));
-
-        device.pressBack(); // To close notification panel.
 
     }
 
@@ -154,7 +137,7 @@ public class CoursesChecksWorkerTest {
 
         when(user.getUsername()).thenReturn("test_user");
 
-        givenThereAreSomeCourses(App.DOWNLOAD_COURSES_DISPLAY);
+        givenThereAreSomeCourses(BuildConfig.DOWNLOAD_COURSES_DISPLAY);
 
         coursesChecksWorkerManager.checkNoCoursesInstalled();
 
@@ -162,7 +145,6 @@ public class CoursesChecksWorkerTest {
         device.openNotification();
         device.wait(Until.hasObject(By.text(context.getString(R.string.notification_course_download_title))), 1000);
         Assert.assertNull(device.findObject(By.text(context.getString(R.string.notification_course_download_title))));
-        device.pressBack(); // To close notification panel.
 
     }
 
