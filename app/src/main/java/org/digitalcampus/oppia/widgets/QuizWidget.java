@@ -110,7 +110,7 @@ public class QuizWidget extends AnswerWidget {
     protected void showContentUnavailableRationale(String unavailabilityReasonString) {
         super.showContentUnavailableRationale(unavailabilityReasonString);
 
-        QuizStats quizStats = attemptsRepository.getQuizAttemptStats(getActivity(), activity.getDigest());
+        QuizStats quizStats = attemptsRepository.getQuizAttemptStats(getActivity(), course.getCourseId(), activity.getDigest());
         quizStats.setQuizTitle(activity.getTitle(prefLang));
         if (quizStats.isAttempted()) {
             Button button = getView().findViewById(R.id.btn_quiz_unavailable);
@@ -139,7 +139,7 @@ public class QuizWidget extends AnswerWidget {
             ViewGroup info = getView().findViewById(R.id.quiz_stats);
             info.setVisibility(View.VISIBLE);
 
-            QuizStats stats = attemptsRepository.getQuizAttemptStats(getContext(), activity.getDigest());
+            QuizStats stats = attemptsRepository.getQuizAttemptStats(getContext(), course.getCourseId(), activity.getDigest());
             // We take into account the current quiz (not saved yet)
             int numAttempts = stats.getNumAttempts();
             float average = ((stats.getAverageScore() * numAttempts) + quiz.getUserscore()) / (numAttempts + 1);
@@ -199,7 +199,7 @@ public class QuizWidget extends AnswerWidget {
         thresholdBar.setProgress(quiz.getPassThreshold());
 
         info.findViewById(R.id.take_quiz_btn).setOnClickListener(view -> checkPasswordProtectionAndShowQuestion());
-        QuizStats stats = attemptsRepository.getQuizAttemptStats(getContext(), activity.getDigest());
+        QuizStats stats = attemptsRepository.getQuizAttemptStats(getContext(), course.getCourseId(), activity.getDigest());
         showStats(info, stats);
     }
 
