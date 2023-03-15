@@ -36,6 +36,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -80,7 +82,7 @@ public class FeedbackUITest extends DaggerInjectMockUITest {
         setFeedback(SINGLE_ATTEMPT_FEEDBACK_JSON);
         QuizStats stats = new QuizStats();
         stats.setNumAttempts(0);
-        when(attemptsRepository.getQuizAttemptStats(anyObject(), anyString())).thenReturn(stats);
+        when(attemptsRepository.getQuizAttemptStats(anyObject(), anyInt(), anyString())).thenReturn(stats);
 
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
@@ -104,7 +106,7 @@ public class FeedbackUITest extends DaggerInjectMockUITest {
 
         QuizStats stats = new QuizStats();
         stats.setNumAttempts(1);
-        when(attemptsRepository.getQuizAttemptStats(anyObject(), anyString())).thenReturn(stats);
+        when(attemptsRepository.getQuizAttemptStats(anyObject(), anyInt(), anyString())).thenReturn(stats);
 
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
