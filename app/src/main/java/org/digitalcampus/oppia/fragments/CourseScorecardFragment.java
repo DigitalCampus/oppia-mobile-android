@@ -131,7 +131,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
 
         for (Activity a: quizActs){
         	// get the max score for the quiz for the user
-        	QuizStats qs = db.getQuizAttemptStats(a.getDigest(), userId);
+        	QuizStats qs = db.getQuizAttemptStats(a.getDigest(), course.getCourseId(), userId);
         	qs.setQuizTitle(a.getTitle(prefLang));
         	qs.setSectionTitle(parsedCourse.getSectionByActivityDigest(a.getDigest()).getTitle(prefLang));
         	quizzes.add(qs);
@@ -152,7 +152,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         int pretestScore = -1;
         for (Activity baselineAct : baseline){
             if (!baselineAct.getActType().equals("quiz")) continue;
-            QuizStats pretest = db.getQuizAttemptStats(baselineAct.getDigest(), userId);
+            QuizStats pretest = db.getQuizAttemptStats(baselineAct.getDigest(), course.getCourseId(), userId);
             pretestScore = pretest.getPercent();
         }
         

@@ -22,6 +22,7 @@ import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import androidTestFiles.utils.FileUtils;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 
 public abstract class BaseQuizTest extends DaggerInjectMockUITest {
 
@@ -52,7 +53,7 @@ public abstract class BaseQuizTest extends DaggerInjectMockUITest {
         args.putBoolean(CourseActivity.BASELINE_TAG, false);
 
         stats = new QuizStats();
-        Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), any());
+        Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), anyInt(), any());
 
     }
 

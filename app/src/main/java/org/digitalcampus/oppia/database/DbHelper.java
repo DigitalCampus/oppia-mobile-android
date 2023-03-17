@@ -1346,14 +1346,14 @@ public class DbHelper extends SQLiteOpenHelper {
         return digest;
     }
 
-    public QuizStats getQuizAttemptStats(String digest, long userId) {
+    public QuizStats getQuizAttemptStats(String digest, int courseId, long userId) {
         QuizStats qs = new QuizStats();
         qs.setDigest(digest);
         qs.setPassed(false);
 
         // find if attempted
-        String s1 = QUIZATTEMPTS_C_USERID + STR_EQUALS_AND + QUIZATTEMPTS_C_ACTIVITY_DIGEST + "=?";
-        String[] args1 = new String[]{String.valueOf(userId), digest};
+        String s1 = QUIZATTEMPTS_C_USERID + STR_EQUALS_AND + QUIZATTEMPTS_C_COURSEID + STR_EQUALS_AND + QUIZATTEMPTS_C_ACTIVITY_DIGEST + "=?";
+        String[] args1 = new String[]{String.valueOf(userId), String.valueOf(courseId), digest};
         Cursor query = db.query(QUIZATTEMPTS_TABLE, null, s1, args1, null, null, null);
         qs.setNumAttempts(query.getCount());
         if (query.getCount() == 0) {
