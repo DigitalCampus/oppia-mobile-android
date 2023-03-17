@@ -27,9 +27,9 @@ public class QuizAttemptRepository {
         return db.getGlobalQuizAttempts(userId, lang);
     }
 
-    public QuizStats getQuizAttemptStats(Context ctx, String digest){
+    public QuizStats getQuizAttemptStats(Context ctx, int courseId, String digest){
         DbHelper db = DbHelper.getInstance(ctx);
         long userId = db.getUserId(SessionManager.getUsername(ctx));
-        return db.getQuizAttemptStats(digest, userId);
+        return db.getQuizAttemptStats(digest, courseId, userId);
     }
 }

@@ -13,6 +13,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 
 import android.Manifest;
 import android.content.Context;
@@ -66,7 +67,7 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
         // Setting up before every test
         loadQuizAndSetArgs(SIMPLE_QUIZ_JSON);
         stats = new QuizStats();
-        Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), any());
+        Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), anyInt(), any());
     }
 
     public void initMocks(){
@@ -126,7 +127,7 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
         loadQuizAndSetArgs(WITH_MAX_ATTEMPTS_JSON);
 
         stats.setNumAttempts(5);
-        Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), any());
+        Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), anyInt(), any());
 
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
 
@@ -144,7 +145,7 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
         onView(withId(R.id.mquiz_next_btn)).perform(click());
 
         stats.setNumAttempts(1);
-        Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), any());
+        Mockito.doAnswer((Answer<QuizStats>) invocation -> stats).when(attemptsRepository).getQuizAttemptStats(any(Context.class), anyInt(), any());
 
         onView(withText("wronganswer")).perform(click());
         onView(withId(R.id.mquiz_next_btn)).perform(click());

@@ -189,7 +189,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
         QuizStats qs = new QuizStats();
         qs.setNumAttempts(1);
 
-        when(attemptsRepository.getQuizAttemptStats(any(), anyString())).thenReturn(qs);
+        when(attemptsRepository.getQuizAttemptStats(any(), anyInt(), anyString())).thenReturn(qs);
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIndexIntent(status))) {
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 2);
