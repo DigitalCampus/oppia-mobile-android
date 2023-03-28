@@ -1,6 +1,5 @@
 package androidTestFiles.features;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static org.hamcrest.Matchers.not;
@@ -10,6 +9,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidTestFiles.utils.parent.BaseTest.COURSE_QUIZ;
 import static androidTestFiles.utils.parent.BaseTest.COURSE_QUIZ_SHORTNAME;
@@ -36,9 +36,9 @@ import org.mockito.Mock;
 
 import java.util.Arrays;
 
-import androidTestFiles.utils.parent.DaggerInjectMockUITest;
-import androidTestFiles.utils.assertions.StatusBadgeAssertion;
 import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.assertions.StatusBadgeAssertion;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 public class StatusBadgeTests extends DaggerInjectMockUITest {
 
@@ -93,7 +93,7 @@ public class StatusBadgeTests extends DaggerInjectMockUITest {
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-            onView(withRecyclerView(R.id.recycler_courses)
+            waitForView(withRecyclerView(R.id.recycler_courses)
                     .atPositionOnView(0, R.id.view_course_status))
                     .check(StatusBadgeAssertion.withText(context.getString(R.string.status_read_only)));
         }
@@ -108,7 +108,7 @@ public class StatusBadgeTests extends DaggerInjectMockUITest {
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-            onView(withRecyclerView(R.id.recycler_courses)
+            waitForView(withRecyclerView(R.id.recycler_courses)
                     .atPositionOnView(0, R.id.view_course_status))
                     .check(matches(not(isDisplayed())));
         }
@@ -123,7 +123,7 @@ public class StatusBadgeTests extends DaggerInjectMockUITest {
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-            onView(withRecyclerView(R.id.recycler_courses)
+            waitForView(withRecyclerView(R.id.recycler_courses)
                     .atPositionOnView(0, R.id.view_course_status))
                     .check(matches(not(isDisplayed())));
         }
@@ -138,7 +138,7 @@ public class StatusBadgeTests extends DaggerInjectMockUITest {
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-            onView(withRecyclerView(R.id.recycler_courses)
+            waitForView(withRecyclerView(R.id.recycler_courses)
                     .atPositionOnView(0, R.id.view_course_status))
                     .check(StatusBadgeAssertion.withText(context.getString(R.string.status_draft)));
         }

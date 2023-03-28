@@ -1,20 +1,18 @@
 package androidTestFiles.features;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
 import static org.hamcrest.CoreMatchers.not;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 import android.content.SharedPreferences;
 
@@ -36,8 +34,8 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 @RunWith(AndroidJUnit4.class)
 public class UIChecksPropsBasedTest extends DaggerInjectMockUITest {
@@ -67,9 +65,9 @@ public class UIChecksPropsBasedTest extends DaggerInjectMockUITest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             openDrawer();
             if (BuildConfig.MENU_ALLOW_SETTINGS) {
-                onView(withId(R.id.menu_settings)).check(matches(isDisplayed()));
+                waitForView(withId(R.id.menu_settings)).check(matches(isDisplayed()));
             } else {
-                onView(withId(R.id.menu_settings)).check(doesNotExist());
+                waitForView(withId(R.id.menu_settings)).check(doesNotExist());
             }
         }
     }
@@ -83,9 +81,9 @@ public class UIChecksPropsBasedTest extends DaggerInjectMockUITest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             openDrawer();
             if (BuildConfig.MENU_ALLOW_COURSE_DOWNLOAD) {
-                onView(withId(R.id.menu_download)).check(matches(isDisplayed()));
+                waitForView(withId(R.id.menu_download)).check(matches(isDisplayed()));
             } else {
-                onView(withId(R.id.menu_download)).check(doesNotExist());
+                waitForView(withId(R.id.menu_download)).check(doesNotExist());
             }
         }
     }
@@ -96,9 +94,9 @@ public class UIChecksPropsBasedTest extends DaggerInjectMockUITest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             openDrawer();
             if (BuildConfig.MENU_ALLOW_SYNC) {
-                onView(withId(R.id.menu_sync)).check(matches(isDisplayed()));
+                waitForView(withId(R.id.menu_sync)).check(matches(isDisplayed()));
             } else {
-                onView(withId(R.id.menu_sync)).check(doesNotExist());
+                waitForView(withId(R.id.menu_sync)).check(doesNotExist());
             }
         }
     }
@@ -122,9 +120,9 @@ public class UIChecksPropsBasedTest extends DaggerInjectMockUITest {
             openDrawer();
 
             if (BuildConfig.MENU_ALLOW_LANGUAGE) {
-                onView(withId(R.id.menu_language)).check(matches(isDisplayed()));
+                waitForView(withId(R.id.menu_language)).check(matches(isDisplayed()));
             } else {
-                onView(withId(R.id.menu_language)).check(doesNotExist());
+                waitForView(withId(R.id.menu_language)).check(doesNotExist());
             }
         }
     }
@@ -135,11 +133,11 @@ public class UIChecksPropsBasedTest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             openDrawer();
-            onView(withId(R.id.btn_expand_profile_options)).perform(click());
+            waitForView(withId(R.id.btn_expand_profile_options)).perform(click());
             if (BuildConfig.MENU_ALLOW_EDIT_PROFILE) {
-                onView(withId(R.id.btn_edit_profile)).check(matches(isDisplayed()));
+                waitForView(withId(R.id.btn_edit_profile)).check(matches(isDisplayed()));
             } else {
-                onView(withId(R.id.btn_edit_profile)).check(matches(not(isDisplayed())));
+                waitForView(withId(R.id.btn_edit_profile)).check(matches(not(isDisplayed())));
             }
         }
     }
@@ -149,11 +147,11 @@ public class UIChecksPropsBasedTest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             openDrawer();
-            onView(withId(R.id.btn_expand_profile_options)).perform(click());
+            waitForView(withId(R.id.btn_expand_profile_options)).perform(click());
             if (BuildConfig.MENU_ALLOW_CHANGE_PASSWORD) {
-                onView(withId(R.id.btn_change_password)).check(matches(isDisplayed()));
+                waitForView(withId(R.id.btn_change_password)).check(matches(isDisplayed()));
             } else {
-                onView(withId(R.id.btn_change_password)).check(matches(not(isDisplayed())));
+                waitForView(withId(R.id.btn_change_password)).check(matches(not(isDisplayed())));
             }
         }
     }
@@ -166,9 +164,9 @@ public class UIChecksPropsBasedTest extends DaggerInjectMockUITest {
         try (ActivityScenario<PrivacyActivity> scenario = ActivityScenario.launch(PrivacyActivity.class)) {
 
             if (BuildConfig.DELETE_ACCOUNT_ENABLED) {
-                onView(withId(R.id.delete_data_section)).perform(scrollTo()).check(matches(isDisplayed()));
+                waitForView(withId(R.id.delete_data_section)).perform(scrollTo()).check(matches(isDisplayed()));
             } else {
-                onView(withId(R.id.delete_data_section)).check(matches(not(isDisplayed())));
+                waitForView(withId(R.id.delete_data_section)).check(matches(not(isDisplayed())));
             }
         }
     }
@@ -180,9 +178,9 @@ public class UIChecksPropsBasedTest extends DaggerInjectMockUITest {
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
             if (BuildConfig.ALLOW_REGISTER_USER) {
-                onView(withId(R.id.welcome_register)).check(matches(isDisplayed()));
+                waitForView(withId(R.id.welcome_register)).check(matches(isDisplayed()));
             } else {
-                onView(withId(R.id.welcome_register)).check(matches(not(isDisplayed())));
+                waitForView(withId(R.id.welcome_register)).check(matches(not(isDisplayed())));
             }
         }
     }

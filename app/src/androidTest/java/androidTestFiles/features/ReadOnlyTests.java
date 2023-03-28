@@ -1,6 +1,5 @@
 package androidTestFiles.features;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -14,6 +13,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.parent.BaseTest.COURSE_FEEDBACK;
 import static androidTestFiles.utils.parent.BaseTest.COURSE_QUIZ;
 import static androidTestFiles.utils.parent.BaseTest.COURSE_QUIZ_SHORTNAME;
@@ -122,7 +122,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIndexIntent(status))) {
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 2);
-            onView(withId(R.id.quiz_unavailable)).check(doesNotExist());
+            waitForView(withId(R.id.quiz_unavailable)).check(doesNotExist());
         }
     }
 
@@ -134,7 +134,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIndexIntent(status))) {
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 2);
-            onView(withId(R.id.quiz_unavailable)).check(matches(withText(
+            waitForView(withId(R.id.quiz_unavailable)).check(matches(withText(
                     context.getString(R.string.read_only_answer_unavailable_message,
                             context.getString(R.string.feedback).toLowerCase(Locale.ROOT)))));
         }
@@ -149,7 +149,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIndexIntent(status))) {
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 2);
-            onView(withId(R.id.quiz_unavailable)).check(doesNotExist());
+            waitForView(withId(R.id.quiz_unavailable)).check(doesNotExist());
         }
     }
 
@@ -161,7 +161,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIndexIntent(status))) {
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 2);
-            onView(withId(R.id.quiz_unavailable)).check(matches(withText(
+            waitForView(withId(R.id.quiz_unavailable)).check(matches(withText(
                     context.getString(R.string.read_only_answer_unavailable_message,
                             context.getString(R.string.quiz).toLowerCase(Locale.ROOT)))));
 
@@ -176,7 +176,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIndexIntent(status))) {
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 2);
-            onView(withId(R.id.btn_quiz_unavailable)).check(matches(not(isDisplayed())));
+            waitForView(withId(R.id.btn_quiz_unavailable)).check(matches(not(isDisplayed())));
         }
     }
 
@@ -193,7 +193,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIndexIntent(status))) {
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 2);
-            onView(withId(R.id.btn_quiz_unavailable)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.btn_quiz_unavailable)).check(matches(isDisplayed()));
         }
     }
 
@@ -217,8 +217,8 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_LIVE);
 
         try (ActivityScenario<CourseQuizAttemptsActivity> scenario = ActivityScenario.launch(getTestCourseQuizAttemptsIntent(1))) {
-            onView(withId(R.id.retake_quiz_btn)).check(matches(isDisplayed()));
-            onView(withId(R.id.btn_take_quiz)).check(matches(not(isDisplayed())));
+            waitForView(withId(R.id.retake_quiz_btn)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.btn_take_quiz)).check(matches(not(isDisplayed())));
         }
     }
 
@@ -230,8 +230,8 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_LIVE);
 
         try (ActivityScenario<CourseQuizAttemptsActivity> scenario = ActivityScenario.launch(getTestCourseQuizAttemptsIntent(0))) {
-            onView(withId(R.id.retake_quiz_btn)).check(matches(not(isDisplayed())));
-            onView(withId(R.id.btn_take_quiz)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.retake_quiz_btn)).check(matches(not(isDisplayed())));
+            waitForView(withId(R.id.btn_take_quiz)).check(matches(isDisplayed()));
         }
     }
 
@@ -243,8 +243,8 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_READ_ONLY);
 
         try (ActivityScenario<CourseQuizAttemptsActivity> scenario = ActivityScenario.launch(getTestCourseQuizAttemptsIntent(0))) {
-            onView(withId(R.id.retake_quiz_btn)).check(matches(not(isDisplayed())));
-            onView(withId(R.id.btn_take_quiz)).check(matches(not(isDisplayed())));
+            waitForView(withId(R.id.retake_quiz_btn)).check(matches(not(isDisplayed())));
+            waitForView(withId(R.id.btn_take_quiz)).check(matches(not(isDisplayed())));
         }
     }
 
@@ -267,7 +267,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_LIVE);
 
         try (ActivityScenario<QuizAttemptActivity> scenario = ActivityScenario.launch(getTestQuizAttemptsIntent())) {
-            onView(withId(R.id.retake_quiz_btn)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.retake_quiz_btn)).check(matches(isDisplayed()));
         }
     }
 
@@ -279,7 +279,7 @@ public class ReadOnlyTests extends DaggerInjectMockUITest {
         mockCourseCache(COURSE_QUIZ_SHORTNAME, Course.STATUS_READ_ONLY);
 
         try (ActivityScenario<QuizAttemptActivity> scenario = ActivityScenario.launch(getTestQuizAttemptsIntent())) {
-            onView(withId(R.id.retake_quiz_btn)).check(matches(not(isDisplayed())));
+            waitForView(withId(R.id.retake_quiz_btn)).check(matches(not(isDisplayed())));
         }
     }
 

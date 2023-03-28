@@ -34,7 +34,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
@@ -54,6 +53,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 @RunWith(AndroidJUnit4.class)
 public class CourseIndexActivityUITest extends DaggerInjectMockUITest {
@@ -147,7 +147,7 @@ public class CourseIndexActivityUITest extends DaggerInjectMockUITest {
         Intent i = getIntentParams(c, null);
 
         try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
-            onView(withText(R.string.error_reading_xml)).check(matches(isDisplayed()));
+            waitForView(withText(R.string.error_reading_xml)).check(matches(isDisplayed()));
         }
     }
 
@@ -161,7 +161,7 @@ public class CourseIndexActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
 
-            onView(withText("Activity1.4")).check(matches(isDisplayed())).perform(click());
+            waitForView(withText("Activity1.4")).check(matches(isDisplayed())).perform(click());
             assertEquals(CourseActivity.class, TestUtils.getCurrentActivity().getClass());
         }
     }
@@ -174,7 +174,7 @@ public class CourseIndexActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
 
-            onView(allOf(withId(R.id.section_icon), hasSibling(withChild(withText(("First section"))))))
+            waitForView(allOf(withId(R.id.section_icon), hasSibling(withChild(withText(("First section"))))))
                     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         }
     }
@@ -188,7 +188,7 @@ public class CourseIndexActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
 
-            onView(allOf(withId(R.id.section_icon), hasSibling(withChild(withText(("First section"))))))
+            waitForView(allOf(withId(R.id.section_icon), hasSibling(withChild(withText(("First section"))))))
                     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         }
     }

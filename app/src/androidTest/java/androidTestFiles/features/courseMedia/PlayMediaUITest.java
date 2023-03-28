@@ -1,6 +1,5 @@
 package androidTestFiles.features.courseMedia;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
@@ -15,6 +14,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.ViewsUtils.isToast;
 
 import android.Manifest;
@@ -24,7 +24,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.intent.Intents;
@@ -36,7 +35,6 @@ import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
-import org.digitalcampus.oppia.activity.DeviceListActivity;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -170,7 +168,7 @@ public class PlayMediaUITest extends CourseMediaBaseTest {
                     .withElement(findElement(Locator.TAG_NAME, "a"))
                     .perform(webClick());
 
-            onView(withText(context.getString(R.string.error_media_not_found, MEDIA_TEST_FILENAME))).
+            waitForView(withText(context.getString(R.string.error_media_not_found, MEDIA_TEST_FILENAME))).
                     inRoot(isToast()).
                     check(matches(isDisplayed()));
 

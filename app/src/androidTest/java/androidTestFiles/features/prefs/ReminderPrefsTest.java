@@ -1,7 +1,6 @@
 package androidTestFiles.features.prefs;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
@@ -11,6 +10,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 import androidx.test.espresso.contrib.RecyclerViewActions;
 
@@ -28,7 +28,7 @@ public class ReminderPrefsTest {
 
         launchInContainer(NotificationsPrefsFragment.class, null, R.style.Oppia_ToolbarTheme);
 
-        onView(withId(androidx.preference.R.id.recycler_view))
+        waitForView(withId(androidx.preference.R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(
                         hasDescendant(withText(R.string.prefCoursesReminderDaysTitle)), click()));
 
@@ -40,12 +40,12 @@ public class ReminderPrefsTest {
         uncheckViewWithText(R.string.week_day_7);
         uncheckViewWithText(R.string.week_day_1);
 
-        onView(withText(android.R.string.ok))
+        waitForView(withText(android.R.string.ok))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()))
                 .perform(click());
 
-        onView(withText(R.string.warning_reminder_at_least_one_day)).check(matches(isDisplayed()));
+        waitForView(withText(R.string.warning_reminder_at_least_one_day)).check(matches(isDisplayed()));
 
 
     }
@@ -56,25 +56,25 @@ public class ReminderPrefsTest {
 
         launchInContainer(NotificationsPrefsFragment.class, null, R.style.Oppia_ToolbarTheme);
 
-        onView(withId(androidx.preference.R.id.recycler_view))
+        waitForView(withId(androidx.preference.R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(
                         hasDescendant(withText(R.string.prefCoursesReminderIntervalTitle)), click()));
 
-        onView(withText(R.string.interval_weekly)).perform(click());
+        waitForView(withText(R.string.interval_weekly)).perform(click());
 
-        onView(withId(androidx.preference.R.id.recycler_view))
+        waitForView(withId(androidx.preference.R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(
                         hasDescendant(withText(R.string.prefCoursesReminderDaysTitle)), click()));
 
         checkViewWithText(R.string.week_day_1);
         checkViewWithText(R.string.week_day_3);
 
-        onView(withText(android.R.string.ok))
+        waitForView(withText(android.R.string.ok))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()))
                 .perform(click());
 
-        onView(withText(R.string.warning_reminder_weekly_just_one_day)).check(matches(isDisplayed()));
+        waitForView(withText(R.string.warning_reminder_weekly_just_one_day)).check(matches(isDisplayed()));
     }
 
 
@@ -84,8 +84,8 @@ public class ReminderPrefsTest {
      */
     private void uncheckViewWithText(int stringId) {
         try {
-            onView(withText(stringId)).check(matches(isChecked()));
-            onView(withText(stringId)).perform(click());
+            waitForView(withText(stringId)).check(matches(isChecked()));
+            waitForView(withText(stringId)).perform(click());
         } catch (AssertionFailedError e) {
             // It is already unchecked
         }
@@ -93,8 +93,8 @@ public class ReminderPrefsTest {
 
     private void checkViewWithText(int stringId) {
         try {
-            onView(withText(stringId)).check(matches(isNotChecked()));
-            onView(withText(stringId)).perform(click());
+            waitForView(withText(stringId)).check(matches(isNotChecked()));
+            waitForView(withText(stringId)).perform(click());
         } catch (AssertionFailedError e) {
             // It is already unchecked
         }

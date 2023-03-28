@@ -1,9 +1,23 @@
 package androidTestFiles.features.quiz;
 
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static androidTestFiles.utils.CourseUtils.mockCourse;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
@@ -22,22 +36,9 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
-import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.TestUtils;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.GrantPermissionRule;
-
-import static androidTestFiles.utils.CourseUtils.mockCourse;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 @RunWith(AndroidJUnit4.class)
 public class PretestUITest extends DaggerInjectMockUITest {
@@ -95,7 +96,7 @@ public class PretestUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(i)) {
 
-            onView(withText(R.string.alert_pretest))
+            waitForView(withText(R.string.alert_pretest))
                     .check(matches(isDisplayed()));
         }
     }
@@ -111,7 +112,7 @@ public class PretestUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(i)) {
 
-            onView(withText(R.string.alert_pretest))
+            waitForView(withText(R.string.alert_pretest))
                     .check(matches(isDisplayed()));
         }
     }
@@ -139,7 +140,7 @@ public class PretestUITest extends DaggerInjectMockUITest {
         configureMockProviderResponse(completeCourse);
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(i)) {
-            onView(withText(R.string.alert_pretest))
+            waitForView(withText(R.string.alert_pretest))
                     .check(doesNotExist());
         }
     }

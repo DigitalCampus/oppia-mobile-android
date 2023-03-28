@@ -1,12 +1,12 @@
 package androidTestFiles.features.trackers;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 import android.Manifest;
 import android.content.Context;
@@ -14,6 +14,7 @@ import android.content.Context;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.ActivityLogActivity;
@@ -24,10 +25,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidTestFiles.utils.parent.DaggerInjectMockUITest;
-import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
 import androidTestFiles.database.sampledata.UserData;
-import androidx.test.rule.GrantPermissionRule;
+import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 @RunWith(AndroidJUnit4.class)
 public class ExportTrackersTest extends DaggerInjectMockUITest {
@@ -59,15 +59,15 @@ public class ExportTrackersTest extends DaggerInjectMockUITest {
         try (ActivityScenario<ActivityLogActivity> scenario = ActivityScenario.launch(ActivityLogActivity.class)) {
 
             assertThat(db.getUnexportedTrackersCount(), equalTo(1));
-            onView(withId(R.id.highlight_to_export)).check(matches(withText("1")));
+            waitForView(withId(R.id.highlight_to_export)).check(matches(withText("1")));
 
-            onView(withId(R.id.export_btn)).perform(click());
-            onView(withText(R.string.close)).perform(click());
+            waitForView(withId(R.id.export_btn)).perform(click());
+            waitForView(withText(R.string.close)).perform(click());
 
             assertThat(db.getUnexportedTrackersCount(), equalTo(0));
-            onView(withId(R.id.highlight_to_export)).check(matches(withText("0")));
+            waitForView(withId(R.id.highlight_to_export)).check(matches(withText("0")));
 
-            onView(withId(R.id.exported_files_list)).check(new RecyclerViewItemCountAssertion(1));
+            waitForView(withId(R.id.exported_files_list)).check(new RecyclerViewItemCountAssertion(1));
 
         }
     }

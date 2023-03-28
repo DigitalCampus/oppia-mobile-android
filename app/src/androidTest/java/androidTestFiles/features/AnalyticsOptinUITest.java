@@ -1,7 +1,33 @@
 package androidTestFiles.features;
 
+import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
+import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
+
 import android.Manifest;
 import android.content.SharedPreferences;
+
+import androidx.preference.PreferenceManager;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.contrib.NavigationViewActions;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import junit.framework.AssertionFailedError;
 
@@ -19,39 +45,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
-import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidTestFiles.utils.TestUtils;
-import androidx.preference.PreferenceManager;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.NavigationViewActions;
-import androidx.test.espresso.matcher.ViewMatchers;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.GrantPermissionRule;
-
-import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.pressBack;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
-import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
+import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
 public class AnalyticsOptinUITest extends MockedApiEndpointTest {
@@ -101,8 +97,8 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
             performValidLogin("username-1");
             assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
             openPrivacyScreen();
-            onView(withId(R.id.analytics_checkbox)).perform(scrollTo()).check(matches(isChecked()));
-            onView(withId(R.id.bugreport_checkbox)).perform(scrollTo()).check(matches(isNotChecked()));
+            waitForView(withId(R.id.analytics_checkbox)).perform(scrollTo()).check(matches(isChecked()));
+            waitForView(withId(R.id.bugreport_checkbox)).perform(scrollTo()).check(matches(isNotChecked()));
 
             pressBack();
             performLogout();
@@ -110,42 +106,42 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
             performValidLogin("username-2");
             assertEquals(MainActivity.class, TestUtils.getCurrentActivity().getClass());
             openPrivacyScreen();
-            onView(withId(R.id.analytics_checkbox)).perform(scrollTo()).check(matches(isChecked()));
-            onView(withId(R.id.bugreport_checkbox)).perform(scrollTo()).check(matches(isChecked()));
+            waitForView(withId(R.id.analytics_checkbox)).perform(scrollTo()).check(matches(isChecked()));
+            waitForView(withId(R.id.bugreport_checkbox)).perform(scrollTo()).check(matches(isChecked()));
         }
     }
 
     private void openPrivacyScreen() {
 
         openDrawer();
-        onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(R.id.menu_privacy));
+        waitForView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(R.id.menu_privacy));
     }
 
     private void selectAnalyticsOptions(int... checkbox_ids) {
         for (int checkbox_id : checkbox_ids) {
-            onView(withId(checkbox_id)).perform(click());
+            waitForView(withId(checkbox_id)).perform(click());
         }
-        onView(withId(R.id.continue_button)).perform(click());
+        waitForView(withId(R.id.continue_button)).perform(click());
     }
 
     private void performLogout() {
 
         openDrawer();
 
-        onView(withId(R.id.btn_expand_profile_options)).perform(click());
-        onView(withId(R.id.btn_logout)).perform(click());
-        onView(withText(R.string.yes)).perform(click());
+        waitForView(withId(R.id.btn_expand_profile_options)).perform(click());
+        waitForView(withId(R.id.btn_logout)).perform(click());
+        waitForView(withText(R.string.yes)).perform(click());
 
     }
 
     private void performValidLogin(String username) {
 
         startServer(200, VALID_LOGIN_REGISTER_RESPONSE, 0);
-        onView(withId(R.id.welcome_login)).perform(scrollTo(), click());
-        onView(withId(R.id.login_username_field)).perform(closeSoftKeyboard(), scrollTo(), typeText(username));
-        onView(withId(R.id.login_password_field))
+        waitForView(withId(R.id.welcome_login)).perform(scrollTo(), click());
+        waitForView(withId(R.id.login_username_field)).perform(closeSoftKeyboard(), scrollTo(), typeText(username));
+        waitForView(withId(R.id.login_password_field))
                 .perform(scrollTo(), typeText("valid_password"), closeSoftKeyboard());
-        onView(withId(R.id.login_btn)).perform(scrollTo(), click());
+        waitForView(withId(R.id.login_btn)).perform(scrollTo(), click());
     }
 
     @Test
@@ -158,7 +154,7 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
         startServer(200, VALID_LOGIN_REGISTER_RESPONSE, 0);
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
@@ -179,14 +175,14 @@ public class AnalyticsOptinUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"), closeSoftKeyboard());
 
-            onView(withId(R.id.register_btn))
+            waitForView(withId(R.id.register_btn))
                     .perform(click());
 
             try {
                 assertEquals(AnalyticsOptinActivity.class, TestUtils.getCurrentActivity().getClass());
             } catch (AssertionFailedError afe) {
                 // If server returns any error:
-                onView(withText(R.string.error)).check(matches(isDisplayed()));
+                waitForView(withText(R.string.error)).check(matches(isDisplayed()));
             }
         }
     }

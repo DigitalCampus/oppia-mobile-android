@@ -1,5 +1,12 @@
 package androidTestFiles.widgets.quiz;
 
+import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
+
 import android.os.Bundle;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -19,13 +26,6 @@ import java.util.ArrayList;
 
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.TestUtils;
-
-import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class BaselineQuizTest {
@@ -64,25 +64,25 @@ public class BaselineQuizTest {
     @Test
     public void allCorrect() {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText(QUESTION_TITLE_1)));
 
-        onView(withText(CORRECT_ANSWER_1)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(CORRECT_ANSWER_1)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText(QUESTION_TITLE_2)));
 
-        onView(withText(CORRECT_ANSWER_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(CORRECT_ANSWER_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         String actual = TestUtils.getCurrentActivity().getString(R.string.widget_quiz_results_score, (float) 100);
-        onView(withId(R.id.quiz_results_score))
+        waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(actual)));
 
         // TODO check that the feedback is *not* displayed
 
-        onView(withId(R.id.quiz_exit_button))
+        waitForView(withId(R.id.quiz_exit_button))
                 .check(matches(withText(R.string.widget_quiz_baseline_goto_course)));
 
     }
@@ -90,50 +90,50 @@ public class BaselineQuizTest {
     @Test
     public void partiallyCorrect() throws InterruptedException {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText(QUESTION_TITLE_1)));
 
-        onView(withText(INCORRECT_ANSWER_1)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(INCORRECT_ANSWER_1)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText(QUESTION_TITLE_2)));
 
-        onView(withText(CORRECT_ANSWER_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(CORRECT_ANSWER_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         String actual = TestUtils.getCurrentActivity().getString(R.string.widget_quiz_results_score, (float) 50);
-        onView(withId(R.id.quiz_results_score))
+        waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(actual)));
 
         // TODO check that the feedback is *not* displayed
 
-        onView(withId(R.id.quiz_exit_button))
+        waitForView(withId(R.id.quiz_exit_button))
                 .check(matches(withText(R.string.widget_quiz_baseline_goto_course)));
     }
 
     @Test
     public void allIncorrect() {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText(QUESTION_TITLE_1)));
 
-        onView(withText(INCORRECT_ANSWER_1)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(INCORRECT_ANSWER_1)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText(QUESTION_TITLE_2)));
 
-        onView(withText(INCORRECT_ANSWER_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(INCORRECT_ANSWER_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         String actual = TestUtils.getCurrentActivity().getString(R.string.widget_quiz_results_score, (float) 0);
-        onView(withId(R.id.quiz_results_score))
+        waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(actual)));
 
         // TODO check that the feedback is *not* displayed
 
-        onView(withId(R.id.quiz_exit_button))
+        waitForView(withId(R.id.quiz_exit_button))
                 .check(matches(withText(R.string.widget_quiz_baseline_goto_course)));
     }
 

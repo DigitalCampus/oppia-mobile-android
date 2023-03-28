@@ -33,7 +33,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
@@ -55,6 +54,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 @RunWith(AndroidJUnit4.class)
 public class CourseActivityUITest extends DaggerInjectMockUITest {
@@ -132,18 +132,18 @@ public class CourseActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
 
-            onView(allOf(isAssignableFrom(TextView.class), withParent(isAssignableFrom(Toolbar.class)))).check(matches(withText(COURSE_TITLE)));
+            waitForView(allOf(isAssignableFrom(TextView.class), withParent(isAssignableFrom(Toolbar.class)))).check(matches(withText(COURSE_TITLE)));
 
             //Check the three activity tabs where added
-            onView(AllOf.allOf(withText("Test0"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+            waitForView(AllOf.allOf(withText("Test0"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                     isDescendantOfA(withId(R.id.tabs_toolbar))))
                     .check(matches(isDisplayed()));
 
-            onView(AllOf.allOf(withText("Test1"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+            waitForView(AllOf.allOf(withText("Test1"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                     isDescendantOfA(withId(R.id.tabs_toolbar))))
                     .check(matches(isDisplayed()));
 
-            onView(AllOf.allOf(withText("Test2"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+            waitForView(AllOf.allOf(withText("Test2"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                     isDescendantOfA(withId(R.id.tabs_toolbar))))
                     .check(matches(isDisplayed()));
         }
@@ -166,7 +166,7 @@ public class CourseActivityUITest extends DaggerInjectMockUITest {
 
         Intent i = getIntentParams(getMockCourse(), getMockSection(1), 0, true);
         try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
-            onView(allOf(isAssignableFrom(TextView.class), withParent(isAssignableFrom(Toolbar.class)))).check(matches(withText(COURSE_TITLE)));
+            waitForView(allOf(isAssignableFrom(TextView.class), withParent(isAssignableFrom(Toolbar.class)))).check(matches(withText(COURSE_TITLE)));
         }
     }
 
@@ -179,11 +179,11 @@ public class CourseActivityUITest extends DaggerInjectMockUITest {
         Intent i = getIntentParams(c, section, 0, false);
         try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
 
-            onView(AllOf.allOf(withText("Test1"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+            waitForView(AllOf.allOf(withText("Test1"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                     isDescendantOfA(withId(R.id.tabs_toolbar))))
                     .perform(click());
 
-            onView(withText(R.string.sequencing_dialog_title)).check(matches(isDisplayed()));
+            waitForView(withText(R.string.sequencing_dialog_title)).check(matches(isDisplayed()));
         }
     }
 
@@ -196,11 +196,11 @@ public class CourseActivityUITest extends DaggerInjectMockUITest {
         Intent i = getIntentParams(c, section, 2, false);
         try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
 
-            onView(AllOf.allOf(withText("Test1"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+            waitForView(AllOf.allOf(withText("Test1"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                     isDescendantOfA(withId(R.id.tabs_toolbar))))
                     .perform(click());
 
-            onView(withText(R.string.sequencing_dialog_title)).check(doesNotExist());
+            waitForView(withText(R.string.sequencing_dialog_title)).check(doesNotExist());
         }
     }
 
@@ -230,7 +230,7 @@ public class CourseActivityUITest extends DaggerInjectMockUITest {
         try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
 
             //Check that the tab of the activity with unknown type has not been added
-            onView(AllOf.allOf(withText("Test0"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+            waitForView(AllOf.allOf(withText("Test0"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                     isDescendantOfA(withId(R.id.tabs_toolbar))))
                     .check(doesNotExist());
         }
@@ -256,17 +256,17 @@ public class CourseActivityUITest extends DaggerInjectMockUITest {
         Intent i = getIntentParams(c, section, 0, false);
         try (ActivityScenario<DeviceListActivity> scenario = ActivityScenario.launch(i)) {
 
-            onView(AllOf.allOf(withText("English title"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+            waitForView(AllOf.allOf(withText("English title"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                     isDescendantOfA(withId(R.id.tabs_toolbar))))
                     .check(matches(isDisplayed()));
 
             openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
-            onView(anyOf(withText(R.string.change_content_language), withId(R.id.menu_language))).perform(click());
+            waitForView(anyOf(withText(R.string.change_content_language), withId(R.id.menu_language))).perform(click());
 
             when(prefs.getString(eq(PrefsActivity.PREF_CONTENT_LANGUAGE), anyString())).thenReturn("fi");
-            onView(withText("suomi")).perform(click());
+            waitForView(withText("suomi")).perform(click());
 
-            onView(AllOf.allOf(withText("Suomi title"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+            waitForView(AllOf.allOf(withText("Suomi title"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                     isDescendantOfA(withId(R.id.tabs_toolbar))))
                     .check(matches(isDisplayed()));
         }

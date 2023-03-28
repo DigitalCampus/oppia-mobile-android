@@ -1,6 +1,5 @@
 package androidTestFiles.activities;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -13,6 +12,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.ViewsUtils.isToast;
 import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
 import static androidTestFiles.utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
@@ -109,7 +109,7 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.field_lastname)
                     .perform(scrollTo(), clearText(), closeSoftKeyboard());
 
-            onView(withId(R.id.btn_save_profile)).perform(click());
+            waitForView(withId(R.id.btn_save_profile)).perform(click());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.field_firstname)
                     .check(matches(withText(R.string.field_required)));
@@ -127,7 +127,7 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.field_email)
                     .perform(scrollTo(), clearText(), typeText("wrong-email-format"), closeSoftKeyboard());
 
-            onView(withId(R.id.btn_save_profile)).perform(click());
+            waitForView(withId(R.id.btn_save_profile)).perform(click());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.field_email)
                     .check(matches(withText(R.string.error_register_email)));
@@ -146,9 +146,9 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
 
             enterValidData();
 
-            onView(withId(R.id.btn_save_profile)).perform(click());
+            waitForView(withId(R.id.btn_save_profile)).perform(click());
 
-            onView(withText("Error message"))
+            waitForView(withText("Error message"))
                     .inRoot(isToast())
                     .check(matches(isDisplayed()));
 
@@ -165,7 +165,7 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
 
             enterValidData();
             closeSoftKeyboard();
-            onView(withId(R.id.btn_save_profile)).perform(click());
+            waitForView(withId(R.id.btn_save_profile)).perform(click());
 
             Context context = InstrumentationRegistry.getInstrumentation().getContext();
 
@@ -195,9 +195,9 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
 
             enterValidData();
 
-            onView(withId(R.id.btn_save_profile)).perform(click());
+            waitForView(withId(R.id.btn_save_profile)).perform(click());
 
-            onView(withText(R.string.error_connection))
+            waitForView(withText(R.string.error_connection))
                     .inRoot(isToast())
                     .check(matches(isDisplayed()));
         }

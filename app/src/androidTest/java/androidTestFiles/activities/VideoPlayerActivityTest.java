@@ -1,12 +1,12 @@
 package androidTestFiles.activities;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.is;
 
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.parent.BaseTest.MEDIA_FILE_VIDEO_TEST_1;
 
 import android.Manifest;
@@ -75,7 +75,7 @@ public class VideoPlayerActivityTest extends CourseMediaBaseTest {
 
         try (ActivityScenario<VideoPlayerActivity> scenario = ActivityScenario.launchActivityForResult(videoActivityIntent)) {
 
-            onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(MEDIA_TEST_LENGHT_SECONDS - 2)));
+            waitForView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(MEDIA_TEST_LENGHT_SECONDS - 2)));
 
             Espresso.pressBackUnconditionally();
 
@@ -92,9 +92,9 @@ public class VideoPlayerActivityTest extends CourseMediaBaseTest {
 
         try (ActivityScenario<VideoPlayerActivity> scenario = ActivityScenario.launchActivityForResult(videoActivityIntent)) {
 
-            onView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(MEDIA_TEST_LENGHT_SECONDS + 2)));
+            waitForView(isRoot()).perform(waitFor(TimeUnit.SECONDS.toMillis(MEDIA_TEST_LENGHT_SECONDS + 2)));
 
-            onView(withId(R.id.continue_button)).perform(click());
+            waitForView(withId(R.id.continue_button)).perform(click());
 
             assertThat(scenario.getResult().getResultCode(), is(android.app.Activity.RESULT_OK));
 

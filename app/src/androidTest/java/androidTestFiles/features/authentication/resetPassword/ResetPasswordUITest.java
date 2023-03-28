@@ -1,20 +1,5 @@
 package androidTestFiles.features.authentication.resetPassword;
 
-import android.Manifest;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.WelcomeActivity;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import androidTestFiles.utils.parent.MockedApiEndpointTest;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.matcher.ViewMatchers;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.GrantPermissionRule;
-
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -25,8 +10,24 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
+
+import android.Manifest;
+
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.WelcomeActivity;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.concurrent.TimeUnit;
+
+import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
 public class ResetPasswordUITest extends MockedApiEndpointTest {
@@ -41,25 +42,25 @@ public class ResetPasswordUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_login))
+            waitForView(withId(R.id.welcome_login))
                     .perform(scrollTo(), click());
-            onView(withId(R.id.btn_reset_password))
+            waitForView(withId(R.id.btn_reset_password))
                     .perform(click());
 
             await().atMost(5, TimeUnit.SECONDS)
                     .untilAsserted(
                             () ->
-                                    onView(ViewMatchers.withId(R.id.reset_username_field))
+                                    waitForView(ViewMatchers.withId(R.id.reset_username_field))
                                             .check(matches(isCompletelyDisplayed()))
                     );
 
-            onView(withId(R.id.reset_username_field))
+            waitForView(withId(R.id.reset_username_field))
                     .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
-            onView(withId(R.id.reset_btn))
+            waitForView(withId(R.id.reset_btn))
                     .perform(closeSoftKeyboard(), scrollTo(), click());
 
-            onView(withText(R.string.error_register_no_username))
+            waitForView(withText(R.string.error_register_no_username))
                     .check(matches(isDisplayed()));
         }
     }
@@ -71,25 +72,25 @@ public class ResetPasswordUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_login))
+            waitForView(withId(R.id.welcome_login))
                     .perform(scrollTo(), click());
-            onView(withId(R.id.btn_reset_password))
+            waitForView(withId(R.id.btn_reset_password))
                     .perform(click());
 
             await().atMost(5, TimeUnit.SECONDS)
                     .untilAsserted(
                             () ->
-                                    onView(ViewMatchers.withId(R.id.reset_username_field))
+                                    waitForView(ViewMatchers.withId(R.id.reset_username_field))
                                             .check(matches(isCompletelyDisplayed()))
                     );
 
-            onView(withId(R.id.reset_username_field))
+            waitForView(withId(R.id.reset_username_field))
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongUsername"));
 
-            onView(withId(R.id.reset_btn))
+            waitForView(withId(R.id.reset_btn))
                     .perform(closeSoftKeyboard(), scrollTo(), click());
 
-            onView(withText(R.string.error_reset_password))
+            waitForView(withText(R.string.error_reset_password))
                     .check(matches(isDisplayed()));
         }
     }

@@ -14,7 +14,6 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
@@ -23,6 +22,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.AllOf.allOf;
+
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 @RunWith(AndroidJUnit4.class)
 public class AboutActivityTest {
@@ -35,8 +36,7 @@ public class AboutActivityTest {
 
     @Test
     public void clickHelpTab() {
-
-        onView(allOf(withText(R.string.tab_title_help),
+        waitForView(allOf(withText(R.string.tab_title_help),
                 withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 isDescendantOfA(withId(R.id.tabs_toolbar))))
                 .perform(click());
@@ -45,12 +45,12 @@ public class AboutActivityTest {
     @Test
     public void clickAboutTab() {
 
-        onView(allOf(withText(R.string.tab_title_about),
+        waitForView(allOf(withText(R.string.tab_title_about),
                 withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 isDescendantOfA(withId(R.id.tabs_toolbar))))
                 .perform(click());
 
-        onView(withId(R.id.about_versionno)).check(matches(withText(containsString(BuildConfig.VERSION_NAME))));
+        waitForView(withId(R.id.about_versionno)).check(matches(withText(containsString(BuildConfig.VERSION_NAME))));
     }
 
 

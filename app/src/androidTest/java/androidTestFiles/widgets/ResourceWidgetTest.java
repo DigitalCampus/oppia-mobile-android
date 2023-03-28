@@ -1,5 +1,10 @@
 package androidTestFiles.widgets;
 
+import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.junit.Assert.assertEquals;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
+
 import android.Manifest;
 import android.os.Bundle;
 
@@ -19,11 +24,6 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class ResourceWidgetTest {
@@ -61,6 +61,6 @@ public class ResourceWidgetTest {
     public void openResource() {
         launchInContainer(ResourceWidget.class, args, R.style.Oppia_ToolbarTheme);
         // this doesn't really test anything, but gives some coverage to the ResourceWidget class
-        assertEquals(androidx.test.espresso.ViewInteraction.class.getCanonicalName(), onView(withId(act.getActId())).getClass().getCanonicalName());
+        assertEquals(androidx.test.espresso.ViewInteraction.class.getCanonicalName(), waitForView(withId(act.getActId())).getClass().getCanonicalName());
     }
 }

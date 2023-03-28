@@ -1,12 +1,12 @@
 package androidTestFiles.activities;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.not;
-import static org.mockito.Matchers.eq;
+
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 import android.Manifest;
 import android.content.Context;
@@ -74,9 +74,9 @@ public class CourseQuizAttemptsActivityTest extends BaseTestDB {
         try (ActivityScenario<CourseQuizAttemptsActivity> scenario = ActivityScenario.launch(intent)) {
 
             int avgPercent = Math.round(avgScore * 100.0f / Math.max(1, maxScore));
-            onView(withId(R.id.highlight_average)).check(matches(withText(avgPercent + "%")));
-            onView(withId(R.id.empty_state)).check(matches(not(isDisplayed())));
-            onView((withId(R.id.retake_quiz_btn))).check(matches(isDisplayed()));
+            waitForView(withId(R.id.highlight_average)).check(matches(withText(avgPercent + "%")));
+            waitForView(withId(R.id.empty_state)).check(matches(not(isDisplayed())));
+            waitForView(withId(R.id.retake_quiz_btn)).check(matches(isDisplayed()));
         }
 
     }
@@ -90,9 +90,9 @@ public class CourseQuizAttemptsActivityTest extends BaseTestDB {
         Intent intent = getCourseQuizAttemptsIntent(0, 0, 0);
 
         try (ActivityScenario<CourseQuizAttemptsActivity> scenario = ActivityScenario.launch(intent)) {
-            onView(withId(R.id.highlight_average)).check(matches(withText("-")));
-            onView(withId(R.id.empty_state)).check(matches(isDisplayed()));
-            onView((withId(R.id.retake_quiz_btn))).check(matches(not(isDisplayed())));
+            waitForView(withId(R.id.highlight_average)).check(matches(withText("-")));
+            waitForView(withId(R.id.empty_state)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.retake_quiz_btn)).check(matches(not(isDisplayed())));
         }
     }
 
