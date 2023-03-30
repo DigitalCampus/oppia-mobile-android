@@ -1,31 +1,20 @@
-package androidTestFiles.features.quiz.models;
+package testFiles.model.quiz;
 
-import android.Manifest;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
-import androidTestFiles.utils.FileUtils;
-import androidx.test.rule.GrantPermissionRule;
+import testFiles.utils.UnitTestsFileUtils;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-
-@RunWith(AndroidJUnit4.class)
 public class MultiChoiceQuestionTest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String MULTICHOICE_NOFEEDBACK_JSON = "quizzes/multichoice_no_feedback.json";
     private static final String MULTICHOICE_WITHFEEDBACK_JSON = "quizzes/multichoice_with_feedback.json";
@@ -36,13 +25,11 @@ public class MultiChoiceQuestionTest {
     @Before
     public void setup() throws Exception {
         // Setting up before every test
-        String quizNoFeedbackContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), MULTICHOICE_NOFEEDBACK_JSON);
+        String quizNoFeedbackContent = UnitTestsFileUtils.readFileFromTestResources(MULTICHOICE_NOFEEDBACK_JSON);
         quizNoFeedback = new Quiz();
         quizNoFeedback.load(quizNoFeedbackContent, DEFAULT_LANG);
 
-        String quizWithFeedbackContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), MULTICHOICE_WITHFEEDBACK_JSON);
+        String quizWithFeedbackContent = UnitTestsFileUtils.readFileFromTestResources(MULTICHOICE_WITHFEEDBACK_JSON);
         quizWithFeedback = new Quiz();
         quizWithFeedback.load(quizWithFeedbackContent, DEFAULT_LANG);
     }

@@ -8,10 +8,7 @@ import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Matching;
 import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -52,7 +49,6 @@ public class MatchingQuestionTest {
 
 
     // correct answer
-    @Ignore
     @Test
     public void test_correctNoFeedback()throws Exception {
         QuizQuestion quizQuestion = quizDefaultFeedback.getCurrentQuestion();
@@ -95,7 +91,6 @@ public class MatchingQuestionTest {
     }
 
     // partially correct
-    @Ignore
     @Test
     public void test_partialCorrectNoFeedback()throws Exception {
         QuizQuestion quizQuestion = quizDefaultFeedback.getCurrentQuestion();
@@ -128,7 +123,6 @@ public class MatchingQuestionTest {
 
     // no correct
 
-    @Ignore
     @Test
     public void test_noCorrectNoFeedback()throws Exception {
         QuizQuestion quizQuestion = quizDefaultFeedback.getCurrentQuestion();

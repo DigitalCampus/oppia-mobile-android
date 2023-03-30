@@ -1,33 +1,22 @@
-package androidTestFiles.features.quiz.models;
+package testFiles.model.quiz;
 
-import android.Manifest;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import androidTestFiles.utils.FileUtils;
-import androidx.test.rule.GrantPermissionRule;
+import testFiles.utils.UnitTestsFileUtils;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-
-@RunWith(AndroidJUnit4.class)
 public class NumericQuestionTest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String NUMERIC_CLOSE_NOFEEDBACK_JSON = "quizzes/numeric_close_no_feedback.json";
     private static final String NUMERIC_EXACT_NOFEEDBACK_JSON = "quizzes/numeric_exact_no_feedback.json";
@@ -42,18 +31,15 @@ public class NumericQuestionTest {
     @Before
     public void setup() throws Exception {
         // Setting up before every test
-        String quizCloseNoFeedbackContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), NUMERIC_CLOSE_NOFEEDBACK_JSON);
+        String quizCloseNoFeedbackContent = UnitTestsFileUtils.readFileFromTestResources(NUMERIC_CLOSE_NOFEEDBACK_JSON);
         quizCloseNoFeedback = new Quiz();
         quizCloseNoFeedback.load(quizCloseNoFeedbackContent, DEFAULT_LANG);
 
-        String quizExactNoFeedbackContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), NUMERIC_EXACT_NOFEEDBACK_JSON);
+        String quizExactNoFeedbackContent = UnitTestsFileUtils.readFileFromTestResources(NUMERIC_EXACT_NOFEEDBACK_JSON);
         quizExactNoFeedback = new Quiz();
         quizExactNoFeedback.load(quizExactNoFeedbackContent, DEFAULT_LANG);
 
-        String quizWithFeedbackContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), NUMERIC_WITH_FEEDBACK_JSON);
+        String quizWithFeedbackContent = UnitTestsFileUtils.readFileFromTestResources(NUMERIC_WITH_FEEDBACK_JSON);
         quizWithFeedback = new Quiz();
         quizWithFeedback.load(quizWithFeedbackContent, DEFAULT_LANG);
     }
@@ -310,8 +296,7 @@ public class NumericQuestionTest {
     @Test
     public void test_errorCheck()throws Exception {
 
-        String quizErrorCheckContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), NUMERIC_ERROR_CHECK_JSON);
+        String quizErrorCheckContent = UnitTestsFileUtils.readFileFromTestResources(NUMERIC_ERROR_CHECK_JSON);
         Quiz quizErrorCheck = new Quiz();
         quizErrorCheck.load(quizErrorCheckContent, DEFAULT_LANG);
 

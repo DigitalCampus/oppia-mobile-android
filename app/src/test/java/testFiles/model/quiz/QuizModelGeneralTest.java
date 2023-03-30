@@ -1,9 +1,8 @@
-package androidTestFiles.features.quiz.models;
+package testFiles.model.quiz;
 
-import android.Manifest;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 import org.digitalcampus.mobile.quiz.InvalidQuizException;
 import org.digitalcampus.mobile.quiz.Quiz;
@@ -12,25 +11,15 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import androidTestFiles.utils.FileUtils;
-import androidx.test.rule.GrantPermissionRule;
+import testFiles.utils.UnitTestsFileUtils;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-
-@RunWith(AndroidJUnit4.class)
 public class QuizModelGeneralTest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String DEFAULT_LANG = "en";
     private static final String MULTICHOICE_QUIZ_JSON = "quizzes/multichoice_no_feedback.json";
@@ -55,8 +44,7 @@ public class QuizModelGeneralTest {
     @Before
     public void setup() throws Exception {
         // Setting up before every test
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), MULTICHOICE_QUIZ_JSON);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(MULTICHOICE_QUIZ_JSON);
         quiz = new Quiz();
         quiz.load(quizContent, DEFAULT_LANG);
 
@@ -65,8 +53,7 @@ public class QuizModelGeneralTest {
     @Test
     public void test_loads()throws Exception {
         quiz = new Quiz();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), MULTICHOICE_QUIZ_JSON);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(MULTICHOICE_QUIZ_JSON);
         boolean result = quiz.load(quizContent, DEFAULT_LANG);
         assertTrue(result);
     }
@@ -77,8 +64,7 @@ public class QuizModelGeneralTest {
         quiz.setMaxscore(10);
         assertEquals(10, quiz.getMaxscore(), 0);
         assertEquals(0, quiz.getMaxAttempts());
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), DESCRIPTION_JSON);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(DESCRIPTION_JSON);
         quiz = new Quiz();
         quiz.load(quizContent, DEFAULT_LANG);
         assertEquals(0, quiz.getCurrentQuestionNo());
@@ -148,8 +134,7 @@ public class QuizModelGeneralTest {
     @Test
     public void test_invalidQuizJson() throws Exception {
         quiz = new Quiz();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), QUIZ_INVALID_JSON);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(QUIZ_INVALID_JSON);
         boolean result = quiz.load(quizContent, DEFAULT_LANG);
         assertFalse(result);
     }
@@ -170,8 +155,7 @@ public class QuizModelGeneralTest {
     @Test
     public void test_randomSelect()throws Exception {
         quiz = new Quiz();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), QUIZ_RANDOM_JSON);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(QUIZ_RANDOM_JSON);
         boolean result = quiz.load(quizContent, DEFAULT_LANG);
         assertTrue(result);
         assertEquals((float) 2, quiz.getMaxscore());
@@ -181,8 +165,7 @@ public class QuizModelGeneralTest {
     @Test
     public void test_descriptionQuestion()throws Exception {
         quiz = new Quiz();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), DESCRIPTION_QUIZ_JSON);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(DESCRIPTION_QUIZ_JSON);
         boolean result = quiz.load(quizContent, DEFAULT_LANG);
         assertTrue(result);
         assertEquals(2, quiz.getTotalNoQuestions());
@@ -192,8 +175,7 @@ public class QuizModelGeneralTest {
     @Test
     public void test_multilangQuizTitle()throws Exception {
         quiz = new Quiz();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), MULTILANG_QUIZ_TITLE_JSON);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(MULTILANG_QUIZ_TITLE_JSON);
         quiz.load(quizContent, DEFAULT_LANG);
         assertEquals("Questions", quiz.getTitle(DEFAULT_LANG));
         assertEquals("Kysymykset", quiz.getTitle("fi"));
@@ -205,8 +187,7 @@ public class QuizModelGeneralTest {
     @Test
     public void maxAttemptsTest() throws Exception {
         quiz = new Quiz();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), WITH_MAX_ATTEMPTS_JSON);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(WITH_MAX_ATTEMPTS_JSON);
         quiz.load(quizContent, DEFAULT_LANG);
         assertEquals(true, quiz.limitAttempts());
     }
@@ -215,8 +196,7 @@ public class QuizModelGeneralTest {
     @Test
     public void nonMultiLangTest() throws Exception {
         quiz = new Quiz();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), NO_MULTILANG_OBJECTS);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(NO_MULTILANG_OBJECTS);
         quiz.load(quizContent, DEFAULT_LANG);
         assertEquals("Questions", quiz.getTitle(DEFAULT_LANG));
     }
@@ -225,8 +205,7 @@ public class QuizModelGeneralTest {
     @Test
     public void integerFormatTitlesTest() throws Exception {
         quiz = new Quiz();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), INTEGER_TITLES);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(INTEGER_TITLES);
         quiz.load(quizContent, DEFAULT_LANG);
         assertEquals("unknown", quiz.getTitle(DEFAULT_LANG));
     }
@@ -235,8 +214,7 @@ public class QuizModelGeneralTest {
     @Test
     public void unsupportedQuestionTypeTest() throws Exception {
         quiz = new Quiz();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), UNSUPPORTED_QUESTION_TYPE);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(UNSUPPORTED_QUESTION_TYPE);
         quiz.load(quizContent, DEFAULT_LANG);
         assertEquals("Questions", quiz.getTitle(DEFAULT_LANG));
         assertEquals(1, quiz.getTotalNoQuestions());
@@ -246,8 +224,7 @@ public class QuizModelGeneralTest {
     @Test
     public void essayQuestionTypeTest() throws Exception {
         quiz = new Quiz();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), ESSAY_QUESTION_TYPE);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(ESSAY_QUESTION_TYPE);
         quiz.load(quizContent, DEFAULT_LANG);
         assertEquals("Questions", quiz.getTitle(DEFAULT_LANG));
         assertEquals(1, quiz.getTotalNoQuestions());
@@ -277,8 +254,7 @@ public class QuizModelGeneralTest {
     @Test
     public void quizNoPasswordField() throws Exception {
         quiz = new Quiz();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), PASSWORD_PROTECT_NO_PASSWORD_FIELD);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(PASSWORD_PROTECT_NO_PASSWORD_FIELD);
         quiz.load(quizContent, DEFAULT_LANG);
         assertEquals(null, quiz.getPassword());
     }
@@ -286,8 +262,7 @@ public class QuizModelGeneralTest {
     @Test
     public void quizNullPassword() throws Exception {
         quiz = new Quiz();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), PASSWORD_PROTECT_NULL_PASSWORD);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(PASSWORD_PROTECT_NULL_PASSWORD);
         quiz.load(quizContent, DEFAULT_LANG);
         assertEquals(null, quiz.getPassword());
     }
@@ -295,8 +270,7 @@ public class QuizModelGeneralTest {
     @Test
     public void quizEmptyPassword() throws Exception {
         quiz = new Quiz();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), PASSWORD_PROTECT_EMPTY_PASSWORD);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(PASSWORD_PROTECT_EMPTY_PASSWORD);
         quiz.load(quizContent, DEFAULT_LANG);
         assertEquals("", quiz.getPassword());
     }
@@ -304,8 +278,7 @@ public class QuizModelGeneralTest {
     @Test
     public void quizNonEmptyPassword() throws Exception {
         quiz = new Quiz();
-        String quizContent = FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), PASSWORD_PROTECT_NON_EMPTY_PASSWORD);
+        String quizContent = UnitTestsFileUtils.readFileFromTestResources(PASSWORD_PROTECT_NON_EMPTY_PASSWORD);
         quiz.load(quizContent, DEFAULT_LANG);
         assertEquals("letmein", quiz.getPassword());
     }
