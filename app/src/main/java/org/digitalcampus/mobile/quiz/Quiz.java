@@ -223,7 +223,7 @@ public class Quiz implements Serializable {
         if (questionProps.names() != null){
             for (int k = 0; k < questionProps.names().length(); k++) {
                 qProps.put(questionProps.names().getString(k),
-                        questionProps.getString(questionProps.names().getString(k)));
+                        questionProps.get(questionProps.names().getString(k)).toString());
             }
             question.setProps(qProps);
         }
@@ -287,7 +287,7 @@ public class Quiz implements Serializable {
         if (responseProps.names() != null) {
             for (int m = 0; m < responseProps.names().length(); m++) {
                 rProps.put(responseProps.names().getString(m),
-                        responseProps.getString(responseProps.names().getString(m)));
+                        responseProps.get(responseProps.names().getString(m)).toString());
             }
         }
         responseOption.setProps(rProps);
