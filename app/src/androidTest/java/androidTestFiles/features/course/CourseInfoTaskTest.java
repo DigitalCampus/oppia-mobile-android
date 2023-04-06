@@ -24,8 +24,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 
 public class CourseInfoTaskTest  extends MockedApiEndpointTaskTest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String NOT_JSON_RESPONSE = "responses/response_body_error_message.txt";
     private static final String VALID_COURSEINFO_RESPONSE = "responses/course/response_200_course_info.json";

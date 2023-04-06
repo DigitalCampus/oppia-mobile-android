@@ -1,23 +1,6 @@
 package androidTestFiles.widgets.quiz;
 
 
-import android.view.View;
-import android.widget.Spinner;
-import android.widget.TextView;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.widgets.QuizWidget;
-import org.hamcrest.Matcher;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import androidTestFiles.utils.TestUtils;
-import androidTestFiles.features.quiz.models.MatchingQuestionTest;
-
-import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withDrawable;
-import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -32,12 +15,33 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withDrawable;
+import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
+
+import android.view.View;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.widgets.QuizWidget;
+import org.hamcrest.Matcher;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import androidTestFiles.utils.TestUtils;
 
 @RunWith(AndroidJUnit4.class)
 public class MatchingDefaultFeedbackTest extends BaseQuizTest {
 
     private static final String MATCHING_DEFAULT_FEEDBACK_JSON =
             "quizzes/matching_default_feedback.json";
+
+    public static final String FEEDBACK_TEXT_CORRECT = "Your answer is correct.";
+    public static final String FEEDBACK_TEXT_PARTIALLY_CORRECT = "Your answer is partially correct.";
+    public static final String FEEDBACK_TEXT_INCORRECT = "Your answer is incorrect.";
+    
     private static final String FIRST_QUESTION_TITLE =
             "What beats what?";
 
@@ -101,7 +105,7 @@ public class MatchingDefaultFeedbackTest extends BaseQuizTest {
 
         onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
                 .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
-                .check(matches(withText(MatchingQuestionTest.FEEDBACK_TEXT_CORRECT)));
+                .check(matches(withText(FEEDBACK_TEXT_CORRECT)));
 
         onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
                 .atPositionOnView(0, R.id.quiz_question_feedback_image))
@@ -140,7 +144,7 @@ public class MatchingDefaultFeedbackTest extends BaseQuizTest {
 
         onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
                 .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
-                .check(matches(withText(MatchingQuestionTest.FEEDBACK_TEXT_PARTIALLY_CORRECT)));
+                .check(matches(withText(FEEDBACK_TEXT_PARTIALLY_CORRECT)));
 
         onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
                 .atPositionOnView(0, R.id.quiz_question_feedback_image))
@@ -180,7 +184,7 @@ public class MatchingDefaultFeedbackTest extends BaseQuizTest {
 
         onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
                 .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
-                .check(matches(withText(MatchingQuestionTest.FEEDBACK_TEXT_INCORRECT)));
+                .check(matches(withText(FEEDBACK_TEXT_INCORRECT)));
 
         onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
                 .atPositionOnView(0, R.id.quiz_question_feedback_image))

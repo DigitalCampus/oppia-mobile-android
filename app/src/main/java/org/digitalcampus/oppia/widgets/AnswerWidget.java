@@ -244,7 +244,7 @@ public abstract class AnswerWidget extends BaseWidget {
     protected boolean isUserOverLimitedAttempts(boolean afterAttempt){
         if (this.quiz.limitAttempts()){
             //Check if the user has attempted the quiz the max allowed
-            QuizStats qs = attemptsRepository.getQuizAttemptStats(this.getActivity(), activity.getDigest());
+            QuizStats qs = attemptsRepository.getQuizAttemptStats(this.getActivity(), course.getCourseId(), activity.getDigest());
             if (afterAttempt){
                 //If the quiz was just attempted, it is not saved yet, so we added
                 qs.setNumAttempts(qs.getNumAttempts() + 1);

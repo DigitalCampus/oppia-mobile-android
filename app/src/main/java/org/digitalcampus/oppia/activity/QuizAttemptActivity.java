@@ -112,6 +112,7 @@ public class QuizAttemptActivity extends AppActivity {
 		} catch (InvalidXMLException ixmle) {
 			Log.d(TAG,"Invalid course xml file", ixmle);
 			Analytics.logException(ixmle);
+			return;
 		}
 
 		if (quizAttempt.getData() == null){
@@ -151,7 +152,7 @@ public class QuizAttemptActivity extends AppActivity {
 
 		if (quiz.limitAttempts()){
 			//Check if the user has attempted the quiz the max allowed
-			QuizStats qs = attemptsRepository.getQuizAttemptStats(this, quizAttempt.getActivityDigest());
+			QuizStats qs = attemptsRepository.getQuizAttemptStats(this, parsed.getCourseId(), quizAttempt.getActivityDigest());
 			if (qs.getNumAttempts() >= quiz.getMaxAttempts()){
 				binding.retakeQuizBtn.setVisibility(View.GONE);
 			}
