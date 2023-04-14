@@ -798,7 +798,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     database.update(QUIZATTEMPTS_TABLE, values, QUIZATTEMPTS_C_ID + "=" + attemptID, null);
                 }
 
-            } catch (JSONException e) {
+            } catch (JSONException | NullPointerException e) {
                 // Pass
             }
             c1.moveToNext();
@@ -1793,15 +1793,17 @@ public class DbHelper extends SQLiteOpenHelper {
 
                 case Gamification.EVENT_NAME_MEDIA_PLAYED:
                     String data = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
-                    try {
-                        JSONObject jsonObj = new JSONObject(data);
-                        String mediaFileName = jsonObj.getString("mediafile");
-                        if (course != null) {
-                            description = this.ctx.getString(R.string.points_event_media_played,
-                                    mediaFileName);
+                    if (data != null) {
+                        try {
+                            JSONObject jsonObj = new JSONObject(data);
+                            String mediaFileName = jsonObj.getString("mediafile");
+                            if (course != null) {
+                                description = this.ctx.getString(R.string.points_event_media_played,
+                                        mediaFileName);
+                            }
+                        } catch (JSONException e) {
+                            Log.d(TAG, e.getMessage(), e);
                         }
-                    } catch (JSONException jsone) {
-                        Log.d(TAG, jsone.getMessage(), jsone);
                     }
 
                     break;
