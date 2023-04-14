@@ -1,6 +1,5 @@
 package androidTestFiles.features;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -14,6 +13,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -31,8 +31,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 @RunWith(AndroidJUnit4.class)
 public class StagingWarningMessageTest extends DaggerInjectMockUITest {
@@ -71,7 +71,7 @@ public class StagingWarningMessageTest extends DaggerInjectMockUITest {
         when(prefs.getString(eq(PrefsActivity.PREF_SERVER), anyString())).thenReturn("https://staging.server.com");
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.view_staging_warning)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.view_staging_warning)).check(matches(isDisplayed()));
         }
     }
 
@@ -81,7 +81,7 @@ public class StagingWarningMessageTest extends DaggerInjectMockUITest {
         when(prefs.getString(eq(PrefsActivity.PREF_SERVER), anyString())).thenReturn("https://live.server.com");
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.view_staging_warning)).check(matches(not(isDisplayed())));
+            waitForView(withId(R.id.view_staging_warning)).check(matches(not(isDisplayed())));
         }
     }
 
@@ -91,12 +91,12 @@ public class StagingWarningMessageTest extends DaggerInjectMockUITest {
         when(prefs.getString(eq(PrefsActivity.PREF_SERVER), anyString())).thenReturn("https://staging.server.com");
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.view_staging_warning)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.view_staging_warning)).check(matches(isDisplayed()));
             openDrawer();
-            onView(withText(R.string.menu_settings)).perform(click());
+            waitForView(withText(R.string.menu_settings)).perform(click());
             when(prefs.getString(eq(PrefsActivity.PREF_SERVER), anyString())).thenReturn("https://live.server.com");
             pressBack();
-            onView(withId(R.id.view_staging_warning)).check(matches(not(isDisplayed())));
+            waitForView(withId(R.id.view_staging_warning)).check(matches(not(isDisplayed())));
         }
     }
 
@@ -106,12 +106,12 @@ public class StagingWarningMessageTest extends DaggerInjectMockUITest {
         when(prefs.getString(eq(PrefsActivity.PREF_SERVER), anyString())).thenReturn("https://live.server.com");
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.view_staging_warning)).check(matches(not(isDisplayed())));
+            waitForView(withId(R.id.view_staging_warning)).check(matches(not(isDisplayed())));
             openDrawer();
-            onView(withText(R.string.menu_settings)).perform(click());
+            waitForView(withText(R.string.menu_settings)).perform(click());
             when(prefs.getString(eq(PrefsActivity.PREF_SERVER), anyString())).thenReturn("https://staging.server.com");
             pressBack();
-            onView(withId(R.id.view_staging_warning)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.view_staging_warning)).check(matches(isDisplayed()));
         }
     }
 
@@ -121,13 +121,13 @@ public class StagingWarningMessageTest extends DaggerInjectMockUITest {
         when(prefs.getString(eq(PrefsActivity.PREF_SERVER), anyString())).thenReturn("https://staging.server.com");
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.view_staging_warning)).check(matches(isDisplayed()));
-            onView(withId(R.id.img_close_staging_warning)).perform(click());
-            onView(withId(R.id.view_staging_warning)).check(matches(not(isDisplayed())));
+            waitForView(withId(R.id.view_staging_warning)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.img_close_staging_warning)).perform(click());
+            waitForView(withId(R.id.view_staging_warning)).check(matches(not(isDisplayed())));
             openDrawer();
-            onView(withText(R.string.menu_settings)).perform(click());
+            waitForView(withText(R.string.menu_settings)).perform(click());
             pressBack();
-            onView(withId(R.id.view_staging_warning)).check(matches(not(isDisplayed())));
+            waitForView(withId(R.id.view_staging_warning)).check(matches(not(isDisplayed())));
         }
     }
 

@@ -1,6 +1,28 @@
 package androidTestFiles.features.authentication.register;
 
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.assertNotEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
+import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
+import static androidTestFiles.utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
+import static androidTestFiles.utils.ViewsUtils.onHelperTextViewWithinTextInputLayoutWithId;
+
 import android.Manifest;
+
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import junit.framework.AssertionFailedError;
 
@@ -17,29 +39,8 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidTestFiles.utils.TestUtils;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.GrantPermissionRule;
-
-import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
-import static androidTestFiles.utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
-import static androidTestFiles.utils.ViewsUtils.onHelperTextViewWithinTextInputLayoutWithId;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
+import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
 public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
@@ -65,13 +66,13 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                     .perform(closeSoftKeyboard(), scrollTo(), replaceText(""));
 
-            onView(withId(R.id.register_btn))
+            waitForView(withId(R.id.register_btn))
                     .perform(click());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.register_form_username_field)
@@ -88,13 +89,13 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("Us"), closeSoftKeyboard());
 
-            onView(withId(R.id.register_btn))
+            waitForView(withId(R.id.register_btn))
                     .perform(click());
 
             String usernameLengthError = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().getString(
@@ -114,13 +115,13 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("Username With Spaces"));
 
-            onView(withId(R.id.register_btn))
+            waitForView(withId(R.id.register_btn))
                     .perform(closeSoftKeyboard(), click());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.register_form_username_field)
@@ -137,7 +138,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
@@ -161,7 +162,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
 
-            onView(withId(R.id.register_btn))
+            waitForView(withId(R.id.register_btn))
                     .perform(closeSoftKeyboard(), click());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.register_form_email_field)
@@ -178,7 +179,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
@@ -202,7 +203,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
 
-            onView(withId(R.id.register_btn))
+            waitForView(withId(R.id.register_btn))
                     .perform(closeSoftKeyboard(), click());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.register_form_email_field)
@@ -219,7 +220,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
@@ -231,7 +232,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("123"));
 
-            onView(withId(R.id.register_btn))
+            waitForView(withId(R.id.register_btn))
                     .perform(closeSoftKeyboard(), click());
 
             String passwordError = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().getString(
@@ -251,7 +252,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
@@ -266,7 +267,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("password2"));
 
-            onView(withId(R.id.register_btn))
+            waitForView(withId(R.id.register_btn))
                     .perform(click());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.register_form_password_field)
@@ -283,7 +284,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
@@ -301,7 +302,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
-            onView(withId(R.id.register_btn))
+            waitForView(withId(R.id.register_btn))
                     .perform(click());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
@@ -318,7 +319,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
@@ -339,7 +340,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
-            onView(withId(R.id.register_btn))
+            waitForView(withId(R.id.register_btn))
                     .perform(click());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
@@ -356,7 +357,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
@@ -380,7 +381,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("1234"));
 
-            onView(withId(R.id.register_btn))
+            waitForView(withId(R.id.register_btn))
                     .perform(click(), closeSoftKeyboard());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
@@ -398,7 +399,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
         startServer(200, VALID_REGISTER_RESPONSE, 0);
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
@@ -419,14 +420,14 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
 
-            onView(withId(R.id.register_btn))
+            waitForView(withId(R.id.register_btn))
                     .perform(click());
 
             try {
                 assertNotEquals(WelcomeActivity.class, TestUtils.getCurrentActivity().getClass());
             } catch (AssertionFailedError afe) {
                 // If server returns any error:
-                onView(withText(R.string.error)).check(matches(isDisplayed()));
+                waitForView(withText(R.string.error)).check(matches(isDisplayed()));
             }
         }
     }
@@ -440,7 +441,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
             String usernameHelperText = InstrumentationRegistry.getInstrumentation().getTargetContext().getString(R.string.error_register_username_length, App.USERNAME_MIN_CHARACTERS);

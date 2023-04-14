@@ -1,11 +1,11 @@
 package androidTestFiles.features.quiz;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -93,35 +93,35 @@ public class FeedbackGradeBoundariesUITest {
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
         // Question 1
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 1")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 2
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 2")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 3
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 3")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 4
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 4")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         String expected = DEFAULT_FEEDBACK_MESSAGE;
-        onView(withId(R.id.quiz_results_score))
+        waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(expected)));
     }
 
@@ -135,35 +135,35 @@ public class FeedbackGradeBoundariesUITest {
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
         // Question 1
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 1")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 2
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 2")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 3
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 3")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 4
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 4")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         String expected = FEEDBACK_MESSAGE_100_EN;
-        onView(withId(R.id.quiz_results_score))
+        waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(expected)));
     }
 
@@ -177,35 +177,35 @@ public class FeedbackGradeBoundariesUITest {
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
         // Question 1
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 1")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 2
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 2")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 3
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 3")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 4
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 4")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         String expected = FEEDBACK_MESSAGE_75_EN;
-        onView(withId(R.id.quiz_results_score))
+        waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(expected)));
     }
 
@@ -219,35 +219,35 @@ public class FeedbackGradeBoundariesUITest {
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
         // Question 1
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 1")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 2
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 2")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 3
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 3")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_1)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_1)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 4
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 4")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_1)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_1)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         String expected = FEEDBACK_MESSAGE_25_EN;
-        onView(withId(R.id.quiz_results_score))
+        waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(expected)));
     }
 
@@ -261,15 +261,15 @@ public class FeedbackGradeBoundariesUITest {
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
         // Question 1
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("What is the capital of Germany?")));
 
-        onView(withText("Berlin")).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText("Berlin")).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
 
         int expected = R.string.widget_feedback_submit_title;
-        onView(withId(R.id.quiz_results_score))
+        waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(expected)));
     }
 
@@ -283,35 +283,35 @@ public class FeedbackGradeBoundariesUITest {
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
         // Question 1
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 1")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 2
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 2")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 3
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 3")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 4
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 4")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         String expected = FEEDBACK_INCORRECT_MESSAGE;
-        onView(withId(R.id.quiz_results_score))
+        waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(expected)));
     }
 
@@ -325,35 +325,35 @@ public class FeedbackGradeBoundariesUITest {
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
         // Question 1
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 1")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 2
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 2")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 3
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 3")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 4
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 4")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         String expected = FEEDBACK_MESSAGE_100_ES;
-        onView(withId(R.id.quiz_results_score))
+        waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(expected)));
     }
 
@@ -367,35 +367,35 @@ public class FeedbackGradeBoundariesUITest {
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
         // Question 1
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 1")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 2
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 2")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 3
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 3")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 4
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 4")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         String expected = FEEDBACK_MESSAGE_75_ES;
-        onView(withId(R.id.quiz_results_score))
+        waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(expected)));
     }
 
@@ -409,37 +409,37 @@ public class FeedbackGradeBoundariesUITest {
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
         // Question 1
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 1")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 2
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 2")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_0)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 3
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 3")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_1)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_1)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 4
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 4")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_1)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_1)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         String expected = FEEDBACK_MESSAGE_25_EN;   // This grade boundary is only in english,
                                                     // so even if the language is set to Spanish,
                                                     // the English message will be displayed
-        onView(withId(R.id.quiz_results_score))
+        waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(expected)));
     }
 
@@ -453,36 +453,36 @@ public class FeedbackGradeBoundariesUITest {
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
         // Question 1
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 1")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 2
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 2")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 3
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 3")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         // Question 4
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText("Question 4")));
 
-        onView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText(FEEDBACK_RESPONSE_SCORE_2)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         String expected = FEEDBACK_MESSAGE_100_EN;  // English message will be displayed because
                                                     // is the first defined language in the grade boundary message
-        onView(withId(R.id.quiz_results_score))
+        waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(expected)));
 
     }

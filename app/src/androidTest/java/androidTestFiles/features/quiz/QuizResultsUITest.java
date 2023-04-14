@@ -1,6 +1,5 @@
 package androidTestFiles.features.quiz;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
@@ -15,8 +14,12 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-
-import static androidTestFiles.utils.parent.BaseTest.*;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
+import static androidTestFiles.utils.parent.BaseTest.COURSE_QUIZ_HIDE_AT_END;
+import static androidTestFiles.utils.parent.BaseTest.COURSE_QUIZ_HIDE_AT_END_AND_LATER;
+import static androidTestFiles.utils.parent.BaseTest.COURSE_QUIZ_HIDE_LATER;
+import static androidTestFiles.utils.parent.BaseTest.COURSE_QUIZ_SHOW_ALL;
+import static androidTestFiles.utils.parent.BaseTest.PATH_COURSES_QUIZ_RESULTS_TESTS;
 
 import android.Manifest;
 import android.content.Context;
@@ -26,6 +29,7 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.UiDevice;
 
 import org.digitalcampus.mobile.learning.R;
@@ -39,13 +43,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import androidTestFiles.utils.parent.DaggerInjectMockUITest;
+import java.util.concurrent.TimeUnit;
+
 import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.UITestActionsUtils;
-import androidx.test.rule.GrantPermissionRule;
-
-import java.util.concurrent.TimeUnit;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 @RunWith(AndroidJUnit4.class)
 public class QuizResultsUITest extends DaggerInjectMockUITest {
@@ -102,9 +105,9 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
             UITestActionsUtils.clickViewWithText(R.string.widget_quiz_getresults);
 
             if (atEnd) {
-                onView(withId(R.id.recycler_quiz_results_feedback)).check(matches(isDisplayed()));
+                waitForView(withId(R.id.recycler_quiz_results_feedback)).check(matches(isDisplayed()));
             } else {
-                onView(withId(R.id.recycler_quiz_results_feedback)).check(matches(not(isDisplayed())));
+                waitForView(withId(R.id.recycler_quiz_results_feedback)).check(matches(not(isDisplayed())));
             }
 
             UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -112,22 +115,22 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
             device.pressBack();
             device.pressBack();
 
-            onView(withId(R.id.nav_bottom_scorecard)).perform(click());
-            onView(withId(R.id.tabs)).perform(UITestActionsUtils.selectTabAtPosition(2));
+            waitForView(withId(R.id.nav_bottom_scorecard)).perform(click());
+            waitForView(withId(R.id.tabs)).perform(UITestActionsUtils.selectTabAtPosition(2));
 
             // wait for viewpager transition
             await().atMost(5, TimeUnit.SECONDS)
                     .untilAsserted(
                             () ->
-                                    onView(ViewMatchers.withId(R.id.attempts_list))
+                                    waitForView(ViewMatchers.withId(R.id.attempts_list))
                                         .check(matches(isCompletelyDisplayed()))
                     );
             UITestActionsUtils.clickRecyclerViewPosition(R.id.attempts_list, 0);
 
             if (later) {
-                onView(withId(R.id.recycler_quiz_results_feedback)).check(matches(isDisplayed()));
+                waitForView(withId(R.id.recycler_quiz_results_feedback)).check(matches(isDisplayed()));
             } else {
-                onView(withId(R.id.recycler_quiz_results_feedback)).check(matches(not(isDisplayed())));
+                waitForView(withId(R.id.recycler_quiz_results_feedback)).check(matches(not(isDisplayed())));
             }
 
         }

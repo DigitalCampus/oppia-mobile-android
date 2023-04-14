@@ -1,6 +1,5 @@
 package androidTestFiles.features.quiz;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -18,6 +17,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static androidTestFiles.utils.CourseUtils.runInstallCourseTask;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidTestFiles.utils.parent.BaseTest.COURSE_SKIP_LOGIC;
 import static androidTestFiles.utils.parent.BaseTest.PATH_COURSES_SKIP_LOGIC_TESTS;
@@ -133,9 +133,9 @@ public class FeedbackSkipLogicTest extends DaggerInjectMockUITest {
     }
 
     private void typeResponse(String questionText, String responseText) {
-        onView(allOf(withId(R.id.question_text), isCompletelyDisplayed())).check(matches(withText(questionText)));
-        onView(withId(R.id.responsetext)).perform(scrollTo(), typeText(responseText), closeSoftKeyboard());
-        onView(allOf(withId(R.id.mquiz_next_btn), isCompletelyDisplayed())).perform(click());
+        waitForView(allOf(withId(R.id.question_text), isCompletelyDisplayed())).check(matches(withText(questionText)));
+        waitForView(withId(R.id.responsetext)).perform(scrollTo(), typeText(responseText), closeSoftKeyboard());
+        waitForView(allOf(withId(R.id.mquiz_next_btn), isCompletelyDisplayed())).perform(click());
     }
 
     private void selectResponse(String questionText, String responseText) {
@@ -143,20 +143,20 @@ public class FeedbackSkipLogicTest extends DaggerInjectMockUITest {
     }
 
     private void selectResponse(String questionText, String responseText, boolean performNext) {
-        onView(allOf(withId(R.id.question_text), isCompletelyDisplayed()))
+        waitForView(allOf(withId(R.id.question_text), isCompletelyDisplayed()))
                 .check(matches(withText(questionText)));
-        onView(allOf(withText(responseText), isCompletelyDisplayed())).perform(click());
+        waitForView(allOf(withText(responseText), isCompletelyDisplayed())).perform(click());
         if (performNext) {
-            onView(allOf(withId(R.id.mquiz_next_btn), isCompletelyDisplayed())).perform(click());
+            waitForView(allOf(withId(R.id.mquiz_next_btn), isCompletelyDisplayed())).perform(click());
         }
     }
 
     private void checkResultAtPosition(int position, String questionText, String responseText) {
 
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+        waitForView(withRecyclerView(R.id.recycler_quiz_results_feedback)
                 .atPositionOnView(position, R.id.quiz_question_text))
                 .check(matches(withText(questionText)));
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+        waitForView(withRecyclerView(R.id.recycler_quiz_results_feedback)
                 .atPositionOnView(position, R.id.quiz_question_user_response_text))
                 .check(matches(withText(responseText)));
     }
@@ -227,8 +227,8 @@ public class FeedbackSkipLogicTest extends DaggerInjectMockUITest {
 
             selectResponse(QUESTION_RATE_APP, RESPONSE_GOOD);
             typeResponse(QUESTION_APP_GOOD_REASON, "it's beautiful and useful");
-            onView(allOf(withId(R.id.mquiz_prev_btn), isCompletelyDisplayed())).perform(click());
-            onView(allOf(withId(R.id.mquiz_prev_btn), isCompletelyDisplayed())).perform(click());
+            waitForView(allOf(withId(R.id.mquiz_prev_btn), isCompletelyDisplayed())).perform(click());
+            waitForView(allOf(withId(R.id.mquiz_prev_btn), isCompletelyDisplayed())).perform(click());
             selectResponse(QUESTION_RATE_APP, RESPONSE_OK);
             selectResponse(QUESTION_RATE_CONTENT, RESPONSE_GOOD);
             typeResponse(QUESTION_SCALE_CONTENT, "4");
@@ -328,9 +328,9 @@ public class FeedbackSkipLogicTest extends DaggerInjectMockUITest {
             selectResponse(QUESTION_RATE_APP, RESPONSE_BAD);
             selectResponse(QUESTION_APP_BAD_ISSUES, RESPONSE_BAD_ISSUE_OTHER);
             typeResponse(QUESTION_APP_OTHER_ISSUE_REASON, "it's ugly");
-            onView(allOf(withId(R.id.mquiz_prev_btn), isCompletelyDisplayed())).perform(click());
-            onView(allOf(withId(R.id.mquiz_prev_btn), isCompletelyDisplayed())).perform(click());
-            onView(allOf(withId(R.id.mquiz_prev_btn), isCompletelyDisplayed())).perform(click());
+            waitForView(allOf(withId(R.id.mquiz_prev_btn), isCompletelyDisplayed())).perform(click());
+            waitForView(allOf(withId(R.id.mquiz_prev_btn), isCompletelyDisplayed())).perform(click());
+            waitForView(allOf(withId(R.id.mquiz_prev_btn), isCompletelyDisplayed())).perform(click());
             selectResponse(QUESTION_RATE_APP, RESPONSE_OK);
             selectResponse(QUESTION_RATE_CONTENT, RESPONSE_GOOD);
             typeResponse(QUESTION_SCALE_CONTENT, "4");

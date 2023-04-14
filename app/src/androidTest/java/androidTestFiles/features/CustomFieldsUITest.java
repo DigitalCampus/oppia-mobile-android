@@ -1,6 +1,30 @@
 package androidTestFiles.features;
 
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withHint;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
+import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
+
 import android.Manifest;
+
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -17,29 +41,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.action.ViewActions;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.GrantPermissionRule;
-
-import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
-import static androidx.test.espresso.Espresso.onData;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withHint;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class CustomFieldsUITest extends MockedApiEndpointTest {
@@ -76,12 +77,12 @@ public class CustomFieldsUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
-            onView(withId(R.id.register_form_jobtitle_field)).perform(scrollTo());
-            onView(withText("Helper text")).perform(scrollTo()).check(matches(isDisplayed()));
-            onView(withText("Custom int")).perform(scrollTo()).check(matches(isDisplayed()));
+            waitForView(withId(R.id.register_form_jobtitle_field)).perform(scrollTo());
+            waitForView(withText("Helper text")).perform(scrollTo()).check(matches(isDisplayed()));
+            waitForView(withText("Custom int")).perform(scrollTo()).check(matches(isDisplayed()));
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("user"));
@@ -101,8 +102,8 @@ public class CustomFieldsUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("Surname"));
 
-            onView(withId(R.id.register_btn)).perform(closeSoftKeyboard(), click());
-            onView(withText(R.string.field_required)).perform(scrollTo()).check(matches(isDisplayed()));
+            waitForView(withId(R.id.register_btn)).perform(closeSoftKeyboard(), click());
+            waitForView(withText(R.string.field_required)).perform(scrollTo()).check(matches(isDisplayed()));
         }
     }
 
@@ -133,17 +134,17 @@ public class CustomFieldsUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
-            onView(withId(R.id.register_form_jobtitle_field)).perform(scrollTo());
+            waitForView(withId(R.id.register_form_jobtitle_field)).perform(scrollTo());
 
-            onView(withHint("Custom bool")).perform(scrollTo(), click());
+            waitForView(withHint("Custom bool")).perform(scrollTo(), click());
 
             // When we check the switch, the field is displayed
-            onView(withText("Dependant field")).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
+            waitForView(withText("Dependant field")).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
 
-            onView(withHint(containsString("Custom bool"))).perform(scrollTo(), click());
+            waitForView(withHint(containsString("Custom bool"))).perform(scrollTo(), click());
         }
     }
 
@@ -180,21 +181,21 @@ public class CustomFieldsUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register))
+            waitForView(withId(R.id.welcome_register))
                     .perform(scrollTo(), click());
 
-            onView(withId(R.id.register_form_jobtitle_field)).perform(scrollTo());
+            waitForView(withId(R.id.register_form_jobtitle_field)).perform(scrollTo());
 
-            onView(withSpinnerText(containsString("Custom select 1"))).perform(scrollTo(), click());
+            waitForView(withSpinnerText(containsString("Custom select 1"))).perform(scrollTo(), click());
             onData(anything()).atPosition(1).perform(click());
 
             // When we select the specific value, the field is displayed
-            onView(withText("Dependant field")).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
+            waitForView(withText("Dependant field")).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
 
-            onView(withSpinnerText(containsString("value 1"))).perform(scrollTo(), click());
+            waitForView(withSpinnerText(containsString("value 1"))).perform(scrollTo(), click());
             onData(anything()).atPosition(1).perform(click());
 
-            onView(withText("Dependant field")).check(matches(not(isDisplayed())));
+            waitForView(withText("Dependant field")).check(matches(not(isDisplayed())));
         }
     }
 
