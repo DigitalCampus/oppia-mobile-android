@@ -26,9 +26,11 @@ import android.os.Build;
 import androidx.preference.PreferenceManager;
 
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,15 +46,11 @@ public class MetaDataUtils {
 
     public MetaDataUtils(Context ctx) {
         this.ctx = ctx;
-        setPrefs(PreferenceManager.getDefaultSharedPreferences(ctx));
+        this.prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         TelephonyManager manager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
         if (manager != null) {
             networkProvider = manager.getNetworkOperatorName();
         }
-    }
-
-    public void setPrefs(SharedPreferences prefs){
-        this.prefs = prefs;
     }
 
     private String getNetworkProvider() {
@@ -84,6 +82,16 @@ public class MetaDataUtils {
         }
 
         return ((float) level / (float) scale) * 100.0f;
+    }
+
+    public void saveMetaData(JSONObject json){
+        try {
+            JSONObject metadata = json.getJSONObject("metadata");
+            saveMetaData(metadata, this.prefs);
+        } catch (JSONException e) {
+            Analytics.logException(e);
+            Log.d(TAG, "JSONException: ", e);
+        }
     }
 
     public void saveMetaData(JSONObject metadata, SharedPreferences prefs) throws JSONException {

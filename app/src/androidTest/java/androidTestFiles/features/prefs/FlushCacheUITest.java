@@ -39,7 +39,7 @@ import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.task.UpdateUserCohortsTask;
+import org.digitalcampus.oppia.task.FetchUserTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
@@ -180,9 +180,9 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
 
             // 2. Flush cache and retrieve mocked response with cohorts 5 and 6
             startServer(200, COHORTS_5_AND_6, 0);
-            UpdateUserCohortsTask task = new UpdateUserCohortsTask();
+            FetchUserTask task = new FetchUserTask();
             task.setListener(() -> signal.countDown());
-            task.updateLoggedUserCohorts(context, apiEndpoint, user);
+            task.updateLoggedUserProfile(context, apiEndpoint, user);
             signal.await();
 
             // 3. Assert User1 now belongs to cohorts 5 and 6

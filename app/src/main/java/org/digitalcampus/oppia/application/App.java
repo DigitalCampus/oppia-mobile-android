@@ -47,7 +47,7 @@ import org.digitalcampus.oppia.di.DaggerAppComponent;
 import org.digitalcampus.oppia.service.CoursesChecksWorker;
 import org.digitalcampus.oppia.service.CoursesCompletionReminderWorkerManager;
 import org.digitalcampus.oppia.service.TrackerWorker;
-import org.digitalcampus.oppia.service.UserCohortsCheckerWorker;
+import org.digitalcampus.oppia.service.UpdateUserProfileWorker;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
@@ -258,7 +258,7 @@ public class App extends Application {
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
-        PeriodicWorkRequest userProfileCheckWork = new PeriodicWorkRequest.Builder(UserCohortsCheckerWorker.class, 12, TimeUnit.HOURS)
+        PeriodicWorkRequest userProfileCheckWork = new PeriodicWorkRequest.Builder(UpdateUserProfileWorker.class, 12, TimeUnit.HOURS)
                 .setConstraints(constraints)
                 .build();
 

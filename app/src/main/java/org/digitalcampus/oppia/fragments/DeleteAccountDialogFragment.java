@@ -14,6 +14,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.DialogDeleteAccountBinding;
 import org.digitalcampus.oppia.activity.AppActivity;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.task.DeleteAccountTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
@@ -22,9 +23,14 @@ import org.digitalcampus.oppia.utils.TextUtilsJava;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import javax.inject.Inject;
+
 public class DeleteAccountDialogFragment extends DialogFragment implements APIRequestListener {
 
     private DialogDeleteAccountBinding binding;
+
+    @Inject
+    ApiEndpoint apiEndpoint;
 
     public interface DeleteAccountListener{
         void onDeleteAccountSuccess();
@@ -64,7 +70,7 @@ public class DeleteAccountDialogFragment extends DialogFragment implements APIRe
                 return;
             }
 
-            DeleteAccountTask task = new DeleteAccountTask(getContext());
+            DeleteAccountTask task = new DeleteAccountTask(getContext(), apiEndpoint);
             task.setAPIRequestListener(this);
             task.execute(password);
         });

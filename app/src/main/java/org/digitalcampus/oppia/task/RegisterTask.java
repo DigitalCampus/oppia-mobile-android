@@ -140,7 +140,7 @@ public class RegisterTask extends APIRequestTask<User, Object, EntityResult<User
                 u.setBadgingEnabled(getBadgingEnabled(jsonResp));
                 u.setFirstname(jsonResp.getString(User.FIRST_NAME));
                 u.setLastname(jsonResp.getString(User.LAST_NAME));
-                saveMetaData(jsonResp);
+                new MetaDataUtils(ctx).saveMetaData(jsonResp);
                 return true;
             } else if (response.code() == 400) {
                 String bodyResponse = response.body().string();
@@ -196,15 +196,6 @@ public class RegisterTask extends APIRequestTask<User, Object, EntityResult<User
         }
     }
 
-    private void saveMetaData(JSONObject jsonResp) {
-        try {
-            JSONObject metadata = jsonResp.getJSONObject("metadata");
-            MetaDataUtils mu = new MetaDataUtils(ctx);
-            mu.saveMetaData(metadata, prefs);
-        } catch (JSONException e) {
-            Log.d(TAG, "JSONException:", e);
-        }
-    }
 
     @Override
     protected void onPostExecute(EntityResult<User> result) {

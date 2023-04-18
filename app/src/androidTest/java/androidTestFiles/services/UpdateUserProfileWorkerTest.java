@@ -26,8 +26,8 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.service.UserCohortsCheckerWorker;
-import org.digitalcampus.oppia.service.UserCohortsChecksWorkerManager;
+import org.digitalcampus.oppia.service.UpdateUserProfileWorker;
+import org.digitalcampus.oppia.service.UpdateUserProfileWorkerManager;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.junit.Before;
 import org.junit.Rule;
@@ -43,7 +43,7 @@ import androidTestFiles.database.sampledata.UserData;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 @RunWith(AndroidJUnit4.class)
-public class UserCohortsCheckerWorkerTest {
+public class UpdateUserProfileWorkerTest {
 
     @Rule
     public DaggerMockRule<AppComponent> daggerRule =
@@ -86,7 +86,7 @@ public class UserCohortsCheckerWorkerTest {
     public void testCohortsCheckerWorkerFinishSuccessfully() throws ExecutionException, InterruptedException {
         when(user.getUsername()).thenReturn(UserData.TEST_USER_1);
 
-        ListenableWorker testUserCohortsCheckerWorker = TestListenableWorkerBuilder.from(context, UserCohortsCheckerWorker.class).build();
+        ListenableWorker testUserCohortsCheckerWorker = TestListenableWorkerBuilder.from(context, UpdateUserProfileWorker.class).build();
         ListenableWorker.Result result = testUserCohortsCheckerWorker.startWork().get();
         assertThat(result, is(ListenableWorker.Result.success()));
     }
@@ -95,9 +95,9 @@ public class UserCohortsCheckerWorkerTest {
     public void doesReturnFailureIfNoUserIsLoggedIn() throws Exception {
         when(user.getUsername()).thenReturn(null);
 
-        ListenableWorker testUserCohortsCheckerWorker = TestListenableWorkerBuilder.from(context, UserCohortsCheckerWorker.class).build();
+        ListenableWorker testUserCohortsCheckerWorker = TestListenableWorkerBuilder.from(context, UpdateUserProfileWorker.class).build();
         ListenableWorker.Result result = testUserCohortsCheckerWorker.startWork().get();
-        Data expectedData = new Data.Builder().putString(UserCohortsChecksWorkerManager.RESULT_MESSAGE, context.getString(R.string.user_not_logged_in)).build();
+        Data expectedData = new Data.Builder().putString(UpdateUserProfileWorkerManager.RESULT_MESSAGE, context.getString(R.string.user_not_logged_in)).build();
         assertThat(result, is(ListenableWorker.Result.failure(expectedData)));
     }
 
@@ -110,7 +110,7 @@ public class UserCohortsCheckerWorkerTest {
         doCallRealMethod().when(user).getCohorts();
 
         List<Integer> updatedCohorts = Arrays.asList(2,3,4);
-        UserCohortsChecksWorkerManager userCohortsChecksWorkerManager = spy(new UserCohortsChecksWorkerManager(context));
+        UpdateUserProfileWorkerManager userCohortsChecksWorkerManager = spy(new UpdateUserProfileWorkerManager(context));
         doAnswer(invocationOnMock -> {
             // Mock API result for returning a success response and the list of updated cohorts
             BasicResult result = new BasicResult();
@@ -118,7 +118,7 @@ public class UserCohortsCheckerWorkerTest {
             result.setResultMessage(updatedCohorts.toString());
             userCohortsChecksWorkerManager.apiRequestComplete(result);
             return null;
-        }).when(userCohortsChecksWorkerManager).checkUserCohortsUpdates();
+        }).when(userCohortsChecksWorkerManager).fetchUserProfile();
         userCohortsChecksWorkerManager.setOnFinishListener(result -> assertThat(result, is(ListenableWorker.Result.success())));
         userCohortsChecksWorkerManager.startChecks();
 
@@ -135,7 +135,7 @@ public class UserCohortsCheckerWorkerTest {
 
         List<Integer> initialCohorts = Arrays.asList(1,2); // Cohorts of UserData.TEST_USER_1
         List<Integer> updatedCohorts = Arrays.asList(2,3,4);
-        UserCohortsChecksWorkerManager userCohortsChecksWorkerManager = spy(new UserCohortsChecksWorkerManager(context));
+        UpdateUserProfileWorkerManager userCohortsChecksWorkerManager = spy(new UpdateUserProfileWorkerManager(context));
         doAnswer(invocationOnMock -> {
             // Mock API result for returning a success response and the list of updated cohorts
             BasicResult result = new BasicResult();
@@ -143,9 +143,9 @@ public class UserCohortsCheckerWorkerTest {
             result.setResultMessage(updatedCohorts.toString());
             userCohortsChecksWorkerManager.apiRequestComplete(result);
             return null;
-        }).when(userCohortsChecksWorkerManager).checkUserCohortsUpdates();
+        }).when(userCohortsChecksWorkerManager).fetchUserProfile();
 
-        Data expectedData = new Data.Builder().putString(UserCohortsChecksWorkerManager.RESULT_MESSAGE, context.getString(R.string.user_not_logged_in)).build();
+        Data expectedData = new Data.Builder().putString(UpdateUserProfileWorkerManager.RESULT_MESSAGE, context.getString(R.string.user_not_logged_in)).build();
         userCohortsChecksWorkerManager.setOnFinishListener(result -> assertThat(result, is(ListenableWorker.Result.failure(expectedData))));
         userCohortsChecksWorkerManager.startChecks();
 
