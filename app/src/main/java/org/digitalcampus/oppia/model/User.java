@@ -246,9 +246,11 @@ public class User {
 
 	public void updateFromJSON(Context ctx, JSONObject json) throws JSONException {
 
-		this.setApiKey(json.getString(User.API_KEY));
 		this.setFirstname(json.getString(User.FIRST_NAME));
 		this.setLastname(json.getString(User.LAST_NAME));
+		if (json.has(User.API_KEY)){
+			this.setApiKey(json.getString(User.API_KEY));
+		}
 		if (json.has(User.EMAIL)) {
 			this.setEmail(json.getString(User.EMAIL));
 		}

@@ -56,14 +56,23 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
     protected EntityResult<User> doInBackground(User... params) {
 
         User user = params[0];
-
         EntityResult<User> result = new EntityResult<>();
         result.setEntity(user);
 
-        // firstly try to login locally
+        if (ConnectionUtils.isNetworkConnected(ctx)) {
+            loginRemotely(user, result);
+        }
+        else{
+            // Only try to login locally if no connection available
+            loginLocalOfflineUser(user, result);
+        }
+
+        return result;
+    }
+
+    private void loginLocalOfflineUser(User user, EntityResult<User> result){
         try {
             User localUser = DbHelper.getInstance(ctx).getUser(user.getUsername());
-
             Log.d(TAG, "logged pw: " + localUser.getPasswordEncrypted());
             Log.d(TAG, "entered pw: " + user.getPasswordEncrypted());
 
@@ -72,22 +81,17 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
                 result.setSuccess(true);
                 result.setResultMessage(ctx.getString(R.string.login_complete));
                 result.getEntity().setLocalUser(true);
-                return result;
             } else {
-                if (!ConnectionUtils.isNetworkConnected(ctx)) {
-                    result.setSuccess(false);
-                    result.setResultMessage(ctx.getString(R.string.offline_user_invalid_password));
-                    return result;
-                }
+                result.setSuccess(false);
+                result.setResultMessage(ctx.getString(R.string.offline_user_invalid_password));
             }
         } catch (UserNotFoundException unfe) {
-            if (!ConnectionUtils.isNetworkConnected(ctx)) {
-                result.setSuccess(false);
-                result.setResultMessage(ctx.getString(R.string.offline_user_not_found));
-                return result;
-            }
+            result.setSuccess(false);
+            result.setResultMessage(ctx.getString(R.string.offline_user_not_found));
         }
+    }
 
+    private void loginRemotely(User user, EntityResult<User> result){
         try {
             // update progress dialog
             publishProgress(ctx.getString(R.string.login_process));
@@ -136,9 +140,7 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
             result.setResultMessage(ctx.getString(R.string.error_processing_response));
         }
 
-        return result;
     }
-
 
     @Override
     protected void onPostExecute(EntityResult<User> result) {
