@@ -50,6 +50,12 @@
                     android:id="@+id/chart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/progress_points"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true" />
             </RelativeLayout>
 
             <LinearLayout
