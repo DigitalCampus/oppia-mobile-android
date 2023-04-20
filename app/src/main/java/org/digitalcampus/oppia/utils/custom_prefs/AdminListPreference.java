@@ -3,7 +3,6 @@ package org.digitalcampus.oppia.utils.custom_prefs;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
 
 public class AdminListPreference extends ListPreference implements AdminPreference {

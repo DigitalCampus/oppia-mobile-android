@@ -6,11 +6,8 @@ import android.os.Bundle;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.application.App;
 
 import androidx.preference.EditTextPreference;
-import androidx.preference.Preference;
 
 public class MainPreferencesFragment extends BasePreferenceFragment {
 

@@ -1,11 +1,9 @@
 package org.digitalcampus.oppia.task;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.SessionManager;

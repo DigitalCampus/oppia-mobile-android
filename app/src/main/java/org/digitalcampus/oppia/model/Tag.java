@@ -50,10 +50,7 @@ public class Tag implements Serializable{
 	}
 	public int getCount() {
 		// count should not be under 0
-		if (this.count < 0){
-			return 0;
-		}
-		return count;
+		return Math.max(0, count);
 	}
 	public void setCount(int count) {
 		this.count = count;

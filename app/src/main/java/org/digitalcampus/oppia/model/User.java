@@ -18,12 +18,9 @@
 package org.digitalcampus.oppia.model;
 
 import android.content.Context;
-import android.util.Log;
 
-import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.utils.CryptoUtils;
-import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

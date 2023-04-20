@@ -17,8 +17,6 @@
 
 package org.digitalcampus.oppia.utils.xmlreaders;
 
-import android.text.TextUtils;
-
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Activity;

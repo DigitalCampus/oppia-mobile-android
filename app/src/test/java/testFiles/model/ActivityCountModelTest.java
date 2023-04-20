@@ -2,11 +2,8 @@ package testFiles.model;
 
 import static org.junit.Assert.assertEquals;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import org.digitalcampus.oppia.model.ActivityCount;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

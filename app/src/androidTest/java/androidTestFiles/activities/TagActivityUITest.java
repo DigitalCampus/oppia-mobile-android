@@ -30,7 +30,6 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)

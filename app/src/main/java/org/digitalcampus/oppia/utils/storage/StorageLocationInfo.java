@@ -1,7 +1,6 @@
 package org.digitalcampus.oppia.utils.storage;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;

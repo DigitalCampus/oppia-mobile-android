@@ -1,7 +1,5 @@
 package testFiles.utils;
 
-import android.content.Context;
-
 import org.digitalcampus.oppia.analytics.Analytics;
 
 import java.io.IOException;

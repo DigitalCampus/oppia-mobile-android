@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
@@ -36,7 +35,6 @@ import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
-import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

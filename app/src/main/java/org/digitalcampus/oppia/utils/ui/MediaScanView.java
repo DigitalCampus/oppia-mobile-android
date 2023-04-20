@@ -25,7 +25,6 @@ import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.task.ScanMediaTask;
 import org.digitalcampus.oppia.task.result.EntityListResult;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MediaScanView extends FrameLayout implements ScanMediaListener {

@@ -29,7 +29,6 @@ import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;

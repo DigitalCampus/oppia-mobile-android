@@ -3,7 +3,6 @@ package org.digitalcampus.oppia.utils.custom_prefs;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import androidx.preference.ListPreference;
 import androidx.preference.MultiSelectListPreference;
 
 public class AdminMultiSelectListPreference extends MultiSelectListPreference implements AdminPreference {

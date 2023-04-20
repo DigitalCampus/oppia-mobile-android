@@ -1,6 +1,5 @@
 package androidTestFiles.features.passwordProtected;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -34,7 +33,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 

@@ -19,7 +19,6 @@ package org.digitalcampus.oppia.application;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;

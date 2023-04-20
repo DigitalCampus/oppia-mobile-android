@@ -22,7 +22,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.BuildConfig;

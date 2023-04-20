@@ -1,12 +1,10 @@
 package androidTestFiles.services;
 
-import android.Manifest;
 import android.content.Context;
 import android.util.Log;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.Until;
@@ -18,9 +16,6 @@ import androidx.work.testing.WorkManagerTestInitHelper;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.di.AppComponent;
-import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.User;
@@ -28,7 +23,6 @@ import org.digitalcampus.oppia.service.CoursesChecksWorkerManager;
 import org.digitalcampus.oppia.service.CoursesChecksWorker;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -38,7 +32,6 @@ import java.util.concurrent.ExecutionException;
 
 import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.parent.NotificationsUiTest;
-import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

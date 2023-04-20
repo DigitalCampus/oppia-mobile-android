@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import androidx.preference.CheckBoxPreference;
-import androidx.preference.EditTextPreference;
 
 public class AdminCheckBoxPreference extends CheckBoxPreference implements AdminPreference {
 
