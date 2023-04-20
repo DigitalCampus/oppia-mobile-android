@@ -11,138 +11,173 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/profile_view"
+        android:visibility="gone"
+        tools:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/btn_save_profile">
+        android:layout_below="@id/toolbar">
 
-
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="@dimen/activity_horizontal_margin">
-
-            <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
-                android:id="@+id/field_email"
-                style="@style/Oppia.CustomField.TextInputLayout"
-                app:cantContainSpaces="true">
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/register_form_email_title"
-                    android:inputType="textEmailAddress"
-                    android:textSize="15sp"/>
-
-            </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
-
-            <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
-                android:id="@+id/field_firstname"
-                style="@style/Oppia.CustomField.TextInputLayout"
-                android:layout_marginTop="@dimen/margin_medium"
-                app:required="true">
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/register_form_firstname_title"
-                    android:inputType="text"
-                    android:textSize="15sp"/>
-            </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
-
-            <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
-                android:id="@+id/field_lastname"
-                android:layout_marginTop="@dimen/margin_medium"
-                style="@style/Oppia.CustomField.TextInputLayout"
-                app:required="true">
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/register_form_lastname_title"
-                    android:inputType="text"
-                    android:textSize="15sp"/>
-            </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
-
-
-            <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
-                android:id="@+id/field_organisation"
-                style="@style/Oppia.CustomField.TextInputLayout"
-                android:layout_marginTop="@dimen/margin_medium">
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/register_form_organisation_title"
-                    android:inputType="text"
-                    android:textSize="15sp"/>
-            </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
-
-
-            <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
-                android:id="@+id/field_jobtitle"
-                style="@style/Oppia.CustomField.TextInputLayout"
-                android:layout_marginTop="@dimen/margin_medium">
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/register_form_jobtitle_title"
-                    android:inputType="text"
-                    android:textSize="15sp"/>
-
-            </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
-
-            <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
-                android:id="@+id/field_phoneno"
-                style="@style/Oppia.CustomField.TextInputLayout"
-                android:gravity="center_vertical"
-                android:layout_marginTop="@dimen/margin_medium">
-
-                <LinearLayout
-                    android:id="@+id/field_phoneno_container"
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_height="wrap_content">
-
-                    <com.hbb20.CountryCodePicker
-                        android:id="@+id/ccp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:ccp_autoDetectCountry="true"
-                        android:textSize="15sp" />
-                </LinearLayout>
-
-                <EditText
-                    android:id="@+id/register_form_phoneno_edittext"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/register_form_phoneno_title"
-                    android:inputType="phone"
-                    android:singleLine="true"
-                    android:textSize="15sp" />
-
-            </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
-
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_save_profile"
+            tools:layout_editor_absoluteY="56dp">
 
             <LinearLayout
-                android:id="@+id/custom_fields_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </LinearLayout>
-    </ScrollView>
+                android:orientation="vertical"
+                android:padding="@dimen/activity_horizontal_margin">
 
-    <Button
-        android:id="@+id/btn_save_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/save_profile"
-        android:theme="@style/PrimaryButton"
-        android:layout_margin="10dp"/>
+                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
+                    android:id="@+id/field_email"
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    app:cantContainSpaces="true">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/register_form_email_title"
+                        android:inputType="textEmailAddress"
+                        android:textSize="15sp" />
+
+                </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
+
+                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
+                    android:id="@+id/field_firstname"
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    app:required="true">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/register_form_firstname_title"
+                        android:inputType="text"
+                        android:textSize="15sp" />
+                </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
+
+                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
+                    android:id="@+id/field_lastname"
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    app:required="true">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/register_form_lastname_title"
+                        android:inputType="text"
+                        android:textSize="15sp" />
+                </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
+
+
+                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
+                    android:id="@+id/field_organisation"
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    android:layout_marginTop="@dimen/margin_medium">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/register_form_organisation_title"
+                        android:inputType="text"
+                        android:textSize="15sp" />
+                </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
+
+
+                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
+                    android:id="@+id/field_jobtitle"
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    android:layout_marginTop="@dimen/margin_medium">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/register_form_jobtitle_title"
+                        android:inputType="text"
+                        android:textSize="15sp" />
+
+                </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
+
+                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
+                    android:id="@+id/field_phoneno"
+                    style="@style/Oppia.CustomField.TextInputLayout"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:id="@+id/field_phoneno_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.hbb20.CountryCodePicker
+                            android:id="@+id/ccp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp"
+                            app:ccp_autoDetectCountry="true" />
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/register_form_phoneno_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/register_form_phoneno_title"
+                        android:inputType="phone"
+                        android:singleLine="true"
+                        android:textSize="15sp" />
+
+                </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/custom_fields_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </ScrollView>
+
+        <Button
+            android:id="@+id/btn_save_profile"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="@dimen/margin_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_profile"
+            android:theme="@style/PrimaryButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/loading_profile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progressBar2"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/textView"
+            style="@style/SmallTextDark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/loading" />
+    </LinearLayout>
 
 </RelativeLayout>

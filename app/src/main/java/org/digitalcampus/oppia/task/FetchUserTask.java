@@ -59,14 +59,15 @@ public class FetchUserTask {
                     }
                 }
 
-                handler.post(() -> {
-                    if (listener != null) {
-                        listener.onComplete();
-                    }
-                });
             } catch (IOException e) {
                 Log.w(TAG, "Unable to update user profile: ", e);
             }
+
+            handler.post(() -> {
+                if (listener != null) {
+                    listener.onComplete();
+                }
+            });
         });
     }
 }

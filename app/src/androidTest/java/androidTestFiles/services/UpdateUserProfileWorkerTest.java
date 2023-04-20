@@ -3,10 +3,13 @@ package androidTestFiles.services;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
+
+import static androidTestFiles.activities.EditProfileActivityTest.VALID_PROFILE_RESPONSE;
 
 import android.content.Context;
 import android.util.Log;
@@ -40,6 +43,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import androidTestFiles.database.sampledata.UserData;
+import androidTestFiles.utils.FileUtils;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 @RunWith(AndroidJUnit4.class)
@@ -51,7 +55,6 @@ public class UpdateUserProfileWorkerTest {
                     .getTargetContext()
                     .getApplicationContext())).set(
                     component -> {
-
                         App app =
                                 (App) InstrumentationRegistry.getInstrumentation()
                                         .getTargetContext()
@@ -67,7 +70,6 @@ public class UpdateUserProfileWorkerTest {
     public void setUp() throws Exception {
 
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-
         Configuration config = new Configuration.Builder()
                 // Set log level to Log.DEBUG to
                 // make it easier to see why tests failed
@@ -83,11 +85,11 @@ public class UpdateUserProfileWorkerTest {
     }
 
     @Test
-    public void testCohortsCheckerWorkerFinishSuccessfully() throws ExecutionException, InterruptedException {
+    public void testUpdateUserProfileWorkerFinishSuccessfully() throws ExecutionException, InterruptedException {
         when(user.getUsername()).thenReturn(UserData.TEST_USER_1);
 
-        ListenableWorker testUserCohortsCheckerWorker = TestListenableWorkerBuilder.from(context, UpdateUserProfileWorker.class).build();
-        ListenableWorker.Result result = testUserCohortsCheckerWorker.startWork().get();
+        ListenableWorker testUpdateUserProfileWorker = TestListenableWorkerBuilder.from(context, UpdateUserProfileWorker.class).build();
+        ListenableWorker.Result result = testUpdateUserProfileWorker.startWork().get();
         assertThat(result, is(ListenableWorker.Result.success()));
     }
 
@@ -95,39 +97,43 @@ public class UpdateUserProfileWorkerTest {
     public void doesReturnFailureIfNoUserIsLoggedIn() throws Exception {
         when(user.getUsername()).thenReturn(null);
 
-        ListenableWorker testUserCohortsCheckerWorker = TestListenableWorkerBuilder.from(context, UpdateUserProfileWorker.class).build();
-        ListenableWorker.Result result = testUserCohortsCheckerWorker.startWork().get();
+        ListenableWorker testUpdateUserProfileWorker = TestListenableWorkerBuilder.from(context, UpdateUserProfileWorker.class).build();
+        ListenableWorker.Result result = testUpdateUserProfileWorker.startWork().get();
         Data expectedData = new Data.Builder().putString(UpdateUserProfileWorkerManager.RESULT_MESSAGE, context.getString(R.string.user_not_logged_in)).build();
         assertThat(result, is(ListenableWorker.Result.failure(expectedData)));
     }
 
     @Test
-    public void updateUserCohortsIfResultIsSuccessful() throws Exception {
+    public void updateUserProfileIfResultIsSuccessful() throws Exception {
         UserData.loadData(context);
         // Initial cohorts of UserData.TEST_USER_1 = [1,2]
         when(user.getUsername()).thenReturn(UserData.TEST_USER_1);
         doCallRealMethod().when(user).setCohorts(any());
+        doCallRealMethod().when(user).updateFromJSON(any(), any());
+        doCallRealMethod().when(user).setCohortsFromJSONArray(any());
         doCallRealMethod().when(user).getCohorts();
 
-        List<Integer> updatedCohorts = Arrays.asList(2,3,4);
-        UpdateUserProfileWorkerManager userCohortsChecksWorkerManager = spy(new UpdateUserProfileWorkerManager(context));
+        String profileResponse = FileUtils.getStringFromFile(
+                InstrumentationRegistry.getInstrumentation().getContext(), VALID_PROFILE_RESPONSE);
+        List<Integer> updatedCohorts = Arrays.asList(4,5,6);
+        UpdateUserProfileWorkerManager updateUserProfileWorkerManager = spy(new UpdateUserProfileWorkerManager(context));
         doAnswer(invocationOnMock -> {
             // Mock API result for returning a success response and the list of updated cohorts
             BasicResult result = new BasicResult();
             result.setSuccess(true);
-            result.setResultMessage(updatedCohorts.toString());
-            userCohortsChecksWorkerManager.apiRequestComplete(result);
+            result.setResultMessage(profileResponse);
+            updateUserProfileWorkerManager.apiRequestComplete(result);
             return null;
-        }).when(userCohortsChecksWorkerManager).fetchUserProfile();
-        userCohortsChecksWorkerManager.setOnFinishListener(result -> assertThat(result, is(ListenableWorker.Result.success())));
-        userCohortsChecksWorkerManager.startChecks();
+        }).when(updateUserProfileWorkerManager).fetchUserProfile();
+        updateUserProfileWorkerManager.setOnFinishListener(result -> assertThat(result, is(ListenableWorker.Result.success())));
+        updateUserProfileWorkerManager.startChecks();
 
         List<Integer> cohorts = DbHelper.getInstance(context).getUser(UserData.TEST_USER_1).getCohorts();
         assertThat(cohorts, is(updatedCohorts));
     }
 
     @Test
-    public void dontUpdateUserCohortsIfUserIsNotLoggedIn() throws Exception {
+    public void dontUpdateUserProfileIfUserIsNotLoggedIn() throws Exception {
         UserData.loadData(context);
         when(user.getUsername()).thenReturn(null); // No user logged in
         doCallRealMethod().when(user).setCohorts(any());
@@ -135,19 +141,19 @@ public class UpdateUserProfileWorkerTest {
 
         List<Integer> initialCohorts = Arrays.asList(1,2); // Cohorts of UserData.TEST_USER_1
         List<Integer> updatedCohorts = Arrays.asList(2,3,4);
-        UpdateUserProfileWorkerManager userCohortsChecksWorkerManager = spy(new UpdateUserProfileWorkerManager(context));
+        UpdateUserProfileWorkerManager updateUserProfileWorkerManager = spy(new UpdateUserProfileWorkerManager(context));
         doAnswer(invocationOnMock -> {
             // Mock API result for returning a success response and the list of updated cohorts
             BasicResult result = new BasicResult();
             result.setSuccess(true);
             result.setResultMessage(updatedCohorts.toString());
-            userCohortsChecksWorkerManager.apiRequestComplete(result);
+            updateUserProfileWorkerManager.apiRequestComplete(result);
             return null;
-        }).when(userCohortsChecksWorkerManager).fetchUserProfile();
+        }).when(updateUserProfileWorkerManager).fetchUserProfile();
 
         Data expectedData = new Data.Builder().putString(UpdateUserProfileWorkerManager.RESULT_MESSAGE, context.getString(R.string.user_not_logged_in)).build();
-        userCohortsChecksWorkerManager.setOnFinishListener(result -> assertThat(result, is(ListenableWorker.Result.failure(expectedData))));
-        userCohortsChecksWorkerManager.startChecks();
+        updateUserProfileWorkerManager.setOnFinishListener(result -> assertThat(result, is(ListenableWorker.Result.failure(expectedData))));
+        updateUserProfileWorkerManager.startChecks();
 
         List<Integer> cohorts = DbHelper.getInstance(context).getUser(UserData.TEST_USER_1).getCohorts();
         assertThat(cohorts, is(initialCohorts));

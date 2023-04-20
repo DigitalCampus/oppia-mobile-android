@@ -92,6 +92,15 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
     }
 
     private void loginRemotely(User user, EntityResult<User> result){
+
+        User localUser;
+        try {
+            localUser = DbHelper.getInstance(ctx).getUser(user.getUsername());
+        }
+        catch (UserNotFoundException unfe){
+            localUser = null;
+        }
+
         try {
             // update progress dialog
             publishProgress(ctx.getString(R.string.login_process));
@@ -113,6 +122,12 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
                 new MetaDataUtils(ctx).saveMetaData(jsonResp);
                 result.setSuccess(true);
                 result.setResultMessage(ctx.getString(R.string.login_complete));
+
+                if (localUser != null &&
+                        localUser.getPasswordEncrypted().equals(user.getPasswordEncrypted())) {
+                    user.setLocalUser(true);
+                }
+
             } else {
                 if (response.code() == 400 || response.code() == 401) {
                     result.setSuccess(false);
