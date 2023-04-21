@@ -1151,7 +1151,7 @@ public class DbHelper extends SQLiteOpenHelper {
         qa.setId(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
         qa.setActivityDigest(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
         qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
-        qa.setSent(Boolean.parseBoolean(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_SENT))));
+        qa.setSent(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_SENT)) == 1);
         qa.setDateTimeFromString(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATETIME)));
         qa.setCourseId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_COURSEID)));
         qa.setUserId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_USERID)));

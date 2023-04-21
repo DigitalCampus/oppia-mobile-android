@@ -20,12 +20,20 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class DeleteAccountTask extends APIUserRequestTask{
+    private ResponseListener responseListener;
+
     public DeleteAccountTask(Context ctx) {
         super(ctx);
     }
 
     public DeleteAccountTask(Context ctx, ApiEndpoint api) {
         super(ctx, api);
+    }
+
+    public interface ResponseListener {
+        void onSuccess();
+
+        void onError(String error);
     }
 
     @Override
@@ -79,4 +87,24 @@ public class DeleteAccountTask extends APIUserRequestTask{
         return result;
     }
 
+    @Override
+    protected void onPostExecute(BasicResult result) {
+        synchronized (this) {
+            if (responseListener != null) {
+
+                if (result.isSuccess()) {
+                    responseListener.onSuccess();
+                } else {
+                    responseListener.onError(result.getResultMessage());
+                }
+
+            }
+        }
+    }
+
+    public void setResponseListener(ResponseListener srl) {
+        synchronized (this) {
+            responseListener = srl;
+        }
+    }
 }
