@@ -188,7 +188,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Void, Integer, Ent
                         editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));
                         editor.apply();
 
-                        saveMetadata(jsonResp);
+                        new MetaDataUtils(ctx).saveMetaData(jsonResp);
 
                     } catch (JSONException e) {
                         Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
@@ -226,17 +226,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Void, Integer, Ent
             return false;
         }
     }
-
-    private void saveMetadata(JSONObject jsonResp) {
-        try {
-            JSONObject metadata = jsonResp.getJSONObject("metadata");
-            MetaDataUtils mu = new MetaDataUtils(ctx);
-            mu.saveMetaData(metadata, prefs);
-        } catch (JSONException e) {
-            Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
-        }
-    }
-
+    
     private List<File> getActivityLogsToSend(){
         ArrayList<File> files = new ArrayList<>();
         File activityFolder = new File(Storage.getActivityPath(ctx));

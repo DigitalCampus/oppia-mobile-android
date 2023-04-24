@@ -1,6 +1,5 @@
 package androidTestFiles.features.courseMedia;
 
-import android.Manifest;
 import android.content.Context;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -9,7 +8,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 import java.io.File;
@@ -19,7 +17,6 @@ import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.database.TestDBHelper;
-import androidx.test.rule.GrantPermissionRule;
 
 @RunWith(AndroidJUnit4.class)
 public abstract class CourseMediaBaseTest extends DaggerInjectMockUITest {

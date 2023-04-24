@@ -24,7 +24,6 @@ import androidx.test.espresso.util.TreeIterables;
 import com.google.android.material.tabs.TabLayout;
 
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 
 public class UITestActionsUtils {
 

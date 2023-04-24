@@ -29,7 +29,6 @@ import org.digitalcampus.oppia.task.result.EntityListResult;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ScanMediaTask extends AsyncTask<List<Course>, String, EntityListResult<Media>> {

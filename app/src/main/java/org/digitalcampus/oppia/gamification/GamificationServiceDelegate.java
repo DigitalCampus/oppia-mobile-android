@@ -7,7 +7,6 @@ import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 
-import java.io.Serializable;
 import java.util.HashMap;
 
 public class GamificationServiceDelegate {

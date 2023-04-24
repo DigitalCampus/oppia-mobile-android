@@ -1,6 +1,5 @@
 package androidTestFiles.features.course;
 
-import android.Manifest;
 import android.content.Context;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -10,7 +9,6 @@ import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.task.CourseInfoTask;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -18,7 +16,6 @@ import java.util.concurrent.CountDownLatch;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.MockApiEndpoint;
 import androidTestFiles.utils.parent.MockedApiEndpointTaskTest;
-import androidx.test.rule.GrantPermissionRule;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;

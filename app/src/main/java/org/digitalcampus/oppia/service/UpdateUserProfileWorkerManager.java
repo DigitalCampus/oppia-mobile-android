@@ -1,15 +1,10 @@
 package org.digitalcampus.oppia.service;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.work.Data;
 import androidx.work.ListenableWorker;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.analytics.Analytics;
@@ -22,26 +17,26 @@ import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
-
-import java.lang.reflect.Type;
-import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 
-public class UserCohortsChecksWorkerManager implements APIRequestFinishListener, APIRequestListener {
+public class UpdateUserProfileWorkerManager implements APIRequestFinishListener, APIRequestListener {
 
-    public static final String TAG = UserCohortsChecksWorkerManager.class.getSimpleName();
+    public static final String TAG = UpdateUserProfileWorkerManager.class.getSimpleName();
     public static final String RESULT_MESSAGE = "message";
 
-    private Context context;
+    private final Context context;
     private int pendingChecks;
     private OnFinishListener onFinishListener;
 
     @Inject
     User user;
 
-    public UserCohortsChecksWorkerManager(Context context) {
+    public UpdateUserProfileWorkerManager(Context context) {
         this.context = context;
         initializeDaggerBase();
     }
@@ -65,10 +60,8 @@ public class UserCohortsChecksWorkerManager implements APIRequestFinishListener,
 
     public void startChecks() {
         if (isUserLoggedIn()) {
-
             pendingChecks = 1;
-
-            checkUserCohortsUpdates();
+            fetchUserProfile();
 
         } else {
             if (onFinishListener != null) {
@@ -79,9 +72,9 @@ public class UserCohortsChecksWorkerManager implements APIRequestFinishListener,
 
     }
 
-    public void checkUserCohortsUpdates() {
+    public void fetchUserProfile() {
         APIUserRequestTask task = new APIUserRequestTask(context);
-        String url = Paths.USER_COHORTS_PATH;
+        String url = Paths.USER_PROFILE_PATH;
         task.setAPIRequestListener(this);
         task.setAPIRequestFinishListener(this, "APIUserRequestTask");
         task.execute(url);
@@ -92,22 +85,15 @@ public class UserCohortsChecksWorkerManager implements APIRequestFinishListener,
     public void apiRequestComplete(BasicResult result) {
 
         if (result.isSuccess()) {
-
             try {
-
-                Type listType = new TypeToken<List<Integer>>(){}.getType();
-                List<Integer> userCohorts = new Gson().fromJson(result.getResultMessage(), listType);
-
-                user.setCohorts(userCohorts);
+                JSONObject response = new JSONObject(result.getResultMessage());
+                user.updateFromJSON(context, response);
                 DbHelper.getInstance(context).addOrUpdateUser(user);
-
-                onFinishListener.onFinish(ListenableWorker.Result.success());
-
-            } catch (JsonSyntaxException e) {
+                new MetaDataUtils(context).saveMetaData(response);
+            } catch (JSONException e) {
                 Analytics.logException(e);
                 Log.d(TAG, "JSON error: ", e);
             }
-
         }
     }
 

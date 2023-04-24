@@ -1,7 +1,5 @@
 package org.digitalcampus.oppia.model.responses;
 
-import android.text.TextUtils;
-
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 

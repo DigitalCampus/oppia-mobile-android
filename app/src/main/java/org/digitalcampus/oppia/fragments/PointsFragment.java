@@ -25,14 +25,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -42,7 +39,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.mobile.learning.databinding.FragmentPointsBinding;
 import org.digitalcampus.oppia.adapter.PointsAdapter;
 import org.digitalcampus.oppia.database.DbHelper;

@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.model;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.utils.DateUtils;

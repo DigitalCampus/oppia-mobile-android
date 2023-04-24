@@ -3,8 +3,6 @@ package org.digitalcampus.oppia.utils.custom_prefs;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import androidx.preference.MultiSelectListPreference;
-
 public class AdminTimePreference extends TimePreference implements AdminPreference {
 
     private OnPreferenceClickListener customOnPreferenceClickListener;

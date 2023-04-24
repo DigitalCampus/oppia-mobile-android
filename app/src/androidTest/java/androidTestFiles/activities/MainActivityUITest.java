@@ -1,6 +1,5 @@
 package androidTestFiles.activities;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -14,6 +13,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.SearchActivity;
 import org.digitalcampus.oppia.activity.StartUpActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
@@ -26,7 +26,6 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -40,7 +39,6 @@ import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidTestFiles.utils.TestUtils;
 import androidTestFiles.utils.UITestActionsUtils;
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -69,6 +67,8 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.activities.EditProfileActivityTest.VALID_PROFILE_RESPONSE;
+import static androidTestFiles.features.authentication.login.LoginUITest.VALID_LOGIN_RESPONSE;
 import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 @RunWith(AndroidJUnit4.class)
@@ -88,6 +88,8 @@ public class MainActivityUITest extends MockedApiEndpointTest {
     ArrayList<Points> pointList;
     @Mock
     ArrayList<Badge> badgeList;
+    @Mock
+    protected ApiEndpoint apiEndpoint;
 
     @Mock
     TagRepository tagRepository;
@@ -676,6 +678,8 @@ public class MainActivityUITest extends MockedApiEndpointTest {
 
     @Test
     public void showsEditProfileActivityOnMenuItemClick() throws Exception {
+
+        startServer(200, VALID_PROFILE_RESPONSE, 0);
 
         if (!BuildConfig.MENU_ALLOW_EDIT_PROFILE) {
             return;

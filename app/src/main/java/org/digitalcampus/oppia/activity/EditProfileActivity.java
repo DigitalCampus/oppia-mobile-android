@@ -1,22 +1,19 @@
 package org.digitalcampus.oppia.activity;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-
-import com.hbb20.CountryCodePicker;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityEditProfileBinding;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomFieldsRepository;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.FetchUserTask;
 import org.digitalcampus.oppia.task.UpdateProfileTask;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.ui.fields.CustomFieldsUIManager;
 import org.digitalcampus.oppia.utils.ui.fields.ValidableField;
@@ -79,13 +76,27 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
         fieldsManager = new CustomFieldsUIManager(this, fields, profileCustomFields);
         fieldsManager.populateAndInitializeFields(binding.customFieldsContainer);
 
-        fillUserProfileData();
     }
 
     @Override
     public void onStart() {
         super.onStart();
         initialize(false);
+
+        if (ConnectionUtils.isNetworkConnected(this)) {
+            FetchUserTask task = new FetchUserTask();
+            task.setListener(this::showUserEditForm);
+            task.updateLoggedUserProfile(this, apiEndpoint, user);
+        }
+        else{
+            showUserEditForm();
+        }
+    }
+
+    private void showUserEditForm(){
+        fillUserProfileData();
+        binding.loadingProfile.setVisibility(View.GONE);
+        binding.profileView.setVisibility(View.VISIBLE);
     }
 
 
@@ -103,9 +114,7 @@ public class EditProfileActivity extends AppActivity implements View.OnClickList
             binding.fieldPhoneno.setText(user.getPhoneNo());
         }
 
-
         fieldsManager.fillWithUserData(user);
-
         binding.fieldPhoneno.setCustomValidator(field -> {
             String phoneNo = field.getCleanedValue();
             if ((phoneNo.length() > 0) && !binding.ccp.isValidFullNumber()){

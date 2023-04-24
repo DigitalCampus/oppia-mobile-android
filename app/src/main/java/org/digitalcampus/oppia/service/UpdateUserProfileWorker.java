@@ -12,17 +12,17 @@ import androidx.work.impl.utils.futures.SettableFuture;
 import com.google.common.util.concurrent.ListenableFuture;
 
 @SuppressLint("RestrictedApi")
-public class UserCohortsCheckerWorker extends ListenableWorker {
+public class UpdateUserProfileWorker extends ListenableWorker {
 
-    public static final String TAG = UserCohortsCheckerWorker.class.getSimpleName();
+    public static final String TAG = UpdateUserProfileWorker.class.getSimpleName();
     private SettableFuture<Result> future;
 
-    public UserCohortsCheckerWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+    public UpdateUserProfileWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 
-    public UserCohortsChecksWorkerManager getWorkerManager() {
-        return new UserCohortsChecksWorkerManager(getApplicationContext());
+    public UpdateUserProfileWorkerManager getWorkerManager() {
+        return new UpdateUserProfileWorkerManager(getApplicationContext());
     }
 
     @SuppressLint("RestrictedApi")
@@ -33,7 +33,7 @@ public class UserCohortsCheckerWorker extends ListenableWorker {
 
         future = SettableFuture.create();
 
-        UserCohortsChecksWorkerManager userCohortsChecksWorkerManager = getWorkerManager();
+        UpdateUserProfileWorkerManager userCohortsChecksWorkerManager = getWorkerManager();
         userCohortsChecksWorkerManager.setOnFinishListener(result -> future.set(result));
         userCohortsChecksWorkerManager.startChecks();
 

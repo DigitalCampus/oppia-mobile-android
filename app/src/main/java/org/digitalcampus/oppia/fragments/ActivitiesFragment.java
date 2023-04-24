@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -35,7 +34,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.mobile.learning.databinding.FragmentActivitiesBinding;
 import org.digitalcampus.oppia.adapter.ActivityTypesAdapter;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -55,12 +53,10 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.inject.Inject;
 
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSelectedListener, ActivityTypesAdapter.OnItemClickListener {
 

@@ -1,14 +1,8 @@
 package org.digitalcampus.oppia.utils.resources;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
-import android.widget.Toast;
-
-import org.digitalcampus.mobile.learning.R;
-
-import java.io.File;
 
 public class JSInterfaceForInlineInput extends JSInterface{
 

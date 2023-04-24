@@ -21,7 +21,6 @@ import android.content.Context;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.task.result.BasicResult;

@@ -2,7 +2,6 @@ package org.digitalcampus.oppia.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
 
 import androidx.preference.PreferenceManager;
 

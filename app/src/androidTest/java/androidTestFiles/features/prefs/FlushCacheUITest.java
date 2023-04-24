@@ -13,6 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.activities.EditProfileActivityTest.VALID_PROFILE_RESPONSE;
 import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withDrawable;
 import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
@@ -39,7 +40,7 @@ import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.task.UpdateUserCohortsTask;
+import org.digitalcampus.oppia.task.FetchUserTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
@@ -67,7 +68,6 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
     @Mock
     TagRepository tagRepository;
 
-    private static final String COHORTS_5_AND_6 = "responses/cohorts/response_200_cohorts_5_6.json";
 
     private void givenThereAreSomeCourses(int numberOfCourses) {
 
@@ -166,7 +166,7 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    public void testFlushUserCohorts() throws Exception {
+    public void testFlushUserData() throws Exception {
         final CountDownLatch signal = new CountDownLatch(1);
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         DbHelper dbHelper = DbHelper.getInstance(context);
@@ -179,15 +179,15 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
             assertEquals(Arrays.asList(1, 2), user.getCohorts());
 
             // 2. Flush cache and retrieve mocked response with cohorts 5 and 6
-            startServer(200, COHORTS_5_AND_6, 0);
-            UpdateUserCohortsTask task = new UpdateUserCohortsTask();
+            startServer(200, VALID_PROFILE_RESPONSE, 0);
+            FetchUserTask task = new FetchUserTask();
             task.setListener(() -> signal.countDown());
-            task.updateLoggedUserCohorts(context, apiEndpoint, user);
+            task.updateLoggedUserProfile(context, apiEndpoint, user);
             signal.await();
 
             // 3. Assert User1 now belongs to cohorts 5 and 6
             user = dbHelper.getUser(UserData.TEST_USER_1);
-            assertEquals(Arrays.asList(5, 6), user.getCohorts());
+            assertEquals(Arrays.asList(4, 5, 6), user.getCohorts());
 
         } catch (UserNotFoundException e) {
             e.printStackTrace();

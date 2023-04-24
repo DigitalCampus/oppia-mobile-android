@@ -1,7 +1,58 @@
 {
-  "fields": [],
+  "fields": [
+    {
+      "name":"gender",
+      "label":"Gender",
+      "order":8,
+      "required":false,
+      "helper_text":"",
+      "collection":"genders",
+      "type":"choices"
+    },
+    {
+      "name":"age",
+      "label":"Age",
+      "order":8,
+      "required":false,
+      "helper_text":"",
+      "type":"int"
+    },
+    {
+      "name":"pr1",
+      "label":"Profile field 1",
+      "order":11,
+      "required":false,
+      "helper_text":"",
+      "type":"boolean"
+    },
+    {
+      "name":"pr2",
+      "label":"Profile field 2",
+      "order":12,
+      "required":false,
+      "helper_text":"Helper hepling you",
+      "type":"str"
+    },
+    {
+      "name":"pr3",
+      "label":"Profile field 3",
+      "order":12,
+      "required":false,
+      "helper_text":"Helper hepling you",
+      "type":"str"
+    }
+  ],
   "required_fields": ["email"],
-  "collections": [],
+  "collections": [
+    {
+      "collection_name": "genders",
+      "items": [
+        {"id": "female", "value":"Female"},
+        {"id": "male", "value":"Male"},
+        {"id": "prefer_not_to_say", "value":"Prefer not to say"}
+      ]
+    }
+  ],
   "register_steps": [
     {
       "order": 1,
@@ -30,6 +81,8 @@
         "email",
         "phoneno",
         "organisation",
+        "gender",
+        "age",
         "jobtitle"
       ]
     }
