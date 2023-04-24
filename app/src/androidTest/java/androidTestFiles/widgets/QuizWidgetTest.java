@@ -41,19 +41,20 @@ import org.mockito.stubbing.Answer;
 import java.util.ArrayList;
 
 import androidTestFiles.utils.FileUtils;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 
 @RunWith(AndroidJUnit4.class)
 public class QuizWidgetTest extends DaggerInjectMockUITest {
 
-    private static final String SIMPLE_QUIZ_JSON = "quizzes/simple_quiz.json";
-    private static final String WITH_MAX_ATTEMPTS_JSON = "quizzes/with_max_attempts_quiz.json";
+    private static final String SIMPLE_QUIZ_JSON = BaseTest.PATH_QUIZZES + "/simple_quiz.json";
+    private static final String WITH_MAX_ATTEMPTS_JSON = BaseTest.PATH_QUIZZES + "/with_max_attempts_quiz.json";
 
-    public static final String PASSWORD_PROTECT_NO_PASSWORD_FIELD = "quizzes/password_protect/no_password_field.json";
-    public static final String PASSWORD_PROTECT_NULL_PASSWORD = "quizzes/password_protect/null_password.json";
-    public static final String PASSWORD_PROTECT_EMPTY_PASSWORD = "quizzes/password_protect/empty_password.json";
-    public static final String PASSWORD_PROTECT_NON_EMPTY_PASSWORD = "quizzes/password_protect/non_empty_password.json";
+    public static final String PASSWORD_PROTECT_NO_PASSWORD_FIELD = BaseTest.PATH_QUIZZES + "/password_protect/no_password_field.json";
+    public static final String PASSWORD_PROTECT_NULL_PASSWORD = BaseTest.PATH_QUIZZES + "/password_protect/null_password.json";
+    public static final String PASSWORD_PROTECT_EMPTY_PASSWORD = BaseTest.PATH_QUIZZES + "/password_protect/empty_password.json";
+    public static final String PASSWORD_PROTECT_NON_EMPTY_PASSWORD = BaseTest.PATH_QUIZZES + "/password_protect/non_empty_password.json";
 
     private Activity act;
     private Bundle args;

@@ -31,12 +31,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.utils.TestUtils;
+import androidTestFiles.utils.parent.BaseTest;
 
 @RunWith(AndroidJUnit4.class)
 public class MatchingDefaultFeedbackTest extends BaseQuizTest {
 
     private static final String MATCHING_DEFAULT_FEEDBACK_JSON =
-            "quizzes/matching_default_feedback.json";
+            BaseTest.PATH_QUIZZES + "/matching_default_feedback.json";
 
     public static final String FEEDBACK_TEXT_CORRECT = "Your answer is correct.";
     public static final String FEEDBACK_TEXT_PARTIALLY_CORRECT = "Your answer is partially correct.";

@@ -23,6 +23,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
+
+import androidTestFiles.utils.parent.BaseTest;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
@@ -60,7 +62,7 @@ public class RememberUsernameTest {
         try {
             mockServer = new MockWebServer();
 
-            String filename = "responses/response_201_remember_username.json";
+            String filename = BaseTest.PATH_RESPONSES + "/response_201_remember_username.json";
 
             mockServer.enqueue(new MockResponse()
                     .setResponseCode(201)
@@ -112,7 +114,7 @@ public class RememberUsernameTest {
         try {
             mockServer = new MockWebServer();
 
-            String filename = "responses/response_400_remember_username.json";
+            String filename = BaseTest.PATH_RESPONSES + "/response_400_remember_username.json";
 
             mockServer.enqueue(new MockResponse()
                     .setResponseCode(400)

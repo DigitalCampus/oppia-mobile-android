@@ -17,6 +17,8 @@ public class BaseTest {
 
     public static final String PATH_CUSTOM_FIELDS_TESTS = PATH_TESTS + "/customFields";
     public static final String PATH_TAGS_TESTS = PATH_TESTS + "/tags";
+    public static final String PATH_QUIZZES = PATH_TESTS + "/quizzes";
+    public static final String PATH_RESPONSES = PATH_TESTS + "/responses";
 
 
 

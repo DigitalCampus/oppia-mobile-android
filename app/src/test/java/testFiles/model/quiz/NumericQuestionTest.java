@@ -18,10 +18,10 @@ import testFiles.utils.UnitTestsFileUtils;
 
 public class NumericQuestionTest {
 
-    private static final String NUMERIC_CLOSE_NOFEEDBACK_JSON = "quizzes/numeric_close_no_feedback.json";
-    private static final String NUMERIC_EXACT_NOFEEDBACK_JSON = "quizzes/numeric_exact_no_feedback.json";
-    private static final String NUMERIC_ERROR_CHECK_JSON = "quizzes/numeric_error_check.json";
-    private static final String NUMERIC_WITH_FEEDBACK_JSON = "quizzes/numeric_with_feedback.json";
+    private static final String NUMERIC_CLOSE_NOFEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/numeric_close_no_feedback.json";
+    private static final String NUMERIC_EXACT_NOFEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/numeric_exact_no_feedback.json";
+    private static final String NUMERIC_ERROR_CHECK_JSON = BaseTest.PATH_QUIZZES + "/numeric_error_check.json";
+    private static final String NUMERIC_WITH_FEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/numeric_with_feedback.json";
     private static final String DEFAULT_LANG = "en";
     private Quiz quizCloseNoFeedback;
     private Quiz quizExactNoFeedback;

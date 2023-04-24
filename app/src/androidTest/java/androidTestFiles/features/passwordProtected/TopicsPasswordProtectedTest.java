@@ -1,6 +1,5 @@
 package androidTestFiles.features.passwordProtected;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -34,7 +33,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -66,6 +64,7 @@ import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.UITestActionsUtils;
 import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
@@ -78,7 +77,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
     private static final long USER_ID_NONE = -1;
     private static final int COURSE_ID = 1;
 
-    private static final String VALID_LOGIN_REGISTER_RESPONSE = "responses/response_200_register.json";
+    private static final String VALID_LOGIN_REGISTER_RESPONSE = BaseTest.PATH_RESPONSES + "/response_200_register.json";
 
     private Context context;
     private TestDBHelper testDBHelper;

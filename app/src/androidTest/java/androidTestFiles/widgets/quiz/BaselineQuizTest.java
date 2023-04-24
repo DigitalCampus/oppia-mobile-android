@@ -26,12 +26,12 @@ import java.util.ArrayList;
 
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.TestUtils;
+import androidTestFiles.utils.parent.BaseTest;
 
 @RunWith(AndroidJUnit4.class)
 public class BaselineQuizTest {
 
-    private static final String BASELINE_QUIZ_JSON =
-            "quizzes/baseline_quiz.json";
+    private static final String BASELINE_QUIZ_JSON = BaseTest.PATH_QUIZZES + "/baseline_quiz.json";
     private static final String QUESTION_TITLE_1 = "The capital of Finland is Helsinki";
     private static final String CORRECT_ANSWER_1 = "True";
     private static final String INCORRECT_ANSWER_1 = "False";

@@ -20,12 +20,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.utils.TestUtils;
+import androidTestFiles.utils.parent.BaseTest;
 
 @RunWith(AndroidJUnit4.class)
 public class ShortAnswerNoFeedbackTest extends BaseQuizTest {
 
     private static final String SHORTANSWER_NO_FEEDBACK_JSON =
-            "quizzes/shortanswer_no_feedback.json";
+            BaseTest.PATH_QUIZZES + "/shortanswer_no_feedback.json";
     private static final String FIRST_QUESTION_TITLE = "What is the capital of Spain?";
     private static final String CORRECT_ANSWER = "Madrid";
     private static final String INCORRECT_ANSWER = "Lisbon";

@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -23,7 +24,7 @@ public class LeaderboardFragmentTest extends MockedApiEndpointTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    private static final String VALID_LEADERBOARD_RESPONSE = "responses/response_201_login.json";
+    private static final String VALID_LEADERBOARD_RESPONSE = BaseTest.PATH_RESPONSES + "/response_201_login.json";
 
     private Bundle args;
     @Before

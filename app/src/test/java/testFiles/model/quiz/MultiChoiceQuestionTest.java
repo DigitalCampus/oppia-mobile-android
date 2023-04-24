@@ -16,8 +16,8 @@ import testFiles.utils.UnitTestsFileUtils;
 
 public class MultiChoiceQuestionTest {
 
-    private static final String MULTICHOICE_NOFEEDBACK_JSON = "quizzes/multichoice_no_feedback.json";
-    private static final String MULTICHOICE_WITHFEEDBACK_JSON = "quizzes/multichoice_with_feedback.json";
+    private static final String MULTICHOICE_NOFEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/multichoice_no_feedback.json";
+    private static final String MULTICHOICE_WITHFEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/multichoice_with_feedback.json";
     private static final String DEFAULT_LANG = "en";
     private Quiz quizNoFeedback;
     private Quiz quizWithFeedback;

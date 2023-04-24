@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import androidTestFiles.utils.FileUtils;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 
@@ -47,8 +48,8 @@ public class FeedbackUITest extends DaggerInjectMockUITest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    private static final String SIMPLE_FEEDBACK_JSON = "quizzes/simple_feedback.json";
-    private static final String SINGLE_ATTEMPT_FEEDBACK_JSON = "quizzes/single_attempt_feedback.json";
+    private static final String SIMPLE_FEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/simple_feedback.json";
+    private static final String SINGLE_ATTEMPT_FEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/single_attempt_feedback.json";
 
     @Mock
     QuizAttemptRepository attemptsRepository;

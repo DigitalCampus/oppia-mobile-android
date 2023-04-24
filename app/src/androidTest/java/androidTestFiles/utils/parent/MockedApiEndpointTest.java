@@ -1,7 +1,6 @@
 package androidTestFiles.utils.parent;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -14,7 +13,6 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import androidTestFiles.utils.FileUtils;
-import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
@@ -25,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 public abstract class MockedApiEndpointTest extends DaggerInjectMockUITest {
 
-    public static final String ERROR_MESSAGE_BODY = "responses/response_body_error_message.txt";
+    public static final String ERROR_MESSAGE_BODY = BaseTest.PATH_RESPONSES + "/response_body_error_message.txt";
     protected static final String EMPTY_JSON = "{}";
 
     @Mock

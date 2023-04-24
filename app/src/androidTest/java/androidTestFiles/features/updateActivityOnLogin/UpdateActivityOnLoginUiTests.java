@@ -64,12 +64,13 @@ import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.MockUtils;
 import androidTestFiles.utils.TestUtils;
 import androidTestFiles.utils.assertions.CircularProgressbarAssertion;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
 
 
-    private static final String VALID_COURSE_ACTIVITY_RESPONSE = "responses/response_200_course_activity.xml";
+    private static final String VALID_COURSE_ACTIVITY_RESPONSE = BaseTest.PATH_RESPONSES + "/response_200_course_activity.xml";
 
 
     @Mock

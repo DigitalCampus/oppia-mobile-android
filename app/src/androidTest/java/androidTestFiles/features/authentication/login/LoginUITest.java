@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.utils.TestUtils;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 
@@ -32,8 +33,8 @@ public class LoginUITest extends MockedApiEndpointTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    public static final String VALID_LOGIN_RESPONSE = "responses/response_201_login.json";
-    private static final String WRONG_CREDENTIALS_RESPONSE = "responses/response_400_login.json";
+    public static final String VALID_LOGIN_RESPONSE = BaseTest.PATH_RESPONSES + "/response_201_login.json";
+    private static final String WRONG_CREDENTIALS_RESPONSE = BaseTest.PATH_RESPONSES + "/response_400_login.json";
 
 
     @Test
