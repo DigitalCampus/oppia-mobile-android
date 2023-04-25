@@ -17,8 +17,6 @@
 
 package org.digitalcampus.oppia.model;
 
-import android.text.TextUtils;
-
 import androidx.annotation.Nullable;
 
 import java.io.Serializable;

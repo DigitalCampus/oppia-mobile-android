@@ -3,7 +3,6 @@ package org.digitalcampus.oppia.utils.ui.fields;
 import android.content.Context;
 import android.os.Build;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;

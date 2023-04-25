@@ -10,7 +10,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.DialogDownloadUserDataBinding;
-import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.service.DownloadOppiaDataService;

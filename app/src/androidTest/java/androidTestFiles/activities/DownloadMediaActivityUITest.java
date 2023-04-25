@@ -130,7 +130,7 @@ public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
 
 
     @Test
-    public void showSelectptionIfPendingMediaUnselected() throws Exception {
+    public void selectAllOptionIsClickableIfPendingMediaUnselected() throws Exception {
 
         copyCourseFromAssets(COURSE_WITH_MEDIA_1);
         copyCourseFromAssets(COURSE_WITH_MEDIA_2);
@@ -146,7 +146,7 @@ public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
     }
 
     @Test
-    public void showSortByOptionIfPendingMediaUnselected() throws Exception {
+    public void sortByOptionIsClickableIfPendingMediaUnselected() throws Exception {
 
         copyCourseFromAssets(COURSE_WITH_MEDIA_1);
         copyCourseFromAssets(COURSE_WITH_MEDIA_2);
@@ -161,5 +161,32 @@ public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
         }
     }
 
+    @Test
+    public void showProgressBarOnDownloadingMedia() throws Exception {
+
+        copyCourseFromAssets(COURSE_WITH_MEDIA_1);
+        copyCourseFromAssets(COURSE_WITH_MEDIA_2);
+
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
+
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            Media m = (Media) invocationOnMock.getArguments()[1];
+            sendBroadcast(ctx, DownloadService.ACTION_DOWNLOAD, m.getDownloadUrl());
+            return null;
+        }).when(downloadServiceDelegate).startDownload(any(), any());
+
+        try (ActivityScenario<DownloadMediaActivity> scenario = ActivityScenario.launch(DownloadMediaActivity.class)) {
+
+            waitForView(withRecyclerView(R.id.missing_media_list)
+                    .atPositionOnView(0, R.id.action_btn))
+                    .perform(click());
+
+            waitForView(withRecyclerView(R.id.missing_media_list)
+                    .atPositionOnView(0, R.id.download_progress))
+                    .check(matches(isDisplayed()));
+        }
+    }
 
 }

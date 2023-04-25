@@ -7,7 +7,6 @@ import android.util.Log;
 
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.application.Tracker;
 
 import java.io.File;
 import java.io.FileNotFoundException;

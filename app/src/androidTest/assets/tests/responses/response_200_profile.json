@@ -1,0 +1,7 @@
+{
+  "api_key": "fakeapikey",
+  "first_name": "Tester",
+  "last_name": "Testington",
+  "email": "fakeemail@domain.com",
+  "cohorts": [4, 5, 6]
+}

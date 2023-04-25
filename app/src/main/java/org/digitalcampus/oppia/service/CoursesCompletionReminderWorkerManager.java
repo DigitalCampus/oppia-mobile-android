@@ -3,7 +3,6 @@ package org.digitalcampus.oppia.service;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;

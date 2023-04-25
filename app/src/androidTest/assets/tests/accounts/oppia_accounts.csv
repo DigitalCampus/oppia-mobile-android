@@ -1,0 +1,3 @@
+username,password,apikey,email,first_name,last_name,
+testuser1,password1,testApiKey1,testuser1@test.com,Test,User1,
+testuser2,password2,testApiKey2,testuser2@test.com,Test,User2,

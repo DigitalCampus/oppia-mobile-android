@@ -17,12 +17,6 @@
 
 package org.digitalcampus.oppia.model;
 
-import android.content.Context;
-
-import androidx.preference.PreferenceManager;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 

@@ -18,6 +18,11 @@ import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidx.test.rule.GrantPermissionRule;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 @RunWith(AndroidJUnit4.class)
 public class LeaderboardFragmentTest extends MockedApiEndpointTest {
@@ -37,6 +42,13 @@ public class LeaderboardFragmentTest extends MockedApiEndpointTest {
         startServer(200, VALID_LEADERBOARD_RESPONSE, 0);
 
         launchInContainer(LeaderboardFragment.class, args, R.style.Oppia_ToolbarTheme);
-        // waitForView(withId(R.id.tv_total_points)).check(matches(withText("0")));
+    }
+
+    @Test
+    public void openleaderboard_ServerError(){
+        startServer(400, null, 0);
+
+        launchInContainer(LeaderboardFragment.class, args, R.style.Oppia_ToolbarTheme);
+        waitForView(withId(R.id.error_state)).check(matches(isDisplayed()));
     }
 }

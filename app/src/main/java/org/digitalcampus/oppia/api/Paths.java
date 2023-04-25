@@ -23,6 +23,7 @@ public class Paths {
     public static final String DOWNLOAD_ACCOUNT_DATA_PATH = OPPIAMOBILE_API + "downloaddata/";
     public static final String CHANGE_PASSWORD_PATH = OPPIAMOBILE_API + "password/";
     public static final String USER_COHORTS_PATH = OPPIAMOBILE_API + "cohorts/";
+    public static final String USER_PROFILE_PATH = OPPIAMOBILE_API + "profile/";
 
     private Paths() {
         throw new IllegalStateException("Utility class");

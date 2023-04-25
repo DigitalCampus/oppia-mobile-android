@@ -95,7 +95,7 @@ public class UpdateLeaderboardFromServerTask extends APIRequestTask<Void, Object
     }
 
 
-    public void seListener(SubmitListener srl) {
+    public void setListener(SubmitListener srl) {
         synchronized (this) {
             listener = srl;
         }

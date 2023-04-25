@@ -29,7 +29,6 @@ import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
@@ -45,8 +44,15 @@ import okhttp3.Response;
 
 public class SubmitQuizAttemptsTask extends APIRequestTask<List<QuizAttempt>, Object, BasicResult> {
 
+
+	private ResponseListener responseListener;
+
 	public SubmitQuizAttemptsTask(Context ctx) { super(ctx); }
 	public SubmitQuizAttemptsTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
+
+	public interface ResponseListener {
+		void onComplete(BasicResult result);
+	}
 
 	@Override
 	protected BasicResult doInBackground(List<QuizAttempt>... params) {
@@ -112,6 +118,21 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<List<QuizAttempt>, Ob
 
 	protected void onProgressUpdate(String... obj) {
 		// do nothing
+	}
+
+	@Override
+	protected void onPostExecute(BasicResult result) {
+		synchronized (this) {
+			if (responseListener != null) {
+				responseListener.onComplete(result);
+			}
+		}
+	}
+
+	public void setResponseListener(ResponseListener srl) {
+		synchronized (this) {
+			responseListener = srl;
+		}
 	}
 
 }

@@ -8,12 +8,7 @@ import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 
 public class JSInterfaceForResourceImages extends JSInterface{
 

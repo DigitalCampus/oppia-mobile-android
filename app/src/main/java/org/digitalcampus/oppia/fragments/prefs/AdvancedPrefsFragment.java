@@ -27,7 +27,7 @@ import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ExportActivityTask;
-import org.digitalcampus.oppia.task.UpdateUserCohortsTask;
+import org.digitalcampus.oppia.task.FetchUserTask;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.CourseUtils;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
@@ -169,7 +169,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
 
     private void flushAppCache() {
         flushCourseListingCache();
-        flushUserCohorts();
+        flushUserProfileInfo();
 
         ((AppActivity) getActivity()).toast(R.string.cache_flushed_successfuly);
     }
@@ -185,10 +185,10 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         }
     }
 
-    private void flushUserCohorts() {
+    private void flushUserProfileInfo() {
         try {
             User user = DbHelper.getInstance(getContext()).getUser(SessionManager.getUsername(getContext()));
-            new UpdateUserCohortsTask().updateLoggedUserCohorts(getContext(), apiEndpoint, user);
+            new FetchUserTask().updateLoggedUserProfile(getContext(), apiEndpoint, user);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }

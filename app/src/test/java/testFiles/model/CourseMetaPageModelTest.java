@@ -2,7 +2,6 @@ package testFiles.model;
 
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Lang;
