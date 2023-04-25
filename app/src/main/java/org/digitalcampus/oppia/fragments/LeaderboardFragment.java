@@ -67,7 +67,7 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         if (LeaderboardUtils.shouldFetchLeaderboard(prefs)){
             UpdateLeaderboardFromServerTask task = new UpdateLeaderboardFromServerTask(super.getActivity(), apiEndpoint);
-            task.seListener(this);
+            task.setListener(this);
             task.execute();
         }
         else {
@@ -108,7 +108,14 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
 
     @Override
     public void submitComplete(BasicResult result) {
-        updateLeaderboard();
+        if (result.isSuccess()){
+            updateLeaderboard();
+        }
+        else{
+            binding.loadingSpinner.setVisibility(View.GONE);
+            binding.listLeaderboard.setVisibility(View.GONE);
+            binding.errorState.setVisibility(View.VISIBLE);
+        }
     }
 
 
