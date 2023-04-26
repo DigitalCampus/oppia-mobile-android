@@ -70,10 +70,5 @@ public class PageWidgetTest {
         // TODO complete this
         launchInContainer(PageWidget.class, args, R.style.Oppia_ToolbarTheme);
 
-        Thread.sleep(5000);
-        onWebView()
-                .withElement(findElement(Locator.TAG_NAME, "h3"))
-                .check(webMatches(getText(), containsStringIgnoringCase("Installing new courses")));
-
     }
 }

@@ -16,6 +16,9 @@ public class DrawableMatcher extends TypeSafeMatcher<View> {
     private final int expectedId;
     private String resourceName;
 
+    static final int EMPTY = -1;
+    static final int ANY = -2;
+
     public DrawableMatcher(int resourceId) {
         super(View.class);
         this.expectedId = resourceId;
@@ -23,13 +26,22 @@ public class DrawableMatcher extends TypeSafeMatcher<View> {
 
     @Override
     protected boolean matchesSafely(View target) {
+
         if (!(target instanceof ImageView)){
             return false;
         }
+
         ImageView imageView = (ImageView) target;
-        if (expectedId < 0){
-            return imageView.getDrawable() == null;
+        Bitmap drawable1 = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+        if (expectedId == EMPTY){
+            return ((BitmapDrawable)imageView.getDrawable()).getBitmap() == null;
         }
+
+        if (expectedId == ANY){
+            return ((BitmapDrawable)imageView.getDrawable()).getBitmap() != null;
+        }
+
+        // expectedId is an internal resource
         Resources resources = target.getContext().getResources();
         Drawable expectedDrawable = resources.getDrawable(expectedId);
         resourceName = resources.getResourceEntryName(expectedId);

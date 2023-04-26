@@ -42,6 +42,7 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidTestFiles.database.TestDBHelper;
 
@@ -55,7 +56,7 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
     private static final String VALID_LAST_NAME = "Last Name";
     private static final String VALID_ORGANIZATION = "A organization";
     private static final String VALID_JOB_TITLE = "A job title";
-    public static final String VALID_PROFILE_RESPONSE = "responses/response_200_profile.json";
+    public static final String VALID_PROFILE_RESPONSE = BaseTest.PATH_RESPONSES + "/response_200_profile.json";
 
     @Mock
     protected User user;

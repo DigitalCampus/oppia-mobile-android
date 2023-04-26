@@ -296,20 +296,17 @@ public abstract class AnswerWidget extends BaseWidget {
             String fileUrl = course.getLocation() + q.getProp("image");
             Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
             File file = new File(fileUrl);
-            ImageView iv = getView().findViewById(R.id.question_image_image);
-            iv.setImageBitmap(myBitmap);
-            iv.setTag(file);
+            binding.questionImageImage.setImageBitmap(myBitmap);
+            binding.questionImageImage.setTag(file);
             if (q.getProp("media") == null) {
                 OnImageClickListener oicl = new OnImageClickListener(super.getActivity());
-                iv.setOnClickListener(oicl);
-                TextView tv = getView().findViewById(R.id.question_image_caption);
-                tv.setText(R.string.widget_quiz_image_caption);
+                binding.questionImageImage.setOnClickListener(oicl);
+                binding.questionImageCaption.setText(R.string.widget_quiz_image_caption);
                 binding.questionImage.setVisibility(View.VISIBLE);
             } else {
-                TextView tv = getView().findViewById(R.id.question_image_caption);
-                tv.setText(R.string.widget_quiz_media_caption);
+                binding.questionImageCaption.setText(R.string.widget_quiz_media_caption);
                 OnMediaClickListener omcl = new OnMediaClickListener(q.getProp("media"));
-                iv.setOnClickListener(omcl);
+                binding.questionImageImage.setOnClickListener(omcl);
                 binding.questionImage.setVisibility(View.VISIBLE);
             }
 

@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+import testFiles.utils.BaseTest;
 import testFiles.utils.UnitTestsFileUtils;
 
 public class ShortAnswerQuestionTest {

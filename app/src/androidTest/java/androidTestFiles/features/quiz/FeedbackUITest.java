@@ -45,8 +45,6 @@ import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 @RunWith(AndroidJUnit4.class)
 public class FeedbackUITest extends DaggerInjectMockUITest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private static final String SIMPLE_FEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/simple_feedback.json";
     private static final String SINGLE_ATTEMPT_FEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/single_attempt_feedback.json";
