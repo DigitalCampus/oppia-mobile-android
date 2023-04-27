@@ -109,17 +109,9 @@ public class FeedbackSkipLogicTest extends DaggerInjectMockUITest {
         CourseUtils.cleanUp();
     }
 
-    protected void copyCourseFromAssets(String filename) {
-        FileUtils.copyZipFromAssetsPath(context, PATH_COURSES_SKIP_LOGIC_TESTS, filename);  //Copy course zip from assets to download path
-    }
-
-
     private void installCourse(String filename) {
 
-        copyCourseFromAssets(filename);
-
-        BasicResult response = runInstallCourseTask(context);
-        assertTrue(response.isSuccess());
+        super.installCourse(PATH_COURSES_SKIP_LOGIC_TESTS, filename);
     }
 
     private Intent getTestCourseIntent() {
