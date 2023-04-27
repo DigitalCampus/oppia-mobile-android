@@ -107,27 +107,6 @@ public class QuizMediaUiTest extends CourseMediaBaseTest {
                 .check(matches(noDrawable()));
     }
 
-    @Test
-    public void checkQuestionWithAudioCorrect() throws Exception {
-
-        installCourse(PATH_COURSE_QUIZ_MEDIA, FILENAME_QUIZ_AUDIO);
-        copyMediaFromAssets(FILENAME_TEST_AUDIO_CORRECT);
-        navigateToQuiz();
-        waitForView(withId(R.id.question_image_image)).perform(click());
-        assertEquals(VideoPlayerActivity.class, TestUtils.getCurrentActivity().getClass());
-
-    }
-
-    @Test
-    public void checkQuestionWithAudioIncorrect() throws Exception {
-
-        installCourse(PATH_COURSE_QUIZ_MEDIA, FILENAME_QUIZ_AUDIO);
-        copyMediaFromAssets(FILENAME_TEST_AUDIO_INCORRECT);
-        navigateToQuiz();
-        waitForView(withId(R.id.question_image_image)).perform(click());
-        assertEquals(CourseActivity.class, TestUtils.getCurrentActivity().getClass());
-
-    }
 
     @Test
     public void checkQuestionWithVideoCorrect() throws Exception {

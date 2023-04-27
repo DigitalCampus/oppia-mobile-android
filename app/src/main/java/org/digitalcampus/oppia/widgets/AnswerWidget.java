@@ -171,7 +171,6 @@ public abstract class AnswerWidget extends BaseWidget {
         this.barAnim = new ProgressBarAnimator(binding.progressQuiz);
         this.barAnim.setAnimDuration(PROGRESS_ANIM_DURATION);
         this.binding.questionImage.setVisibility(View.GONE);
-        this.binding.playAudioBtn.setVisibility(View.GONE);
     }
 
     @Override
@@ -287,7 +286,7 @@ public abstract class AnswerWidget extends BaseWidget {
 
         binding.questionText.setVisibility(View.VISIBLE);
         // convert in case has any html special chars
-        String questionText = stripAudioFromText(q);
+        String questionText = q.getTitle(prefLang);
         binding.questionText.setText(UIUtils.getFromHtmlAndTrim(questionText));
 
         if (q.getProp("image") == null) {
@@ -356,37 +355,6 @@ public abstract class AnswerWidget extends BaseWidget {
                 }
             });
         }
-    }
-
-    private String stripAudioFromText(QuizQuestion q) {
-        String questionText = q.getTitle(prefLang);
-        Pattern p = Pattern.compile("[a-zA-Z0-9\\-_]+\\.mp3");
-        Matcher m = p.matcher(questionText);
-        if (m.find()) {
-            final String mp3filename = m.group();
-            questionText = questionText.replace(mp3filename, "");
-            File file = new File(course.getLocation() + "resources/" + mp3filename);
-            if (!file.exists()) {
-                binding.playAudioBtn.setVisibility(View.GONE);
-                return questionText;
-            }
-            final Uri mp3Uri = Uri.fromFile(file);
-            Log.d(TAG, mp3Uri.getPath());
-
-            binding.playAudioBtn.setVisibility(View.VISIBLE);
-            binding.playAudioBtn.setOnClickListener(v -> {
-                if ((mp != null) && mp.isPlaying()) {
-                    mp.stop();
-                    mp.release();
-                    mp = null;
-                }
-                mp = MediaPlayer.create(getContext(), mp3Uri);
-                mp.start();
-            });
-        } else {
-            binding.playAudioBtn.setVisibility(View.GONE);
-        }
-        return questionText;
     }
 
     private void setNav() {
