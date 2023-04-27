@@ -55,12 +55,13 @@ import java.util.ArrayList;
 import androidTestFiles.database.sampledata.UserData;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.TestUtils;
+import androidTestFiles.utils.parent.BaseTest;
 
 @RunWith(AndroidJUnit4.class)
 public class PlayMediaUITest extends CourseMediaBaseTest {
 
     private static final String COURSE_SHORTNAME = "courseactivity_test";
-    private static final String MEDIA_TEST_FILENAME = "video-test-1.mp4";
+    private static final String MEDIA_TEST_FILENAME = BaseTest.MEDIA_FILE_VIDEO_TEST_1;
     private static final String MEDIA_TEST_FILENAME_WITH_SPACES = "video with spaces.mp4";
     private static final String PAGE_FILENAME = "page.html";
 

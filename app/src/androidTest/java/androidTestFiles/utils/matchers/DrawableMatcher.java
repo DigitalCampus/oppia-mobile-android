@@ -32,7 +32,6 @@ public class DrawableMatcher extends TypeSafeMatcher<View> {
         }
 
         ImageView imageView = (ImageView) target;
-        Bitmap drawable1 = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
         if (expectedId == EMPTY){
             return ((BitmapDrawable)imageView.getDrawable()).getBitmap() == null;
         }

@@ -11,14 +11,18 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static androidTestFiles.utils.UITestActionsUtils.waitForView;
-import static androidTestFiles.utils.matchers.EspressoTestsMatchers.hasDrawable;
 import static androidTestFiles.utils.matchers.EspressoTestsMatchers.noDrawable;
+import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withBitmap;
 import static androidTestFiles.utils.parent.BaseTest.PATH_COURSES_TESTS;
+import static androidTestFiles.utils.parent.BaseTest.PATH_MEDIA_RESOURCES;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
@@ -30,9 +34,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import java.io.InputStream;
+
 import androidTestFiles.features.courseMedia.CourseMediaBaseTest;
 import androidTestFiles.utils.TestUtils;
 import androidTestFiles.utils.UITestActionsUtils;
+import androidTestFiles.utils.parent.BaseTest;
 
 @RunWith(AndroidJUnit4.class)
 public class QuizMediaUiTest extends CourseMediaBaseTest {
@@ -44,8 +51,8 @@ public class QuizMediaUiTest extends CourseMediaBaseTest {
     private final String FILENAME_TEST_AUDIO_CORRECT = "test-audio.mp3";
     private final String FILENAME_TEST_AUDIO_INCORRECT = "test-audio-incorrect.mp3";
     private final String FILENAME_QUIZ_VIDEO = "quiz-video.zip";
-    public static final String FILENAME_TEST_VIDEO_CORRECT = "video-test-1.mp4";
-    public static final String FILENAME_TEST_VIDEO_INCORRECT = "video-test-1-incorrect.mp4";
+    public static final String FILENAME_TEST_VIDEO_CORRECT = BaseTest.MEDIA_FILE_VIDEO_TEST_1;
+    public static final String FILENAME_TEST_VIDEO_INCORRECT = "incorrect-" + BaseTest.MEDIA_FILE_VIDEO_TEST_1;
 
     @Mock
     SharedPreferences prefs;
@@ -82,8 +89,12 @@ public class QuizMediaUiTest extends CourseMediaBaseTest {
 
         installCourse(PATH_COURSE_QUIZ_MEDIA, FILENAME_QUIZ_IMAGES_CORRECT);
         navigateToQuiz();
+
+        InputStream is = InstrumentationRegistry.getInstrumentation().getContext()
+                .getResources().getAssets().open(PATH_MEDIA_RESOURCES + "/quiz_image.png");
+        Bitmap expectedBitmap = BitmapFactory.decodeStream(is);
         waitForView(withId(R.id.question_image_image))
-                .check(matches(hasDrawable()));
+                .check(matches(withBitmap(expectedBitmap)));
     }
 
 

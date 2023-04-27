@@ -43,14 +43,15 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import androidTestFiles.features.courseMedia.CourseMediaBaseTest;
+import androidTestFiles.utils.parent.BaseTest;
 
 @RunWith(AndroidJUnit4.class)
 public class VideoPlayerActivityTest extends CourseMediaBaseTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    private static final String MEDIA_TEST_FILENAME = "video-test-1.mp4";
-    private static final String LONG_MEDIA_TEST_FILENAME = "video-test-3.mp4";
+    private static final String MEDIA_TEST_FILENAME = BaseTest.MEDIA_FILE_VIDEO_TEST_1;
+    private static final String LONG_MEDIA_TEST_FILENAME = BaseTest.MEDIA_FILE_VIDEO_TEST_3;
     private static final int MEDIA_TEST_LENGHT_SECONDS = 4;
 
     private Intent getTestVideoActivityIntent(String mediaFile) {
