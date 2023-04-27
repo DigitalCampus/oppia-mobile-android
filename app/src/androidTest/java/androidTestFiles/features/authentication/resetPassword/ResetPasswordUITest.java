@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 
 import java.util.concurrent.TimeUnit;
 
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
@@ -35,7 +36,7 @@ public class ResetPasswordUITest extends MockedApiEndpointTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    private static final String ERROR_RESET_RESPONSE = "responses/response_400_reset_password.json";
+    private static final String ERROR_RESET_RESPONSE = BaseTest.PATH_RESPONSES + "/response_400_reset_password.json";
 
     @Test
     public void showsErrorMessageWhenThereIsNoUsername() throws Exception {

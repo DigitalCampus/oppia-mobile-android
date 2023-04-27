@@ -13,13 +13,14 @@ import org.junit.Test;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import testFiles.utils.BaseTest;
 import testFiles.utils.UnitTestsFileUtils;
 
 
 public class MatchingQuestionTest {
 
-    private static final String MATCHING_DEFAULT_FEEDBACK_JSON = "quizzes/matching_default_feedback.json";
-    private static final String MATCHING_WITH_FEEDBACK_JSON = "quizzes/matching_with_feedback.json";
+    private static final String MATCHING_DEFAULT_FEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/matching_default_feedback.json";
+    private static final String MATCHING_WITH_FEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/matching_with_feedback.json";
     private static final String DEFAULT_LANG = "en";
 
     public static final String FEEDBACK_TEXT_CORRECT = "Your answer is correct.";

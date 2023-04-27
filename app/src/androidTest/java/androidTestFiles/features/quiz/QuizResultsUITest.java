@@ -53,9 +53,6 @@ import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 @RunWith(AndroidJUnit4.class)
 public class QuizResultsUITest extends DaggerInjectMockUITest {
 
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
     @Mock
     SharedPreferences prefs;
     @Mock
@@ -82,13 +79,7 @@ public class QuizResultsUITest extends DaggerInjectMockUITest {
     }
 
     private void installCourse(String course) {
-
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-
-        CourseUtils.cleanUp();
-        FileUtils.copyZipFromAssetsPath(context, PATH_COURSES_QUIZ_RESULTS_TESTS, course);
-        BasicResult response = CourseUtils.runInstallCourseTask(context);
-        assertTrue(response.isSuccess());
+        super.installCourse(PATH_COURSES_QUIZ_RESULTS_TESTS, course);
     }
 
     private void checkShowResults(boolean atEnd, boolean later) throws Exception {

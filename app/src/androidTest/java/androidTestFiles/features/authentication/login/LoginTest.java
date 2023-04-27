@@ -25,6 +25,7 @@ import java.util.concurrent.CountDownLatch;
 import androidTestFiles.database.TestDBHelper;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.MockApiEndpoint;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTaskTest;
 
 
@@ -71,7 +72,7 @@ public class LoginTest extends MockedApiEndpointTaskTest {
     @Test
     public void userLogin_OKResponse() throws Exception {
 
-        String filename = "responses/response_201_login.json";
+        String filename = BaseTest.PATH_RESPONSES + "/response_201_login.json";
         String response = FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), filename);
         startServer(201, response);
 
@@ -86,7 +87,7 @@ public class LoginTest extends MockedApiEndpointTaskTest {
     @Test
     public void userLogin_WrongPassword() throws Exception {
 
-        String filename = "responses/response_400_login.json";
+        String filename = BaseTest.PATH_RESPONSES + "/response_400_login.json";
         String response = FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), filename);
         startServer(400, response, 500);
 

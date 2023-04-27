@@ -11,13 +11,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import testFiles.utils.BaseTest;
 import testFiles.utils.UnitTestsFileUtils;
 
 public class TagRepositoryTest {
 
-    private static final String TAGS_ORIGINAL = "tags/tags_original.json";
-    private static final String TAGS_NEW_DOWNLOADS_ALL_AVAILABLE = "tags/new_downloads_all_available.json";
-    private static final String TAGS_NEW_DOWNLOADS_ONE_NON_AVAILABLE = "tags/new_downloads_one_non_available.json";
+    private static final String TAGS_ORIGINAL = BaseTest.PATH_TAGS_TESTS + "/tags_original.json";
+    private static final String TAGS_NEW_DOWNLOADS_ALL_AVAILABLE = BaseTest.PATH_TAGS_TESTS + "/new_downloads_all_available.json";
+    private static final String TAGS_NEW_DOWNLOADS_ONE_NON_AVAILABLE = BaseTest.PATH_TAGS_TESTS + "/new_downloads_one_non_available.json";
 
     private List<Tag> loadTagList(String json) throws Exception {
         return loadTagList(json, new ArrayList<>());

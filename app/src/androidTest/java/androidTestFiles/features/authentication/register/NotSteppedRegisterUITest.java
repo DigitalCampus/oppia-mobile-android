@@ -40,6 +40,7 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 
 import androidTestFiles.utils.TestUtils;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
@@ -47,7 +48,7 @@ public class NotSteppedRegisterUITest extends MockedApiEndpointTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    private static final String VALID_REGISTER_RESPONSE = "responses/response_200_register.json";
+    private static final String VALID_REGISTER_RESPONSE = BaseTest.PATH_RESPONSES + "/response_200_register.json";
 
     @Mock
     protected CustomFieldsRepository customFieldsRepo;

@@ -24,11 +24,13 @@ import org.junit.runners.Parameterized;
 
 import java.util.ArrayList;
 
+import androidTestFiles.utils.parent.BaseTest;
+
 
 @RunWith(Parameterized.class)
 public class AnswerWidgetTest extends BaseQuizTest {
 
-    private static final String SIMPLE_QUIZ_JSON = "quizzes/simple_quiz.json";
+    private static final String SIMPLE_QUIZ_JSON = BaseTest.PATH_QUIZZES + "/simple_quiz.json";
     private static final String FIRST_QUESTION_TITLE = "First question";
 
     private Class widgetClass;

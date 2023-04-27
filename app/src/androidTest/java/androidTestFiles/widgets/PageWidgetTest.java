@@ -2,12 +2,18 @@ package androidTestFiles.widgets;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.web.assertion.WebViewAssertions.webMatches;
+import static androidx.test.espresso.web.sugar.Web.onWebView;
+import static androidx.test.espresso.web.webdriver.DriverAtoms.findElement;
+import static androidx.test.espresso.web.webdriver.DriverAtoms.getText;
+import static org.hamcrest.Matchers.containsStringIgnoringCase;
 import static org.junit.Assert.assertEquals;
 import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 import android.Manifest;
 import android.os.Bundle;
 
+import androidx.test.espresso.web.webdriver.Locator;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -27,8 +33,6 @@ import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
 public class PageWidgetTest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private Activity act;
     private Bundle args;
@@ -62,8 +66,9 @@ public class PageWidgetTest {
     }
 
     @Test
-    public void getContentToReadTest() {
+    public void getContentToReadTest() throws InterruptedException {
         // TODO complete this
         launchInContainer(PageWidget.class, args, R.style.Oppia_ToolbarTheme);
+
     }
 }

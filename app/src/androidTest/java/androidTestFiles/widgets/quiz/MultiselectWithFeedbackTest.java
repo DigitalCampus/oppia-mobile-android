@@ -18,12 +18,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.utils.TestUtils;
+import androidTestFiles.utils.parent.BaseTest;
 
 @RunWith(AndroidJUnit4.class)
 public class MultiselectWithFeedbackTest extends BaseQuizTest {
 
     private static final String MULTISELECT_WITHFEEDBACK_JSON =
-            "quizzes/multiselect_with_feedback.json";
+            BaseTest.PATH_QUIZZES + "/multiselect_with_feedback.json";
     private static final String FIRST_QUESTION_TITLE =
             "Which of the following are colours of the rainbow?";
     private static final String CORRECT_ANSWER_1 = "Red";

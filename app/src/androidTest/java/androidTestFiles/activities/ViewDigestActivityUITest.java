@@ -23,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 
 import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidTestFiles.utils.TestUtils;
 import androidx.test.core.app.ActivityScenario;
@@ -50,7 +51,7 @@ public class ViewDigestActivityUITest extends MockedApiEndpointTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    private static final String VALID_COURSE_INFO_RESPONSE = "responses/response_200_course_info.json";
+    private static final String VALID_COURSE_INFO_RESPONSE = BaseTest.PATH_RESPONSES + "/response_200_course_info.json";
 
     @Mock
     CoursesRepository coursesRepository;

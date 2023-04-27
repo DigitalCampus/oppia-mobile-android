@@ -30,20 +30,12 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 
+import androidTestFiles.features.courseMedia.CourseMediaBaseTest;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 @RunWith(AndroidJUnit4.class)
-public class ExternalResourceOpenerTests extends DaggerInjectMockUITest {
-
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-    private Context context;
-
-    @Before
-    public void setUp() throws Exception {
-        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-    }
+public class ExternalResourceOpenerTests extends CourseMediaBaseTest {
 
     @Test
     public void getIntentFor_nonExistingResource() throws Exception {
@@ -67,10 +59,10 @@ public class ExternalResourceOpenerTests extends DaggerInjectMockUITest {
     @Test
     public void getIntentForShare_existingResource() throws Exception {
         File mediaPath = new File(Storage.getMediaPath(context));
-        FileUtils.copyFileFromAssets(context, PATH_COURSES_MEDIA_TESTS, "video-test-1.mp4", mediaPath);
-        File media = new File(mediaPath, "video-test-1.mp4");
+        copyMediaFromAssets(BaseTest.MEDIA_FILE_VIDEO_TEST_1);
+        File media = new File(mediaPath, BaseTest.MEDIA_FILE_VIDEO_TEST_1);
 
-        Intent intent = ExternalResourceOpener.constructShareFileIntent(context, media, "image/png");
+        Intent intent = ExternalResourceOpener.constructShareFileIntent(context, media, "video/mp4");
         assertNotNull(intent);
     }
 }

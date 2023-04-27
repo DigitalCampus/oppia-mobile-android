@@ -19,11 +19,13 @@ import org.digitalcampus.oppia.widgets.QuizWidget;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidTestFiles.utils.parent.BaseTest;
+
 @RunWith(AndroidJUnit4.class)
 public class MultiselectWithUnicodeAndHTMLTest extends BaseQuizTest {
 
     private static final String MULTISELECT_WITH_UNICODE_AND_HTML_JSON =
-            "quizzes/multiselect_with_unicode_and_html.json";
+            BaseTest.PATH_QUIZZES + "/multiselect_with_unicode_and_html.json";
     private static final String FIRST_QUESTION_TITLE =
             "Test with Unicode characters in response options";
     private static final String CORRECT_ANSWER_1 = "response option without unicode - correct";

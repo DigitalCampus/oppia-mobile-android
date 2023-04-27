@@ -17,12 +17,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.utils.TestUtils;
+import androidTestFiles.utils.parent.BaseTest;
 
 @RunWith(AndroidJUnit4.class)
 public class MultichoiceNoFeedbackTest extends BaseQuizTest {
 
     private static final String MULTICHOICE_NOFEEDBACK_JSON =
-            "quizzes/multichoice_no_feedback.json";
+            BaseTest.PATH_QUIZZES + "/multichoice_no_feedback.json";
     private static final String FIRST_QUESTION_TITLE = "What is the capital of Germany?";
     private static final String CORRECT_ANSWER = "Berlin";
     private static final String INCORRECT_ANSWER = "Bonn";

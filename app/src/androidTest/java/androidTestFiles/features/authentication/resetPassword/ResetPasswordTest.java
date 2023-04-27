@@ -24,6 +24,8 @@ import java.util.concurrent.CountDownLatch;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.MockApiEndpoint;
 import androidx.test.rule.GrantPermissionRule;
+
+import androidTestFiles.utils.parent.BaseTest;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
@@ -61,7 +63,7 @@ public class ResetPasswordTest {
         try {
             mockServer = new MockWebServer();
 
-            String filename = "responses/response_201_reset_password.json";
+            String filename = BaseTest.PATH_RESPONSES + "/response_201_reset_password.json";
 
             mockServer.enqueue(new MockResponse()
                     .setResponseCode(201)
@@ -113,7 +115,7 @@ public class ResetPasswordTest {
         try {
             mockServer = new MockWebServer();
 
-            String filename = "responses/response_400_reset_password.json";
+            String filename = BaseTest.PATH_RESPONSES + "/response_400_reset_password.json";
 
             mockServer.enqueue(new MockResponse()
                     .setResponseCode(400)

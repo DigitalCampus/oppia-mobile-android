@@ -23,6 +23,7 @@ import java.util.concurrent.CountDownLatch;
 
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.MockApiEndpoint;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTaskTest;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -35,7 +36,7 @@ public class FetchServerInfoTest extends MockedApiEndpointTaskTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    private static final String VALID_SERVERINFO_RESPONSE = "responses/response_200_serverinfo.json";
+    private static final String VALID_SERVERINFO_RESPONSE = BaseTest.PATH_RESPONSES + "/response_200_serverinfo.json";
 
     private Context context;
     private SharedPreferences prefs;

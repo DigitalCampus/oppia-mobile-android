@@ -21,11 +21,12 @@ import java.util.concurrent.CountDownLatch;
 
 import androidTestFiles.database.TestDataManager;
 import androidTestFiles.utils.MockApiEndpoint;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTaskTest;
 
 @RunWith(AndroidJUnit4.class)
 public class ChangePasswordTaskTest extends MockedApiEndpointTaskTest {
-    public static final String ERROR_CHANGEPASSWORD_DIFFERENT = "responses/response_400_change_password.json";
+    public static final String ERROR_CHANGEPASSWORD_DIFFERENT = BaseTest.PATH_RESPONSES + "/response_400_change_password.json";
     public static final String ORIGINAL_USER_PASSWORD = "password";
 
     private Context context;

@@ -55,6 +55,7 @@ import java.util.concurrent.CountDownLatch;
 import androidTestFiles.database.sampledata.UserData;
 import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.FileUtils;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
@@ -86,7 +87,7 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
 
         givenThereAreSomeCourses(1);
 
-        String previousCacheAsset = "responses/course/response_200_courses_list.json";
+        String previousCacheAsset = BaseTest.PATH_RESPONSES + "/course/response_200_courses_list.json";
         String previousCache = FileUtils.getStringFromFile(
                 InstrumentationRegistry.getInstrumentation().getContext(), previousCacheAsset);
 
@@ -149,7 +150,7 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefs.edit().remove(PrefsActivity.PREF_SERVER_COURSES_CACHE).commit();
 
-        String responseAsset = "responses/course/response_200_courses_list.json";
+        String responseAsset = BaseTest.PATH_RESPONSES + "/course/response_200_courses_list.json";
         startServer(200, responseAsset, 0);
 
         try (ActivityScenario<TagSelectActivity> scenario = ActivityScenario.launch(TagSelectActivity.class)) {

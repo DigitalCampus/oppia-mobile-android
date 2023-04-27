@@ -20,12 +20,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.utils.TestUtils;
+import androidTestFiles.utils.parent.BaseTest;
 
 @RunWith(AndroidJUnit4.class)
 public class NumericInexactNoFeedbackTest extends BaseQuizTest {
 
     private static final String NUMERIC_CLOSE_NO_FEEDBACK_JSON =
-            "quizzes/numeric_close_no_feedback.json";
+            BaseTest.PATH_QUIZZES + "/numeric_close_no_feedback.json";
     private static final String FIRST_QUESTION_TITLE = "How high in metres is Everest?";
     private static final String CORRECT_ANSWER = "8848";
     private static final String CLOSE_ANSWER = "8799";

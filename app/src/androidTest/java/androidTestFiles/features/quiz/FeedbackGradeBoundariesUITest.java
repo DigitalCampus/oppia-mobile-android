@@ -29,14 +29,15 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import androidTestFiles.utils.FileUtils;
+import androidTestFiles.utils.parent.BaseTest;
 
 @RunWith(AndroidJUnit4.class)
 public class FeedbackGradeBoundariesUITest {
 
-    private static final String MULTICHOICE_NOFEEDBACK_JSON = "quizzes/multichoice_no_feedback.json";
-    private static final String FEEDBACK_GRADE_BOUNDARIES_JSON = "quizzes/feedback_grade_boundaries.json";
-    private static final String FEEDBACK_INCORRECT_GRADE_BOUNDARIES_JSON = "quizzes/feedback_incorrect_grade_boundaries.json";
-    private static final String FEEDBACK_MULTILANG_GRADE_BOUNDARIES_JSON = "quizzes/feedback_multilang_grade_boundaries.json";
+    private static final String MULTICHOICE_NOFEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/multichoice_no_feedback.json";
+    private static final String FEEDBACK_GRADE_BOUNDARIES_JSON = BaseTest.PATH_QUIZZES + "/feedback_grade_boundaries.json";
+    private static final String FEEDBACK_INCORRECT_GRADE_BOUNDARIES_JSON = BaseTest.PATH_QUIZZES + "/feedback_incorrect_grade_boundaries.json";
+    private static final String FEEDBACK_MULTILANG_GRADE_BOUNDARIES_JSON = BaseTest.PATH_QUIZZES + "/feedback_multilang_grade_boundaries.json";
     private static final String EN_LANG = "en";
     private static final String ES_LANG = "es";
     private static final String FI_LANG = "fi";

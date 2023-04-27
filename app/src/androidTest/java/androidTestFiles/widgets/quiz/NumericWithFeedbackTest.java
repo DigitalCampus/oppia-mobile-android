@@ -20,12 +20,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.utils.TestUtils;
+import androidTestFiles.utils.parent.BaseTest;
 
 @RunWith(AndroidJUnit4.class)
 public class NumericWithFeedbackTest extends BaseQuizTest {
 
     private static final String NUMERIC_WITH_FEEDBACK_JSON =
-            "quizzes/numeric_with_feedback.json";
+            BaseTest.PATH_QUIZZES + "/numeric_with_feedback.json";
     private static final String FIRST_QUESTION_TITLE = "How many sides does a hexagon have?";
     private static final String CORRECT_ANSWER = "6";
     private static final String INCORRECT_ANSWER = "7";

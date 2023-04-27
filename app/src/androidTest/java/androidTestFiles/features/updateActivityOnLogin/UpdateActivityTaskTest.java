@@ -26,12 +26,13 @@ import java.util.concurrent.CountDownLatch;
 import androidTestFiles.database.TestDBHelper;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.MockApiEndpoint;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTaskTest;
 
 public class UpdateActivityTaskTest extends MockedApiEndpointTaskTest {
 
-    private static final String VALID_ACTIVITY_TRACKERS = "responses/response_200_course_activity_trackers.xml";
-    private static final String VALID_ACTIVITY_QUIZ_ATTEMPTS = "responses/response_200_course_activity_quiz_attempts.xml";
+    private static final String VALID_ACTIVITY_TRACKERS = BaseTest.PATH_RESPONSES + "/response_200_course_activity_trackers.xml";
+    private static final String VALID_ACTIVITY_QUIZ_ATTEMPTS = BaseTest.PATH_RESPONSES + "/response_200_course_activity_quiz_attempts.xml";
 
     private Context context;
     private TestDBHelper testDBHelper;

@@ -12,12 +12,13 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+import testFiles.utils.BaseTest;
 import testFiles.utils.UnitTestsFileUtils;
 
 public class ShortAnswerQuestionTest {
 
-    private static final String SHORTANSWER_NOFEEDBACK_JSON = "quizzes/shortanswer_no_feedback.json";
-    private static final String SHORTANSWER_WITH_FEEDBACK_JSON = "quizzes/shortanswer_with_feedback.json";
+    private static final String SHORTANSWER_NOFEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/shortanswer_no_feedback.json";
+    private static final String SHORTANSWER_WITH_FEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/shortanswer_with_feedback.json";
     private static final String DEFAULT_LANG = "en";
     private Quiz quizNoFeedback;
     private Quiz quizWithFeedback;

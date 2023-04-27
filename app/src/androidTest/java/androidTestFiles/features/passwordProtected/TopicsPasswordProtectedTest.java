@@ -64,6 +64,7 @@ import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.UITestActionsUtils;
 import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
@@ -76,7 +77,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
     private static final long USER_ID_NONE = -1;
     private static final int COURSE_ID = 1;
 
-    private static final String VALID_LOGIN_REGISTER_RESPONSE = "responses/response_200_register.json";
+    private static final String VALID_LOGIN_REGISTER_RESPONSE = BaseTest.PATH_RESPONSES + "/response_200_register.json";
 
     private Context context;
     private TestDBHelper testDBHelper;

@@ -37,8 +37,6 @@ import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
 
 @RunWith(AndroidJUnit4.class)
 public class MissingMediaUITest extends CourseMediaBaseTest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @Test
     public void main_mediaViewHiddenWhenThereAreNoCourses(){

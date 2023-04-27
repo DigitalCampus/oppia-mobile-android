@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
@@ -32,8 +33,8 @@ public class BadgesFragmentTest extends MockedApiEndpointTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    private static final String VALID_BADGES_RESPONSE_NOT_EMPTY = "responses/response_200_badges_not_empty.json";
-    private static final String VALID_BADGES_RESPONSE_EMPTY = "responses/response_200_badges_empty.json";
+    private static final String VALID_BADGES_RESPONSE_NOT_EMPTY = BaseTest.PATH_RESPONSES + "/response_200_badges_not_empty.json";
+    private static final String VALID_BADGES_RESPONSE_EMPTY = BaseTest.PATH_RESPONSES + "/response_200_badges_empty.json";
 
     private Bundle args;
 

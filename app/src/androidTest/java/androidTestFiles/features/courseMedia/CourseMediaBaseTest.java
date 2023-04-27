@@ -2,6 +2,7 @@ package androidTestFiles.features.courseMedia;
 
 import android.content.Context;
 
+import androidx.annotation.CallSuper;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -26,11 +27,12 @@ public abstract class CourseMediaBaseTest extends DaggerInjectMockUITest {
     protected TestDBHelper testDBHelper;
 
     @Before
+    @CallSuper
     public void setUp() throws Exception {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
         // First ensure to use in-memory database
-        testDBHelper = new TestDBHelper(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        testDBHelper = new TestDBHelper(context);
         testDBHelper.setUp();
 
         CourseUtils.cleanUp();
@@ -50,7 +52,7 @@ public abstract class CourseMediaBaseTest extends DaggerInjectMockUITest {
 
     protected void copyMediaFromAssets(String filename, String destinationFilename){
         File mediaPath = new File(Storage.getMediaPath(context));
-        FileUtils.copyFileFromAssets(context, BaseTest.PATH_COURSES_MEDIA_TESTS, filename, mediaPath, destinationFilename);  //Copy course zip from assets to download path
+        FileUtils.copyFileFromAssets(context, BaseTest.PATH_MEDIA_RESOURCES, filename, mediaPath, destinationFilename);  //Copy course zip from assets to download path
     }
 
     protected void copyMediaFromAssets(String filename){

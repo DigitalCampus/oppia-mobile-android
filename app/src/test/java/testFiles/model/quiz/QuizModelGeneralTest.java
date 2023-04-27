@@ -17,27 +17,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import testFiles.utils.BaseTest;
 import testFiles.utils.UnitTestsFileUtils;
 
 public class QuizModelGeneralTest {
 
     private static final String DEFAULT_LANG = "en";
-    private static final String MULTICHOICE_QUIZ_JSON = "quizzes/multichoice_no_feedback.json";
-    private static final String QUIZ_INVALID_JSON = "quizzes/quiz_invalid.json";
-    private static final String QUIZ_RANDOM_JSON = "quizzes/quiz_random_selection.json";
-    private static final String DESCRIPTION_QUIZ_JSON = "quizzes/quiz_random_selection.json";
-    private static final String MULTILANG_QUIZ_TITLE_JSON = "quizzes/multilang_quiz_title.json";
-    private static final String DESCRIPTION_JSON = "quizzes/description_question.json";
-    private static final String WITH_MAX_ATTEMPTS_JSON = "quizzes/with_max_attempts_quiz.json";
-    private static final String NO_MULTILANG_OBJECTS = "quizzes/no_multilang_objects.json";
-    private static final String INTEGER_TITLES = "quizzes/integer_titles.json";
-    private static final String UNSUPPORTED_QUESTION_TYPE = "quizzes/unsupported_question_type.json";
-    private static final String ESSAY_QUESTION_TYPE = "quizzes/essay_question_type.json";
+    private static final String MULTICHOICE_QUIZ_JSON = BaseTest.PATH_QUIZZES + "/multichoice_no_feedback.json";
+    private static final String QUIZ_INVALID_JSON = BaseTest.PATH_QUIZZES + "/quiz_invalid.json";
+    private static final String QUIZ_RANDOM_JSON = BaseTest.PATH_QUIZZES + "/quiz_random_selection.json";
+    private static final String DESCRIPTION_QUIZ_JSON = BaseTest.PATH_QUIZZES + "/quiz_random_selection.json";
+    private static final String MULTILANG_QUIZ_TITLE_JSON = BaseTest.PATH_QUIZZES + "/multilang_quiz_title.json";
+    private static final String DESCRIPTION_JSON = BaseTest.PATH_QUIZZES + "/description_question.json";
+    private static final String WITH_MAX_ATTEMPTS_JSON = BaseTest.PATH_QUIZZES + "/with_max_attempts_quiz.json";
+    private static final String NO_MULTILANG_OBJECTS = BaseTest.PATH_QUIZZES + "/no_multilang_objects.json";
+    private static final String INTEGER_TITLES = BaseTest.PATH_QUIZZES + "/integer_titles.json";
+    private static final String UNSUPPORTED_QUESTION_TYPE = BaseTest.PATH_QUIZZES + "/unsupported_question_type.json";
+    private static final String ESSAY_QUESTION_TYPE = BaseTest.PATH_QUIZZES + "/essay_question_type.json";
 
-    public static final String PASSWORD_PROTECT_NO_PASSWORD_FIELD = "quizzes/password_protect/no_password_field.json";
-    public static final String PASSWORD_PROTECT_NULL_PASSWORD = "quizzes/password_protect/null_password.json";
-    public static final String PASSWORD_PROTECT_EMPTY_PASSWORD = "quizzes/password_protect/empty_password.json";
-    public static final String PASSWORD_PROTECT_NON_EMPTY_PASSWORD = "quizzes/password_protect/non_empty_password.json";
+    public static final String PASSWORD_PROTECT_NO_PASSWORD_FIELD = BaseTest.PATH_QUIZZES + "/password_protect/no_password_field.json";
+    public static final String PASSWORD_PROTECT_NULL_PASSWORD = BaseTest.PATH_QUIZZES + "/password_protect/null_password.json";
+    public static final String PASSWORD_PROTECT_EMPTY_PASSWORD = BaseTest.PATH_QUIZZES + "/password_protect/empty_password.json";
+    public static final String PASSWORD_PROTECT_NON_EMPTY_PASSWORD = BaseTest.PATH_QUIZZES + "/password_protect/non_empty_password.json";
 
     private Quiz quiz;
 

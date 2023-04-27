@@ -3,6 +3,7 @@ package androidTestFiles.activities;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -54,7 +55,8 @@ public class ChangePasswordActivityTest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.field_password_repeat)
                     .perform(scrollTo(), clearText(), typeText("newPasswordDifferent"));
 
-            onView(withId(R.id.btn_save_new_password)).check(matches(isDisplayed())).perform(click());
+            onView(withId(R.id.btn_save_new_password)).check(matches(isDisplayed()))
+                    .perform(closeSoftKeyboard(), click());
 
             onView(withText(R.string.error_register_password_no_match)).check(matches(isDisplayed()));
         }

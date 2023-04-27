@@ -15,6 +15,7 @@ import java.util.concurrent.CountDownLatch;
 
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.MockApiEndpoint;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTaskTest;
 
 import static junit.framework.Assert.assertEquals;
@@ -22,8 +23,8 @@ import static junit.framework.Assert.assertNull;
 
 public class CourseInfoTaskTest  extends MockedApiEndpointTaskTest {
 
-    private static final String NOT_JSON_RESPONSE = "responses/response_body_error_message.txt";
-    private static final String VALID_COURSEINFO_RESPONSE = "responses/course/response_200_course_info.json";
+    private static final String NOT_JSON_RESPONSE = BaseTest.PATH_RESPONSES + "/response_body_error_message.txt";
+    private static final String VALID_COURSEINFO_RESPONSE = BaseTest.PATH_RESPONSES + "/course/response_200_course_info.json";
 
     private CourseInstallViewAdapter courseResult;
     private String errorMsg;
