@@ -32,7 +32,7 @@ public abstract class CourseMediaBaseTest extends DaggerInjectMockUITest {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
         // First ensure to use in-memory database
-        testDBHelper = new TestDBHelper(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        testDBHelper = new TestDBHelper(context);
         testDBHelper.setUp();
 
         CourseUtils.cleanUp();
