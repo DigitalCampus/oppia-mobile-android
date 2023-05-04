@@ -523,7 +523,7 @@ public abstract class AnswerWidget extends BaseWidget {
         if (this.isBaseline) {
             exitBtn.setText(getString(R.string.widget_quiz_baseline_goto_course));
             actionBtn.setVisibility(View.GONE);
-        } else if (this.getActivityCompleted() || !contentAvailable) {
+        } else if (!contentAvailable) {
             actionBtn.setVisibility(View.GONE);
         } else {
             actionBtn.setText(getString(R.string.widget_quiz_results_restart));
