@@ -3,8 +3,6 @@ package androidTestFiles.utils.matchers;
 import android.view.View;
 import android.widget.Spinner;
 
-import com.google.android.apps.common.testing.accessibility.framework.replacements.TextUtils;
-
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;

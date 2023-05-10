@@ -6,14 +6,10 @@ import androidx.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.mobile.learning.databinding.FragmentLeaderboardBinding;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.adapter.LeaderboardAdapter;
@@ -21,12 +17,10 @@ import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.gamification.LeaderboardUtils;
-import org.digitalcampus.oppia.listener.SubmitEntityListener;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.db_model.Leaderboard;
 import org.digitalcampus.oppia.task.UpdateLeaderboardFromServerTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
-import org.digitalcampus.oppia.task.result.EntityResult;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,7 +67,7 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         if (LeaderboardUtils.shouldFetchLeaderboard(prefs)){
             UpdateLeaderboardFromServerTask task = new UpdateLeaderboardFromServerTask(super.getActivity(), apiEndpoint);
-            task.seListener(this);
+            task.setListener(this);
             task.execute();
         }
         else {
@@ -114,7 +108,14 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
 
     @Override
     public void submitComplete(BasicResult result) {
-        updateLeaderboard();
+        if (result.isSuccess()){
+            updateLeaderboard();
+        }
+        else{
+            binding.loadingSpinner.setVisibility(View.GONE);
+            binding.listLeaderboard.setVisibility(View.GONE);
+            binding.errorState.setVisibility(View.VISIBLE);
+        }
     }
 
 

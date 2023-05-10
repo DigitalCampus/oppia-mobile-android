@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.listener;
 
 import org.digitalcampus.oppia.task.result.BasicResult;
-import org.digitalcampus.oppia.task.result.EntityResult;
 
 public interface SubmitListener extends APIKeyRequestListener {
 	void submitComplete(BasicResult result);

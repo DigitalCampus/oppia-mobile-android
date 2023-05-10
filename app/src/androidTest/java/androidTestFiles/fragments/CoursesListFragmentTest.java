@@ -1,11 +1,10 @@
 package androidTestFiles.fragments;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 
 import android.content.Context;
@@ -23,9 +22,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
 import androidTestFiles.database.sampledata.CourseData;
 import androidTestFiles.database.sampledata.UserData;
+import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
 
 @RunWith(AndroidJUnit4.class)
 public class CoursesListFragmentTest {
@@ -64,8 +63,8 @@ public class CoursesListFragmentTest {
         launchInContainer(CoursesListFragment.class, args, R.style.Oppia_ToolbarTheme);
 
         // 2. Then TEST_USER_3 should only see TEST_COURSE_3 which is not restricted to cohorts
-        onView(withId(R.id.recycler_courses)).check(new RecyclerViewItemCountAssertion(1));
-        onView(withRecyclerView(R.id.recycler_courses)
+        waitForView(withId(R.id.recycler_courses)).check(new RecyclerViewItemCountAssertion(1));
+        waitForView(withRecyclerView(R.id.recycler_courses)
                 .atPositionOnView(0, R.id.course_title))
                 .check(matches(withText(CourseData.TEST_COURSE_3)));
     }
@@ -80,13 +79,13 @@ public class CoursesListFragmentTest {
         launchInContainer(CoursesListFragment.class, args, R.style.Oppia_ToolbarTheme);
 
         // 2. Then TEST_USER_2 should see TEST_COURSE_2 and TEST_COURSE_3
-        onView(withId(R.id.recycler_courses)).check(new RecyclerViewItemCountAssertion(2));
+        waitForView(withId(R.id.recycler_courses)).check(new RecyclerViewItemCountAssertion(2));
 
-        onView(withRecyclerView(R.id.recycler_courses)
+        waitForView(withRecyclerView(R.id.recycler_courses)
                 .atPositionOnView(0, R.id.course_title))
                 .check(matches(withText(CourseData.TEST_COURSE_2)));
 
-        onView(withRecyclerView(R.id.recycler_courses)
+        waitForView(withRecyclerView(R.id.recycler_courses)
                 .atPositionOnView(1, R.id.course_title))
                 .check(matches(withText(CourseData.TEST_COURSE_3)));
     }
@@ -101,17 +100,17 @@ public class CoursesListFragmentTest {
         launchInContainer(CoursesListFragment.class, args, R.style.Oppia_ToolbarTheme);
 
         // 2. Then TEST_USER_1 should see TEST_COURSE_1, TEST_COURSE_2, and TEST_COURSE_3
-        onView(withId(R.id.recycler_courses)).check(new RecyclerViewItemCountAssertion(3));
+        waitForView(withId(R.id.recycler_courses)).check(new RecyclerViewItemCountAssertion(3));
 
-        onView(withRecyclerView(R.id.recycler_courses)
+        waitForView(withRecyclerView(R.id.recycler_courses)
                 .atPositionOnView(0, R.id.course_title))
                 .check(matches(withText(CourseData.TEST_COURSE_1)));
 
-        onView(withRecyclerView(R.id.recycler_courses)
+        waitForView(withRecyclerView(R.id.recycler_courses)
                 .atPositionOnView(1, R.id.course_title))
                 .check(matches(withText(CourseData.TEST_COURSE_2)));
 
-        onView(withRecyclerView(R.id.recycler_courses)
+        waitForView(withRecyclerView(R.id.recycler_courses)
                 .atPositionOnView(2, R.id.course_title))
                 .check(matches(withText(CourseData.TEST_COURSE_3)));
     }
@@ -126,17 +125,17 @@ public class CoursesListFragmentTest {
         launchInContainer(CoursesListFragment.class, args, R.style.Oppia_ToolbarTheme);
 
         // 2. Then TEST_USER_1 should see TEST_COURSE_1, TEST_COURSE_2, and TEST_COURSE_3
-        onView(withId(R.id.recycler_courses)).check(new RecyclerViewItemCountAssertion(3));
+        waitForView(withId(R.id.recycler_courses)).check(new RecyclerViewItemCountAssertion(3));
 
-        onView(withRecyclerView(R.id.recycler_courses)
+        waitForView(withRecyclerView(R.id.recycler_courses)
                 .atPositionOnView(0, R.id.course_title))
                 .check(matches(withText(CourseData.TEST_COURSE_1)));
 
-        onView(withRecyclerView(R.id.recycler_courses)
+        waitForView(withRecyclerView(R.id.recycler_courses)
                 .atPositionOnView(1, R.id.course_title))
                 .check(matches(withText(CourseData.TEST_COURSE_2)));
 
-        onView(withRecyclerView(R.id.recycler_courses)
+        waitForView(withRecyclerView(R.id.recycler_courses)
                 .atPositionOnView(2, R.id.course_title))
                 .check(matches(withText(CourseData.TEST_COURSE_3)));
 
@@ -146,9 +145,9 @@ public class CoursesListFragmentTest {
         launchInContainer(CoursesListFragment.class, args, R.style.Oppia_ToolbarTheme);
 
         // 4. We should only see TEST_COURSE_3
-        onView(withId(R.id.recycler_courses)).check(new RecyclerViewItemCountAssertion(1));
+        waitForView(withId(R.id.recycler_courses)).check(new RecyclerViewItemCountAssertion(1));
 
-        onView(withRecyclerView(R.id.recycler_courses)
+        waitForView(withRecyclerView(R.id.recycler_courses)
                 .atPositionOnView(0, R.id.course_title))
                 .check(matches(withText(CourseData.TEST_COURSE_3)));
     }

@@ -1,6 +1,5 @@
 package androidTestFiles.features.passwordProtected;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -22,6 +21,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 import static androidTestFiles.utils.CourseUtils.runInstallCourseTask;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withDrawable;
 import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidTestFiles.utils.parent.BaseTest.COURSE_PASSWORD_PROTECT;
@@ -33,7 +33,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -65,6 +64,7 @@ import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.UITestActionsUtils;
 import androidTestFiles.utils.assertions.RecyclerViewItemCountAssertion;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
@@ -77,7 +77,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
     private static final long USER_ID_NONE = -1;
     private static final int COURSE_ID = 1;
 
-    private static final String VALID_LOGIN_REGISTER_RESPONSE = "responses/response_200_register.json";
+    private static final String VALID_LOGIN_REGISTER_RESPONSE = BaseTest.PATH_RESPONSES + "/response_200_register.json";
 
     private Context context;
     private TestDBHelper testDBHelper;
@@ -157,7 +157,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIntent())) {
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 2);
 
-            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+            waitForView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
         }
     }
 
@@ -170,7 +170,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIntent())) {
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 4);
 
-            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+            waitForView(withText(R.string.password_needed)).check(matches(isDisplayed()));
         }
     }
 
@@ -184,7 +184,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIntent())) {
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 4);
 
-            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+            waitForView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
         }
     }
 
@@ -197,15 +197,15 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_course_sections)
+            waitForView(withRecyclerView(R.id.recycler_course_sections)
                     .atPositionOnView(1, R.id.lock_indicator))
                     .check(matches(not(isDisplayed())));
 
-            onView(withRecyclerView(R.id.recycler_course_sections)
+            waitForView(withRecyclerView(R.id.recycler_course_sections)
                     .atPositionOnView(3, R.id.lock_indicator))
                     .check(matches(withDrawable(R.drawable.ic_unlock)));
 //
-            onView(withRecyclerView(R.id.recycler_course_sections)
+            waitForView(withRecyclerView(R.id.recycler_course_sections)
                     .atPositionOnView(6, R.id.lock_indicator))
                     .check(matches(withDrawable(R.drawable.ic_lock)));
         }
@@ -214,20 +214,20 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
     private void performLogout() {
 
         openDrawer();
-        onView(withId(R.id.btn_expand_profile_options)).perform(click());
-        onView(withId(R.id.btn_logout)).perform(click());
-        onView(withText(R.string.yes)).perform(click());
+        waitForView(withId(R.id.btn_expand_profile_options)).perform(click());
+        waitForView(withId(R.id.btn_logout)).perform(click());
+        waitForView(withText(R.string.yes)).perform(click());
 
     }
 
     private void performValidLogin(String username) {
 
         startServer(200, VALID_LOGIN_REGISTER_RESPONSE, 0);
-        onView(withId(R.id.welcome_login)).perform(scrollTo(), click());
-        onView(withId(R.id.login_username_field)).perform(closeSoftKeyboard(), scrollTo(), typeText(username));
-        onView(withId(R.id.login_password_field))
+        waitForView(withId(R.id.welcome_login)).perform(scrollTo(), click());
+        waitForView(withId(R.id.login_username_field)).perform(closeSoftKeyboard(), scrollTo(), typeText(username));
+        waitForView(withId(R.id.login_password_field))
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_password"));
-        onView(withId(R.id.login_btn)).perform(closeSoftKeyboard(), scrollTo(), click());
+        waitForView(withId(R.id.login_btn)).perform(closeSoftKeyboard(), scrollTo(), click());
     }
 
 
@@ -241,10 +241,10 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
 
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 4);
-            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
-            onView(withId(R.id.section_password_field)).perform(typeText(PASSWORD_INITIAL), closeSoftKeyboard());
-            onView(withId(R.id.submit_password)).perform(click());
-            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+            waitForView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.section_password_field)).perform(typeText(PASSWORD_INITIAL), closeSoftKeyboard());
+            waitForView(withId(R.id.submit_password)).perform(click());
+            waitForView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
 
             pressBack();
             pressBack();
@@ -252,7 +252,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
 
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 4);
-            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+            waitForView(withText(R.string.password_needed)).check(matches(isDisplayed()));
 
         }
     }
@@ -272,7 +272,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
 
         try (ActivityScenario<CourseIndexActivity> scenario = ActivityScenario.launch(getTestCourseIntent())) {
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 7);
-            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+            waitForView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
         }
     }
 
@@ -286,7 +286,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
 
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 9);
-            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+            waitForView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
 
             pressBack();
             pressBack();
@@ -294,7 +294,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
 
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 9);
-            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+            waitForView(withText(R.string.password_needed)).check(matches(isDisplayed()));
 
         }
     }
@@ -309,7 +309,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
 
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 11);
-            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+            waitForView(withText(R.string.password_needed)).check(matches(isDisplayed()));
 
             pressBack();
             pressBack();
@@ -317,7 +317,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
 
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 11);
-            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+            waitForView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
 
         }
     }
@@ -337,10 +337,10 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
             performValidLogin("username-1");
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 4);
-            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
-            onView(withId(R.id.section_password_field)).perform(typeText(PASSWORD_INITIAL), closeSoftKeyboard());
-            onView(withId(R.id.submit_password)).perform(click());
-            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+            waitForView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.section_password_field)).perform(typeText(PASSWORD_INITIAL), closeSoftKeyboard());
+            waitForView(withId(R.id.submit_password)).perform(click());
+            waitForView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
 
             pressBack();
             pressBack();
@@ -349,7 +349,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
             performValidLogin("username-1");
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 4);
-            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+            waitForView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
 
         }
     }
@@ -368,10 +368,10 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
             performValidLogin("username-1");
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 4);
-            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
-            onView(withId(R.id.section_password_field)).perform(typeText(PASSWORD_INITIAL), closeSoftKeyboard());
-            onView(withId(R.id.submit_password)).perform(click());
-            onView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
+            waitForView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.section_password_field)).perform(typeText(PASSWORD_INITIAL), closeSoftKeyboard());
+            waitForView(withId(R.id.submit_password)).perform(click());
+            waitForView(withText(R.string.password_needed)).check(matches(not(isDisplayed())));
 
             pressBack();
             pressBack();
@@ -380,7 +380,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
             performValidLogin("username-2");
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_courses, 0);
             UITestActionsUtils.clickRecyclerViewPosition(R.id.recycler_course_sections, 4);
-            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+            waitForView(withText(R.string.password_needed)).check(matches(isDisplayed()));
 
         }
     }
@@ -390,10 +390,10 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
         installCourse(COURSE_PASSWORD_PROTECT);
 
         try (ActivityScenario<SearchActivity> scenario = ActivityScenario.launch(SearchActivity.class)) {
-            onView(withId(R.id.search_string)).perform(typeText("omicron"), closeSoftKeyboard());
-            onView(withId(R.id.searchbutton)).perform(click());
+            waitForView(withId(R.id.search_string)).perform(typeText("omicron"), closeSoftKeyboard());
+            waitForView(withId(R.id.searchbutton)).perform(click());
 
-            onView(withId(R.id.recycler_results_search)).check(matches(hasChildCount(2)));
+            waitForView(withId(R.id.recycler_results_search)).check(matches(hasChildCount(2)));
         }
     }
 
@@ -404,10 +404,10 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
         setCourseSectionUnlockPassword(3, PASSWORD_INITIAL);
 
         try (ActivityScenario<SearchActivity> scenario = ActivityScenario.launch(SearchActivity.class)) {
-            onView(withId(R.id.search_string)).perform(typeText("omicron"), closeSoftKeyboard());
-            onView(withId(R.id.searchbutton)).perform(click());
+            waitForView(withId(R.id.search_string)).perform(typeText("omicron"), closeSoftKeyboard());
+            waitForView(withId(R.id.searchbutton)).perform(click());
 
-            onView(withId(R.id.recycler_results_search)).check(new RecyclerViewItemCountAssertion(4));
+            waitForView(withId(R.id.recycler_results_search)).check(new RecyclerViewItemCountAssertion(4));
         }
     }
 
@@ -426,8 +426,8 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
         installCourse(COURSE_PASSWORD_PROTECT);
 
         try (ActivityScenario<QuizAttemptActivity> scenario = ActivityScenario.launch(intent)) {
-            onView(withId(R.id.retake_quiz_btn)).perform(click());
-            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.retake_quiz_btn)).perform(click());
+            waitForView(withText(R.string.password_needed)).check(matches(isDisplayed()));
         }
     }
 
@@ -441,7 +441,7 @@ public class TopicsPasswordProtectedTest extends MockedApiEndpointTest {
         Intent startIntent = CourseUtils.getIntentForDigest(digest);
         try (ActivityScenario<ViewDigestActivity> scenario = ActivityScenario.launch(startIntent)) {
 
-            onView(withText(R.string.password_needed)).check(matches(isDisplayed()));
+            waitForView(withText(R.string.password_needed)).check(matches(isDisplayed()));
         }
 
     }

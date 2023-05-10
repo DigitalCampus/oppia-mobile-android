@@ -2,7 +2,6 @@ package org.digitalcampus.oppia.activity;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityChangePasswordBinding;
@@ -10,7 +9,6 @@ import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ChangePasswordTask;
-import org.digitalcampus.oppia.task.UpdateProfileTask;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import javax.inject.Inject;

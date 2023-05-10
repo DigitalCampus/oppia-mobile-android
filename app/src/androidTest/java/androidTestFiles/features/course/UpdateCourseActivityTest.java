@@ -1,7 +1,5 @@
 package androidTestFiles.features.course;
 
-import static org.junit.Assert.assertTrue;
-
 /**
 @RunWith(AndroidJUnit4.class)
 public class UpdateCourseActivityTest {

@@ -59,16 +59,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <com.google.android.material.floatingactionbutton.FloatingActionButton
-                            android:id="@+id/playAudioBtn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/activity_horizontal_margin"
-                            android:clickable="true"
-                            android:scaleType="fitCenter"
-                            app:fabSize="normal"
-                            app:srcCompat="@drawable/ic_media_play" />
-
                         <TextView
                             android:id="@+id/question_text"
                             style="@style/NormalTextDark"

@@ -1,11 +1,9 @@
 package org.digitalcampus.oppia.task;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -22,12 +20,20 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class DeleteAccountTask extends APIUserRequestTask{
+    private ResponseListener responseListener;
+
     public DeleteAccountTask(Context ctx) {
         super(ctx);
     }
 
     public DeleteAccountTask(Context ctx, ApiEndpoint api) {
         super(ctx, api);
+    }
+
+    public interface ResponseListener {
+        void onSuccess();
+
+        void onError(String error);
     }
 
     @Override
@@ -81,4 +87,24 @@ public class DeleteAccountTask extends APIUserRequestTask{
         return result;
     }
 
+    @Override
+    protected void onPostExecute(BasicResult result) {
+        synchronized (this) {
+            if (responseListener != null) {
+
+                if (result.isSuccess()) {
+                    responseListener.onSuccess();
+                } else {
+                    responseListener.onError(result.getResultMessage());
+                }
+
+            }
+        }
+    }
+
+    public void setResponseListener(ResponseListener srl) {
+        synchronized (this) {
+            responseListener = srl;
+        }
+    }
 }

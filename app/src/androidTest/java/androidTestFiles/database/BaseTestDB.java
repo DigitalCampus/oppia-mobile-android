@@ -1,26 +1,18 @@
 package androidTestFiles.database;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.di.AppComponent;
-import org.digitalcampus.oppia.di.AppModule;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import androidx.test.rule.GrantPermissionRule;
-
 import androidTestFiles.utils.parent.DaggerInjectMockUITest;
-import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;

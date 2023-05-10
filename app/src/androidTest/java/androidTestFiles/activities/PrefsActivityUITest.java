@@ -1,14 +1,12 @@
 package androidTestFiles.activities;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBackUnconditionally;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -24,16 +22,15 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.view.Gravity;
 import android.widget.EditText;
 
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.action.ViewActions;
-import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -107,11 +104,11 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefDisplay_title)),
                             click()));
 
-            onView(withText(R.string.prefContentLanguage)).check(matches(isDisplayed()));
+            waitForView(withText(R.string.prefContentLanguage)).check(matches(isDisplayed()));
         }
     }
 
@@ -126,7 +123,7 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-            onView(withText(R.string.prefContentLanguage)).check(doesNotExist());
+            waitForView(withText(R.string.prefContentLanguage)).check(doesNotExist());
         }
     }
 
@@ -149,19 +146,19 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             openDrawer();
 
-            onView(withText(R.string.menu_settings)).perform(click());
+            waitForView(withText(R.string.menu_settings)).perform(click());
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(
                             hasDescendant(withText(R.string.prefAdvanced_title)), click()));
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(
                             hasDescendant(withText(R.string.prefServer)), click()));
 
             closeSoftKeyboard();
 
-            onView(withText(android.R.string.ok))
+            waitForView(withText(android.R.string.ok))
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()))
                     .perform(click());
@@ -196,29 +193,29 @@ public class PrefsActivityUITest extends DaggerInjectMockUITest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             openDrawer();
 
-            onView(withText(R.string.menu_settings)).perform(click());
+            waitForView(withText(R.string.menu_settings)).perform(click());
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(
                             hasDescendant(withText(R.string.prefAdvanced_title)), click()));
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(
                             hasDescendant(withText(R.string.prefServer)), click()));
 
-            onView(allOf(instanceOf(EditText.class)))
+            waitForView(allOf(instanceOf(EditText.class)))
                     .inRoot(isDialog())
                     .perform(clearText(), typeText(String.format("https://some-url-%s.com", getRandomString())),
                             ViewActions.closeSoftKeyboard());
 
             closeSoftKeyboard();
 
-            onView(withText(android.R.string.ok))
+            waitForView(withText(android.R.string.ok))
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()))
                     .perform(click());
 
-            onView(withText(R.string.accept))
+            waitForView(withText(R.string.accept))
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()))
                     .perform(click());

@@ -21,18 +21,17 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -42,7 +41,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.mobile.learning.databinding.FragmentPointsBinding;
 import org.digitalcampus.oppia.adapter.PointsAdapter;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -58,6 +56,8 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
@@ -80,6 +80,9 @@ public class PointsFragment extends AppFragment implements TabLayout.OnTabSelect
     private Course course;
     private PointsAdapter adapterPoints;
     private FragmentPointsBinding binding;
+
+    private final Executor executor = Executors.newSingleThreadExecutor();
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     public static PointsFragment newInstance(Course course) {
         PointsFragment pointsFragment = new PointsFragment();
@@ -323,9 +326,20 @@ public class PointsFragment extends AppFragment implements TabLayout.OnTabSelect
     }
 
     private void loadPoints() {
-        DbHelper db = DbHelper.getInstance(super.getActivity());
-        long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
-        pointsFull = db.getUserPoints(userId, course, false, false, true);
+
+        binding.progressPoints.setVisibility(View.VISIBLE);
+        executor.execute(() -> {
+
+            DbHelper db = DbHelper.getInstance(super.getActivity());
+            long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
+            pointsFull = db.getUserPoints(userId, course, false, false, true);
+
+            handler.post(() ->  {
+                binding.progressPoints.setVisibility(View.GONE);
+                showPointsFiltered(currentDatesRangePosition);
+            });
+        });
+
     }
 
     @Override

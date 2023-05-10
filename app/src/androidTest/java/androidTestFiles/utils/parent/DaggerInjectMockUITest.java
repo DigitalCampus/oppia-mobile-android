@@ -1,18 +1,16 @@
 package androidTestFiles.utils.parent;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertTrue;
 import static androidTestFiles.utils.CourseUtils.runInstallCourseTask;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 import android.Manifest;
 import android.content.Context;
@@ -62,24 +60,24 @@ public class DaggerInjectMockUITest {
                     });
 
     public void openDrawer() {
-        onView(withId(R.id.drawer))
+        waitForView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
 
         await().atMost(5, TimeUnit.SECONDS)
-                .untilAsserted(() -> onView(ViewMatchers.withId(R.id.drawer))
+                .untilAsserted(() -> waitForView(ViewMatchers.withId(R.id.drawer))
                         .check(matches(isCompletelyDisplayed())));
 
-        onView(withId(R.id.drawer)).check(matches(isOpen()));
+        waitForView(withId(R.id.drawer)).check(matches(isOpen()));
     }
 
     public void clickPrefWithText(int prefTitleId) {
-        onView(withId(androidx.preference.R.id.recycler_view))
+        waitForView(withId(androidx.preference.R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(prefTitleId)),
                         click()));
     }
 
     public void performClickDrawerItem(int itemId) {
-        onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(itemId));
+        waitForView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(itemId));
     }
 
 

@@ -1,8 +1,19 @@
 package androidTestFiles.widgets;
 
+import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.web.assertion.WebViewAssertions.webMatches;
+import static androidx.test.espresso.web.sugar.Web.onWebView;
+import static androidx.test.espresso.web.webdriver.DriverAtoms.findElement;
+import static androidx.test.espresso.web.webdriver.DriverAtoms.getText;
+import static org.hamcrest.Matchers.containsStringIgnoringCase;
+import static org.junit.Assert.assertEquals;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
+
 import android.Manifest;
 import android.os.Bundle;
 
+import androidx.test.espresso.web.webdriver.Locator;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -20,15 +31,8 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
-import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.junit.Assert.assertEquals;
-
 @RunWith(AndroidJUnit4.class)
 public class PageWidgetTest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     private Activity act;
     private Bundle args;
@@ -58,12 +62,13 @@ public class PageWidgetTest {
     public void openPageTest() {
         launchInContainer(PageWidget.class, args, R.style.Oppia_ToolbarTheme);
         // this doesn't really test anything, but gives some coverage to the PageWidget class
-        assertEquals(androidx.test.espresso.ViewInteraction.class.getCanonicalName(), onView(withId(act.getActId())).getClass().getCanonicalName());
+        assertEquals(androidx.test.espresso.ViewInteraction.class.getCanonicalName(), waitForView(withId(act.getActId())).getClass().getCanonicalName());
     }
 
     @Test
-    public void getContentToReadTest() {
+    public void getContentToReadTest() throws InterruptedException {
         // TODO complete this
         launchInContainer(PageWidget.class, args, R.style.Oppia_ToolbarTheme);
+
     }
 }

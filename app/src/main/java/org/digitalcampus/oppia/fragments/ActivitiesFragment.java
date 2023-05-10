@@ -18,13 +18,16 @@
 package org.digitalcampus.oppia.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.core.content.ContextCompat;
+
 import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -35,11 +38,10 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
 import org.digitalcampus.mobile.learning.databinding.FragmentActivitiesBinding;
 import org.digitalcampus.oppia.adapter.ActivityTypesAdapter;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.model.ActivityCount;
 import org.digitalcampus.oppia.model.ActivityType;
@@ -55,12 +57,10 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
-
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSelectedListener, ActivityTypesAdapter.OnItemClickListener {
 
@@ -77,17 +77,20 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
     private List<Points> pointsFiltered = new ArrayList<>();
     private List<String> labels = new ArrayList<>();
     private Map<String, ActivityCount> activitiesGrouped = new LinkedHashMap<>(); // LinkedHashMap: ordered by insertion. TreeMap: sorts naturally by key
-    private int currentDatesRangePosition;
+    private int currentDatesRangePosition = POSITION_TAB_LAST_WEEK;
     private Course course;
     private ArrayList<ActivityType> activityTypes;
     private FragmentActivitiesBinding binding;
+
+    private final Executor executor = Executors.newSingleThreadExecutor();
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     public static ActivitiesFragment newInstance(Course course) {
         ActivitiesFragment fragment = new ActivitiesFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_COURSE, course);
         fragment.setArguments(args);
-        return fragment ;
+        return fragment;
     }
 
     @Override
@@ -108,7 +111,6 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
         course = (Course) getArguments().getSerializable(ARG_COURSE);
 
         loadPoints();
-        showPointsFiltered(POSITION_TAB_LAST_WEEK);
 
     }
 
@@ -157,6 +159,11 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
     }
 
     private void showPointsFiltered(int position) {
+
+        if (pointsFull == null) {
+            // still loading in bg
+            return;
+        }
 
         currentDatesRangePosition = position;
 
@@ -239,8 +246,8 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
 
                 break;
 
-                default:
-                    throw new IllegalArgumentException("currentDatesRangePosition not valid: " + currentDatesRangePosition);
+            default:
+                throw new IllegalArgumentException("currentDatesRangePosition not valid: " + currentDatesRangePosition);
         }
 
         for (Points point : pointsFiltered) {
@@ -305,7 +312,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
 
     }
 
-    private void loadLabels(){
+    private void loadLabels() {
         labels.clear();
         for (Map.Entry<String, ActivityCount> entryMap : activitiesGrouped.entrySet()) {
             labels.add(entryMap.getKey());
@@ -320,10 +327,10 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
         }
     }
 
-    private void configureAxis(int maxYValue){
+    private void configureAxis(int maxYValue) {
         XAxis xAxis = binding.chart.getXAxis();
         xAxis.setLabelCount(Math.min(labels.size(), 12));
-        xAxis.setValueFormatter(new ValueFormatter(){
+        xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
 
@@ -339,7 +346,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
 
         YAxis yAxis = binding.chart.getAxisLeft();
         yAxis.setLabelCount(Math.min(maxYValue, 10));
-        yAxis.setValueFormatter(new ValueFormatter(){
+        yAxis.setValueFormatter(new ValueFormatter() {
 
             @Override
             public String getFormattedValue(float value) {
@@ -353,9 +360,19 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
     }
 
     private void loadPoints() {
-        DbHelper db = DbHelper.getInstance(super.getActivity());
-        long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
-        pointsFull = db.getUserPoints(userId, course, true, true, false);
+
+        binding.progressPoints.setVisibility(View.VISIBLE);
+        executor.execute(() -> {
+
+            DbHelper db = DbHelper.getInstance(super.getActivity());
+            long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
+            pointsFull = db.getUserPoints(userId, course, true, true, false);
+
+            handler.post(() ->  {
+                binding.progressPoints.setVisibility(View.GONE);
+                showPointsFiltered(currentDatesRangePosition);
+            });
+        });
     }
 
     // Useful for testing

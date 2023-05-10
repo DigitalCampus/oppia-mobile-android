@@ -1,7 +1,38 @@
 package androidTestFiles.features.authentication.register;
 
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
+import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayout;
+import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
+import static androidTestFiles.utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
+import static androidTestFiles.utils.ViewsUtils.withHintInInputLayout;
+import static androidTestFiles.utils.parent.BaseTest.PATH_CUSTOM_FIELDS_TESTS;
+
 import android.Manifest;
 import android.widget.Spinner;
+
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.UiDevice;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -22,38 +53,6 @@ import java.util.List;
 import androidTestFiles.utils.FileUtils;
 import androidTestFiles.utils.matchers.SpinnerMatcher;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
-
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.GrantPermissionRule;
-import androidx.test.uiautomator.UiDevice;
-
-import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayout;
-import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
-import static androidTestFiles.utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
-import static androidTestFiles.utils.ViewsUtils.withHintInInputLayout;
-import static androidTestFiles.utils.parent.BaseTest.PATH_CUSTOM_FIELDS_TESTS;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
-import static androidx.test.espresso.Espresso.pressBack;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.startsWith;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class SteppedRegisterUITest extends MockedApiEndpointTest {
@@ -105,10 +104,10 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
         setRegisterSteps(REGISTER_STEPS_NORMAL);
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
-            onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+            waitForView(withId(R.id.welcome_register)).perform(scrollTo(), click());
 
-            onView(withId(R.id.frame_stepper_indicator)).check(matches(isDisplayed()));
-            onView(withText("First step")).check(matches(isDisplayed()));
+            waitForView(withId(R.id.frame_stepper_indicator)).check(matches(isDisplayed()));
+            waitForView(withText("First step")).check(matches(isDisplayed()));
         }
 
     }
@@ -123,15 +122,15 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
         setRegisterSteps(REGISTER_STEPS_NORMAL);
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
-            onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+            waitForView(withId(R.id.welcome_register)).perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                     .perform(closeSoftKeyboard(), scrollTo(), replaceText(""));
 
-            onView(withId(R.id.next_btn)).perform(click());
+            waitForView(withId(R.id.next_btn)).perform(click());
 
             // Check we're still in the first step
-            onView(withText("First step")).check(matches(isDisplayed()));
+            waitForView(withText("First step")).check(matches(isDisplayed()));
 
             onErrorViewWithinTextInputLayoutWithId(R.id.register_form_username_field)
                     .check(matches(withText(R.string.field_required)));
@@ -149,7 +148,7 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+            waitForView(withId(R.id.welcome_register)).perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
@@ -158,9 +157,9 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-            onView(withId(R.id.next_btn)).perform(closeSoftKeyboard(), click());
+            waitForView(withId(R.id.next_btn)).perform(closeSoftKeyboard(), click());
 
-            onView(withText("Second step")).check(matches(isDisplayed()));
+            waitForView(withText("Second step")).check(matches(isDisplayed()));
 
         }
     }
@@ -176,7 +175,7 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
         setRegisterSteps(REGISTER_STEPS_NORMAL);
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
-            onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+            waitForView(withId(R.id.welcome_register)).perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
@@ -185,9 +184,9 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-            onView(withId(R.id.next_btn)).perform(closeSoftKeyboard(), click());
-            onView(withText("Second step")).check(matches(isDisplayed()));
-            onView(withId(R.id.prev_btn)).perform(click());
+            waitForView(withId(R.id.next_btn)).perform(closeSoftKeyboard(), click());
+            waitForView(withText("Second step")).check(matches(isDisplayed()));
+            waitForView(withId(R.id.prev_btn)).perform(click());
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                     .check(matches(withText("Username")));
         }
@@ -203,15 +202,15 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
         setRegisterSteps(BASIC_DEPENDANT_STEPS);
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
-            onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+            waitForView(withId(R.id.welcome_register)).perform(scrollTo(), click());
 
-            onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Position")))))
+            waitForView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Position")))))
                     .perform(scrollTo())
                     .check(matches(isDisplayed()))
                     .perform(click());
 
-            onView(withText("Other")).perform(click());
-            onView(allOf(instanceOf(ValidableTextInputLayout.class),
+            waitForView(withText("Other")).perform(click());
+            waitForView(allOf(instanceOf(ValidableTextInputLayout.class),
                     withHintInInputLayout(startsWith("Please specify"))))
                     .check(matches(isDisplayed()));
         }
@@ -227,25 +226,25 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
         setRegisterSteps(ADVANCED_SCENARIOS);
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
-            onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+            waitForView(withId(R.id.welcome_register)).perform(scrollTo(), click());
 
-            onView(allOf(instanceOf(Spinner.class), SpinnerMatcher.withSpinnerSelectedItemText("Select county")))
+            waitForView(allOf(instanceOf(Spinner.class), SpinnerMatcher.withSpinnerSelectedItemText("Select county")))
                     .perform(scrollTo()).perform(click());
-            onView(withText("Area1")).perform(click());
+            waitForView(withText("Area1")).perform(click());
 
-            onView(allOf(instanceOf(Spinner.class), SpinnerMatcher.withSpinnerSelectedItemText("Select district")))
+            waitForView(allOf(instanceOf(Spinner.class), SpinnerMatcher.withSpinnerSelectedItemText("Select district")))
                     .perform(scrollTo(), click());
-            onView(withText("region1")).perform(click());
+            waitForView(withText("region1")).perform(click());
 
-            onView(allOf(instanceOf(Spinner.class), SpinnerMatcher.withSpinnerSelectedItemText("Area1")))
+            waitForView(allOf(instanceOf(Spinner.class), SpinnerMatcher.withSpinnerSelectedItemText("Area1")))
                     .perform(scrollTo()).perform(click());
-            onView(withText("Area2")).perform(click());
+            waitForView(withText("Area2")).perform(click());
 
-            onView(allOf(instanceOf(Spinner.class), SpinnerMatcher.withSpinnerSelectedItemText("Select district")))
+            waitForView(allOf(instanceOf(Spinner.class), SpinnerMatcher.withSpinnerSelectedItemText("Select district")))
                     .perform(scrollTo())
                     .check(matches(isDisplayed()))
                     .perform(click());
-            onView(withText("region3"))
+            waitForView(withText("region3"))
                     .check(matches(isDisplayed()))
                     .perform(click());
         }
@@ -262,25 +261,25 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
         setRegisterSteps(ADVANCED_SCENARIOS);
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
-            onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+            waitForView(withId(R.id.welcome_register)).perform(scrollTo(), click());
 
-            onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Select county")))))
+            waitForView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Select county")))))
                     .perform(scrollTo()).perform(click());
-            onView(withText("Area1")).perform(click());
+            waitForView(withText("Area1")).perform(click());
 
-            onView(withId(R.id.next_btn)).perform(click());
+            waitForView(withId(R.id.next_btn)).perform(click());
 
-            onView(withText("Area1 dependant"))
+            waitForView(withText("Area1 dependant"))
                     .check(matches(isDisplayed()));
 
             //Now we go back and select a different value to check that it is not displayed
-            onView(withId(R.id.prev_btn)).perform(click());
+            waitForView(withId(R.id.prev_btn)).perform(click());
 
-            onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Select county")))))
+            waitForView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Select county")))))
                     .perform(scrollTo()).perform(click());
-            onView(withText("Area2")).perform(click());
+            waitForView(withText("Area2")).perform(click());
 
-            onView(withText("Area1 dependant"))
+            waitForView(withText("Area1 dependant"))
                     .check(matches(not(isDisplayed())));
         }
     }
@@ -295,21 +294,21 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
         setRegisterSteps(BASIC_DEPENDANT_STEPS);
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
-            onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+            waitForView(withId(R.id.welcome_register)).perform(scrollTo(), click());
 
-            onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Position")))))
+            waitForView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Position")))))
                     .perform(scrollTo())
                     .check(matches(isDisplayed()))
                     .perform(click());
 
-            onView(withText("Other")).perform(click());
+            waitForView(withText("Other")).perform(click());
             onEditTextWithinTextInputLayout(allOf(instanceOf(ValidableTextInputLayout.class),
                     withHintInInputLayout(startsWith("Please specify"))))
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("None"));
 
-            onView(withId(R.id.next_btn)).perform(closeSoftKeyboard(), click());
+            waitForView(withId(R.id.next_btn)).perform(closeSoftKeyboard(), click());
 
-            onView(withText("Other role info")).check(matches(isDisplayed()));
+            waitForView(withText("Other role info")).check(matches(isDisplayed()));
         }
     }
 
@@ -323,18 +322,18 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
         setRegisterSteps(BASIC_DEPENDANT_STEPS);
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
-            onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+            waitForView(withId(R.id.welcome_register)).perform(scrollTo(), click());
 
-            onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Position")))))
+            waitForView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Position")))))
                     .perform(scrollTo())
                     .check(matches(isDisplayed()))
                     .perform(click());
 
-            onView(withText("Role2")).perform(click());
+            waitForView(withText("Role2")).perform(click());
 
-            onView(withId(R.id.next_btn)).perform(click());
+            waitForView(withId(R.id.next_btn)).perform(click());
 
-            onView(withText("Personal info")).check(matches(isDisplayed()));
+            waitForView(withText("Personal info")).check(matches(isDisplayed()));
         }
     }
 
@@ -348,7 +347,7 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
         setRegisterSteps(REGISTER_STEPS_NORMAL);
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
-            onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+            waitForView(withId(R.id.welcome_register)).perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
@@ -357,22 +356,22 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-            onView(withId(R.id.next_btn)).perform(closeSoftKeyboard(), click());
+            waitForView(withId(R.id.next_btn)).perform(closeSoftKeyboard(), click());
 
-            onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Position")))))
+            waitForView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Position")))))
                     .perform(scrollTo())
                     .perform(click());
-            onView(withText("Role2")).perform(click());
+            waitForView(withText("Role2")).perform(click());
 
-            onView(withId(R.id.next_btn)).perform(click());
+            waitForView(withId(R.id.next_btn)).perform(click());
 
-            onView(withId(R.id.next_btn)).check(matches(not(isDisplayed())));
-            onView(withId(R.id.register_btn)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.next_btn)).check(matches(not(isDisplayed())));
+            waitForView(withId(R.id.register_btn)).check(matches(isDisplayed()));
 
-            onView(withId(R.id.prev_btn)).perform(click());
+            waitForView(withId(R.id.prev_btn)).perform(click());
 
-            onView(withId(R.id.next_btn)).check(matches(isDisplayed()));
-            onView(withId(R.id.register_btn)).check(matches(not(isDisplayed())));
+            waitForView(withId(R.id.next_btn)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.register_btn)).check(matches(not(isDisplayed())));
         }
     }
 
@@ -387,7 +386,7 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
         setRegisterSteps(REGISTER_STEPS_NORMAL);
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
-            onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+            waitForView(withId(R.id.welcome_register)).perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
@@ -396,16 +395,16 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
-            onView(withId(R.id.next_btn)).perform(closeSoftKeyboard(), click());
+            waitForView(withId(R.id.next_btn)).perform(closeSoftKeyboard(), click());
 
-            onView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Position")))))
+            waitForView(allOf(instanceOf(Spinner.class), hasSibling(withText(startsWith("Position")))))
                     .perform(scrollTo())
                     .perform(click());
-            onView(withText("Role2")).perform(click());
+            waitForView(withText("Role2")).perform(click());
 
-            onView(withId(R.id.next_btn)).perform(click());
+            waitForView(withId(R.id.next_btn)).perform(click());
 
-            onView(withId(R.id.register_btn)).perform(click());
+            waitForView(withId(R.id.register_btn)).perform(click());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
                     .check(matches(withText(R.string.field_required)));
@@ -420,7 +419,7 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
         }
 
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
-            onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+            waitForView(withId(R.id.welcome_register)).perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
@@ -430,7 +429,7 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
             openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
-            onView(withText(R.string.menu_settings)).perform(closeSoftKeyboard(), click());
+            waitForView(withText(R.string.menu_settings)).perform(closeSoftKeyboard(), click());
 
             pressBack();
 
@@ -451,7 +450,7 @@ public class SteppedRegisterUITest extends MockedApiEndpointTest {
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
 
-            onView(withId(R.id.welcome_register)).perform(scrollTo(), click());
+            waitForView(withId(R.id.welcome_register)).perform(scrollTo(), click());
 
             onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));

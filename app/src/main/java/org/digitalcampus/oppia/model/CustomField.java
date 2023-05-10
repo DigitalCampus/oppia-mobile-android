@@ -1,7 +1,6 @@
 package org.digitalcampus.oppia.model;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.database.DbHelper;

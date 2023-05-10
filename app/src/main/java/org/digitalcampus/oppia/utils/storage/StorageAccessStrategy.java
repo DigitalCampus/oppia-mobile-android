@@ -18,10 +18,7 @@
 package org.digitalcampus.oppia.utils.storage;
 
 
-import android.app.Activity;
 import android.content.Context;
-
-import org.digitalcampus.oppia.listener.StorageAccessListener;
 
 public interface StorageAccessStrategy {
     String  getStorageLocation(Context ctx);

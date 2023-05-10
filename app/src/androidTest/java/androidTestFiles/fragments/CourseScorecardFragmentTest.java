@@ -42,6 +42,6 @@ public class CourseScorecardFragmentTest {
     public void openCourseScorecardFragment(){
         // TODO stub - needs an actual course xml file to load
         // launchInContainer(CourseScorecardFragment.class, args, R.style.Oppia_ToolbarTheme, null);
-        // onView(withId(R.id.tv_total_points)).check(matches(withText("0")));
+        // waitForView(withId(R.id.tv_total_points)).check(matches(withText("0")));
     }
 }

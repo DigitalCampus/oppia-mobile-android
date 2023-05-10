@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
-import android.text.TextUtils;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;

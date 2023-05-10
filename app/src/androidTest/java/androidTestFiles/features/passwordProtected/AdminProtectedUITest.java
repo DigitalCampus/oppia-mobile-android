@@ -1,35 +1,5 @@
 package androidTestFiles.features.passwordProtected;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.MainActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.CoursesRepository;
-import org.digitalcampus.oppia.model.User;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.mockito.Mock;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import androidTestFiles.utils.parent.DaggerInjectMockUITest;
-import androidTestFiles.utils.CourseUtils;
-import androidTestFiles.utils.TestUtils;
-import androidx.preference.PreferenceManager;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.Espresso;
-import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.espresso.matcher.ViewMatchers;
-import androidx.test.platform.app.InstrumentationRegistry;
-
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -50,6 +20,36 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import androidx.preference.PreferenceManager;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.MainActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.User;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.mockito.Mock;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import androidTestFiles.utils.CourseUtils;
+import androidTestFiles.utils.TestUtils;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 @RunWith(Parameterized.class)
 public class AdminProtectedUITest extends DaggerInjectMockUITest {
@@ -133,8 +133,8 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
     }
 
     private void fillPasswordDialog() {
-        onView(withId(R.id.admin_password_field)).perform(clearText(), typeText("testpass"));
-        onView(withText(R.string.ok)).perform(closeSoftKeyboard(), click());
+        waitForView(withId(R.id.admin_password_field)).perform(clearText(), typeText("testpass"));
+        waitForView(withText(R.string.ok)).perform(closeSoftKeyboard(), click());
     }
 
     private void givenThereAreSomeCourses(int numberOfCourses) {
@@ -148,12 +148,12 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
     // --- CHECKS ---
     private void checkAdminPasswordDialogIsDisplayed() {
-        onView(withText(R.string.admin_password_required))
+        waitForView(withText(R.string.admin_password_required))
                 .check(matches(isDisplayed()));
     }
 
     private void checkAdminPasswordDialogIsNOTDisplayed() {
-        onView(withText(R.string.admin_password_required))
+        waitForView(withText(R.string.admin_password_required))
                 .check(doesNotExist());
     }
 
@@ -196,7 +196,7 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefSecurity_title)),
                             click()));
 
@@ -204,7 +204,7 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
                 fillPasswordDialog();
             }
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdminProtection)),
                             click()));
 
@@ -229,7 +229,7 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefSecurity_title)),
                             click()));
 
@@ -237,7 +237,7 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
                 fillPasswordDialog();
             }
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdminPassword)),
                             click()));
 
@@ -247,7 +247,7 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
                     checkAdminPasswordDialogIsDisplayed();
                     break;
                 case PROTECTION_OPTION_ONLY_ACTION:
-                    onView(withId(android.R.id.edit)).check(doesNotExist());
+                    waitForView(withId(android.R.id.edit)).check(doesNotExist());
                     break;
                 case PROTECTION_OPTION_ONLY_ADMIN:
                     checkAdminPasswordDialogIsDisplayed();
@@ -261,7 +261,7 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdvanced_title)),
                             click()));
 
@@ -271,7 +271,7 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
                 return;
             }
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefServer)),
                             click()));
 
@@ -293,7 +293,7 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdvanced_title)),
                             click()));
 
@@ -318,7 +318,7 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-            onView(withId(R.id.manage_courses_btn))
+            waitForView(withId(R.id.manage_courses_btn))
                     .perform(click());
 
             switch (adminProtectionOption) {
@@ -384,12 +384,12 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
     private void clickOptionInCourseContextMenu(int optionId) {
 
-        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+        waitForView(ViewMatchers.withId(R.id.recycler_courses))
 //                .inRoot(RootMatchers.withDecorView(
 //                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
-        onView(withId(optionId))
+        waitForView(withId(optionId))
                 .perform(click());
     }
 
@@ -401,9 +401,9 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-            onView(withId(R.id.nav_bottom_scorecard)).perform(click());
+            waitForView(withId(R.id.nav_bottom_scorecard)).perform(click());
 
-            onView(withId(R.id.btn_download_courses))
+            waitForView(withId(R.id.btn_download_courses))
                     .perform(click());
 
             switch (adminProtectionOption) {
@@ -435,11 +435,11 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
             setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_DISABLE_NOTIFICATIONS, false);
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
                             click()));
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefDisableNotifications)),
                             click()));
 
@@ -454,11 +454,11 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
             setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_DISABLE_NOTIFICATIONS, true);
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
                             click()));
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefDisableNotifications)),
                             click()));
 
@@ -485,11 +485,11 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
             setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_COURSES_REMINDER_ENABLED, true);
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
                             click()));
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefCoursesReminderEnabled)),
                             click()));
 
@@ -504,11 +504,11 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
             setCheckBoxPreferenceInitialValue(PrefsActivity.PREF_COURSES_REMINDER_ENABLED, false);
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
                             click()));
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefCoursesReminderEnabled)),
                             click()));
 
@@ -548,11 +548,11 @@ public class AdminProtectedUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefNotifications_title)),
                             click()));
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(titleStringId)),
                             click()));
 

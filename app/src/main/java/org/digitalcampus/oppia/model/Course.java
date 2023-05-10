@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.model;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.App;

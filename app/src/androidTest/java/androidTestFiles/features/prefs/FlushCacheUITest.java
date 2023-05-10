@@ -1,6 +1,5 @@
 package androidTestFiles.features.prefs;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBackUnconditionally;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -8,16 +7,26 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.activities.EditProfileActivityTest.VALID_PROFILE_RESPONSE;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withDrawable;
 import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import androidx.preference.PreferenceManager;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -31,7 +40,7 @@ import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.task.UpdateUserCohortsTask;
+import org.digitalcampus.oppia.task.FetchUserTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
@@ -43,19 +52,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
+import androidTestFiles.database.sampledata.UserData;
 import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.FileUtils;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
-import androidTestFiles.database.sampledata.UserData;
-
-import androidx.preference.PreferenceManager;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.GrantPermissionRule;
-
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class FlushCacheUITest extends MockedApiEndpointTest {
@@ -68,7 +69,6 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
     @Mock
     TagRepository tagRepository;
 
-    private static final String COHORTS_5_AND_6 = "responses/cohorts/response_200_cohorts_5_6.json";
 
     private void givenThereAreSomeCourses(int numberOfCourses) {
 
@@ -87,7 +87,7 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
 
         givenThereAreSomeCourses(1);
 
-        String previousCacheAsset = "responses/course/response_200_courses_list.json";
+        String previousCacheAsset = BaseTest.PATH_RESPONSES + "/course/response_200_courses_list.json";
         String previousCache = FileUtils.getStringFromFile(
                 InstrumentationRegistry.getInstrumentation().getContext(), previousCacheAsset);
 
@@ -99,7 +99,7 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-            onView(withRecyclerView(R.id.recycler_courses)
+            waitForView(withRecyclerView(R.id.recycler_courses)
                     .atPositionOnView(0, R.id.img_sync_status))
                     .check(matches(withDrawable(R.drawable.ic_action_refresh)));
 
@@ -109,8 +109,8 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
 
             if (BuildConfig.ADMIN_PROTECT_ADVANCED_SETTINGS) {
                 String adminPass = context.getString(R.string.prefAdminPasswordDefault);
-                onView(withId(R.id.admin_password_field)).perform(clearText(), typeText(adminPass));
-                onView(withText(R.string.ok)).perform(closeSoftKeyboard(), click());
+                waitForView(withId(R.id.admin_password_field)).perform(clearText(), typeText(adminPass));
+                waitForView(withText(R.string.ok)).perform(closeSoftKeyboard(), click());
             }
 
             clickPrefWithText(R.string.pref_flush_app_cache);
@@ -118,7 +118,7 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
             pressBackUnconditionally();
             pressBackUnconditionally();
 
-            onView(withRecyclerView(R.id.recycler_courses)
+            waitForView(withRecyclerView(R.id.recycler_courses)
                     .atPositionOnView(0, R.id.img_sync_status))
                     .check(matches(CoreMatchers.not(isDisplayed())));
         }
@@ -150,7 +150,7 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefs.edit().remove(PrefsActivity.PREF_SERVER_COURSES_CACHE).commit();
 
-        String responseAsset = "responses/course/response_200_courses_list.json";
+        String responseAsset = BaseTest.PATH_RESPONSES + "/course/response_200_courses_list.json";
         startServer(200, responseAsset, 0);
 
         try (ActivityScenario<TagSelectActivity> scenario = ActivityScenario.launch(TagSelectActivity.class)) {
@@ -167,7 +167,7 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
     }
 
     @Test
-    public void testFlushUserCohorts() throws Exception {
+    public void testFlushUserData() throws Exception {
         final CountDownLatch signal = new CountDownLatch(1);
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         DbHelper dbHelper = DbHelper.getInstance(context);
@@ -180,15 +180,15 @@ public class FlushCacheUITest extends MockedApiEndpointTest {
             assertEquals(Arrays.asList(1, 2), user.getCohorts());
 
             // 2. Flush cache and retrieve mocked response with cohorts 5 and 6
-            startServer(200, COHORTS_5_AND_6, 0);
-            UpdateUserCohortsTask task = new UpdateUserCohortsTask();
+            startServer(200, VALID_PROFILE_RESPONSE, 0);
+            FetchUserTask task = new FetchUserTask();
             task.setListener(() -> signal.countDown());
-            task.updateLoggedUserCohorts(context, apiEndpoint, user);
+            task.updateLoggedUserProfile(context, apiEndpoint, user);
             signal.await();
 
             // 3. Assert User1 now belongs to cohorts 5 and 6
             user = dbHelper.getUser(UserData.TEST_USER_1);
-            assertEquals(Arrays.asList(5, 6), user.getCohorts());
+            assertEquals(Arrays.asList(4, 5, 6), user.getCohorts());
 
         } catch (UserNotFoundException e) {
             e.printStackTrace();

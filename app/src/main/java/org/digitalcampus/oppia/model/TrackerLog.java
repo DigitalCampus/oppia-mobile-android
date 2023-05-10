@@ -17,8 +17,6 @@
 
 package org.digitalcampus.oppia.model;
 
-import android.text.TextUtils;
-
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.joda.time.DateTime;

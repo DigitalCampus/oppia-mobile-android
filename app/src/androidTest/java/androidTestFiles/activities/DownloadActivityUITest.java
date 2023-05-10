@@ -39,12 +39,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withDrawable;
 import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidTestFiles.utils.parent.BaseTest.COURSE_TEST;
 import static androidTestFiles.utils.parent.BaseTest.PATH_COMMON_TESTS;
-import static androidTestFiles.utils.parent.BaseTest.PATH_TESTS;
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -151,7 +150,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
             Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.view_course_status))
                     .check(StatusBadgeAssertion.withText(context.getString(R.string.status_draft)));
         }
@@ -166,7 +165,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.view_course_status))
                     .check(matches(not(isDisplayed())));
         }
@@ -185,7 +184,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.course_title))
                     .check(matches(withText(title)));
         }
@@ -199,7 +198,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.course_title))
                     .check(matches(withText(MultiLangInfoModel.DEFAULT_NOTITLE)));
         }
@@ -217,7 +216,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.course_description))
                     .check(matches(withText(description)));
         }
@@ -231,7 +230,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.course_description))
                     .check(matches(not(isDisplayed())));
         }
@@ -248,7 +247,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.course_author))
                     .check(matches(withText(authorName)));
         }
@@ -262,7 +261,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.course_author))
                     .check(matches(not(isDisplayed())));
         }
@@ -283,7 +282,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.download_course_btn))
                     .perform(click())
                     .check(matches(withDrawable(R.drawable.ic_action_cancel)));
@@ -306,7 +305,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.download_course_btn))
                     .perform(click())
                     .check(matches(withDrawable(R.drawable.ic_action_cancel)));
@@ -326,11 +325,11 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.download_course_btn))
                     .perform(click());
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.download_progress))
                     .check(matches(isDisplayed()));
         }
@@ -350,11 +349,11 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.download_course_btn))
                     .perform(click());
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.download_progress))
                     .check(matches(isDisplayed()));
         }
@@ -371,7 +370,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.download_progress))
                     .check(matches(not(isDisplayed())));
         }
@@ -392,11 +391,11 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.download_course_btn))
                     .perform(click());
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.download_progress))
                     .check(matches(not(isDisplayed())));
         }
@@ -414,7 +413,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.download_course_btn))
                     .check(matches(withDrawable(R.drawable.ic_action_download)));
         }
@@ -432,7 +431,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.download_course_btn))
                     .check(matches(withDrawable(R.drawable.ic_action_refresh)));
         }
@@ -450,7 +449,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.download_course_btn))
                     .check(matches(isEnabled()));
         }
@@ -471,7 +470,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.download_course_btn))
                     .perform(click())
                     .check(matches(withDrawable(R.drawable.ic_action_accept)));
@@ -503,7 +502,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.download_course_btn))
                     .perform(click())
                     .check(matches(withDrawable(R.drawable.ic_action_accept)));
@@ -521,9 +520,9 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-//        onView(withRecyclerView(R.id.recycler_tags).atPosition(0)).perform(click());
+//        waitForView(withRecyclerView(R.id.recycler_tags).atPosition(0)).perform(click());
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.download_course_btn))
                     .check(matches(isEnabled()));
         }
@@ -546,9 +545,9 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
+            waitForView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.course_title))
                     .check(matches(withText("Course1")));
         }
@@ -577,13 +576,13 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(2));
+            waitForView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(2));
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.course_title))
                     .check(matches(withText("Course1")));
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(1, R.id.course_title))
                     .check(matches(withText("Course2")));
         }
@@ -606,9 +605,9 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
+            waitForView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.course_title))
                     .check(matches(withText("Course1")));
         }
@@ -637,13 +636,13 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
 
-            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(2));
+            waitForView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(2));
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.course_title))
                     .check(matches(withText("Course1")));
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(1, R.id.course_title))
                     .check(matches(withText("Course2")));
         }
@@ -665,7 +664,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         // 3. The available courses for download should be 0
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
-            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(0));
+            waitForView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(0));
         }
     }
 
@@ -686,9 +685,9 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         // 3. The user should see Course1 because they share cohort 1
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
-            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
+            waitForView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.course_title))
                     .check(matches(withText("Course1")));
         }
@@ -717,9 +716,9 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         // 3. The user should see Course1 because they share cohort 1
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
-            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
+            waitForView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.course_title))
                     .check(matches(withText("Course1")));
         }
@@ -748,9 +747,9 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         // 3. The user should see Course1 because they share cohort 1
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
-            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
+            waitForView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.course_title))
                     .check(matches(withText("Course1")));
         }
@@ -760,13 +759,13 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         // 5. The user should see Course1 and Course2 because they share cohort 3
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
-            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(2));
+            waitForView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(2));
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.course_title))
                     .check(matches(withText("Course1")));
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(1, R.id.course_title))
                     .check(matches(withText("Course2")));
         }
@@ -788,9 +787,9 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
         // 3. The user should see Course1 because the course is not restricted
         try (ActivityScenario<DownloadActivity> scenario = ActivityScenario.launch(getMockTagCoursesIntent())) {
-            onView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
+            waitForView(withId(R.id.recycler_tags)).check(new RecyclerViewItemCountAssertion(1));
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.course_title))
                     .check(matches(withText("Course1")));
         }

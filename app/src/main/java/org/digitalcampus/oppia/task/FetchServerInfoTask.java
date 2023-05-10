@@ -5,14 +5,12 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import androidx.preference.PreferenceManager;
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;

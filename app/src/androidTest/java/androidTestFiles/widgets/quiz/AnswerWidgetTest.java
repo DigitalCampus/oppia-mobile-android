@@ -1,6 +1,15 @@
 package androidTestFiles.widgets.quiz;
 
 
+import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.core.StringStartsWith.startsWith;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
+
 import androidx.fragment.app.Fragment;
 
 import org.digitalcampus.mobile.learning.R;
@@ -15,21 +24,13 @@ import org.junit.runners.Parameterized;
 
 import java.util.ArrayList;
 
-import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.core.StringStartsWith.startsWith;
-import static org.mockito.Matchers.any;
+import androidTestFiles.utils.parent.BaseTest;
 
 
 @RunWith(Parameterized.class)
 public class AnswerWidgetTest extends BaseQuizTest {
 
-    private static final String SIMPLE_QUIZ_JSON = "quizzes/simple_quiz.json";
+    private static final String SIMPLE_QUIZ_JSON = BaseTest.PATH_QUIZZES + "/simple_quiz.json";
     private static final String FIRST_QUESTION_TITLE = "First question";
 
     private Class widgetClass;
@@ -61,7 +62,7 @@ public class AnswerWidgetTest extends BaseQuizTest {
 
         launchInContainer(this.widgetClass, args, R.style.Oppia_ToolbarTheme);
 
-        onView(withId(R.id.quiz_unavailable))
+        waitForView(withId(R.id.quiz_unavailable))
                 .check(matches(withText((R.string.quiz_loading_error))));
 
     }
@@ -70,15 +71,15 @@ public class AnswerWidgetTest extends BaseQuizTest {
     public void dontContinueIfQuestionUnaswered() {
         launchInContainer(this.widgetClass, args, R.style.Oppia_ToolbarTheme);
         if (widgetClass == QuizWidget.class){
-            onView(withId(R.id.take_quiz_btn)).perform(click());
+            waitForView(withId(R.id.take_quiz_btn)).perform(click());
         }
 
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText(startsWith(FIRST_QUESTION_TITLE))));
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
         //If we didn't select any option, it should have stayed in the same question
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText(startsWith(FIRST_QUESTION_TITLE))));
 
     }
@@ -87,15 +88,15 @@ public class AnswerWidgetTest extends BaseQuizTest {
     public void continueIfQuestionAnswered() {
         launchInContainer(this.widgetClass, args, R.style.Oppia_ToolbarTheme);
         if (widgetClass == QuizWidget.class){
-            onView(withId(R.id.take_quiz_btn)).perform(click());
+            waitForView(withId(R.id.take_quiz_btn)).perform(click());
         }
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(withText(startsWith(FIRST_QUESTION_TITLE))));
 
-        onView(withText("correctanswer")).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText("correctanswer")).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
-        onView(withId(R.id.question_text))
+        waitForView(withId(R.id.question_text))
                 .check(matches(not(withText(startsWith(FIRST_QUESTION_TITLE)))));
 
     }

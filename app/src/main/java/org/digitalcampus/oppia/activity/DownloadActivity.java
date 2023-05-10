@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -57,7 +56,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;

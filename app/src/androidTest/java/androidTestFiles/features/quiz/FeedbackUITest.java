@@ -1,12 +1,25 @@
 package androidTestFiles.features.quiz;
 
 
+import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.not;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
+
 import android.Manifest;
 import android.os.Bundle;
 
-import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
@@ -26,30 +39,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import androidTestFiles.utils.FileUtils;
-import androidx.test.rule.GrantPermissionRule;
-
-import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
+import androidTestFiles.utils.parent.BaseTest;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 
 @RunWith(AndroidJUnit4.class)
 public class FeedbackUITest extends DaggerInjectMockUITest {
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    private static final String SIMPLE_FEEDBACK_JSON = "quizzes/simple_feedback.json";
-    private static final String SINGLE_ATTEMPT_FEEDBACK_JSON = "quizzes/single_attempt_feedback.json";
+    private static final String SIMPLE_FEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/simple_feedback.json";
+    private static final String SINGLE_ATTEMPT_FEEDBACK_JSON = BaseTest.PATH_QUIZZES + "/single_attempt_feedback.json";
 
     @Mock
     QuizAttemptRepository attemptsRepository;
@@ -86,17 +84,17 @@ public class FeedbackUITest extends DaggerInjectMockUITest {
 
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
-        onView(withText("firstanswer")).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
-        onView(withText("secondanswer")).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText("firstanswer")).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText("secondanswer")).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
-        onView(withId(R.id.quiz_exit_button))
+        waitForView(withId(R.id.quiz_exit_button))
                 .check(matches(withText(R.string.widget_quiz_continue)));
-        onView(withId(R.id.quiz_results_button))
+        waitForView(withId(R.id.quiz_results_button))
                 .check(matches(not(isDisplayed())));
 
-        onView(withId(R.id.quiz_results_score))
+        waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(R.string.widget_feedback_submit_title)));
     }
 
@@ -110,7 +108,7 @@ public class FeedbackUITest extends DaggerInjectMockUITest {
 
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
-        onView(withText(R.string.widget_feedback_unavailable_attempts)).check(matches(isDisplayed()));
+        waitForView(withText(R.string.widget_feedback_unavailable_attempts)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -118,17 +116,17 @@ public class FeedbackUITest extends DaggerInjectMockUITest {
         setFeedback(SIMPLE_FEEDBACK_JSON);
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
-        onView(withText("firstanswer")).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
-        onView(withText("secondanswer")).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText("firstanswer")).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withText("secondanswer")).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
-        onView(withId(R.id.quiz_exit_button))
+        waitForView(withId(R.id.quiz_exit_button))
                 .check(matches(withText(R.string.widget_quiz_continue)));
-        onView(withId(R.id.quiz_results_button))
+        waitForView(withId(R.id.quiz_results_button))
                 .check(matches(not(isDisplayed())));
 
-        onView(withId(R.id.quiz_results_score))
+        waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(R.string.widget_feedback_submit_title)));
 
     }
@@ -138,12 +136,12 @@ public class FeedbackUITest extends DaggerInjectMockUITest {
         setFeedback(SIMPLE_FEEDBACK_JSON);
         launchInContainer(FeedbackWidget.class, args, R.style.Oppia_ToolbarTheme);
 
-        onView(withId(R.id.tv_quiz_progress)).check(matches(withText("1/2")));
-        onView(withText("firstanswer")).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
-        onView(withId(R.id.tv_quiz_progress)).check(matches(withText("2/2")));
-        onView(withText("secondanswer")).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withId(R.id.tv_quiz_progress)).check(matches(withText("1/2")));
+        waitForView(withText("firstanswer")).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
+        waitForView(withId(R.id.tv_quiz_progress)).check(matches(withText("2/2")));
+        waitForView(withText("secondanswer")).perform(click());
+        waitForView(withId(R.id.mquiz_next_btn)).perform(click());
 
 
     }

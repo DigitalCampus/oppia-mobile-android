@@ -2,14 +2,7 @@ package org.digitalcampus.oppia.model;
 
 import android.content.Context;
 
-import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.exception.UserNotFoundException;
-import org.digitalcampus.oppia.utils.storage.Storage;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TrackerLogRepository {
 

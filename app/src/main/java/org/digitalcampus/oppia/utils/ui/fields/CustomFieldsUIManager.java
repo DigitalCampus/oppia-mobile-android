@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.LayoutInflater;

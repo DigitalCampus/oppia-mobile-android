@@ -1,7 +1,26 @@
 package androidTestFiles.features.course;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static org.hamcrest.CoreMatchers.not;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
+import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withDrawable;
+import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
+
 import android.Manifest;
 import android.content.SharedPreferences;
+
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
@@ -21,25 +40,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import androidTestFiles.utils.CourseUtils;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.GrantPermissionRule;
-
-import static androidTestFiles.utils.matchers.EspressoTestsMatchers.withDrawable;
-import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static org.hamcrest.CoreMatchers.not;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 @RunWith(AndroidJUnit4.class)
 public class CoursesUpdateDeleteTest extends DaggerInjectMockUITest {
@@ -124,11 +126,11 @@ public class CoursesUpdateDeleteTest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-            onView(withRecyclerView(R.id.recycler_courses)
+            waitForView(withRecyclerView(R.id.recycler_courses)
                     .atPositionOnView(0, R.id.img_sync_status))
                     .check(matches(not(isDisplayed())));
 
-            onView(withRecyclerView(R.id.recycler_courses)
+            waitForView(withRecyclerView(R.id.recycler_courses)
                     .atPositionOnView(1, R.id.img_sync_status))
                     .check(matches(withDrawable(R.drawable.ic_action_refresh)));
         }
@@ -145,11 +147,11 @@ public class CoursesUpdateDeleteTest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-            onView(withRecyclerView(R.id.recycler_courses)
+            waitForView(withRecyclerView(R.id.recycler_courses)
                     .atPositionOnView(0, R.id.img_sync_status))
                     .check(matches(not(isDisplayed())));
 
-            onView(withRecyclerView(R.id.recycler_courses)
+            waitForView(withRecyclerView(R.id.recycler_courses)
                     .atPositionOnView(1, R.id.img_sync_status))
                     .check(matches(withDrawable(R.drawable.dialog_ic_action_delete)));
         }

@@ -1,7 +1,6 @@
 package androidTestFiles.features.updateActivityOnLogin;
 
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBackUnconditionally;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -9,13 +8,11 @@ import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -30,17 +27,16 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static androidTestFiles.features.authentication.login.LoginUITest.VALID_LOGIN_RESPONSE;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.parent.BaseTest.COURSE_SINGLE_PAGE;
 import static androidTestFiles.utils.parent.BaseTest.PATH_COMMON_TESTS;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Gravity;
 
 import androidx.preference.PreferenceManager;
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -68,12 +64,13 @@ import androidTestFiles.utils.CourseUtils;
 import androidTestFiles.utils.MockUtils;
 import androidTestFiles.utils.TestUtils;
 import androidTestFiles.utils.assertions.CircularProgressbarAssertion;
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
 
 
-    private static final String VALID_COURSE_ACTIVITY_RESPONSE = "responses/response_200_course_activity.xml";
+    private static final String VALID_COURSE_ACTIVITY_RESPONSE = BaseTest.PATH_RESPONSES + "/response_200_course_activity.xml";
 
 
     @Mock
@@ -145,16 +142,16 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
         startServer(200, VALID_LOGIN_RESPONSE, 0);
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_login))
+            waitForView(withId(R.id.welcome_login))
                     .perform(scrollTo(), click());
 
-            onView(withId(R.id.login_username_field))
+            waitForView(withId(R.id.login_username_field))
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_username"));
 
-            onView(withId(R.id.login_password_field))
+            waitForView(withId(R.id.login_password_field))
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_password"));
 
-            onView(withId(R.id.login_btn))
+            waitForView(withId(R.id.login_btn))
                     .perform(closeSoftKeyboard(), scrollTo(), click());
 
             intended(allOf(
@@ -172,16 +169,16 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
         testDBHelper.getTestDataManager().addUsers();
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
 
-            onView(withId(R.id.welcome_login))
+            waitForView(withId(R.id.welcome_login))
                     .perform(scrollTo(), click());
 
-            onView(withId(R.id.login_username_field))
+            waitForView(withId(R.id.login_username_field))
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("user1"));
 
-            onView(withId(R.id.login_password_field))
+            waitForView(withId(R.id.login_password_field))
                     .perform(closeSoftKeyboard(), scrollTo(), typeText("password"));
 
-            onView(withId(R.id.login_btn))
+            waitForView(withId(R.id.login_btn))
                     .perform(closeSoftKeyboard(), scrollTo(), click());
 
             intended(allOf(
@@ -210,10 +207,10 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
             await().atMost(5, TimeUnit.SECONDS)
                     .untilAsserted(
                             () ->
-                                    onView(ViewMatchers.withId(R.id.circularProgressBar))
+                                    waitForView(ViewMatchers.withId(R.id.circularProgressBar))
                                             .check(CircularProgressbarAssertion.withProgress(100))
                     );
-        onView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(100));
+        waitForView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(100));
 
     }
 
@@ -228,11 +225,11 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
         await().atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(
                         () ->
-                                onView(ViewMatchers.withId(R.id.circularProgressBar))
+                                waitForView(ViewMatchers.withId(R.id.circularProgressBar))
                                         .check(CircularProgressbarAssertion.withProgress(100))
                 );
 
-        onView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(100));
+        waitForView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(100));
     }
 
     @Test
@@ -245,11 +242,11 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
         await().atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(
                         () ->
-                                onView(ViewMatchers.withId(R.id.circularProgressBar))
+                                waitForView(ViewMatchers.withId(R.id.circularProgressBar))
                                         .check(CircularProgressbarAssertion.withProgress(0))
                 );
 
-        onView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(0));
+        waitForView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(0));
     }
 
     @Test
@@ -262,11 +259,11 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
         await().atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(
                         () ->
-                                onView(ViewMatchers.withId(R.id.circularProgressBar))
+                                waitForView(ViewMatchers.withId(R.id.circularProgressBar))
                                         .check(CircularProgressbarAssertion.withProgress(0))
                 );
 
-        onView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(0));
+        waitForView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(0));
 
     }
 
@@ -280,11 +277,11 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
         await().atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(
                         () ->
-                                onView(ViewMatchers.withId(R.id.circularProgressBar))
+                                waitForView(ViewMatchers.withId(R.id.circularProgressBar))
                                         .check(CircularProgressbarAssertion.withProgress(0))
                 );
 
-        onView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(0));
+        waitForView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(0));
 
         try {
             Thread.sleep(30000);
@@ -305,11 +302,11 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
 
         launchCoursesListFragment(true);
 
-        onView(withText(R.string.connection_unavailable_couse_activity))
+        waitForView(withText(R.string.connection_unavailable_couse_activity))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()));
 
-        onView(withText(R.string.continue_anyway))
+        waitForView(withText(R.string.continue_anyway))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()));
     }
@@ -325,11 +322,11 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
 
         launchCoursesListFragment(true);
 
-        onView(withText(R.string.connection_unavailable_couse_activity))
+        waitForView(withText(R.string.connection_unavailable_couse_activity))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()));
 
-        onView(withText(R.string.continue_anyway))
+        waitForView(withText(R.string.continue_anyway))
                 .inRoot(isDialog())
                 .check(doesNotExist());
     }
@@ -345,11 +342,11 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
 
         launchCoursesListFragment(true);
 
-        onView(withText(R.string.error_unable_retrieve_course_activity))
+        waitForView(withText(R.string.error_unable_retrieve_course_activity))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()));
 
-        onView(withText(R.string.continue_anyway))
+        waitForView(withText(R.string.continue_anyway))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()));
     }
@@ -366,11 +363,11 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
 
         launchCoursesListFragment(true);
 
-        onView(withText(R.string.error_unable_retrieve_course_activity))
+        waitForView(withText(R.string.error_unable_retrieve_course_activity))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()));
 
-        onView(withText(R.string.continue_anyway))
+        waitForView(withText(R.string.continue_anyway))
                 .inRoot(isDialog())
                 .check(doesNotExist());
     }
@@ -411,20 +408,20 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             openDrawer();
 
-            onView(withText(R.string.menu_settings)).perform(click());
+            waitForView(withText(R.string.menu_settings)).perform(click());
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(
                             hasDescendant(withText(R.string.prefAdvanced_title)), click()));
 
-            onView(withId(androidx.preference.R.id.recycler_view))
+            waitForView(withId(androidx.preference.R.id.recycler_view))
                     .perform(RecyclerViewActions.actionOnItem(
                             hasDescendant(withText(R.string.pref_update_activity_on_login)), click()));
 
-            onView(withText(finalOptionText)).perform(click());
+            waitForView(withText(finalOptionText)).perform(click());
 
             if (closeWarningDialog) {
-                onView(withText(R.string.accept))
+                waitForView(withText(R.string.accept))
                         .inRoot(isDialog())
                         .check(matches(isDisplayed()))
                         .perform(click());

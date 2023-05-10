@@ -17,7 +17,6 @@
 
 package org.digitalcampus.oppia.task;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 
@@ -27,18 +26,14 @@ import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.model.CustomField;
-import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.result.BasicResult;
-import org.digitalcampus.oppia.task.result.EntityResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

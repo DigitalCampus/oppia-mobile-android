@@ -1,16 +1,15 @@
 package androidTestFiles.activities;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidTestFiles.utils.parent.BaseTest.COURSE_TEST;
 import static androidTestFiles.utils.parent.BaseTest.COURSE_TEST_2;
 import static androidTestFiles.utils.parent.BaseTest.PATH_COMMON_TESTS;
-import static androidTestFiles.utils.parent.BaseTest.PATH_TESTS;
 import static androidTestFiles.utils.parent.BaseTest.TAGS_LIVE_DRAFT_RESPONSE;
 import static androidTestFiles.utils.parent.BaseTest.TAGS_NO_COURSE_STATUSES_FIELD_RESPONSE;
 
@@ -31,7 +30,6 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
@@ -67,11 +65,11 @@ public class TagActivityUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<TagSelectActivity> scenario = ActivityScenario.launch(TagSelectActivity.class)) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.tag_name))
                     .check(matches(withText(startsWith("Mocked Course Name"))));
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.tag_count))
                     .check(matches(withText("3")));
         }
@@ -85,7 +83,7 @@ public class TagActivityUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<TagSelectActivity> scenario = ActivityScenario.launch(TagSelectActivity.class)) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.tag_count))
                     .check(matches(withText("1")));
         }
@@ -101,7 +99,7 @@ public class TagActivityUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<TagSelectActivity> scenario = ActivityScenario.launch(TagSelectActivity.class)) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.tag_count))
                     .check(matches(withText("2")));
         }
@@ -117,7 +115,7 @@ public class TagActivityUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<TagSelectActivity> scenario = ActivityScenario.launch(TagSelectActivity.class)) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.tag_count))
                     .check(matches(withText("2")));
         }
@@ -134,7 +132,7 @@ public class TagActivityUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<TagSelectActivity> scenario = ActivityScenario.launch(TagSelectActivity.class)) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.tag_count))
                     .check(matches(withText("3")));
         }
@@ -148,11 +146,11 @@ public class TagActivityUITest extends MockedApiEndpointTest {
 
         try (ActivityScenario<TagSelectActivity> scenario = ActivityScenario.launch(TagSelectActivity.class)) {
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(0, R.id.tag_count))
                     .check(matches(withText("3")));
 
-            onView(withRecyclerView(R.id.recycler_tags)
+            waitForView(withRecyclerView(R.id.recycler_tags)
                     .atPositionOnView(1, R.id.tag_count))
                     .check(matches(withText("2")));
         }

@@ -41,7 +41,7 @@ android {
         // that the app's state is completely cleared between tests.
         testInstrumentationRunnerArguments clearPackageData: 'true'
         testInstrumentationRunnerArguments coverage: 'true'
-        testInstrumentationRunnerArguments coverageFilePath: '/sdcard/coverage/'
+        testInstrumentationRunnerArguments useTestStorageService: 'true'
 
         vectorDrawables.useSupportLibrary = true
 
@@ -257,7 +257,7 @@ dependencies {
     def fragmentVersion = '1.5.4'
     def daggerVersion = '2.41'
     def appcompatVersion = '1.6.0-rc01'
-    def espressoVersion = '3.5.0'
+    def espressoVersion = '3.5.1'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'joda-time:joda-time:2.10.13'
@@ -317,6 +317,7 @@ dependencies {
     androidTestImplementation 'androidx.annotation:annotation:1.3.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     androidTestUtil 'androidx.test:orchestrator:1.4.2'
+    androidTestUtil 'androidx.test.services:test-services:1.4.2'
 
     //Espresso Dependencies
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"

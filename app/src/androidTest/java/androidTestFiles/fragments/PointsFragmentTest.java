@@ -31,6 +31,6 @@ public class PointsFragmentTest {
     @Test
     public void openPointsFragment(){
         launchInContainer(PointsFragment.class, args, R.style.Oppia_ToolbarTheme);
-        // onView(withId(R.id.tv_total_points)).check(matches(withText("0")));
+        // waitForView(withId(R.id.tv_total_points)).check(matches(withText("0")));
     }
 }

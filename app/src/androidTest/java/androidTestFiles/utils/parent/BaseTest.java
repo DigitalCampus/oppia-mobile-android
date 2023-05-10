@@ -17,6 +17,10 @@ public class BaseTest {
 
     public static final String PATH_CUSTOM_FIELDS_TESTS = PATH_TESTS + "/customFields";
     public static final String PATH_TAGS_TESTS = PATH_TESTS + "/tags";
+    public static final String PATH_QUIZZES = PATH_TESTS + "/quizzes";
+    public static final String PATH_RESPONSES = PATH_TESTS + "/responses";
+
+    public static final String PATH_MEDIA_RESOURCES = PATH_TESTS + "/media_resources";
 
 
 
@@ -44,6 +48,7 @@ public class BaseTest {
     public static final String COURSE_WITH_MEDIA_2 = "Course_with_media_2.zip";
     public static final String MEDIA_FILE_VIDEO_TEST_1 = "video-test-1.mp4";
     public static final String MEDIA_FILE_VIDEO_TEST_2 = "video-test-2.mp4";
+    public static final String MEDIA_FILE_VIDEO_TEST_3 = "video-test-3.mp4";
 
     public static final String COURSE_QUIZ_SHOW_ALL = "show_all.zip";
     public static final String COURSE_QUIZ_HIDE_LATER = "hide_later.zip";

@@ -1,7 +1,22 @@
 package androidTestFiles.features;
 
+import static androidx.test.espresso.action.ViewActions.click;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
+
 import android.Manifest;
 import android.content.SharedPreferences;
+
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
@@ -16,22 +31,8 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 import androidTestFiles.utils.CourseUtils;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.Espresso;
-import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.espresso.matcher.ViewMatchers;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.GrantPermissionRule;
-
-import static androidx.test.espresso.action.ViewActions.click;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
+import androidTestFiles.utils.parent.DaggerInjectMockUITest;
 
 @RunWith(AndroidJUnit4.class)
 public class GamificationUITest extends DaggerInjectMockUITest {
@@ -85,13 +86,13 @@ public class GamificationUITest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
-            Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+            waitForView(ViewMatchers.withId(R.id.recycler_courses))
                     .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-            Espresso.onView(ViewMatchers.withId(R.id.recycler_course_sections))
+            waitForView(ViewMatchers.withId(R.id.recycler_course_sections))
                     .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-            Espresso.onView(ViewMatchers.withId(R.id.recycler_course_sections))
+            waitForView(ViewMatchers.withId(R.id.recycler_course_sections))
                     .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
 
         }

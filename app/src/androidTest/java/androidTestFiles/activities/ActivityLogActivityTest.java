@@ -19,8 +19,8 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.core.StringStartsWith.startsWith;
@@ -45,7 +45,7 @@ public class ActivityLogActivityTest extends DaggerInjectMockUITest {
 
         try (ActivityScenario<ActivityLogActivity> scenario = ActivityScenario.launch(ActivityLogActivity.class)) {
 
-            onView(withRecyclerView(R.id.exported_files_list)
+            waitForView(withRecyclerView(R.id.exported_files_list)
                     .atPositionOnView(0, R.id.file_name))
                     .check(matches(withText(startsWith("username"))));
 

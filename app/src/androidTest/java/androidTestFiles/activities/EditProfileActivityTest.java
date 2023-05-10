@@ -1,6 +1,5 @@
 package androidTestFiles.activities;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -13,6 +12,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.ViewsUtils.isToast;
 import static androidTestFiles.utils.ViewsUtils.onEditTextWithinTextInputLayoutWithId;
 import static androidTestFiles.utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
@@ -42,6 +42,7 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
+import androidTestFiles.utils.parent.BaseTest;
 import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidTestFiles.database.TestDBHelper;
 
@@ -55,6 +56,7 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
     private static final String VALID_LAST_NAME = "Last Name";
     private static final String VALID_ORGANIZATION = "A organization";
     private static final String VALID_JOB_TITLE = "A job title";
+    public static final String VALID_PROFILE_RESPONSE = BaseTest.PATH_RESPONSES + "/response_200_profile.json";
 
     @Mock
     protected User user;
@@ -71,6 +73,7 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
         testDBHelper = new TestDBHelper(InstrumentationRegistry.getInstrumentation().getTargetContext());
         testDBHelper.setUp();
 
+        startServer(200, VALID_PROFILE_RESPONSE, 0);
     }
 
     @After
@@ -109,7 +112,7 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.field_lastname)
                     .perform(scrollTo(), clearText(), closeSoftKeyboard());
 
-            onView(withId(R.id.btn_save_profile)).perform(click());
+            waitForView(withId(R.id.btn_save_profile)).perform(click());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.field_firstname)
                     .check(matches(withText(R.string.field_required)));
@@ -127,7 +130,7 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
             onEditTextWithinTextInputLayoutWithId(R.id.field_email)
                     .perform(scrollTo(), clearText(), typeText("wrong-email-format"), closeSoftKeyboard());
 
-            onView(withId(R.id.btn_save_profile)).perform(click());
+            waitForView(withId(R.id.btn_save_profile)).perform(click());
 
             onErrorViewWithinTextInputLayoutWithId(R.id.field_email)
                     .check(matches(withText(R.string.error_register_email)));
@@ -140,15 +143,15 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
     // https://oppia.atlassian.net/browse/OPPIA-1130
     public void checkShowsSubmitErrorMessageWhenServerError400Response() throws Exception {
 
-        startServer(400, ERROR_MESSAGE_BODY, 0);
+        enqueueResponse(400, ERROR_MESSAGE_BODY, 0);
 
         try (ActivityScenario<EditProfileActivity> scenario = ActivityScenario.launch(EditProfileActivity.class)) {
 
             enterValidData();
 
-            onView(withId(R.id.btn_save_profile)).perform(click());
+            waitForView(withId(R.id.btn_save_profile)).perform(click());
 
-            onView(withText("Error message"))
+            waitForView(withText("Error message"))
                     .inRoot(isToast())
                     .check(matches(isDisplayed()));
 
@@ -159,13 +162,13 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
     @Test
     public void checkDataSavedWhenServerSuccessResponse() throws Exception {
 
-        startServer(200, null, 0);
+        enqueueResponse(200, null, 0);
 
         try (ActivityScenario<EditProfileActivity> scenario = ActivityScenario.launch(EditProfileActivity.class)) {
 
             enterValidData();
             closeSoftKeyboard();
-            onView(withId(R.id.btn_save_profile)).perform(click());
+            waitForView(withId(R.id.btn_save_profile)).perform(click());
 
             Context context = InstrumentationRegistry.getInstrumentation().getContext();
 
@@ -189,15 +192,15 @@ public class EditProfileActivityTest extends MockedApiEndpointTest {
     // https://oppia.atlassian.net/browse/OPPIA-1130
     public void checkShowsSubmitErrorMessageWhenServerError500Response() throws Exception {
 
-        startServer(500, ERROR_MESSAGE_BODY, 0);
+        enqueueResponse(500, ERROR_MESSAGE_BODY, 0);
 
         try (ActivityScenario<EditProfileActivity> scenario = ActivityScenario.launch(EditProfileActivity.class)) {
 
             enterValidData();
 
-            onView(withId(R.id.btn_save_profile)).perform(click());
+            waitForView(withId(R.id.btn_save_profile)).perform(click());
 
-            onView(withText(R.string.error_connection))
+            waitForView(withText(R.string.error_connection))
                     .inRoot(isToast())
                     .check(matches(isDisplayed()));
         }

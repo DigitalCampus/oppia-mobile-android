@@ -1,6 +1,5 @@
 package androidTestFiles.activities;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -10,6 +9,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 import static androidTestFiles.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static androidTestFiles.utils.CourseUtils.runInstallCourseTask;
 import static androidTestFiles.utils.parent.BaseTest.*;
@@ -64,7 +64,7 @@ public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
         copyMediaFromAssets(MEDIA_FILE_VIDEO_TEST_2);
 
         try (ActivityScenario<DownloadMediaActivity> scenario = ActivityScenario.launch(DownloadMediaActivity.class)) {
-            onView(withId(R.id.empty_state)).check(matches(isDisplayed()));
+            waitForView(withId(R.id.empty_state)).check(matches(isDisplayed()));
         }
     }
 
@@ -78,7 +78,7 @@ public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
         assertTrue(response.isSuccess());
 
         try (ActivityScenario<DownloadMediaActivity> scenario = ActivityScenario.launch(DownloadMediaActivity.class)) {
-            onView(withId(R.id.missing_media_list)).check(new RecyclerViewItemCountAssertion(2));
+            waitForView(withId(R.id.missing_media_list)).check(new RecyclerViewItemCountAssertion(2));
         }
     }
 
@@ -97,7 +97,7 @@ public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
         intent.putExtra(DownloadMediaActivity.MISSING_MEDIA_COURSE_FILTER, course);
 
         try (ActivityScenario<DownloadMediaActivity> scenario = ActivityScenario.launch(intent)) {
-            onView(withId(R.id.missing_media_list)).check(new RecyclerViewItemCountAssertion(1));
+            waitForView(withId(R.id.missing_media_list)).check(new RecyclerViewItemCountAssertion(1));
         }
     }
 
@@ -118,11 +118,11 @@ public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
 
         try (ActivityScenario<DownloadMediaActivity> scenario = ActivityScenario.launch(DownloadMediaActivity.class)) {
 
-            onView(withRecyclerView(R.id.missing_media_list)
+            waitForView(withRecyclerView(R.id.missing_media_list)
                     .atPositionOnView(0, R.id.action_btn))
                     .perform(click());
 
-            onView(withRecyclerView(R.id.missing_media_list)
+            waitForView(withRecyclerView(R.id.missing_media_list)
                     .atPositionOnView(0, R.id.download_error))
                     .check(matches(isDisplayed()));
         }
@@ -130,7 +130,7 @@ public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
 
 
     @Test
-    public void showSelectptionIfPendingMediaUnselected() throws Exception {
+    public void selectAllOptionIsClickableIfPendingMediaUnselected() throws Exception {
 
         copyCourseFromAssets(COURSE_WITH_MEDIA_1);
         copyCourseFromAssets(COURSE_WITH_MEDIA_2);
@@ -141,12 +141,12 @@ public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
         try (ActivityScenario<DownloadMediaActivity> scenario = ActivityScenario.launch(DownloadMediaActivity.class)) {
 
             openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
-            onView(withText(R.string.menu_select_all)).check(matches(isDisplayed()));
+            waitForView(withText(R.string.menu_select_all)).check(matches(isDisplayed()));
         }
     }
 
     @Test
-    public void showSortByOptionIfPendingMediaUnselected() throws Exception {
+    public void sortByOptionIsClickableIfPendingMediaUnselected() throws Exception {
 
         copyCourseFromAssets(COURSE_WITH_MEDIA_1);
         copyCourseFromAssets(COURSE_WITH_MEDIA_2);
@@ -157,9 +157,36 @@ public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
         try (ActivityScenario<DownloadMediaActivity> scenario = ActivityScenario.launch(DownloadMediaActivity.class)) {
 
             openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
-            onView(withText(R.string.menu_sort_by_course)).check(matches(isDisplayed()));
+            waitForView(withText(R.string.menu_sort_by_course)).check(matches(isDisplayed()));
         }
     }
 
+    @Test
+    public void showProgressBarOnDownloadingMedia() throws Exception {
+
+        copyCourseFromAssets(COURSE_WITH_MEDIA_1);
+        copyCourseFromAssets(COURSE_WITH_MEDIA_2);
+
+        BasicResult response = runInstallCourseTask(context);
+        assertTrue(response.isSuccess());
+
+        doAnswer(invocationOnMock -> {
+            Context ctx = (Context) invocationOnMock.getArguments()[0];
+            Media m = (Media) invocationOnMock.getArguments()[1];
+            sendBroadcast(ctx, DownloadService.ACTION_DOWNLOAD, m.getDownloadUrl());
+            return null;
+        }).when(downloadServiceDelegate).startDownload(any(), any());
+
+        try (ActivityScenario<DownloadMediaActivity> scenario = ActivityScenario.launch(DownloadMediaActivity.class)) {
+
+            waitForView(withRecyclerView(R.id.missing_media_list)
+                    .atPositionOnView(0, R.id.action_btn))
+                    .perform(click());
+
+            waitForView(withRecyclerView(R.id.missing_media_list)
+                    .atPositionOnView(0, R.id.download_progress))
+                    .check(matches(isDisplayed()));
+        }
+    }
 
 }

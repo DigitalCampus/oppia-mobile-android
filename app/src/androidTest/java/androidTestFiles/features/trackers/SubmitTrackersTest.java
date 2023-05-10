@@ -1,9 +1,12 @@
 package androidTestFiles.features.trackers;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 import android.Manifest;
 import android.content.Context;
@@ -11,6 +14,7 @@ import android.content.Context;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.ActivityLogActivity;
@@ -20,21 +24,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-
-import androidTestFiles.utils.parent.MockedApiEndpointTest;
 import androidTestFiles.database.sampledata.UserData;
-import androidx.test.rule.GrantPermissionRule;
+import androidTestFiles.utils.parent.BaseTest;
+import androidTestFiles.utils.parent.MockedApiEndpointTest;
 
 @RunWith(AndroidJUnit4.class)
 public class SubmitTrackersTest extends MockedApiEndpointTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    private static final String VALID_RESPONSE = "responses/response_200_trackers.json";
+    private static final String VALID_RESPONSE = BaseTest.PATH_RESPONSES + "/response_200_trackers.json";
 
     private Context context;
     private DbHelper db;
@@ -63,12 +63,12 @@ public class SubmitTrackersTest extends MockedApiEndpointTest {
         try (ActivityScenario<ActivityLogActivity> scenario = ActivityScenario.launch(ActivityLogActivity.class)) {
 
             assertThat(db.getUnsentTrackersCount(), equalTo(1));
-            onView(withId(R.id.highlight_to_submit)).check(matches(withText("1")));
+            waitForView(withId(R.id.highlight_to_submit)).check(matches(withText("1")));
 
-            onView(withId(R.id.submit_btn)).perform(click());
+            waitForView(withId(R.id.submit_btn)).perform(click());
 
             assertThat(db.getUnsentTrackersCount(), equalTo(0));
-            onView(withId(R.id.highlight_to_submit)).check(matches(withText("0")));
+            waitForView(withId(R.id.highlight_to_submit)).check(matches(withText("0")));
 
         }
     }
@@ -83,12 +83,12 @@ public class SubmitTrackersTest extends MockedApiEndpointTest {
         try (ActivityScenario<ActivityLogActivity> scenario = ActivityScenario.launch(ActivityLogActivity.class)) {
 
             assertThat(db.getUnsentTrackersCount(), equalTo(1));
-            onView(withId(R.id.highlight_to_submit)).check(matches(withText("1")));
+            waitForView(withId(R.id.highlight_to_submit)).check(matches(withText("1")));
 
-            onView(withId(R.id.submit_btn)).perform(click());
+            waitForView(withId(R.id.submit_btn)).perform(click());
 
             assertThat(db.getUnsentTrackersCount(), equalTo(1));
-            onView(withId(R.id.highlight_to_submit)).check(matches(withText("1")));
+            waitForView(withId(R.id.highlight_to_submit)).check(matches(withText("1")));
 
         }
     }
