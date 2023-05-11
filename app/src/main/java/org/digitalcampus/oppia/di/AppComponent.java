@@ -9,6 +9,7 @@ import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.DownloadMediaActivity;
 import org.digitalcampus.oppia.activity.EditProfileActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
+import org.digitalcampus.oppia.activity.OfflineCourseImportActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.QuizAttemptActivity;
 import org.digitalcampus.oppia.activity.StartUpActivity;
@@ -74,6 +75,7 @@ public interface AppComponent {
     void inject(QuizAttemptActivity activity);
     void inject(WelcomeActivity activity);
     void inject(StartUpActivity activity);
+    void inject(OfflineCourseImportActivity activity);
 
     void inject(AdvancedPrefsFragment advancedPrefsFragment);
     void inject(NotificationsPrefsFragment notificationsPrefsFragment);
