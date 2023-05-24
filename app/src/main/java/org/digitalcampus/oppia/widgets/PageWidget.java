@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.widgets;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -40,6 +42,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
+import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.resources.JSInterface;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForInlineInput;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForResourceImages;
@@ -57,9 +60,15 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.core.text.HtmlCompat;
 
+import com.google.android.material.snackbar.Snackbar;
+
 public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.OnInputEnteredListener {
 
 	public static final String TAG = PageWidget.class.getSimpleName();
+
+	private static final String VIDEO_SUBPATH = "/video/";
+	private static final String RESOURCE_SUBPATH = "/resources/";
+
 	private WebView webview;
 
 	private final List<JSInterface> jsInterfaces = new ArrayList<>();
@@ -67,17 +76,17 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 
 	public static PageWidget newInstance(Activity activity, Course course, boolean isBaseline) {
 		PageWidget myFragment = new PageWidget();
-	    Bundle args = new Bundle();
-	    args.putSerializable(Activity.TAG, activity);
-	    args.putSerializable(Course.TAG, course);
-	    args.putBoolean(CourseActivity.BASELINE_TAG, isBaseline);
-	    myFragment.setArguments(args);
+		Bundle args = new Bundle();
+		args.putSerializable(Activity.TAG, activity);
+		args.putSerializable(Course.TAG, course);
+		args.putBoolean(CourseActivity.BASELINE_TAG, isBaseline);
+		myFragment.setArguments(args);
 
-	    return myFragment;
+		return myFragment;
 	}
 
 	public PageWidget(){
-        // Required empty public constructor
+		// Required empty public constructor
 	}
 
 
@@ -101,14 +110,14 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 		outState.putSerializable(BaseWidget.WIDGET_CONFIG, (Serializable) getWidgetConfig());
 		super.onSaveInstanceState(outState);
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		webview = super.getActivity().findViewById(activity.getActId());
 		// get the location data
 		String url = course.getLocation() + activity.getLocation(prefLang);
-		
+
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		webview.getSettings().setDefaultFontSize(defaultFontSize);
 		webview.getSettings().setAllowFileAccess(true);
@@ -150,26 +159,18 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 			@Deprecated
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
-				if (url.contains("/video/")) {
+			private boolean handleUrl(final String url){
+				if (url.contains(VIDEO_SUBPATH)) {
 					// extract video name from url
-					int startPos = url.indexOf("/video/") + 7;
+					int startPos = url.indexOf(VIDEO_SUBPATH) + VIDEO_SUBPATH.length();
 					String mediaFileName = url.substring(startPos);
 					PageWidget.super.startMediaPlayerWithFile(mediaFileName);
-                    return true;
-					
-				} else {
-					
-					try {
-						Intent intent = new Intent(Intent.ACTION_VIEW);
-						Uri data = Uri.parse(url);
-						intent.setData(data);
-						PageWidget.super.getActivity().startActivity(intent);
-						return true;
-					} catch (ActivityNotFoundException anfe) {
-						Log.d(TAG,"Activity not found", anfe);
-					}
-					return false;
+					return true;
+
+				} else if (url.contains(RESOURCE_SUBPATH)){
+					openResourceExternally(url);
 				}
+				return false;
 			}
 		});
 	}
@@ -182,6 +183,36 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 	@Override
 	protected void onTextSizeChanged(int fontSize) {
 		webview.getSettings().setDefaultFontSize(fontSize);
+	}
+
+	private void openResourceExternally(String fileUrl){
+		File fileToOpen = new File(fileUrl);
+		try {
+			Intent intent = ExternalResourceOpener.getIntentToOpenResource(getContext(), fileToOpen);
+			if(intent != null){
+				PageWidget.super.getActivity().startActivity(intent);
+			} else {
+				showResourceOpenerNotFoundMessage(fileToOpen);
+			}
+		} catch (ActivityNotFoundException anfe) {
+			Log.d(TAG,"Activity not found", anfe);
+		}
+	}
+
+	private void showResourceOpenerNotFoundMessage(File fileToOpen){
+		String filename = fileToOpen.getName();
+		Intent installAppIntent = ExternalResourceOpener.getIntentToInstallAppForResource(getContext(), fileToOpen);
+
+		Snackbar snackbar = Snackbar.make(getView(),
+				getContext().getString(R.string.external_resource_app_missing, filename), Snackbar.LENGTH_LONG);
+		snackbar.show();
+		snackbar.setActionTextColor(Color.WHITE);
+
+		if (installAppIntent != null){
+			snackbar.setAction(R.string.external_resource_install_app, v -> {
+				PageWidget.super.getActivity().startActivity(installAppIntent);
+			});
+		}
 	}
 
 	public boolean activityMediaCompleted() {
