@@ -30,8 +30,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import androidx.preference.PreferenceManager;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,6 +46,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -66,7 +65,8 @@ import org.digitalcampus.oppia.listener.GamificationEventListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.storage.StorageUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 
 import java.util.concurrent.TimeUnit;
 
@@ -93,11 +93,8 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             Log.d(TAG, "externalStorageReceiver. onReceive: " + intent.getAction());
             switch (intent.getAction()) {
                 case Intent.ACTION_MEDIA_MOUNTED:
-                    closeSdCardBlockingMessage();
-                    break;
-
                 case Intent.ACTION_MEDIA_UNMOUNTED:
-                    showSdCardBlockingMessage();
+                    checkSdCardStatus();
                     break;
             }
         }
@@ -125,6 +122,10 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         intentFilter.addDataScheme("file");
         registerReceiver(externalStorageReceiver, intentFilter);
 
+        checkSdCardStatus();
+    }
+
+    private void checkSdCardStatus() {
         if (!isSdCardReady()) {
             showSdCardBlockingMessage();
         } else {
@@ -143,6 +144,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
                 .setTitle(R.string.sdcard_not_available)
                 .setMessage(R.string.sdcard_not_available_message)
                 .setCancelable(false)
+                .setNegativeButton(R.string.close_app, (dialog, which) -> finishAffinity())
                 .show();
     }
 
@@ -153,10 +155,10 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     }
 
     private boolean isSdCardReady() {
-        String storateOption = getPrefs().getString(PrefsActivity.PREF_STORAGE_OPTION, null);
-        boolean externalStorageSelected = TextUtilsJava.equals(storateOption, PrefsActivity.STORAGE_OPTION_EXTERNAL);
+        StorageAccessStrategy storageStrategy = Storage.getStorageStrategy();
+        boolean externalStorageSelected = TextUtilsJava.equals(storageStrategy.getStorageType(), PrefsActivity.STORAGE_OPTION_EXTERNAL);
         if (externalStorageSelected) {
-            boolean externalStorageAvailable = StorageUtils.getExternalMemoryDrive(this) != null;
+            boolean externalStorageAvailable = storageStrategy.isStorageAvailable(this);
             return externalStorageAvailable;
         } else {
             return true;
