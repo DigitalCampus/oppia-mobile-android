@@ -20,15 +20,14 @@ package org.digitalcampus.oppia.widgets;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -44,6 +43,7 @@ import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.resources.JSInterface;
+import org.digitalcampus.oppia.utils.resources.JSInterfaceForBackwardsCompat;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForInlineInput;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForResourceImages;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -125,6 +125,10 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 		try {
 			webview.getSettings().setJavaScriptEnabled(true);
 
+			JSInterfaceForBackwardsCompat backwardsCompatJSInterface = new JSInterfaceForBackwardsCompat(getContext());
+			jsInterfaces.add(backwardsCompatJSInterface);
+			webview.addJavascriptInterface(backwardsCompatJSInterface, backwardsCompatJSInterface.getInterfaceExposedName());
+
             //We inject the interface to launch intents from the HTML
 			JSInterfaceForResourceImages imagesJSInterface = new JSInterfaceForResourceImages(getContext(), course.getLocation());
 			jsInterfaces.add(imagesJSInterface);
@@ -152,12 +156,10 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
             }
 
             // set up the page to intercept videos
-			/**
-			 * @deprecated (replace as soon as possible)
-			 */
 			@Override
-			@Deprecated
-			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+				return handleUrl(request.getUrl().getPath());
+			}
 
 			private boolean handleUrl(final String url){
 				if (url.contains(VIDEO_SUBPATH)) {
