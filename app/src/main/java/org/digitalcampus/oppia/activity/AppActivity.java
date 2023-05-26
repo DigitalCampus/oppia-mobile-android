@@ -21,14 +21,17 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import androidx.preference.PreferenceManager;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,7 +64,9 @@ import org.digitalcampus.oppia.gamification.GamificationService;
 import org.digitalcampus.oppia.listener.APIKeyRequestListener;
 import org.digitalcampus.oppia.listener.GamificationEventListener;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.storage.StorageUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -82,22 +87,87 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     private ProgressDialog progressDialog;
 
+    BroadcastReceiver externalStorageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "externalStorageReceiver. onReceive: " + intent.getAction());
+            switch (intent.getAction()) {
+                case Intent.ACTION_MEDIA_MOUNTED:
+                    closeSdCardBlockingMessage();
+                    break;
+
+                case Intent.ACTION_MEDIA_UNMOUNTED:
+                    showSdCardBlockingMessage();
+                    break;
+            }
+        }
+    };
+
+
+    private AlertDialog sdCardNotAvailableDialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeDaggerBase();
     }
 
+
     @Override
     public void onStart(){
         super.onStart();
         Analytics.trackViewOnStart(this);
+
+        Environment.getExternalStorageState();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_MEDIA_MOUNTED);
+        intentFilter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
+        intentFilter.addDataScheme("file");
+        registerReceiver(externalStorageReceiver, intentFilter);
+
+        if (!isSdCardReady()) {
+            showSdCardBlockingMessage();
+        } else {
+            closeSdCardBlockingMessage();
+        }
+    }
+
+    private void showSdCardBlockingMessage() {
+        closeSdCardBlockingMessage();
+
+        if (this instanceof StartUpActivity) {
+            return;
+        }
+
+        sdCardNotAvailableDialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.sdcard_not_available)
+                .setMessage(R.string.sdcard_not_available_message)
+                .setCancelable(false)
+                .show();
+    }
+
+    private void closeSdCardBlockingMessage() {
+        if (sdCardNotAvailableDialog != null && sdCardNotAvailableDialog.isShowing()) {
+            sdCardNotAvailableDialog.dismiss();
+        }
+    }
+
+    private boolean isSdCardReady() {
+        String storateOption = getPrefs().getString(PrefsActivity.PREF_STORAGE_OPTION, null);
+        boolean externalStorageSelected = TextUtilsJava.equals(storateOption, PrefsActivity.STORAGE_OPTION_EXTERNAL);
+        if (externalStorageSelected) {
+            boolean externalStorageAvailable = StorageUtils.getExternalMemoryDrive(this) != null;
+            return externalStorageAvailable;
+        } else {
+            return true;
+        }
     }
 
     @Override
     public void onStop(){
-        Analytics.trackViewOnStop(this);
         super.onStop();
+        Analytics.trackViewOnStop(this);
+        unregisterReceiver(externalStorageReceiver);
     }
 
     public AppComponent getAppComponent(){

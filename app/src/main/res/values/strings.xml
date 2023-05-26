@@ -652,6 +652,8 @@
     <string name="continue_anyway">Continue anyway</string>
     <string name="offline_user_not_found">Offline user not found.\nYou have no internet connection so only local users are available.</string>
     <string name="offline_user_invalid_password">Invalid password.\nYou have no internet connection so only local users are available.</string>
+    <string name="sdcard_not_available">SD card not available</string>
+    <string name="sdcard_not_available_message">To continue using the app the SD card is needed. \nPlease reinsert your SD card.</string>
 
 </resources>
 

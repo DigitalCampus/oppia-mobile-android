@@ -39,11 +39,9 @@ public class CompleteCourseProvider {
     }
 
     private void showErrorMessage(final Context ctx){
-        UIUtils.showAlert(ctx, R.string.error, R.string.error_reading_xml, new Callable<Boolean>() {
-            public Boolean call() throws Exception {
-                ((CourseIndexActivity) ctx).finish();
-                return true;
-            }
+        UIUtils.showAlert(ctx, R.string.error, R.string.error_reading_xml, () -> {
+            ((CourseIndexActivity) ctx).finish();
+            return true;
         });
     }
 }
