@@ -27,6 +27,8 @@ import org.digitalcampus.oppia.repository.InterfaceLanguagesRepository;
 import org.digitalcampus.oppia.service.DownloadServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,31 +45,31 @@ public class AppModule {
 
     private Application app;
 
-    public AppModule(Application app){
+    public AppModule(Application app) {
         this.app = app;
     }
 
     @Provides
     @Singleton
-    public CoursesRepository provideCoursesRepository(){
+    public CoursesRepository provideCoursesRepository() {
         return new CoursesRepository();
     }
 
     @Provides
     @Singleton
-    public CompleteCourseProvider provideCompleteCourseProvider(){
+    public CompleteCourseProvider provideCompleteCourseProvider() {
         return new CompleteCourseProvider();
 
     }
 
     @Provides
     @Singleton
-    public SharedPreferences provideSharedPreferences(){
+    public SharedPreferences provideSharedPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(app);
     }
 
     @Provides
-    public User provideUser(){
+    public User provideUser() {
         try {
             return DbHelper.getInstance(app).getUser(SessionManager.getUsername(app));
         } catch (UserNotFoundException e) {
@@ -77,12 +79,12 @@ public class AppModule {
     }
 
     @Provides
-    public List<Points> providePointsList(){
+    public List<Points> providePointsList() {
         return new ArrayList<>();
     }
 
     @Provides
-    public List<Badge> provideBadgesList(){
+    public List<Badge> provideBadgesList() {
         return new ArrayList<>();
     }
 
@@ -113,13 +115,13 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public CourseInstallerServiceDelegate provideCourseInstallerServiceDelegate(){
+    public CourseInstallerServiceDelegate provideCourseInstallerServiceDelegate() {
         return new CourseInstallerServiceDelegate();
     }
 
     @Provides
     @Singleton
-    public DownloadServiceDelegate provideDownloadServiceDelegate(){
+    public DownloadServiceDelegate provideDownloadServiceDelegate() {
         return new DownloadServiceDelegate();
     }
 
@@ -136,13 +138,13 @@ public class AppModule {
     }
 
     @Provides
-    public CustomFieldsRepository provideProfileCustomFieldsList(){
+    public CustomFieldsRepository provideProfileCustomFieldsList() {
         return new CustomFieldsRepository();
     }
 
     @Provides
     @Singleton
-    public AnalyticsProvider provideAnalyticsProvider(){
+    public AnalyticsProvider provideAnalyticsProvider() {
         return new AnalyticsProvider();
     }
 
@@ -153,7 +155,12 @@ public class AppModule {
     }
 
     @Provides
-    public InterfaceLanguagesRepository provideInterfaceLanguagesRepository(){
+    public InterfaceLanguagesRepository provideInterfaceLanguagesRepository() {
         return new InterfaceLanguagesRepository();
+    }
+
+    @Provides
+    public StorageAccessStrategy getStorageStrategy() {
+        return Storage.getStorageStrategy();
     }
 }

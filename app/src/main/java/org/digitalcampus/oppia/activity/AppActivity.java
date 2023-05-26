@@ -85,6 +85,9 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     @Inject
     SharedPreferences prefs;
 
+    @Inject
+    StorageAccessStrategy storageStrategy;
+
     private ProgressDialog progressDialog;
 
     BroadcastReceiver externalStorageReceiver = new BroadcastReceiver() {
@@ -155,7 +158,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     }
 
     private boolean isSdCardReady() {
-        StorageAccessStrategy storageStrategy = Storage.getStorageStrategy();
         boolean externalStorageSelected = TextUtilsJava.equals(storageStrategy.getStorageType(), PrefsActivity.STORAGE_OPTION_EXTERNAL);
         if (externalStorageSelected) {
             boolean externalStorageAvailable = storageStrategy.isStorageAvailable(this);
