@@ -73,6 +73,7 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 
 	private final List<JSInterface> jsInterfaces = new ArrayList<>();
 	private final List<String> inlineInput = new ArrayList<>();
+	private final List<String> openedResources = new ArrayList<>();
 
 	public static PageWidget newInstance(Activity activity, Course course, boolean isBaseline) {
 		PageWidget myFragment = new PageWidget();
@@ -193,6 +194,7 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 			Intent intent = ExternalResourceOpener.getIntentToOpenResource(getContext(), fileToOpen);
 			if(intent != null){
 				PageWidget.super.getActivity().startActivity(intent);
+				openedResources.add(fileToOpen.getName());
 			} else {
 				showResourceOpenerNotFoundMessage(fileToOpen);
 			}
@@ -271,6 +273,9 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 				.createActivityIntent(course, activity, getActivityCompleted(), isBaseline);
 		if (!inlineInput.isEmpty()){
 			delegate.addExtraEventData("inline_input", TextUtilsJava.join(",", inlineInput));
+		}
+		if (!openedResources.isEmpty()){
+			delegate.addExtraEventData("opened_resources", TextUtilsJava.join(",", openedResources));
 		}
 		delegate.registerPageActivityEvent(timetaken, readAloud);
 	}
