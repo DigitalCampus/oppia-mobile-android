@@ -43,6 +43,10 @@ public class ExternalResourceOpener {
             //Create the file descriptor again to avoid possible file:// prefixes in the URI
             resourceFile = new File(Storage.getStorageLocationRoot(ctx), relativePath);
         }
+        if (!resourceFile.exists()){
+            return null;
+        }
+
         Uri resourceUri = FileProvider.getUriForFile(ctx, FILEPROVIDER_AUTHORITY, resourceFile);
 
         // check there is actually an app installed to open this filetype
