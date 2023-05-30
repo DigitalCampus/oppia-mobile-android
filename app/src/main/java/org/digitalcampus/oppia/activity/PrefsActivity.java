@@ -163,6 +163,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
     public static final String PREF_UPDATE_ACTIVITY_ON_LOGIN = "prefUpdateActivityOnLogin";
 
+    public static final String PREF_OFFLINE_COURSE_IMPORT = "prefOfflineCourseImport";
+
     private PreferenceChangedCallback currentPrefScreen;
 
     @Inject

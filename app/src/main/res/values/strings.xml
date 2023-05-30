@@ -653,5 +653,17 @@
     <string name="offline_user_not_found">Offline user not found.\nYou have no internet connection so only local users are available.</string>
     <string name="offline_user_invalid_password">Invalid password.\nYou have no internet connection so only local users are available.</string>
 
+    <!-- Offline course import -->
+    <string name="title_offline_course_import">Offline course import</string>
+    <string name="offline_course_import.instructions">To import courses, first click on the \"Add files\" button and select the .zip files for the courses and the media files you want to import.\n\nThen, wait until the files appear on the list and click the \"Import\" button.</string>
+    <string name="offline_course_import.add_files">Add files</string>
+    <string name="offline_course_import.import">Import</string>
+    <string name="offline_course_import.import_in_progress">Import in progress. Please, be patient.</string>
+    <string name="offline_course_import.importing_media_file">Importing media file: %s</string>
+    <string name="offline_course_import.empty_files">No files added yet.</string>
+    <string name="offline_course_import.import_completed">Import completed.</string>
+    <string name="offline_course_import.media_files_imported">Media files imported</string>
+    <string name="offline_course_import.course_files_imported">Course files imported</string>
+
 </resources>
 

@@ -82,4 +82,12 @@
         app:allowDividerBelow="true"
         app:useSimpleSummaryProvider="true"/>
 
+    <Preference
+        app:key="prefOfflineCourseImport"
+        app:title="@string/title_offline_course_import"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:icon="@drawable/ic_offline_course_import">
+    </Preference>
+
 </androidx.preference.PreferenceScreen>
