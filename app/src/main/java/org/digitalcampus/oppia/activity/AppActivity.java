@@ -21,14 +21,15 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +46,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -61,7 +63,10 @@ import org.digitalcampus.oppia.gamification.GamificationService;
 import org.digitalcampus.oppia.listener.APIKeyRequestListener;
 import org.digitalcampus.oppia.listener.GamificationEventListener;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 
 import java.util.concurrent.TimeUnit;
 
@@ -80,7 +85,26 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     @Inject
     SharedPreferences prefs;
 
+    @Inject
+    StorageAccessStrategy storageStrategy;
+
     private ProgressDialog progressDialog;
+
+    BroadcastReceiver externalStorageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "externalStorageReceiver. onReceive: " + intent.getAction());
+            switch (intent.getAction()) {
+                case Intent.ACTION_MEDIA_MOUNTED:
+                case Intent.ACTION_MEDIA_UNMOUNTED:
+                    checkSdCardStatus();
+                    break;
+            }
+        }
+    };
+
+
+    private AlertDialog sdCardNotAvailableDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,16 +112,66 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         initializeDaggerBase();
     }
 
+
     @Override
     public void onStart(){
         super.onStart();
         Analytics.trackViewOnStart(this);
+
+        Environment.getExternalStorageState();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_MEDIA_MOUNTED);
+        intentFilter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
+        intentFilter.addDataScheme("file");
+        registerReceiver(externalStorageReceiver, intentFilter);
+
+        checkSdCardStatus();
+    }
+
+    private void checkSdCardStatus() {
+        if (!isSdCardReady()) {
+            showSdCardBlockingMessage();
+        } else {
+            closeSdCardBlockingMessage();
+        }
+    }
+
+    private void showSdCardBlockingMessage() {
+        closeSdCardBlockingMessage();
+
+        if (this instanceof StartUpActivity) {
+            return;
+        }
+
+        sdCardNotAvailableDialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.sdcard_not_available)
+                .setMessage(R.string.sdcard_not_available_message)
+                .setCancelable(false)
+                .setNegativeButton(R.string.close_app, (dialog, which) -> finishAffinity())
+                .show();
+    }
+
+    private void closeSdCardBlockingMessage() {
+        if (sdCardNotAvailableDialog != null && sdCardNotAvailableDialog.isShowing()) {
+            sdCardNotAvailableDialog.dismiss();
+        }
+    }
+
+    private boolean isSdCardReady() {
+        boolean externalStorageSelected = TextUtilsJava.equals(storageStrategy.getStorageType(), PrefsActivity.STORAGE_OPTION_EXTERNAL);
+        if (externalStorageSelected) {
+            boolean externalStorageAvailable = storageStrategy.isStorageAvailable(this);
+            return externalStorageAvailable;
+        } else {
+            return true;
+        }
     }
 
     @Override
     public void onStop(){
-        Analytics.trackViewOnStop(this);
         super.onStop();
+        Analytics.trackViewOnStop(this);
+        unregisterReceiver(externalStorageReceiver);
     }
 
     public AppComponent getAppComponent(){

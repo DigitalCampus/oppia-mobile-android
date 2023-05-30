@@ -383,6 +383,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         } else {
             storagePref.setValue(storageOption);
         }
+        loadPrefs();
     }
 
     private void updateStorageList(Context ctx) {
