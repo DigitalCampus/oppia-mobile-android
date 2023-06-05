@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tag_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/list_card_horizontal_margin"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="@dimen/list_card_horizontal_margin"
+        android:layout_marginBottom="7dp"
+        app:contentPaddingBottom="@dimen/list_card_vertical_padding"
+        app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
+        app:contentPaddingRight="@dimen/list_card_horizontal_padding"
+        app:contentPaddingTop="@dimen/list_card_vertical_padding">
+
+        <RelativeLayout
+            android:id="@+id/file_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/view_title_and_badge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/file_title"
+                    style="@style/NormalTextBoldDark"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/type_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Oppia.Theme.CardBadge"
+                    android:textSize="13sp"
+                    android:background="@drawable/badge_tag_count"
+                    android:paddingVertical="@dimen/list_card_vertical_padding"
+                    android:paddingHorizontal="@dimen/list_card_horizontal_padding"
+                    android:layout_marginTop="5dp"/>
+
+            </LinearLayout>
+
+
+            <ProgressBar
+                android:id="@+id/import_progress"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="center_vertical"
+                android:layout_toStartOf="@+id/row_btn"
+                android:indeterminate="true"
+                android:indeterminateOnly="false"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/row_btn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/cancel"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_action_cancel" />
+
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

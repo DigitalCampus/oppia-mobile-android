@@ -13,12 +13,21 @@ import androidx.core.content.FileProvider;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ExternalResourceOpener {
 
     private static final String FILEPROVIDER_AUTHORITY = BuildConfig.APPLICATION_ID + ".provider";
+
+    private static final String GOOGLE_PLAY_INTENT_URI = "market://details?id=";
+    private static final String GOOGLE_PLAY_INTENT_URL = "https://play.google.com/store/apps/details?id=";
+    private static Map<String, String> MIMETYPE_OPENER_PACKAGES =new HashMap<String , String>() {{
+        put("application/pdf", "com.artifex.mupdf.viewer.app");
+    }};
 
     private ExternalResourceOpener() {
         throw new IllegalStateException("Utility class");
@@ -26,12 +35,19 @@ public class ExternalResourceOpener {
 
     public static Intent getIntentToOpenResource(Context ctx, File resourceFile) {
 
-        if (!resourceFile.exists()) {
+        String resourceMimeType = FileUtils.getMimeType(resourceFile.getPath());
+
+        String storageLocationRoot = Storage.getStorageLocationRoot(ctx);
+        if (resourceFile.getAbsolutePath().contains(storageLocationRoot)){
+            String relativePath = resourceFile.getAbsolutePath().substring(storageLocationRoot.length() +1);
+            //Create the file descriptor again to avoid possible file:// prefixes in the URI
+            resourceFile = new File(Storage.getStorageLocationRoot(ctx), relativePath);
+        }
+        if (!resourceFile.exists()){
             return null;
         }
 
         Uri resourceUri = FileProvider.getUriForFile(ctx, FILEPROVIDER_AUTHORITY, resourceFile);
-        String resourceMimeType = FileUtils.getMimeType(resourceFile.getPath());
 
         // check there is actually an app installed to open this filetype
         Intent intent = new Intent();
@@ -39,17 +55,41 @@ public class ExternalResourceOpener {
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setDataAndType(resourceUri, resourceMimeType);
 
-        PackageManager pm = ctx.getPackageManager();
-
-        ActivityInfo activityInfo = intent.resolveActivityInfo(pm, intent.getFlags());
-        boolean appFound = activityInfo != null && activityInfo.exported;
-
-        //In case there is a valid filter, we return the intent, otherwise null
-        return (appFound ? intent : null);
-
+        String targetAppPackage = getAppToResolveIntent(ctx, intent);
+        if (targetAppPackage != null) {
+            //In case there is a valid filter, we grant permission and return the intent, otherwise null
+            ctx.grantUriPermission(targetAppPackage, resourceUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            return intent;
+        }
+        return null;
     }
 
-    public static Intent constructShareFileIntent(Context ctx, File fileToShare, String type) {
+    public static Intent getIntentToInstallAppForResource(Context ctx, File resourceFile){
+        String resourceMimeType = FileUtils.getMimeType(resourceFile.getPath());
+        if (! MIMETYPE_OPENER_PACKAGES.containsKey(resourceMimeType)) {
+            return null;
+        }
+
+        String appPackage = MIMETYPE_OPENER_PACKAGES.get(resourceMimeType);
+        Intent intent = new Intent();
+        intent.setAction(android.content.Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(GOOGLE_PLAY_INTENT_URI + appPackage));
+
+        // If Google Play is not installed, we open the Google Play link in the browser
+        if (getAppToResolveIntent(ctx, intent) == null) {
+            intent.setData(Uri.parse(GOOGLE_PLAY_INTENT_URL + appPackage));
+        }
+        return intent;
+    }
+
+    private static String getAppToResolveIntent(Context ctx, Intent i) {
+        PackageManager pm = ctx.getPackageManager();
+        ActivityInfo activityInfo = i.resolveActivityInfo(pm, 0);
+        boolean appFound = activityInfo !=  null && activityInfo.exported;
+        return appFound ? activityInfo.packageName : null;
+    }
+
+    public static Intent constructShareFileIntent(Context ctx, File fileToShare, String type){
 
         if (!fileToShare.exists()) {
             return null;

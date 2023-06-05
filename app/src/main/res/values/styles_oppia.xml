@@ -50,6 +50,7 @@
 
         <item name="android:popupMenuStyle">@style/PopupMenu.Om</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Om</item>
+        <item name="snackbarButtonStyle">@style/Oppia.Theme.SnackBarButton</item>
     </style>
 
     <style name="Oppia.Theme.ActionBarTheme">
@@ -126,6 +127,11 @@
         <item name="elevation">4dp</item>
         <item name="titleTextColor">@color/toolbar_text_color</item>
         <item name="subtitleTextColor">@color/toolbar_text_color</item>
+    </style>
+
+    <style name="Oppia.Theme.SnackBarButton" parent="@style/Widget.MaterialComponents.Button.TextButton.Snackbar">
+        <item name="backgroundTint">@color/transparent</item>
+        <item name="android:textColor">@color/text_light</item>
     </style>
 
 

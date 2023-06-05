@@ -122,7 +122,7 @@ public class ChangeStorageOptionTest {
         signal.await();
 
         assertFalse(resultResponse.isSuccess()); 
-        assertEquals(context.getString(R.string.error_sdcard), resultResponse.getResultMessage());
+        assertEquals(context.getString(R.string.sdcard_not_available_change_settings), resultResponse.getResultMessage());
 
         ExternalStorageState.setExternalStorageState(new ExternalStorageState());   //Replace mocked object
     }
@@ -156,7 +156,7 @@ public class ChangeStorageOptionTest {
         signal.await();
 
         assertFalse(resultResponse.isSuccess());
-        assertEquals(context.getString(R.string.error_sdcard), resultResponse.getResultMessage());
+        assertEquals(context.getString(R.string.sdcard_not_available_change_settings), resultResponse.getResultMessage());
 
         ExternalStorageState.setExternalStorageState(new ExternalStorageState());   //Replace mocked object
     }
@@ -190,7 +190,7 @@ public class ChangeStorageOptionTest {
         signal.await();
 
         assertFalse(resultResponse.isSuccess());
-        assertEquals(context.getString(R.string.error_sdcard), resultResponse.getResultMessage());
+        assertEquals(context.getString(R.string.sdcard_not_available_change_settings), resultResponse.getResultMessage());
 
         ExternalStorageState.setExternalStorageState(new ExternalStorageState());   //Replace mocked object
     }
@@ -226,7 +226,7 @@ public class ChangeStorageOptionTest {
         signal.await();
 
         assertFalse(resultResponse.isSuccess());
-        assertEquals(context.getString(R.string.error_sdcard), resultResponse.getResultMessage());
+        assertEquals(context.getString(R.string.sdcard_not_available_change_settings), resultResponse.getResultMessage());
 
         ExternalStorageState.setExternalStorageState(new ExternalStorageState());   //Replace mocked object
     }
@@ -260,7 +260,7 @@ public class ChangeStorageOptionTest {
         signal.await();
 
         assertFalse(resultResponse.isSuccess());
-        assertEquals(context.getString(R.string.error_sdcard), resultResponse.getResultMessage());
+        assertEquals(context.getString(R.string.sdcard_not_available_change_settings), resultResponse.getResultMessage());
 
         ExternalStorageState.setExternalStorageState(new ExternalStorageState());   //Replace mocked object
     }

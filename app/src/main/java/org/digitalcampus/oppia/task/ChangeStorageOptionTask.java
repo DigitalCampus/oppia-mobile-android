@@ -59,7 +59,7 @@ public class ChangeStorageOptionTask extends AsyncTask<String, Void, BasicResult
         try {
             Log.d(TAG, "Checking if storage is available...");
             if (!newStrategy.isStorageAvailable(ctx)) {
-                throw new ChangeStorageException(ctx.getString(R.string.error_sdcard));
+                throw new ChangeStorageException(ctx.getString(R.string.sdcard_not_available_change_settings));
             }
 
             Log.d(TAG, "Getting storage sizes...");

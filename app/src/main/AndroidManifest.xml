@@ -180,6 +180,13 @@
             android:theme="@style/Oppia.ToolbarTheme"
             android:windowSoftInputMode="adjustResize"/>
 
+        <activity
+            android:name="org.digitalcampus.oppia.activity.OfflineCourseImportActivity"
+            android:label="@string/title_offline_course_import"
+            android:theme="@style/Oppia.ToolbarTheme"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+
 
         <service
             android:name="org.digitalcampus.oppia.service.DownloadService"
@@ -219,5 +226,13 @@
         </service>
 
     </application>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:mimeType="*/*" />
+        </intent>
+    </queries>
 
 </manifest>
