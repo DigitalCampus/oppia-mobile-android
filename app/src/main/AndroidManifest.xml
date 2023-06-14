@@ -158,19 +158,17 @@
             android:name="org.digitalcampus.oppia.activity.ViewDigestActivity"
             android:theme="@style/Oppia.ToolbarTheme.Dark"
             android:exported="true">
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <!-- https://developer.android.com/training/app-links/deep-linking -->
-                <data
-                    android:host="@string/oppiaServerDomain"
-                    android:pathPrefix="/view"
-                    android:scheme="http" />
+                <data android:host="@string/oppiaServerDomain" />
+                <data android:pathPrefix="/view" />
                 <data android:scheme="https" />
-                <data android:scheme="oppiamobile" />
+                <data android:scheme="http" />
 
             </intent-filter>
         </activity>
