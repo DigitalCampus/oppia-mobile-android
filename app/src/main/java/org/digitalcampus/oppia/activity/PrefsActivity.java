@@ -254,6 +254,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
+            finishAffinity();
             return;
         }
 
