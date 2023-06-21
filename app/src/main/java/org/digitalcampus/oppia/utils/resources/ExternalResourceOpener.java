@@ -16,8 +16,12 @@ import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ExternalResourceOpener {
 
@@ -25,12 +29,31 @@ public class ExternalResourceOpener {
 
     private static final String GOOGLE_PLAY_INTENT_URI = "market://details?id=";
     private static final String GOOGLE_PLAY_INTENT_URL = "https://play.google.com/store/apps/details?id=";
+
+    private static final String RESOURCE_SUBPATH = "resources/";
+    private static final String RESOURCE_HREF_REGEX = "href=\"([0-9A-Za-z\\.\\/\\-\\']+)\"";
+
     private static Map<String, String> MIMETYPE_OPENER_PACKAGES =new HashMap<String , String>() {{
         put("application/pdf", "com.artifex.mupdf.viewer.app");
     }};
 
     private ExternalResourceOpener() {
         throw new IllegalStateException("Utility class");
+    }
+
+    public static List<String> getResourcesFromContent(String content){
+
+        List<String> resources = new ArrayList<>();
+        Matcher m = Pattern.compile(RESOURCE_HREF_REGEX).matcher(content);
+        while (m.find()){
+            String url = m.group(1);
+            if (url.contains(RESOURCE_SUBPATH)){
+                String filename = m.group(1);
+                filename = filename.substring(filename.lastIndexOf(RESOURCE_SUBPATH)+RESOURCE_SUBPATH.length());
+                resources.add(filename);
+            }
+        }
+        return resources;
     }
 
     public static Intent getIntentToOpenResource(Context ctx, File resourceFile) {
