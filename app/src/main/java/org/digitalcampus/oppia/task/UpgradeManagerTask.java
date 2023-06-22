@@ -134,13 +134,6 @@ public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
             result.setSuccess(true);
         }
 
-        if (!prefs.getBoolean("upgradeV49b", false)) {
-            upgradeV49();
-            prefs.edit().putBoolean("upgradeV49b", true).apply();
-            publishProgress(this.ctx.getString(R.string.info_upgrading, "v49"));
-            result.setSuccess(true);
-        }
-
         if (!prefs.getBoolean("upgradeV54", false)) {
             upgradeV54();
             prefs.edit().putBoolean("upgradeV54", true).apply();
@@ -257,76 +250,6 @@ public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
         DbHelper db = DbHelper.getInstance(ctx);
         long userId = db.addOrUpdateUser(user);
         db.updateV43(userId);
-    }
-
-    /*
-     * Move files from current location into new one
-     */
-    protected void upgradeV49() {
-
-        String location = Storage.getStorageLocationRoot(ctx);
-        if (TextUtilsJava.isEmpty(location)) {
-            return;
-        }
-
-        String source = Environment.getExternalStorageDirectory() + File.separator + Storage.APP_ROOT_DIR_NAME + File.separator;
-
-        File[] dirs = ctx.getExternalFilesDirs(null);
-        if (dirs.length > 0) {
-
-            String destination = dirs[dirs.length - 1].getAbsolutePath();
-            File downloadSource = new File(source + Storage.APP_DOWNLOAD_DIR_NAME);
-            File mediaSource = new File(source + Storage.APP_MEDIA_DIR_NAME);
-            File courseSource = new File(source + Storage.APP_COURSES_DIR_NAME);
-
-            publishProgress(this.ctx.getString(R.string.upgradev49_1));
-            try {
-                org.apache.commons.io.FileUtils.forceDelete(new File(destination + File.separator + Storage.APP_DOWNLOAD_DIR_NAME));
-            } catch (IOException e) {
-                Log.d(TAG, MSG_DELETE_FAIL + destination + File.separator + Storage.APP_DOWNLOAD_DIR_NAME, e);
-            }
-
-            try {
-                org.apache.commons.io.FileUtils.forceDelete(new File(destination + File.separator + Storage.APP_MEDIA_DIR_NAME));
-            } catch (IOException e) {
-                Log.d(TAG, MSG_DELETE_FAIL + destination + File.separator + Storage.APP_MEDIA_DIR_NAME, e);
-            }
-
-            try {
-                org.apache.commons.io.FileUtils.forceDelete(new File(destination + File.separator + Storage.APP_COURSES_DIR_NAME));
-            } catch (IOException e) {
-                Log.d(TAG, MSG_DELETE_FAIL + destination + File.separator + Storage.APP_COURSES_DIR_NAME, e);
-            }
-
-            // now copy over
-            try {
-                org.apache.commons.io.FileUtils.moveDirectoryToDirectory(downloadSource, new File(destination), true);
-                Log.d(TAG, MSG_COMPLETED);
-            } catch (IOException e) {
-                Log.d(TAG, MSG_FAILED, e);
-            }
-
-            try {
-                org.apache.commons.io.FileUtils.moveDirectoryToDirectory(mediaSource, new File(destination), true);
-                Log.d(TAG, MSG_COMPLETED);
-            } catch (IOException e) {
-                Log.d(TAG, MSG_FAILED, e);
-            }
-
-            try {
-                org.apache.commons.io.FileUtils.moveDirectoryToDirectory(courseSource, new File(destination), true);
-                Log.d(TAG, MSG_COMPLETED);
-            } catch (IOException e) {
-                Log.d(TAG, MSG_FAILED, e);
-            }
-
-            // delete original dir
-            try {
-                org.apache.commons.io.FileUtils.forceDelete(new File(source));
-            } catch (IOException e) {
-                Log.d(TAG, "failed to delete original file", e);
-            }
-        }
     }
 
     // update all the current quiz results for the score/maxscore etc

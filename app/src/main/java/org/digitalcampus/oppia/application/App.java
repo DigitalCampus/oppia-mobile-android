@@ -173,7 +173,12 @@ public class App extends Application {
 
         String storageOption = getPrefs(this).getString(PrefsActivity.PREF_STORAGE_OPTION, null);
         if (TextUtilsJava.isEmpty(storageOption)) {
-            storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
+            StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_EXTERNAL);
+            if (!strategy.isStorageAvailable(this)) {
+                storageOption = PrefsActivity.STORAGE_OPTION_INTERNAL;
+            } else {
+                storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
+            }
         }
 
         StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
