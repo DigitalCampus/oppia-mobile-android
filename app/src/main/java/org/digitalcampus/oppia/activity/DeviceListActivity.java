@@ -79,34 +79,9 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
 
         // Initialize the button to perform device discovery
         binding.buttonScan.setOnClickListener(v -> {
-            final List<String> notGrantedPerms = PermissionsManager.filterNotGrantedPermissions(
-                    DeviceListActivity.this, PermissionsManager.BLUETOOTH_PERMISSIONS_REQUIRED);
-            if (!notGrantedPerms.isEmpty()) {
-                if (PermissionsManager.canAskForAllPermissions(DeviceListActivity.this, notGrantedPerms)) {
-                    UIUtils.showAlert(
-                            DeviceListActivity.this,
-                            R.string.permissions_simple_title,
-                            R.string.permissions_bluetooth_message,
-                            R.string.permissions_allow_btn_text,
-                            () -> {
-                                PermissionsManager.requestPermissions(
-                                        DeviceListActivity.this, notGrantedPerms);
-                                return true;
-                            }
-                    );
-                } else {
-                    UIUtils.showAlert(
-                            DeviceListActivity.this,
-                            R.string.permissions_simple_title,
-                            R.string.permissions_not_askable_message);
-                }
-            } else {
-                binding.buttonScan.setVisibility(View.GONE);
-                doDiscovery();
-            }
-
+            binding.buttonScan.setVisibility(View.GONE);
+            doDiscovery();
         });
-
 
         // Get the local Bluetooth adapter
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();

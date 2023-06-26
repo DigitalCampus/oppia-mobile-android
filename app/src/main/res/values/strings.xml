@@ -672,6 +672,7 @@
     <string name="offline_course_import.import_completed">Import completed.</string>
     <string name="offline_course_import.media_files_imported">Media files imported</string>
     <string name="offline_course_import.course_files_imported">Course files imported</string>
+    <string name="bluetooth_not_supported">Bluetooth not supported</string>
 
 </resources>
 

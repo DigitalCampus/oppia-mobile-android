@@ -205,7 +205,7 @@
                     android:text="@string/bluetooth.device_name"
                     android:textColor="@color/theme_primary_dark" />
 
-                <ImageButton
+                <androidx.appcompat.widget.AppCompatImageButton
                     android:id="@+id/tethering_btn"
                     style="@android:style/Widget.Material.ImageButton"
                     android:layout_width="wrap_content"
@@ -216,7 +216,7 @@
                     android:adjustViewBounds="true"
                     android:background="@drawable/bg_transparent"
                     android:scaleType="fitEnd"
-                    android:tint="@color/theme_primary"
+                    app:tint="@color/theme_primary"
                     app:srcCompat="@drawable/ic_wifi_tethering" />
 
             </RelativeLayout>

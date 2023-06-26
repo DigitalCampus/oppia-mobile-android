@@ -6,6 +6,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -88,12 +90,15 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         // Prevent activity from going to sleep
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        // If the adapter is null, then Bluetooth is not supported
-        if (bluetoothAdapter == null) {
-            Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
-            this.finish();
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)
+                || BluetoothAdapter.getDefaultAdapter() == null) {
+            Toast.makeText(this, R.string.bluetooth_not_supported, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
+
+
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         btServiceDelegate = new BluetoothTransferServiceDelegate(this);
     }
 
@@ -148,14 +153,20 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     public void onResume() {
         super.onResume();
 
-        hasPermissions = PermissionsManager.checkPermissionsAndInform(this,
-                PermissionsManager.BLUETOOTH_PERMISSIONS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            hasPermissions = PermissionsManager.checkPermissionsAndInform(this,
+                    PermissionsManager.BLUETOOTH_API_31_PERMISSIONS);
+        } else {
+            hasPermissions = PermissionsManager.checkPermissionsAndInform(this,
+                    PermissionsManager.BLUETOOTH_PERMISSIONS);
+        }
+
         if (!hasPermissions){
             return;
         }
 
         // If BT is not on, request that it be enabled.
-        if ((bluetoothAdapter != null) && !bluetoothAdapter.isEnabled()) {
+        if (bluetoothAdapter != null && !bluetoothAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
             // Otherwise, setup the chat session
