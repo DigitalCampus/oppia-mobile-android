@@ -1,14 +1,12 @@
 package org.digitalcampus.oppia.activity;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.OpenableColumns;
@@ -19,13 +17,13 @@ import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.annotation.NonNull;
 
 import org.apache.commons.io.IOUtils;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityOfflineCourseImportBinding;
 import org.digitalcampus.oppia.adapter.OfflineCourseImportAdapter;
+import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.exception.CourseInstallException;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.OnRemoveButtonClickListener;
@@ -55,7 +53,6 @@ import javax.inject.Inject;
 
 public class OfflineCourseImportActivity extends AppActivity implements InstallCourseListener, ScanMediaListener, OnRemoveButtonClickListener {
 
-    private static final int REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 1;
     private ActivityOfflineCourseImportBinding binding;
     private OfflineCourseImportAdapter adapter;
     private boolean coursesImported = false;
@@ -104,8 +101,10 @@ public class OfflineCourseImportActivity extends AppActivity implements InstallC
     }
 
     private void launchFileExplorer() {
-        if (ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
+        final List<String> notGrantedPerms = PermissionsManager.filterNotGrantedPermissions(
+                OfflineCourseImportActivity.this, PermissionsManager.OFFLINE_COURSE_IMPORT_PERMISSIONS_REQUIRED);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && !notGrantedPerms.isEmpty()) {
+            PermissionsManager.requestPermissions(OfflineCourseImportActivity.this, notGrantedPerms);
         } else {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -113,6 +112,12 @@ public class OfflineCourseImportActivity extends AppActivity implements InstallC
             intent.setType("application/zip");
             someActivityResultLauncher.launch(intent);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionsManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private final ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(

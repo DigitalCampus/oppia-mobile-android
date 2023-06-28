@@ -19,24 +19,29 @@ package org.digitalcampus.oppia.application;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
-
-import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
-
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.preference.PreferenceManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ViewPermissionsExplanationBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class PermissionsManager {
@@ -59,6 +64,10 @@ public class PermissionsManager {
             Manifest.permission.POST_NOTIFICATIONS
     );
 
+    public static final List<String> OFFLINE_COURSE_IMPORT_PERMISSIONS_REQUIRED = Arrays.asList(
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    );
+
     public static final int STARTUP_PERMISSIONS = 1;
     public static final int BLUETOOTH_PERMISSIONS = 2;
     public static final int STORAGE_PERMISSIONS = 3;
@@ -74,6 +83,14 @@ public class PermissionsManager {
 
     private static void setAsked(SharedPreferences prefs, String permission) {
         prefs.edit().putBoolean(permission + "_asked", true).apply();
+    }
+
+    private static boolean isPermissionDeniedOnce(SharedPreferences prefs, String permission) {
+        return prefs.getBoolean(permission + "_denied", false);
+    }
+
+    private static void setDenied(SharedPreferences prefs, String permission) {
+        prefs.edit().putBoolean(permission + "_denied", true).apply();
     }
 
     public static boolean checkPermissionsAndInform(final Activity act, int perms) {
@@ -151,6 +168,10 @@ public class PermissionsManager {
         }
     }
 
+    public static void requestPermission(final Activity act, String permission) {
+        requestPermissions(act, Collections.singletonList(permission));
+    }
+
     public static void requestPermissions(final Activity act, List<String> permissions) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             act.requestPermissions(permissions.toArray(new String[0]), PERMISSIONS_REQUEST);
@@ -203,15 +224,39 @@ public class PermissionsManager {
             for (int i = 0; i < permissions.length; i++) {
                 setAsked(prefs, permissions[i]);
 
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     Log.d("Permissions", "Permission Granted: " + permissions[i]);
                     permissionsGranted++;
-                } else if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                } else {
                     Log.d("Permissions", "Permission Denied: " + permissions[i]);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) ctx, permissions[i])) {
+                            setDenied(prefs, permissions[i]);
+                        } else if (isPermissionDeniedOnce(prefs, permissions[i])) {
+                            showPermissionDeniedDialog(ctx);
+                        }
+                    }
                 }
             }
         }
         return permissions.length == permissionsGranted;
+    }
+
+    public static void showPermissionDeniedDialog(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(context.getString(R.string.permissions_denied));
+        builder.setMessage(context.getString(R.string.permissions_not_askable_message));
+        builder.setPositiveButton(context.getString(R.string.app_settings), (dialog, which) -> PermissionsManager.openAppSettings(context));
+        builder.setNegativeButton(context.getString(R.string.cancel), (dialog, which) -> {});
+
+        builder.create().show();
+    }
+
+    public static void openAppSettings(Context context) {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", context.getPackageName(), null);
+        intent.setData(uri);
+        context.startActivity(intent);
     }
 
 }
