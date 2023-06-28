@@ -56,6 +56,11 @@ public class PermissionsManager {
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
     );
+    public static final List<String> BLUETOOTH_API_31_PERMISSIONS_REQUIRED = Arrays.asList(
+            Manifest.permission.BLUETOOTH_SCAN,
+            Manifest.permission.BLUETOOTH_CONNECT,
+            Manifest.permission.BLUETOOTH_ADVERTISE
+    );
     public static final List<String> STORAGE_PERMISSIONS_REQUIRED = Arrays.asList(
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     );
@@ -72,6 +77,7 @@ public class PermissionsManager {
     public static final int BLUETOOTH_PERMISSIONS = 2;
     public static final int STORAGE_PERMISSIONS = 3;
     public static final int NOTIFICATIONS_PERMISSIONS = 4;
+    public static final int BLUETOOTH_API_31_PERMISSIONS = 5;
 
     private PermissionsManager() {
         throw new IllegalStateException("Utility class");
@@ -112,6 +118,10 @@ public class PermissionsManager {
             }
             case BLUETOOTH_PERMISSIONS: {
                 permissions = BLUETOOTH_PERMISSIONS_REQUIRED;
+                break;
+            }
+            case BLUETOOTH_API_31_PERMISSIONS: {
+                permissions = BLUETOOTH_API_31_PERMISSIONS_REQUIRED;
                 break;
             }
             case STORAGE_PERMISSIONS: {

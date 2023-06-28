@@ -15,15 +15,20 @@
         tools:ignore="ProtectedPermissions" />
 
     <!-- Bluetooth permissions -->
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
 
     <!-- Dangerous-level permissions (need user confirmation) -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
@@ -165,12 +170,10 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <!-- https://developer.android.com/training/app-links/deep-linking -->
-                <data
-                    android:host="@string/oppiaServerDomain"
-                    android:pathPrefix="/view"
-                    android:scheme="http" />
+                <data android:host="@string/oppiaServerDomain" />
+                <data android:pathPrefix="/view" />
                 <data android:scheme="https" />
-                <data android:scheme="oppiamobile" />
+                <data android:scheme="http" />
 
             </intent-filter>
         </activity>

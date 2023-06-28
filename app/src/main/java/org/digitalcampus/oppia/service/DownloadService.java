@@ -108,7 +108,8 @@ public class DownloadService extends FileIntentService {
         if (action.equals(FileIntentService.ACTION_COMPLETE) && (tasksDownloading==null || tasksDownloading.isEmpty())){
             Log.d(TAG, "Sending notification from Service for the completion of all pending media downloads");
 
-            PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(),
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             NotificationCompat.Builder mBuilder  = OppiaNotificationUtils.getBaseBuilder(this, true);
             mBuilder.setContentTitle(getString(R.string.app_name))
                     .setContentText(getString(R.string.notification_media_subject))
