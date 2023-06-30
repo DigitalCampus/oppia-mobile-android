@@ -73,6 +73,7 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 
 	private final List<JSInterface> jsInterfaces = new ArrayList<>();
 	private final List<String> inlineInput = new ArrayList<>();
+	private List<String> pageResources = new ArrayList<>();
 	private final List<String> openedResources = new ArrayList<>();
 
 	public static PageWidget newInstance(Activity activity, Course course, boolean isBaseline) {
@@ -115,15 +116,18 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		webview = super.getActivity().findViewById(activity.getActId());
 		// get the location data
 		String url = course.getLocation() + activity.getLocation(prefLang);
-
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
+
+		webview = super.getActivity().findViewById(activity.getActId());
 		webview.getSettings().setDefaultFontSize(defaultFontSize);
 		webview.getSettings().setAllowFileAccess(true);
 
 		try {
+			String contents = FileUtils.readFile(url);
+			pageResources = ExternalResourceOpener.getResourcesFromContent(contents);
+
 			webview.getSettings().setJavaScriptEnabled(true);
 
 			JSInterfaceForBackwardsCompat backwardsCompatJSInterface = new JSInterfaceForBackwardsCompat(getContext());
@@ -140,7 +144,8 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 			jsInterfaces.add(inputJSInterface);
             webview.addJavascriptInterface(inputJSInterface, inputJSInterface.getInterfaceExposedName());
 
-			webview.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, FileUtils.readFile(url), "text/html", "utf-8", null);
+
+			webview.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, contents, "text/html", "utf-8", null);
 		} catch (IOException e) {
 			webview.loadUrl("file://" + url);
 		}
@@ -240,6 +245,15 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 	public boolean getActivityCompleted(){
 		if (!this.activityMediaCompleted()){
 			return false;
+		}
+
+		if (!pageResources.isEmpty() && BuildConfig.PAGE_COMPLETION_VIEW_FILE){
+			//If there are files, they have to be opened to mark the activity has completed
+			for (String resource : pageResources){
+				if (!openedResources.contains(resource)){
+					return false;
+				}
+			}
 		}
 
 		long timetaken = this.getSpentTime();
