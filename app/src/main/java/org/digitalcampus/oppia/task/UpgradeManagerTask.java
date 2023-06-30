@@ -117,14 +117,6 @@ public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
             result.setSuccess(true);
         }
 
-        if (!prefs.getBoolean("upgradeV43", false)) {
-            upgradeV43();
-            Editor editor = prefs.edit();
-            editor.putBoolean("upgradeV43", true).apply();
-            publishProgress(this.ctx.getString(R.string.info_upgrading, "v43"));
-            result.setSuccess(true);
-        }
-
         if (!prefs.getBoolean("upgradeV46", false)) {
             Editor editor = prefs.edit();
             editor.putBoolean("upgradeV46", true);
@@ -239,18 +231,6 @@ public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
         prefs.edit().putString(PrefsActivity.PREF_SERVER, ctx.getString(R.string.prefServerDefault)).apply();
     }
 
-    /* go through and add html content to tables
-     */
-    protected void upgradeV43() {
-        SearchUtils.reindexAll(ctx);
-        prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        User user = new User();
-        user.setUsername(SessionManager.getUsername(ctx));
-        user.setApiKey(prefs.getString(UpgradeManagerTask.PREF_API_KEY, ""));
-        DbHelper db = DbHelper.getInstance(ctx);
-        long userId = db.addOrUpdateUser(user);
-        db.updateV43(userId);
-    }
 
     // update all the current quiz results for the score/maxscore etc
     protected void upgradeV54() {
