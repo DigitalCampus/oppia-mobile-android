@@ -145,17 +145,11 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         });
 
         Preference prefOfflineCourseImport = findPreference(PrefsActivity.PREF_OFFLINE_COURSE_IMPORT);
-        if(userLoggedIn) {
-            prefOfflineCourseImport.setSelectable(true);
-            prefOfflineCourseImport.setOnPreferenceClickListener(preference -> {
-                Intent intent = new Intent(getActivity(), OfflineCourseImportActivity.class);
-                startActivity(intent);
-                return true;
-            });
-        } else {
-            prefOfflineCourseImport.setSelectable(false);
-            prefOfflineCourseImport.setSummary(getString(R.string.about_not_logged_in));
-        }
+        prefOfflineCourseImport.setOnPreferenceClickListener(preference -> {
+            Intent intent = new Intent(getActivity(), OfflineCourseImportActivity.class);
+            startActivity(intent);
+            return true;
+        });
 
     }
 

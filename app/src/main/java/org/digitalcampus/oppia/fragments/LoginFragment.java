@@ -110,8 +110,7 @@ public class LoginFragment extends AppFragment implements SubmitEntityListener<U
 
         if (response.isSuccess()) {
             User user = response.getEntity();
-            boolean firstLogin = !user.isLocalUser();
-            ((WelcomeActivity) getActivity()).onSuccessUserAccess(user, firstLogin);
+            ((WelcomeActivity) getActivity()).onSuccessUserAccess(user, true);
 
         } else {
             Context ctx = super.getActivity();

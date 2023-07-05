@@ -87,11 +87,18 @@ public class FileUtils {
 
         long availableStorage = Storage.getAvailableStorageSize(context);
         long uncompressedSize = 0;
-        try (ZipFile zipFile = new ZipFile(sourceFile)) {
-            Enumeration<? extends ZipEntry> entries = zipFile.entries();
-            while (entries.hasMoreElements()) {
-                ZipEntry zipEntry = entries.nextElement();
-                uncompressedSize += zipEntry.getSize();
+        try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(sourceFile))) {
+            byte[] buffer = new byte[4096];
+            ZipEntry zipEntry;
+
+            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+                if (!zipEntry.isDirectory()) {
+                    int bytesRead;
+                    while ((bytesRead = zipInputStream.read(buffer)) != -1) {
+                        uncompressedSize += bytesRead;
+                    }
+                }
+                zipInputStream.closeEntry();
             }
         } catch (IOException e) {
             e.printStackTrace();

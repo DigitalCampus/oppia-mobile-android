@@ -369,6 +369,7 @@
         needs the following permissions to function properly:</string>
     <string name="permissions.storage.title">Read and modify contents of the SD card</string>
     <string name="permissions.simple.title">Permissions needed</string>
+    <string name="permissions.denied">Permission denied</string>
     <string name="permissions.storage.description">&appName; needs access to the SD card to be able to store the downloaded media contents for the courses</string>
     <string name="permissions.phone_state.title">read phone state and identity</string>
     <string name="permissions.phone_state.description">&appName; needs access to the phone identity to get information about your device model and Android version</string>
@@ -378,6 +379,7 @@
     <string name="permissions.not_askable.info">You see this message because permissions were prompted before and you denied them and checked \"Don\'t ask again\"</string>
     <string name="permissions.bluetooth.message">The app needs some additional permissions to scan for Bluetooth devices.</string>
     <string name="error_apikey_expired">Your API key expired. Please, log in again.</string>
+    <string name="app_settings">App Settings</string>
 
     <string name="privacy.title">Privacy and Your Data</string>
     <string name="privacy.policy_info">Privacy policy</string>
@@ -673,6 +675,7 @@
     <string name="offline_course_import.import_completed">Import completed.</string>
     <string name="offline_course_import.media_files_imported">Media files imported</string>
     <string name="offline_course_import.course_files_imported">Course files imported</string>
+    <string name="bluetooth_not_supported">Bluetooth not supported</string>
 
 </resources>
 

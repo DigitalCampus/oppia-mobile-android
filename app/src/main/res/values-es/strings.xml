@@ -278,7 +278,7 @@
     <string name="error_preloading_accounts">Error precargando cuentas de usuario desde fichero CSV</string>
     <string name="error_reset_password">Nombre de usuario o email no encontrado\nInténtelo de nuevo</string>
     <string name="no_title_set">Sin título</string>
-    h
+
     <string name="info.startup.preloaded_accounts">Precargadas %1$d nueva(s) cuenta(s) de usuario.</string>
     <string name="empty_state_media">Genial! Ha descargado todo el contenido multimedia de sus cursos en el dispositivo.</string>
     <string name="menu_sort_by">Ordenar por</string>
@@ -303,6 +303,8 @@
     <string name="permissions.bluetooth.message">La app necesita permisos adicionales para buscar otros dispositivos Bluetooth.</string>
     <string name="permissions.location.title">acceder a la ubicación</string>
     <string name="permissions.location.description">En las últimas versiones de Android se necesita este permiso para poder enlazar otros dispositivos con Bluetooth</string>
+    <string name="permissions.denied">Permiso denegado</string>
+    <string name="app_settings">Ajustes de la app</string>
 
     <string name="prefLogoutEnabled">Permitir cierre de sesión desde el menú principal</string>
     <string name="register_alert_title">Registro</string>

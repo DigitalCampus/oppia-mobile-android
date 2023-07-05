@@ -121,9 +121,9 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
     }
 
 
-    private void launchCoursesListFragment(boolean firstLogin) {
+    private void launchCoursesListFragment() {
         Bundle args = new Bundle();
-        args.putBoolean(MainActivity.EXTRA_FIRST_LOGIN, firstLogin);
+        args.putBoolean(MainActivity.EXTRA_FIRST_LOGIN, true);
         launchInContainer(CoursesListFragment.class, args, R.style.Oppia_ToolbarTheme);
     }
 
@@ -137,7 +137,7 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
 
 
     @Test
-    public void checkExtraParameterIfFirstLogin() {
+    public void checkExtraParameterIfLogin() {
         Intents.init();
         startServer(200, VALID_LOGIN_RESPONSE, 0);
         try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
@@ -161,33 +161,6 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
         Intents.release();
     }
 
-    @Test
-    public void checkExtraParameterIfNotFirstLogin() {
-
-        Intents.init();
-        startServer(200, VALID_LOGIN_RESPONSE, 0);
-        testDBHelper.getTestDataManager().addUsers();
-        try (ActivityScenario<WelcomeActivity> scenario = ActivityScenario.launch(WelcomeActivity.class)) {
-
-            waitForView(withId(R.id.welcome_login))
-                    .perform(scrollTo(), click());
-
-            waitForView(withId(R.id.login_username_field))
-                    .perform(closeSoftKeyboard(), scrollTo(), typeText("user1"));
-
-            waitForView(withId(R.id.login_password_field))
-                    .perform(closeSoftKeyboard(), scrollTo(), typeText("password"));
-
-            waitForView(withId(R.id.login_btn))
-                    .perform(closeSoftKeyboard(), scrollTo(), click());
-
-            intended(allOf(
-                    hasComponent(MainActivity.class.getName()),
-                    hasExtra(MainActivity.EXTRA_FIRST_LOGIN, false)));
-        }
-        Intents.release();
-    }
-
 
     private void prepareCircularProgressbarTests() {
 
@@ -198,11 +171,11 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
     }
 
     @Test
-    public void updateActivityIfFirstLoginAndUpdateValueOptional() {
+    public void updateActivityAtLoginIfUpdateValueOptional() {
 
         prepareCircularProgressbarTests();
         setOption(R.string.update_activity_on_login_value_optional);
-        launchCoursesListFragment(true);
+        launchCoursesListFragment();
 
             await().atMost(5, TimeUnit.SECONDS)
                     .untilAsserted(
@@ -216,11 +189,11 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
 
 
     @Test
-    public void updateActivityIfFirstLoginAndUpdateValueForce() {
+    public void updateActivityAtLoginIfUpdateValueForce() {
 
         prepareCircularProgressbarTests();
         setOption(R.string.update_activity_on_login_value_force);
-        launchCoursesListFragment(true);
+        launchCoursesListFragment();
 
         await().atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(
@@ -233,11 +206,11 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
     }
 
     @Test
-    public void dontUpdateActivityIfFirstLoginAndUpdateValueNone() {
+    public void dontUpdateActivityAtLoginIfUpdateValueNone() {
 
         prepareCircularProgressbarTests();
         setOption(R.string.update_activity_on_login_value_none);
-        launchCoursesListFragment(true);
+        launchCoursesListFragment();
 
         await().atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(
@@ -248,48 +221,6 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
 
         waitForView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(0));
     }
-
-    @Test
-    public void dontUpdateActivityIfNotFirstLoginAndUpdateValueOptional() {
-
-        prepareCircularProgressbarTests();
-        setOption(R.string.update_activity_on_login_value_optional);
-        launchCoursesListFragment(false);
-
-        await().atMost(5, TimeUnit.SECONDS)
-                .untilAsserted(
-                        () ->
-                                waitForView(ViewMatchers.withId(R.id.circularProgressBar))
-                                        .check(CircularProgressbarAssertion.withProgress(0))
-                );
-
-        waitForView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(0));
-
-    }
-
-    @Test
-    public void dontUpdateActivityIfNotFirstLoginAndUpdateValueForce() {
-
-        prepareCircularProgressbarTests();
-        setOption(R.string.update_activity_on_login_value_force);
-        launchCoursesListFragment(false);
-
-        await().atMost(5, TimeUnit.SECONDS)
-                .untilAsserted(
-                        () ->
-                                waitForView(ViewMatchers.withId(R.id.circularProgressBar))
-                                        .check(CircularProgressbarAssertion.withProgress(0))
-                );
-
-        waitForView(withId(R.id.circularProgressBar)).check(CircularProgressbarAssertion.withProgress(0));
-
-        try {
-            Thread.sleep(30000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @Test
     public void checkErrorMessageWhenNoConnectionAndUpdateValueOptional() {
@@ -300,7 +231,7 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
 
         setOption(R.string.update_activity_on_login_value_optional);
 
-        launchCoursesListFragment(true);
+        launchCoursesListFragment();
 
         waitForView(withText(R.string.connection_unavailable_couse_activity))
                 .inRoot(isDialog())
@@ -320,7 +251,7 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
 
         setOption(R.string.update_activity_on_login_value_force);
 
-        launchCoursesListFragment(true);
+        launchCoursesListFragment();
 
         waitForView(withText(R.string.connection_unavailable_couse_activity))
                 .inRoot(isDialog())
@@ -340,7 +271,7 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
 
         startServer(400, null);
 
-        launchCoursesListFragment(true);
+        launchCoursesListFragment();
 
         waitForView(withText(R.string.error_unable_retrieve_course_activity))
                 .inRoot(isDialog())
@@ -361,7 +292,7 @@ public class UpdateActivityOnLoginUiTests extends MockedApiEndpointTest {
 
         startServer(400, null);
 
-        launchCoursesListFragment(true);
+        launchCoursesListFragment();
 
         waitForView(withText(R.string.error_unable_retrieve_course_activity))
                 .inRoot(isDialog())
