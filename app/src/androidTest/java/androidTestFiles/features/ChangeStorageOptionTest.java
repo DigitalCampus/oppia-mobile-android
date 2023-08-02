@@ -111,11 +111,6 @@ public class ChangeStorageOptionTest {
                 resultResponse = result;
                 signal.countDown();
             }
-
-            @Override
-            public void moveStorageProgressUpdate(String s) {
-
-            }
         });
         task.execute(storageOption);
 
@@ -145,11 +140,6 @@ public class ChangeStorageOptionTest {
                 resultResponse = result;
                 signal.countDown();
             }
-
-            @Override
-            public void moveStorageProgressUpdate(String s) {
-
-            }
         });
         task.execute(storageOption);
 
@@ -178,11 +168,6 @@ public class ChangeStorageOptionTest {
             public void moveStorageComplete(BasicResult result) {
                 resultResponse = result;
                 signal.countDown();
-            }
-
-            @Override
-            public void moveStorageProgressUpdate(String s) {
-
             }
         });
         task.execute(storageOption);
@@ -215,11 +200,6 @@ public class ChangeStorageOptionTest {
                 resultResponse = result;
                 signal.countDown();
             }
-
-            @Override
-            public void moveStorageProgressUpdate(String s) {
-
-            }
         });
         task.execute(storageOption);
 
@@ -249,11 +229,6 @@ public class ChangeStorageOptionTest {
                 resultResponse = result;
                 signal.countDown();
             }
-
-            @Override
-            public void moveStorageProgressUpdate(String s) {
-
-            }
         });
         task.execute(storageOption);
 
@@ -280,11 +255,6 @@ public class ChangeStorageOptionTest {
             public void moveStorageComplete(BasicResult result) {
                 resultResponse = result;
                 signal.countDown();
-            }
-
-            @Override
-            public void moveStorageProgressUpdate(String s) {
-
             }
         });
         task.execute(storageOption);

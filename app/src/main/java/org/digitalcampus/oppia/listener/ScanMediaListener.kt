@@ -14,12 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
+package org.digitalcampus.oppia.listener
 
-package org.digitalcampus.oppia.listener;
+import org.digitalcampus.oppia.model.Media
+import org.digitalcampus.oppia.task.result.EntityListResult
 
-public interface DownloadMediaListener {
-
-    void onDownloadProgress(String fileUrl, int progress);
-    void onDownloadFailed(String fileUrl, String message);
-    void onDownloadComplete(String fileUrl);
+interface ScanMediaListener {
+    fun scanStart()
+    fun scanProgressUpdate(msg: String?)
+    fun scanComplete(result: EntityListResult<Media?>?)
 }

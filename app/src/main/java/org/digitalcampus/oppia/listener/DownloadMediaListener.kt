@@ -14,18 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
+package org.digitalcampus.oppia.listener
 
-
-package org.digitalcampus.oppia.listener;
-
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.task.result.EntityResult;
-
-import java.util.List;
-
-public interface UpdateActivityListener extends APIKeyRequestListener {
-
-	void updateActivityComplete(EntityResult<List<Course>> result);
-    void updateActivityProgressUpdate(DownloadProgress dp);
+interface DownloadMediaListener {
+    fun onDownloadProgress(fileUrl: String?, progress: Int)
+    fun onDownloadFailed(fileUrl: String?, message: String?)
+    fun onDownloadComplete(fileUrl: String?)
 }

@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
+package org.digitalcampus.oppia.listener
 
-package org.digitalcampus.oppia.listener;
-
-public interface APIRequestFinishListener extends APIKeyRequestListener {
-	void onRequestFinish(String nameRequest);
+interface APIRequestFinishListener : APIKeyRequestListener {
+    fun onRequestFinish(nameRequest: String?)
 }
