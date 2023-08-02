@@ -3,6 +3,7 @@ import com.android.build.api.dsl.ManagedVirtualDevice
 apply plugin: 'com.android.application'
 apply from: '../jacoco.gradle'
 apply from: '../sonarqube.gradle'
+apply plugin: 'kotlin-android'
 
 repositories {
     maven { url "https://jitpack.io" }
@@ -259,6 +260,7 @@ dependencies {
     def daggerVersion = '2.41'
     def appcompatVersion = '1.6.0-rc01'
     def espressoVersion = '3.5.1'
+    def kotlinVersion = '1.8.20'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'joda-time:joda-time:2.10.13'
@@ -350,6 +352,8 @@ dependencies {
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
+    // Kotlin Dependencies
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 }
 
 
