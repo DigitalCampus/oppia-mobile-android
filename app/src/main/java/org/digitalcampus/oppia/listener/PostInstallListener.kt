@@ -14,11 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
+package org.digitalcampus.oppia.listener
 
-package org.digitalcampus.oppia.listener;
-
-import org.digitalcampus.oppia.task.result.BasicResult;
-
-public interface APIRequestListener extends APIKeyRequestListener {
-	void apiRequestComplete(BasicResult result);
+interface PostInstallListener {
+    fun postInstallComplete()
 }

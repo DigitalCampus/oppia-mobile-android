@@ -14,8 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.digitalcampus.oppia.listener;
+package org.digitalcampus.oppia.listener
 
-public interface PostInstallListener {
-	void postInstallComplete();
+import org.digitalcampus.oppia.task.result.BasicResult
+
+interface UpgradeListener {
+    fun upgradeComplete(result: BasicResult?)
+    fun upgradeProgressUpdate(s: String?)
 }

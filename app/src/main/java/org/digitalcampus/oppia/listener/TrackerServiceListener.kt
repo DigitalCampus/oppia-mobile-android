@@ -14,11 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
+package org.digitalcampus.oppia.listener
 
-package org.digitalcampus.oppia.listener;
-
-import org.digitalcampus.oppia.task.result.BasicResult;
-
-public interface PreloadAccountsListener {
-    void onPreloadAccountsComplete(BasicResult result);
+interface TrackerServiceListener {
+    fun trackerComplete(success: Boolean, message: String?, failures: List<String?>?)
+    fun trackerProgressUpdate()
 }
