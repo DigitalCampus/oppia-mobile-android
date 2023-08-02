@@ -14,32 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
+package org.digitalcampus.oppia.exception
 
-
-package org.digitalcampus.oppia.exception;
-
-import org.digitalcampus.oppia.analytics.Analytics;
-
-public class InvalidXMLException extends Exception {
-
-	public static final String TAG = InvalidXMLException.class.getSimpleName();
-	private static final long serialVersionUID = -2986632352088699106L;
-
-	public InvalidXMLException(String message){
-		super(message);
-	}
-
-	public InvalidXMLException(Exception e, String message){
-		this(message);
-
-		Analytics.logException(e);
-		e.printStackTrace();
-	}
-
-	public InvalidXMLException(Exception e){
-		this(e, e.getMessage());
-	}
-	
-
-
+class CourseNotFoundException : Exception() {
+    companion object {
+        val TAG = CourseNotFoundException::class.simpleName
+        private const val serialVersionUID = 6941152461497123259L
+    }
 }
