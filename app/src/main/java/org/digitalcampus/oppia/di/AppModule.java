@@ -134,7 +134,7 @@ public class AppModule {
     @Provides
     @Singleton
     public ApiEndpoint provideApiEndpoint() {
-        return new RemoteApiEndpoint();
+        return RemoteApiEndpoint.INSTANCE;
     }
 
     @Provides
