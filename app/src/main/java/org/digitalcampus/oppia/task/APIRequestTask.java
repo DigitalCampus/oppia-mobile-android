@@ -32,7 +32,7 @@ public abstract class APIRequestTask<P, G, R> extends AsyncTask<P, G, R> {
     private String nameRequest;
 
     protected APIRequestTask(Context ctx) {
-        this(ctx, new RemoteApiEndpoint());
+        this(ctx, RemoteApiEndpoint.INSTANCE);
     }
 
     protected APIRequestTask(Context ctx, ApiEndpoint api) {

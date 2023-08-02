@@ -73,7 +73,7 @@ public class DownloadOppiaDataService {
             return;
         }
 
-        String url = new RemoteApiEndpoint().getFullURL(context, path);
+        String url = RemoteApiEndpoint.INSTANCE.getFullURL(context, path);
         HttpUrl urlWithCredentials = HTTPClientUtils.getUrlWithCredentials(url, user.getUsername(), user.getApiKey());
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(urlWithCredentials.toString()));
 
