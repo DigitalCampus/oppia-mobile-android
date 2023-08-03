@@ -92,7 +92,7 @@ public class FeedbackUITest extends DaggerInjectMockUITest {
         waitForView(withId(R.id.quiz_exit_button))
                 .check(matches(withText(R.string.widget_quiz_continue)));
         waitForView(withId(R.id.quiz_results_button))
-                .check(matches(not(isDisplayed())));
+                .check(matches(isDisplayed()));
 
         waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(R.string.widget_feedback_submit_title)));
@@ -124,7 +124,7 @@ public class FeedbackUITest extends DaggerInjectMockUITest {
         waitForView(withId(R.id.quiz_exit_button))
                 .check(matches(withText(R.string.widget_quiz_continue)));
         waitForView(withId(R.id.quiz_results_button))
-                .check(matches(not(isDisplayed())));
+                .check(matches(isDisplayed()));
 
         waitForView(withId(R.id.quiz_results_score))
                 .check(matches(withText(R.string.widget_feedback_submit_title)));

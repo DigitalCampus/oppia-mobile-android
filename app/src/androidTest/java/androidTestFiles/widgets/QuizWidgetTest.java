@@ -103,7 +103,7 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
         waitForView(withId(R.id.quiz_exit_button))
                 .check(matches(withText(R.string.widget_quiz_continue)));
         waitForView(withId(R.id.quiz_results_button))
-                .check(matches(not(isDisplayed())));
+                .check(matches(isDisplayed()));
     }
 
     @Test
