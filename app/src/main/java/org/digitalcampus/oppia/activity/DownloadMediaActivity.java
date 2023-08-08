@@ -33,6 +33,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityDownloadMediaBinding;
 import org.digitalcampus.oppia.adapter.DownloadMediaAdapter;
 import org.digitalcampus.oppia.listener.DownloadMediaListener;
+import org.digitalcampus.oppia.listener.MultiChoiceModeListener;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
@@ -43,7 +44,7 @@ import org.digitalcampus.oppia.service.DownloadServiceDelegate;
 import org.digitalcampus.oppia.task.ScanMediaTask;
 import org.digitalcampus.oppia.task.result.EntityListResult;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
-import org.digitalcampus.oppia.utils.MultiChoiceHelper;
+import org.digitalcampus.oppia.utils.multichoice.MultiChoiceHelper;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.ArrayList;
@@ -102,7 +103,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         adapterMedia = new DownloadMediaAdapter(this, missingMedia);
         multiChoiceHelper = new MultiChoiceHelper(this, adapterMedia);
-        multiChoiceHelper.setMultiChoiceModeListener(new MultiChoiceHelper.MultiChoiceModeListener() {
+        multiChoiceHelper.setMultiChoiceModeListener(new MultiChoiceModeListener() {
             @Override
             public void onItemCheckedStateChanged(androidx.appcompat.view.ActionMode mode, int position, long id, boolean checked) {
                 Log.v(TAG, "Count: " + multiChoiceHelper.getCheckedItemCount());

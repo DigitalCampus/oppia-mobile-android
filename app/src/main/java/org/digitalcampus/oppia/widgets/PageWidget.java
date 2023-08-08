@@ -37,6 +37,7 @@ import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
+import org.digitalcampus.oppia.listener.OnInputEnteredListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
@@ -62,7 +63,7 @@ import androidx.core.text.HtmlCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
-public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.OnInputEnteredListener {
+public class PageWidget extends BaseWidget implements OnInputEnteredListener {
 
 	public static final String TAG = PageWidget.class.getSimpleName();
 

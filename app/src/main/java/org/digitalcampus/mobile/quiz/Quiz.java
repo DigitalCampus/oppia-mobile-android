@@ -17,6 +17,7 @@
 
 package org.digitalcampus.mobile.quiz;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.mobile.quiz.model.GradeBoundary;
@@ -32,7 +33,6 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.utils.DateUtils;
-import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -352,13 +352,13 @@ public class Quiz implements Serializable {
     private void checkQuestionsSkipped(int questionId) {
         for (int forward = questionId + 1; forward < questions.size(); forward++) {
             QuizQuestion forwardQuestion = questions.get(forward);
-            if (TextUtilsJava.isEmpty(forwardQuestion.getDependItemLabel())) {
+            if (TextUtils.isEmpty(forwardQuestion.getDependItemLabel())) {
                 continue;
             }
 
             for (int backward = 0; backward <= questionId; backward++) {
                 QuizQuestion backwardQuestion = questions.get(backward);
-                if (TextUtilsJava.equals(backwardQuestion.getLabel(), forwardQuestion.getDependItemLabel())) {
+                if (TextUtils.equals(backwardQuestion.getLabel(), forwardQuestion.getDependItemLabel())) {
                     if (backwardQuestion.isSkipped()) {
                         forwardQuestion.setSkipped(true);
                         continue;
@@ -367,7 +367,7 @@ public class Quiz implements Serializable {
                     for (String userResponse : backwardQuestion.getUserResponses()) {
                         String userResponseValue = userResponse.toLowerCase().trim();
                         String forwardQuestionDependentValue = forwardQuestion.getDependValue().toLowerCase();
-                        if (TextUtilsJava.equals(userResponseValue, forwardQuestionDependentValue)) {
+                        if (TextUtils.equals(userResponseValue, forwardQuestionDependentValue)) {
                             forwardQuestion.setSkipped(false);
                             break;
                         } else {
@@ -502,7 +502,7 @@ public class Quiz implements Serializable {
     }
 
     public boolean isPasswordProtected(){
-        return !TextUtilsJava.isEmpty(this.getPassword());
+        return !TextUtils.isEmpty(this.getPassword());
     }
 
     public String getPassword(){

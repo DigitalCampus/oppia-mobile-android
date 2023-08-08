@@ -40,7 +40,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Section;
-import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
+import org.digitalcampus.oppia.activity.VideoPlayerActivity;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.junit.After;
 import org.junit.Before;
