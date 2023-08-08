@@ -32,7 +32,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoControllerView;
-import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
+import org.digitalcampus.oppia.activity.VideoPlayerActivity;
 import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;

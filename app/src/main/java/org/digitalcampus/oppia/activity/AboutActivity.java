@@ -21,6 +21,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.preference.PreferenceManager;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 
@@ -32,7 +33,6 @@ import org.digitalcampus.mobile.learning.databinding.ActivityAboutBinding;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.AboutFragment;
 import org.digitalcampus.oppia.fragments.OppiaWebViewFragment;
-import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public class AboutActivity extends AppActivity {
 			currentTab = bundle.getInt(AboutActivity.TAB_ACTIVE, 0);
 
 			String actTitle = bundle.getString(TITLE);
-			if (!TextUtilsJava.isEmpty(actTitle)){ setTitle(actTitle); }
+			if (!TextUtils.isEmpty(actTitle)){ setTitle(actTitle); }
 		}
 	}
 	

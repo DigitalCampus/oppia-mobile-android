@@ -30,6 +30,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,9 +64,7 @@ import org.digitalcampus.oppia.gamification.GamificationService;
 import org.digitalcampus.oppia.listener.APIKeyRequestListener;
 import org.digitalcampus.oppia.listener.GamificationEventListener;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 
 import java.util.concurrent.TimeUnit;
@@ -158,7 +157,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     }
 
     private boolean isSdCardReady() {
-        boolean externalStorageSelected = TextUtilsJava.equals(storageStrategy.getStorageType(), PrefsActivity.STORAGE_OPTION_EXTERNAL);
+        boolean externalStorageSelected = TextUtils.equals(storageStrategy.getStorageType(), PrefsActivity.STORAGE_OPTION_EXTERNAL);
         if (externalStorageSelected) {
             boolean externalStorageAvailable = storageStrategy.isStorageAvailable(this);
             return externalStorageAvailable;

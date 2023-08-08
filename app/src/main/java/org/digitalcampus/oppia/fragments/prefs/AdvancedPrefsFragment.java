@@ -407,9 +407,9 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
 
         for (StorageLocationInfo storageLoc : storageLocations) {
             //Only add it as an option if it is writable
-            if (!storageLoc.readonly) {
+            if (!storageLoc.getReadonly()) {
                 entries.add(storageLoc.getDisplayName(getActivity()));
-                entryValues.add(storageLoc.type);
+                entryValues.add(storageLoc.getType());
             }
         }
 

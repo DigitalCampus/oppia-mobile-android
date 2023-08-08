@@ -128,7 +128,7 @@
             android:name="org.digitalcampus.oppia.activity.AppActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity"
+            android:name="org.digitalcampus.oppia.activity.VideoPlayerActivity"
             android:label="@string/media_player_description"
             android:screenOrientation="landscape"
             android:theme="@style/Oppia.Fullscreen" />

@@ -2,6 +2,7 @@ package org.digitalcampus.oppia.activity;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityChangePasswordBinding;
@@ -9,7 +10,6 @@ import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ChangePasswordTask;
-import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import javax.inject.Inject;
 
@@ -61,7 +61,7 @@ public class ChangePasswordActivity extends AppActivity implements ChangePasswor
             return;
         }
 
-        if (!TextUtilsJava.equals(pass1, pass2)) {
+        if (!TextUtils.equals(pass1, pass2)) {
             binding.fieldPasswordRepeat.setError(getString(R.string.error_register_password_no_match));
             return;
         }

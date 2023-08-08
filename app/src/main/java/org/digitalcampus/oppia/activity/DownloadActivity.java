@@ -32,6 +32,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityDownloadBinding;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.listener.MultiChoiceModeListener;
 import org.digitalcampus.oppia.model.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.adapter.DownloadCoursesAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;
@@ -47,8 +48,8 @@ import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDeleg
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.result.BasicResult;
-import org.digitalcampus.oppia.utils.MultiChoiceHelper;
-import org.digitalcampus.oppia.utils.TextUtilsJava;
+import org.digitalcampus.oppia.utils.multichoice.MultiChoiceHelper;
+import android.text.TextUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.json.JSONException;
@@ -160,7 +161,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         selected = new ArrayList<>();
         coursesAdapter = new DownloadCoursesAdapter(this, courses);
         multiChoiceHelper = new MultiChoiceHelper(this, coursesAdapter);
-        multiChoiceHelper.setMultiChoiceModeListener(new MultiChoiceHelper.MultiChoiceModeListener() {
+        multiChoiceHelper.setMultiChoiceModeListener(new MultiChoiceModeListener() {
             @Override
             public void onItemCheckedStateChanged(androidx.appcompat.view.ActionMode mode, int position, long id, boolean checked) {
                 Log.v(TAG, "Count: " + multiChoiceHelper.getCheckedItemCount());
@@ -428,7 +429,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
     private boolean isInstalled(CourseInstallViewAdapter courseAdapter, List<Course> installedCourses) {
         for (Course course : installedCourses) {
-            if (TextUtilsJava.equals(course.getShortname(), courseAdapter.getShortname())) {
+            if (TextUtils.equals(course.getShortname(), courseAdapter.getShortname())) {
                 return true;
             }
         }
@@ -501,7 +502,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
     private void findCourseAndDownload(Course courseToUpdate) {
         for (CourseInstallViewAdapter course : courses) {
-            if (TextUtilsJava.equals(course.getShortname(), courseToUpdate.getShortname())) {
+            if (TextUtils.equals(course.getShortname(), courseToUpdate.getShortname())) {
                 downloadCourse(course);
             }
         }

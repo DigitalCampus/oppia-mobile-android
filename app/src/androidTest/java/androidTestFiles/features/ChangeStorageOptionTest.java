@@ -97,7 +97,7 @@ public class ChangeStorageOptionTest {
 
         ExternalStorageState state = Mockito.mock(ExternalStorageState.class);  //Mock ExternalStorageState object
         ExternalStorageState.setExternalStorageState(state);    //Inject mocked object in ExternalStorageState class
-        when(state.getExternalStorageState(any())).thenReturn(Environment.MEDIA_REMOVED);    //Provide mocked behaviour
+        when(state.getState(any())).thenReturn(Environment.MEDIA_REMOVED);    //Provide mocked behaviour
 
         Storage.setStorageStrategy(StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_INTERNAL));
         Storage.createFolderStructure(context);
@@ -126,7 +126,7 @@ public class ChangeStorageOptionTest {
 
         ExternalStorageState state = Mockito.mock(ExternalStorageState.class);  //Mock ExternalStorageState object
         ExternalStorageState.setExternalStorageState(state);    //Inject mocked object in ExternalStorageState class
-        when(state.getExternalStorageState(any())).thenReturn(Environment.MEDIA_UNMOUNTABLE);    //Provide mocked behaviour
+        when(state.getState(any())).thenReturn(Environment.MEDIA_UNMOUNTABLE);    //Provide mocked behaviour
 
         Storage.setStorageStrategy(StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_INTERNAL));
         Storage.createFolderStructure(context);
@@ -155,7 +155,7 @@ public class ChangeStorageOptionTest {
 
         ExternalStorageState state = Mockito.mock(ExternalStorageState.class);  //Mock ExternalStorageState object
         ExternalStorageState.setExternalStorageState(state);    //Inject mocked object in ExternalStorageState class
-        when(state.getExternalStorageState(any())).thenReturn(Environment.MEDIA_UNMOUNTED);    //Provide mocked behaviour
+        when(state.getState(any())).thenReturn(Environment.MEDIA_UNMOUNTED);    //Provide mocked behaviour
 
         Storage.setStorageStrategy(StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_INTERNAL));
         Storage.createFolderStructure(context);
@@ -186,7 +186,7 @@ public class ChangeStorageOptionTest {
 
         ExternalStorageState state = Mockito.mock(ExternalStorageState.class);  //Mock ExternalStorageState object
         ExternalStorageState.setExternalStorageState(state);    //Inject mocked object in ExternalStorageState class
-        when(state.getExternalStorageState(any())).thenReturn(Environment.MEDIA_MOUNTED_READ_ONLY);    //Provide mocked behaviour
+        when(state.getState(any())).thenReturn(Environment.MEDIA_MOUNTED_READ_ONLY);    //Provide mocked behaviour
 
         Storage.setStorageStrategy(StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_INTERNAL));
         Storage.createFolderStructure(context);
@@ -215,7 +215,7 @@ public class ChangeStorageOptionTest {
 
         ExternalStorageState state = Mockito.mock(ExternalStorageState.class);  //Mock ExternalStorageState object
         ExternalStorageState.setExternalStorageState(state);    //Inject mocked object in ExternalStorageState class
-        when(state.getExternalStorageState(any())).thenReturn(Environment.MEDIA_SHARED);    //Provide mocked behaviour
+        when(state.getState(any())).thenReturn(Environment.MEDIA_SHARED);    //Provide mocked behaviour
 
         Storage.setStorageStrategy(StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_INTERNAL));
         Storage.createFolderStructure(context);

@@ -34,7 +34,7 @@ import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
-import org.digitalcampus.oppia.utils.TextUtilsJava;
+import android.text.TextUtils;
 import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 
 import java.util.ArrayList;
@@ -117,7 +117,7 @@ public class SearchActivity extends AppActivity {
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         currentSearch = savedInstanceState.getString("currentSearch");
-        if (!TextUtilsJava.isEmpty(currentSearch)) {
+        if (!TextUtils.isEmpty(currentSearch)) {
             binding.searchString.setText(currentSearch);
             currentSearch = "";
             performSearch();
@@ -133,7 +133,7 @@ public class SearchActivity extends AppActivity {
     private void performSearch() {
         String newSearch = binding.searchString.getText().toString().trim();
 
-        if (TextUtilsJava.isEmpty(newSearch)) {
+        if (TextUtils.isEmpty(newSearch)) {
             binding.searchString.setText("");
             return;
         }

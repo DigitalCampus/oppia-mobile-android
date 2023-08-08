@@ -1,6 +1,7 @@
 package org.digitalcampus.oppia.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,6 @@ import org.digitalcampus.oppia.task.ExportActivityTask;
 import org.digitalcampus.oppia.task.SubmitQuizAttemptsTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
-import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 
@@ -172,7 +172,7 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
 
         if (!failures.isEmpty()){
             msg += "\nErrors: \n";
-            msg += TextUtilsJava.join("\n", failures);
+            msg += TextUtils.join("\n", failures);
         }
 
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();

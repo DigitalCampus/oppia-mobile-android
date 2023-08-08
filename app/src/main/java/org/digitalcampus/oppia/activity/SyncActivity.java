@@ -36,7 +36,7 @@ import org.digitalcampus.oppia.task.ExportActivityTask;
 import org.digitalcampus.oppia.task.FetchCourseTransferableFilesTask;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.result.BasicResult;
-import org.digitalcampus.oppia.utils.TextUtilsJava;
+import android.text.TextUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
 import java.lang.ref.WeakReference;
@@ -429,7 +429,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         if ((isReceiving) || (file.getType().equals(CourseTransferableFile.TYPE_ACTIVITY_LOG))){
             Log.d(TAG, "Complete!");
             String title = file.getNotificationName();
-            if ((file.getFile() == null) && !TextUtilsJava.isEmpty(title)){
+            if ((file.getFile() == null) && !TextUtils.isEmpty(title)){
                 Toast.makeText(this, getString(R.string.bluetooth_transfer_complete, title), Toast.LENGTH_LONG).show();
             }
         }

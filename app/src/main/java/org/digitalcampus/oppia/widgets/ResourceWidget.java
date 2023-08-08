@@ -212,13 +212,8 @@ public class ResourceWidget extends BaseWidget {
 			}
 
 			// add in extra meta-data
-			try {
-				MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
-				data = mdu.getMetaData(data);
-			} catch (JSONException e) {
-				Analytics.logException(e);
-				Log.d(TAG, "JSONException", e);
-			}
+			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
+			data = mdu.getMetaData(data);
 
 			GamificationEngine gamificationEngine = new GamificationEngine( getActivity());
 			GamificationEvent gamificationEvent = gamificationEngine.processEventResourceStoppedActivity();

@@ -99,15 +99,8 @@ public class Tracker {
 	}
 
 	public void saveRegisterTracker(){
-
-		try {
-			JSONObject registerData = new MetaDataUtils(ctx).getMetaData();
-			saveTracker(0, "", registerData, Gamification.EVENT_NAME_REGISTER, true, Gamification.GAMIFICATION_REGISTER);
-
-		} catch (JSONException e) {
-			Analytics.logException(e);
-			Log.d(TAG, "Error saving register tracker:", e);
-		}
+		JSONObject registerData = new MetaDataUtils(ctx).getMetaData();
+		saveTracker(0, "", registerData, Gamification.EVENT_NAME_REGISTER, true, Gamification.GAMIFICATION_REGISTER);
 	}
 
 }

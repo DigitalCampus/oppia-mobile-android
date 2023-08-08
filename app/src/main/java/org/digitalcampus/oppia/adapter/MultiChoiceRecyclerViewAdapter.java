@@ -3,7 +3,8 @@ package org.digitalcampus.oppia.adapter;
 
 import android.view.View;
 
-import org.digitalcampus.oppia.utils.MultiChoiceHelper;
+import org.digitalcampus.oppia.utils.multichoice.MultiChoiceHelper;
+import org.digitalcampus.oppia.utils.multichoice.MultiChoiceViewHolder;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +15,7 @@ public abstract class MultiChoiceRecyclerViewAdapter<H extends MultiChoiceRecycl
     private MultiChoiceHelper multiChoiceHelper;
     protected boolean isMultiChoiceMode;
 
-    public void updateViewHolder(@NonNull final MultiChoiceRecyclerViewAdapter.ViewHolder viewHolder, final int position){
+    public void updateViewHolder(@NonNull final MultiChoiceViewHolder viewHolder, final int position){
         viewHolder.updateCheckedState(position);
     }
 
@@ -31,7 +32,7 @@ public abstract class MultiChoiceRecyclerViewAdapter<H extends MultiChoiceRecycl
         multiChoiceHelper = helper;
     }
 
-    public class ViewHolder extends MultiChoiceHelper.ViewHolder {
+    public class ViewHolder extends MultiChoiceViewHolder {
 
         public ViewHolder(View itemView) {
             super(itemView);
