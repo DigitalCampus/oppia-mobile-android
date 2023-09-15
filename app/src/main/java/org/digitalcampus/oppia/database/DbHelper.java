@@ -39,17 +39,21 @@ import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.PointsComparator;
 import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.BooleanValue;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomValue;
+import org.digitalcampus.oppia.model.FloatValue;
 import org.digitalcampus.oppia.model.GamificationEvent;
+import org.digitalcampus.oppia.model.IntValue;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.model.Section;
+import org.digitalcampus.oppia.model.StringValue;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.model.db_model.Leaderboard;
@@ -1617,16 +1621,16 @@ public class DbHelper extends SQLiteOpenHelper {
                     if (field.isString() || field.isChoices()) {
                         // Internally, we just save the choices key value as a str
                         String value = c.getString(c.getColumnIndex(CF_VALUE_STR));
-                        u.putCustomField(key, new CustomValue<>(value));
+                        u.putCustomField(key, new CustomValue(new StringValue(value)));
                     } else if (field.isBoolean()) {
                         boolean value = c.getInt(c.getColumnIndex(CF_VALUE_BOOL)) == 1;
-                        u.putCustomField(key, new CustomValue<>(value));
+                        u.putCustomField(key, new CustomValue(new BooleanValue(value)));
                     } else if (field.isInteger()) {
                         int value = c.getInt(c.getColumnIndex(CF_VALUE_INT));
-                        u.putCustomField(key, new CustomValue<>(value));
+                        u.putCustomField(key, new CustomValue(new IntValue(value)));
                     } else if (field.isFloat()) {
                         float value = c.getFloat(c.getColumnIndex(CF_VALUE_FLOAT));
-                        u.putCustomField(key, new CustomValue<>(value));
+                        u.putCustomField(key, new CustomValue(new FloatValue(value)));
                     }
                 }
             }
