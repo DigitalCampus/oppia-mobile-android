@@ -47,7 +47,7 @@ jobs:
     timeout-minutes: 180
     strategy:
       matrix:
-        api-level: [27, 28, 30, 31]
+        api-level: [30, 31]
 
     steps:
       - name: Checkout repo
