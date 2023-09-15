@@ -15,8 +15,11 @@ import android.widget.Spinner;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.model.BooleanValue;
 import org.digitalcampus.oppia.model.CustomField;
 import org.digitalcampus.oppia.model.CustomValue;
+import org.digitalcampus.oppia.model.IntValue;
+import org.digitalcampus.oppia.model.StringValue;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 
@@ -206,13 +209,13 @@ public class CustomFieldsUIManager {
             CustomField field = formField.first;
             if (field.isBoolean()){
                 ValidableSwitchLayout input = (ValidableSwitchLayout) formField.second;
-                values.put(field.getKey(), new CustomValue<>(input.isChecked()));
+                values.put(field.getKey(), new CustomValue(new BooleanValue(input.isChecked())));
             }
             else if (field.isChoices()){
                 ValidableSpinnerLayout input = (ValidableSpinnerLayout) formField.second;
                 String value = input.getCleanedValue();
                 if (value != null && !TextUtilsJava.isEmpty(value)){
-                    values.put(field.getKey(), new CustomValue<>(input.getCleanedValue()));
+                    values.put(field.getKey(), new CustomValue(new StringValue(input.getCleanedValue())));
                 }
 
             }
@@ -221,11 +224,11 @@ public class CustomFieldsUIManager {
                 if (field.isInteger()){
                     String value = input.getCleanedValue();
                     if (value != null && !TextUtilsJava.isEmpty(value)){
-                        values.put(field.getKey(), new CustomValue<>(Integer.parseInt(value)));
+                        values.put(field.getKey(), new CustomValue(new IntValue(Integer.parseInt(value))));
                     }
                 }
                 else{
-                    values.put(field.getKey(), new CustomValue<>(input.getCleanedValue()));
+                    values.put(field.getKey(), new CustomValue(new StringValue(input.getCleanedValue())));
                 }
             }
 

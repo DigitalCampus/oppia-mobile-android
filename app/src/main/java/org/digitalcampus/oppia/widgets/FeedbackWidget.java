@@ -127,7 +127,7 @@ public class FeedbackWidget extends AnswerWidget {
 		for(QuizQuestion q: questions){
 			if(!(q instanceof Description) && !q.isSkipped()){
 				QuizAnswerFeedback qf = new QuizAnswerFeedback();
-				qf.setIsSurvey(true);
+				qf.setSurvey(true);
 				qf.setScore(100);
 				qf.setQuestionText(q.getTitle(prefLang));
 				qf.setUserResponse(q.getUserResponses());
