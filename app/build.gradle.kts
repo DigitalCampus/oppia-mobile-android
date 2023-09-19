@@ -209,7 +209,7 @@ dependencies {
     val workVersion = "2.7.1"
     val roomVersion = "2.3.0"
     val fragmentVersion = "1.5.4"
-    val daggerVersion = "2.41"
+    val daggerVersion = "2.43.2"
     val appcompatVersion = "1.6.0-rc01"
     val espressoVersion = "3.5.1"
     val kotlinVersion = "1.8.20"
