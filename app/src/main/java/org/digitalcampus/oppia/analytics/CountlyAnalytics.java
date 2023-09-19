@@ -20,7 +20,7 @@ public class CountlyAnalytics extends BaseAnalytics {
 
     @Override
     protected void startTrackingSession() {
-        CountlyConfig config = new CountlyConfig(ctx, BuildConfig.COUNTLY_APP_KEY, BuildConfig.COUNTLY_SERVER_URL);
+        CountlyConfig config = new CountlyConfig(ctx, String.valueOf(BuildConfig.COUNTLY_APP_KEY), BuildConfig.COUNTLY_SERVER_URL);
         config.setLoggingEnabled(Analytics.isTrackingEnabled(ctx));
         config.setViewTracking(Analytics.isTrackingEnabled(ctx));
         if (Analytics.isBugReportEnabled(ctx)) {

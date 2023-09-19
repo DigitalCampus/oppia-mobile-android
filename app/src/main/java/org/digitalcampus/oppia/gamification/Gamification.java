@@ -62,7 +62,7 @@ public class Gamification {
     public static final GamificationEvent GAMIFICATION_FEEDBACK_COMPLETED =  new GamificationEvent(EVENT_NAME_FEEDBACK_COMPLETED,50);
 
     // Gamification points configuration
-    public static final String GAMIFICATION_POINTS_ANIMATION = BuildConfig.GAMIFICATION_POINTS_ANIMATION;
+    public static final String GAMIFICATION_POINTS_ANIMATION = String.valueOf(BuildConfig.GAMIFICATION_POINTS_ANIMATION);
     public static final int DURATION_GAMIFICATION_POINTS_VIEW = BuildConfig.DURATION_GAMIFICATION_POINTS_VIEW;
 
     public static final String MEDIA_CRITERIA_INTERVALS = "intervals";
