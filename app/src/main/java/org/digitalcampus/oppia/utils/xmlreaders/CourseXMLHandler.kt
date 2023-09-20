@@ -71,9 +71,9 @@ internal class CourseXMLHandler(private val courseId: Long, private val userId: 
     private val courseTitles = ArrayList<Lang>()
     private val courseGamification = ArrayList<GamificationEvent>()
     private val courseLangs = ArrayList<Lang>()
-    private val courseBaseline = ArrayList<Activity?>()
-    private val sections = ArrayList<Section?>()
-    private val courseMetaPages = ArrayList<CourseMetaPage?>()
+    private val courseBaseline = ArrayList<Activity>()
+    private val sections = ArrayList<Section>()
+    private val courseMetaPages = ArrayList<CourseMetaPage>()
     override val courseMedia: MutableList<Media> = ArrayList()
 
     //Vars for traversing the tree
@@ -169,40 +169,40 @@ internal class CourseXMLHandler(private val courseId: Long, private val userId: 
 
     override fun endElement(aUri: String, aLocalName: String, aQName: String) {
         if (NODE_SECTION == aQName) {
-            currentSection?.setTitles(sectTitles)
+            sectTitles?.let { currentSection?.setTitles(it) }
             if (currentSection!!.isProtectedByPassword) {
                 currentSection?.isUnlocked = db.sectionUnlocked(courseId, currentSection!!.order, userId)
             }
-            sections.add(currentSection)
+            sections.add(currentSection!!)
             parentElements.pop()
         } else if (NODE_TITLE == aQName) {
             if (chars!!.isEmpty()) return
             if (NODE_SECTION == parentElements.peek()) {
-                sectTitles?.add(Lang(currentLang, chars.toString()))
+                sectTitles?.add(Lang(currentLang!!, chars.toString()))
             } else if (NODE_ACTIVITY == parentElements.peek()) {
-                actTitles?.add(Lang(currentLang, chars.toString()))
+                actTitles?.add(Lang(currentLang!!, chars.toString()))
             } else if (NODE_META == parentElements.peek()) {
-                courseTitles.add(Lang(if (currentLang == null) App.DEFAULT_LANG else currentLang, chars.toString()))
+                courseTitles.add(Lang(currentLang ?: App.DEFAULT_LANG, chars.toString()))
             } else if (NODE_PAGE == parentElements.peek()) {
-                pageTitles?.add(Lang(if (currentLang == null) App.DEFAULT_LANG else currentLang, chars.toString()))
+                pageTitles?.add(Lang(currentLang ?: App.DEFAULT_LANG, chars.toString()))
             }
         } else if (NODE_LOCATION == aQName) {
             if (chars!!.isEmpty()) return
             if (NODE_ACTIVITY == parentElements.peek()) {
-                actLocations?.add(Lang(currentLang, chars.toString()))
+                actLocations?.add(Lang(currentLang!!, chars.toString()))
             } else if (NODE_PAGE == parentElements.peek()) {
-                pageLocations?.add(Lang(currentLang, chars.toString()))
+                pageLocations?.add(Lang(currentLang!!, chars.toString()))
             }
         } else if (NODE_CONTENT == aQName) {
             if (chars!!.isNotEmpty() && NODE_ACTIVITY == parentElements.peek()) {
-                actContents?.add(Lang(currentLang, chars.toString()))
+                actContents?.add(Lang(currentLang!!, chars.toString()))
             }
         } else if (NODE_DESCRIPTION == aQName) {
             if (chars!!.isEmpty()) return
             if (NODE_ACTIVITY == parentElements.peek()) {
-                actDescriptions?.add(Lang(currentLang, chars.toString()))
+                actDescriptions?.add(Lang(currentLang!!, chars.toString()))
             } else if (NODE_META == parentElements.peek()) {
-                courseDescriptions.add(Lang(if (currentLang == null) App.DEFAULT_LANG else currentLang, chars.toString()))
+                courseDescriptions.add(Lang(currentLang ?: App.DEFAULT_LANG, chars.toString()))
             }
         } else if (NODE_VERSIONID == aQName) {
             if (chars!!.isEmpty()) return
@@ -218,21 +218,21 @@ internal class CourseXMLHandler(private val courseId: Long, private val userId: 
                 courseSequencingMode = chars.toString()
             }
         } else if (NODE_ACTIVITY == aQName) {
-            currentActivity?.setTitles(actTitles)
-            currentActivity?.setDescriptions(actDescriptions)
-            currentActivity?.setLocations(actLocations)
-            currentActivity?.setContents(actContents)
-            currentActivity?.media = actMedia
-            currentActivity?.setGamificationEvents(actGamification)
+            currentActivity?.setTitles(actTitles!!)
+            currentActivity?.setDescriptions(actDescriptions!!)
+            currentActivity?.setLocations(actLocations!!)
+            currentActivity?.setContents(actContents!!)
+            currentActivity?.media = actMedia!!
+            currentActivity?.setGamificationEvents(actGamification!!)
             parentElements.pop()
             if (NODE_SECTION == parentElements.peek()) {
                 currentActivity?.sectionId = currentSection!!.order
                 currentActivity?.completed = db.activityCompleted(courseId.toInt(), currentActivity?.digest, userId)
-                currentSection?.addActivity(currentActivity)
+                currentSection?.addActivity(currentActivity!!)
             } else if (NODE_META == parentElements.peek()) {
                 currentActivity?.sectionId = 0
                 currentActivity?.isAttempted = db.activityAttempted(courseId, currentActivity?.digest, userId)
-                courseBaseline.add(currentActivity)
+                courseBaseline.add(currentActivity!!)
             }
         } else if (NODE_MEDIA == aQName) {
             parentElements.pop()
@@ -257,7 +257,7 @@ internal class CourseXMLHandler(private val courseId: Long, private val userId: 
                     }
                 }
             }
-            courseMetaPages.add(currentPage)
+            courseMetaPages.add(currentPage!!)
             parentElements.pop()
         } else if (NODE_GAMIFICATION == aQName) {
             parentElements.pop()
@@ -284,7 +284,7 @@ internal class CourseXMLHandler(private val courseId: Long, private val userId: 
         c.imageFile = courseImage
         c.priority = coursePriority
         c.setTitles(courseTitles)
-        c.langs = courseLangs
+        c.setLangs(courseLangs)
         c.setDescriptions(courseDescriptions)
         c.baselineActivities = courseBaseline
         c.media = courseMedia
@@ -295,7 +295,7 @@ internal class CourseXMLHandler(private val courseId: Long, private val userId: 
                 && ((courseSequencingMode == Course.SEQUENCING_MODE_COURSE)
                 || (courseSequencingMode == Course.SEQUENCING_MODE_SECTION)
                 || (courseSequencingMode == Course.SEQUENCING_MODE_NONE))) {
-            c.sequencingMode = courseSequencingMode
+            c.sequencingMode = courseSequencingMode!!
         }
         return c
     }
