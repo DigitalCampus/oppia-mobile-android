@@ -36,19 +36,19 @@ object SearchUtils {
 
         db.beginTransaction()
         for (a in activities) {
-            val langs = course.langs
+            val langs = course.getLangs()
             val fileContents = StringBuilder()
             for (l in langs) {
-                var langContents = a.getFileContents(course.location, l.language) ?: continue
+                var langContents = a.getFileContents(course.getLocation(), l.language) ?: continue
                 // strip out all html tags from string (not needed for search)
                 langContents = langContents.replace("<.*?>".toRegex(), "").trim()
                 fileContents.append(langContents)
             }
             val act = db.getActivityByDigest(a.digest)
             if (act != null && fileContents.isNotEmpty()) {
-                db.insertActivityIntoSearchTable(course.titleJSONString,
-                        course.getSection(a.sectionId).titleJSONString,
-                        a.titleJSONString,
+                db.insertActivityIntoSearchTable(course.getTitleJSONString(),
+                        course.getSection(a.sectionId)?.getTitleJSONString(),
+                        a.getTitleJSONString(),
                         act.dbId,
                         fileContents.toString())
             }

@@ -39,7 +39,9 @@ object CourseUtils {
             val coursesServerResponse = Gson().fromJson(
                     coursesCachedStr, CoursesServerResponse::class.java)
             for (course in courses) {
-                checkCourseStatuses(course, coursesServerResponse.courses, fromTimestamp)
+                coursesServerResponse.courses?.let {
+                    checkCourseStatuses(course, it, fromTimestamp)
+                }
             }
         } else {
             for (course in courses) {
@@ -55,7 +57,7 @@ object CourseUtils {
             if (fromTimestamp != null && courseServer.version <= fromTimestamp) {
                 continue
             }
-            if (TextUtilsJava.equals(course.shortname, courseServer.shortname)) {
+            if (TextUtilsJava.equals(course.getShortname(), courseServer.shortname)) {
                 val toUpdate = course.versionId < courseServer.version
                 course.isToUpdate = toUpdate
                 course.isToDelete = false
@@ -77,9 +79,11 @@ object CourseUtils {
                     coursesCachedStr, CoursesServerResponse::class.java)
             val coursesServer = coursesServerResponse.courses
             notInstalledCourses = ArrayList()
-            for (courseServer in coursesServer) {
-                if (!isCourseInstalled(courseServer, coursesInstalled)) {
-                    notInstalledCourses.add(courseServer)
+            if (coursesServer != null) {
+                for (courseServer in coursesServer) {
+                    if (!isCourseInstalled(courseServer, coursesInstalled)) {
+                        notInstalledCourses.add(courseServer)
+                    }
                 }
             }
         }
@@ -88,7 +92,7 @@ object CourseUtils {
 
     private fun isCourseInstalled(courseServer: CourseServer, coursesInstalled: List<Course>): Boolean {
         for (course in coursesInstalled) {
-            if (TextUtilsJava.equals(course.shortname, courseServer.shortname)) {
+            if (TextUtilsJava.equals(course.getShortname(), courseServer.shortname)) {
                 return true
             }
         }
@@ -100,10 +104,10 @@ object CourseUtils {
         val db = DbHelper.getInstance(ctx)
         val activities = course.getActivities(course.courseId.toLong())
         for (a in activities) {
-            val langs = course.langs as ArrayList<Lang>
+            val langs = course.getLangs() as ArrayList<Lang>
             var wordCount = 0
             for (l in langs) {
-                var langContents = a.getFileContents(course.location, l.language) ?: continue
+                var langContents = a.getFileContents(course.getLocation(), l.language) ?: continue
                 // strip out all html tags from string (not needed for search nor wordcount)
                 langContents = langContents.replace("<.*?>".toRegex(), "").trim()
                 val langWordCount = langContents.split("\\s+".toRegex()).size
@@ -130,8 +134,8 @@ object CourseUtils {
         if (coursesCachedStr != null) {
             val coursesServerResponse = Gson().fromJson(
                     coursesCachedStr, CoursesServerResponse::class.java)
-            for (courseServer in coursesServerResponse.courses) {
-                if (TextUtilsJava.equals(courseServer.shortname, course.shortname)) {
+            for (courseServer in coursesServerResponse.courses!!) {
+                if (TextUtilsJava.equals(courseServer.shortname, course.getShortname())) {
                     return courseServer.hasStatus(Course.STATUS_READ_ONLY)
                 }
             }
@@ -147,8 +151,8 @@ object CourseUtils {
             val coursesServerResponse = Gson().fromJson(
                     coursesCachedStr, CoursesServerResponse::class.java)
             if (coursesServerResponse != null) {
-                for (courseServer in coursesServerResponse.courses) {
-                    if (TextUtilsJava.equals(courseServer.shortname, course.shortname)) {
+                for (courseServer in coursesServerResponse.courses!!) {
+                    if (TextUtilsJava.equals(courseServer.shortname, course.getShortname())) {
                         refreshCachedStatus(course, courseServer.status)
                         refreshCachedCohorts(course, courseServer.isRestricted, courseServer.restrictedCohorts)
                     }
