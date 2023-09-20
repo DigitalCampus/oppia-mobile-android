@@ -19,5 +19,5 @@ package org.digitalcampus.oppia.listener
 import org.digitalcampus.oppia.task.result.BasicResult
 
 interface APIRequestListener : APIKeyRequestListener {
-    fun apiRequestComplete(result: BasicResult?)
+    fun apiRequestComplete(result: BasicResult)
 }
