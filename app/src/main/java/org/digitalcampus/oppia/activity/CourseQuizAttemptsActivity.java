@@ -82,7 +82,7 @@ public class CourseQuizAttemptsActivity extends AppActivity {
 
         final List<QuizAttempt> attempts = attemptsRepository.getQuizAttempts(this, stats);
         QuizAttemptAdapter adapter = new QuizAttemptAdapter(this, attempts);
-        adapter.setOnItemClickListener((v, position) -> {
+        adapter.setOnItemClickListener((v, position, type, enabled) -> {
             Intent i = new Intent(CourseQuizAttemptsActivity.this, QuizAttemptActivity.class);
             Bundle tb = new Bundle();
             QuizAttempt attempt = attempts.get(position);

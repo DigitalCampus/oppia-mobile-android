@@ -98,7 +98,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         quizzesAdapter = new CourseQuizzesAdapter(getActivity(), quizStats);
         binding.scorecardGridQuizzes.setAdapter(quizzesAdapter);
         binding.scorecardGridQuizzes.setNestedScrollingEnabled(false);
-        quizzesAdapter.setOnItemClickListener((v, position)->{
+        quizzesAdapter.setOnItemClickListener((v, position, type, enabled)->{
             QuizStats stats = quizzesAdapter.getItemAtPosition(position);
             Intent i = new Intent(getActivity(), CourseQuizAttemptsActivity.class);
             Bundle tb = new Bundle();

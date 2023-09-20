@@ -79,7 +79,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener, D
 		getAppComponent().inject(this);
 
         adapterBadges = new BadgesAdapter(super.getActivity(), badges);
-        adapterBadges.setOnItemClickListener(position -> checkPermissionAndDownloadCertificate(badges.get(position)));
+		adapterBadges.setOnItemClickListener((view, position, type, enabled) -> checkPermissionAndDownloadCertificate(badges.get(position)));
 		binding.recyclerBadges.setAdapter(adapterBadges);
 
 		downloadOppiaDataService = new DownloadOppiaDataService(getActivity());

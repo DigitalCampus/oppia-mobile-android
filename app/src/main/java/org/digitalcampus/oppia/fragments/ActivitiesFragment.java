@@ -43,6 +43,7 @@ import org.digitalcampus.oppia.adapter.ActivityTypesAdapter;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.gamification.Gamification;
+import org.digitalcampus.oppia.listener.OnItemClickListener;
 import org.digitalcampus.oppia.model.ActivityCount;
 import org.digitalcampus.oppia.model.ActivityType;
 import org.digitalcampus.oppia.model.Course;
@@ -62,7 +63,7 @@ import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
-public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSelectedListener, ActivityTypesAdapter.OnItemClickListener {
+public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSelectedListener, OnItemClickListener {
 
     private static final String ARG_COURSE = "arg_course";
 
@@ -439,8 +440,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.OnTabSe
 
     // Event types list
     @Override
-    public void onItemClick(int position, String type, boolean enabled) {
-
+    public void onItemClick(View view, int position, String type, boolean enabled) {
         loadPlot(false);
     }
 }

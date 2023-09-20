@@ -61,7 +61,7 @@ public class SearchActivity extends AppActivity {
         adapterResults = new SearchResultsAdapter(this, results);
         
         binding.recyclerResultsSearch.setAdapter(adapterResults);
-        adapterResults.setOnItemClickListener((view, position) -> {
+        adapterResults.setOnItemClickListener((view, position, type, enabled) -> {
             Course course = (Course) view.getTag(R.id.TAG_COURSE);
             String digest = (String) view.getTag(R.id.TAG_ACTIVITY_DIGEST);
 
