@@ -38,7 +38,7 @@ public class GlobalQuizAttemptsFragment extends AppFragment {
 
         adapter = new GlobalQuizAttemptsAdapter(this.getContext(), attempts);
         binding.attemptsList.setAdapter(adapter);
-        adapter.setOnItemClickListener((v, position) -> {
+        adapter.setOnItemClickListener((v, position, type, enabled) -> {
             Intent i = new Intent(getActivity(), QuizAttemptActivity.class);
             Bundle tb = new Bundle();
             QuizAttempt attempt = attempts.get(position);

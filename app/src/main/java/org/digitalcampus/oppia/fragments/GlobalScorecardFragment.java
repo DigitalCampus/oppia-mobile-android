@@ -36,6 +36,7 @@ import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.ScorecardsGridAdapter;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
+import org.digitalcampus.oppia.listener.OnItemClickListener;
 import org.digitalcampus.oppia.model.Badge;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
@@ -46,7 +47,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class GlobalScorecardFragment extends AppFragment implements ScorecardsGridAdapter.OnItemClickListener {
+public class GlobalScorecardFragment extends AppFragment implements OnItemClickListener {
 
     private ScorecardsGridAdapter adapterScorecards;
 
@@ -129,8 +130,7 @@ public class GlobalScorecardFragment extends AppFragment implements ScorecardsGr
     }
 
     @Override
-    public void onItemClick(View view, int position) {
-
+    public void onItemClick(View view, int position, String type, boolean enabled) {
         Course selectedCourse = adapterScorecards.getItemAtPosition(position);
         Intent i = new Intent(super.getActivity(), CourseIndexActivity.class);
         Bundle tb = new Bundle();

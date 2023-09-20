@@ -228,7 +228,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             }
         });
 
-        coursesAdapter.setOnItemClickListener((view, position) -> {
+        coursesAdapter.setOnItemClickListener((view, position, type, enabled) -> {
             Log.d("course-download", "Clicked " + position);
             CourseInstallViewAdapter course = courses.get(position);
             // When installing, don't do anything on click

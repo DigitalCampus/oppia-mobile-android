@@ -106,7 +106,7 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
         DevicesBTAdapter adapterPairedDevices = new DevicesBTAdapter(this, pairedDevicesNames);
 
         // Find and set up the RecyclerView for paired devices
-        adapterPairedDevices.setOnItemClickListener((v, position) -> selectDevice(v));
+        adapterPairedDevices.setOnItemClickListener((v, position, type, enabled) -> selectDevice(v));
         binding.recyclerPairedDevices.setAdapter(adapterPairedDevices);
 
         // Find and set up the RecyclerView for newly discovered devices
@@ -114,7 +114,7 @@ public class DeviceListActivity extends Activity implements BluetoothBroadcastRe
         newDevicesNames.clear();
         adapterNewDevices = new DevicesBTAdapter(this, newDevicesNames);
 
-        adapterNewDevices.setOnItemClickListener((v, position) -> selectDevice(v));
+        adapterNewDevices.setOnItemClickListener((v, position, type, enabled) -> selectDevice(v));
         binding.recyclerNewDevices.setAdapter(adapterNewDevices);
 
         // Register for broadcasts when a device is discovered

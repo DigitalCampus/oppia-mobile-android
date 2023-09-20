@@ -31,6 +31,7 @@ import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
+import org.digitalcampus.oppia.listener.CourseItemClickListener;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
 import org.digitalcampus.oppia.listener.UpdateActivityListener;
 import org.digitalcampus.oppia.model.Course;
@@ -58,7 +59,7 @@ import javax.inject.Inject;
 public class CoursesListFragment extends AppFragment implements SharedPreferences.OnSharedPreferenceChangeListener,
         DeleteCourseListener,
         CourseInstallerListener,
-        UpdateActivityListener, CoursesListAdapter.OnItemClickListener {
+        UpdateActivityListener, CourseItemClickListener {
 
     public static final String ACTION_COURSES_UPDATES = "actionCoursesUpdates";
 

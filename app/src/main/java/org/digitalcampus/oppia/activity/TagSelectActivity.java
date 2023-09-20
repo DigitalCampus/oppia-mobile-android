@@ -78,7 +78,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
         adapterTags = new TagsAdapter(this, tags);
 
 		binding.recyclerTags.setAdapter(adapterTags);
-		adapterTags.setOnItemClickListener((view, position) -> {
+		adapterTags.setOnItemClickListener((view, position, type, enabled) -> {
 			Tag selectedTag = tags.get(position);
 			Intent i = new Intent(TagSelectActivity.this, DownloadActivity.class);
 			Bundle tb = new Bundle();
