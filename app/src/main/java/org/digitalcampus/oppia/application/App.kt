@@ -123,7 +123,7 @@ class App : Application() {
             .build()
 
         DbHelper.getInstance(this).readableDatabase
-        Analytics.initializeAnalytics(applicationContext)
+        Analytics.initializeAnalytics(this)
 
         // this method fires once at application start
         Log.d(TAG, "Application start")
