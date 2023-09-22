@@ -14,17 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
+package org.digitalcampus.oppia.gamification
 
-package org.digitalcampus.oppia.gamification;
-
-import org.digitalcampus.oppia.model.Points;
-
-import java.util.Comparator;
+import org.digitalcampus.oppia.model.Points
 
 // for sorting points by date order
-public class PointsComparator implements Comparator<Points> {
-    @Override
-    public int compare(Points p1, Points p2) {
-        return p2.getDateTime().compareTo(p1.getDateTime());
+class PointsComparator : Comparator<Points> {
+    override fun compare(p1: Points, p2: Points): Int {
+        return p2.dateTime!!.compareTo(p1.dateTime)
     }
 }
