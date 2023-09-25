@@ -12,10 +12,9 @@ import org.digitalcampus.oppia.activity.PrefsActivity
 import org.digitalcampus.oppia.adapter.DownloadMediaAdapter.DownloadMediaViewHolder
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener
 import org.digitalcampus.oppia.model.Media
-import java.util.Collections
 import java.util.Locale
 
-class DownloadMediaAdapter(private val context: Context, private var mediaList: List<Media>) :
+class DownloadMediaAdapter(private val context: Context, private var mediaList: MutableList<Media>) :
     MultiChoiceRecyclerViewAdapter<DownloadMediaViewHolder>() {
 
     inner class DownloadMediaViewHolder(itemView: View) : ViewHolder(itemView) {
@@ -90,7 +89,7 @@ class DownloadMediaAdapter(private val context: Context, private var mediaList: 
         //Sort the media list by filename
         val prefsCourse = PreferenceManager.getDefaultSharedPreferences(context)
         val lang = prefsCourse.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().language)
-        mediaList = mediaList.sortedWith { o1, o2 ->
+        mediaList.sortedWith { o1, o2 ->
             val titleCourse1 = o1.getCourses()!![0].getTitle(lang)
             val titleCourse2 = o2.getCourses()!![0].getTitle(lang)
             titleCourse1.compareTo(titleCourse2)
@@ -101,7 +100,7 @@ class DownloadMediaAdapter(private val context: Context, private var mediaList: 
 
     fun sortByFilename() {
         //Sort the media list by filename
-        mediaList = mediaList.sortedBy { it.filename }
+        mediaList.sortedBy { it.filename }
         notifyDataSetChanged()
     }
 
