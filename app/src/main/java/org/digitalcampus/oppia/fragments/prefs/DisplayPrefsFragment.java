@@ -78,9 +78,9 @@ public class DisplayPrefsFragment extends BasePreferenceFragment implements Pref
     }
 
     private void loadInterfaceLangs() {
-        String[] langs = interfaceLanguagesRepository.getLanguageOptions();
+        List<String> langs = interfaceLanguagesRepository.getLanguageOptions();
 
-        Map<String, String> langNames = mapLangCodesToNames(Arrays.asList(langs));
+        Map<String, String> langNames = mapLangCodesToNames(langs);
 
         ListPreference prefInterfaceLangs = findPreference(PrefsActivity.PREF_INTERFACE_LANGUAGE);
         prefInterfaceLangs.setEntries(langNames.keySet().toArray(new String[0]));
