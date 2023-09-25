@@ -33,6 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import androidTestFiles.utils.parent.DaggerInjectMockUITest;
@@ -58,7 +59,7 @@ public class InterfaceLanguageUITest extends DaggerInjectMockUITest {
     @Test
     public void changeInterfaceLanguageInSettings() throws Exception {
 
-        when(interfaceLanguagesRepository.getLanguageOptions()).thenReturn(new String[]{"en", "es"});
+        when(interfaceLanguagesRepository.getLanguageOptions()).thenReturn(Arrays.asList("en", "es"));
 
         try (ActivityScenario<PrefsActivity> scenario = ActivityScenario.launch(PrefsActivity.class)) {
 
@@ -94,7 +95,7 @@ public class InterfaceLanguageUITest extends DaggerInjectMockUITest {
     @Test
     public void changeInterfaceLanguageInAboutPage() throws Exception {
 
-        when(interfaceLanguagesRepository.getLanguageOptions()).thenReturn(new String[]{"en", "es"});
+        when(interfaceLanguagesRepository.getLanguageOptions()).thenReturn(Arrays.asList("en", "es"));
 
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
 
