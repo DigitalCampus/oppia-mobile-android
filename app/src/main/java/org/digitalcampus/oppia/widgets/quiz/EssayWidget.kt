@@ -14,33 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
+package org.digitalcampus.oppia.widgets.quiz
 
-package org.digitalcampus.oppia.widgets.quiz;
+import android.app.Activity
+import android.view.View
+import android.view.ViewGroup
+import org.digitalcampus.mobile.learning.R
 
-import android.app.Activity;
-import android.view.View;
-import android.view.ViewGroup;
+class EssayWidget(activity: Activity, v: View, container: ViewGroup) :
+    TextInputQuizWidget(activity, v, container, R.layout.widget_quiz_shortanswer) {
 
-import org.digitalcampus.mobile.learning.R;
+    val TAG = ShortAnswerWidget::class.simpleName
 
-import java.util.ArrayList;
-import java.util.List;
+    override fun setQuestionResponses(currentAnswers: List<String>) {
+        // not used for this widget
+    }
 
-public class EssayWidget extends TextInputQuizWidget{
-
-	public static final String TAG = ShortAnswerWidget.class.getSimpleName();
-	
-	public EssayWidget(Activity activity, View v, ViewGroup container) {
-		super(activity, v, container ,R.layout.widget_quiz_shortanswer);
-	}
-
-	@Override
-	public void setQuestionResponses(List<String> currentAnswers) {
-		// not used for this widget
-	}
-
-	@Override
-	public List<String> getQuestionResponses() {
-		return new ArrayList<>();
-	}
+    override fun getQuestionResponses(): List<String> {
+        return ArrayList()
+    }
 }

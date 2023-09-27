@@ -13,7 +13,7 @@ class GamificationServiceDelegate(private val ctx: Context) {
     private var serviceIntent: Intent? = null
     private val extraData = HashMap<String, String>()
 
-    fun createActivityIntent(c: Course, act: Activity, isCompleted: Boolean, isBaseline: Boolean): GamificationServiceDelegate {
+    fun createActivityIntent(c: Course, act: Activity?, isCompleted: Boolean, isBaseline: Boolean): GamificationServiceDelegate {
         serviceIntent = Intent(ctx, GamificationService::class.java).apply {
             putExtra(GamificationService.SERVICE_COURSE, c)
             putExtra(GamificationService.SERVICE_ACTIVITY, act)
