@@ -9,7 +9,7 @@ repositories {
 }
 
 def version_code = 111
-def version_name = "7.4.6"
+def version_name = "7.4.6-noora.1"
 
 android {
 
@@ -30,7 +30,7 @@ android {
         versionCode version_code
         versionName version_name
 
-        applicationId "org.digitalcampus.mobile.learning"
+        applicationId "org.noorahealth.academy.indonesia"
 
         minSdk 21
         targetSdk 33

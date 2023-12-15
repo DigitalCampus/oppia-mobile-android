@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE resources [
-    <!ENTITY appName "OppiaMobile">
-    <!ENTITY companyName "Digital Campus"> ]>
+<!DOCTYPE resources [<!ENTITY appName "Noora Academy"><!ENTITY companyName "Noora Health"> ]>
 <resources>
     <string name="fragment_welcome_title">እንኳን ደህና መጣህ ወደ &appName;</string>
 </resources>

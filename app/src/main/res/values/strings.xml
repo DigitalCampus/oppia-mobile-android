@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appName "OppiaMobile"><!ENTITY companyName "Digital Campus"> ]>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appName "Noora Academy"><!ENTITY companyName "Noora Health"> ]>
 <resources>
     <string name="app_name">&appName;</string>
     <string name="app_logo_alt">&companyName; Logo</string>
@@ -25,7 +25,7 @@
     <string name="service_tracker">&appName; Tracker Service</string>
 
     <string name="fragment_welcome_title">Welcome to &appName;</string>
-    <string name="fragment_welcome_desc">&appName; is a mobile learning platform for delivering learning content, video and quizzes.\n\n\'Oppia\' means \'to learn\' in Finnish</string>
+    <string name="fragment_welcome_desc">&appName; is a mobile learning platform for delivering learning content, video and quizzes.</string>
     <string name="fragment_welcome_login_info">To get started with &appName;, you will need to register or login.</string>
     <string name="fragment_welcome_privacy_info">By registering or logging in, you agree to our <a href="">Privacy Policy and Terms of Service</a>.</string>
     <string name="fragment_welcome_powered_by">Powered by <a href="https://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
