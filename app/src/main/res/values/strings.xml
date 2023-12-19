@@ -30,6 +30,11 @@
     <string name="fragment_welcome_privacy_info">By registering or logging in, you agree to our <a href="">Privacy Policy and Terms of Service</a>.</string>
     <string name="fragment_welcome_powered_by">Powered by <a href="https://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
 
+    <string name="drawer_header_background_description">Background image</string>
+    <string name="drawer_header_logo_description">&appName; logo</string>
+    <string name="drawer_header_username_placeholder">User name</string>
+    <string name="drawer_header_userfullname_placeholder">User full name</string>
+
     <string name="tab_title_about">About</string>
     <string name="tab_title_badges">Badges</string>
     <string name="tab_title_help">Help</string>

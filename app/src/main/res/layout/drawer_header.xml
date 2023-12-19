@@ -12,7 +12,8 @@
         android:layout_gravity="top"
         android:padding="0dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/drawer_header_bg" />
+        android:src="@drawable/drawer_header_bg"
+        android:contentDescription="@string/drawer_header_background_description"/>
 
     <ImageView
         android:id="@+id/imageView9"
@@ -21,7 +22,8 @@
         android:layout_above="@+id/view_user_info"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"
-        android:src="@drawable/brand_icon" />
+        android:src="@drawable/brand_icon"
+        android:contentDescription="@string/drawer_header_logo_description"/>
 
     <RelativeLayout
         android:id="@+id/view_user_info"
@@ -39,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:text="User name"
+            android:text="@string/drawer_header_username_placeholder"
             android:textColor="@color/subtitle_bar_text_color"
             android:textSize="15sp" />
 
@@ -49,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/drawer_username"
             android:layout_alignParentStart="true"
-            android:text="User full name"
+            android:text="@string/drawer_header_userfullname_placeholder"
             android:textColor="@color/subtitle_bar_text_color"
             android:textSize="15sp" />
 
