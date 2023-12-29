@@ -145,7 +145,7 @@ public abstract class AnswerWidget extends BaseWidget {
 
         getAppComponent().inject(this);
 
-        setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
+        setIsBaseline("feedback".equals(activity.getActType()));
         binding.getRoot().setId(activity.getActId());
         if ((savedInstanceState != null) && (savedInstanceState.getSerializable(BaseWidget.WIDGET_CONFIG) != null)) {
             setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable(BaseWidget.WIDGET_CONFIG));
