@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.widgets;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -166,7 +167,31 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 			public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 				return handleUrl(request.getUrl().getPath());
 			}
+			@Override
+			@Deprecated
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
+				if (url.contains("/video/")) {
+					// extract video name from url
+					int startPos = url.indexOf("/video/") + 7;
+					String mediaFileName = url.substring(startPos);
+					PageWidget.super.startMediaPlayerWithFile(mediaFileName);
+					return true;
+
+				} else {
+
+					try {
+						Intent intent = new Intent(Intent.ACTION_VIEW);
+						Uri data = Uri.parse(url);
+						intent.setData(data);
+						PageWidget.super.getActivity().startActivity(intent);
+						return true;
+					} catch (ActivityNotFoundException anfe) {
+						Log.d(TAG,"Activity not found", anfe);
+					}
+					return false;
+				}
+			}
 			private boolean handleUrl(final String url){
 				if (url.contains(VIDEO_SUBPATH)) {
 					// extract video name from url
