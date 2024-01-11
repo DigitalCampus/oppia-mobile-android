@@ -45,7 +45,7 @@ public class AboutActivityTest {
     @Test
     public void clickAboutTab() {
 
-        waitForView(allOf(withText(R.string.tab_title_about),
+        waitForView(allOf(withText(R.string.tab_title_about_ee),
                 withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 isDescendantOfA(withId(R.id.tabs_toolbar))))
                 .perform(click());
