@@ -521,7 +521,7 @@ public abstract class AnswerWidget extends BaseWidget {
 
         exitBtn.setOnClickListener(getCloseBtnListener());
         if (this.isBaseline) {
-            exitBtn.setText(getString(R.string.widget_quiz_baseline_goto_course));
+            exitBtn.setText(getString(R.string.widget_quiz_continue));
             actionBtn.setVisibility(View.GONE);
         } else if (!contentAvailable) {
             actionBtn.setVisibility(View.GONE);
