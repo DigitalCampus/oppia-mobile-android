@@ -30,6 +30,7 @@ import org.digitalcampus.oppia.model.QuizAttemptRepository;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.widgets.FeedbackWidget;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,6 +72,7 @@ public class FeedbackUITest extends DaggerInjectMockUITest {
         ArrayList<Lang> contents = new ArrayList<>();
         contents.add(new Lang("en", quizContent));
         act.setContents(contents);
+        act.setActType("feedback");
         args.putSerializable(Activity.TAG, act);
 
     }
@@ -111,6 +113,7 @@ public class FeedbackUITest extends DaggerInjectMockUITest {
         waitForView(withText(R.string.widget_feedback_unavailable_attempts)).check(matches(isDisplayed()));
     }
 
+    @Ignore("Feedback is always with single attempt and this case is covered by showGreetingsAtFinishInFeedbackWithSingleAttempt test case")
     @Test
     public void showGreetingsAtFinish() throws Exception {
         setFeedback(SIMPLE_FEEDBACK_JSON);
