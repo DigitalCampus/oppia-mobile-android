@@ -103,7 +103,7 @@ public class InterfaceLanguageUITest extends DaggerInjectMockUITest {
 
             onWebView()
                     .withElement(findElement(Locator.TAG_NAME, "h3"))
-                    .check(webMatches(getText(), containsStringIgnoringCase("Installing new courses")));
+                    .check(webMatches(getText(), containsStringIgnoringCase("About OppiaMobile")));
 
             pressBackUnconditionally();
 
@@ -128,7 +128,7 @@ public class InterfaceLanguageUITest extends DaggerInjectMockUITest {
 
             onWebView()
                     .withElement(findElement(Locator.TAG_NAME, "h3"))
-                    .check(webMatches(getText(), containsStringIgnoringCase("Instalar nuevos cursos")));
+                    .check(webMatches(getText(), containsStringIgnoringCase("Colaboradores")));
 
 
             pressBackUnconditionally();
