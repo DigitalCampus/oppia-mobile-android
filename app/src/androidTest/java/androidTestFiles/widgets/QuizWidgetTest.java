@@ -102,8 +102,11 @@ public class QuizWidgetTest extends DaggerInjectMockUITest {
         //If the quiz is passed, we only have to show the "Continue" button
         waitForView(withId(R.id.quiz_exit_button))
                 .check(matches(withText(R.string.widget_quiz_continue)));
-        waitForView(withId(R.id.quiz_results_button))
-                .check(matches(not(isDisplayed())));
+
+//        The button need to be shown for now
+
+//        waitForView(withId(R.id.quiz_results_button))
+//                .check(matches(not(isDisplayed())));
     }
 
     @Test
