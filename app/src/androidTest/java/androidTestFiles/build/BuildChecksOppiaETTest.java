@@ -17,7 +17,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-public class BuildChecksOppiaET {
+public class BuildChecksOppiaETTest {
 
     private Context context;
     private SharedPreferences prefs;
@@ -36,8 +36,8 @@ public class BuildChecksOppiaET {
         String oppiaServerDefault = context.getString(R.string.prefServerDefault);
         String oppiaServerHost = context.getString(R.string.oppiaServerHost);
 
-        assertEquals("https://training.et.oppia-mobile.org/", oppiaServerDefault);
-        assertEquals("training.et.oppia-mobile.org", oppiaServerHost);
+        assertEquals("https://training-ee.moh.gov.et/", oppiaServerDefault);
+        assertEquals("training-ee.moh.gov.et", oppiaServerHost);
 
         assertEquals(false, BuildConfig.ADMIN_PROTECT_SETTINGS);
         assertEquals(true, BuildConfig.ADMIN_PROTECT_ADVANCED_SETTINGS);
@@ -82,7 +82,7 @@ public class BuildChecksOppiaET {
         assertEquals(600, BuildConfig.SESSION_EXPIRATION_TIMEOUT);
 
         assertEquals(false, BuildConfig.SHOW_COURSE_DESCRIPTION);
-        assertEquals(true, BuildConfig.ALLOW_REGISTER_USER);
+        assertEquals(false, BuildConfig.ALLOW_REGISTER_USER);
         assertEquals(true, BuildConfig.SHOW_GAMIFICATION_EVENTS);
 
         assertEquals("threshold", BuildConfig.GAMIFICATION_MEDIA_CRITERIA);
