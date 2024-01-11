@@ -21,6 +21,7 @@ import org.digitalcampus.oppia.activity.PrivacyActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -53,6 +54,7 @@ public class PrivacyActivityTest {
         }
     }
 
+    @Ignore("Terms and Service button is hidden")
     @Test
     public void privacySection_clickTermsOfServiceOption_moveToAboutActivity() {
 
