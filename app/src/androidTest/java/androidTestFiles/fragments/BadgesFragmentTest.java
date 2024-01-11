@@ -8,12 +8,14 @@ import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
 import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
 import android.Manifest;
 import android.os.Bundle;
 
+import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -62,6 +64,7 @@ public class BadgesFragmentTest extends MockedApiEndpointTest {
 
         launchInContainer(BadgesFragment.class, args, R.style.Oppia_ToolbarTheme);
 
+        Espresso.onIdle();
         waitForView(withText(R.string.error_connection))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()));
