@@ -3,10 +3,12 @@ package androidTestFiles.widgets.quiz;
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidTestFiles.utils.UITestActionsUtils.waitForView;
 
+import static org.hamcrest.CoreMatchers.allOf;
 import android.os.Bundle;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -54,7 +56,7 @@ public class BaselineQuizTest {
         ArrayList<Lang> contents = new ArrayList<>();
         contents.add(new Lang("en", quizContent));
         act.setContents(contents);
-
+        act.setDigest("2aadd06f629370028539ee0cac50f738528cr0s2p80m0");
         args = new Bundle();
         args.putSerializable(Activity.TAG, act);
         args.putSerializable(Course.TAG, new Course(""));
@@ -64,7 +66,8 @@ public class BaselineQuizTest {
     @Test
     public void allCorrect() {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
-        waitForView(withId(R.id.question_text))
+        waitForView(withId(R.id.take_quiz_btn)).perform(click());
+        waitForView(allOf(withId(R.id.question_text), isCompletelyDisplayed()))
                 .check(matches(withText(QUESTION_TITLE_1)));
 
         waitForView(withText(CORRECT_ANSWER_1)).perform(click());
@@ -83,13 +86,14 @@ public class BaselineQuizTest {
         // TODO check that the feedback is *not* displayed
 
         waitForView(withId(R.id.quiz_exit_button))
-                .check(matches(withText(R.string.widget_quiz_baseline_goto_course)));
+                .check(matches(withText(R.string.widget_quiz_continue)));
 
     }
 
     @Test
     public void partiallyCorrect() throws InterruptedException {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
+        waitForView(withId(R.id.take_quiz_btn)).perform(click());
         waitForView(withId(R.id.question_text))
                 .check(matches(withText(QUESTION_TITLE_1)));
 
@@ -109,12 +113,14 @@ public class BaselineQuizTest {
         // TODO check that the feedback is *not* displayed
 
         waitForView(withId(R.id.quiz_exit_button))
-                .check(matches(withText(R.string.widget_quiz_baseline_goto_course)));
+                .check(matches(withText(R.string.widget_quiz_continue)));
     }
 
     @Test
     public void allIncorrect() {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme);
+
+        waitForView(withId(R.id.take_quiz_btn)).perform(click());
         waitForView(withId(R.id.question_text))
                 .check(matches(withText(QUESTION_TITLE_1)));
 
@@ -134,7 +140,7 @@ public class BaselineQuizTest {
         // TODO check that the feedback is *not* displayed
 
         waitForView(withId(R.id.quiz_exit_button))
-                .check(matches(withText(R.string.widget_quiz_baseline_goto_course)));
+                .check(matches(withText(R.string.widget_quiz_continue)));
     }
 
 }
