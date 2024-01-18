@@ -4,10 +4,8 @@ instrumented_tests_task:
   timeout_in: 120m
   env:
     matrix:
-      - API_LEVEL: 27
-      - API_LEVEL: 28
-      - API_LEVEL: 29
-      - API_LEVEL: 30
+      - API_LEVEL: 23
+      - API_LEVEL: 33
   container:
     image: reactivecircus/android-emulator-${API_LEVEL}:latest
     kvm: true

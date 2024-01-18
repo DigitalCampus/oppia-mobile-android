@@ -1,0 +1,98 @@
+name: Android Tests NIT
+
+on:
+  push:
+    branches:
+      - test-case-updates
+
+jobs:
+  build:
+    name: Gradle build pass
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout repo
+        with:
+          fetch-depth: 1
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: 8
+      - name: Build with Gradle
+        run: ./gradlew assembleNormalDebug
+
+  junit:
+    name: Unit tests
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout repo
+        with:
+          fetch-depth: 1
+
+      - name: Run Unit tests
+        run: ./gradlew testNormalDebugUnitTest
+
+      - name: Bundle unit tests results artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: unit-tests-results
+          path: app/build/reports/tests/testNormalDebugUnitTest
+
+  tests:
+    name: Instrumentation tests
+    needs: [build]
+    runs-on: macos-latest
+    timeout-minutes: 180
+    strategy:
+      matrix:
+        api-level: [23, 33]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: 8
+      - name: Cache Gradle and wrapper
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Run all instrumented Tests
+        uses: reactivecircus/android-emulator-runner@v2.28.0
+        with:
+          api-level: ${{ matrix.api-level }}
+          target: ${{ matrix.api-level >= 32 && 'google_apis' || 'default' }}
+          profile: pixel_5
+          ram-size: 2048M
+          arch: x86_64
+          disk-size: 4096M
+          emulator-options: -no-snapshot-save -no-window -accel on -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew clean jacocoTestReport -i
+      - name: Upload Reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-test-report
+          path: app/build/reports/androidTests/connected
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v3
+        with:
+          name: android-coverage-report
+          path: app/build/reports/coverage/androidTest
+          if-no-files-found: error
+      - name: Run SonarCloud analysis
+        run: ./gradlew sonarqube
