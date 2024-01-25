@@ -1,6 +1,9 @@
-name: Android Tests
+name: Android Tests for Master
 
-on: push
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
