@@ -319,4 +319,17 @@
         <item name="android:layout_weight">1</item>
     </style>
 
+    <style name="QuizCheckableItem">
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_quiz_checkable_item</item>
+        <item name="android:button">@null</item>
+        <item name="android:paddingStart">30dp</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingEnd">30dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:textColor">@color/text_quiz_checkable_item</item>
+        <item name="android:checkable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
 </resources>

@@ -63,6 +63,8 @@
     <color name="quiz_attempted">@color/theme_secondary</color>
     <color name="quiz_passed">@color/theme_secondary_light</color>
 
+    <color name="quiz_custom_bg_color">#00956e</color>
+
     <!-- Course index -->
     <color name="course_index_section_title">@color/text_dark</color>
     <color name="course_index_highlight">@color/theme_secondary</color>

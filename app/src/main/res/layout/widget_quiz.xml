@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:ignore="MissingPrefix">
+    tools:ignore="MissingPrefix"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp">
 
     <FrameLayout
         android:layout_width="match_parent"

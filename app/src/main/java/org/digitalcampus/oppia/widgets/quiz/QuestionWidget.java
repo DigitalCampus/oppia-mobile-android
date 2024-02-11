@@ -64,7 +64,7 @@ public abstract class QuestionWidget {
 	}
 
 	protected void setResponseMarginInLayoutParams(LinearLayout.LayoutParams params){
-		params.setMargins(0, (int) ctx.getResources().getDimension(R.dimen.quiz_response_margin), 0, 0);
+		params.setMargins(0, ctx.getResources().getDimensionPixelSize(R.dimen.quiz_response_margin), 0, 0);
 	}
 
 }

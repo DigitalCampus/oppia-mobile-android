@@ -60,10 +60,10 @@ public class MultiSelectWidget extends QuestionWidget {
         }
 
         for (Response r : responses) {
-            CheckBox chk = new CheckBox(ctx);
+            CheckBox chk = new CheckBox(ctx, null, 0, R.style.QuizCheckableItem);
             chk.setText(UIUtils.getFromHtmlAndTrim(r.getTitle(currentUserLang)));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             setResponseMarginInLayoutParams(params);
             responsesLL.addView(chk, params);
             for (String a : currentAnswer) {
