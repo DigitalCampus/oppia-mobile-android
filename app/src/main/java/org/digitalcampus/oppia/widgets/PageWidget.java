@@ -47,6 +47,7 @@ import org.digitalcampus.oppia.utils.resources.JSInterfaceForBackwardsCompat;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForInlineInput;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForResourceImages;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -159,6 +160,7 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
                 for (JSInterface jsInterface : jsInterfaces){
 					view.loadUrl(jsInterface.getJavascriptInjection());
 				}
+				view.evaluateJavascript("changeAudioSource('" + Storage.getMediaPath(getContext()) + "')", null);
             }
 
             // set up the page to intercept videos
