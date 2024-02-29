@@ -675,6 +675,8 @@
     <string name="offline_course_import.media_files_imported">Media files imported</string>
     <string name="offline_course_import.course_files_imported">Course files imported</string>
     <string name="bluetooth_not_supported">Bluetooth not supported</string>
+    <string name="select_one_or_more">(Select one or more)</string>
+    <string name="select_one">(Select one)</string>
 
 </resources>
 

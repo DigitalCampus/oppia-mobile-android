@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			android:orientation="vertical" android:layout_width="match_parent"
-			android:layout_height="match_parent">
-		<LinearLayout android:layout_width="match_parent"
-					android:layout_height="wrap_content" 
-					android:orientation="vertical"
-					android:id="@+id/questionresponses"
-					android:layout_margin="10dp">
-		</LinearLayout>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/TextBase"
+        android:text="@string/select_one_or_more"
+        android:textStyle="italic"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/questionresponses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical" />
 </LinearLayout>
