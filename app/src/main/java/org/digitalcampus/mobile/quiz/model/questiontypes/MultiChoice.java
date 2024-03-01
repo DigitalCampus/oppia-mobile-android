@@ -17,11 +17,30 @@
 
 package org.digitalcampus.mobile.quiz.model.questiontypes;
 
+import org.digitalcampus.mobile.quiz.model.Response;
+
 import java.io.Serializable;
 
 public class MultiChoice extends UserResponseQuestion implements Serializable  {
 
     private static final long serialVersionUID = -6605393327170759582L;
     public static final String TAG = MultiChoice.class.getSimpleName();
+
+    @Override
+    public void mark(String lang) {
+        // loop through the responses
+        // find whichever are set as selected and add up the responses
+        float total = 0;
+        for (Response r : responseOptions) {
+            for (String a : userResponses) {
+                if (r.getTitle(lang).equals(a)) {
+                    total += r.getScore();
+                    feedback = r.getFeedback(lang);
+                    feedbackHtmlFile = r.getFeedbackHtml(lang);
+                }
+            }
+        }
+        this.calculateUserscore(total);
+    }
 
 }

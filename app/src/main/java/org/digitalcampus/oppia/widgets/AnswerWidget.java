@@ -397,12 +397,14 @@ public abstract class AnswerWidget extends BaseWidget {
                             && !quiz.getCurrentQuestion().getFeedbackDisplayed()) {
 
                         String feedback = quiz.getCurrentQuestion().getFeedback(prefLang);
-                        String feedbackHtml = quiz.getCurrentQuestion().getFeedbackHtml(prefLang);
+                        String feedbackHtmlFile = quiz.getCurrentQuestion().getFeedbackHtmlFile(prefLang);
 
-                        if (feedbackHtml != null && !feedbackHtml.isEmpty()) {
-                            showFeedbackHtml(feedbackHtml);
+                        if (feedbackHtmlFile != null && !feedbackHtmlFile.isEmpty()) {
+                            showFeedbackHtmlFile(feedbackHtmlFile);
                         } else if (feedback != null && !feedback.isEmpty()) {
                             showFeedback(feedback);
+                        } else {
+                            nextStep();
                         }
                     } else {
                         nextStep();
@@ -489,7 +491,7 @@ public abstract class AnswerWidget extends BaseWidget {
         }
     }
 
-    private void showFeedbackHtml(String htmlFile) {
+    private void showFeedbackHtmlFile(String htmlFile) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Oppia_AlertDialogStyle);
         WebView webView = new WebView(getContext());
         webView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
