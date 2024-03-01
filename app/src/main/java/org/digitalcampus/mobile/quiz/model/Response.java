@@ -34,6 +34,7 @@ public class Response implements Serializable {
     private float score;
     private Map<String, String> props = new HashMap<>();
     private Map<String, String> feedback = new HashMap<>();
+    private Map<String, String> feedbackHtml = new HashMap<>();
 
     public String getTitle(String lang) {
         if (title.containsKey(lang)) {
@@ -93,9 +94,37 @@ public class Response implements Serializable {
         }
     }
 
-    public Float getTolerance(){
+    public void setFeedbackHtml(String defaultLang) {
+        if (this.props.containsKey(Quiz.JSON_PROPERTY_FEEDBACK_HTML_FILE)) try {
+            JSONObject feedbackLangs = new JSONObject(this.getProp(Quiz.JSON_PROPERTY_FEEDBACK_HTML_FILE));
+            Iterator<?> keys = feedbackLangs.keys();
+
+            while (keys.hasNext()) {
+                String key = (String) keys.next();
+                this.setFeedbackHtmlForLang(key, feedbackLangs.getString(key));
+            }
+        } catch (JSONException e) {
+            this.setFeedbackHtmlForLang(defaultLang, this.getProp(Quiz.JSON_PROPERTY_FEEDBACK));
+        }
+    }
+
+    private void setFeedbackHtmlForLang(String lang, String title) {
+        this.feedbackHtml.put(lang, title);
+    }
+
+    public String getFeedbackHtml(String lang) {
+        if (feedbackHtml.containsKey(lang)) {
+            return feedbackHtml.get(lang);
+        } else if (!feedbackHtml.entrySet().isEmpty()) {
+            return feedbackHtml.entrySet().iterator().next().getValue();
+        } else {
+            return "";
+        }
+    }
+
+    public Float getTolerance() {
         Float tolerance = (float) 0.0;
-        if(this.getProp(Quiz.JSON_PROPERTY_TOLERANCE) != null){
+        if (this.getProp(Quiz.JSON_PROPERTY_TOLERANCE) != null) {
             tolerance = Float.parseFloat(this.getProp(Quiz.JSON_PROPERTY_TOLERANCE));
         }
         return tolerance;
