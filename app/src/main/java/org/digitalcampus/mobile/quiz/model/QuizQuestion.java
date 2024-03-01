@@ -49,6 +49,7 @@ public class QuizQuestion implements Serializable {
     protected List<Response> responseOptions = new ArrayList<>();
     protected List<String> userResponses = new ArrayList<>();
     protected String feedback = "";
+    protected String feedbackHtml = "";
     private boolean skipped;
 
     public void addResponseOption(Response r) {
@@ -82,10 +83,8 @@ public class QuizQuestion implements Serializable {
             for (String a : userResponses) {
                 if (r.getTitle(lang).equals(a)) {
                     total += r.getScore();
-                    String feedbackLang = r.getFeedback(lang);
-                    if (!TextUtilsJava.isEmpty(feedbackLang)) {
-                        feedback = feedbackLang;
-                    }
+                    feedback = r.getFeedback(lang);
+                    feedbackHtml = r.getFeedbackHtml(lang);
                 }
             }
         }
@@ -148,6 +147,13 @@ public class QuizQuestion implements Serializable {
         this.feedback = "";
         this.mark(lang);
         return this.feedback;
+    }
+
+    public String getFeedbackHtml(String lang) {
+        // reset feedback back to nothing
+        this.feedbackHtml = "";
+        this.mark(lang);
+        return this.feedbackHtml;
     }
 
     public int getMaxScore() {
