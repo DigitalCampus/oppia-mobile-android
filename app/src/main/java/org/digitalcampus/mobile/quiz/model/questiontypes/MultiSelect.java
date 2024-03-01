@@ -65,7 +65,7 @@ public class MultiSelect extends QuizQuestion implements Serializable {
     private void setFeedbackHtmlFile(String lang) {
         try {
             String feedbackKey = "";
-            if (userscore == 0) {
+            if (userscore * 100 < Quiz.QUIZ_QUESTION_PASS_THRESHOLD) {
                 feedbackKey = "incorrectfeedbackhtmlfile";
             } else {
                 feedbackKey = "correctfeedbackhtmlfile";
