@@ -57,7 +57,35 @@ public class MultiSelect extends QuizQuestion implements Serializable {
         } else {
             userscore = total;
         }
+
+        setFeedbackHtmlFile(lang);
         Log.d(TAG, "User score for question: " + userscore);
+    }
+
+    private void setFeedbackHtmlFile(String lang) {
+        try {
+            String feedbackKey = "";
+            if (userscore == 0) {
+                feedbackKey = "incorrectfeedbackhtmlfile";
+            } else {
+                feedbackKey = "correctfeedbackhtmlfile";
+            }
+
+            if (getProps().containsKey(feedbackKey)) {
+                String incorrectFeedbackLangs = getProps().get(feedbackKey);
+                JSONObject feedbackHtmlLangs = new JSONObject(incorrectFeedbackLangs);
+
+                if (feedbackHtmlLangs.has(lang)) {
+                    feedbackHtmlFile = feedbackHtmlLangs.getString(lang);
+                } else if (feedbackHtmlLangs.keys().hasNext()) {
+                    feedbackHtmlFile = feedbackHtmlLangs.getString(feedbackHtmlLangs.keys().next());
+                } else {
+                    feedbackHtmlFile = "";
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "setFeedbackHtmlFile: ", e);
+        }
     }
 
     private float setFeedback(String lang){

@@ -31,6 +31,11 @@ public class Description extends QuizQuestion {
     public static final String TAG = Description.class.getSimpleName();
 
     @Override
+    public void mark(String lang) {
+        // Nothing to do
+    }
+
+    @Override
     public JSONObject responsesToJSON() {
         JSONObject jo = new JSONObject();
         try {
