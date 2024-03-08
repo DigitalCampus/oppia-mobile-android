@@ -21,7 +21,6 @@ import android.util.Log;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.analytics.Analytics;
-import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class QuizQuestion implements Serializable {
+public abstract class QuizQuestion implements Serializable {
 
     public static final String TAG = QuizQuestion.class.getSimpleName();
     private static final long serialVersionUID = 852385823168202643L;
@@ -49,6 +48,7 @@ public class QuizQuestion implements Serializable {
     protected List<Response> responseOptions = new ArrayList<>();
     protected List<String> userResponses = new ArrayList<>();
     protected String feedback = "";
+    protected String feedbackHtmlFile = "";
     private boolean skipped;
 
     public void addResponseOption(Response r) {
@@ -74,25 +74,9 @@ public class QuizQuestion implements Serializable {
         this.userResponses.clear();
     }
 
-    public void mark(String lang) {
-        // loop through the responses
-        // find whichever are set as selected and add up the responses
-        float total = 0;
-        for (Response r : responseOptions) {
-            for (String a : userResponses) {
-                if (r.getTitle(lang).equals(a)) {
-                    total += r.getScore();
-                    String feedbackLang = r.getFeedback(lang);
-                    if (!TextUtilsJava.isEmpty(feedbackLang)) {
-                        feedback = feedbackLang;
-                    }
-                }
-            }
-        }
-        this.calculateUserscore(total);
-    }
+    public abstract void mark(String lang);
 
-    public void calculateUserscore(float total){
+    protected void calculateUserscore(float total){
         if (this.getProp(Quiz.JSON_PROPERTY_MAXSCORE) != null) {
             int maxscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
             if (total > maxscore) {
@@ -148,6 +132,13 @@ public class QuizQuestion implements Serializable {
         this.feedback = "";
         this.mark(lang);
         return this.feedback;
+    }
+
+    public String getFeedbackHtmlFile(String lang) {
+        // reset feedback back to nothing
+        this.feedbackHtmlFile = "";
+        this.mark(lang);
+        return this.feedbackHtmlFile;
     }
 
     public int getMaxScore() {

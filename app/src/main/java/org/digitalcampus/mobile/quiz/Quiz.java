@@ -83,6 +83,7 @@ public class Quiz implements Serializable {
     public static final String JSON_PROPERTY_TEXT = "text";
     public static final String JSON_PROPERTY_TOLERANCE = "tolerance";
     public static final String JSON_PROPERTY_FEEDBACK = "feedback";
+    public static final String JSON_PROPERTY_FEEDBACK_HTML_FILE = "feedbackhtmlfile";
     public static final String JSON_PROPERTY_CORRECTFEEDBACK = "correctfeedback";
     public static final String JSON_PROPERTY_INCORRECTFEEDBACK = "incorrectfeedback";
     public static final String JSON_PROPERTY_PARTIALLYCORRECTFEEDBACK = "partiallycorrectfeedback";
@@ -292,6 +293,7 @@ public class Quiz implements Serializable {
         }
         responseOption.setProps(rProps);
         responseOption.setFeedback(this.defaultLang);
+        responseOption.setFeedbackHtml(this.defaultLang);
         return responseOption;
     }
 

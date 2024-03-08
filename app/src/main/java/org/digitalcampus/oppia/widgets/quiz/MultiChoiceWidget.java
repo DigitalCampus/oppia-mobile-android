@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.widgets.quiz;
 
 import android.app.Activity;
+import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -61,15 +62,22 @@ public class MultiChoiceWidget extends QuestionWidget{
 			Collections.shuffle(responses);
 		}
 
-    	int id = 1000+1;
-    	for (Response r : responses){
-    		RadioButton rb = new RadioButton(ctx);
-			RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
-				ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-			setResponseMarginInLayoutParams(params);
-    		rb.setId(id);
-			rb.setText(UIUtils.getFromHtmlAndTrim(r.getTitle(currentUserLang)));
-			responsesRG.addView(rb, params);
+        String showStandardInstructions = question.getProp("show_standard_instructions");
+        View tvInstructions = view.findViewById(R.id.tv_instructions);
+        if (tvInstructions != null) {
+            boolean visible = showStandardInstructions != null && showStandardInstructions.equals("1");
+            tvInstructions.setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
+
+        int id = 1000 + 1;
+        for (Response r : responses) {
+            RadioButton rb = new RadioButton(ctx);
+            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            setResponseMarginInLayoutParams(params);
+            rb.setId(id);
+            rb.setText(UIUtils.getFromHtmlAndTrim(r.getTitle(currentUserLang)));
+            responsesRG.addView(rb, params);
             for (String answer : currentAnswer) {
                 if (answer.equals(r.getTitle(currentUserLang))){
                     rb.setChecked(true);

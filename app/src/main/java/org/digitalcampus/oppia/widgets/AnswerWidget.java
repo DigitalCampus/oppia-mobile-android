@@ -22,16 +22,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +52,7 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -60,6 +61,7 @@ import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
@@ -72,11 +74,10 @@ import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
 import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -386,16 +387,25 @@ public abstract class AnswerWidget extends BaseWidget {
 
     private View.OnClickListener nextBtnClickListener() {
         return v -> {
+
+            UIUtils.hideSoftKeyboard(v);
+
             // save answer
             if (saveAnswer()) {
-                String feedback;
                 try {
-                    feedback = quiz.getCurrentQuestion().getFeedback(prefLang);
-                    if (!feedback.equals("") &&
-                            quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS
+                    if (quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS
                             && !quiz.getCurrentQuestion().getFeedbackDisplayed()) {
-                        UIUtils.hideSoftKeyboard(v);
-                        showFeedback(feedback);
+
+                        String feedback = quiz.getCurrentQuestion().getFeedback(prefLang);
+                        String feedbackHtmlFile = quiz.getCurrentQuestion().getFeedbackHtmlFile(prefLang);
+
+                        if (feedbackHtmlFile != null && !feedbackHtmlFile.isEmpty()) {
+                            showFeedbackHtmlFile(feedbackHtmlFile);
+                        } else if (feedback != null && !feedback.isEmpty()) {
+                            showFeedback(feedback);
+                        } else {
+                            nextStep();
+                        }
                     } else {
                         nextStep();
                     }
@@ -478,6 +488,40 @@ public abstract class AnswerWidget extends BaseWidget {
         } catch (InvalidQuizException e) {
             Analytics.logException(e);
             Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
+        }
+    }
+
+    private void showFeedbackHtmlFile(String htmlFile) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Oppia_AlertDialogStyle);
+        WebView webView = new WebView(getContext());
+        webView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        loadWebviewContents(webView, htmlFile);
+        builder.setView(webView);
+        builder.setPositiveButton(R.string.ok, (arg0, arg1) -> nextStep());
+        builder.show();
+
+        try {
+            quiz.getCurrentQuestion().setFeedbackDisplayed(true);
+        } catch (InvalidQuizException e) {
+            Analytics.logException(e);
+            Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
+        }
+    }
+
+    private void loadWebviewContents(WebView webview, String htmlFile) {
+
+        String url = course.getLocation() + htmlFile;
+        int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
+
+        webview.getSettings().setDefaultFontSize(defaultFontSize);
+        webview.getSettings().setAllowFileAccess(true);
+
+        try {
+            String contents = FileUtils.readFile(url);
+            webview.getSettings().setJavaScriptEnabled(true);
+            webview.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, contents, "text/html", "utf-8", null);
+        } catch (IOException e) {
+            webview.loadUrl("file://" + url);
         }
     }
 
