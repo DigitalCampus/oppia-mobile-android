@@ -9,21 +9,21 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar"/>
+        layout="@layout/toolbar" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/profile_view"
-        android:visibility="gone"
-        tools:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar">
+        android:layout_below="@id/toolbar"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/btn_save_profile"
+            app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteY="56dp">
 
             <LinearLayout
@@ -103,7 +103,7 @@
 
                 </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
 
-                <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
+                <org.digitalcampus.oppia.utils.ui.fields.ValidableNestedTextInputLayout
                     android:id="@+id/field_phoneno"
                     style="@style/Oppia.CustomField.TextInputLayout"
                     android:layout_marginTop="@dimen/margin_medium"
@@ -120,19 +120,25 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
-                            app:ccp_autoDetectCountry="true" />
+                            app:ccp_autoDetectCountry="true"
+                            android:layout_gravity="bottom"/>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/ccp_text_input_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:id="@+id/register_form_phoneno_edittext"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/register_form_phoneno_title"
+                                android:inputType="phone"
+                                android:singleLine="true"
+                                android:textSize="15sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
-
-                    <EditText
-                        android:id="@+id/register_form_phoneno_edittext"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/register_form_phoneno_title"
-                        android:inputType="phone"
-                        android:singleLine="true"
-                        android:textSize="15sp" />
-
-                </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
+                </org.digitalcampus.oppia.utils.ui.fields.ValidableNestedTextInputLayout>
 
 
                 <LinearLayout
@@ -146,13 +152,13 @@
         <Button
             android:id="@+id/btn_save_profile"
             android:layout_width="wrap_content"
-            android:layout_marginBottom="@dimen/margin_medium"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_medium"
             android:text="@string/save_profile"
-            android:theme="@style/PrimaryButton" />
+            android:theme="@style/PrimaryButton"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

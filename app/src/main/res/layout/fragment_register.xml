@@ -162,7 +162,7 @@
                     android:textSize="15sp" />
             </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
 
-            <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
+            <org.digitalcampus.oppia.utils.ui.fields.ValidableNestedTextInputLayout
                 android:id="@+id/register_form_phoneno_field"
                 style="@style/Oppia.CustomField.TextInputLayout"
                 android:layout_marginTop="@dimen/margin_medium"
@@ -179,19 +179,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
-                        app:ccp_autoDetectCountry="true" />
+                        app:ccp_autoDetectCountry="true"
+                        android:layout_gravity="bottom" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/ccp_text_input_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/register_form_phoneno_edittext"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/register_form_phoneno_title"
+                            android:inputType="phone"
+                            android:singleLine="true"
+                            android:textSize="15sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
                 </LinearLayout>
-
-                <EditText
-                    android:id="@+id/register_form_phoneno_edittext"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/register_form_phoneno_title"
-                    android:inputType="phone"
-                    android:singleLine="true"
-                    android:textSize="15sp" />
-
-            </org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout>
+            </org.digitalcampus.oppia.utils.ui.fields.ValidableNestedTextInputLayout>
 
 
             <org.digitalcampus.oppia.utils.ui.fields.ValidableTextInputLayout
