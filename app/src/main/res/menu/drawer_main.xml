@@ -19,6 +19,12 @@
             android:icon="@android:drawable/ic_menu_preferences"
             android:title="@string/menu_settings" />
         <item
+            android:id="@+id/prefInterfaceLanguage"
+            android:icon="@drawable/ic_interface_language"
+            android:key="prefInterfaceLanguage"
+            android:title="@string/prefInterfaceLanguage"/>
+
+        <item
             android:id="@+id/menu_privacy"
             android:icon="@drawable/ic_settings_security"
             android:title="@string/menu_privacy" />

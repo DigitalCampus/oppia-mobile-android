@@ -32,6 +32,7 @@ import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.FetchServerInfoTask;
+import org.digitalcampus.oppia.repository.InterfaceLanguagesRepository;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
@@ -57,7 +58,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private DrawerHeaderBinding bindingHeader;
     private ViewBadgeBinding bindingBadgeView;
     private boolean stagingWarningClosed;
-
+    InterfaceLanguagesRepository interfaceLanguagesRepository = new InterfaceLanguagesRepository();
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -166,7 +167,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     public void onStart() {
         super.onStart();
         initialize();
-        drawer = new DrawerMenuManager(this);
+        drawer = new DrawerMenuManager(this, interfaceLanguagesRepository);
         drawer.initializeDrawer();
 
     }

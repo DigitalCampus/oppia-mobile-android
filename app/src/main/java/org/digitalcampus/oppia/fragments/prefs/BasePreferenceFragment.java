@@ -50,7 +50,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
         return true;
     }
 
-    void liveUpdateSummary(String prefKey) {
+    public void liveUpdateSummary(String prefKey) {
         liveUpdateSummary(prefKey, "");
     }
 
