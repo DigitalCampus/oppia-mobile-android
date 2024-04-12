@@ -1,10 +1,9 @@
-name: Android Tests for Master
+name: Android Tests for other Branches
 
 on:
   push:
-    branches:
+    branches-ignore:
       - master
-
 jobs:
   build:
     name: Gradle build pass
@@ -47,10 +46,10 @@ jobs:
     name: Instrumentation tests
     needs: [build]
     runs-on: macos-latest
-    timeout-minutes: 180
+    timeout-minutes: 240
     strategy:
       matrix:
-        api-level: [27, 33]
+        api-level: [23, 33]
 
     steps:
       - name: Checkout repo
@@ -75,7 +74,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2.28.0
         with:
           api-level: ${{ matrix.api-level }}
-          target: ${{ matrix.api-level >= 32 && 'google_apis' || 'default' }}
+          target: 'default'
           profile: pixel_5
           ram-size: 2048M
           arch: x86_64

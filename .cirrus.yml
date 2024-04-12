@@ -4,10 +4,8 @@ instrumented_tests_task:
   timeout_in: 120m
   env:
     matrix:
-      - API_LEVEL: 27
-      - API_LEVEL: 28
-      - API_LEVEL: 29
-      - API_LEVEL: 30
+      - API_LEVEL: 23
+      - API_LEVEL: 33
   container:
     image: reactivecircus/android-emulator-${API_LEVEL}:latest
     kvm: true
@@ -28,8 +26,10 @@ instrumented_tests_task:
     adb shell settings put global window_animation_scale 0.0
     adb shell settings put global transition_animation_scale 0.0
     adb shell settings put global animator_duration_scale 0.0
-  run_instrumented_tests_script:
-    ./gradlew connectedCheck
+  run_instrumented_tests_script: |
+      adb logcat -c
+      adb logcat &
+      ./gradlew connectedCheck
   cleanup_script:
     - rm -rf ~/.gradle/caches/[0-9].*
     - rm -rf ~/.gradle/caches/trasnforms-1
