@@ -65,6 +65,7 @@ public class Quiz implements Serializable {
     public static final int SHOW_FEEDBACK_ALWAYS = 1;
     public static final int SHOW_FEEDBACK_NEVER = 0;
     public static final int SHOW_FEEDBACK_AT_END = 2;
+    public static final int SHOW_FEEDBACK_ONLY_AFTER_QUESTION = 3;
 
     public static final int QUIZ_DEFAULT_PASS_THRESHOLD = 99; // use 99 rather than 100 in case of rounding
     public static final int QUIZ_QUESTION_PASS_THRESHOLD = 99; // use 99 rather than 100 in case of rounding
