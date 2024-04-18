@@ -393,7 +393,8 @@ public abstract class AnswerWidget extends BaseWidget {
             // save answer
             if (saveAnswer()) {
                 try {
-                    if (quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS
+                    if ((quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS ||
+                            quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ONLY_AFTER_QUESTION)
                             && !quiz.getCurrentQuestion().getFeedbackDisplayed()) {
 
                         String feedback = quiz.getCurrentQuestion().getFeedback(prefLang);
