@@ -112,14 +112,14 @@ public class GamificationServiceDelegate {
 
     }
 
-    public void registerMediaPlaybackEvent(long timetaken, String mediaFileName, boolean videoEndReached){
+    public void registerMediaPlaybackEvent(long timetaken, String mediaFileName, boolean mediaEndReached){
 
         if (serviceIntent == null) return;
 
         serviceIntent.putExtra(GamificationService.SERVICE_EVENT, GamificationService.SERVICE_EVENT_MEDIAPLAYBACK);
         serviceIntent.putExtra(GamificationService.EVENTDATA_TIMETAKEN, timetaken);
         serviceIntent.putExtra(GamificationService.EVENTDATA_MEDIA_FILENAME, mediaFileName);
-        serviceIntent.putExtra(GamificationService.EVENTDATA_MEDIA_END_REACHED, videoEndReached);
+        serviceIntent.putExtra(GamificationService.EVENTDATA_MEDIA_END_REACHED, mediaEndReached);
         putExtraDataIfAny();
         ctx.startService(serviceIntent);
 

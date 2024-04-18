@@ -29,6 +29,11 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
+
+import com.google.android.material.snackbar.Snackbar;
+
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
@@ -43,6 +48,7 @@ import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.resources.JSInterface;
+import org.digitalcampus.oppia.utils.resources.JSInterfaceForAudioPlayer;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForBackwardsCompat;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForInlineInput;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForResourceImages;
@@ -57,11 +63,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.core.text.HtmlCompat;
-
-import com.google.android.material.snackbar.Snackbar;
 
 public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.OnInputEnteredListener {
 
@@ -144,6 +145,27 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 			inputJSInterface.setOnInputEnteredListener(this);
 			jsInterfaces.add(inputJSInterface);
             webview.addJavascriptInterface(inputJSInterface, inputJSInterface.getInterfaceExposedName());
+
+			JSInterfaceForAudioPlayer audioPlayerJSInterface = new JSInterfaceForAudioPlayer(getContext());
+			audioPlayerJSInterface.setOnPlayButtonClickListener(new JSInterfaceForAudioPlayer.OnPlayButtonClickListener() {
+				@Override
+				public void onPlayButtonClick(boolean playing, int duration) {
+					if (playing) {
+						resumeTimeTracking();
+					} else {
+						pauseTimeTracking();
+					}
+				}
+
+				@Override
+				public void onAudioCompleted(String filename) {
+					new GamificationServiceDelegate(getActivity())
+							.createActivityIntent(course, activity, true, false)
+							.registerMediaPlaybackEvent(getSpentTime(), filename, true);
+				}
+			});
+			jsInterfaces.add(audioPlayerJSInterface);
+			webview.addJavascriptInterface(audioPlayerJSInterface, audioPlayerJSInterface.getInterfaceExposedName());
 
 
 			webview.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, contents, "text/html", "utf-8", null);
