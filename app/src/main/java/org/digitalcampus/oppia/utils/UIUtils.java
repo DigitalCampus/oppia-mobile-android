@@ -42,9 +42,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.BlendModeColorFilterCompat;
 import androidx.core.graphics.BlendModeCompat;
+import androidx.core.os.LocaleListCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.preference.PreferenceManager;
 
@@ -60,6 +62,7 @@ import org.digitalcampus.oppia.model.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class UIUtils {
@@ -322,7 +325,68 @@ public class UIUtils {
     public static void hideSoftKeyboard(Activity activity) {
         hideSoftKeyboard(activity.getWindow());
     }
+    public static void createInterfaceLanguageDialog(
+            Context ctx,
+            Map<String, String> languagesList,
+            final SharedPreferences prefs,
+            final Callable<Boolean> funct
+    ) {
+        ArrayList<String> langStringList = new ArrayList<>(languagesList.keySet());
 
+        int prefLangPosition = -1;
+        int i = 0;
+
+        String prefLanguage = prefs.getString(PrefsActivity.PREF_INTERFACE_LANGUAGE, Locale.getDefault().getLanguage());
+
+        // Find the preferred language position in the list
+        for (String language : langStringList) {
+            if (languagesList.get(language).equalsIgnoreCase(prefLanguage)) {
+                prefLangPosition = i;
+                break; // Exit the loop once the preferred language is found
+            }
+            i++;
+        }
+
+        // Ensure there's at least one language to display
+        if (langStringList.size() > 0) {
+            // Create a single-choice dialog for selecting the language
+            ArrayAdapter<String> arr = new ArrayAdapter<>(
+                    ctx,
+                    android.R.layout.select_dialog_singlechoice,
+                    langStringList
+            );
+
+            AlertDialog mAlertDialog = new AlertDialog.Builder(ctx)
+                    .setSingleChoiceItems(arr, prefLangPosition, (dialog, whichButton) -> {
+                        String selectedLang = langStringList.get(whichButton);
+                        String newLang = languagesList.get(selectedLang); // Get the language code
+
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString(PrefsActivity.PREF_INTERFACE_LANGUAGE, newLang);
+                        editor.apply();
+                        LocaleListCompat appLocale = LocaleListCompat.forLanguageTags((String) newLang);
+                        // Call this on the main thread as it may require Activity.restart()
+                        AppCompatDelegate.setApplicationLocales(appLocale);
+
+                        dialog.dismiss(); // Close the dialog after selection
+
+                        try {
+                            funct.call(); // Invoke the callback function
+                        } catch (Exception e) {
+                            // Handle exception
+                            Log.e("LanguageInterfaceDialog", "Error executing callback", e);
+                        }
+                    })
+                    .setTitle(ctx.getString(R.string.change_interface_language))
+                    .setNegativeButton(ctx.getString(R.string.cancel), (dialog, which) -> {
+                        // User cancelled; do nothing
+                    })
+                    .create();
+
+            // Show the dialog
+            mAlertDialog.show();
+        }
+    }
     public static void hideSoftKeyboard(Dialog dialog) {
         hideSoftKeyboard(dialog.getWindow());
     }

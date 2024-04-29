@@ -31,16 +31,19 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.repository.InterfaceLanguagesRepository;
+import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -58,7 +61,9 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private DrawerHeaderBinding bindingHeader;
     private ViewBadgeBinding bindingBadgeView;
     private boolean stagingWarningClosed;
-    InterfaceLanguagesRepository interfaceLanguagesRepository = new InterfaceLanguagesRepository();
+
+    @Inject
+    InterfaceLanguagesRepository interfaceLanguagesRepository;
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -167,7 +172,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     public void onStart() {
         super.onStart();
         initialize();
-        drawer = new DrawerMenuManager(this, interfaceLanguagesRepository);
+        drawer = new DrawerMenuManager(this , getSupportFragmentManager());
         drawer.initializeDrawer();
 
     }
@@ -176,7 +181,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     public boolean onPrepareOptionsMenu(Menu menu) {
 
         Map<Integer, DrawerMenuManager.MenuOption> options = getMenuOptions();
-        drawer.onPrepareOptionsMenu(options);
+        drawer.onPrepareOptionsMenu(null,options);
 
         configureSearchButtonVisibility(binding.navBottomView.getSelectedItemId());
 
@@ -186,9 +191,11 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private Map<Integer, DrawerMenuManager.MenuOption> getMenuOptions() {
 
         Map<Integer, DrawerMenuManager.MenuOption> options = new HashMap<>();
-
+        Map<String, String> interfaceLanguages = LangCodesWithNames();
+        //String[] interfaceLangs = interfaceLanguagesRepository.getLanguageOptions();
         final ArrayList<Lang> langs = new ArrayList<>();
         List<Course> courses = coursesRepository.getCourses(this);
+
 
         for (Course course : courses) {
             for (Lang courseLang : course.getLangs()) {
@@ -201,6 +208,10 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         // Change language menu option only should be visible if there is more than one language
         if (langs.size() > 1) {
             options.put(R.id.menu_language, () -> showLanguageSelectDialog(langs));
+        }
+        // show interface language
+        if (interfaceLanguages.size() > 1) {
+            options.put(R.id.menu_interface_language, () -> showInterfaceLanguageSelectDialog(interfaceLanguages));
         }
 
         return options;
@@ -218,7 +229,30 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
             return false;
         });
     }
+    private void showInterfaceLanguageSelectDialog(Map<String, String> langs) {
 
+        UIUtils.createInterfaceLanguageDialog(this, langs, prefs, () -> {
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_main);
+            if (fragment instanceof CoursesListFragment) {
+                // Refresh courses list
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
+            }
+
+            return false;
+        });
+    }
+
+    private Map<String, String> LangCodesWithNames() {
+        String[] langs = interfaceLanguagesRepository.getLanguageOptions();
+        List<String> langCodes = Arrays.asList(langs);
+        if (langs.length > 0) {
+
+            return langCodes.stream().collect(Collectors.toMap(
+                    langCode -> new Locale(langCode).getDisplayLanguage(new Locale(langCode)),
+                    langCode -> langCode));
+        }
+        return null;
+    }
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);

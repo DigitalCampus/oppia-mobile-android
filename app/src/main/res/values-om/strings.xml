@@ -4,5 +4,6 @@
     <!ENTITY companyName "Digital Campus"> ]>
 <resources>
     <string name="fragment_welcome_title">baga nagaan gara &appName; dhuftan</string>
+    <string name="change_interface_language">Change Interface Language</string>
 
 </resources>
