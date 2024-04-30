@@ -37,18 +37,27 @@ import org.digitalcampus.oppia.analytics.AnalyticsProvider;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.fragments.CoursesListFragment;
 import org.digitalcampus.oppia.fragments.LoginFragment;
 import org.digitalcampus.oppia.fragments.RegisterFragment;
 import org.digitalcampus.oppia.fragments.RememberUsernameFragment;
 import org.digitalcampus.oppia.fragments.ResetPasswordFragment;
 import org.digitalcampus.oppia.fragments.WelcomeFragment;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.repository.InterfaceLanguagesRepository;
 import org.digitalcampus.oppia.task.FetchUserTask;
+import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -68,7 +77,9 @@ public class WelcomeActivity extends AppActivity {
         menuOverflowIconColor.put(TAB_RESET_PASSWORD, R.color.text_dark);
         menuOverflowIconColor.put(TAB_REMEMBER_USERNAME, R.color.text_dark);
     }
-
+    public interface MenuOption {
+        void onOptionSelected();
+    }
     private int currentTab = TAB_WELCOME;
     private ActivityWelcomeBinding binding;
 
@@ -77,7 +88,8 @@ public class WelcomeActivity extends AppActivity {
 
     @Inject
     ApiEndpoint apiEndpoint;
-
+    @Inject
+    InterfaceLanguagesRepository interfaceLanguagesRepository;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +137,36 @@ public class WelcomeActivity extends AppActivity {
         return true;
     }
 
+
+
+    private Map<String, String> LangCodesWithNames() {
+        String[] langs = interfaceLanguagesRepository.getLanguageOptions();
+        List<String> langCodes = Arrays.asList(langs);
+        if (langs.length > 0) {
+
+            return langCodes.stream().collect(Collectors.toMap(
+                    langCode -> new Locale(langCode).getDisplayLanguage(new Locale(langCode)),
+                    langCode -> langCode));
+        }
+        return null;
+    }
+    private void showInterfaceLanguageSelectDialog(Map<String, String> languages) {
+        if (languages == null || languages.isEmpty()) {
+            return; // Return early if there are no languages to show
+        }
+
+        UIUtils.createInterfaceLanguageDialog(this, languages, prefs, () -> {
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_main);
+            if (fragment instanceof CoursesListFragment) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_main, new CoursesListFragment())
+                        .commit();
+            }
+            return false;
+        });
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
@@ -142,7 +184,13 @@ public class WelcomeActivity extends AppActivity {
             Intent iA = new Intent(this, PrivacyActivity.class);
             startActivity(iA);
             return true;
-        } else {
+        }
+        else if (itemId == R.id.menu_interface_language_logout) { // Make sure this ID matches your menu item
+            Map<String, String> interfaceLanguages = LangCodesWithNames();
+            showInterfaceLanguageSelectDialog(interfaceLanguages); // Call the dialog function
+            return true;
+        }
+        else {
             return super.onOptionsItemSelected(item);
         }
     }

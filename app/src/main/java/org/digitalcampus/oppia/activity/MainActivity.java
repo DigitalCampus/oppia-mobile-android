@@ -192,7 +192,6 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         Map<Integer, DrawerMenuManager.MenuOption> options = new HashMap<>();
         Map<String, String> interfaceLanguages = LangCodesWithNames();
-        //String[] interfaceLangs = interfaceLanguagesRepository.getLanguageOptions();
         final ArrayList<Lang> langs = new ArrayList<>();
         List<Course> courses = coursesRepository.getCourses(this);
 

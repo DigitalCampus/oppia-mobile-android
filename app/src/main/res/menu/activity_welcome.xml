@@ -10,4 +10,8 @@
     <item android:id="@+id/menu_about"
         android:title="@string/menu_about"
         android:icon="@android:drawable/ic_menu_preferences"/>
+    <item
+        android:id="@+id/menu_interface_language_logout"
+        android:icon="@drawable/ic_interface_language"
+        android:title="@string/change_interface_language"/>
 </menu>
