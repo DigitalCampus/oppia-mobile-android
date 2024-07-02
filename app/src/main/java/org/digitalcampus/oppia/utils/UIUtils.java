@@ -60,6 +60,7 @@ import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -74,8 +75,23 @@ public class UIUtils {
     private UIUtils() {
         throw new IllegalStateException("Utility class");
     }
+    private static final Map<String, String> iso6391ToIso6392Map = new HashMap<>();
 
+    static {
+        iso6391ToIso6392Map.put("de", "deu"); // German
+        iso6391ToIso6392Map.put("fr", "fra"); // French
+        iso6391ToIso6392Map.put("en", "eng"); // English
+        iso6391ToIso6392Map.put("am", "amh"); // Amharic
+        iso6391ToIso6392Map.put("om", "orm"); // Oromo
+        iso6391ToIso6392Map.put("ti", "tir"); // Tigrinya
+        iso6391ToIso6392Map.put("so", "som"); // Somali
+        iso6391ToIso6392Map.put("aa", "aar"); // Afar
+    }
 
+    // Method to map ISO 639-1 language codes to ISO 639-2 codes
+    public static String mapISO6391toISO6392(String iso6391Code) {
+        return iso6391ToIso6392Map.get(iso6391Code);
+    }
     public static void showUserData(Menu menu, final Context ctx, final Course courseInContext) {
         showUserData(menu, ctx, courseInContext, false, -1);
     }
@@ -321,7 +337,10 @@ public class UIUtils {
         }
     }
 
+    public static String getPreferredLanguage(SharedPreferences prefs) {
+       return prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getDisplayLanguage());
 
+    }
     public static void hideSoftKeyboard(Activity activity) {
         hideSoftKeyboard(activity.getWindow());
     }

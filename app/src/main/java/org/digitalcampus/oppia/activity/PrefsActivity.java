@@ -212,6 +212,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         }
 
         OppiaNotificationUtils.cancelNotifications(this, OppiaNotificationUtils.NOTIF_ID_COURSES_REMINDER);
+
     }
 
 

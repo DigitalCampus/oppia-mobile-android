@@ -12,10 +12,11 @@
 
     <ListPreference
         android:key="prefInterfaceLanguage"
-        android:title="@string/prefInterfaceLanguage"
+        android:title="test-pref"
         app:icon="@drawable/ic_interface_language"
         app:allowDividerAbove="true"
-        app:allowDividerBelow="true" />
+        app:allowDividerBelow="true"
+        app:isPreferenceVisible="false"/>
 
     <ListPreference
         android:defaultValue="16"
