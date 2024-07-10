@@ -219,7 +219,7 @@ public class UpgradeManagerTask extends AsyncTask<Void, String, BasicResult> {
 
                 if (courseId != -1) {
                     db.insertActivities(c.getActivities(courseId));
-                    db.insertTrackers(ctxr.getTrackers(courseId, 0));
+                    db.insertTrackers(ctxr.getTrackers(ctx, courseId, 0));
                 }
             }
         }

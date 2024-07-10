@@ -17,8 +17,14 @@
 
 package org.digitalcampus.oppia.utils.xmlreaders;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.model.QuizAttempt;
@@ -36,6 +42,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
@@ -54,6 +61,7 @@ public class CourseTrackerXMLReader {
     private static final String NODE_PASSED = "passed";
     private static final String NODE_EVENT = "event";
     private static final String NODE_POINTS = "points";
+    private static final String NODE_UUID = "uuid";
 
     private Document document;
 
@@ -81,14 +89,20 @@ public class CourseTrackerXMLReader {
     }
 
 
-    public List<TrackerLog> getTrackers(long courseId, long userId) {
+    public List<TrackerLog> getTrackers(Context ctx, long courseId, long userId) {
         List<TrackerLog> trackers = new ArrayList<>();
         if (this.document == null) {
             return trackers;
         }
+        List<String> uuidList = getExistingTrackersIds(ctx, userId);
         NodeList actTrackers = document.getFirstChild().getChildNodes();
         for (int i = 0; i < actTrackers.getLength(); i++) {
             NamedNodeMap attrs = actTrackers.item(i).getAttributes();
+            String uuid = attrs.getNamedItem(NODE_UUID).getTextContent();
+            if (uuidList.contains(uuid)) {
+                continue;
+            }
+
             String digest = attrs.getNamedItem(NODE_DIGEST).getTextContent();
             String submittedDateString = attrs.getNamedItem(NODE_SUBMITTEDDATE).getTextContent();
             DateTime sdt = DateUtils.DATETIME_FORMAT.parseDateTime(submittedDateString);
@@ -134,6 +148,24 @@ public class CourseTrackerXMLReader {
             trackers.add(t);
         }
         return trackers;
+    }
+
+    private List<String> getExistingTrackersIds(Context ctx, long userId) {
+        DbHelper db = DbHelper.getInstance(ctx);
+        List<TrackerLog> userTrackers = db.getTrackers(userId, false);
+        List<String> uuidList = userTrackers.stream().map(t -> {
+            if (t.getContent() != null) {
+                JsonElement data = new Gson().fromJson(t.getContent(), JsonObject.class).get("data");
+                if (data != null) {
+                    JsonElement uuid = new Gson().fromJson(data.getAsString(), JsonObject.class).get("uuid");
+                    if (uuid != null) {
+                        return uuid.getAsString();
+                    }
+                }
+            }
+            return "";
+        }).collect(Collectors.toList());
+        return uuidList;
     }
 
     public List<QuizAttempt> getQuizAttempts(long courseId, long userId) {
