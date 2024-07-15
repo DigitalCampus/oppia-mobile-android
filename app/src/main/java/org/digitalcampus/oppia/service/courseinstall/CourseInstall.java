@@ -140,7 +140,7 @@ public class CourseInstall {
 
             long userId = db.getUserId(SessionManager.getUsername(ctx));
             db.resetCourse(courseId, userId);
-            db.insertTrackers(ctxr.getTrackers(courseId, userId));
+            db.insertTrackers(ctxr.getTrackers(ctx, courseId, userId));
             db.insertQuizAttempts(ctxr.getQuizAttempts(courseId, userId));
 
             listener.onInstallProgress(60);
