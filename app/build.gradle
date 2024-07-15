@@ -24,7 +24,7 @@ android {
         logger.error('No properties file found. Using default values.')
     }
 
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         versionCode version_code
@@ -33,7 +33,7 @@ android {
         applicationId "org.digitalcampus.mobile.learning"
 
         minSdk 21
-        targetSdk 33
+        targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The following argument makes the Android Test Orchestrator run its

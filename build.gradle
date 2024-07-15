@@ -10,7 +10,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
+        classpath 'com.android.tools.build:gradle:7.4.2'
         classpath "com.neenbedankt.gradle.plugins:android-apt:1.8"
         classpath "org.jacoco:org.jacoco.core:0.8.8"
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.8"
