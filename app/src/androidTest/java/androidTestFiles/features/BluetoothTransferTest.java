@@ -36,6 +36,7 @@ public class BluetoothTransferTest extends NotificationsUiTest {
     private void sendBluetoothServiceBroadcast(String message, String errorMsg) {
 
         Intent broadcastIntent = new Intent(BluetoothTransferService.BROADCAST_ACTION);
+        broadcastIntent.setPackage(context.getPackageName());
         broadcastIntent.putExtra(BluetoothTransferService.SERVICE_MESSAGE, message);
         broadcastIntent.putExtra(BluetoothTransferService.SERVICE_ERROR, errorMsg);
         context.sendBroadcast(broadcastIntent);

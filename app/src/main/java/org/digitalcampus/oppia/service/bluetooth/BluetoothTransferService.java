@@ -266,6 +266,7 @@ public class BluetoothTransferService extends Service {
     private void connectionLost(Exception e) {
         // Send a failure message back to the Activity
         Intent localIntent = new Intent(BROADCAST_ACTION);
+        localIntent.setPackage(getPackageName());
         localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_DISCONNECT);
         localIntent.putExtra(SERVICE_ERROR, e.getMessage());
 
@@ -287,6 +288,7 @@ public class BluetoothTransferService extends Service {
             Log.d(TAG, "Sending " + file.getName() + " over bluetooth...");
             // Notify the UI that a course is transferring
             Intent localIntent = new Intent(BROADCAST_ACTION);
+            localIntent.setPackage(getPackageName());
             localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_START_TRANSFER);
             localIntent.putExtra(SERVICE_FILE, trFile);
             sendOrderedBroadcast(localIntent, null);
@@ -302,6 +304,7 @@ public class BluetoothTransferService extends Service {
             }
 
             localIntent = new Intent(BROADCAST_ACTION);
+            localIntent.setPackage(getPackageName());
             localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_TRANSFER_COMPLETE);
             localIntent.putExtra(SERVICE_FILE, trFile);
             // Broadcasts the Intent to receivers in this app.
@@ -328,6 +331,7 @@ public class BluetoothTransferService extends Service {
                 outputStream.write(buf, 0, bytesRead);
 
                 Intent localIntent = new Intent(BROADCAST_ACTION);
+                localIntent.setPackage(getPackageName());
                 localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_SEND_PROGRESS);
                 localIntent.putExtra(SERVICE_FILE, trFile);
                 localIntent.putExtra(SERVICE_PROGRESS, totalBytes);
@@ -348,7 +352,8 @@ public class BluetoothTransferService extends Service {
         Log.i(TAG, "BEGIN receiving thread");
         // Notify the UI that a course is transferring
         sendOrderedBroadcast(new Intent(BROADCAST_ACTION)
-                .putExtra(SERVICE_MESSAGE, MESSAGE_CONNECT), null);
+                .putExtra(SERVICE_MESSAGE, MESSAGE_CONNECT)
+                .setPackage(getPackageName()), null);
 
         // Read from the InputStream
         BufferedInputStream in = new BufferedInputStream(input);
@@ -371,6 +376,7 @@ public class BluetoothTransferService extends Service {
 
                 // Notify the UI that a course is transferring
                 Intent localIntent = new Intent(BROADCAST_ACTION);
+                localIntent.setPackage(getPackageName());
                 localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_START_TRANSFER);
                 localIntent.putExtra(SERVICE_FILE, trFile);
                 sendOrderedBroadcast(localIntent, null);
@@ -385,6 +391,7 @@ public class BluetoothTransferService extends Service {
                 if (totalBytes < fileSize){
                     FileUtils.deleteFile(file);
                     localIntent = new Intent(BROADCAST_ACTION);
+                    localIntent.setPackage(getPackageName());
                     localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_TRANSFER_FAIL);
                     localIntent.putExtra(SERVICE_FILE, trFile);
                     // Broadcasts the Intent to receivers in this app.
@@ -404,6 +411,7 @@ public class BluetoothTransferService extends Service {
                         FileUtils.moveFileToDir(file, activityLogsDir, true);
                     }
                     localIntent = new Intent(BROADCAST_ACTION);
+                    localIntent.setPackage(getPackageName());
                     localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_TRANSFER_COMPLETE);
                     localIntent.putExtra(SERVICE_FILE, trFile);
                     // Broadcasts the Intent to receivers in this app.
@@ -442,6 +450,7 @@ public class BluetoothTransferService extends Service {
                     prevProgress = currentProgress;
 
                     Intent localIntent = new Intent(BROADCAST_ACTION);
+                    localIntent.setPackage(getPackageName());
                     localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_RECEIVE_PROGRESS);
                     localIntent.putExtra(SERVICE_FILE, file);
                     localIntent.putExtra(SERVICE_PROGRESS, totalBytes);

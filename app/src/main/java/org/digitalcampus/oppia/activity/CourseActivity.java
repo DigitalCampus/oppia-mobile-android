@@ -32,6 +32,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
@@ -58,10 +62,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.fragment.app.Fragment;
 
 public class CourseActivity extends AppActivity implements OnInitListener, TabLayout.OnTabSelectedListener {
 
@@ -92,7 +92,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
         binding = ActivityCourseBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
-        
+
         ActionBar actionBar = getSupportActionBar();
 
         Bundle bundle = this.getIntent().getExtras();
@@ -114,28 +114,26 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 actionBar.setDisplayShowTitleEnabled(true);
             }
 
-            if (section.isProtectedByPassword() && !section.isUnlocked()){
+            if (section.isProtectedByPassword() && !section.isUnlocked()) {
                 topicLocked = true;
                 supportInvalidateOptionsMenu();
                 binding.unlockTopicForm.setVisibility(View.VISIBLE);
                 binding.submitPassword.setOnClickListener(view -> {
                     String password = binding.sectionPasswordField.getText().toString();
-                    if (section.checkPassword(password)){
+                    if (section.checkPassword(password)) {
                         DbHelper.getInstance(this).saveSectionUnlockedByUser(course, section, userID, password);
                         binding.unlockTopicForm.setVisibility(View.GONE);
                         topicLocked = false;
                         loadActivities();
                         supportInvalidateOptionsMenu();
-                    }
-                    else{
+                    } else {
                         binding.sectionPasswordError.setVisibility(View.VISIBLE);
                         SimpleAnimator.fade(binding.sectionPasswordError, SimpleAnimator.FADE_IN);
                         binding.sectionPasswordField.setText("");
                     }
 
                 });
-            }
-            else{
+            } else {
                 loadActivities();
             }
 
@@ -222,7 +220,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         ttsMenuItem.setTitle(ttsRunning ? R.string.menu_stop_read_aloud : R.string.menu_read_aloud);
 
         // If there is only one language for this course, makes no sense to show the language menu
-        if (course.getLangs().size() <= 1){
+        if (course.getLangs().size() <= 1) {
             MenuItem langMenuItem = menu.findItem(R.id.menu_language);
             langMenuItem.setVisible(false);
             langMenuItem.setEnabled(false);
@@ -244,8 +242,11 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 return true;
 
             case R.id.menu_text_size:
-                UIUtils.showChangeTextSizeDialog(this,
-                        () -> sendBroadcast(new Intent(BaseWidget.ACTION_TEXT_SIZE_CHANGED)));
+                UIUtils.showChangeTextSizeDialog(this, () -> {
+                    Intent intent = new Intent(BaseWidget.ACTION_TEXT_SIZE_CHANGED);
+                    intent.setPackage(getPackageName());
+                    sendBroadcast(intent);
+                });
                 return true;
 
             case R.id.menu_help:
@@ -331,7 +332,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
         for (int i = 0; i < activities.size(); i++) {
             Activity activity = determineActivityType(i, fragments);
-            if (activity != null){
+            if (activity != null) {
                 titles.add(activity.getTitle(currentLang));
             }
         }
@@ -344,7 +345,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         binding.tabsToolbar.addOnTabSelectedListener(this);
         apAdapter.updateTabViews(binding.tabsToolbar);
 
-        if (currentActivityNo >= fragments.size()){
+        if (currentActivityNo >= fragments.size()) {
             //Wrong activity number passed
             Toast.makeText(this, "Wrong activity parameter", Toast.LENGTH_SHORT).show();
             this.finish();
@@ -353,7 +354,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         binding.activityWidgetPager.setCurrentItem(currentActivityNo);
     }
 
-    private Activity determineActivityType(int i, List<Fragment> fragments){
+    private Activity determineActivityType(int i, List<Fragment> fragments) {
         Activity activity = activities.get(i);
         //Fragment creation
         if (activity.getActType().equalsIgnoreCase("page")) {
@@ -379,8 +380,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         } else if (activities.get(i).getActType().equalsIgnoreCase("url")) {
             UrlWidget f = UrlWidget.newInstance(activities.get(i), course, isBaseline);
             fragments.add(f);
-        }
-        else {
+        } else {
             return null;
         }
 

@@ -76,6 +76,7 @@ public abstract class FileIntentService extends IntentService {
     protected void sendBroadcast(String fileUrl, String result, String message){
 
         Intent localIntent = new Intent(getBroadcastAction());
+        localIntent.setPackage(getPackageName());
         localIntent.putExtra(SERVICE_ACTION, result);
         localIntent.putExtra(SERVICE_URL, fileUrl);
         if (message != null){

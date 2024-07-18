@@ -121,6 +121,7 @@ public class DownloadActivityUITest extends DaggerInjectMockUITest {
 
     private void sendBroadcast(Context ctx, String action) {
         Intent intent = new Intent(CourseInstallerService.BROADCAST_ACTION);
+        intent.setPackage(ctx.getPackageName());
         intent.putExtra(CourseInstallerService.SERVICE_ACTION, action);
         intent.putExtra(CourseInstallerService.SERVICE_URL, "Mock URL");
         intent.putExtra(CourseInstallerService.SERVICE_MESSAGE, "1");

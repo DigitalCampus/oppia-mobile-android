@@ -45,6 +45,7 @@ public class DownloadMediaActivityUITest extends CourseMediaBaseTest {
 
     private void sendBroadcast(Context ctx, String action, String url) {
         Intent intent = new Intent(DownloadService.BROADCAST_ACTION);
+        intent.setPackage(ctx.getPackageName());
         intent.putExtra(DownloadService.SERVICE_ACTION, action);
         intent.putExtra(DownloadService.SERVICE_URL, url);
         intent.putExtra(DownloadService.SERVICE_MESSAGE, "1");
