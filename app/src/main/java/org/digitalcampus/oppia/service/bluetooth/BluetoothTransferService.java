@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 /**
  * This class does all the work for setting up and managing Bluetooth
@@ -147,7 +148,7 @@ public class BluetoothTransferService extends Service {
         //We register the alternative notifier for sending notifications when no other BroadcasReceiver is set
         IntentFilter broadcastFilter = new IntentFilter(BluetoothTransferService.BROADCAST_ACTION);
         broadcastFilter.setPriority(IntentFilter.SYSTEM_LOW_PRIORITY);
-        registerReceiver(alternateNotifier, broadcastFilter);
+        ContextCompat.registerReceiver(this, alternateNotifier, broadcastFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
     }
 

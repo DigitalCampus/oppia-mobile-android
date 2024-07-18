@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -184,7 +185,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         receiver.setListener(this);
         IntentFilter broadcastFilter = new IntentFilter(BluetoothTransferService.BROADCAST_ACTION);
         broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
-        registerReceiver(receiver, broadcastFilter);
+        ContextCompat.registerReceiver(this, receiver, broadcastFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
         updateStatus(true);
 

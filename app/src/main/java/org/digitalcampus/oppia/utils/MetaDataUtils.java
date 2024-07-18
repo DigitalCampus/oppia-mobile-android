@@ -23,6 +23,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.BatteryManager;
 import android.os.Build;
+
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import android.telephony.TelephonyManager;
@@ -72,7 +74,8 @@ public class MetaDataUtils {
     }
 
     private float getBatteryLevel() {
-        Intent batteryIntent = ctx.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        Intent batteryIntent = ContextCompat.registerReceiver(ctx, null,
+                new IntentFilter(Intent.ACTION_BATTERY_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
         int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 

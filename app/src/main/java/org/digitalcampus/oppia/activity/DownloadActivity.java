@@ -28,6 +28,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityDownloadBinding;
 import org.digitalcampus.oppia.application.App;
@@ -256,7 +258,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         receiver.setCourseInstallerListener(this);
         IntentFilter broadcastFilter = new IntentFilter(CourseInstallerService.BROADCAST_ACTION);
         broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
-        registerReceiver(receiver, broadcastFilter);
+        ContextCompat.registerReceiver(this, receiver, broadcastFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
         if (json == null) {
             // The JSON download task has not started or been completed yet

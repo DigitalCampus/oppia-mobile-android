@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import androidx.preference.PreferenceManager;
@@ -99,7 +100,8 @@ public abstract class BaseWidget extends Fragment {
         prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
         prefLang = prefs.getString(PrefsActivity.PREF_CONTENT_LANGUAGE, Locale.getDefault().getLanguage());
 
-        getActivity().registerReceiver(receiver, new IntentFilter(ACTION_TEXT_SIZE_CHANGED));
+        IntentFilter broadcastFilter = new IntentFilter(ACTION_TEXT_SIZE_CHANGED);
+        ContextCompat.registerReceiver(getActivity(), receiver, broadcastFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 
 

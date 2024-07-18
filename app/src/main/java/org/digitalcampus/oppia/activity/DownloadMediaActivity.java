@@ -53,6 +53,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 public class DownloadMediaActivity extends AppActivity implements DownloadMediaListener, ScanMediaListener {
 
@@ -244,7 +245,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         receiver.setMediaListener(this);
         IntentFilter broadcastFilter = new IntentFilter(DownloadService.BROADCAST_ACTION);
         broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
-        registerReceiver(receiver, broadcastFilter);
+        ContextCompat.registerReceiver(this, receiver, broadcastFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
         invalidateOptionsMenu();
     }

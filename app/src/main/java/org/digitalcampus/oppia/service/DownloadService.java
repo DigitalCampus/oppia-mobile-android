@@ -44,6 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -99,7 +101,7 @@ public class DownloadService extends FileIntentService {
         //We register the alternative notifier for sending notifications when no other BroadcasReceiver is set
         IntentFilter broadcastFilter = new IntentFilter(DownloadService.BROADCAST_ACTION);
         broadcastFilter.setPriority(IntentFilter.SYSTEM_LOW_PRIORITY);
-        registerReceiver(alternativeNotifier, broadcastFilter);
+        ContextCompat.registerReceiver(this, alternativeNotifier, broadcastFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
     }
 

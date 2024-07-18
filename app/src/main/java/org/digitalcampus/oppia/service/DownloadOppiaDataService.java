@@ -23,6 +23,8 @@ import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
 import okhttp3.HttpUrl;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
@@ -133,7 +135,8 @@ public class DownloadOppiaDataService {
     };
 
     public void onResume() {
-        context.registerReceiver(onDownloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+        ContextCompat.registerReceiver(context, onDownloadComplete, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 
     public void onPause() {

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -150,10 +151,10 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         receiver.setCourseInstallerListener(this);
         IntentFilter broadcastFilter = new IntentFilter(CourseInstallerService.BROADCAST_ACTION);
         broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
-        getActivity().registerReceiver(receiver, broadcastFilter);
+        ContextCompat.registerReceiver(getActivity(), receiver, broadcastFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
         IntentFilter coursesUpdatesBroadcastFilter = new IntentFilter(ACTION_COURSES_UPDATES);
-        getActivity().registerReceiver(coursesUpdatesReceiver, coursesUpdatesBroadcastFilter);
+        ContextCompat.registerReceiver(getActivity(), coursesUpdatesReceiver, coursesUpdatesBroadcastFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
         if (adapterListCourses != null) {
             adapterListCourses.notifyDataSetChanged();
