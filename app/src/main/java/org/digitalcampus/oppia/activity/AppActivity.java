@@ -65,7 +65,6 @@ import org.digitalcampus.oppia.listener.GamificationEventListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 
 import java.util.concurrent.TimeUnit;
@@ -123,7 +122,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         intentFilter.addAction(Intent.ACTION_MEDIA_MOUNTED);
         intentFilter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
         intentFilter.addDataScheme("file");
-        registerReceiver(externalStorageReceiver, intentFilter);
+        ContextCompat.registerReceiver(this, externalStorageReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
         checkSdCardStatus();
     }
@@ -303,7 +302,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         gamificationReceiver.setGamificationEventListener(this);
         IntentFilter broadcastFilter = new IntentFilter(GamificationService.BROADCAST_ACTION);
         broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
-        registerReceiver(gamificationReceiver, broadcastFilter);
+        ContextCompat.registerReceiver(this, gamificationReceiver, broadcastFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
         //We check if the user session time has expired to log him out
         if (BuildConfig.SESSION_EXPIRATION_ENABLED) {

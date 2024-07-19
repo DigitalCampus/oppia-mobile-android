@@ -212,7 +212,8 @@ public class CoursesChecksWorkerManager implements APIRequestFinishListener, API
 
         if (toUpdateCount > 0) {
             showToUpdateNotification(toUpdateCount);
-            context.sendBroadcast(new Intent(CoursesListFragment.ACTION_COURSES_UPDATES));
+            context.sendBroadcast(new Intent(CoursesListFragment.ACTION_COURSES_UPDATES)
+                    .setPackage(context.getPackageName()));
         }
 
 

@@ -238,6 +238,7 @@ public class GamificationService  extends IntentService {
         String message = gEngine.getEventMessage(event, c, act);
 
         Intent localIntent = new Intent(BROADCAST_ACTION);
+        localIntent.setPackage(getPackageName());
         localIntent.putExtra(SERVICE_MESSAGE, message);
         localIntent.putExtra(SERVICE_POINTS, event.getPoints());
 
