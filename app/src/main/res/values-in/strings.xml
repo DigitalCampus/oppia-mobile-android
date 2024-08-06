@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appName "OppiaMobile"><!ENTITY companyName "Digital Campus"> ]>
+<resources>
+    <string name="app_name">&appName;</string>
+    <string name="app_logo_alt">&companyName; Logo</string>
+    <string name="about_logged_in">Masuk sebagai: %1$s</string>
+    <string name="about_not_logged_in">Belum masuk</string>
+
+    <string name="menu_download">Unduh Kursus</string>
+    <string name="menu_change_text_size">Ubah ukuran teks</string>
+    <string name="menu_settings">Pengaturan</string>
+    <string name="menu_privacy">Privasi dan Data Anda</string>
+    <string name="menu_about">Tentang dan Bantuan</string>
+    <string name="menu_help">Bantuan</string>
+    <string name="menu_logout">Keluar</string>
+    <string name="menu_read_aloud">Baca nyaring</string>
+    <string name="menu_return_to_courses">Kembali ke kursus</string>
+    <string name="menu_scorecard">Kartu Skor</string>
+    <string name="menu_search">Cari</string>
+    <string name="menu_stop_read_aloud">Berhenti membaca</string>
+    <string name="menu_sort_by">Urutkan berdasarkan</string>
+    <string name="menu_sort_by_course">Urutkan berdasarkan kursus</string>
+    <string name="menu_sort_by_filename">Urutkan berdasarkan nama file</string>
+    <string name="menu_select_all">Pilih semua</string>
+
+    <string name="service_tracker">&appName; Layanan Pelacak</string>
+
+    <string name="fragment_welcome_title">Selamat datang di &appName;</string>
+    <string name="fragment_welcome_desc">&appName; adalah platform pembelajaran mobile untuk menyampaikan konten pembelajaran, video, dan kuis.\n\n\'Oppia\' means \'to learn\' in Finnish</string>
+    <string name="fragment_welcome_login_info">Untuk memulai dengan &appName;, Anda perlu mendaftar atau masuk.</string>
+    <string name="fragment_welcome_privacy_info">Dengan mendaftar atau masuk, Anda setuju dengan <a href="">Kebijakan Privasi dan Ketentuan Layanan Kami</a>.</string>
+    <string name="fragment_welcome_powered_by">Didukung oleh <a href="https://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
+
+    <string name="drawer_header_background_description">Gambar latar belakang</string>
+    <string name="drawer_header_logo_description">&appName; Logo</string>
+    <string name="drawer_header_username_placeholder">Nama pengguna</string>
+    <string name="drawer_header_userfullname_placeholder">Nama lengkap pengguna</string>
+
+    <string name="tab_title_about">Tentang</string>
+    <string name="tab_title_badges">Lencana</string>
+    <string name="tab_title_help">Bantuan</string>
+    <string name="tab_title_login">Masuk</string>
+    <string name="tab_title_points">Poin</string>
+    <string name="tab_title_privacy">Kebijakan Privasi</string>
+    <string name="tab_title_terms">Ketentuan Layanan</string>
+    <string name="tab_title_register">Daftar</string>
+    <string name="tab_title_reset_password">Atur Ulang Kata Sandi</string>
+    <string name="tab_title_remember_username">Lupa nama pengguna</string>
+    <string name="tab_title_scorecard">Kartu Skor</string>
+    <string name="tab_title_activity">Aktivitas</string>
+    <string name="tab_title_welcome">Selamat datang</string>
+
+    <string name="title_about">Tentang dan Bantuan</string>
+    <string name="title_baseline">Baseline</string>
+    <string name="title_btn_reset_password">Atur ulang kata sandi</string>
+    <string name="title_btn_remember_username">Lupa nama pengguna</string>
+    <string name="title_download_activity">Kelola kursus</string>
+    <string name="title_activity_course_index">Indeks Kursus</string>
+    <string name="title_activity_course">Aktivitas</string>
+    <string name="title_course_meta">Tentang</string>
+    <string name="title_prefs">Pengaturan</string>
+    <string name="title_scorecard">Kartu Skor</string>
+    <string name="title_tag_select_activity">Pilih Kategori</string>
+    <string name="version">Versi: %1$s</string>
+    <string name="title_download_media">Unduh Media</string>
+
+    <string name="widget_feedback_submit">Kirim</string>
+    <string name="widget_feedback_submit_title">Terima kasih telah mengirimkan umpan balik Anda.</string>
+    <string name="widget_feedback_unavailable_attempts">Anda telah mengirimkan umpan balik Anda</string>
+
+    <string name="widget_quiz_next">Selanjutnya</string>
+    <string name="widget_quiz_prev">Sebelumnya</string>
+    <string name="widget_quiz_getresults">Dapatkan Hasil</string>
+    <string name="widget_quiz_noanswergiven">Silahkan berikan jawaban sebelum melanjutkan ke pertanyaan berikutnya</string>
+    <string name="widget_quiz_progress">Pertanyaan %1$d dari %2$d</string>
+    <string name="widget_quiz_results_score">Skor Anda: %1$.0f%%</string>
+    <string name="widget_quiz_results_restart">Ulangi kuis ini</string>
+    <string name="widget_quiz_continue">Lanjutkan &gt;&gt;</string>
+    <string name="widget_quiz_baseline_completed">Terima kasih telah menyelesaikan pre-test. Anda sekarang dapat melanjutkan ke kursus.</string>
+    <string name="widget_quiz_baseline_goto_course">Lanjutkan ke kursus &gt;&gt;</string>
+    <string name="widget_quiz_image_caption">Tekan gambar untuk melihat versi yang lebih besar</string>
+    <string name="widget_quiz_media_caption">Tekan gambar untuk memulai video</string>
+    <string name="widget_quiz_feedback_response_title">Anda menjawab: </string>
+    <string name="widget_quiz_feedback_response_skipped">Anda melewatkan pertanyaan ini.</string>
+    <string name="widget_quiz_feedback_feedback_title">Umpan balik: </string>
+    <string name="widget_quiz_num_questions">%1$d pertanyaan</string>
+    <string name="widget_quiz_pass_threshold">%1$d%% ambang batas kelulusan</string>
+    <string name="widget_quiz_unavailable_section">Anda harus menyelesaikan semua aktivitas sebelumnya di bagian ini sebelum kuis ini tersedia untuk Anda.</string>
+    <string name="widget_quiz_unavailable_course">Anda harus menyelesaikan semua aktivitas sebelumnya di kursus ini sebelum kuis ini tersedia untuk Anda.</string>
+    <string name="widget_quiz_unavailable_attempts">Anda telah mencoba kuis ini sebanyak jumlah maksimum yang diizinkan</string>
+    <string name="widget_resource_open_file">Buka \'%1$s\'</string>
+
+    <string name="course_context_reset">Atur Ulang</string>
+    <string name="course_context_delete">Hapus</string>
+    <string name="course_context_update_activity">Perbarui aktivitas</string>
+    <string name="course_context_reset_confirm">Apakah Anda yakin ingin mengatur ulang kursus ini? Ini akan menghapus semua log kemajuan untuk kursus ini.</string>
+    <string name="course_context_delete_confirm">Apakah Anda yakin ingin menghapus kursus ini? Ini akan sepenuhnya menghapus kursus dari ponsel Anda.</string>
+
+    <string name="no_courses">Tidak ada kursus yang terdaftar saat ini</string>
+    <string name="more_courses">Unduh lebih banyak kursus</string>
+
+    <string name="prefCurrentVersion">Versi saat ini: %1$s</string>
+    <string name="prefAdvanced">Pengaturan lanjutan</string>
+    <string name="prefBackgroundDataConnect">Pelacak aktivitas latar belakang</string>
+    <string name="prefBackgroundDataConnect_summary">Kirim log aktivitas bahkan ketika aplikasi ini tidak berjalan</string>
+    <string name="prefContentLanguage">Bahasa konten yang diinginkan</string>
+    <string name="prefInterfaceLanguage">Bahasa antarmuka</string>
+    <string name="prefHighlightCompleted">Sorot aktivitas yang selesai</string>
+    <string name="prefServer">Server</string>
+    <string name="prefServer_notChecked">URL tidak diperiksa</string>
+    <string name="prefServer_errorTitle">URL tidak valid</string>
+    <string name="prefServer_errorDescription"> Silakan masukkan URL yang terbentuk dengan baik sesuai dengan endpoint server &appName; Anda</string>
+    <string name="prefServerTimeoutConnection">Batas waktu koneksi habis</string>
+    <string name="prefServerTimeoutResponse">Batas waktu respons habis</string>
+    <string name="prefServerIncompatible">Versi tidak kompatibel (lebih lama)</string>
+    <string name="prefInt_errorTitle">Nilai tidak valid</string>
+    <string name="prefInt_errorDescription">Silakan masukkan nilai bilangan bulat yang valid</string>
+    <string name="prefShowCourseDescription">Tampilkan deskripsi kursus</string>
+    <string name="prefShowProgressBar">Tampilkan bilah kemajuan</string>
+    <string name="prefShowSectionNumbers">Tampilkan nomor bagian</string>
+    <string name="prefTextSize">Ukuran teks</string>
+    <string name="prefUser">Nama pengguna</string>
+    <string name="prefUserHint">(hanya baca)</string>
+    <string name="prefLogoutEnabled">Aktifkan logout dari beranda</string>
+    <string name="prefDeleteCourseEnabled">Aktifkan penghapusan kursus</string>
+    <string name="prefDisableNotifications">Nonaktifkan notifikasi</string>
+    <string name="prefNotifications_title">Notifikasi</string>
+    <string name="prefSecurity_title">Keamanan</string>
+    <string name="prefAdvanced_title">Lanjutan</string>
+    <string name="prefDisplay_title">Tampilan</string>
+    <string name="prefNotifications_description">Notifikasi sistem dan pesan gamifikasi dalam aplikasi</string>
+    <string name="prefSecurity_description">Perlindungan admin terhadap tindakan khusus dan mengaktifkan/nonaktifkan fungsi tertentu dari layar</string>
+    <string name="prefAdvanced_description">Pengaturan lanjutan/teknis</string>
+    <string name="prefDisplay_description">Kontrol bagaimana kursus dan konten ditampilkan</string>
+
+    <string name="prefAdminProtection">Lindungi tindakan admin dengan kata sandi</string>
+    <string name="prefAdminPassword">Ubah kata sandi admin</string>
+    <string name="prefRemoteAdminEnabled">Aktifkan administrasi jarak jauh perangkat</string>
+    <string name="prefSectionSystemNotifs">Notifikasi sistem</string>
+    <string name="prefSectionGamification">Acara gamifikasi</string>
+    <string name="prefShowGamificationEvents">Tampilkan acara gamifikasi</string>
+    <string name="prefDownloadEnabled">Aktifkan pengunduhan kursus dari beranda</string>
+    <string name="prefChangeLanguageEnabled">Aktifkan perubahan bahasa dari beranda</string>
+    <string name="prefStartCourseIndexCollapsed">Mulai indeks kursus dengan bagian yang dilipat</string>
+    <string name="prefAnimationTypeGamificationPoints">Jenis animasi poin gamifikasi</string>
+    <string name="prefGamificationPointsViewTypeFullAnimationSound">Animasi penuh dengan suara</string>
+    <string name="prefGamificationPointsViewTypeFullAnimation">Animasi penuh</string>
+    <string name="prefGamificationPointsViewTypeSimpleAnimation">Animasi sederhana</string>
+    <string name="prefGamificationPointsViewTypeNone">Tidak ada</string>
+    <string name="prefDurationAnimationTypeGamificationPointsView">Durasi animasi</string>
+    <string name="prefDurationAnimation_summary">Waktu saat animasi acara poin gamifikasi ditampilkan di layar (dalam detik)</string>
+
+    <string name="prefSectionReminder">Pengingat kursus yang belum selesai</string>
+    <string name="prefCoursesReminderEnabled">Aktifkan notifikasi pengingat</string>
+    <string name="prefCoursesReminderIntervalTitle">Interval pengingat</string>
+    <string name="prefCoursesReminderDaysTitle">Pengingat hari</string>
+    <string name="prefCoursesReminderTimeTitle">Pengingat waktu</string>
+    
+    <!-- Strings relative to Storage -->
+    <string name="prefStorageLocation">Lokasi Penyimpanan</string>
+    <string name="prefStorageOptionInternal">Internal</string>
+    <string name="prefStorageOptionExternal">Eksternal</string>
+    <string name="moving_storage_location">Memindahkan file ke lokasi penyimpanan baru…</string>
+    <string name="move_storage_completed">Pemindahan penyimpanan selesai</string>
+    <string name="storageNonRemovable">Non-removable storage</string>
+    <string name="storageRemovable">Removable SD Card</string>
+    <string name="storageAccessNotGranted">Akses kartu SD tidak diberikan</string>
+    <string name="storageAccess_help1">Sejak Android 5 (Lollipop) ada cara resmi baru bagi aplikasi untuk menulis ke kartu SD eksternal. Aplikasi harus meminta pengguna untuk memberikan akses menulis ke folder di kartu SD. Dialog pemilih folder sistem akan terbuka, dan Anda harus memilih kartu SD dari sana.</string>
+    <string name="storageAccess_help2">Jika dialog muncul kosong dan tidak ada item di laci kiri, pertama-tama Anda harus pergi ke menu dan memberi tahu sistem untuk menampilkan kartu SD.</string>
+    <string name="storageAccess_help3">Kemudian, ketuk kartu SD dari daftar di sisi kiri untuk menampilkan struktur foldernya. Dalam tangkapan layar ini Anda melihat \"Penyimpanan internal\" dan kartu SD. Kartu SD dapat ditampilkan dengan nama yang berbeda dari yang Anda lihat di sini, misalnya \"Kingston\". Itu disebut label disk dari kartu.</string>
+    <string name="storageAccess_help4">Kemudian pilih kartu. Jangan menavigasi ke folder subfolder mana pun. Anda harus memilih top-level root folder dari kartu SD. Ini penting.</string>
+    <string name="storageAccess_help5">Setelah mengetuk tombol \"Pilih kartu SD\" Anda harus kembali ke aplikasi. Aplikasi memeriksa ulang jika sekarang memang dapat menulis ke kartu SD, dan jika folder yang dipilih adalah yang root.</string>
+
+    <string name="notification_course_update_title">Pembaruan kursus baru</string>
+    <string name="notification_course_update_text">Pembaruan tersedia untuk kursus Anda.</string>
+
+    <string name="notification_course_download_title">Pengunduhan kursus</string>
+    <string name="notification_course_download_text">Kursus tersedia untuk Anda unduh</string>
+
+    <string name="title_login">Masuk</string>
+    <string name="login_username_title">Nama pengguna</string>
+    <string name="login_password_title">Kata sandi</string>
+    <string name="title_register">Daftar</string>
+
+    <string name="register_form_username_title">Nama pengguna</string>
+    <string name="register_form_email_title">Alamat email</string>
+    <string name="register_form_firstname_title">Nama depan</string>
+    <string name="register_form_jobtitle_title">Jabatan</string>
+    <string name="register_form_lastname_title">Nama belakang</string>
+    <string name="register_form_organisation_title">Organisasi</string>
+    <string name="register_form_password_title">Kata sandi</string>
+    <string name="register_form_password_again_title">Kata sandi (ulangi)</string>
+    <string name="register_form_phoneno_title">Nomor telepon</string>
+    <string name="register_btn_text">Daftar</string>
+
+    <string name="reset_password_field">Nama pengguna atau Email</string>
+    <string name="reset_password_description">Silakan masukkan nama pengguna atau email Anda di bawah ini dan Anda akan dikirim email dengan tautan untuk mengatur ulang kata sandi Anda.</string>
+
+    <string name="remember_username_description">Silakan masukkan email Anda di bawah ini dan Anda akan dikirim email dengan pengingat nama pengguna Anda.</string>
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
+    <string name="close">Tutup</string>
+    <string name="error">Kesalahan</string>
+    <string name="info">Info</string>
+    <string name="warning">Peringatan</string>
+    <string name="loading">Memuat</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Batal</string>
+    <string name="logout">Keluar</string>
+    <string name="feedback">Umpan balik</string>
+    <string name="download">Unduh</string>
+    <string name="downloaded">Diunduh</string>
+    <string name="open">Buka</string>
+    <string name="storage_default">Default</string>
+
+    <string name="alert_pretest">Pre-test</string>
+    <string name="alert_pretest_summary">Kursus ini berisi pre-test yang perlu Anda selesaikan sebelum Anda dapat melihat seluruh kursus.</string>
+
+    <string name="tag_label">%1$s (%2$d)</string>
+    <string name="alt_activity_icon">Ikon aktivitas</string>
+
+    <string name="publisher">Penerbit:</string>
+    <string name="update">Perbarui</string>
+    <string name="installed">Terpasang</string>
+    <string name="install">Pasang</string>
+    <string name="courses_install_pending">Ada kursus baru yang diterima tetapi belum dipasang.</string>
+
+    <string name="download_starting">Pengunduhan dimulai</string>
+    <string name="downloading">Mengunduh &#8230;</string>
+    <string name="download_complete">Pengunduhan selesai</string>
+
+    <string name="updating">Memperbarui &#8230;</string>
+
+    <string name="installing_course">Memasang: %1$s</string>
+    <string name="install_complete">Pemasangan selesai</string>
+
+    <string name="install_course_complete">%1$s: terpasang</string>
+
+    <string name="info_scan_media_start">Memindai media</string>
+    <string name="info_scan_media_checking">Memeriksa: %1$s</string>
+    <string name="info_scan_media_missing">Beberapa file media hilang pada kursus Anda.</string>
+    <string name="info_scan_course_media_missing">Beberapa file media hilang pada kursus ini.</string>
+
+    <string name="info_upgrading">Meningkatkan ke %1$s</string>
+    <string name="course_updating">Memperbarui aktivitas kursus…</string>
+    <string name="course_updating_success">\'%1$s\': Aktivitas kursus berhasil diperbarui</string>
+    <string name="course_updating_error">\'%1$s\': Kesalahan saat memperbarui kursus</string>
+    <string name="course_deleting">Menghapus kursus…</string>
+    <string name="course_deleting_success">Kursus berhasil dihapus</string>
+    <string name="course_deleting_error">Kesalahan menghapus kursus</string>
+    <string name="info.startup.preloaded_accounts">Memuat %1$d pengguna baru.</string>
+
+    <string name="loading_courses">Memuat kursus</string>
+    <string name="loading_points">Memuat poin &#8230;</string>
+
+    <string name="badges.loading">Memuat lencana &#8230;</string>
+    <string name="badges.empty_state">Anda belum memiliki lencana. Selesaikan seluruh kursus untuk mendapatkan lencana pertama Anda.</string>
+    <string name="badges.award_method.criteria">Kriteria penghargaan lencana: </string>
+    <string name="badges.award_method.final_quiz">Hanya kuis terakhir yang perlu diselesaikan dan lulus</string>
+    <string name="badges.award_method.all_quizzes_plus_percent">Semua kuis perlu diselesaikan dan lulus, dan %1$d%% dari semua aktivitas lainnya diselesaikan.</string>
+    <string name="badges.award_method.all_quizzes">Semua kuis perlu diselesaikan dan lulus</string>
+    <string name="badges.award_method.all_activities">Semua aktivitas harus diselesaikan, termasuk menyelesaikan semua kuis dan melihat semua media</string>
+
+    <string name="scan_media_download_button">Unduh</string>
+    <string name="success_media_download">File media: \'%1$s\' berhasil diunduh.</string>
+    <string name="media_file_size">%1$.1fMb</string>
+    <string name="missing_media_download_selected">Unduh yang dipilih</string>
+    <string name="missing_media_stop_selected">Hentikan yang dipilih</string>
+    <string name="missing_media_unselect_all">Batalkan semua pilihan</string>
+    <string name="notification_media_title">&appName;: manajemen media</string>
+    <string name="notification_media_subject">Semua file media berhasil diunduh</string>
+
+    <string name="error_connection">Kesalahan saat menghubungkan ke server. Harap periksa apakah Anda memiliki koneksi internet aktif dan coba lagi.</string>
+    <string name="error_connection_required">Anda memerlukan koneksi internet aktif untuk mengakses halaman ini. Harap nyalakan wifi atau koneksi internet seluler dan coba lagi.</string>
+    <string name="error_connection_needed">Anda memerlukan koneksi internet aktif untuk menyelesaikan tindakan ini. Harap coba lagi ketika Anda memiliki koneksi internet aktif.</string>
+    <string name="error_connection_ssl">Kesalahan menghubungkan ke server karena masalah SSL. Harap pastikan bahwa host dalam pengaturan server &appName;
+        Anda benar, dan bahwa perangkat Anda memiliki waktu/tanggal yang benar</string>
+    <string name="error_connection_timeout">Kesalahan waktu habis saat menghubungkan ke server. Harap periksa apakah Anda memiliki koneksi internet yang stabil dan coba lagi.</string>
+    <string name="error_installing_course">%1$s: gagal menginstal</string>
+    <string name="error_latest_already_installed">%1$s: versi terbaru sudah terinstal</string>
+    <string name="error_login">Nama pengguna/kata sandi tidak valid\nHarap coba lagi</string>
+    <string name="error_media_app_not_found">Anda tampaknya tidak memiliki pemutar media yang mendukung pemutaran video ini.</string>
+    <string name="error_no_username">Harap masukkan nama pengguna Anda</string>
+    <string name="error_processing_response">Kesalahan memproses tanggapan</string>
+    <string name="error_quiz_no_questions">Tidak ada pertanyaan dalam kuis ini.</string>
+    <string name="error_register_no_email">Harap masukkan alamat email Anda</string>
+    <string name="error_register_password">Kata sandi Anda harus memiliki setidaknya %1$d karakter atau lebih</string>
+    <string name="error_register_password_no_match">Kata sandi Anda tidak cocok</string>
+    <string name="error_register_no_firstname">Harap masukkan nama depan Anda</string>
+    <string name="error_register_no_lastname">Harap masukkan nama belakang Anda</string>
+    <string name="error_register_no_phoneno">Harap masukkan nomor telepon Anda</string>
+    <string name="error_register_no_username">Harap masukkan nama pengguna</string>
+    <string name="error_register_username_spaces">Nama pengguna Anda tidak boleh mengandung spasi</string>
+    <string name="error_register_email">Email tidak valid</string>
+    <string name="error_resource_app_not_found">Anda tampaknya tidak memiliki aplikasi yang terinstal untuk membuka \'%1$s\'. Harap instal aplikasi yang dapat membuka jenis file ini.</string>
+    <string name="external_resource_app_missing">Anda tampaknya tidak memiliki aplikasi yang terinstal untuk membuka \'%1$s\'</string>
+    <string name="external_resource_install_app">Instal aplikasi</string>
+
+
+    <string name="error_resource_not_found">File: \'%1$s\' tidak ditemukan.</string>
+    <string name="error_preloading_accounts">Kesalahan memuat akun dari file CSV</string>
+    <string name="error_reset_password">Nama pengguna atau email tidak ditemukan\nHarap coba lagi</string>
+    <string name="error_remember_username">Email tidak ditemukan\nHarap coba lagi</string>
+    <string name="no_title_set">Tidak ada judul yang ditetapkan</string>
+
+    <string name="error_insufficient_storage_available">Ruang penyimpanan tidak mencukupi</string>
+    <string name="error_sdcard">Kartu SD Anda tidak tersedia - harap mulai ulang aplikasi ini ketika kartu SD tersedia.\nAplikasi akan segera ditutup.</string>
+    <string name="error_media_not_found">File media: \'%1$s\' tidak ditemukan.</string>
+    <string name="error_media_unsupported">\'%1$s\' tampaknya bukan jenis file media yang didukung.</string>
+    <string name="error_download_failure">Pengunduhan gagal</string>
+    <string name="error_update_failure">Pembaruan gagal</string>
+    <string name="error_install_failure">Instalasi gagal</string>
+    <string name="error_media_download">Kesalahan saat mencoba mengunduh media, harap coba lagi nanti</string>
+    <string name="error_reading_xml">Terjadi kesalahan saat mencoba memuat kursus. Harap instal ulang kursus.</string>
+    <string name="error_tts_start">Text To Speech gagal. Harap periksa ponsel Anda untuk memastikan Text to Speech terinstal dan diaktifkan</string>
+    <string name="warning_wifi_required">Anda harus terhubung ke jaringan wifi untuk mengunduh file media.\nHarap sambungkan ke jaringan wifi untuk mengunduh file media di ponsel Anda, atau unduh file melalui PC Anda.</string>
+    <string name="warning_delete_disabled">Maaf, menghapus kursus saat ini dinonaktifkan - harap perbarui pengaturan Anda untuk mengizinkan penghapusan kursus.</string>
+
+    <string name="login_process">Masuk</string>
+    <string name="login_complete">Berhasil Masuk</string>
+
+    <string name="logout_confirm">Apakah Anda yakin ingin keluar?</string>
+
+    <string name="register_alert_title">Daftar</string>
+    <string name="register_process">Mendaftarkan…</string>
+    <string name="register_complete">Pendaftaran berhasil</string>
+
+    <string name="reset_password">Atur ulang kata sandi</string>
+    <string name="reset_process">Mengatur ulang kata sandi …</string>
+    <string name="reset_password_complete">Kata sandi Anda telah diatur ulang.\n\nHarap periksa email Anda untuk kata sandi baru Anda.</string>
+
+    <string name="remember_username_complete">Email telah dikirim bersama dengan pengingat nama pengguna Anda</string>
+
+    <string name="change_content_language">Ubah bahasa konten</string>
+
+    <string name="course_draft">Versi draf</string>
+
+    <string name="search.activity_title">Cari</string>
+    <string name="search.result_summary">%1$d hasil untuk \"%2$s\"</string>
+    <string name="search.message.searching">Mencari…</string>
+    <string name="search.message.no_results">Tidak ada hasil ditemukan untuk \"%1$s\"</string>
+    <string name="search.message.fetching">Mengambil hasil…</string>
+    <string name="submit_stats_btn_text">Kirim sekarang</string>
+
+    <string name="media_player_description">&appName; Pemutar Media</string>
+
+    <string name="upgradev49_1">Menyalin file ke lokasi baru - ini mungkin memakan waktu beberapa menit, jadi harap bersabar</string>
+    <string name="loading_course">Memuat kursus…</string>
+    <string name="scorecard_quizzes_title">Kuis</string>
+    <string name="scorecard_quizzes_highlight_pretest">Pre-test</string>
+    <string name="scorecard_quizzes_highlight_attempted">Dicoba</string>
+    <string name="scorecard_quizzes_highlight_passed">Lulus</string>
+    <string name="scorecard_activities_completed">aktivitas selesai</string>
+    <string name="scorecard_activities_total">total</string>
+
+    <string name="admin_password_required">Fitur ini dilindungi untuk penggunaan admin saja. Silakan masukkan kata sandi admin untuk melanjutkan:</string>
+    <string name="admin_password_error_incorrect_password">Kata sandi admin salah. Coba lagi</string>
+    <string name="admin_password_newpassword_dialog_title">Kata sandi admin</string>
+    <string name="admin_password_newpassword_dialog_message">Silakan masukkan kata sandi admin</string>
+
+    <string name="notification.remote_admin.title">&appName; Administrasi Jarak Jauh</string>
+    <string name="notification.remote_admin.camera_disabled">Kamera perangkat telah dinonaktifkan dari jarak jauh</string>
+    <string name="notification.remote_admin.camera_enabled">Kamera perangkat telah diaktifkan dari jarak jauh</string>
+
+    <string name="sequencing.dialog_title">Aktivitas terkunci</string>
+    <string name="sequencing.section.message">Anda harus menyelesaikan aktivitas sebelumnya di bagian ini sebelum yang ini tersedia untuk Anda.</string>
+    <string name="sequencing.course.message">Anda harus menyelesaikan semua aktivitas sebelumnya dalam kursus ini sebelum yang ini tersedia untuk Anda.</string>
+    <string name="empty_state_courses">Saat ini tidak ada kursus yang tersedia untuk Anda di server ini.</string>
+    <string name="empty_state_media">Bagus! Anda sekarang telah mengunduh semua konten media untuk kursus Anda ke perangkat Anda.</string>
+    <string name="empty_state_scorecard">Anda belum menginstal kursus apa pun. \nSetelah Anda menginstal kursus, Anda dapat melihat kemajuan Anda di sini.</string>
+
+    <string name="permissions.title">&appName;
+        memerlukan izin berikut agar berfungsi dengan baik:</string>
+    <string name="permissions.storage.title">Baca dan ubah konten kartu SD</string>
+    <string name="permissions.simple.title">Izin diperlukan</string>
+    <string name="permissions.denied">Izin ditolak</string>
+    <string name="permissions.storage.description">&appName; memerlukan akses ke kartu SD untuk dapat menyimpan konten media yang diunduh untuk kursus</string>
+    <string name="permissions.phone_state.title">baca status dan identitas ponsel</string>
+    <string name="permissions.phone_state.description">&appName; memerlukan akses ke identitas ponsel untuk mendapatkan informasi tentang model perangkat Anda dan versi Android</string>
+    <string name="permissions.allow_btn_text">Izinkan izin</string>
+    <string name="permissions.not_askable.message">Aplikasi tidak memiliki izin yang diperlukan untuk berjalan. Silakan, buka Pengaturan | Aplikasi | &appName;
+        | Izin untuk memberikan akses ke izin ini</string>
+    <string name="permissions.not_askable.info">Anda melihat pesan ini karena izin diminta sebelumnya dan Anda menolaknya dan mencentang "Jangan tanya lagi"</string>
+    <string name="permissions.bluetooth.message">Aplikasi memerlukan beberapa izin tambahan untuk memindai perangkat Bluetooth.</string>
+    <string name="error_apikey_expired">Kunci API Anda telah kedaluwarsa. Silakan, masuk lagi.</string>
+    <string name="app_settings">Pengaturan Aplikasi</string>
+
+    <string name="privacy.title">Privasi dan Data Anda</string>
+    <string name="privacy.policy_info">Kebijakan Privasi</string>
+    <string name="privacy.terms">Ketentuan Layanan</string>
+    <string name="privacy.data_why">Bagaimana data Anda digunakan?</string>
+    <string name="privacy.data_what">Data apa yang dikumpulkan?</string>
+
+    <string name="privacy.section.privacy">Privasi dan Penggunaan Data</string>
+    <string name="privacy.section.analytics">Preferensi Analitik</string>
+    <string name="privacy.section.manage_data">Kelola data Anda</string>
+
+    <string name="privacy.download_data.info">Ekspor salinan konten di akun &appName; Anda untuk mencadangkannya atau mengeksplorasinya.</string>
+    <string name="privacy.download_data.label">Unduh data</string>
+    <string name="privacy.download_data.description">Anda dapat mengekspor data Anda di server &appName; ke perangkat ini dalam format yang dapat dibaca. Silakan pilih informasi yang ingin Anda unduh: </string>
+    <string name="privacy.download_data.profile">Data profil</string>
+    <string name="privacy.download_data.course">Aktivitas kursus</string>
+    <string name="privacy.download_data.quizzes">Percobaan kuis dan umpan balik</string>
+    <string name="privacy.delete_account.info">Hapus akun Anda sepenuhnya dan semua data terkait dari server &appName;.</string>
+    <string name="privacy.delete_account.label">Hapus akun</string>
+    <string name="privacy.delete_account.explanation">Menghapus akun Anda bersifat permanen, semua data Anda akan dihapus. Untuk menggunakan &appName; alagi Anda harus membuat akun baru. \n\nSilakan masukkan kata sandi Anda di bawah ini untuk mengonfirmasi penghapusan akun Anda.</string>
+
+    <string name="analytics.optin.title">Preferensi Analitik</string>
+    <string name="analytics.optin.description">Untuk membantu meningkatkan &appName;, Anda dapat memilih untuk mengirimkan laporan bug otomatis dan analitik tambahan. Anda dapat mengubah pengaturan ini kapan saja di aplikasi.</string>
+    <string name="privacy.optin.bugreport.switch">Izinkan pengiriman laporan kerusakan</string>
+    <string name="privacy.optin.analytics.switch">Izinkan pengiriman info penggunaan</string>
+
+    <string name="open_digest.errors.invalid_param">Parameter \"digest\" salah dikonfigurasi atau hilang. Harap periksa apakah tautannya valid.</string>
+    <string name="open_digest.errors.not_logged_in">Anda belum masuk. Silakan masuk dan coba buka tautan lagi.</string>
+    <string name="open_digest.errors.activity_not_found">Aktivitas tidak ditemukan. Apakah Anda yakin telah menginstal kursus yang berisi aktivitas ini?</string>
+    <string name="open_digest.errors.course_not_found">Tidak dapat menemukan kursus di server. Mungkin kursus itu tidak ada atau Anda tidak memiliki izin untuk mengaksesnya.</string>
+    <string name="open_digest.errors.bad_request">Tidak dapat menemukan kursus di server. Mungkin kursus itu tidak ada atau Anda tidak memiliki izin untuk mengaksesnya.</string>
+    <string name="open_digest.description">&appName; memiliki fungsi untuk membuka aktivitas atau kursus tertentu berdasarkan URL-nya (dibuka dari SMS atau aplikasi eksternal, misalnya)</string>
+    <string name="open_digest.course_not_installed">Anda belum menginstal kursus ini di perangkat. Anda dapat menginstalnya dengan mengklik ikon unduh </string>
+    <string name="open_digest.btn_action">Buka aktivitas</string>
+    <string name="open_digest.activity_completed">Aktivitas selesai</string>
+    <string name="open_digest.weblink_not_supported">Tautan web tidak didukung</string>
+    <string name="open_digest.fetching_course_info">Mengambil info kursus…</string>
+    <string name="open_digest.go_to_course">Pergi ke kursus</string>
+    <string name="open_digest.login_register">Masuk / Daftar</string>
+    <string name="open_digest.login_text">Anda belum masuk. Silakan masuk/daftar untuk melanjutkan.</string>
+
+    <string name="menu_sync">Sinkronkan</string>
+    <string name="title_sync">Sinkronkan</string>
+    <string name="export_activity.text">Ekspor aktivitas terbaru dan pelacak kuis ke file eksternal</string>
+    <string name="export_task_completed">Ekspor selesai</string>
+    <string name="export_task_completed_text">File bernama \'%1$s\' telah ditempatkan di sistem file perangkat</string>
+    <string name="exported_activities.title">Pelacak aktivitas yang diekspor</string>
+    <string name="export_task_no_activities">Tidak ada aktivitas atau kuis baru yang diekspor.</string>
+    <string name="submit_trackers_success">Pelacak berhasil dikirim ke server.</string>
+
+    <!-- Strings for Bluetooth transfer -->
+    <string name="bt_not_enabled_leaving">Bluetooth tidak diaktifkan</string>
+    <string name="paired_devices">Perangkat yang terpasang</string>
+    <string name="other_devices">Perangkat lain</string>
+    <string name="bluetooth.button_scan">Pindai</string>
+    <string name="bluetooth.none_paired">Belum ada perangkat yang terpasang</string>
+    <string name="bluetooth.scanning">Memindai…</string>
+    <string name="bluetooth.no_devices_found">Tidak ada perangkat yang ditemukan</string>
+    <string name="bluetooth.no_device_connected">Tidak ada perangkat yang terhubung</string>
+    <string name="bluetooth.select_device">Pilih perangkat untuk dihubungkan</string>
+    <string name="bluetooth.title_connecting">Menghubungkan ke perangkat…</string>
+    <string name="bluetooth.title_not_connected">Tidak terhubung</string>
+    <string name="bluetooth.title_connected_to">Terhubung</string>
+    <string name="course_transferring">Transfer kursus sedang berlangsung…</string>
+    <string name="bluetooth.info_connect">Hubungkan ke perangkat lain menggunakan Bluetooth untuk memulai transfer</string>
+    <string name="bluetooth.transferable_type">Jenis yang dapat ditransfer</string>
+    <string name="bluetooth_device_scanning">Memindai perangkat baru…</string>
+    <string name="bluetooth_communication_closed">Komunikasi Bluetooth ditutup.</string>
+    <string name="bluetooth_transfer_failure">Transfer Bluetooth gagal.</string>
+    <string name="bluetooth.files_pending">%1$d file tertunda</string>
+    <string name="bluetooth_all_transfers_complete">Semua transfer Bluetooth yang tertunda telah selesai</string>
+    <string name="bluetooth.transfer_complete">%1$s: Transfer selesai</string>
+    <string name="bluetooth.btn_connect">Hubungkan</string>
+    <string name="bluetooth.device_name">Nama perangkat ini:</string>
+    <string name="bluetooth.tab_course">kursus</string>
+    <string name="bluetooth.tab_activitylog">log aktivitas</string>
+    <string name="bluetooth.send_all">Kirim semua</string>
+    <string name="bluetooth.btn_disconnect">Putuskan</string>
+    <string name="bluetooth.enable_discovery">Aktifkan mode penemuan</string>
+    <string name="bluetooth.discovery_already_enabled">Perangkat sudah dapat ditemukan</string>
+    <string name="bluetooth.discovery_fail">Tidak dapat mengaktifkan mode penemuan</string>
+    <string name="bluetooth.discovery_success">Mode penemuan diaktifkan selama %1$d detik</string>
+
+
+    <!-- Strings for quiz attempts -->
+    <string name="quiz_attempts.title">Percobaan kuis</string>
+    <string name="quiz_attempts.loading">Memuat percobaan kuis…</string>
+    <string name="quiz_attempts.number">Percobaan</string>
+    <string name="quiz_attempts.best">Terbaik</string>
+    <string name="quiz_attempts.average">Rata-rata</string>
+    <string name="quiz_attempts.empty_state">Anda belum mencoba\nkuis ini.</string>
+    <string name="quiz_attempts.retake_quiz">Ulangi kuis ini</string>
+    <string name="quiz_attempts.take_quiz">Kerjakan kuis ini</string>
+    <string name="quiz_attempts.unknown_course">Kursus tidak dikenal/dihapus</string>
+    <string name="quiz_attempts.unknown_quiz">Kuis tidak dikenal/dihapus</string>
+    <string name="quiz_attempts.global_empty_state">Anda belum mencoba\nkuis apa pun.</string>
+    <string name="quiz_attempt.title">Percobaan kuis</string>
+    <string name="quiz_attempts.previous">Percobaan sebelumnya</string>
+    <string name="quiz_attempts.unlimited">Percobaan tak terbatas</string>
+    <string name="quiz_attempts.left">%1$d percobaan (%2$d tersisa)</string>
+
+    <!-- Strings for point events -->
+    <string name="points_event_default">Poin diberikan!</string>
+    <string name="points_event_activity_completed">Aktivitas selesai \'%1$s - %2$s\'</string>
+    <string name="points_event_media_played">Media diputar \'%1$s\'</string>
+    <string name="points_event_quiz_attempt">Percobaan kuis \'%1$s - %2$s\'</string>
+    <string name="points_event_course_downloaded">Kursus \'%1$s\' diunduh</string>
+    <string name="points_event_feedback_completed">Umpan balik  \'%1$s - %2$s\' dikirim</string>
+    <string name="tab_title_leaderboard">Papan Peringkat</string>
+    <string name="leaderboard_position">Posisi Anda</string>
+    <string name="leaderboard_points">%1$s poin</string>
+
+    <string name="transfer_receiving_course">Menerima file kursus…</string>
+    <string name="sign_in_title">Masuk</string>
+    <string name="register_account_already">Sudah memiliki akun?</string>
+    <string name="login_dont_have_account">Belum memiliki akun?</string>
+    <string name="offline_register_confirm">Sebagai alternatif, Anda dapat mendaftar secara offline dan mulai menggunakan aplikasi. Kemudian, Anda perlu mengirim atau mentransfer data pengguna Anda nanti</string>
+    <string name="register_offline">Daftar offline</string>
+    <string name="field_required">Kolom ini tidak boleh kosong</string>
+    <string name="field_spaces_error">Tidak boleh mengandung spasi</string>
+    <string name="permissions.location.title">Akses lokasi</string>
+    <string name="permissions.location.description">Di perangkat Android baru, izin ini diperlukan untuk dapat memasangkan dengan perangkat lain menggunakan Bluetooth</string>
+    <string name="points">poin</string>
+    <string name="last_year">tahun lalu</string>
+    <string name="last_month">bulan lalu</string>
+    <string name="last_week">minggu lalu</string>
+    <string name="no_points_data">Tidak ada data poin</string>
+    <string name="event_activity_completed">Aktivitas selesai</string>
+    <string name="event_media_played">Media diputar</string>
+    <string name="event_media_watched">Media ditonton</string>
+    <string name="event_course_downloaded">Kursus diunduh</string>
+    <string name="event_quiz_attempt">Percobaan kuis</string>
+    <string name="event_activity_all">Semua aktivitas</string>
+
+
+    <string name="channel_notif_internal_name">Notifikasi internal</string>
+    <string name="channel_notif_internal_description">Saluran ini menampilkan notifikasi berguna dalam banyak proses seperti transfer Bluetooth, pengunduhan kursus, atau tugas sinkronisasi</string>
+
+
+    <string name="nav_home">Beranda</string>
+    <string name="nav_scorecard">Kartu skor</string>
+    <string name="nav_points">Poin</string>
+    <string name="edit_profile">Edit profil</string>
+
+
+    <string name="info_override_password">Menimpa kata sandi admin</string>
+    <string name="register_username_exists">Nama pengguna sudah ada</string>
+    <string name="collapse_all_sections">Tutup semua bagian</string>
+    <string name="expand_all_sections">Buka semua bagian</string>
+
+    <string name="title_activitylog">Log aktivitas</string>
+    <string name="archived_activities">Pelacak yang diarsipkan (sudah ditransfer)</string>
+    <string name="activitylog_delete">Hapus</string>
+    <string name="activitylog_delete_confirm">Apakah Anda yakin ingin menghapus file log aktivitas ini?</string>
+    <string name="activitylog_delete_failed">Tidak dapat menghapus file log aktivitas</string>
+
+    <string name="title_activity_edit_profile">Edit profil</string>
+    <string name="option_available_online">Opsi ini hanya tersedia ketika perangkat terhubung ke Internet</string>
+    <string name="save_profile">Simpan profil</string>
+    <string name="profile_updated_successfully">Profil berhasil diperbarui</string>
+    <string name="activitylog_submitted">dikirim ke server</string>
+    <string name="activitylog_tosubmit">untuk dikirim</string>
+    <string name="activitylog_toexport">untuk diekspor</string>
+    <string name="activitylog_btn_submit">Kirim ke server</string>
+    <string name="activitylog_btn_export">Ekspor aktivitas</string>
+    <string name="videoplayer_play_again">Putar lagi</string>
+    <string name="videoplayer_continue">Lanjutkan ke kursus</string>
+    <string name="options">Opsi</string>
+    <string name="quiz_loading_error">Kesalahan tak terduga saat memuat kuis. Mungkin formatnya salah atau sudah usang?</string>
+    <string name="error_register_username_length">Nama pengguna harus memiliki setidaknya %d karakter</string>
+    <string name="change_setting_apikey_warning">Ini akan membatalkan kunci API untuk setiap pengguna yang di-cache di perangkat, jadi mereka memerlukan koneksi internet aktif untuk masuk kembali.</string>
+    <string name="change_setting_logout_warning">Anda saat ini masuk. Jika Anda mengubah pengaturan ini, sesi Anda akan berakhir. Apakah Anda mengonfirmasi?</string>
+    <string name="accept">Terima</string>
+    <string name="user_not_logged_in">Pengguna tidak masuk</string>
+
+    <string name="notification_courses_to_update_title">Pembaruan kursus baru</string>
+    <plurals name="notification_courses_to_update_text">
+        <item quantity="one">Ada %d kursus siap diperbarui</item>
+        <item quantity="few">Ada %d kursus siap diperbarui</item>
+        <item quantity="other">Ada %d kursus siap diperbarui</item>
+    </plurals>
+
+
+    <string name="notification_new_courses_title">Kursus baru tersedia</string>
+    <plurals name="notification_new_courses_text">
+        <item quantity="one">Ada %d kursus baru tersedia</item>
+        <item quantity="few">Ada %d kursus baru tersedia</item>
+        <item quantity="other">Ada %d kursus baru tersedia</item>
+    </plurals>
+    <string name="btn_continue">Lanjutkan</string>
+
+    <string name="course_deleted">Kursus dihapus</string>
+    <string name="course_deleted_dialog_message">Kursus ini telah dihapus dari server dan tidak lagi tersedia di aplikasi.\nApakah Anda ingin menghapusnya sekarang dari aplikasi?</string>
+    <string name="course_update">Pembaruan kursus</string>
+    <string name="course_update_dialog_message">Ada pembaruan tersedia untuk kursus ini.\nApakah Anda ingin memperbaruinya sekarang?</string>
+
+    <string name="course_updates">Pembaruan kursus</string>
+    <string name="new_courses">Kursus baru</string>
+    <string name="back">Kembali</string>
+    <string name="continue_to_course">Lanjutkan ke kursus</string>
+    <string name="processing">Sedang memproses…</string>
+    <string name="user_data_download_success">Data Anda telah berhasil diunduh.\nAnda dapat mengaksesnya di folder sistem Unduhan.</string>
+    <string name="open_download_folder">Buka folder unduhan</string>
+    <string name="error_download_failure_reason_format">Kegagalan unduhan. Alasan: %s</string>
+    <string name="download_certificate">Unduh sertifikat</string>
+    <string name="storage_permission_not_granted">Izin penyimpanan tidak diberikan</string>
+    <string name="courses_reminder_notif_text">Anda belum menyelesaikan semua kursus Anda.\nPergi ke kursus Anda</string>
+    <string name="courses_reminder_notif_title">Pengingat kursus</string>
+    <string name="courses_reminder_settings">Pengaturan pengingat</string>
+    <string name="change_password">Ganti kata sandi</string>
+    <string name="change_password_success">Kata sandi Anda telah berhasil diperbarui</string>
+    <string name="change_password_intro">Untuk mengganti kata sandi Anda, silakan masukkan kata sandi baru di bawah ini:</string>
+
+    <string name="text_size_smallest">Terkecil</string>
+    <string name="text_size_small">Kecil</string>
+    <string name="text_size_normal">Normal</string>
+    <string name="text_size_large">Besar</string>
+    <string name="text_size_largest">Terbesar</string>
+
+    <string name="interval_weekly">Mingguan</string>
+    <string name="interval_daily">Harian</string>
+
+    <string name="week_day_1">Minggu</string>
+    <string name="week_day_2">Senin</string>
+    <string name="week_day_3">Selasa</string>
+    <string name="week_day_4">Rabu</string>
+    <string name="week_day_5">Kamis</string>
+    <string name="week_day_6">Jumat</string>
+    <string name="week_day_7">Sabtu</string>
+
+    <string name="warning_reminder_weekly_just_one_day">Untuk interval mingguan hanya satu hari yang harus diatur</string>
+    <string name="warning_reminder_at_least_one_day">Anda harus mengatur setidaknya satu hari</string>
+
+    <string name="quiz_protected">Kuis dilindungi</string>
+    <string name="please_enter_quiz_password">Silakan, masukkan kata sandi untuk mengakses kuis ini</string>
+    <string name="invalid_password">Kata sandi tidak valid</string>
+    <string name="pref_export_full_activity_title">Ekspor data aktivitas lengkap</string>
+    <string name="full_activity_exported_success">Aktivitas lengkap berhasil diekspor.\n\nAnda dapat mengirimkannya ke aplikasi eksternal dengan mengklik tombol "Bagikan"</string>
+    <string name="full_activity_export_path">\n\nPath: %s.</string>
+    <string name="share">Bagikan</string>
+    <string name="no_app_to_share">Error. Tidak ada aplikasi yang terinstal untuk membagikan file ini</string>
+    <string name="pref_flush_app_cache">Bersihkan cache aplikasi</string>
+    <string name="cache_flushed_successfuly">Cache berhasil dibersihkan</string>
+
+    <string name="incorrect_password_topic">Kata sandi topik salah. Coba lagi</string>
+    <string name="password_needed">Kata sandi diperlukan</string>
+    <string name="password_needed_description">Topik ini dilindungi kata sandi. \n Silakan masukkan kata sandi di bawah ini untuk mengakses konten (Anda hanya perlu melakukannya sekali).</string>
+    <string name="password_activity_title">Aktivitas dilindungi</string>
+    <string name="password_activity_description">Aktivitas ini dilindungi kata sandi. \n Silakan, masukkan kata sandi di bawah ini untuk mengakses kontennya. </string>
+    <string name="password_activity_incorrect">Kata sandi salah. Coba lagi</string>
+    <string name="password_activity_submit">Akses konten</string>
+    <string name="unlock_topic">Buka topik</string>
+    <string name="staging_warning_msg">Anda terhubung ke server staging/pengembangan.</string>
+
+    <!-- Status badges -->
+    <string name="status_draft">Draf</string>
+    <string name="status_new_download_disabled">Unduhan baru dinonaktifkan</string>
+    <string name="status_archived">Diarsipkan</string>
+    <string name="status_read_only">Hanya baca</string>
+    <string name="quiz">Kuis</string>
+    <string name="read_only_answer_unavailable_message">Kursus ini sekarang hanya-baca, sehingga akses ke %s is no longer availableini tidak lagi tersedia</string>
+    <string name="view_your_previous_attempts">Lihat percobaan Anda sebelumnya</string>
+    <string name="invalid_parameters">Parameter tidak valid</string>
+    <string name="source_dir_does_not_exist">Direktori sumber tidak ada</string>
+    <string name="source_file_does_not_exist">File sumber tidak ada</string>
+    <string name="dest_dir_does_not_exist">Direktori tujuan tidak ada</string>
+    <string name="pref_update_activity_on_login">Perbarui aktivitas saat login</string>
+
+    <!-- Update activity on login -->
+    <string name="none">Tidak ada</string>
+    <string name="optional">Opsional</string>
+    <string name="force">Paksa</string>
+    <string name="updating_course_activity">Memperbarui aktivitas kursus: %s</string>
+    <string name="error_unable_retrieve_course_activity">Saat ini tidak dapat mengambil aktivitas kursus</string>
+    <string name="connection_unavailable_couse_activity">Koneksi tidak tersedia, tidak dapat mengambil aktivitas kursus</string>
+    <string name="try_again">Coba lagi</string>
+    <string name="continue_anyway">Lanjutkan saja</string>
+    <string name="offline_user_not_found">Pengguna offline tidak ditemukan.\nAnda tidak memiliki koneksi internet sehingga hanya pengguna lokal yang tersedia.</string>
+    <string name="offline_user_invalid_password">Kata sandi tidak valid.\nAnda tidak memiliki koneksi internet sehingga hanya pengguna lokal yang tersedia.</string>
+    <string name="sdcard_not_available">Kartu SD tidak tersedia</string>
+    <string name="sdcard_not_available_message">Untuk melanjutkan menggunakan aplikasi, kartu SD diperlukan. \nSilakan masukkan kembali kartu SD Anda.</string>
+    <string name="sdcard_not_available_change_settings">Kartu SD tidak tersedia. Tidak dapat beralih ke penyimpanan eksternal</string>
+    <string name="close_app">Tutup aplikasi</string>
+
+    <!-- Offline course import -->
+    <string name="title_offline_course_import">Impor kursus offline</string>
+    <string name="offline_course_import.instructions">Untuk mengimpor kursus, pertama klik tombol \"Tambahkan file\" dan pilih file .zip untuk kursus dan file media yang ingin Anda impor.\n\nKemudian, tunggu hingga file muncul di daftar dan klik tombol \"Impor\".</string>
+    <string name="offline_course_import.add_files">Tambahkan file</string>
+    <string name="offline_course_import.import">Impor</string>
+    <string name="offline_course_import.import_in_progress">Impor sedang berlangsung. Harap bersabar.</string>
+    <string name="offline_course_import.importing_media_file">Mengimpor file media: %s</string>
+    <string name="offline_course_import.empty_files">Belum ada file yang ditambahkan.</string>
+    <string name="offline_course_import.import_completed">Impor selesai.</string>
+    <string name="offline_course_import.media_files_imported">File media diimpor</string>
+    <string name="offline_course_import.course_files_imported">File kursus diimpor</string>
+    <string name="bluetooth_not_supported">Bluetooth tidak didukung</string>
+    <string name="select_one_or_more">(Pilih satu atau lebih)</string>
+    <string name="select_one">(Pilih satu)</string>
+
+</resources>
+
