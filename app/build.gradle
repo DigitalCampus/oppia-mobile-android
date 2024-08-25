@@ -245,7 +245,11 @@ android {
     useLibrary 'android.test.mock'
     namespace 'org.digitalcampus.mobile.learning'
 
-    android.buildFeatures.viewBinding = true
+    buildFeatures {
+        buildConfig true
+        viewBinding = true
+    }
+
 }
 
 dependencies {
