@@ -358,7 +358,7 @@ tasks.register('grantPermissions', Exec) {
     group = 'test'
     description = 'Grant permissions for testing.'
 
-    def adb = android.getAdbExe().toString()
+    def adb = android.getAdbExecutable().toString()
     if (!System.getProperty('os.name').toLowerCase().contains('windows')) {
         logger.lifecycle('Granting permissions for a non windows os')
     } else {
