@@ -4,10 +4,6 @@ apply plugin: 'com.android.application'
 apply from: '../jacoco.gradle'
 apply from: '../sonarqube.gradle'
 
-repositories {
-    maven { url "https://jitpack.io" }
-}
-
 def version_code = 114
 def version_name = "7.4.9"
 
@@ -240,7 +236,7 @@ android {
 
     }
 
-    flavorDimensions "main"
+    flavorDimensions = ["main"]
 
     productFlavors {
         normal { dimension "main" }
@@ -249,40 +245,44 @@ android {
     useLibrary 'android.test.mock'
     namespace 'org.digitalcampus.mobile.learning'
 
-    android.buildFeatures.viewBinding = true
+    buildFeatures {
+        buildConfig true
+        viewBinding = true
+    }
+
 }
 
 dependencies {
-    def workVersion = '2.7.1'
-    def roomVersion = "1.1.1"
-    def fragmentVersion = '1.5.4'
+    def workVersion = '2.9.1'
+    def roomVersion = "2.6.1"
+    def fragmentVersion = '1.8.2'
     def daggerVersion = '2.41'
-    def appcompatVersion = '1.6.0-rc01'
-    def espressoVersion = '3.5.1'
+    def appcompatVersion = '1.7.0'
+    def espressoVersion = '3.6.1'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'joda-time:joda-time:2.10.13'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
-    implementation 'androidx.core:core:1.9.0'
+    implementation 'androidx.core:core:1.13.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.preference:preference:1.2.1'
 
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
 
-    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.navigation:navigation-fragment:2.5.3'
-    implementation 'androidx.navigation:navigation-ui:2.5.3'
+    implementation 'androidx.vectordrawable:vectordrawable:1.2.0'
+    implementation 'androidx.navigation:navigation-fragment:2.7.7'
+    implementation 'androidx.navigation:navigation-ui:2.7.7'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.concurrent:concurrent-futures:1.1.0'
-    implementation "android.arch.persistence.room:runtime:$roomVersion"
+    implementation 'androidx.concurrent:concurrent-futures:1.2.0'
+    implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.work:work-runtime:$workVersion"
-    implementation 'com.google.guava:guava:31.1-android'
+    implementation 'com.google.guava:guava:33.2.1-android'
 
     androidTestImplementation "androidx.work:work-testing:$workVersion"
-    annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
+    annotationProcessor "androidx.room:room-compiler:$roomVersion"
 
     implementation 'javax.xml.stream:stax-api:1.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
@@ -294,7 +294,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.mikhaellopez:circularprogressbar:3.1.0'
     implementation 'com.github.badoualy:stepper-indicator:1.0.7'
-    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'com.hbb20:ccp:2.6.0' //Phone code picker
 
     //Dagger Dependencies
@@ -308,17 +308,17 @@ dependencies {
     implementation "com.squareup.inject:assisted-inject-annotations-dagger2:0.8.1"
 
     //JUnit Dependencies
-    testImplementation 'androidx.test.ext:junit:1.1.5'
+    testImplementation 'androidx.test.ext:junit:1.2.1'
     testImplementation "org.json:json:20220924"
 
     androidTestImplementation 'com.squareup.okhttp3:mockwebserver:4.9.3'
-    androidTestImplementation 'androidx.test:runner:1.5.2'
-    androidTestImplementation 'androidx.test:rules:1.5.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test:runner:1.6.2'
+    androidTestImplementation 'androidx.test:rules:1.6.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.annotation:annotation:1.3.0'
-    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
-    androidTestUtil 'androidx.test:orchestrator:1.4.2'
-    androidTestUtil 'androidx.test.services:test-services:1.4.2'
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.3.0'
+    androidTestUtil 'androidx.test:orchestrator:1.5.0'
+    androidTestUtil 'androidx.test.services:test-services:1.5.0'
 
     //Espresso Dependencies
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
@@ -334,8 +334,8 @@ dependencies {
 
     // Fragment testing
     implementation "androidx.fragment:fragment:$fragmentVersion"
-    debugImplementation 'androidx.test:core:1.5.0'
-    debugImplementation "androidx.fragment:fragment-testing:1.5.4"
+    debugImplementation 'androidx.test:core:1.6.1'
+    debugImplementation "androidx.fragment:fragment-testing:1.8.2"
 
     //Mockito Dependencies
     testImplementation 'org.mockito:mockito-core:4.3.1'
@@ -353,11 +353,12 @@ dependencies {
 }
 
 
-task grantPermissions(type: Exec, dependsOn: 'installNormalDebug') {
+tasks.register('grantPermissions', Exec) {
+    dependsOn 'installNormalDebug'
     group = 'test'
     description = 'Grant permissions for testing.'
 
-    def adb = android.getAdbExe().toString()
+    def adb = android.getAdbExecutable().toString()
     if (!System.getProperty('os.name').toLowerCase().contains('windows')) {
         logger.lifecycle('Granting permissions for a non windows os')
     } else {
@@ -369,7 +370,7 @@ task grantPermissions(type: Exec, dependsOn: 'installNormalDebug') {
 
 }
 
-tasks.whenTaskAdded { task ->
+tasks.configureEach { task ->
     if (task.name.startsWith('connectedAndroidTest') ||
             task.name.startsWith('connectedDebugAndroidTest') ||
             task.name.startsWith('assembleDebugAndroidTest') ||
