@@ -23,6 +23,7 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ import androidx.appcompat.app.AlertDialog;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.FragmentRegisterBinding;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.App;
@@ -42,12 +44,14 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.RegisterTask;
 import org.digitalcampus.oppia.utils.TextUtilsJava;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.ui.fields.CustomFieldsUIManager;
 import org.digitalcampus.oppia.utils.ui.fields.SteppedFormUIManager;
 import org.digitalcampus.oppia.utils.ui.fields.ValidableField;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -162,6 +166,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 			binding.frameStepperIndicator.setVisibility(View.VISIBLE);
 			binding.loginContainer.setVisibility(View.GONE);
 			binding.registerBtn.setVisibility(View.GONE);
+			binding.viewPrivacyPolicy.setVisibility(View.GONE);
 			binding.nextBtn.setVisibility(View.VISIBLE);
 			binding.prevBtn.setVisibility(View.INVISIBLE);
 			stepsManager.initialize(binding.customFieldsContainer, binding.steppedFieldsContainer, binding.stepDescription);
@@ -177,9 +182,24 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 			}
 
 		});
+		binding.tvPrivacyPolicyLink.setOnClickListener(v -> showPrivacyPolicyDialog());
+
 		for (ValidableField field : fields.values()){
 			field.initialize();
 		}
+	}
+
+	private void showPrivacyPolicyDialog() {
+
+		String lang = getPrefs().getString(PrefsActivity.PREF_INTERFACE_LANGUAGE, Locale.getDefault().getLanguage());
+		String urlPolicy = Storage.getLocalizedFilePath(getActivity(), lang, "privacy.html");
+		WebView webView = new WebView(getActivity());
+		webView.loadUrl(urlPolicy);
+		new AlertDialog.Builder(getActivity())
+				.setView(webView)
+				.setNegativeButton(R.string.close, null)
+				.show();
+
 	}
 
 	private void nextStep(){
@@ -193,6 +213,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		if (stepsManager.isLastStep()){
 			binding.nextBtn.setVisibility(View.GONE);
 			binding.registerBtn.setVisibility(View.VISIBLE);
+			binding.viewPrivacyPolicy.setVisibility(View.VISIBLE);
 		}
 
 	}
@@ -206,11 +227,17 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		}
 
 		binding.registerBtn.setVisibility(View.GONE);
+		binding.viewPrivacyPolicy.setVisibility(View.GONE);
 		binding.nextBtn.setVisibility(View.VISIBLE);
 	}
 
 
 	public void onRegisterClick() {
+
+		if (!binding.checkPrivacyPolicy.isChecked()) {
+			toast(R.string.must_accept_privacy_policy);
+			return;
+		}
 
 		boolean valid = true;
 		if (stepsManager == null){
