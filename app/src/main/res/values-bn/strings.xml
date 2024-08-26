@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appName "OppiaMobile"><!ENTITY companyName "Digital Campus"> ]>
+<resources>
+    <string name="app_name"> নূরা একাডেমী </string>
+    <string name="app_logo_alt">অর্গানাইজেশন এর নাম ; Logo</string>
+    <string name="about_logged_in">লগ ইন করা হয়েছে  as: %1$s</string>
+    <string name="about_not_logged_in">লগ ইন করা হয়নি</string>
+
+    <string name="menu_download">কোর্সটি ডাউনলোড করুন</string>
+    <string name="menu_change_text_size"> টেক্সট এর  সাইজ  পরিবর্তন করুন</string>
+    <string name="menu_settings"> সেটিংস </string>
+    <string name="menu_privacy"> গোপনীয়তা এবং আপনার ডেটা </string>
+    <string name="menu_about">সম্পর্কিত এবং সাহায্য </string>
+    <string name="menu_help"> সাহায্য </string>
+    <string name="menu_logout"> লগ আউট </string>
+    <string name="menu_read_aloud"> জোরে পড়ুন </string>
+    <string name="menu_return_to_courses"> কোর্সে ফিরে যান </string>
+    <string name="menu_scorecard"> স্কোরকার্ড </string>
+    <string name="menu_search"> অনুসন্ধান </string>
+    <string name="menu_stop_read_aloud"> পড়া বন্ধ করুন </string>
+    <string name="menu_sort_by">ক্রমানুসারে সাজান</string>
+    <string name="menu_sort_by_course">কোর্স অনুযায়ী সাজান</string>
+    <string name="menu_sort_by_filename">ফাইল এর নাম অনুযায়ী সাজান</string>
+    <string name="menu_select_all">সব নির্বাচন করুন</string>
+
+    <string name="service_tracker">অ্যাপ এর নাম এবং ট্র্যাকার  এর সেবা </string>
+
+    <string name="fragment_welcome_title"> স্বাগতম এবং অ্যাপ এর নাম ;</string>
+    <string name="fragment_welcome_desc"> অ্যাপ এর নাম; শেখার বিষয়বস্তু, ভিডিও এবং কুইজ প্রদানের জন্য একটি মোবাইল লার্নিং প্ল্যাটফর্ম.</string>
+    <string name="fragment_welcome_login_info"> অ্যাপ এর নাম দিয়ে শুরু করতে হবে, আপনাকে নিবন্ধন বা লগ ইন করতে হবে</string>
+    <string name="fragment_welcome_privacy_info">আপনি যদি আমাদের সাথে সম্মত হন,নিবন্ধন বা লগ ইন করুন </string>
+    <string name="fragment_welcome_powered_by">দ্বারা চালিত <a href="https://digital-campus.org/oppiamobile/">OppiaMobile</a></string>
+
+    <string name="drawer_header_background_description"> ব্যাকগ্রাউন্ড ইমেজ </string>
+    <string name="drawer_header_logo_description"> অ্যাপ্লিকেশন এর  নাম; লোগো</string>
+    <string name="drawer_header_username_placeholder"> ব্যবহারকারীর নাম</string>
+    <string name="drawer_header_userfullname_placeholder"> ব্যবহারকারীর পুরো নাম</string>
+
+    <string name="tab_title_about"> সম্পর্কিত </string>
+    <string name="tab_title_badges"> ব্যাজসমূহ  </string>
+    <string name="tab_title_help"> সাহায্য </string>
+    <string name="tab_title_login"> লগ ইন </string>
+    <string name="tab_title_points"> পয়েন্টস </string>
+    <string name="tab_title_privacy"> গোপনীয়তা </string>
+    <string name="tab_title_terms"> শর্তাবলী </string>
+    <string name="tab_title_register"> নিবন্ধন </string>
+    <string name="tab_title_reset_password"> পুনরায় পাসওয়ার্ডটি সেট করুন  </string>
+    <string name="tab_title_remember_username"> ব্যবহারকারীর নাম ভুলে গিয়েছেন  </string>
+    <string name="tab_title_scorecard"> স্কোরকার্ড </string>
+    <string name="tab_title_activity"> কার্যক্রম</string>
+    <string name="tab_title_welcome">স্বাগতম </string>
+
+    <string name="title_about">সম্পর্কিত এবং সাহায্য</string>
+    <string name="title_baseline"> বেসলাইন </string>
+    <string name="title_btn_reset_password"> পুনরায় পাসওয়ার্ডটি সেট করুন </string>
+    <string name="title_btn_remember_username"> ব্যবহারকারীর নাম ভুলে গিয়েছেন </string>
+    <string name="title_download_activity"> কোর্সটি পরিচালনা করুন </string>
+    <string name="title_activity_course_index"> কোর্স সূচক </string>
+    <string name="title_activity_course">কার্যক্রম </string>
+    <string name="title_course_meta">সম্পর্কিত</string>
+    <string name="title_prefs"> সেটিংস</string>
+    <string name="title_scorecard"> স্কোরকার্ড</string>
+    <string name="title_tag_select_activity">বিষয়টি নির্বাচন করুনy</string>
+    <string name="version">সংস্করণ: %1$s</string>
+    <string name="title_download_media">বিষয়গুলো ডাউনলোড করুন</string>
+
+    <string name="widget_feedback_submit">জমা দিন </string>
+    <string name="widget_feedback_submit_title">আপনার মতামত জমা দেওয়ার জন্য ধন্যবাদ.</string>
+    <string name="widget_feedback_unavailable_attempts">আপনি  ইতোমধ্যে  আপনার মতামত পাঠিয়েছেন </string>
+
+    <string name="widget_quiz_next"> পরবর্তী </string>
+    <string name="widget_quiz_prev"> পূর্ববর্তী </string>
+    <string name="widget_quiz_getresults"> ফলাফল দেখুন </string>
+    <string name="widget_quiz_noanswergiven">পরবর্তী প্রশ্নে যাওয়ার আগে উত্তরটি সম্পূর্ণ করুন</string>
+    <string name="widget_quiz_progress">প্রশ্ন  </string>
+    <string name="widget_quiz_results_score"> আপনার স্কোর: %1$.0f%%</string>
+    <string name="widget_quiz_results_restart"> কুইজটি পুনরায় নিন  </string>
+    <string name="widget_quiz_continue">চালিয়ে যান</string> 
+    <string name="widget_quiz_baseline_completed">প্রি-টেস্ট সম্পন্ন করার জন্য ধন্যবাদ। আপনি কোর্সটি চালিয়ে যেতে পারেন।</string>
+    <string name="widget_quiz_baseline_goto_course">কোর্সটি চালিয়ে যান </string>
+    <string name="widget_quiz_image_caption"> বড় করে দেখতে চাইলে ছবিতে প্রেস করুন </string>
+    <string name="widget_quiz_media_caption">ভিডিও শুরু করতে ছবিতে প্রেস করুন </string>
+    <string name="widget_quiz_feedback_response_title">আপনার উত্তর: </string>
+    <string name="widget_quiz_feedback_response_skipped">আপনি এই প্রশ্ন বাদ দিয়েছেন।.</string>
+    <string name="widget_quiz_feedback_feedback_title"> ফিডব্যাক : </string>
+    <string name="widget_quiz_num_questions"> প্রশ্ন</string>
+    <string name="widget_quiz_pass_threshold"> পাসের সীমা  </string>
+    <string name="widget_quiz_unavailable_section">কুইজ এ যাওয়ার পূর্বে আপনাকে পূর্ববর্তী সকল কার্যক্রম সফলভাবে সম্পূর্ণ করতে হবে.</string>
+    <string name="widget_quiz_unavailable_course">কুইজ এ যাওয়ার পূর্বে আপনাকে পূর্ববর্তী সকল কার্যক্রম সফলভাবে সম্পূর্ণ করতে হবে। </string> 
+    <string name="widget_quiz_unavailable_attempts">আপনি ইতোমধ্যে  এই কুইজটি সর্বাধিক বার চেষ্টা করেছেন</string>
+    <string name="widget_resource_open_file">খুলুন </string>
+
+    <string name="course_context_reset">পুনরায় সেট করুন </string>
+    <string name="course_context_delete">মুছে ফেলুন</string>
+    <string name="course_context_update_activity">কার্যক্রমটি আপডেট করুন</string>
+    <string name="course_context_reset_confirm">আপনি কি নিশ্চিত যে, এই কোর্সটি পুনরায় নির্ধারণ  করতে চান? আপনি কোর্সটির এই পর্যন্ত যা যা  সম্পন্ন  করেছেন সবকিছু মুছে যাবে.</string> 
+    <string name="course_context_delete_confirm">আপনি কি নিশ্চিত যে আপনি এই কোর্সটি মুছে ফেলতে চান? এতে আপনার ফোন থেকে  সম্পূর্ণভাবেকোর্সটি মুছে যাবে।</string>
+
+    <string name="no_courses">বর্তমানে কোনো কোর্স ইনস্টল করা নেই</string>
+    <string name="more_courses">আরো  কোর্স ডাউনলোড করুন</string>
+
+    <string name="prefCurrentVersion">বর্তমান সংস্করণ: %1$s</string>
+    <string name="prefAdvanced"> অ্যাডভান্স সেটিংস</string>
+    <string name="prefBackgroundDataConnect">ব্যাকগ্রাউন্ড কার্যক্রম এর ট্র্যাকার</string>
+    <string name="prefBackgroundDataConnect_summary">এই অ্যাপ্লিকেশনটি চালু না থাকলেও  কার্যক্রম এর লগ পাঠান</string>
+    <string name="prefContentLanguage">ভাষা নির্বাচন করুন</string>
+    <string name="prefInterfaceLanguage">ভাষা নির্বাচন </string>
+    <string name="prefHighlightCompleted">সম্পন্ন কার্যক্রম হাইলাইট করুন</string>
+    <string name="prefServer">সার্ভার</string>
+    <string name="prefServer_notChecked">পরীক্ষিত নয় </string>
+    <string name="prefServer_errorTitle">বৈধ নয় </string>
+    <string name="prefServer_errorDescription">অনুগ্রহ করে নূরা একাডেমী এর সার্ভার এন্ড পয়েন্ট এর জন্য সঠিক URL  প্রবেশ করান </string>
+    <string name="prefServerTimeoutConnection">সংযোগের সময় শেষ </string>
+    <string name="prefServerTimeoutResponse">উত্তর দেবার সময় শেষ</string>
+    <string name="prefServerIncompatible">অসঙ্গতিপূর্ণ সংস্করণ  (older)</string>
+    <string name="prefInt_errorTitle"> অকার্যকর মান </string>
+    <string name="prefInt_errorDescription">অনুগ্রহ করে,একটি বৈধ পূর্ণসংখ্যা প্রবেশ করুন</string>
+    <string name="prefShowCourseDescription">কোর্সের বিবরণ দেখুন</string>
+    <string name="prefShowProgressBar">অগ্রগতি দেখুন</string>
+    <string name="prefShowSectionNumbers">সেকশন নাম্বার দেখান </string>
+    <string name="prefTextSize">টেক্সট  এর সাইজ</string>
+    <string name="prefUser"> ব্যবহারকারীর নাম </string>
+    <string name="prefUserHint"> (শুধুমাত্র পড়ার জন্য)</string>
+    <string name="prefLogoutEnabled"> হোমপেজ থেকে লগআউট করুন</string>
+    <string name="prefDeleteCourseEnabled"> কোর্স সমূহ মুছে ফেলতে সক্ষম হোন </string>
+    <string name="prefDisableNotifications"> নোটিফিকেশন সমূহ নিষ্ক্রিয় করুন</string>
+    <string name="prefNotifications_title"> নোটিফিকেশন সমূহ</string>
+    <string name="prefSecurity_title">নিরাপত্তা </string>
+    <string name="prefAdvanced_title"> অ্যাডভান্সড </string>
+    <string name="prefDisplay_title"> প্রদর্শন </string>
+    <string name="prefNotifications_description">সিস্টেম নোটিফিকেশন এবং অ্যাপ এর মধ্যকার গেমিফিকেশনের বার্তা  </string>
+    <string name="prefSecurity_description">বিশেষ কার্যক্রম এর প্রশাসনিক সুরক্ষা এবং স্ক্রিন থেকে নির্দিষ্ট কার্যকারিতা সক্ষম/নিষ্ক্রিয় করা </string>
+    <string name="prefAdvanced_description">আরো উন্নত/প্রযুক্তিগত সেটিংস</string>
+    <string name="prefDisplay_description">কোর্স এবং বিষয়বস্তু কিভাবে প্রদর্শিত হয় তা নিয়ন্ত্রণ করুন</string>
+
+    <string name="prefAdminProtection">পাসওয়ার্ড দিয়ে প্রশাসনিক কার্যক্রম সুরক্ষিত করুন</string>
+    <string name="prefAdminPassword"> প্রশাসনিক পাসওয়ার্ড পরিবর্তন করুন </string>
+    <string name="prefRemoteAdminEnabled"> ডিভাইসের রিমোট অপারেশন সচল করুন </string>
+    <string name="prefSectionSystemNotifs"> সিস্টেম নোটিফিকেশন </string>
+    <string name="prefSectionGamification"> গেমিফিকেশনের বার্তা </string>
+    <string name="prefShowGamificationEvents"> গেমিফিকেশনের দেখুন </string>
+    <string name="prefDownloadEnabled"> হোমপেজ থেকে কোর্সটি ডাউনলোড করুন </string>
+    <string name="prefChangeLanguageEnabled"> হোমপেজ থেকে সক্ষমভাবে ভাষা পরিবর্তন করুন </string>
+    <string name="prefStartCourseIndexCollapsed"> বিভাগগুলো বন্ধ করে কোর্সের সূচী শুরু করুন </string>
+    <string name="prefAnimationTypeGamificationPoints"> গেমিফিকেশন পয়েন্টস এর অ্যানিমেশনের ধরণ </string>
+    <string name="prefGamificationPointsViewTypeFullAnimationSound"> শব্দ সহ  সম্পূর্ণ "অ্যানিমেশন </string>
+    <string name="prefGamificationPointsViewTypeFullAnimation"> সম্পূর্ণ "অ্যানিমেশন" </string>
+    <string name="prefGamificationPointsViewTypeSimpleAnimation"> সাধারণ "অ্যানিমেশন" </string>
+    <string name="prefGamificationPointsViewTypeNone">কোনোটা না </string>
+    <string name="prefDurationAnimationTypeGamificationPointsView"> অ্যানিমেশনের সময়কাল  </string>
+    <string name="prefDurationAnimation_summary"> গ্যামিফিকেশন পয়েন্ট ইভেন্ট অ্যানিমেশন - পর্দায়/স্ক্রিন এ বিদ্যমান থাকার সময়  (সেকেন্ডে এ ) </string>
+
+    <string name="prefSectionReminder"> মনে রাখবেন,কোর্সটি সম্পূর্ণভাবে সম্পূর্ণ হয় নাই </string>
+    <string name="prefCoursesReminderEnabled"> নোটিফিকেশন চালু করুন </string>
+    <string name="prefCoursesReminderIntervalTitle"> মনে রাখবেন, বিরতি</string>
+    <string name="prefCoursesReminderDaysTitle"> মনে রাখবেন, দিন </string>
+    <string name="prefCoursesReminderTimeTitle"> মনে রাখবেন, সময় </string>
+    
+    <!-- Strings relative to Storage, সংগ্রহস্থলের সম্পর্কিত -->
+    <string name="prefStorageLocation"> সংগ্রহস্থলের অবস্থান </string>
+    <string name="prefStorageOptionInternal"> বিরতি </string>
+    <string name="prefStorageOptionExternal"> বাহির </string>
+    <string name="moving_storage_location"> ফাইলগুলিকে নতুন সংগ্রহস্থলে সরানো হচ্ছে…</string>
+    <string name="move_storage_completed"> সংগ্রহস্থলে সরানো সম্পূর্ণ হয়েছে</string>
+    <string name="storageNonRemovable"> সংগ্রহস্থলে সরানো সম্পূর্ণ হয় নাই </string>
+    <string name="storageRemovable"> SD কার্ডটি বের করুন</string>
+    <string name="storageAccessNotGranted">SD কার্ডের   প্রবেশ অনুমোদন করা হয়নি </string> 
+    <string name="storageAccess_help1">যেহেতু অ্যান্ড্রয়েড 5 (ললিপপ)এ এক্সটার্নাল SD কার্ডে লেখার জন্য একটি নতুন অফিসিয়াল উপায় রয়েছে.অ্যাপ্লিকেশানগুলিকে অবশ্যই ব্যবহারকারীকে এসডি কার্ডের একটি ফোল্ডারে লেখার অ্যাক্সেস দেওয়ার জন্য জিজ্ঞাসা করতে হবে। একটি সিস্টেম ফোল্ডার পছন্দ করার ডায়ালগ খুলবে এবং আপনাকে সেখান থেকে এসডি কার্ড নির্বাচন করতে হবে।</string>
+    <string name="storageAccess_help2">যদি বাম দিকের ড্রয়ারে ডায়লগ খালি দেখায়, তাহলে আপনাকে প্রথমে মেনুতে যেতে হবে এবং সেখান থেকে এসডি কার্ড শো করতে হবে।</string>
+    <string name="storageAccess_help3">তারপর বাম দিকের প্রদর্শিত লিস্ট থেকে SD কার্ডে ট্যাপ করুন ফোল্ডারের ভেতরে দেখার জন্য। এখানে আপনি ইন্টার্নাল এবং SD কার্ড উভয় স্টোরেজ দেখতে পাবেন.আপনি এসডি কার্ড যেমনটা এখানে দেখছেন তার থেকে ভিন্ন নামেও দেখতে পারেন, উদাহরন স্বরুপ \"Kingston\"। এটি কার্ডের তথাকথিত ডিস্ক লেভেল।</string>
+    <string name="storageAccess_help4">তারপর কার্ড নির্বাচন করুন। নিচের দিকের কোন সাব-ফোল্ডারে যাবেন না। আপনাকে অবশ্যই SD কার্ডের সবার উপরের ফোল্ডারটি সিলেক্ট করতে হবে। এটা গুরুত্বপূর্ণ। </string>
+    <string name="storageAccess_help5">SDকার্ডে\"Select SD card\"বাটনে ট্যাপ করার পরে  আপনাকে অ্যাপে ফিরে যেতে হবে। অ্যাপটি ডাবল চেক করে নিশ্চিত করবে  যে SD কার্ডের সঠিক ফোল্ডারটি সিলেক্ট হয়েছে এবং কাজ করছে।</string>
+
+    <string name="notification_course_update_title">নতুন কোর্স আপডেট</string>
+    <string name="notification_course_update_text">আপনার  কোর্সের আপডেট পাওয়া যাচ্ছে।</string>
+
+    <string name="notification_course_download_title">কোর্স ডাউনলোড</string>
+    <string name="notification_course_download_text">ডাউনলোডের জন্য কোর্স পাওয়া যাচ্ছে।</string>
+
+    <string name="title_login">Login লগ ইন</string>
+    <string name="login_username_title">ব্যবহারকারীর নাম </string>
+    <string name="login_password_title"> পাসওয়ার্ড</string>
+    <string name="title_register"> নিবন্ধন</string>
+
+    <string name="register_form_username_title"> ব্যবহারকারীর নাম </string>
+    <string name="register_form_email_title">ইমেইল এড্রেস</string>
+    <string name="register_form_firstname_title">নামের প্রথম অংশ</string>
+    <string name="register_form_jobtitle_title">পদবী </string>
+    <string name="register_form_lastname_title">নামের শেষ অংশ</string>
+    <string name="register_form_organisation_title"> অর্গানাইজেশন </string>
+    <string name="register_form_password_title">পাসওয়ার্ড</string>
+    <string name="register_form_password_again_title"> পাসওয়ার্ড (পুনরায়)</string>
+    <string name="register_form_phoneno_title">  ফোন নাম্বার</string>
+    <string name="register_btn_text">নিবন্ধন</string>
+
+    <string name="reset_password_field"> ব্যবহারকারীর নাম অথবা ইমেইল</string>
+    <string name="reset_password_description">অনুগ্রহ করে নিচে আপনার ব্যবহৃত নাম অথবা ইমেইল এড্রেস দিন এবংপাসওয়ার্ড পুনরায় সেট করার জন্য।</string>
+ আপনার ইমেইলে একটি লিঙ্ক পাঠানো হবে 
+    <string name="remember_username_description">অনুগ্রহ করে নিচে আপনার ইমেইল এড্রেস দিন এবং আপনার ইমেইলের মাধ্যমে ব্যবহৃত নাম স্মরণ করিয়ে দেয়া হবে।</string>
+    <string name="yes">হ্যাঁ</string>
+    <string name="no">না</string>
+    <string name="close">বন্ধ</string>
+    <string name="error">ত্রুটি</string>
+    <string name="info">তথ্য</string>
+    <string name="warning">সতর্কতা</string>
+    <string name="loading">লোড হচ্ছে</string>
+    <string name="ok">ঠিক আছে</string>
+    <string name="cancel">বাতিল</string>
+    <string name="logout">লগ আউট</string>
+    <string name="feedback"> প্রতিক্রিয়া </string>
+    <string name="download"> ডাউনলোড করুন </string>
+    <string name="downloaded"> ডাউনলোড হয়েছে </string>
+    <string name="open"> খুলুন </string>
+    <string name="storage_default"> ডিফল্ট </string>
+
+    <string name="alert_pretest">প্রি-টেস্ট</string>
+    <string name="alert_pretest_summary">এই কোর্সে একটি প্রি-টেস্ট রয়েছে যেটি আপনাকে পূর্ণ কোর্সে যাবার আগে সম্পন্ন করতে হবে।</string>
+
+    <string name="tag_label">%1$s (%2$d)</string>
+    <string name="alt_activity_icon">এক্টিভিটি আইকন</string>
+
+    <string name="publisher"> প্রকাশক:</string>
+    <string name="update">আপডেট</string>
+    <string name="installed">ইনস্টল করা হয়েছে</string>
+    <string name="install">ইনস্টল</string>
+    <string name="courses_install_pending">নতুন কোর্স আছে এখনো ইনস্টল করা হয়নি।</string>
+
+    <string name="download_starting">ডাউনলোড শুরু হচ্ছে</string>
+    <string name="downloading">ডাউনলোড হচ্ছে </string>
+    <string name="download_complete">ডাউনলোড সম্পূর্ণ হয়েছে</string>
+
+    <string name="updating">আপডেট করা হচ্ছে </string>
+
+    <string name="installing_course">ইনস্টল করা হচ্ছে </string>
+    <string name="install_complete">ইনস্টলেশন সম্পূর্ণ হয়েছে</string>
+
+    <string name="install_course_complete">%1$s: ইনস্টল করা হয়েছে</string>
+
+    <string name="info_scan_media_start">মিডিয়ার জন্য স্ক্যান করা হচ্ছে</string>
+    <string name="info_scan_media_checking"> চেক করা হচ্ছে</string>
+    <string name="info_scan_media_missing">আপনার কোর্স এর জন্য কিছু মিডিয়া ফাইল খুঁজে পাওয়া যাচ্ছেনা </string>
+    <string name="info_scan_course_media_missing"> আপনার কোর্স এর জন্য কিছু মিডিয়া ফাইল খুঁজে পাওয়া যাচ্ছেনা </string>
+
+    <string name="info_upgrading">আপগ্রেড করা হচ্ছে </string>
+    <string name="course_updating">কোর্সের কার্যকলাপ আপডেট করা হচ্ছে…</string>
+    <string name="course_updating_success">\'%1$s\': কোর্সেরকার্যকলাপ সফলভাবে আপডেট করা হয়েছে।</string>
+    <string name="course_updating_error">\'%1$s\': কোর্স আপডেট করার সময় ত্রুটি</string>
+    <string name="course_deleting">কোর্স মুছে ফেলা হচ্ছে </string>
+    <string name="course_deleting_success">কোর্স সফলভাবে মুছে ফেলা হয়েছে </string>
+    <string name="course_deleting_error">কোর্স মোছার সময় ত্রুটি</string>
+    <string name="info.startup.preloaded_accounts"> নতুন ব্যবহারকারী(দের) প্রিলোড করা হয়েছে।</string>
+
+    <string name="loading_courses"> কোর্স লোড হচ্ছে </string>
+    <string name="loading_points"> লোডিং পয়েন্ট </string>
+
+    <string name="badges.loading"> ব্যাজ লোড হচ্ছে </string>
+    <string name="badges.empty_state"> আপনার কাছে এখনো কোনো ব্যাজ নেই। আপনার প্রথম ব্যাজ অর্জন করতে একটি সম্পূর্ণ কোর্স সম্পূর্ণ করুন </string>
+    <string name="badges.award_method.criteria"> ব্যাজ পুরস্কারের মানদণ্ড </string>
+    <string name="badges.award_method.final_quiz"> শুধুমাত্র চূড়ান্ত কুইজ সম্পন্ন করা এবং পাস করা প্রয়োজন </string>
+    <string name="badges.award_method.all_quizzes_plus_percent"> সমস্ত কুইজ সম্পূর্ণ এবং পাস করা প্রয়োজন এবং অন্যান্য সমস্ত কার্যকলাপ সম্পন্ন করা হয়েছে।</string>
+    <string name="badges.award_method.all_quizzes"> সমস্ত কুইজ সম্পূর্ণ এবং পাস করা প্রয়োজন</string>
+    <string name="badges.award_method.all_activities"> সমস্ত কুইজ পাস করা এবং সমস্ত মিডিয়া দেখা সহ সমস্ত কার্যক্রম অবশ্যই সম্পন্ন করতে হবে</string>
+
+    <string name="scan_media_download_button"> ডাউনলোড করুন </string>
+    <string name="success_media_download">মিডিয়া ফাইল: \'%1$s\' সফলভাবে ডাউনলোড হয়েছে।</string>
+    <string name="media_file_size">%1$.1fMb</string>
+    <string name="missing_media_download_selected">ডাউনলোড বাছাই হয়েছে</string>
+    <string name="missing_media_stop_selected">বাছাই বন্ধ করুন</string>
+    <string name="missing_media_unselect_all">সবগুলোকে বাদ দিন</string>
+    <string name="notification_media_title">&appName;: মিডিয়া ব্যবস্থাপনা</string>
+    <string name="notification_media_subject">সমস্ত মিডিয়া ফাইল সফলভাবে ডাউনলোড করা হয়েছে।</string>
+
+    <string name="error_connection">সার্ভারের সাথে সংযোগে ত্রুটি। দয়া করে নিশ্চিত করুন যে আপনার সক্রিয় ইন্টারনেট সংযোগ রয়েছে এবং আবার চেষ্টা করুন।</string>
+
+    <string name="error_connection_required">এই পেজ এ প্রবেশ করার জন্য আপনার ইন্টারনেট সংযোগ সক্রিয় থাকা প্রয়োজন .দয়া করে আপনার মোবাইল এর ওয়াই ফাই অথবা মোবাইল এর ইন্টারনেট সংযোগ অন করুন এবং আবার চেষ্টা করুন </string>
+    <string name="error_connection_needed"> এই প্রক্রিয়া সম্পন্ন করার জন্য আপনার ইন্টারনেট সংযোগ সক্রিয় থাকা প্রয়োজন .দয়া করে আবার চেষ্টা করুন যখন আপনার ইন্টারনেট সংযোগ সক্রিয় থাকবে </string>
+    <string name="error_connection_ssl">Error connecting to server due to SSL problems. সঞ্চালকের নাম এবং অ্যাপ এর নাম আছে ,সার্ভার এর সেটিংস সঠিক আছে কিনা দেখে নিন . দয়া করে নিশ্চিত করুন আপনার মোবাইল এ - দিন এবং সময় সঠিক আছে  কিনা নিশ্চিত করুন </string>
+    <string name="error_connection_timeout">Timeout error connecting to server. আপনার মোবাইল এর ইন্টারনেট সংযোগ স্থিতিশীল আছে কিনা দেখে নিন অংবং আবার চেষ্টা করুন </string>
+    <string name="error_installing_course">%1$s: ইন্সটল অথবা স্থাপন করতে অপারগতা </string>
+    <string name="error_latest_already_installed">%1$s: সর্বশেষ সংস্করণটি ইতোমধ্যে ইনস্টল করা আছে </string>
+    <string name="error_login">ব্যবহারকারীর নাম/পাসওয়ার্ড অকার্যকর হলে ,দয়া করে আবার চেষ্টা করুন। </string>
+    <string name="error_media_app_not_found">ভিডিও চালানোর জন্য যে মিডিয়া প্লেয়ারের সাহায্যের প্রয়োজন আপনার  মোবাইল এ সেটা প্রদর্শিত হচ্ছেনা </string>
+    <string name="error_no_username">দয়া করে আপনার নাম  নিবন্ধন করুন /টাইপ করুন  </string>
+    <string name="error_processing_response">প্রতিক্রিয়া প্রক্রিয়াকরণে ত্রুটি </string>
+    <string name="error_quiz_no_questions">এই কুইজ এ আর কোনো প্রশ্ন নেই </string>
+    <string name="error_register_no_email">দয়া করে আপনার ইমেইল এড্রেসটি টাইপ করুন  </string>
+    <string name="error_register_password">আপনার পাসওয়ার্ডটি অন্তত কিছু সংখ্যা অথবা অক্ষর এর হতে হবে </string>
+    <string name="error_register_password_no_match">আপনার প্রদত্ত পাসোয়ার্ডটি মিলছেনা </string>
+    <string name="error_register_no_firstname">আপনার নাম এর প্রথম অংশ টাইপ করুন </string>
+    <string name="error_register_no_lastname"> আপনার নাম এর শেষ  অংশ টাইপ করুন </string>
+    <string name="error_register_no_phoneno">আপনার ফোন নম্বরটি টাইপ করুন </string>
+    <string name="error_register_no_username">দয়া করে ব্যবহারকারীর নাম টাইপ করুন </string>
+    <string name="error_register_username_spaces">আপনার প্রদত্ত ব্যবহারকারীর নামের মাঝে স্পেস দেয়া যাবেনা </string>
+    <string name="error_register_email">ইমেইল এড্রেস সঠিক নয় </string>
+    <string name="error_resource_app_not_found">আপনার \'%1$s\'এই ফাইলটি খোলার জন্য এই অ্যাপ নেই। এই ধরণের ফাইল খোলার জন্য অ্যাপটি  ইনস্টল করুন  </string>
+    <string name="external_resource_install_app">অ্যাপটি  ইনস্টল করুন </string>
+    <string name="error_resource_not_found">File: \'%1$s\' খুঁজে পাওয়া যাচ্ছেনা </string>
+    <string name="error_preloading_accounts">CSV ফাইল থেকে  একাউন্ট প্রি-লোডিং এ ত্রুটি </string>
+    <string name="error_reset_password"> ব্যবহারকারীর নাম এবং ইমেইল খুঁজে পাওয়া যাচ্ছেনা ,দয়া করে আবার চেষ্টা করুন। </string>
+    <string name="error_remember_username">ইমেইল খুঁজে পাওয়া যাচ্ছেনা ,দয়া করে আবার চেষ্টা করুন</string>
+    <string name="no_title_set">কোনো শিরোনাম স্থাপন করা হয়নি </string>
+    <string name="error_insufficient_storage_available">জায়গা অপর্যাপ্ত </string>
+    <string name="error_sdcard">আপনার SD কার্ডটি পাওয়া যাচ্ছেনা। দয়া করে যখন SD কার্ডটি পাওয়া যাবে তখন অ্যাপটি পুনরায় চালু করুন \nThe app will now close.</string>
+    <string name="error_media_not_found">Media file: \'%1$s\'মিডিয়া ফাইল পাওয়া যাচ্ছেনা .</string>
+    <string name="error_media_unsupported">\'%1$s\' মিডিয়া ফাইলকে  সমর্থন করছেনা </string>
+    <string name="error_download_failure">ফাইলটি ডাউনলোড করুন </string>
+    <string name="error_update_failure">আপডেট সফল হয়নি </string>
+    <string name="error_install_failure">ইনস্টল সফল হয়নি </string> 
+    <string name="error_media_download">মিডিয়া ডাউনলোড এ ত্রুটি,দয়া করে পুনরায় চেষ্টা করুনError trying to download media, please try again later</string>
+    <string name="error_reading_xml">কোর্স লোড করার চেষ্টার ত্রুটি ঘটেছে .কোর্সটি পুনরায় ইনস্টল করুন .</string>
+    <string name="error_tts_start"> টেক্সট টু স্পীচ অপশন সফল হয়নি .আপনার ফোনটি চেক করে নিশ্চিত করুন টেক্সট টু স্পীচ ইনস্টল হয়েছে এবং সচল হয়েছে  </string>
+    <string name="warning_wifi_required">মিডিয়া ফাইল ডাউনলোড করতে হলে আপনার  অবশ্যই ওয়াই ফাই সংযোগ থাকতে হবে. আপনার মোবাইল এ মিডিয়া ফাইল ডাউনলোড করার জন্য ওয়াই ফাই সংযোগ এ যুক্ত হোন ,অথবা কম্পিউটার এর মাধ্যমে  ফাইল ডাউনলোড করে নিন </string>
+    <string name="warning_delete_disabled">দুঃখিত ,কোর্সটি মুছে ফেলার অপশন নিষ্ক্রিয় আছে।  কোর্সগুলো মুছে ফেলার অনুমতি দেবার জন্য আপনার ফোনের সেটিংস আপডেট করুন </string>
+    <string name="login_process">লগ-ইন হচ্ছে </string>
+    <string name="login_complete">লগ-ইন হয়েছে </string>
+    <string name="logout_confirm">আপনি কি লগ-আউট করার জন্য নিশ্চিত </string>
+    <string name="register_alert_title">রেজিস্টার  </string>
+    <string name="register_process">রেজিস্টার হচ্ছে </string>
+    <string name="register_complete">সফলভাবে রেজিস্টার হয়েছে </string>
+
+    <string name="reset_password">পাসওয়ার্ডটি পুনরায় সেট করুন </string>
+    <string name="reset_process">পাসওয়ার্ডটি পুনরায় সেট হচ্ছে …</string>
+    <string name="reset_password_complete">আপনার পাসওয়ার্ডটি পুনরায় সেট হয়নি, নতুন পাসওয়ার্ড এর  জন্য দয়া করে আপনার ইমেইল চেক করুন </string>
+
+    <string name="remember_username_complete">আপনার দেয়া ব্যবহারকারী নাম আপনার ইমেইল এ পাঠানো হয়েছে </string>
+
+    <string name="change_content_language">বিষয়বস্তুর ভাষা পরিবর্তন করুন </string>
+
+    <string name="course_draft">খসড়া সংস্করণ </string>
+
+    <string name="search.activity_title">অনুসন্ধান করুন </string>
+    <string name="search.result_summary">%1$d ফলাফল </string>
+    <string name="search.message.searching">অনুসন্ধান চলছে </string>
+    <string name="search.message.no_results">\"%1$s\" এর জন্য কোনো ফলাফল পাওয়া যায়নি</string>
+    <string name="search.message.fetching">ফলাফল আনা হচ্ছে </string>
+    <string name="submit_stats_btn_text">এখনই পাঠান </string>
+
+    <string name="media_player_description">নুরা একাডেমি;মিডিয়া প্লেয়ার</string>
+
+    <string name="upgradev49_1">ফাইলগুলো একটি নতুন জায়গায় কপি করা হচ্ছে ,এর জন্য কিছুক্ষন সময় লাগতে পারে ,দয়া করে ধর্য্য ধরুন </string>
+    <string name="loading_course">কোর্স লোড হচ্ছে </string>
+    <string name="scorecard_quizzes_title">কুইজ</string>
+    <string name="scorecard_quizzes_highlight_pretest">প্রি-টেস্ট </string>
+    <string name="scorecard_quizzes_highlight_attempted">প্রচেষ্টা </string>
+    <string name="scorecard_quizzes_highlight_passed">পাস </string> 
+    <string name="scorecard_activities_completed">কার্যক্রম সম্পন্ন </string>
+    <string name="scorecard_activities_total">মোট </string>
+
+    <string name="admin_password_required">এই প্রচেষ্টাটি শুধুমাত্র অ্যাডমিন এর ব্যবহারের জন্য সংরক্ষিত ,দয়া করে অ্যাডমিন এর পাসওয়ার্ড দিয়ে চালিয়ে যান </string>
+    <string name="admin_password_error_incorrect_password">ভুল অ্যাডমিন পাসওয়ার্ড ,চেষ্টা করুন </string>
+    <string name="admin_password_newpassword_dialog_title"> অ্যাডমিন পাসওয়ার্ড </string>
+    <string name="admin_password_newpassword_dialog_message">দয়া করে অ্যাডমিন এর পাসওয়ার্ড দিন</string>
+
+    <string name="notification.remote_admin.title">এবং অ্যাপ এর  নাম , দূরবর্তী প্রশাসন </string>
+    <string name="notification.remote_admin.camera_disabled">দূরবর্তীভাবে  ডিভাইস এর ক্যামেরা অক্ষম করা হলো </string>
+    <string name="notification.remote_admin.camera_enabled">দূরবর্তীভাবে  ডিভাইস এর ক্যামেরা সক্ষম করা হলো </string>
+
+    <string name="sequencing.dialog_title">সক্রিয়ভাবে তালাবদ্ধ </string>
+    <string name="sequencing.section.message">এটা আপনার কাছে সহজলভ্য হবার আগেই এই বিভাগের পূর্ববর্তী কার্যক্রম সম্পন্ন করতে হবে .</string>
+    <string name="sequencing.course.message">এটা আপনার কাছে সহজলভ্য হবার আগেই এই কোর্সের পূর্ববর্তী কার্যক্রম সম্পন্ন করতে হবে</string>
+    <string name="empty_state_courses">আপনার কাছে এই সার্ভার এ অন্য কোনো কোর্স বর্তমানে সহজলভ্য নেই </string>
+    <string name="empty_state_media">দারুন ! আপনার কোর্সের জন্য সমস্ত মিডিয়া বিষয়বস্তু আছে যা আপনার ডিভাইসে ডাউনলোড করা হয়েছে </string>
+    <string name="empty_state_scorecard">এখন পযন্ত আপনাকে আর কোনো কোর্স ইনস্টল করতে হবেনা. একবার ইনস্টল করার পর এখন আপনি এখানে আপনার অগ্রগতি দেখতে পারবেন</string>
+
+    <string name="permissions.title">এবং অ্যাপ এর  নাম ,পরবর্তী কার্যক্রম সঠিকভাবে পরিচালনা করার জন্য কিছু অনুমুতির প্রয়োজন আছে </string>
+    <string name="permissions.storage.title">পড়ুন এবং SD কার্ড এর বিষয়বস্তু সংশোধন করুন </string>
+    <string name="permissions.simple.title">অনুমুতির প্রয়োজন</string>
+    <string name="permissions.denied">অনুমুতি অস্বীকার করা হলো</string>
+    <string name="permissions.storage.description">এবং অ্যাপ এর  নাম ; কোর্সের জন্য  ডাউনলোড করা মিডিয়া বিষয়বস্তু সংরক্ষিত রাখার জন্য কার্ড এ প্রবেশের প্রয়োজন </string>
+    <string name="permissions.phone_state.title">আপনার ফোন এর বর্তমান অবস্থা পড়ুন এবং চিহ্নিত করুন </string>
+    <string name="permissions.phone_state.description">এবং অ্যাপ এর  নাম, আপনার ডিভাইস এর মডেল এবং এন্ড্রইড ভার্সন এর তথ্যের জন্য আপনার ফোন এর পরিচয় দেয়া প্রয়োজন</string>
+    <string name="permissions.allow_btn_text">অনুমুতি প্রদান করুন  </string>
+    <string name="permissions.not_askable.message">কার্যক্রম পরিচালনা করার জন্য  অ্যাপ এর অনুমুতি নেই ,দয়া করে সেটিংস এ যান | অ্যাপ| এবং অ্যাপ এর  নাম
+        | প্রবেশ করার অনুমুতি প্রদান করুন </string>
+    <string name="permissions.not_askable.info">আপনি এই মেসেজ দেখতে পাচ্ছেন কারণ অনুমুতি দেবার আগে খুব দ্রুত ছিল এবং আপনি অস্বীকার করেছেন এবং চেক করেছেন \"আর জিজ্ঞাসা করবেন না </string>
+    <string name="permissions.bluetooth.message">ব্লটুথ ডিভাইসকে স্ক্যান করার জন্য এই অ্যাপ এর আরো কিছু আনুষাঙ্গিক অনুমুতি দরকার .</string>
+    <string name="error_apikey_expired">আপনার API key এর মেয়াদ শেষ, দয়া করে পুনরায় লগ ইন করুন</string>
+    <string name="app_settings">অ্যাপ এর সেটিংস</string>
+
+     <string name="privacy.title">গোপনীয়তা এবং আপনার ডেটা</string>
+    <string name="privacy.policy_info">গোপনীয়তা নীতি</string>
+    <string name="privacy.terms">পরিষেবা শর্তাবলী</string>
+    <string name="privacy.data_why">আপনার ডেটা কীভাবে ব্যবহার করা হয়?</string>
+    <string name="privacy.data_what">কী ধরনের ডেটা সংগ্রহ করা হয়?</string>
+
+    <string name="privacy.section.privacy">গোপনীয়তা এবং ডেটা ব্যবহার</string>
+    <string name="privacy.section.analytics">বিশ্লেষণ পছন্দসমূহ</string>
+    <string name="privacy.section.manage_data">আপনার ডেটা পরিচালনা করুন</string>
+
+    <string name="privacy.download_data.info">আপনার নূরা একাডেমীতে বিষয়বস্তুর একটি কপি এক্সপোর্ট করুন; যাতে এটি ব্যাকআপ করা যায় বা পরীক্ষা করা যায়।</string>
+    <string name="privacy.download_data.label">ডেটা ডাউনলোড করুন</string>
+    <string name="privacy.download_data.description">আপনি নূরা একাডেমী সার্ভারে আপনার ডেটা একটি পাঠযোগ্য ফরম্যাটে এই ডিভাইসে এক্সপোর্ট করতে পারেন। অনুগ্রহ করে আপনি কোন তথ্য ডাউনলোড করতে চান তা নির্বাচন করুন:</string>
+    <string name="privacy.download_data.profile">প্রোফাইল ডেটা</string>
+    <string name="privacy.download_data.course">কোর্স কার্যক্রম</string>
+    <string name="privacy.download_data.quizzes">কুইজ এবং প্রতিক্রিয়া প্রচেষ্টা</string>
+    <string name="privacy.delete_account.info">আপনার অ্যাকাউন্ট এবং সমস্ত সংশ্লিষ্ট ডেটা নূরা একাডেমী থেকে সম্পূর্ণরূপে সরিয়ে ফেলুন; সার্ভার।</string>
+    <string name="privacy.delete_account.label">অ্যাকাউন্ট মুছে ফেলুন</string>
+    <string name="privacy.delete_account.explanation">আপনার অ্যাকাউন্ট মুছে ফেলা স্থায়ী, আপনার সমস্ত ডেটা মুছে ফেলা হবে। নূরা একাডেমী ব্যবহার করতে; পুনরায় আপনাকে একটি নতুন অ্যাকাউন্ট তৈরি করতে হবে। \n\nআপনার অ্যাকাউন্ট মুছে ফেলার নিশ্চিতকরণের জন্য নিচে আপনার পাসওয়ার্ড দিন।</string>
+
+    <string name="analytics.optin.title">বিশ্লেষণ পছন্দসমূহ</string>
+    <string name="analytics.optin.description">নূরা একাডেমী উন্নত করতে সহায়তা করার জন্য;, আপনি স্বয়ংক্রিয় বাগ রিপোর্ট এবং অতিরিক্ত বিশ্লেষণ পাঠাতে অপ্ট-ইন করতে পারেন। আপনি অ্যাপে যেকোন সময় এই সেটিংস পরিবর্তন করতে পারেন।</string>
+    <string name="privacy.optin.bugreport.switch">ক্র্যাশ রিপোর্ট পাঠানোর অনুমতি দিন</string>
+    <string name="privacy.optin.analytics.switch">ব্যবহার তথ্য পাঠানোর অনুমতি দিন</string>
+
+    <string name="open_digest.errors.invalid_param">\"ডাইজেস্ট\" প্যারামিটারটি ভুল কনফিগার করা হয়েছে বা অনুপস্থিত। অনুগ্রহ করে যাচাই করুন যে লিঙ্কটি বৈধ।</string>
+    <string name="open_digest.errors.not_logged_in">আপনি লগ ইন করেননি। অনুগ্রহ করে, লগ ইন করুন এবং লিঙ্কটি আবার খুলে দেখুন।</string>
+    <string name="open_digest.errors.activity_not_found">কার্যকলাপ পাওয়া যায়নি। আপনি কি নিশ্চিত যে আপনি কোর্সটি ইনস্টল করেছেন যেটিতে এই কার্যকলাপ রয়েছে?</string>
+    <string name="open_digest.errors.course_not_found">সার্ভারে কোর্সটি খুঁজে পাওয়া যায়নি। হয়তো এটি নেই অথবা আপনার এতে অ্যাক্সেস করার অনুমতি নেই।</string>
+    <string name="open_digest.errors.bad_request">সার্ভারে কোর্সটি খুঁজে পাওয়া যায়নি। হয়তো এটি নেই অথবা আপনার এতে অ্যাক্সেস করার অনুমতি নেই।</string>
+    <string name="open_digest.description">নূরা একাডেমী; নূরা একাডেমির URL ভিত্তিক নির্দিষ্ট ক্রিয়াকলাপ বা কোর্স খোলার কার্যকারিতা রয়েছে (উদাহরণস্বরূপ, একটি এসএমএস বা একটি বহিরাগত অ্যাপ থেকে খোলা)</string>
+    <string name="open_digest.course_not_installed">আপনার ডিভাইসে এই কোর্সটি ইনস্টল করা নেই। আপনি ডাউনলোড আইকনে ক্লিক করে এটি ইনস্টল করতে পারেন।</string>
+    <string name="open_digest.btn_action">কার্যক্রম খুলুন</string>
+    <string name="open_digest.activity_completed">কার্যক্রম সম্পন্ন হয়েছে</string>
+    <string name="open_digest.weblink_not_supported">ওয়েবলিঙ্ক সাপোর্ট করছে না</string>
+    <string name="open_digest.fetching_course_info">কোর্সের তথ্য আনা হচ্ছে…</string>
+    <string name="open_digest.go_to_course">কোর্সে যান</string>
+    <string name="open_digest.login_register">লগ ইন / রেজিস্টার</string>
+    <string name="open_digest.login_text">আপনি লগ ইন করেননি। চালিয়ে যেতে অনুগ্রহ করে লগ ইন / রেজিস্টার করুন।</string>
+
+    <string name="menu_sync">সিঙ্ক্রোনাইজ করুন</string>
+    <string name="title_sync">সিঙ্ক্রোনাইজ করুন</string>
+    <string name="export_activity.text">সর্বশেষ কার্যকলাপ এবং কুইজ ট্র্যাকারের তথ্য একটি বাহ্যিক ফাইলে এক্সপোর্ট করুন</string>
+    <string name="export_task_completed">এক্সপোর্ট সম্পন্ন হয়েছে</string>
+    <string name="export_task_completed_text"> \'%1$s\' নামে একটি ফাইল ডিভাইসের ফাইল সিস্টেমে রাখা হয়েছে</string>
+    <string name="exported_activities.title">কার্যক্রম এক্সপোর্ট করা ট্র্যাকার</string>
+    <string name="export_task_no_activities">এক্সপোর্ট  করার জন্য কোন নতুন কার্যক্রম বা কুইজ ছিল না।</string>
+    <string name="submit_trackers_success">ট্র্যাকারগুলো সফলভাবে সার্ভারে জমা হয়েছে।</string>
+
+    <!-- Strings for Bluetooth transfer -->
+    <string name="bt_not_enabled_leaving">ব্লটুথ সক্রিয় করা হয়নি</string>
+    <string name="paired_devices">জোড়া ডিভাইস সমূহ</string>
+    <string name="other_devices">অন্যান্য ডিভাইস সমূহ</string>
+    <string name="bluetooth.button_scan">স্ক্যান করুন</string>
+    <string name="bluetooth.none_paired">এখনো কোনো ডিভাইস জোড়া করা হয়নি</string>
+    <string name="bluetooth.scanning">স্ক্যান করা হচ্ছে…</string>
+    <string name="bluetooth.no_devices_found">কোনো ডিভাইস পাওয়া যায়নি</string>
+    <string name="bluetooth.no_device_connected">কোনো সংযুক্ত ডিভাইস নেই</string>
+    <string name="bluetooth.select_device">সংযোগ করতে ডিভাইস নির্বাচন করুন</string>
+    <string name="bluetooth.title_connecting">ডিভাইসে সংযোগ করা হচ্ছে…</string>
+    <string name="bluetooth.title_not_connected">সংযুক্ত নয়</string>
+    <string name="bluetooth.title_connected_to">সংযুক্ত</string>
+    <string name="course_transferring">কোর্স স্থানান্তর প্রক্রিয়াধীন…</string>
+    <string name="bluetooth.info_connect">স্থানান্তর শুরু করতে ব্লটুথ ব্যবহার করে অন্য ডিভাইসের সাথে সংযোগ করুন</string>
+    <string name="bluetooth.transferable_type">স্থানান্তরযোগ্য প্রকার</string>
+    <string name="bluetooth_device_scanning">নতুন ডিভাইসের জন্য স্ক্যান করা হচ্ছে…</string>
+    <string name="bluetooth_communication_closed">ব্লটুথ যোগাযোগ বন্ধ হয়ে গেছে</string>
+    <string name="bluetooth_transfer_failure">ব্লটুথ স্থানান্তর ব্যর্থ হয়েছে</string>
+    <string name="bluetooth.files_pending">%1$d অনিষ্পাদিত ফাইলসমূহ</string>
+    <string name="bluetooth_all_transfers_complete">সমস্ত অনিষ্পাদিত ব্লুটুথ স্থানান্তর সম্পন্ন হয়েছে</string>
+    <string name="bluetooth.transfer_complete">%1$s: স্থানান্তর সম্পন্ন হয়েছে</string>
+    <string name="bluetooth.btn_connect">সংযোগ করুন</string>
+    <string name="bluetooth.device_name">ডিভাইসের নাম:</string>
+    <string name="bluetooth.tab_course">কোর্স সমূহ</string>
+    <string name="bluetooth.tab_activitylog">কার্যক্রম লগ</string>
+    <string name="bluetooth.send_all">সব পাঠান</string>
+    <string name="bluetooth.btn_disconnect">সংযোগ বিচ্ছিন্ন করুন</string>
+    <string name="bluetooth.enable_discovery">অনুসন্ধান মোড সক্রিয় করুন</string>
+    <string name="bluetooth.discovery_already_enabled">ডিভাইসটি ইতিমধ্যে অনুসন্ধানযোগ্য</string>
+    <string name="bluetooth.discovery_fail">অনুসন্ধান মোড সক্রিয় করা যায়নি</string>
+    <string name="bluetooth.discovery_success">অনুসন্ধান মোড %1$d সেকেন্ডের জন্য সক্রিয় করা হয়েছে</string>
+
+
+    <!-- Strings for quiz attempts -->
+    <string name="quiz_attempts.title">কুইজ পরীক্ষার প্রচেষ্টা</string>
+    <string name="quiz_attempts.loading">কুইজ প্রচেষ্টার তথ্য লোড করা হচ্ছে…</string>
+    <string name="quiz_attempts.number">প্রচেষ্টা সংখ্যা</string>
+    <string name="quiz_attempts.best">সর্বোত্তম</string>
+    <string name="quiz_attempts.average">মাঝামাঝি ধরন</string>
+    <string name="quiz_attempts.empty_state">আপনি এখনও এই কুইজটি চেষ্টা করেননি।</string>
+    <string name="quiz_attempts.retake_quiz">এই কুইজটি পুনরায় নিন</string>
+    <string name="quiz_attempts.take_quiz">এই কুইজটি নিন</string>
+    <string name="quiz_attempts.unknown_course">অজানা/অপসারিত কোর্স</string>
+    <string name="quiz_attempts.unknown_quiz">অজানা/removed quiz</string>
+    <string name="quiz_attempts.global_empty_state">চেষ্টাটি সফল হয় নাই\nany quiz yet.</string>
+    <string name="quiz_attempt.title">এই কুইজটি নিন</string>
+    <string name="quiz_attempts.previous">পূর্ববর্তী চেষ্টা</string>
+    <string name="quiz_attempts.unlimited">সীমাহীন প্রচেষ্টা</string>
+    <string name="quiz_attempts.left">%1$d প্রচেষ্টা (%2$d left)</string>
+
+
+
+
+    <!-- Strings for point events -->
+   <string name="points_event_default">পয়েন্ট দেওয়া হয়েছে!</string>
+    <string name="points_event_activity_completed">কার্যকলাপ সম্পন্ন হয়েছে \'%1$s - %2$s\'</string>
+    <string name="points_event_media_played">মিডিয়া প্লে হয়েছে \'%1$s\'</string>
+    <string name="points_event_quiz_attempt">কুইজ প্রচেষ্টা \'%1$s - %2$s\'</string>
+    <string name="points_event_course_downloaded">কোর্স \'%1$s\' ডাউনলোড করা হয়েছে</string>
+    <string name="points_event_feedback_completed">প্রতিক্রিয়া \'%1$s - %2$s\' জমা দেওয়া হয়েছে৷</string>
+    <string name="tab_title_leaderboard">লিডারবোর্ড</string>
+    <string name="leaderboard_position">আপনার অবস্থান</string>
+    <string name="leaderboard_points">%1$s পয়েন্ট</string>
+
+
+     <string name="transfer_receiving_course">কোর্স ফাইল গ্রহণ করা হচ্ছে...</string>
+    <string name="sign_in_title">সাইন ইন করুন</string>
+    <string name="register_account_already">ইতিমধ্যে একটি অ্যাকাউন্ট আছে?</string>
+    <string name="login_dont_have_account">এখনও একটি অ্যাকাউন্ট নেই?</string>
+    <string name="offline_register_confirm">বিকল্পভাবে, আপনি অফলাইনে নিবন্ধন করতে পারেন এবং অ্যাপটি ব্যবহার করা শুরু করতে পারেন। তারপর, আপনাকে পরে আপনার ব্যবহারকারীর ডেটা জমা দিতে বা স্থানান্তর করতে হবে৷</string>
+    <string name="register_offline">অফলাইনে নিবন্ধন করুন</string>
+    <string name="field_required">এই ক্ষেত্র খালি করা যাবে না</string>
+    <string name="field_spaces_error">স্পেস ধারণ করা যাবে না</string>
+    <string name="permissions.location.title">অ্যাক্সেস অবস্থান</string>
+    <string name="permissions.location.description">নতুন অ্যান্ড্রয়েড ডিভাইসে, ব্লুটুথ ব্যবহার করে অন্যান্য ডিভাইসের সাথে পেয়ার করতে সক্ষম হওয়ার জন্য এই অনুমতি প্রয়োজন</string>
+    <string name="points">পয়েন্ট</string>
+    <string name="last_year">গত বছর</string>
+    <string name="last_month">গত মাসে</string>
+    <string name="last_week">গত সপ্তাহে</string>
+    <string name="no_points_data">কোন পয়েন্ট ডেটা নেই</string>
+    <string name="event_activity_completed">কার্যক্রম সম্পন্ন হয়েছে</string>
+    <string name="event_media_played">মিডিয়া খেলেছে</string>
+    <string name="event_media_watched">মিডিয়া দেখেছে</string>
+    <string name="event_course_downloaded">কোর্স ডাউনলোড করা হয়েছে</string>
+    <string name="event_quiz_attempt">কুইজ প্রচেষ্টা</string>
+    <string name="event_activity_all">সকল কার্যক্রম</string>
+
+
+    <string name="channel_notif_internal_name">অভ্যন্তরীণ বিজ্ঞপ্তি</string>
+    <string name="channel_notif_internal_description">এই চ্যানেলটি ব্লুটুথ স্থানান্তর, কোর্স ডাউনলোড বা  মতো অনেক প্রক্রিয়ায় দরকারী বিজ্ঞপ্তি দেখায়</string>
+
+
+    <string name="nav_home">হোম</string>
+    <string name="nav_scorecard">স্কোরকার্ড</string>
+    <string name="nav_points">পয়েন্ট</string>
+    <string name="edit_profile">প্রোফাইল সম্পাদনা করুন</string>
+
+
+    <string name="info_override_password">অ্যাডমিন পাসওয়ার্ড ওভাররাইডিং</string>
+    <string name="register_username_exists">ব্যবহারকারীর নাম ইতিমধ্যেই বিদ্যমান</string>
+    <string name="collapse_all_sections">সমস্ত বিভাগ বন্ধ করুন</string>
+    <string name="expand_all_sections">সমস্ত বিভাগ প্রসারিত করুন</string>
+
+    <string name="title_activitylog">কার্যকলাপ</string>
+    <string name="archived_activities">সংরক্ষণাগারভুক্ত (ইতিমধ্যে স্থানান্তরিত) ট্র্যাকার</string>
+    <string name="activitylog_delete">মুছে দিন</string>
+    <string name="activitylog_delete_confirm">আপনি কি এই কার্যকলাপ লগ ফাইল মুছে ফেলার বিষয়ে নিশ্চিত?</string>
+    <string name="activitylog_delete_failed">কার্যকলাপ লগ ফাইল মুছে ফেলা যায়নি</string>
+
+
+    <string name="title_activity_edit_profile">প্রোফাইল সম্পাদনা করুন</string>
+    <string name="option_available_online">এই বিকল্পটি শুধুমাত্র তখনই পাওয়া যায় যখন ডিভাইসটি ইন্টারনেটের সাথে সংযুক্ত থাকে</string>
+    <string name="save_profile">প্রোফাইল সংরক্ষণ করুন</string>
+    <string name="profile_updated_successfully">প্রোফাইল সফলভাবে আপডেট করা হয়েছে৷</string>
+    <string name="activitylog_submitted">সার্ভারে জমা দেওয়া হয়েছে</string>
+    <string name="activitylog_tosubmit">জমা দিতে</string>
+    <string name="activitylog_toexport">এক্সপোর্ট করতে</string>
+    <string name="activitylog_btn_submit">সার্ভারে জমা দিন</string>
+    <string name="activitylog_btn_export">এক্সপোর্ট কার্যক্রম</string>
+    <string name="videoplayer_play_again">শুরু করুন</string>
+    <string name="videoplayer_continue">অবশ্যই চালিয়ে যান</string>
+    <string name="options">অপশন</string>
+    <string name="quiz_loading_error">কুইজ লোড করার সময় অপ্রত্যাশিত ত্রুটি। হয়তো বিন্যাস ভুল বা পুরানো ছিল?</string>
+    <string name="error_register_username_length">ইউজারনেমে কমপক্ষে %d অক্ষর থাকতে হবে</string>
+    <string name="change_setting_apikey_warning">এটি ডিভাইসে ক্যাশে থাকা প্রতিটি ব্যবহারকারীর জন্য API কীগুলিকে বাতিল করে দেবে, তাই তাদের আবার লগইন করার জন্য একটি সক্রিয় ইন্টারনেট সংযোগের প্রয়োজন হবে৷</string>
+    <string name="change_setting_logout_warning">আপনি বর্তমানে লগ ইন করেছেন৷ আপনি যদি এই সেটিংটি পরিবর্তন করেন তবে আপনার সেশন শেষ হবে৷ আপনি কি নিশ্চিত?</string>
+    <string name="accept">গ্রহণ করুন</string>
+    <string name="user_not_logged_in">ব্যবহারকারী লগ ইন করেননি</string>
+
+    <string name="notification_courses_to_update_title">নতুন কোর্স আপডেট</string>
+    <plurals name="notification_courses_to_update_text">
+        <item quantity="one">আপডেট করার জন্য %d কোর্স প্রস্তুত আছে</item>
+        <item quantity="few">আপডেট করার জন্য %dটি কোর্স প্রস্তুত রয়েছে৷</item>
+        <item quantity="other">আপডেট করার জন্য %dটি কোর্স প্রস্তুত রয়েছে৷</item>
+    </plurals>
+
+
+    <string name="notification_new_courses_title">নতুন কোর্স সমূহ এভেলেবেল</string>
+    <plurals name="notification_new_courses_text">
+        <item quantity="one">এখানে %d নতুন কোর্স টি এভেলেবেল</item>
+        <item quantity="few">এখানে %d নতুন কোর্স সমূহ এভেলেবেল</item>
+        <item quantity="other">এখানে %d নতুন কোর্স সমূহ এভেলেবেল</item>
+    </plurals>
+    <string name="btn_continue">চালিয়ে যান</string>
+
+    <string name="course_deleted">কোর্স মুছে ফেলা হয়েছে</string>
+    <string name="course_deleted_dialog_message">ই কোর্সটি সার্ভার থেকে মুছে ফেলা হয়েছে এবং এটি আর অ্যাপে উপলব্ধ নেই৷\nআপনি কি এখন অ্যাপ থেকে সরাতে চান?</string>
+    <string name="course_update">কোর্স আপডেট</string>
+    <string name="course_update_dialog_message">এই কোর্সের জন্য একটি উপলব্ধ আপডেট আছে।\nআপনি কি এখন এটি আপডেট করতে চান?</string>
+
+    <string name="course_updates">কোর্স আপডেট</string>
+    <string name="new_courses">কোর্স আপডেট</string>
+    <string name="back">ফিরে</string>
+    <string name="continue_to_course">অবশ্যই চালিয়ে যান</string>
+    <string name="processing">প্রক্রিয়া করা হচ্ছে...</string>
+    <string name="user_data_download_success">আপনার ডেটা সফলভাবে ডাউনলোড করা হয়েছে৷\nআপনি এটি ডাউনলোড সিস্টেম ফোল্ডারে অ্যাক্সেস করতে পারেন৷</string>
+    <string name="open_download_folder">ডাউনলোড ফোল্ডার খুলুন</string>
+    <string name="error_download_failure_reason_format">ডাউনলোড ব্যর্থ হয়েছে । কারণ: %</string>
+    <string name="download_certificate">সার্টিফিকেট ডাউনলোড করুন</string>
+    <string name="storage_permission_not_granted">সংরক্ষণ করার কাজে অনুমতি দেওয়া হয়নি</string>
+    <string name="courses_reminder_notif_text">আপনি এখনও আপনার সমস্ত কোর্স সম্পূর্ণ করেননি৷\nআপনার কোর্সগুলিতে যান৷</string>
+    <string name="courses_reminder_notif_title">মনে রাখুন</string>
+    <string name="courses_reminder_settings">মনে রাখুন সেটিংস</string>
+    <string name="change_password">পাসওয়ার্ড পরিবর্তন করুন</string>
+    <string name="change_password_success">আপনার পাসওয়ার্ড সফলভাবে আপডেট করা হয়েছে</string>
+    <string name="change_password_intro">আপনার পাসওয়ার্ড পরিবর্তন করতে, অনুগ্রহ করে নিচে একটি নতুন পাসওয়ার্ড লিখুন:</string>
+
+    <string name="text_size_smallest">সবচেয়ে ছোট</string>
+    <string name="text_size_small">ছোট</string>
+    <string name="text_size_normal">স্বাভাবিক</string>
+    <string name="text_size_large">বড়</string>
+    <string name="text_size_largest">সবচেয়ে বড়</string>
+
+    <string name="interval_weekly">সাপ্তাহিক</string>
+    <string name="interval_daily">দৈনিক</string>
+
+    <string name="week_day_1">রবিবার</string>
+    <string name="week_day_2">সোমবার</string>
+    <string name="week_day_3">মঙ্গলবার</string>
+    <string name="week_day_4">বুধবার</string>
+    <string name="week_day_5">বৃহস্পতিবার</string>
+    <string name="week_day_6">শুক্রবার</string>
+    <string name="week_day_7">শনিবার</string>
+
+    <string name="warning_reminder_weekly_just_one_day">সাপ্তাহিক ব্যবধানের জন্য শুধুমাত্র একটি দিন সেট করতে হবে</string>
+    <string name="warning_reminder_at_least_one_day">আপনাকে অন্তত একটি দিন নির্ধারণ করতে হবে</string>
+
+    <string name="quiz_protected"> সুরক্ষিত কুইজ</string>
+    <string name="please_enter_quiz_password">অনুগ্রহ করে, এই কুইজ অ্যাক্সেস করতে পাসওয়ার্ড লিখুন</string>
+    <string name="invalid_password"> Invalid পাসওয়ার্ড</string>
+    <string name="pref_export_full_activity_title">সম্পূর্ণ  ডেটা কার্যকলাপ রপ্তানি করুন</string>
+    <string name="full_activity_exported_success">সম্পূর্ণ কার্যকলাপ সফলভাবে রপ্তানি হয়েছে।\n\nআপনি "শেয়ার" বোতামে ক্লিক করে এটিকে বহিরাগত অ্যাপগুলিতে পাঠাতে পারেন</string>
+    <string name="full_activity_export_path">\n\nPath: %s.</string>
+    <string name="share">শেয়ার করুন</string>
+    <string name="no_app_to_share">ত্রুটি. এই ফাইলটি শেয়ার করার জন্য কোনো ইনস্টল করা অ্যাপ নেই</string>
+    <string name="pref_flush_app_cache">অ্যাপ ক্যাশে ফ্লাশ করুন</string>
+    <string name="cache_flushed_successfuly">ক্যাশে সফলভাবে ফ্লাশ করা হয়েছে৷</string>
+
+    <string name="incorrect_password_topic">পাসওয়ার্ডটি ভুল, আবার চেষ্টা করুন </string>
+
+    <string name="password_needed">পাসওয়ার্ড প্রয়োজন</string>
+    <string name="password_needed_description">এই বিষয় পাসওয়ার্ড সুরক্ষিত.\n অনুগ্রহ করে বিষয়বস্তু অ্যাক্সেস করতে নীচের পাসওয়ার্ড লিখুন (আপনাকে শুধুমাত্র একবার এটি করতে হবে)।</string>
+    <string name="password_activity_title">কার্যক্রম সুরক্ষিত</string>
+    <string name="password_activity_description">এই কার্যকলাপ পাসওয়ার্ড সুরক্ষিত.\n অনুগ্রহ করে,এর বিষয়বস্তু অ্যাক্সেস করতে নিচের পাসওয়ার্ডটি প্রবেশ করান। </string>
+    <string name="password_activity_incorrect">পাসওয়ার্ডটি ভুল. Try again</string>
+    <string name="password_activity_submit">Access contents</string>
+    <string name="unlock_topic">Unlock topic</string>
+    <string name="staging_warning_msg">You are connected to a staging/development server.</string>
+
+    <!-- Status badges -->
+    <string name="status_draft">ড্রাফট</string>
+    <string name="status_new_download_disabled">নতুন ডাউনলোড নিষ্ক্রিয়</string>
+    <string name="status_archived">আর্কাইভ</string>
+    <string name="status_read_only">পড়ুন</string>
+    <string name="quiz">Quiz</string>
+    <string name="read_only_answer_unavailable_message">এই কোর্সটি এখন শুধুমাত্র পঠনযোগ্য তাই এই %s-এ অ্যাক্সেস আর উপলব্ধ নেই৷This course is now read-only so access to this %s is no longer available</string>
+    <string name="view_your_previous_attempts">আপনার পূর্ববর্তী প্রচেষ্টাগুলো দেখুন</string>
+    <string name="invalid_parameters">প্যারামিটারগুলো অ্কার্যকর </string>
+    <string name="source_dir_does_not_exist">কোনো উৎস ডিরেক্টরির অস্তিত্ব নেই </string>
+    <string name="source_file_does_not_exist">ফাইলটির কোন অস্তিত্ব নেই</string>
+    <string name="dest_dir_does_not_exist">কোনো গন্তব্য ডিরেক্টরি নেই/ </string>
+    <string name="pref_update_activity_on_login">লগইন করে কার্যক্রম আপডেট করুন</string>
+
+    <!-- Update activity on loginলগ-ইন -->
+    <string name="none">কিছুই না</string>
+    <string name="optional"> ঐচ্ছিকOptional</string>
+    <string name="force">জোরপূর্বক</string>
+    <string name="updating_course_activity">কোর্স কার্যক্রম আপডেট করা হচ্ছে: %s</string>
+    <string name="error_unable_retrieve_course_activity">ত্রুটি_কোর্স কার্যক্রম পুনরুদ্ধার করতে অক্ষম </string>
+    <string name="connection_unavailable_couse_activity">সংযোগ পাওয়া যাচ্ছে না_ কোর্স কার্যক্রম, কোর্স কার্যকলাপ পুনরুদ্ধার করতে অক্ষম</string>
+    <string name="try_again">আবার চেষ্টা করুন</string>
+    <string name="continue_anyway">চালিয়ে/এগিয়ে যান</string>
+    <string name="offline_user_not_found">Offline user not found.\আপনার ইন্টারনেট সংযোগ নেই তাই শুধুমাত্র লোকাল ব্যবহারকারীরা ব্যবহার করতে পারবেন।.</string>
+    <string name="offline_user_invalid_password">Invalid password.\অফলাইন ব্যবহারকারী_ অকার্যকর পাসওয়ার্ড।\nআপনার ইন্টারনেট সংযোগ নেই তাই শুধুমাত্র লোকাল ব্যবহারকারীরা ব্যবহার করতে পারবেন।.</string>
+    <string name="sdcard_not_available">SD কার্ড পাওয়া যায় নাই</string>
+    <string name="sdcard_not_available_message">SD কার্ড নেই_ বার্তা অ্যাপটি ব্যবহার চালিয়ে যেতে এসডি কার্ড প্রয়োজন। \nঅনুগ্রহ করে আপনার SD কার্ড পুনরায় প্রবেশ করান card.</string>
+    <string name="sdcard_not_available_change_settings">SD কার্ড পাওয়া যায় নাই৷ বাহ্যিক স্টোরেজে পরিবর্তন করা যাবে না</string>
+    <string name="close_app">অ্যাপসটি বন্ধ করুন</string>
+
+    <!-- Offline course import -->
+    <string name="title_offline_course_import"> অফলাইন কোর্স ইমপোর্ট</string>
+    <string name="offline_course_import.instructions">নির্দেশাবলী কোর্স ইমপোর্ট করতে, প্রথমে "ফাইল যোগ করুন" বোতামে ক্লিক করুন এবং আপনি ইমপোর্ট করতে চান এমন কোর্স এবং মিডিয়া ফাইলগুলির .zip ফাইলগুলি নির্বাচন করুন।\n\nতারপর, ফাইলগুলি তালিকায় উপস্থিত হওয়া পর্যন্ত অপেক্ষা করুন এবং "ইমপোর্ট করুন" বোতামে ক্লিক করুন।\"Import\" button.</string>
+    <string name="offline_course_import.add_files">ফাইল যোগ করুন</string>
+    <string name="offline_course_import.import">ইমপোর্ট</string>
+    <string name="offline_course_import.import_in_progress">কোর্সগুলো আনার প্রক্রিয়াধীন। অনুগ্রহ করে ধৈর্য ধরুন।.</string>
+    <string name="offline_course_import.importing_media_file">মিডিয়া ফাইল আনা হচ্ছে %s</string>
+    <string name="offline_course_import.empty_files">এখনো কোনো ফাইল সংযুক্ত করা হয়নি।.</string>
+    <string name="offline_course_import.import_completed">কোর্স আনা সম্পন্ন হয়েছে।.</string>
+    <string name="offline_course_import.media_files_imported">মিডিয়া ফাইলগুলি আনা হয়েছে</string>
+    <string name="offline_course_import.course_files_imported"> কোর্স ফাইলগুলি আনা হয়েছে</string>
+    <string name="bluetooth_not_supported">ব্লুটুথ এর সাপোর্ট নেই</string>
+    <string name="select_one_or_more">(এক বা একাধিক নির্বাচন করুন)</string>
+    <string name="select_one">(একটি নির্বাচন করুন)</string>
+
+</resources>
+
