@@ -52,8 +52,10 @@ import org.digitalcampus.oppia.utils.resources.JSInterfaceForAudioPlayer;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForBackwardsCompat;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForInlineInput;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForResourceImages;
+import org.digitalcampus.oppia.utils.resources.JSInterfaceForWebViewScrolling;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.ui.ExtendedWebView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -167,6 +169,9 @@ public class PageWidget extends BaseWidget implements JSInterfaceForInlineInput.
 			jsInterfaces.add(audioPlayerJSInterface);
 			webview.addJavascriptInterface(audioPlayerJSInterface, audioPlayerJSInterface.getInterfaceExposedName());
 
+			JSInterfaceForWebViewScrolling webViewScrollingJSInterface = new JSInterfaceForWebViewScrolling(getContext(), (ExtendedWebView) webview);
+			jsInterfaces.add(webViewScrollingJSInterface);
+			webview.addJavascriptInterface(webViewScrollingJSInterface, webViewScrollingJSInterface.getInterfaceExposedName());
 
 			webview.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, contents, "text/html", "utf-8", null);
 		} catch (IOException e) {
