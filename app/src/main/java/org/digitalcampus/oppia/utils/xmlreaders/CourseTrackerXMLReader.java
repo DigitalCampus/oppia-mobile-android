@@ -33,6 +33,7 @@ import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -98,8 +99,8 @@ public class CourseTrackerXMLReader {
         NodeList actTrackers = document.getFirstChild().getChildNodes();
         for (int i = 0; i < actTrackers.getLength(); i++) {
             NamedNodeMap attrs = actTrackers.item(i).getAttributes();
-            String uuid = attrs.getNamedItem(NODE_UUID).getTextContent();
-            if (uuidList.contains(uuid)) {
+            Node uuid = attrs.getNamedItem(NODE_UUID);
+            if (uuid != null && uuidList.contains(uuid.getTextContent())) {
                 continue;
             }
 
