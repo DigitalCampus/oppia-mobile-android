@@ -683,5 +683,9 @@
     <string name="select_one_or_more">(Select one or more)</string>
     <string name="select_one">(Select one)</string>
 
+    <string name="must_accept_privacy_policy">To continue, you must accept the privacy policy</string>
+    <string name="accept_privacy_check">I accept the</string>
+    <string name="privacy_policy">Privacy Policy</string>
+
 </resources>
 
